@@ -1,0 +1,53 @@
+# CHAPTER 1
+
+
+```{r image, include=FALSE}
+knitr::include_graphics(
+  c(
+    "images/ArchRProject_Schematic.png", 
+    "images/ArchR_FunctionSchematic.png"
+    )
+  )
+```
+
+The following tutorial shows the basics of setting up and interacting with an `ArchRProject` using a gold-standard downsampled dataset of hematopoietic cells [Granja* et al. Nature Biotechnology 2019](https://www.ncbi.nlm.nih.gov/pubmed/31792411). This tutorial and all of the accompanying vignettes assume that you are running ArchR __locally__. __QQQ__ Once all of these steps work for you, feel free to [set up ArchR to work in a cluster environment](articles/Articles/clusterComputing.html). This tutorial does not explain every detail of every step but rather shows you how to perform the most common analyses. Please see the [Vignettes section](articles/index.html) for more details on each major analytical step and all of the major features of ArchR.
+
+## 1. What is an `ArrowFile` / `ArchRProject`?
+
+The base unit of an analytical project in ArchR is called an `ArrowFile`. Each `ArrowFile` stores all of the data associated with an individual sample (i.e. metadata, accessible fragments, and data matrices). Here, an "individual sample" would be the most detailed unit of analysis desired (for ex. a single replicate of a particular condition). During creation and as additional analyses are performed, ArchR updates and edits each `ArrowFile` to contain additional layers of information.
+It is worth noting that, to ArchR, an `ArrowFile` is actually just a path to an external file stored on disk. More explicitly, an `ArrowFile` is not an R-language object that is stored in memory. Because of this, we use an `ArchRProject` object to associate these `ArrowFiles` together into a single analytical framework that can be rapidly accessed in R. This `ArchRProject` object is small in size and is stored in memory.
+
+<center>
+![](images/ArchRProject_Schematic.png){width=700px}
+</center>
+
+Certain actions can be taken directly on `ArrowFiles` while other actions are taken on an `ArchRProject` which in turn updates each associated `ArrowFile`. Because `ArrowFiles` are stored as large HDF5-format files, "get-er" functions in ArchR retrieve data by interacting with the `ArchRProject` while "add-er" functions either (i) add data directly to `ArrowFiles`, (ii) add data directly to an `ArchRProject`, or (iii) add data to `ArrowFiles` by interacting with an `ArchRProject`.
+
+<center>
+![](images/ArchR_FunctionSchematic.png){width=400px}
+</center>
+
+## 2. Getting Set Up
+
+The first thing we do is set up our working directory, load our gene and genome annotations, and set the number of threads we would like to use. Depending on the configuration of your local environment, you may need to modify the number of `threads` used below in `addArchRThreads()`. By default ArchR uses half of the total number of `threads` available but you can adjust this manually as you see fit. If you are using windows, the usable `threads` will automatically be set to 1 because the parallel processing in ArchR is build for Unix-based operating systems.
+
+For the purposes of this tutorial, we provide the gene and genome annotations but you can create your own using the `createGeneAnnotation()` and `createGenomeAnnotation()` functions. See the [Gene and Genome Annotations vignette](articles/Articles/annotations.html) for more information.
+
+```{r eval=FALSE}
+#Load R Libraries
+library(ArchR)
+
+#Create a new folder and set this as the working directory for tutorial analyses
+wd <- "ArchR_tutorial"
+dir.create(wd, showWarnings = FALSE, recursive = TRUE)
+setwd(wd)
+
+#Load genome annotations. Available annotations are for "Hg19", "Hg38", "Mm9", or "Mm10". QQQ THIS DOESNT MAKE SENSE. THE DATA IS HUMAN, NOT MOUSE, AND IS ONLY AVAILABLE FOR ONE GENOME FOR THE TUTORIAL? WOULD REMOVE.
+data("geneAnnoHg19")
+data("genomeAnnoHg19")
+geneAnno <- geneAnnoHg19
+genomeAnno <- genomeAnnoHg19
+
+#Set Default Threads for ArchR Functions
+addArchRThreads(threads = floor(parallel::detectCores()/2)) #QQQ I favor including default values to make it clear what happens. Open to suggestions though.
+```
