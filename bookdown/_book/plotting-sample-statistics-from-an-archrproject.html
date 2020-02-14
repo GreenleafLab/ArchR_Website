@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>ArchR</title>
+  <title>1.7 Plotting Sample Statistics from an ArchRProject | ArchR</title>
   <meta name="description" content="A guide to ArchR" />
   <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="ArchR" />
+  <meta property="og:title" content="1.7 Plotting Sample Statistics from an ArchRProject | ArchR" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="GreenleafLab/ArchR" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="ArchR" />
+  <meta name="twitter:title" content="1.7 Plotting Sample Statistics from an ArchRProject | ArchR" />
   
   <meta name="twitter:description" content="A guide to ArchR" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="getting-started-with-archr.html"/>
+<link rel="prev" href="manipulating-an-archrproject.html"/>
+<link rel="next" href="filtering-doublets-from-an-archrproject.html"/>
 <script src="libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -170,23 +170,59 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">ArchR</h1>
-<p class="author"><em>Jeffrey Granja and Ryan Corces</em></p>
-<p class="date"><em>2020-02-13</em></p>
-</div>
-<div id="preface" class="section level1 unnumbered" number="">
-<h1>Preface</h1>
-<p>This is the ArchR documentation.</p>
-
+<div id="plotting-sample-statistics-from-an-archrproject" class="section level2" number="1.7">
+<h2><span class="header-section-number">1.7</span> Plotting Sample Statistics from an ArchRProject</h2>
+<p>Example 1. Make a Ridge Plot for each sample for the TSS Enrichment scores.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="plotting-sample-statistics-from-an-archrproject.html#cb15-1"></a>p1 &lt;-<span class="st"> </span><span class="kw">plotGroups</span>(</span>
+<span id="cb15-2"><a href="plotting-sample-statistics-from-an-archrproject.html#cb15-2"></a>    <span class="dt">ArchRProj =</span> projHeme, </span>
+<span id="cb15-3"><a href="plotting-sample-statistics-from-an-archrproject.html#cb15-3"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Sample&quot;</span>, </span>
+<span id="cb15-4"><a href="plotting-sample-statistics-from-an-archrproject.html#cb15-4"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, </span>
+<span id="cb15-5"><a href="plotting-sample-statistics-from-an-archrproject.html#cb15-5"></a>    <span class="dt">name =</span> <span class="st">&quot;TSSEnrichment&quot;</span>,</span>
+<span id="cb15-6"><a href="plotting-sample-statistics-from-an-archrproject.html#cb15-6"></a>    <span class="dt">plotAs =</span> <span class="st">&quot;ridges&quot;</span></span>
+<span id="cb15-7"><a href="plotting-sample-statistics-from-an-archrproject.html#cb15-7"></a>   )</span>
+<span id="cb15-8"><a href="plotting-sample-statistics-from-an-archrproject.html#cb15-8"></a>p1</span></code></pre></div>
+<p>Example 2. Make a Violin Plot for each sample for the TSS Enrichment scores.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="plotting-sample-statistics-from-an-archrproject.html#cb16-1"></a>p2 &lt;-<span class="st"> </span><span class="kw">plotGroups</span>(</span>
+<span id="cb16-2"><a href="plotting-sample-statistics-from-an-archrproject.html#cb16-2"></a>    <span class="dt">ArchRProj =</span> projHeme, </span>
+<span id="cb16-3"><a href="plotting-sample-statistics-from-an-archrproject.html#cb16-3"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Sample&quot;</span>, </span>
+<span id="cb16-4"><a href="plotting-sample-statistics-from-an-archrproject.html#cb16-4"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, </span>
+<span id="cb16-5"><a href="plotting-sample-statistics-from-an-archrproject.html#cb16-5"></a>    <span class="dt">name =</span> <span class="st">&quot;TSSEnrichment&quot;</span>,</span>
+<span id="cb16-6"><a href="plotting-sample-statistics-from-an-archrproject.html#cb16-6"></a>    <span class="dt">plotAs =</span> <span class="st">&quot;violin&quot;</span>,</span>
+<span id="cb16-7"><a href="plotting-sample-statistics-from-an-archrproject.html#cb16-7"></a>    <span class="dt">alpha =</span> <span class="fl">0.4</span>,</span>
+<span id="cb16-8"><a href="plotting-sample-statistics-from-an-archrproject.html#cb16-8"></a>    <span class="dt">addBoxPlot =</span> <span class="ot">TRUE</span></span>
+<span id="cb16-9"><a href="plotting-sample-statistics-from-an-archrproject.html#cb16-9"></a>   )</span>
+<span id="cb16-10"><a href="plotting-sample-statistics-from-an-archrproject.html#cb16-10"></a>p2</span></code></pre></div>
+<p>Example 3. Make a Ridge Plot for each sample for the log10 unique nuclear fragments.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="plotting-sample-statistics-from-an-archrproject.html#cb17-1"></a>p3 &lt;-<span class="st"> </span><span class="kw">plotGroups</span>(</span>
+<span id="cb17-2"><a href="plotting-sample-statistics-from-an-archrproject.html#cb17-2"></a>    <span class="dt">ArchRProj =</span> projHeme, </span>
+<span id="cb17-3"><a href="plotting-sample-statistics-from-an-archrproject.html#cb17-3"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Sample&quot;</span>, </span>
+<span id="cb17-4"><a href="plotting-sample-statistics-from-an-archrproject.html#cb17-4"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, </span>
+<span id="cb17-5"><a href="plotting-sample-statistics-from-an-archrproject.html#cb17-5"></a>    <span class="dt">name =</span> <span class="st">&quot;log10(nFrags)&quot;</span>,</span>
+<span id="cb17-6"><a href="plotting-sample-statistics-from-an-archrproject.html#cb17-6"></a>    <span class="dt">plotAs =</span> <span class="st">&quot;ridges&quot;</span></span>
+<span id="cb17-7"><a href="plotting-sample-statistics-from-an-archrproject.html#cb17-7"></a>   )</span>
+<span id="cb17-8"><a href="plotting-sample-statistics-from-an-archrproject.html#cb17-8"></a>p3</span></code></pre></div>
+<p>Example 4. Make a Violin Plot for each sample for the log10 unique nuclear fragments.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="plotting-sample-statistics-from-an-archrproject.html#cb18-1"></a>p4 &lt;-<span class="st"> </span><span class="kw">plotGroups</span>(</span>
+<span id="cb18-2"><a href="plotting-sample-statistics-from-an-archrproject.html#cb18-2"></a>    <span class="dt">ArchRProj =</span> projHeme, </span>
+<span id="cb18-3"><a href="plotting-sample-statistics-from-an-archrproject.html#cb18-3"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Sample&quot;</span>, </span>
+<span id="cb18-4"><a href="plotting-sample-statistics-from-an-archrproject.html#cb18-4"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, </span>
+<span id="cb18-5"><a href="plotting-sample-statistics-from-an-archrproject.html#cb18-5"></a>    <span class="dt">name =</span> <span class="st">&quot;log10(nFrags)&quot;</span>,</span>
+<span id="cb18-6"><a href="plotting-sample-statistics-from-an-archrproject.html#cb18-6"></a>    <span class="dt">plotAs =</span> <span class="st">&quot;violin&quot;</span>,</span>
+<span id="cb18-7"><a href="plotting-sample-statistics-from-an-archrproject.html#cb18-7"></a>    <span class="dt">alpha =</span> <span class="fl">0.4</span>,</span>
+<span id="cb18-8"><a href="plotting-sample-statistics-from-an-archrproject.html#cb18-8"></a>    <span class="dt">addBoxPlot =</span> <span class="ot">TRUE</span></span>
+<span id="cb18-9"><a href="plotting-sample-statistics-from-an-archrproject.html#cb18-9"></a>   )</span>
+<span id="cb18-10"><a href="plotting-sample-statistics-from-an-archrproject.html#cb18-10"></a>p4</span></code></pre></div>
+<p>To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
+nice looking.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="plotting-sample-statistics-from-an-archrproject.html#cb19-1"></a><span class="kw">plotPDF</span>(p1,p2,p3,p4, <span class="dt">name =</span> <span class="st">&quot;QC-Sample-Statistics.pdf&quot;</span>, <span class="dt">ArchRProj =</span> projHeme, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="getting-started-with-archr.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="manipulating-an-archrproject.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="filtering-doublets-from-an-archrproject.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -217,15 +253,15 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/edit/dev/index.Rmd",
+"link": "https://github.com/GreenleafLab/ArchR_Website/edit/dev/01_GettingStarted.Rmd",
 "text": "Edit this chapter"
 },
 "history": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/commits/dev/index.Rmd",
+"link": "https://github.com/GreenleafLab/ArchR_Website/commits/dev/01_GettingStarted.Rmd",
 "text": "Chapter edit history"
 },
 "view": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/view/dev/index.Rmd",
+"link": "https://github.com/GreenleafLab/ArchR_Website/view/dev/01_GettingStarted.Rmd",
 "text": "View source on GitHub"
 },
 "download": ["ArchR.pdf"],

@@ -142,7 +142,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.4" data-path="inferring-scatac-seq-doublets-with-archr.html"><a href="inferring-scatac-seq-doublets-with-archr.html"><i class="fa fa-check"></i><b>1.4</b> Inferring scATAC-seq Doublets with ArchR</a></li>
 <li class="chapter" data-level="1.5" data-path="creating-an-archrproject.html"><a href="creating-an-archrproject.html"><i class="fa fa-check"></i><b>1.5</b> Creating An ArchRProject</a></li>
 <li class="chapter" data-level="1.6" data-path="manipulating-an-archrproject.html"><a href="manipulating-an-archrproject.html"><i class="fa fa-check"></i><b>1.6</b> Manipulating An ArchRProject</a></li>
-<li class="chapter" data-level="1.7" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>1.7</b> Filtering Doublets from an ArchRProject</a></li>
+<li class="chapter" data-level="1.7" data-path="plotting-sample-statistics-from-an-archrproject.html"><a href="plotting-sample-statistics-from-an-archrproject.html"><i class="fa fa-check"></i><b>1.7</b> Plotting Sample Statistics from an ArchRProject</a></li>
+<li class="chapter" data-level="1.8" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>1.8</b> Filtering Doublets from an ArchRProject</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="creating-arrow-files-1.html"><a href="creating-arrow-files-1.html"><i class="fa fa-check"></i><b>2</b> Creating Arrow Files</a>
 <ul>
@@ -172,16 +173,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="inferring-scatac-seq-doublets-with-archr" class="section level2" number="1.4">
 <h2><span class="header-section-number">1.4</span> Inferring scATAC-seq Doublets with ArchR</h2>
 <p>One major source of trouble in single-cell data is the contribution of “doublets” to the analysis. A doublet refers to a single droplet that received a single barcoded bead and more than one nucleus. This causes the reads from more than one cell to appear as a single cell. We remove these computationally and describe this doublet removal process in more depth in the <a href="articles/Articles/doubletRemoval.html">doublet removal vignette</a>.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="inferring-scatac-seq-doublets-with-archr.html#cb3-1"></a><span class="co">#Add Infered Doublet Scores to each Arrow File (~2-5 min per sample)</span></span>
-<span id="cb3-2"><a href="inferring-scatac-seq-doublets-with-archr.html#cb3-2"></a><span class="co">#By default ArchR uses the doublet params as described in the ArchR paper.</span></span>
-<span id="cb3-3"><a href="inferring-scatac-seq-doublets-with-archr.html#cb3-3"></a><span class="co">#We show some of the main adjustable features below for more information </span></span>
-<span id="cb3-4"><a href="inferring-scatac-seq-doublets-with-archr.html#cb3-4"></a><span class="co">#Try ?addDoubletScores to see further documentation on parameters for doublet identification.</span></span>
-<span id="cb3-5"><a href="inferring-scatac-seq-doublets-with-archr.html#cb3-5"></a>doubScores &lt;-<span class="st"> </span><span class="kw">addDoubletScores</span>(</span>
-<span id="cb3-6"><a href="inferring-scatac-seq-doublets-with-archr.html#cb3-6"></a>    <span class="dt">input =</span> ArrowFiles,</span>
-<span id="cb3-7"><a href="inferring-scatac-seq-doublets-with-archr.html#cb3-7"></a>    <span class="dt">k =</span> <span class="dv">10</span>, <span class="co">#Refers to how many cells near a &quot;pseudo-doublet&quot; to count.</span></span>
-<span id="cb3-8"><a href="inferring-scatac-seq-doublets-with-archr.html#cb3-8"></a>    <span class="dt">knnMethod =</span> <span class="st">&quot;UMAP&quot;</span>, <span class="co">#Refers to embedding to use for nearest neighbor search with doublet projection.</span></span>
-<span id="cb3-9"><a href="inferring-scatac-seq-doublets-with-archr.html#cb3-9"></a>    <span class="dt">LSIMethod =</span> <span class="dv">1</span></span>
-<span id="cb3-10"><a href="inferring-scatac-seq-doublets-with-archr.html#cb3-10"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="inferring-scatac-seq-doublets-with-archr.html#cb4-1"></a><span class="co">#Add Infered Doublet Scores to each Arrow File (~2-5 min per sample)</span></span>
+<span id="cb4-2"><a href="inferring-scatac-seq-doublets-with-archr.html#cb4-2"></a><span class="co">#By default ArchR uses the doublet params as described in the ArchR paper.</span></span>
+<span id="cb4-3"><a href="inferring-scatac-seq-doublets-with-archr.html#cb4-3"></a><span class="co">#We show some of the main adjustable features below for more information </span></span>
+<span id="cb4-4"><a href="inferring-scatac-seq-doublets-with-archr.html#cb4-4"></a><span class="co">#Try ?addDoubletScores to see further documentation on parameters for doublet identification.</span></span>
+<span id="cb4-5"><a href="inferring-scatac-seq-doublets-with-archr.html#cb4-5"></a>doubScores &lt;-<span class="st"> </span><span class="kw">addDoubletScores</span>(</span>
+<span id="cb4-6"><a href="inferring-scatac-seq-doublets-with-archr.html#cb4-6"></a>    <span class="dt">input =</span> ArrowFiles,</span>
+<span id="cb4-7"><a href="inferring-scatac-seq-doublets-with-archr.html#cb4-7"></a>    <span class="dt">k =</span> <span class="dv">10</span>, <span class="co">#Refers to how many cells near a &quot;pseudo-doublet&quot; to count.</span></span>
+<span id="cb4-8"><a href="inferring-scatac-seq-doublets-with-archr.html#cb4-8"></a>    <span class="dt">knnMethod =</span> <span class="st">&quot;UMAP&quot;</span>, <span class="co">#Refers to embedding to use for nearest neighbor search with doublet projection.</span></span>
+<span id="cb4-9"><a href="inferring-scatac-seq-doublets-with-archr.html#cb4-9"></a>    <span class="dt">LSIMethod =</span> <span class="dv">1</span></span>
+<span id="cb4-10"><a href="inferring-scatac-seq-doublets-with-archr.html#cb4-10"></a>)</span></code></pre></div>
 </div>
             </section>
 

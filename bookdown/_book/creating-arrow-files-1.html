@@ -142,7 +142,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.4" data-path="inferring-scatac-seq-doublets-with-archr.html"><a href="inferring-scatac-seq-doublets-with-archr.html"><i class="fa fa-check"></i><b>1.4</b> Inferring scATAC-seq Doublets with ArchR</a></li>
 <li class="chapter" data-level="1.5" data-path="creating-an-archrproject.html"><a href="creating-an-archrproject.html"><i class="fa fa-check"></i><b>1.5</b> Creating An ArchRProject</a></li>
 <li class="chapter" data-level="1.6" data-path="manipulating-an-archrproject.html"><a href="manipulating-an-archrproject.html"><i class="fa fa-check"></i><b>1.6</b> Manipulating An ArchRProject</a></li>
-<li class="chapter" data-level="1.7" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>1.7</b> Filtering Doublets from an ArchRProject</a></li>
+<li class="chapter" data-level="1.7" data-path="plotting-sample-statistics-from-an-archrproject.html"><a href="plotting-sample-statistics-from-an-archrproject.html"><i class="fa fa-check"></i><b>1.7</b> Plotting Sample Statistics from an ArchRProject</a></li>
+<li class="chapter" data-level="1.8" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>1.8</b> Filtering Doublets from an ArchRProject</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="creating-arrow-files-1.html"><a href="creating-arrow-files-1.html"><i class="fa fa-check"></i><b>2</b> Creating Arrow Files</a>
 <ul>
@@ -172,24 +173,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="creating-arrow-files-1" class="section level1" number="2">
 <h1><span class="header-section-number">Chapter 2</span> Creating Arrow Files</h1>
 <p>For this tutorial, we will download a collection of fragment files. Fragment files are one of the base file types of the 10x Genomics analytical platform (and other platforms) and can be easily created from any BAM file. See <a href="articles/Articles/inputFiles.html">the ArchR input file types vignette</a> for information on making your own fragment files for input to ArchR. Once we have our fragment files, we provide their paths as a character vector to <code>createArrowFiles()</code>. During creation, some basic metadata and matrices are added to each <code>ArrowFile</code> including a “TileMatrix” containing insertion counts across genome-wide 500-bp bins (see <code>addTileMatrix()</code>) and a “GeneScoreMatrix” that is determined based on weighting insertion counts in tiles nearby a gene promoter (see <code>addGeneScoreMatrix()</code>). These gene activity scores are described in more depth in the <a href="articles/Articles/geneScores.html">Gene Activity Score vignette</a>.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="creating-arrow-files-1.html#cb8-1"></a><span class="co">#Get Tutorial Data ~1GB To Download (if downloaded already ArchR will bypass downloading).</span></span>
-<span id="cb8-2"><a href="creating-arrow-files-1.html#cb8-2"></a>inputFiles &lt;-<span class="st"> </span><span class="kw">getTutorialData</span>(<span class="st">&quot;Hematopoiesis&quot;</span>)</span>
-<span id="cb8-3"><a href="creating-arrow-files-1.html#cb8-3"></a></span>
-<span id="cb8-4"><a href="creating-arrow-files-1.html#cb8-4"></a><span class="co">#Create Arrow Files (~10-15 minutes) w/ helpful messages displaying progress.</span></span>
-<span id="cb8-5"><a href="creating-arrow-files-1.html#cb8-5"></a><span class="co">#For each sample, this step will:</span></span>
-<span id="cb8-6"><a href="creating-arrow-files-1.html#cb8-6"></a><span class="co"># 1. Read accessible fragments.</span></span>
-<span id="cb8-7"><a href="creating-arrow-files-1.html#cb8-7"></a><span class="co"># 2. Calculate QC Information for each cell (TSS Enrichment, Nucleosome info).</span></span>
-<span id="cb8-8"><a href="creating-arrow-files-1.html#cb8-8"></a><span class="co"># 3. Filter cells based on QC parameters.</span></span>
-<span id="cb8-9"><a href="creating-arrow-files-1.html#cb8-9"></a><span class="co"># 4. Create a genome-wide TileMatrix using 500-bp bins.</span></span>
-<span id="cb8-10"><a href="creating-arrow-files-1.html#cb8-10"></a><span class="co"># 5. Create a GeneScoreMatrix using the provided geneAnnotation.</span></span>
-<span id="cb8-11"><a href="creating-arrow-files-1.html#cb8-11"></a>ArrowFiles &lt;-<span class="st"> </span><span class="kw">createArrowFiles</span>(</span>
-<span id="cb8-12"><a href="creating-arrow-files-1.html#cb8-12"></a>  <span class="dt">inputFiles =</span> inputFiles,</span>
-<span id="cb8-13"><a href="creating-arrow-files-1.html#cb8-13"></a>  <span class="dt">sampleNames =</span> <span class="kw">names</span>(inputFiles),</span>
-<span id="cb8-14"><a href="creating-arrow-files-1.html#cb8-14"></a>  <span class="dt">filterTSS =</span> <span class="dv">4</span>, <span class="co">#Dont set this too high because you can always increase later</span></span>
-<span id="cb8-15"><a href="creating-arrow-files-1.html#cb8-15"></a>  <span class="dt">filterFrags =</span> <span class="dv">1000</span>, </span>
-<span id="cb8-16"><a href="creating-arrow-files-1.html#cb8-16"></a>  <span class="dt">addTileMat =</span> <span class="ot">TRUE</span>,</span>
-<span id="cb8-17"><a href="creating-arrow-files-1.html#cb8-17"></a>  <span class="dt">addGeneScoreMat =</span> <span class="ot">TRUE</span></span>
-<span id="cb8-18"><a href="creating-arrow-files-1.html#cb8-18"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="creating-arrow-files-1.html#cb22-1"></a><span class="co">#Get Tutorial Data ~1GB To Download (if downloaded already ArchR will bypass downloading).</span></span>
+<span id="cb22-2"><a href="creating-arrow-files-1.html#cb22-2"></a>inputFiles &lt;-<span class="st"> </span><span class="kw">getTutorialData</span>(<span class="st">&quot;Hematopoiesis&quot;</span>)</span>
+<span id="cb22-3"><a href="creating-arrow-files-1.html#cb22-3"></a></span>
+<span id="cb22-4"><a href="creating-arrow-files-1.html#cb22-4"></a><span class="co">#Create Arrow Files (~10-15 minutes) w/ helpful messages displaying progress.</span></span>
+<span id="cb22-5"><a href="creating-arrow-files-1.html#cb22-5"></a><span class="co">#For each sample, this step will:</span></span>
+<span id="cb22-6"><a href="creating-arrow-files-1.html#cb22-6"></a><span class="co"># 1. Read accessible fragments.</span></span>
+<span id="cb22-7"><a href="creating-arrow-files-1.html#cb22-7"></a><span class="co"># 2. Calculate QC Information for each cell (TSS Enrichment, Nucleosome info).</span></span>
+<span id="cb22-8"><a href="creating-arrow-files-1.html#cb22-8"></a><span class="co"># 3. Filter cells based on QC parameters.</span></span>
+<span id="cb22-9"><a href="creating-arrow-files-1.html#cb22-9"></a><span class="co"># 4. Create a genome-wide TileMatrix using 500-bp bins.</span></span>
+<span id="cb22-10"><a href="creating-arrow-files-1.html#cb22-10"></a><span class="co"># 5. Create a GeneScoreMatrix using the provided geneAnnotation.</span></span>
+<span id="cb22-11"><a href="creating-arrow-files-1.html#cb22-11"></a>ArrowFiles &lt;-<span class="st"> </span><span class="kw">createArrowFiles</span>(</span>
+<span id="cb22-12"><a href="creating-arrow-files-1.html#cb22-12"></a>  <span class="dt">inputFiles =</span> inputFiles,</span>
+<span id="cb22-13"><a href="creating-arrow-files-1.html#cb22-13"></a>  <span class="dt">sampleNames =</span> <span class="kw">names</span>(inputFiles),</span>
+<span id="cb22-14"><a href="creating-arrow-files-1.html#cb22-14"></a>  <span class="dt">filterTSS =</span> <span class="dv">4</span>, <span class="co">#Dont set this too high because you can always increase later</span></span>
+<span id="cb22-15"><a href="creating-arrow-files-1.html#cb22-15"></a>  <span class="dt">filterFrags =</span> <span class="dv">1000</span>, </span>
+<span id="cb22-16"><a href="creating-arrow-files-1.html#cb22-16"></a>  <span class="dt">addTileMat =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb22-17"><a href="creating-arrow-files-1.html#cb22-17"></a>  <span class="dt">addGeneScoreMat =</span> <span class="ot">TRUE</span></span>
+<span id="cb22-18"><a href="creating-arrow-files-1.html#cb22-18"></a>  )</span></code></pre></div>
 <hr /> 
 </div>
             </section>

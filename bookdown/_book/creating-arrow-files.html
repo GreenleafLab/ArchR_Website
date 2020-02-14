@@ -142,7 +142,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.4" data-path="inferring-scatac-seq-doublets-with-archr.html"><a href="inferring-scatac-seq-doublets-with-archr.html"><i class="fa fa-check"></i><b>1.4</b> Inferring scATAC-seq Doublets with ArchR</a></li>
 <li class="chapter" data-level="1.5" data-path="creating-an-archrproject.html"><a href="creating-an-archrproject.html"><i class="fa fa-check"></i><b>1.5</b> Creating An ArchRProject</a></li>
 <li class="chapter" data-level="1.6" data-path="manipulating-an-archrproject.html"><a href="manipulating-an-archrproject.html"><i class="fa fa-check"></i><b>1.6</b> Manipulating An ArchRProject</a></li>
-<li class="chapter" data-level="1.7" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>1.7</b> Filtering Doublets from an ArchRProject</a></li>
+<li class="chapter" data-level="1.7" data-path="plotting-sample-statistics-from-an-archrproject.html"><a href="plotting-sample-statistics-from-an-archrproject.html"><i class="fa fa-check"></i><b>1.7</b> Plotting Sample Statistics from an ArchRProject</a></li>
+<li class="chapter" data-level="1.8" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>1.8</b> Filtering Doublets from an ArchRProject</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="creating-arrow-files-1.html"><a href="creating-arrow-files-1.html"><i class="fa fa-check"></i><b>2</b> Creating Arrow Files</a>
 <ul>
@@ -180,29 +181,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-6"><a href="creating-arrow-files.html#cb2-6"></a><span class="co">#                                  scATAC_CD34_BMMC_R1 </span></span>
 <span id="cb2-7"><a href="creating-arrow-files.html#cb2-7"></a><span class="co"># &quot;HemeFragments/scATAC_CD34_BMMC_R1.fragments.tsv.gz&quot; </span></span>
 <span id="cb2-8"><a href="creating-arrow-files.html#cb2-8"></a><span class="co">#                                       scATAC_PBMC_R1 </span></span>
-<span id="cb2-9"><a href="creating-arrow-files.html#cb2-9"></a><span class="co">#      &quot;HemeFragments/scATAC_PBMC_R1.fragments.tsv.gz&quot; </span></span>
-<span id="cb2-10"><a href="creating-arrow-files.html#cb2-10"></a></span>
-<span id="cb2-11"><a href="creating-arrow-files.html#cb2-11"></a><span class="co">#Create Arrow Files (~10-15 minutes) w/ helpful messages displaying progress.</span></span>
-<span id="cb2-12"><a href="creating-arrow-files.html#cb2-12"></a><span class="co">#For each sample, this step will:</span></span>
-<span id="cb2-13"><a href="creating-arrow-files.html#cb2-13"></a><span class="co"># 1. Read accessible fragments.</span></span>
-<span id="cb2-14"><a href="creating-arrow-files.html#cb2-14"></a><span class="co"># 2. Calculate QC Information for each cell (TSS Enrichment, Nucleosome info).</span></span>
-<span id="cb2-15"><a href="creating-arrow-files.html#cb2-15"></a><span class="co"># 3. Filter cells based on QC parameters.</span></span>
-<span id="cb2-16"><a href="creating-arrow-files.html#cb2-16"></a><span class="co"># 4. Create a genome-wide TileMatrix using 500-bp bins.</span></span>
-<span id="cb2-17"><a href="creating-arrow-files.html#cb2-17"></a><span class="co"># 5. Create a GeneScoreMatrix using the custom geneAnnotation related to when we set addArchRGenome.</span></span>
-<span id="cb2-18"><a href="creating-arrow-files.html#cb2-18"></a>ArrowFiles &lt;-<span class="st"> </span><span class="kw">createArrowFiles</span>(</span>
-<span id="cb2-19"><a href="creating-arrow-files.html#cb2-19"></a>  <span class="dt">inputFiles =</span> inputFiles,</span>
-<span id="cb2-20"><a href="creating-arrow-files.html#cb2-20"></a>  <span class="dt">sampleNames =</span> <span class="kw">names</span>(inputFiles),</span>
-<span id="cb2-21"><a href="creating-arrow-files.html#cb2-21"></a>  <span class="dt">filterTSS =</span> <span class="dv">4</span>, <span class="co">#Dont set this too high because you can always increase later</span></span>
-<span id="cb2-22"><a href="creating-arrow-files.html#cb2-22"></a>  <span class="dt">filterFrags =</span> <span class="dv">1000</span>, </span>
-<span id="cb2-23"><a href="creating-arrow-files.html#cb2-23"></a>  <span class="dt">addTileMat =</span> <span class="ot">TRUE</span>,</span>
-<span id="cb2-24"><a href="creating-arrow-files.html#cb2-24"></a>  <span class="dt">addGeneScoreMat =</span> <span class="ot">TRUE</span></span>
-<span id="cb2-25"><a href="creating-arrow-files.html#cb2-25"></a> )</span>
-<span id="cb2-26"><a href="creating-arrow-files.html#cb2-26"></a>ArrowFiles</span>
-<span id="cb2-27"><a href="creating-arrow-files.html#cb2-27"></a><span class="co"># [1] &quot;scATAC_BMMC_R1.arrow&quot;      &quot;scATAC_CD34_BMMC_R1.arrow&quot;</span></span>
-<span id="cb2-28"><a href="creating-arrow-files.html#cb2-28"></a><span class="co"># [3] &quot;scATAC_PBMC_R1.arrow&quot;</span></span>
-<span id="cb2-29"><a href="creating-arrow-files.html#cb2-29"></a></span>
-<span id="cb2-30"><a href="creating-arrow-files.html#cb2-30"></a><span class="co">#JJJ QualityControl/scATAC_BMMC_R2/scATAC_BMMC_R2-TSS_by_Unique_Frags.pdf</span></span>
-<span id="cb2-31"><a href="creating-arrow-files.html#cb2-31"></a><span class="co">#JJJ QualityControl/scATAC_BMMC_R2/scATAC_BMMC_R2-Fragment_Size_Distribution.pdf</span></span></code></pre></div>
+<span id="cb2-9"><a href="creating-arrow-files.html#cb2-9"></a><span class="co">#      &quot;HemeFragments/scATAC_PBMC_R1.fragments.tsv.gz&quot; </span></span></code></pre></div>
+<p>Create Arrow Files (~10-15 minutes) w/ helpful messages displaying progress. </br>
+For each sample, this step will: </br>
+1. Read accessible fragments from inputFiles. </br>
+2. Calculate QC Information for each cell (TSS Enrichment, Nucleosome info). </br>
+3. Filter cells based on QC parameters. </br>
+4. Create a genome-wide TileMatrix using 500-bp bins. </br>
+5. Create a GeneScoreMatrix using the custom geneAnnotation related to when we set addArchRGenome. </br></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="creating-arrow-files.html#cb3-1"></a>ArrowFiles &lt;-<span class="st"> </span><span class="kw">createArrowFiles</span>(</span>
+<span id="cb3-2"><a href="creating-arrow-files.html#cb3-2"></a>  <span class="dt">inputFiles =</span> inputFiles,</span>
+<span id="cb3-3"><a href="creating-arrow-files.html#cb3-3"></a>  <span class="dt">sampleNames =</span> <span class="kw">names</span>(inputFiles),</span>
+<span id="cb3-4"><a href="creating-arrow-files.html#cb3-4"></a>  <span class="dt">filterTSS =</span> <span class="dv">4</span>, <span class="co">#Dont set this too high because you can always increase later</span></span>
+<span id="cb3-5"><a href="creating-arrow-files.html#cb3-5"></a>  <span class="dt">filterFrags =</span> <span class="dv">1000</span>, </span>
+<span id="cb3-6"><a href="creating-arrow-files.html#cb3-6"></a>  <span class="dt">addTileMat =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb3-7"><a href="creating-arrow-files.html#cb3-7"></a>  <span class="dt">addGeneScoreMat =</span> <span class="ot">TRUE</span></span>
+<span id="cb3-8"><a href="creating-arrow-files.html#cb3-8"></a> )</span>
+<span id="cb3-9"><a href="creating-arrow-files.html#cb3-9"></a>ArrowFiles</span>
+<span id="cb3-10"><a href="creating-arrow-files.html#cb3-10"></a><span class="co"># [1] &quot;scATAC_BMMC_R1.arrow&quot;      &quot;scATAC_CD34_BMMC_R1.arrow&quot;</span></span>
+<span id="cb3-11"><a href="creating-arrow-files.html#cb3-11"></a><span class="co"># [3] &quot;scATAC_PBMC_R1.arrow&quot;</span></span>
+<span id="cb3-12"><a href="creating-arrow-files.html#cb3-12"></a></span>
+<span id="cb3-13"><a href="creating-arrow-files.html#cb3-13"></a><span class="co">#JJJ QualityControl/scATAC_BMMC_R2/scATAC_BMMC_R2-TSS_by_Unique_Frags.pdf</span></span>
+<span id="cb3-14"><a href="creating-arrow-files.html#cb3-14"></a><span class="co">#JJJ QualityControl/scATAC_BMMC_R2/scATAC_BMMC_R2-Fragment_Size_Distribution.pdf</span></span></code></pre></div>
 </div>
             </section>
 

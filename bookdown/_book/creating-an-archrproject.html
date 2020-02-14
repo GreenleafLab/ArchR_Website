@@ -142,7 +142,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.4" data-path="inferring-scatac-seq-doublets-with-archr.html"><a href="inferring-scatac-seq-doublets-with-archr.html"><i class="fa fa-check"></i><b>1.4</b> Inferring scATAC-seq Doublets with ArchR</a></li>
 <li class="chapter" data-level="1.5" data-path="creating-an-archrproject.html"><a href="creating-an-archrproject.html"><i class="fa fa-check"></i><b>1.5</b> Creating An ArchRProject</a></li>
 <li class="chapter" data-level="1.6" data-path="manipulating-an-archrproject.html"><a href="manipulating-an-archrproject.html"><i class="fa fa-check"></i><b>1.6</b> Manipulating An ArchRProject</a></li>
-<li class="chapter" data-level="1.7" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>1.7</b> Filtering Doublets from an ArchRProject</a></li>
+<li class="chapter" data-level="1.7" data-path="plotting-sample-statistics-from-an-archrproject.html"><a href="plotting-sample-statistics-from-an-archrproject.html"><i class="fa fa-check"></i><b>1.7</b> Plotting Sample Statistics from an ArchRProject</a></li>
+<li class="chapter" data-level="1.8" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>1.8</b> Filtering Doublets from an ArchRProject</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="creating-arrow-files-1.html"><a href="creating-arrow-files-1.html"><i class="fa fa-check"></i><b>2</b> Creating Arrow Files</a>
 <ul>
@@ -172,29 +173,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="creating-an-archrproject" class="section level2" number="1.5">
 <h2><span class="header-section-number">1.5</span> Creating An ArchRProject</h2>
 <p>One major source of trouble in single-cell data is the contribution of “doublets” to the analysis. A doublet refers to a single droplet that received a single barcoded bead and more than one nucleus. This causes the reads from more than one cell to appear as a single cell. We remove these computationally and describe this doublet removal process in more depth in the <a href="articles/Articles/doubletRemoval.html">doublet removal vignette</a>.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="creating-an-archrproject.html#cb4-1"></a><span class="co">#Create ArchRProject</span></span>
-<span id="cb4-2"><a href="creating-an-archrproject.html#cb4-2"></a><span class="co">#The outputDirectory here describes where all downstream analyses and plots go.</span></span>
-<span id="cb4-3"><a href="creating-an-archrproject.html#cb4-3"></a><span class="co">#ArchR will add geneAnnotation and genomeAnnotations related to addArchRGenome(&quot;hg19&quot;)</span></span>
-<span id="cb4-4"><a href="creating-an-archrproject.html#cb4-4"></a><span class="co">#as described above.</span></span>
-<span id="cb4-5"><a href="creating-an-archrproject.html#cb4-5"></a>projHeme &lt;-<span class="st"> </span><span class="kw">ArchRProject</span>(</span>
-<span id="cb4-6"><a href="creating-an-archrproject.html#cb4-6"></a>  <span class="dt">ArrowFiles =</span> ArrowFiles, </span>
-<span id="cb4-7"><a href="creating-an-archrproject.html#cb4-7"></a>  <span class="dt">outputDirectory =</span> <span class="st">&quot;HemeTutorial&quot;</span>,</span>
-<span id="cb4-8"><a href="creating-an-archrproject.html#cb4-8"></a>  <span class="dt">copyArrows =</span> <span class="ot">TRUE</span> <span class="co">#This is recommened so that if you modify the ArrowFiles you have an original copy for later usage.</span></span>
-<span id="cb4-9"><a href="creating-an-archrproject.html#cb4-9"></a>)</span>
-<span id="cb4-10"><a href="creating-an-archrproject.html#cb4-10"></a></span>
-<span id="cb4-11"><a href="creating-an-archrproject.html#cb4-11"></a><span class="co">#Lets look at our ArchRProject</span></span>
-<span id="cb4-12"><a href="creating-an-archrproject.html#cb4-12"></a>projHeme</span>
-<span id="cb4-13"><a href="creating-an-archrproject.html#cb4-13"></a><span class="co"># class: ArchRProject </span></span>
-<span id="cb4-14"><a href="creating-an-archrproject.html#cb4-14"></a><span class="co"># outputDirectory: /Volumes/JG_SSD_2/ArchR_Walkthrough/HemeTutorial </span></span>
-<span id="cb4-15"><a href="creating-an-archrproject.html#cb4-15"></a><span class="co"># samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1</span></span>
-<span id="cb4-16"><a href="creating-an-archrproject.html#cb4-16"></a><span class="co"># sampleColData names(1): ArrowFiles</span></span>
-<span id="cb4-17"><a href="creating-an-archrproject.html#cb4-17"></a><span class="co"># cellColData names(11): DoubletEnrichment DoubletScore ... Sample</span></span>
-<span id="cb4-18"><a href="creating-an-archrproject.html#cb4-18"></a><span class="co">#   TSSEnrichment</span></span>
-<span id="cb4-19"><a href="creating-an-archrproject.html#cb4-19"></a><span class="co"># numberOfCells(1): 10661</span></span>
-<span id="cb4-20"><a href="creating-an-archrproject.html#cb4-20"></a><span class="co"># medianTSS(1): 16.832</span></span>
-<span id="cb4-21"><a href="creating-an-archrproject.html#cb4-21"></a><span class="co"># medianFrags(1): 3050</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="creating-an-archrproject.html#cb5-1"></a><span class="co">#Create ArchRProject</span></span>
+<span id="cb5-2"><a href="creating-an-archrproject.html#cb5-2"></a><span class="co">#The outputDirectory here describes where all downstream analyses and plots go.</span></span>
+<span id="cb5-3"><a href="creating-an-archrproject.html#cb5-3"></a><span class="co">#ArchR will add geneAnnotation and genomeAnnotations related to addArchRGenome(&quot;hg19&quot;)</span></span>
+<span id="cb5-4"><a href="creating-an-archrproject.html#cb5-4"></a><span class="co">#as described above.</span></span>
+<span id="cb5-5"><a href="creating-an-archrproject.html#cb5-5"></a>projHeme &lt;-<span class="st"> </span><span class="kw">ArchRProject</span>(</span>
+<span id="cb5-6"><a href="creating-an-archrproject.html#cb5-6"></a>  <span class="dt">ArrowFiles =</span> ArrowFiles, </span>
+<span id="cb5-7"><a href="creating-an-archrproject.html#cb5-7"></a>  <span class="dt">outputDirectory =</span> <span class="st">&quot;HemeTutorial&quot;</span>,</span>
+<span id="cb5-8"><a href="creating-an-archrproject.html#cb5-8"></a>  <span class="dt">copyArrows =</span> <span class="ot">TRUE</span> <span class="co">#This is recommened so that if you modify the ArrowFiles you have an original copy for later usage.</span></span>
+<span id="cb5-9"><a href="creating-an-archrproject.html#cb5-9"></a>)</span></code></pre></div>
+<p>Lets look at our ArchRProject</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="creating-an-archrproject.html#cb6-1"></a>projHeme</span>
+<span id="cb6-2"><a href="creating-an-archrproject.html#cb6-2"></a><span class="co"># class: ArchRProject </span></span>
+<span id="cb6-3"><a href="creating-an-archrproject.html#cb6-3"></a><span class="co"># outputDirectory: /Volumes/JG_SSD_2/ArchR_Walkthrough/HemeTutorial </span></span>
+<span id="cb6-4"><a href="creating-an-archrproject.html#cb6-4"></a><span class="co"># samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1</span></span>
+<span id="cb6-5"><a href="creating-an-archrproject.html#cb6-5"></a><span class="co"># sampleColData names(1): ArrowFiles</span></span>
+<span id="cb6-6"><a href="creating-an-archrproject.html#cb6-6"></a><span class="co"># cellColData names(11): DoubletEnrichment DoubletScore ... Sample</span></span>
+<span id="cb6-7"><a href="creating-an-archrproject.html#cb6-7"></a><span class="co">#   TSSEnrichment</span></span>
+<span id="cb6-8"><a href="creating-an-archrproject.html#cb6-8"></a><span class="co"># numberOfCells(1): 10661</span></span>
+<span id="cb6-9"><a href="creating-an-archrproject.html#cb6-9"></a><span class="co"># medianTSS(1): 16.832</span></span>
+<span id="cb6-10"><a href="creating-an-archrproject.html#cb6-10"></a><span class="co"># medianFrags(1): 3050</span></span></code></pre></div>
 <p>We can see from above the specified outputDirectory, sampleNames, sampleColData (column data associated with each sample), cellColData (column data associated with each cell), the number of cells, median TSS enrichment and median number of fragments. Additionally since we already computed doublet enrichment scores
-we can see in cellColData a column name “DoubletEnrichment” and “DoubletScore” which are related to the above addition of <code>addDoubletScores</code>.</p>
+we can see in cellColData a column name “DoubletEnrichment” and “DoubletScore” which are related to the above addition of <code>addDoubletScores</code>. </br></p>
+<p>How big is the created ArchRProject in memory in R.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="creating-an-archrproject.html#cb7-1"></a><span class="kw">paste0</span>(<span class="st">&quot;Memory Size = &quot;</span>, <span class="kw">round</span>(<span class="kw">object.size</span>(projHeme) <span class="op">/</span><span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="dv">6</span>, <span class="dv">3</span>), <span class="st">&quot; MB&quot;</span>)</span>
+<span id="cb7-2"><a href="creating-an-archrproject.html#cb7-2"></a><span class="co">#[1] &quot;Memory Size = 37.135 MB&quot;</span></span></code></pre></div>
 </div>
             </section>
 
