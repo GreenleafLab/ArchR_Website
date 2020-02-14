@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>1.2 Getting Set Up | ArchR</title>
+  <title>6.1 Identification of Marker Genes | ArchR</title>
   <meta name="description" content="A guide to ArchR" />
   <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="1.2 Getting Set Up | ArchR" />
+  <meta property="og:title" content="6.1 Identification of Marker Genes | ArchR" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="GreenleafLab/ArchR" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="1.2 Getting Set Up | ArchR" />
+  <meta name="twitter:title" content="6.1 Identification of Marker Genes | ArchR" />
   
   <meta name="twitter:description" content="A guide to ArchR" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="what-is-an-arrowfile-archrproject.html"/>
-<link rel="next" href="setting-a-genome-and-geneannotation.html"/>
+<link rel="prev" href="marker-genes-with-scatac.html"/>
+<link rel="next" href="marker-genes.html"/>
 <script src="libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -189,33 +189,59 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="getting-set-up" class="section level2" number="1.2">
-<h2><span class="header-section-number">1.2</span> Getting Set Up</h2>
-<p>The first thing we do is set up our working directory, load our gene and genome annotations, and set the number of threads we would like to use. Depending on the configuration of your local environment, you may need to modify the number of <code>threads</code> used below in <code>addArchRThreads()</code>. By default ArchR uses half of the total number of <code>threads</code> available but you can adjust this manually as you see fit. If you are using windows, the usable <code>threads</code> will automatically be set to 1 because the parallel processing in ArchR is build for Unix-based operating systems.</p>
-<p>For the purposes of this tutorial, we provide the gene and genome annotations but you can create your own using the <code>createGeneAnnotation()</code> and <code>createGenomeAnnotation()</code> functions. See the <a href="articles/Articles/annotations.html">Gene and Genome Annotations vignette</a> for more information.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="getting-set-up.html#cb1-1"></a><span class="co">#Load R Libraries</span></span>
-<span id="cb1-2"><a href="getting-set-up.html#cb1-2"></a><span class="kw">library</span>(ArchR)</span>
-<span id="cb1-3"><a href="getting-set-up.html#cb1-3"></a></span>
-<span id="cb1-4"><a href="getting-set-up.html#cb1-4"></a><span class="co">#Create a new folder and set this as the working directory for tutorial analyses</span></span>
-<span id="cb1-5"><a href="getting-set-up.html#cb1-5"></a>wd &lt;-<span class="st"> &quot;ArchR_Walkthrough&quot;</span></span>
-<span id="cb1-6"><a href="getting-set-up.html#cb1-6"></a><span class="kw">dir.create</span>(wd, <span class="dt">showWarnings =</span> <span class="ot">FALSE</span>, <span class="dt">recursive =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1-7"><a href="getting-set-up.html#cb1-7"></a><span class="kw">setwd</span>(wd)</span>
-<span id="cb1-8"><a href="getting-set-up.html#cb1-8"></a></span>
-<span id="cb1-9"><a href="getting-set-up.html#cb1-9"></a><span class="co">#Set Genome Annotations to be used</span></span>
-<span id="cb1-10"><a href="getting-set-up.html#cb1-10"></a><span class="co">#Since our tutorial data sets are using scATAC-seq data from hg19 we will set that as the default genome.</span></span>
-<span id="cb1-11"><a href="getting-set-up.html#cb1-11"></a><span class="kw">addArchRGenome</span>(<span class="st">&quot;hg19&quot;</span>)</span>
-<span id="cb1-12"><a href="getting-set-up.html#cb1-12"></a></span>
-<span id="cb1-13"><a href="getting-set-up.html#cb1-13"></a><span class="co">#Set Default Threads for ArchR Functions</span></span>
-<span id="cb1-14"><a href="getting-set-up.html#cb1-14"></a><span class="co">#The recommendation is to set it around 1/2 to 3/4 of the total available cores.</span></span>
-<span id="cb1-15"><a href="getting-set-up.html#cb1-15"></a><span class="kw">addArchRThreads</span>(<span class="dt">threads =</span> <span class="dv">6</span>) </span></code></pre></div>
+<div id="identification-of-marker-genes" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> Identification of Marker Genes</h2>
+<p>Identify Marker Gene through Pairwise Test vs Bias-Matched Background</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="identification-of-marker-genes.html#cb53-1"></a>markersGS &lt;-<span class="st"> </span><span class="kw">markerFeatures</span>(</span>
+<span id="cb53-2"><a href="identification-of-marker-genes.html#cb53-2"></a>    <span class="dt">ArchRProj =</span> projHemeND, </span>
+<span id="cb53-3"><a href="identification-of-marker-genes.html#cb53-3"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>, </span>
+<span id="cb53-4"><a href="identification-of-marker-genes.html#cb53-4"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Clusters&quot;</span>,</span>
+<span id="cb53-5"><a href="identification-of-marker-genes.html#cb53-5"></a>    <span class="dt">bias =</span> <span class="kw">c</span>(<span class="st">&quot;TSSEnrichment&quot;</span>, <span class="st">&quot;log10(nFrags)&quot;</span>),</span>
+<span id="cb53-6"><a href="identification-of-marker-genes.html#cb53-6"></a>    <span class="dt">testMethod =</span> <span class="st">&quot;wilcoxon&quot;</span></span>
+<span id="cb53-7"><a href="identification-of-marker-genes.html#cb53-7"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="identification-of-marker-genes.html#cb54-1"></a>markerList &lt;-<span class="st"> </span><span class="kw">getMarkers</span>(markersGS, <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.01 &amp; Log2FC &gt;= 1.25&quot;</span>)</span>
+<span id="cb54-2"><a href="identification-of-marker-genes.html#cb54-2"></a>markerList<span class="op">$</span>Cluster4</span>
+<span id="cb54-3"><a href="identification-of-marker-genes.html#cb54-3"></a><span class="co"># DataFrame with 210 rows and 6 columns</span></span>
+<span id="cb54-4"><a href="identification-of-marker-genes.html#cb54-4"></a><span class="co">#       seqnames     start           name     idx           Log2FC</span></span>
+<span id="cb54-5"><a href="identification-of-marker-genes.html#cb54-5"></a><span class="co">#          &lt;Rle&gt;   &lt;array&gt;        &lt;array&gt; &lt;array&gt;        &lt;numeric&gt;</span></span>
+<span id="cb54-6"><a href="identification-of-marker-genes.html#cb54-6"></a><span class="co"># 14759    chr22  37545962          IL2RB     301 2.09731361787433</span></span>
+<span id="cb54-7"><a href="identification-of-marker-genes.html#cb54-7"></a><span class="co"># 6856     chr14  99737822         BCL11B     595 1.42193213075962</span></span>
+<span id="cb54-8"><a href="identification-of-marker-genes.html#cb54-8"></a><span class="co"># 13123     chr2 192038902          STAT4    1064 1.90075014141832</span></span>
+<span id="cb54-9"><a href="identification-of-marker-genes.html#cb54-9"></a><span class="co"># 12597     chr2  87035519           CD8A     538 1.96747880033344</span></span>
+<span id="cb54-10"><a href="identification-of-marker-genes.html#cb54-10"></a><span class="co"># 9299     chr17  34207377           CCL5     540 2.65385587389937</span></span>
+<span id="cb54-11"><a href="identification-of-marker-genes.html#cb54-11"></a><span class="co"># ...        ...       ...            ...     ...              ...</span></span>
+<span id="cb54-12"><a href="identification-of-marker-genes.html#cb54-12"></a><span class="co"># 1488      chr1 156182779           PMF1    1488 1.35708770978464</span></span>
+<span id="cb54-13"><a href="identification-of-marker-genes.html#cb54-13"></a><span class="co"># 22735     chrX 101854276 ARMCX5-GPRASP2     518 1.59283344451927</span></span>
+<span id="cb54-14"><a href="identification-of-marker-genes.html#cb54-14"></a><span class="co"># 19680     chr7  45144641        SNORA5C     318 1.27027443652085</span></span>
+<span id="cb54-15"><a href="identification-of-marker-genes.html#cb54-15"></a><span class="co"># 1856      chr1 196659182          CFHR4    1856 1.92661384224492</span></span>
+<span id="cb54-16"><a href="identification-of-marker-genes.html#cb54-16"></a><span class="co"># 17830     chr5 140739703        PCDHGB2     690 2.93899133419389</span></span></code></pre></div>
+<p>We can then plot this as a heatmap</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="identification-of-marker-genes.html#cb55-1"></a>markerGenes  &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb55-2"><a href="identification-of-marker-genes.html#cb55-2"></a>    <span class="st">&quot;CD34&quot;</span>, <span class="co">#Early Progenitor</span></span>
+<span id="cb55-3"><a href="identification-of-marker-genes.html#cb55-3"></a>    <span class="st">&quot;GATA1&quot;</span>, <span class="co">#Erythroid</span></span>
+<span id="cb55-4"><a href="identification-of-marker-genes.html#cb55-4"></a>    <span class="st">&quot;PAX5&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="co">#B-Cell Trajectory</span></span>
+<span id="cb55-5"><a href="identification-of-marker-genes.html#cb55-5"></a>    <span class="st">&quot;CD14&quot;</span>, <span class="co">#Monocytes</span></span>
+<span id="cb55-6"><a href="identification-of-marker-genes.html#cb55-6"></a>    <span class="st">&quot;CD3D&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;IL7R&quot;</span> <span class="co">#TCells</span></span>
+<span id="cb55-7"><a href="identification-of-marker-genes.html#cb55-7"></a>  )</span>
+<span id="cb55-8"><a href="identification-of-marker-genes.html#cb55-8"></a></span>
+<span id="cb55-9"><a href="identification-of-marker-genes.html#cb55-9"></a>heatmapGS &lt;-<span class="st"> </span><span class="kw">markerHeatmap</span>(</span>
+<span id="cb55-10"><a href="identification-of-marker-genes.html#cb55-10"></a>  <span class="dt">seMarker =</span> markersGS, </span>
+<span id="cb55-11"><a href="identification-of-marker-genes.html#cb55-11"></a>  <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.01 &amp; Log2FC &gt;= 1.25&quot;</span>, </span>
+<span id="cb55-12"><a href="identification-of-marker-genes.html#cb55-12"></a>  <span class="dt">labelMarkers =</span> markerGenes,</span>
+<span id="cb55-13"><a href="identification-of-marker-genes.html#cb55-13"></a>  <span class="dt">transpose =</span> <span class="ot">TRUE</span></span>
+<span id="cb55-14"><a href="identification-of-marker-genes.html#cb55-14"></a>)</span>
+<span id="cb55-15"><a href="identification-of-marker-genes.html#cb55-15"></a></span>
+<span id="cb55-16"><a href="identification-of-marker-genes.html#cb55-16"></a><span class="kw">draw</span>(heatmapGS, <span class="dt">heatmap_legend_side =</span> <span class="st">&quot;bot&quot;</span>, <span class="dt">annotation_legend_side =</span> <span class="st">&quot;bot&quot;</span>)</span></code></pre></div>
+<p>We can then plot this</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="identification-of-marker-genes.html#cb56-1"></a><span class="kw">plotPDF</span>(heatmapGS, <span class="dt">name =</span> <span class="st">&quot;GeneScores-Marker-Heatmap&quot;</span>, <span class="dt">width =</span> <span class="dv">9</span>, <span class="dt">height =</span> <span class="dv">7</span>, <span class="dt">ArchRProj =</span> projHemeND, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="what-is-an-arrowfile-archrproject.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="setting-a-genome-and-geneannotation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="marker-genes-with-scatac.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="marker-genes.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -246,15 +272,15 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/edit/dev/01_GettingStarted.Rmd",
+"link": "https://github.com/GreenleafLab/ArchR_Website/edit/dev/06_MarkerGenes.Rmd",
 "text": "Edit this chapter"
 },
 "history": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/commits/dev/01_GettingStarted.Rmd",
+"link": "https://github.com/GreenleafLab/ArchR_Website/commits/dev/06_MarkerGenes.Rmd",
 "text": "Chapter edit history"
 },
 "view": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/view/dev/01_GettingStarted.Rmd",
+"link": "https://github.com/GreenleafLab/ArchR_Website/view/dev/06_MarkerGenes.Rmd",
 "text": "View source on GitHub"
 },
 "download": ["ArchR.pdf"],

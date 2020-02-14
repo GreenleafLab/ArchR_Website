@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>1.2 Getting Set Up | ArchR</title>
+  <title>3.2 Batch Effect Correction wtih Harmony | ArchR</title>
   <meta name="description" content="A guide to ArchR" />
   <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="1.2 Getting Set Up | ArchR" />
+  <meta property="og:title" content="3.2 Batch Effect Correction wtih Harmony | ArchR" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="GreenleafLab/ArchR" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="1.2 Getting Set Up | ArchR" />
+  <meta name="twitter:title" content="3.2 Batch Effect Correction wtih Harmony | ArchR" />
   
   <meta name="twitter:description" content="A guide to ArchR" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="what-is-an-arrowfile-archrproject.html"/>
-<link rel="next" href="setting-a-genome-and-geneannotation.html"/>
+<link rel="prev" href="iterative-latent-semantic-indexing-lsi.html"/>
+<link rel="next" href="clustering-with-archr.html"/>
 <script src="libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -189,33 +189,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="getting-set-up" class="section level2" number="1.2">
-<h2><span class="header-section-number">1.2</span> Getting Set Up</h2>
-<p>The first thing we do is set up our working directory, load our gene and genome annotations, and set the number of threads we would like to use. Depending on the configuration of your local environment, you may need to modify the number of <code>threads</code> used below in <code>addArchRThreads()</code>. By default ArchR uses half of the total number of <code>threads</code> available but you can adjust this manually as you see fit. If you are using windows, the usable <code>threads</code> will automatically be set to 1 because the parallel processing in ArchR is build for Unix-based operating systems.</p>
-<p>For the purposes of this tutorial, we provide the gene and genome annotations but you can create your own using the <code>createGeneAnnotation()</code> and <code>createGenomeAnnotation()</code> functions. See the <a href="articles/Articles/annotations.html">Gene and Genome Annotations vignette</a> for more information.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="getting-set-up.html#cb1-1"></a><span class="co">#Load R Libraries</span></span>
-<span id="cb1-2"><a href="getting-set-up.html#cb1-2"></a><span class="kw">library</span>(ArchR)</span>
-<span id="cb1-3"><a href="getting-set-up.html#cb1-3"></a></span>
-<span id="cb1-4"><a href="getting-set-up.html#cb1-4"></a><span class="co">#Create a new folder and set this as the working directory for tutorial analyses</span></span>
-<span id="cb1-5"><a href="getting-set-up.html#cb1-5"></a>wd &lt;-<span class="st"> &quot;ArchR_Walkthrough&quot;</span></span>
-<span id="cb1-6"><a href="getting-set-up.html#cb1-6"></a><span class="kw">dir.create</span>(wd, <span class="dt">showWarnings =</span> <span class="ot">FALSE</span>, <span class="dt">recursive =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1-7"><a href="getting-set-up.html#cb1-7"></a><span class="kw">setwd</span>(wd)</span>
-<span id="cb1-8"><a href="getting-set-up.html#cb1-8"></a></span>
-<span id="cb1-9"><a href="getting-set-up.html#cb1-9"></a><span class="co">#Set Genome Annotations to be used</span></span>
-<span id="cb1-10"><a href="getting-set-up.html#cb1-10"></a><span class="co">#Since our tutorial data sets are using scATAC-seq data from hg19 we will set that as the default genome.</span></span>
-<span id="cb1-11"><a href="getting-set-up.html#cb1-11"></a><span class="kw">addArchRGenome</span>(<span class="st">&quot;hg19&quot;</span>)</span>
-<span id="cb1-12"><a href="getting-set-up.html#cb1-12"></a></span>
-<span id="cb1-13"><a href="getting-set-up.html#cb1-13"></a><span class="co">#Set Default Threads for ArchR Functions</span></span>
-<span id="cb1-14"><a href="getting-set-up.html#cb1-14"></a><span class="co">#The recommendation is to set it around 1/2 to 3/4 of the total available cores.</span></span>
-<span id="cb1-15"><a href="getting-set-up.html#cb1-15"></a><span class="kw">addArchRThreads</span>(<span class="dt">threads =</span> <span class="dv">6</span>) </span></code></pre></div>
+<div id="batch-effect-correction-wtih-harmony" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Batch Effect Correction wtih Harmony</h2>
+<p>Sometimes the iterative LSI approach isnt enough of a correction for strong batch effect differences. For this reason we added a commonly used batch effect correction tool Harmony for scRNA (<a href="https://github.com/immunogenomics/harmony" class="uri">https://github.com/immunogenomics/harmony</a>). We wrote a wrapper that will pass a dimensionality reduction object from ArchR directly to <code>HarmonyMatrix</code>. Additional arguments can be directly passed to <code>HarmonyMatrix</code> in the function. See ?addHarmony for more details.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="batch-effect-correction-wtih-harmony.html#cb36-1"></a>projHemeND &lt;-<span class="st"> </span><span class="kw">addHarmony</span>(</span>
+<span id="cb36-2"><a href="batch-effect-correction-wtih-harmony.html#cb36-2"></a>    <span class="dt">ArchRProj =</span> projHemeND,</span>
+<span id="cb36-3"><a href="batch-effect-correction-wtih-harmony.html#cb36-3"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
+<span id="cb36-4"><a href="batch-effect-correction-wtih-harmony.html#cb36-4"></a>    <span class="dt">name =</span> <span class="st">&quot;Harmony&quot;</span>,</span>
+<span id="cb36-5"><a href="batch-effect-correction-wtih-harmony.html#cb36-5"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Sample&quot;</span></span>
+<span id="cb36-6"><a href="batch-effect-correction-wtih-harmony.html#cb36-6"></a>)</span></code></pre></div>
+
 </div>
+<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="what-is-an-arrowfile-archrproject.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="setting-a-genome-and-geneannotation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="iterative-latent-semantic-indexing-lsi.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="clustering-with-archr.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -246,15 +238,15 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/edit/dev/01_GettingStarted.Rmd",
+"link": "https://github.com/GreenleafLab/ArchR_Website/edit/dev/03_ReducedDims.Rmd",
 "text": "Edit this chapter"
 },
 "history": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/commits/dev/01_GettingStarted.Rmd",
+"link": "https://github.com/GreenleafLab/ArchR_Website/commits/dev/03_ReducedDims.Rmd",
 "text": "Chapter edit history"
 },
 "view": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/view/dev/01_GettingStarted.Rmd",
+"link": "https://github.com/GreenleafLab/ArchR_Website/view/dev/03_ReducedDims.Rmd",
 "text": "View source on GitHub"
 },
 "download": ["ArchR.pdf"],
