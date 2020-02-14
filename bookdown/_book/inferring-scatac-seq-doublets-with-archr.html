@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>ArchR</title>
+  <title>1.4 Inferring scATAC-seq Doublets with ArchR | ArchR</title>
   <meta name="description" content="A guide to ArchR" />
   <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="ArchR" />
+  <meta property="og:title" content="1.4 Inferring scATAC-seq Doublets with ArchR | ArchR" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="GreenleafLab/ArchR" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="ArchR" />
+  <meta name="twitter:title" content="1.4 Inferring scATAC-seq Doublets with ArchR | ArchR" />
   
   <meta name="twitter:description" content="A guide to ArchR" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="getting-started-with-archr.html"/>
+<link rel="prev" href="creating-arrow-files.html"/>
+<link rel="next" href="creating-an-archrproject.html"/>
 <script src="libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -169,23 +169,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">ArchR</h1>
-<p class="author"><em>Jeffrey Granja and Ryan Corces</em></p>
-<p class="date"><em>2020-02-13</em></p>
-</div>
-<div id="preface" class="section level1 unnumbered" number="">
-<h1>Preface</h1>
-<p>This is the ArchR documentation.</p>
-
+<div id="inferring-scatac-seq-doublets-with-archr" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> Inferring scATAC-seq Doublets with ArchR</h2>
+<p>One major source of trouble in single-cell data is the contribution of “doublets” to the analysis. A doublet refers to a single droplet that received a single barcoded bead and more than one nucleus. This causes the reads from more than one cell to appear as a single cell. We remove these computationally and describe this doublet removal process in more depth in the <a href="articles/Articles/doubletRemoval.html">doublet removal vignette</a>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="inferring-scatac-seq-doublets-with-archr.html#cb3-1"></a><span class="co">#Add Infered Doublet Scores to each Arrow File (~2-5 min per sample)</span></span>
+<span id="cb3-2"><a href="inferring-scatac-seq-doublets-with-archr.html#cb3-2"></a><span class="co">#By default ArchR uses the doublet params as described in the ArchR paper.</span></span>
+<span id="cb3-3"><a href="inferring-scatac-seq-doublets-with-archr.html#cb3-3"></a><span class="co">#We show some of the main adjustable features below for more information </span></span>
+<span id="cb3-4"><a href="inferring-scatac-seq-doublets-with-archr.html#cb3-4"></a><span class="co">#Try ?addDoubletScores to see further documentation on parameters for doublet identification.</span></span>
+<span id="cb3-5"><a href="inferring-scatac-seq-doublets-with-archr.html#cb3-5"></a>doubScores &lt;-<span class="st"> </span><span class="kw">addDoubletScores</span>(</span>
+<span id="cb3-6"><a href="inferring-scatac-seq-doublets-with-archr.html#cb3-6"></a>    <span class="dt">input =</span> ArrowFiles,</span>
+<span id="cb3-7"><a href="inferring-scatac-seq-doublets-with-archr.html#cb3-7"></a>    <span class="dt">k =</span> <span class="dv">10</span>, <span class="co">#Refers to how many cells near a &quot;pseudo-doublet&quot; to count.</span></span>
+<span id="cb3-8"><a href="inferring-scatac-seq-doublets-with-archr.html#cb3-8"></a>    <span class="dt">knnMethod =</span> <span class="st">&quot;UMAP&quot;</span>, <span class="co">#Refers to embedding to use for nearest neighbor search with doublet projection.</span></span>
+<span id="cb3-9"><a href="inferring-scatac-seq-doublets-with-archr.html#cb3-9"></a>    <span class="dt">LSIMethod =</span> <span class="dv">1</span></span>
+<span id="cb3-10"><a href="inferring-scatac-seq-doublets-with-archr.html#cb3-10"></a>)</span></code></pre></div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="getting-started-with-archr.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="creating-arrow-files.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="creating-an-archrproject.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -216,15 +220,15 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/edit/dev/index.Rmd",
+"link": "https://github.com/GreenleafLab/ArchR_Website/edit/dev/01_GettingStarted.Rmd",
 "text": "Edit this chapter"
 },
 "history": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/commits/dev/index.Rmd",
+"link": "https://github.com/GreenleafLab/ArchR_Website/commits/dev/01_GettingStarted.Rmd",
 "text": "Chapter edit history"
 },
 "view": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/view/dev/index.Rmd",
+"link": "https://github.com/GreenleafLab/ArchR_Website/view/dev/01_GettingStarted.Rmd",
 "text": "View source on GitHub"
 },
 "download": ["ArchR.pdf"],

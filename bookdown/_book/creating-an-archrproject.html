@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>ArchR</title>
+  <title>1.5 Creating An ArchRProject | ArchR</title>
   <meta name="description" content="A guide to ArchR" />
   <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="ArchR" />
+  <meta property="og:title" content="1.5 Creating An ArchRProject | ArchR" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="GreenleafLab/ArchR" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="ArchR" />
+  <meta name="twitter:title" content="1.5 Creating An ArchRProject | ArchR" />
   
   <meta name="twitter:description" content="A guide to ArchR" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="getting-started-with-archr.html"/>
+<link rel="prev" href="inferring-scatac-seq-doublets-with-archr.html"/>
+<link rel="next" href="manipulating-an-archrproject.html"/>
 <script src="libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -169,23 +169,40 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">ArchR</h1>
-<p class="author"><em>Jeffrey Granja and Ryan Corces</em></p>
-<p class="date"><em>2020-02-13</em></p>
-</div>
-<div id="preface" class="section level1 unnumbered" number="">
-<h1>Preface</h1>
-<p>This is the ArchR documentation.</p>
-
+<div id="creating-an-archrproject" class="section level2" number="1.5">
+<h2><span class="header-section-number">1.5</span> Creating An ArchRProject</h2>
+<p>One major source of trouble in single-cell data is the contribution of “doublets” to the analysis. A doublet refers to a single droplet that received a single barcoded bead and more than one nucleus. This causes the reads from more than one cell to appear as a single cell. We remove these computationally and describe this doublet removal process in more depth in the <a href="articles/Articles/doubletRemoval.html">doublet removal vignette</a>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="creating-an-archrproject.html#cb4-1"></a><span class="co">#Create ArchRProject</span></span>
+<span id="cb4-2"><a href="creating-an-archrproject.html#cb4-2"></a><span class="co">#The outputDirectory here describes where all downstream analyses and plots go.</span></span>
+<span id="cb4-3"><a href="creating-an-archrproject.html#cb4-3"></a><span class="co">#ArchR will add geneAnnotation and genomeAnnotations related to addArchRGenome(&quot;hg19&quot;)</span></span>
+<span id="cb4-4"><a href="creating-an-archrproject.html#cb4-4"></a><span class="co">#as described above.</span></span>
+<span id="cb4-5"><a href="creating-an-archrproject.html#cb4-5"></a>projHeme &lt;-<span class="st"> </span><span class="kw">ArchRProject</span>(</span>
+<span id="cb4-6"><a href="creating-an-archrproject.html#cb4-6"></a>  <span class="dt">ArrowFiles =</span> ArrowFiles, </span>
+<span id="cb4-7"><a href="creating-an-archrproject.html#cb4-7"></a>  <span class="dt">outputDirectory =</span> <span class="st">&quot;HemeTutorial&quot;</span>,</span>
+<span id="cb4-8"><a href="creating-an-archrproject.html#cb4-8"></a>  <span class="dt">copyArrows =</span> <span class="ot">TRUE</span> <span class="co">#This is recommened so that if you modify the ArrowFiles you have an original copy for later usage.</span></span>
+<span id="cb4-9"><a href="creating-an-archrproject.html#cb4-9"></a>)</span>
+<span id="cb4-10"><a href="creating-an-archrproject.html#cb4-10"></a></span>
+<span id="cb4-11"><a href="creating-an-archrproject.html#cb4-11"></a><span class="co">#Lets look at our ArchRProject</span></span>
+<span id="cb4-12"><a href="creating-an-archrproject.html#cb4-12"></a>projHeme</span>
+<span id="cb4-13"><a href="creating-an-archrproject.html#cb4-13"></a><span class="co"># class: ArchRProject </span></span>
+<span id="cb4-14"><a href="creating-an-archrproject.html#cb4-14"></a><span class="co"># outputDirectory: /Volumes/JG_SSD_2/ArchR_Walkthrough/HemeTutorial </span></span>
+<span id="cb4-15"><a href="creating-an-archrproject.html#cb4-15"></a><span class="co"># samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1</span></span>
+<span id="cb4-16"><a href="creating-an-archrproject.html#cb4-16"></a><span class="co"># sampleColData names(1): ArrowFiles</span></span>
+<span id="cb4-17"><a href="creating-an-archrproject.html#cb4-17"></a><span class="co"># cellColData names(11): DoubletEnrichment DoubletScore ... Sample</span></span>
+<span id="cb4-18"><a href="creating-an-archrproject.html#cb4-18"></a><span class="co">#   TSSEnrichment</span></span>
+<span id="cb4-19"><a href="creating-an-archrproject.html#cb4-19"></a><span class="co"># numberOfCells(1): 10661</span></span>
+<span id="cb4-20"><a href="creating-an-archrproject.html#cb4-20"></a><span class="co"># medianTSS(1): 16.832</span></span>
+<span id="cb4-21"><a href="creating-an-archrproject.html#cb4-21"></a><span class="co"># medianFrags(1): 3050</span></span></code></pre></div>
+<p>We can see from above the specified outputDirectory, sampleNames, sampleColData (column data associated with each sample), cellColData (column data associated with each cell), the number of cells, median TSS enrichment and median number of fragments. Additionally since we already computed doublet enrichment scores
+we can see in cellColData a column name “DoubletEnrichment” and “DoubletScore” which are related to the above addition of <code>addDoubletScores</code>.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="getting-started-with-archr.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="inferring-scatac-seq-doublets-with-archr.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="manipulating-an-archrproject.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -216,15 +233,15 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/edit/dev/index.Rmd",
+"link": "https://github.com/GreenleafLab/ArchR_Website/edit/dev/01_GettingStarted.Rmd",
 "text": "Edit this chapter"
 },
 "history": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/commits/dev/index.Rmd",
+"link": "https://github.com/GreenleafLab/ArchR_Website/commits/dev/01_GettingStarted.Rmd",
 "text": "Chapter edit history"
 },
 "view": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/view/dev/index.Rmd",
+"link": "https://github.com/GreenleafLab/ArchR_Website/view/dev/01_GettingStarted.Rmd",
 "text": "View source on GitHub"
 },
 "download": ["ArchR.pdf"],

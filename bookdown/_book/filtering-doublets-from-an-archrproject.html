@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>ArchR</title>
+  <title>1.7 Filtering Doublets from an ArchRProject | ArchR</title>
   <meta name="description" content="A guide to ArchR" />
   <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="ArchR" />
+  <meta property="og:title" content="1.7 Filtering Doublets from an ArchRProject | ArchR" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="GreenleafLab/ArchR" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="ArchR" />
+  <meta name="twitter:title" content="1.7 Filtering Doublets from an ArchRProject | ArchR" />
   
   <meta name="twitter:description" content="A guide to ArchR" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="getting-started-with-archr.html"/>
+<link rel="prev" href="manipulating-an-archrproject.html"/>
+<link rel="next" href="creating-arrow-files-1.html"/>
 <script src="libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -169,23 +169,44 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">ArchR</h1>
-<p class="author"><em>Jeffrey Granja and Ryan Corces</em></p>
-<p class="date"><em>2020-02-13</em></p>
-</div>
-<div id="preface" class="section level1 unnumbered" number="">
-<h1>Preface</h1>
-<p>This is the ArchR documentation.</p>
+<div id="filtering-doublets-from-an-archrproject" class="section level2" number="1.7">
+<h2><span class="header-section-number">1.7</span> Filtering Doublets from an ArchRProject</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="filtering-doublets-from-an-archrproject.html#cb7-1"></a><span class="co">#Remove doublets as normal</span></span>
+<span id="cb7-2"><a href="filtering-doublets-from-an-archrproject.html#cb7-2"></a><span class="co">#If you feel there are more doublets try increasing filterRatio like below</span></span>
+<span id="cb7-3"><a href="filtering-doublets-from-an-archrproject.html#cb7-3"></a>projHemeND &lt;-<span class="st"> </span><span class="kw">filterDoublets</span>(projHeme)</span>
+<span id="cb7-4"><a href="filtering-doublets-from-an-archrproject.html#cb7-4"></a><span class="co"># Filtering 410 cells from ArchRProject!</span></span>
+<span id="cb7-5"><a href="filtering-doublets-from-an-archrproject.html#cb7-5"></a><span class="co">#   scATAC_BMMC_R1 : 243 of 4932 (4.9%)</span></span>
+<span id="cb7-6"><a href="filtering-doublets-from-an-archrproject.html#cb7-6"></a><span class="co">#   scATAC_CD34_BMMC_R1 : 107 of 3275 (3.3%)</span></span>
+<span id="cb7-7"><a href="filtering-doublets-from-an-archrproject.html#cb7-7"></a><span class="co">#   scATAC_PBMC_R1 : 60 of 2454 (2.4%)</span></span>
+<span id="cb7-8"><a href="filtering-doublets-from-an-archrproject.html#cb7-8"></a></span>
+<span id="cb7-9"><a href="filtering-doublets-from-an-archrproject.html#cb7-9"></a><span class="co">#Lets see the project now</span></span>
+<span id="cb7-10"><a href="filtering-doublets-from-an-archrproject.html#cb7-10"></a>projHemeND</span>
+<span id="cb7-11"><a href="filtering-doublets-from-an-archrproject.html#cb7-11"></a><span class="co"># class: ArchRProject </span></span>
+<span id="cb7-12"><a href="filtering-doublets-from-an-archrproject.html#cb7-12"></a><span class="co"># outputDirectory: /Volumes/JG_SSD_2/ArchR_Walkthrough/HemeTutorial </span></span>
+<span id="cb7-13"><a href="filtering-doublets-from-an-archrproject.html#cb7-13"></a><span class="co"># samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1</span></span>
+<span id="cb7-14"><a href="filtering-doublets-from-an-archrproject.html#cb7-14"></a><span class="co"># sampleColData names(1): ArrowFiles</span></span>
+<span id="cb7-15"><a href="filtering-doublets-from-an-archrproject.html#cb7-15"></a><span class="co"># cellColData names(11): DoubletEnrichment DoubletScore ... Sample</span></span>
+<span id="cb7-16"><a href="filtering-doublets-from-an-archrproject.html#cb7-16"></a><span class="co">#   TSSEnrichment</span></span>
+<span id="cb7-17"><a href="filtering-doublets-from-an-archrproject.html#cb7-17"></a><span class="co"># numberOfCells(1): 10251</span></span>
+<span id="cb7-18"><a href="filtering-doublets-from-an-archrproject.html#cb7-18"></a><span class="co"># medianTSS(1): 16.851</span></span>
+<span id="cb7-19"><a href="filtering-doublets-from-an-archrproject.html#cb7-19"></a><span class="co"># medianFrags(1): 2994</span></span>
+<span id="cb7-20"><a href="filtering-doublets-from-an-archrproject.html#cb7-20"></a></span>
+<span id="cb7-21"><a href="filtering-doublets-from-an-archrproject.html#cb7-21"></a><span class="co">#If you want to filter more cells from the ArchR Project try a higher filterRatio</span></span>
+<span id="cb7-22"><a href="filtering-doublets-from-an-archrproject.html#cb7-22"></a>projHemeND2 &lt;-<span class="st"> </span><span class="kw">filterDoublets</span>(projHeme, <span class="dt">filterRatio =</span> <span class="fl">1.5</span>)</span>
+<span id="cb7-23"><a href="filtering-doublets-from-an-archrproject.html#cb7-23"></a><span class="co"># Filtering 614 cells from ArchRProject!</span></span>
+<span id="cb7-24"><a href="filtering-doublets-from-an-archrproject.html#cb7-24"></a><span class="co">#   scATAC_BMMC_R1 : 364 of 4932 (7.4%)</span></span>
+<span id="cb7-25"><a href="filtering-doublets-from-an-archrproject.html#cb7-25"></a><span class="co">#   scATAC_CD34_BMMC_R1 : 160 of 3275 (4.9%)</span></span>
+<span id="cb7-26"><a href="filtering-doublets-from-an-archrproject.html#cb7-26"></a><span class="co">#   scATAC_PBMC_R1 : 90 of 2454 (3.7%)</span></span></code></pre></div>
 
 </div>
+<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="getting-started-with-archr.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="manipulating-an-archrproject.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="creating-arrow-files-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -216,15 +237,15 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/edit/dev/index.Rmd",
+"link": "https://github.com/GreenleafLab/ArchR_Website/edit/dev/01_GettingStarted.Rmd",
 "text": "Edit this chapter"
 },
 "history": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/commits/dev/index.Rmd",
+"link": "https://github.com/GreenleafLab/ArchR_Website/commits/dev/01_GettingStarted.Rmd",
 "text": "Chapter edit history"
 },
 "view": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/view/dev/index.Rmd",
+"link": "https://github.com/GreenleafLab/ArchR_Website/view/dev/01_GettingStarted.Rmd",
 "text": "View source on GitHub"
 },
 "download": ["ArchR.pdf"],
