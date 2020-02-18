@@ -117,7 +117,7 @@ or you will need the following information : </br>
 
 1. A `GRanges` object containing gene coordinates (start to end). Must have a symbols column matching the symbols column of `exons`.
 2. A `GRanges` object containing gene exon coordinates. Must have a symbols column matching the symbols column of `genes`.
-3. A `GRanges` object containing standed transcription start site coordinates for computing TSS enrichment scores downstream.
+3. A `GRanges` object containing standed transcription start site (`TSS`) coordinates for computing TSS enrichment scores downstream.
 
 ```{r eval=FALSE}
 geneAnnotation <- createGeneAnnnotation(TSS = geneAnnotation$TSS, exons = geneAnnotation$exons, genes = geneAnnotation$genes)
@@ -131,6 +131,8 @@ geneAnnotation
 For this tutorial, we will download a collection of fragment files. Fragment files are one of the base file types of the 10x Genomics analytical platform (and other platforms) and can be easily created from any BAM file. See [the ArchR input file types vignette](articles/Articles/inputFiles.html) for information on making your own fragment files for input to ArchR. Once we have our fragment files, we provide their paths as a character vector to `createArrowFiles()`. During creation, some basic metadata and matrices are added to each `ArrowFile` including a "TileMatrix" containing insertion counts across genome-wide 500-bp bins (see `addTileMatrix()`) and a "GeneScoreMatrix" that is determined based on weighting insertion counts in tiles nearby a gene promoter (see `addGeneScoreMatrix()`). These gene activity scores are described in more depth in the [Gene Activity Score vignette](articles/Articles/geneScores.html).
 
 ```{r eval=FALSE}
+library(ArchR)
+
 #Get Tutorial Data ~0.6GB To Download (if downloaded already ArchR will bypass downloading).
 inputFiles <- getTutorialData("Hematopoiesis")
 inputFiles
@@ -151,8 +153,11 @@ For each sample, this step will: </br>
 5. Create a GeneScoreMatrix using the custom geneAnnotation related to when we set `addArchRGenome`. </br>
 
 ```{r eval=FALSE}
-#Set to hg19
+#Set Genome Annotations to be used to hg19
 addArchRGenome("hg19")
+
+#Set Default Threads for ArchR Functions
+addArchRThreads(threads = 6) 
 
 ArrowFiles <- createArrowFiles(
   inputFiles = inputFiles,
@@ -165,25 +170,62 @@ ArrowFiles <- createArrowFiles(
 ArrowFiles
 # [1] "scATAC_BMMC_R1.arrow"      "scATAC_CD34_BMMC_R1.arrow"
 # [3] "scATAC_PBMC_R1.arrow"
-
-#JJJ QualityControl/scATAC_BMMC_R2/scATAC_BMMC_R2-TSS_by_Unique_Frags.pdf
-#JJJ QualityControl/scATAC_BMMC_R2/scATAC_BMMC_R2-Fragment_Size_Distribution.pdf
-
 ```
 
-## Inferring scATAC-seq Doublets with ArchR
-One major source of trouble in single-cell data is the contribution of "doublets" to the analysis. A doublet refers to a single droplet that received a single barcoded bead and more than one nucleus. This causes the reads from more than one cell to appear as a single cell. We remove these computationally and describe this doublet removal process in more depth in the [doublet removal vignette](articles/Articles/doubletRemoval.html).
+Now we can look at the results in a folder "QualityControl" in your current working directory. There are 2 plots associated with each of your samples in this folder : </br>
+1. **TSS Enrichment by Log10 Unique Frags** - </br>
 
-```{r eval=FALSE}
-#Add Infered Doublet Scores to each Arrow File (~2-5 min per sample)
-#By default ArchR uses the doublet params as described in the ArchR paper.
-#We show some of the main adjustable features below for more information 
-#Try ?addDoubletScores to see further documentation on parameters for doublet identification.
-doubScores <- addDoubletScores(
-	input = ArrowFiles,
-	k = 10, #Refers to how many cells near a "pseudo-doublet" to count.
-	knnMethod = "UMAP", #Refers to embedding to use for nearest neighbor search with doublet projection.
-	LSIMethod = 1
-)
+For **BMMC** : </br>
 
-```
+![](images/HemeWalkthrough/PNG/scATAC_BMMC_R1-TSS_by_Unique_Frags_1.png){width=500 height=500}
+
+</br>
+
+For **CD34 BMMC** : </br>
+
+![](images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-TSS_by_Unique_Frags_1.png){width=500 height=500}
+
+</br>
+
+For **PBMC** : </br>
+
+![](images/HemeWalkthrough/PNG/scATAC_PBMC_R1-TSS_by_Unique_Frags_1.png){width=500 height=500}
+
+</br>
+
+</br>
+2. **Fragment Size Distribution** -  </br>
+
+For **BMMC** : </br>
+
+![](images/HemeWalkthrough/PNG/scATAC_BMMC_R1-Fragment_Size_Distribution_1.png){width=450 height=350}
+
+</br>
+
+For **CD34 BMMC** : </br>
+
+![](images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-Fragment_Size_Distribution_1.png){width=450 height=350}
+
+</br>
+
+For **PBMC** : </br>
+
+![](images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Fragment_Size_Distribution_1.png){width=450 height=350}
+
+
+To download the TSS by Frags PDFs for each sample </br>
+
+[Download PDF : scATAC_BMMC_R1-TSS_by_Unique_Frags.pdf](images/HemeWalkthrough/PDF/scATAC_BMMC_R1-TSS_by_Unique_Frags.pdf)</br>
+[Download PDF : scATAC_CD34_BMMC_R1-TSS_by_Unique_Frags.pdf](images/HemeWalkthrough/PDF/scATAC_CD34_BMMC_R1-TSS_by_Unique_Frags.pdf)</br>
+[Download PDF : scATAC_PBMC_R1-TSS_by_Unique_Frags.pdf](images/HemeWalkthrough/PDF/scATAC_PBMC_R1-TSS_by_Unique_Frags.pdf)</br>
+
+To download the Fragment Sizes PDFs for each sample </br>
+
+[Download PDF : scATAC_BMMC_R1-Fragment_Size_Distribution.pdf](images/HemeWalkthrough/PDF/scATAC_BMMC_R1-Fragment_Size_Distribution.pdf)</br>
+[Download PDF : scATAC_CD34_BMMC_R1-Fragment_Size_Distribution.pdf](images/HemeWalkthrough/PDF/scATAC_CD34_BMMC_R1-Fragment_Size_Distribution.pdf)</br>
+[Download PDF : scATAC_PBMC_R1-Fragment_Size_Distribution.pdf](images/HemeWalkthrough/PDF/scATAC_PBMC_R1-Fragment_Size_Distribution.pdf)</br>
+
+
+
+
+
