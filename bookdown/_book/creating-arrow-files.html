@@ -256,7 +256,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="creating-arrow-files" class="section level2" number="1.4">
 <h2><span class="header-section-number">1.4</span> Creating Arrow Files</h2>
-<p>For this tutorial, we will download a collection of fragment files. Fragment files are one of the base file types of the 10x Genomics analytical platform (and other platforms) and can be easily created from any BAM file. See <a href="articles/Articles/inputFiles.html">the ArchR input file types vignette</a> for information on making your own fragment files for input to ArchR. Once we have our fragment files, we provide their paths as a character vector to <code>createArrowFiles()</code>. During creation, some basic metadata and matrices are added to each <code>ArrowFile</code> including a “TileMatrix” containing insertion counts across genome-wide 500-bp bins (see <code>addTileMatrix()</code>) and a “GeneScoreMatrix” that is determined based on weighting insertion counts in tiles nearby a gene promoter (see <code>addGeneScoreMatrix()</code>). These gene activity scores are described in more depth in the <a href="articles/Articles/geneScores.html">Gene Activity Score vignette</a>.</p>
+<p>For this tutorial, we will use data from a gold-standard downsampled dataset of hematopoietic cells <a href="https://www.ncbi.nlm.nih.gov/pubmed/31792411">Granja* et al. Nature Biotechnology 2019</a>. This includes data from bone marrow mononuclear cells (BMMC), peripheral blood mononuclear cells (PBMC), and CD34+ hematopoietic stem and progenitor cells from bone marrow (CD34 BMMC).</p>
+<p>This data is downloaded as fragment files which contain the start and end genomic coordinates of all aligned sequenced fragments. Fragment files are one of the base file types of the 10x Genomics analytical platform (and other platforms) and can be easily created from any BAM file. See <strong>QQQ</strong> for information on making your own fragment files for input to ArchR. Once we have our fragment files, we provide their paths as a character vector to <code>createArrowFiles()</code>. During creation, some basic metadata and matrices are added to each <code>ArrowFile</code> including a “TileMatrix” containing insertion counts across genome-wide 500-bp bins (see <code>addTileMatrix()</code>) and a “GeneScoreMatrix” that is determined based on weighting insertion counts in tiles nearby a gene promoter (see <code>addGeneScoreMatrix()</code>).</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="creating-arrow-files.html#cb9-1"></a><span class="kw">library</span>(ArchR)</span>
 <span id="cb9-2"><a href="creating-arrow-files.html#cb9-2"></a></span>
 <span id="cb9-3"><a href="creating-arrow-files.html#cb9-3"></a><span class="co">#Get Tutorial Data ~0.6GB To Download (if downloaded already ArchR will bypass downloading).</span></span>
@@ -268,13 +269,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb9-9"><a href="creating-arrow-files.html#cb9-9"></a><span class="co"># &quot;HemeFragments/scATAC_CD34_BMMC_R1.fragments.tsv.gz&quot; </span></span>
 <span id="cb9-10"><a href="creating-arrow-files.html#cb9-10"></a><span class="co">#                                       scATAC_PBMC_R1 </span></span>
 <span id="cb9-11"><a href="creating-arrow-files.html#cb9-11"></a><span class="co">#      &quot;HemeFragments/scATAC_PBMC_R1.fragments.tsv.gz&quot; </span></span></code></pre></div>
-<p>Create Arrow Files (~10-15 minutes) w/ helpful messages displaying progress. </br>
-For each sample, this step will: </br>
-1. Read accessible fragments from inputFiles. </br>
-2. Calculate QC Information for each cell (TSS Enrichment, Nucleosome info). </br>
-3. Filter cells based on QC parameters. </br>
+<p>Now we will create our Arrow Files (~10-15 minutes). For each sample, this step will: </br>
+1. Read accessible fragments from the provided input files. </br>
+2. Calculate quality control information for each cell (i.e. TSS enrichment scores and nucleosome info). </br>
+3. Filter cells based on quality control parameters. </br>
 4. Create a genome-wide TileMatrix using 500-bp bins. </br>
-5. Create a GeneScoreMatrix using the custom geneAnnotation related to when we set <code>addArchRGenome</code>. </br></p>
+5. Create a GeneScoreMatrix using the custom <code>geneAnnotation</code> that was defined when we called <code>addArchRGenome()</code>. </br></p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="creating-arrow-files.html#cb10-1"></a><span class="co">#Set Genome Annotations to be used to hg19</span></span>
 <span id="cb10-2"><a href="creating-arrow-files.html#cb10-2"></a><span class="kw">addArchRGenome</span>(<span class="st">&quot;hg19&quot;</span>)</span>
 <span id="cb10-3"><a href="creating-arrow-files.html#cb10-3"></a></span>
@@ -292,8 +292,8 @@ For each sample, this step will: </br>
 <span id="cb10-15"><a href="creating-arrow-files.html#cb10-15"></a>ArrowFiles</span>
 <span id="cb10-16"><a href="creating-arrow-files.html#cb10-16"></a><span class="co"># [1] &quot;scATAC_BMMC_R1.arrow&quot;      &quot;scATAC_CD34_BMMC_R1.arrow&quot;</span></span>
 <span id="cb10-17"><a href="creating-arrow-files.html#cb10-17"></a><span class="co"># [3] &quot;scATAC_PBMC_R1.arrow&quot;</span></span></code></pre></div>
-<p>Now we can look at the results in a folder “QualityControl” in your current working directory. There are 2 plots associated with each of your samples in this folder : </br>
-1. <strong>TSS Enrichment by Log10 Unique Frags</strong> - </br></p>
+<p>This step will create a folder called “QualityControl” in your current working directory that will contain 2 plots associated with each of your samples: </br>
+1. <strong>TSS Enrichment Score by log10(Unique Fragments)</strong> - </br></p>
 <p>For <strong>BMMC</strong> : </br></p>
 <p><img src="images/HemeWalkthrough/PNG/scATAC_BMMC_R1-TSS_by_Unique_Frags_1.png" width="500" height="500" /></p>
 <p></br></p>
@@ -313,11 +313,11 @@ For each sample, this step will: </br>
 <p></br></p>
 <p>For <strong>PBMC</strong> : </br></p>
 <p><img src="images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Fragment_Size_Distribution_1.png" width="450" height="350" /></p>
-<p>To download the TSS by Frags PDFs for each sample </br></p>
+<p>To download the TSS by Frags PDFs for each sample: </br></p>
 <p><a href="images/HemeWalkthrough/PDF/scATAC_BMMC_R1-TSS_by_Unique_Frags.pdf">Download PDF : scATAC_BMMC_R1-TSS_by_Unique_Frags.pdf</a></br>
 <a href="images/HemeWalkthrough/PDF/scATAC_CD34_BMMC_R1-TSS_by_Unique_Frags.pdf">Download PDF : scATAC_CD34_BMMC_R1-TSS_by_Unique_Frags.pdf</a></br>
 <a href="images/HemeWalkthrough/PDF/scATAC_PBMC_R1-TSS_by_Unique_Frags.pdf">Download PDF : scATAC_PBMC_R1-TSS_by_Unique_Frags.pdf</a></br></p>
-<p>To download the Fragment Sizes PDFs for each sample </br></p>
+<p>To download the Fragment Sizes PDFs for each sample: </br></p>
 <p><a href="images/HemeWalkthrough/PDF/scATAC_BMMC_R1-Fragment_Size_Distribution.pdf">Download PDF : scATAC_BMMC_R1-Fragment_Size_Distribution.pdf</a></br>
 <a href="images/HemeWalkthrough/PDF/scATAC_CD34_BMMC_R1-Fragment_Size_Distribution.pdf">Download PDF : scATAC_CD34_BMMC_R1-Fragment_Size_Distribution.pdf</a></br>
 <a href="images/HemeWalkthrough/PDF/scATAC_PBMC_R1-Fragment_Size_Distribution.pdf">Download PDF : scATAC_PBMC_R1-Fragment_Size_Distribution.pdf</a></br></p>

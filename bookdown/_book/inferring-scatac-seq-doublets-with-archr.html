@@ -256,17 +256,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="inferring-scatac-seq-doublets-with-archr" class="section level2" number="2.1">
 <h2><span class="header-section-number">2.1</span> Inferring scATAC-seq Doublets with ArchR</h2>
+<p>Single-cell data generated on essentially any platform is susceptible to the presence of doublets. A doublet refers to a single droplet that received a single barcoded bead and more than one nucleus. This causes the reads from more than one cell to appear as a single cell. For 10x, the percentage of total “cells” that are actually doublets is proportional to the number of cells loaded into the reaction. Even at the lower levels of doublets that result from standard kit use, more than 5% of the data may come from doublets and this exerts substantial effects on clustering. This issue becomes particularly problematic in the context of developmental/trajectory data because doublets look like a mixture between two cell types and this can be confounded with intermediate cell types or cell states.</p>
+<p>To predict which “cells” are actually doublets, we synthesize in silico doublets from the data by mixing the reads from thousands of combinations of individual cells. We then project these synthetic doublets into the UMAP embedding and identify their nearest neighbor. By iterating this procedure thousands of times, we can identify “cells” in our data whose signal looks very similar to synthetic doublets.</p>
+<p><img src="images/doubletRemoval.png" width="450" /></p>
+<p>By default ArchR uses the doublet parameters described in the ArchR manuscript. This is likely a good place to start but we encourage all users to inspect the pre- and post-doublet removal data to understand how doublet removal is affecting the cells. We show some of the main adjustable features below to illustrate how this can be customized to a given application.</p>
+<p>In ArchR, doublet removal is performed in a single step using <code>addDoubletScores()</code>.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="inferring-scatac-seq-doublets-with-archr.html#cb11-1"></a><span class="co">#Add Infered Doublet Scores to each Arrow File (~2-5 min per sample)</span></span>
-<span id="cb11-2"><a href="inferring-scatac-seq-doublets-with-archr.html#cb11-2"></a><span class="co">#By default ArchR uses the doublet params as described in the ArchR paper.</span></span>
-<span id="cb11-3"><a href="inferring-scatac-seq-doublets-with-archr.html#cb11-3"></a><span class="co">#We show some of the main adjustable features below for more information </span></span>
-<span id="cb11-4"><a href="inferring-scatac-seq-doublets-with-archr.html#cb11-4"></a><span class="co">#Try ?addDoubletScores to see further documentation on parameters for doublet identification.</span></span>
-<span id="cb11-5"><a href="inferring-scatac-seq-doublets-with-archr.html#cb11-5"></a>doubScores &lt;-<span class="st"> </span><span class="kw">addDoubletScores</span>(</span>
-<span id="cb11-6"><a href="inferring-scatac-seq-doublets-with-archr.html#cb11-6"></a>    <span class="dt">input =</span> ArrowFiles,</span>
-<span id="cb11-7"><a href="inferring-scatac-seq-doublets-with-archr.html#cb11-7"></a>    <span class="dt">k =</span> <span class="dv">10</span>, <span class="co">#Refers to how many cells near a &quot;pseudo-doublet&quot; to count.</span></span>
-<span id="cb11-8"><a href="inferring-scatac-seq-doublets-with-archr.html#cb11-8"></a>    <span class="dt">knnMethod =</span> <span class="st">&quot;UMAP&quot;</span>, <span class="co">#Refers to embedding to use for nearest neighbor search with doublet projection.</span></span>
-<span id="cb11-9"><a href="inferring-scatac-seq-doublets-with-archr.html#cb11-9"></a>    <span class="dt">LSIMethod =</span> <span class="dv">1</span></span>
-<span id="cb11-10"><a href="inferring-scatac-seq-doublets-with-archr.html#cb11-10"></a>)</span></code></pre></div>
-<p>Now we can look at the results in a folder “QualityControl” in your current working directory. There are 3 plots associated with each of your samples in this folder : </br>
+<span id="cb11-2"><a href="inferring-scatac-seq-doublets-with-archr.html#cb11-2"></a><span class="co">#Try ?addDoubletScores to see further documentation on parameters for doublet identification.</span></span>
+<span id="cb11-3"><a href="inferring-scatac-seq-doublets-with-archr.html#cb11-3"></a>doubScores &lt;-<span class="st"> </span><span class="kw">addDoubletScores</span>(</span>
+<span id="cb11-4"><a href="inferring-scatac-seq-doublets-with-archr.html#cb11-4"></a>    <span class="dt">input =</span> ArrowFiles,</span>
+<span id="cb11-5"><a href="inferring-scatac-seq-doublets-with-archr.html#cb11-5"></a>    <span class="dt">k =</span> <span class="dv">10</span>, <span class="co">#Refers to how many cells near a &quot;pseudo-doublet&quot; to count.</span></span>
+<span id="cb11-6"><a href="inferring-scatac-seq-doublets-with-archr.html#cb11-6"></a>    <span class="dt">knnMethod =</span> <span class="st">&quot;UMAP&quot;</span>, <span class="co">#Refers to embedding to use for nearest neighbor search with doublet projection.</span></span>
+<span id="cb11-7"><a href="inferring-scatac-seq-doublets-with-archr.html#cb11-7"></a>    <span class="dt">LSIMethod =</span> <span class="dv">1</span></span>
+<span id="cb11-8"><a href="inferring-scatac-seq-doublets-with-archr.html#cb11-8"></a>)</span></code></pre></div>
+<p>This command will create plots in the “QualityControl” directory. There are 3 plots associated with each of your samples in this folder: </br>
 1. <strong>Doublet Enrichments</strong> - These represent the enrichment of simulated doublets nearby each single cell compared to the expected if we assume a uniform distribution. </br></p>
 <p>For <strong>BMMC</strong> : </br></p>
 <p><img src="images/HemeWalkthrough/PNG/scATAC_BMMC_R1-Doublet-Summary_1.png" width="500" height="500" /></p>
@@ -278,7 +281,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Doublet-Summary_1.png" width="500" height="500" /></p>
 <p></br></p>
 <p></br>
-2. <strong>Doublet Scores</strong> - These represent the significance (-log10 binomial adjusted p-value) of simulated doublets nearby each single cell compared to the expected if we assume a uniform distribution. We have found this value is not as consistent as the doublet enrichments for doublet identification. </br></p>
+2. <strong>Doublet Scores</strong> - These represent the significance (<code>-log10(binomial adjusted p-value)</code>) of simulated doublets nearby each single cell compared to the expected if we assume a uniform distribution. We have found this value to be less consistent than the doublet enrichments and therefore use doublet enrichments for doublet identification. </br></p>
 <p>For <strong>BMMC</strong> : </br></p>
 <p><img src="images/HemeWalkthrough/PNG/scATAC_BMMC_R1-Doublet-Summary_2.png" width="500" height="500" /></p>
 <p></br></p>
@@ -288,7 +291,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>For <strong>PBMC</strong> : </br></p>
 <p><img src="images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Doublet-Summary_2.png" width="500" height="500" /></p>
 <p></br>
-3. <strong>Doublet Density</strong> - This represents the density of the simulated doublet projections so you can visually where the doublets are located in your 2-d embedding.</br></p>
+3. <strong>Doublet Density</strong> - This represents the density of the simulated doublet projections so you can visualize where the synthetic doublets were located after projection into your 2-dimensional embedding.</br></p>
 <p>For <strong>BMMC</strong> : </br></p>
 <p><img src="images/HemeWalkthrough/PNG/scATAC_BMMC_R1-Doublet-Summary_3.png" width="500" height="500" /></p>
 <p></br></p>
@@ -297,6 +300,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p></br></p>
 <p>For <strong>PBMC</strong> : </br></p>
 <p><img src="images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Doublet-Summary_3.png" width="500" height="500" /></p>
+<p>QQQ - I would have liked to see a pre- and post- doublet removal UMAP here so that we can illustrate what happens.</p>
 <p>To download the PDFs for each sample </br></p>
 <p><a href="images/HemeWalkthrough/PDF/scATAC_BMMC_R1-Doublet-Summary.pdf">Download PDF : scATAC_BMMC_R1-Doublet-Summary.pdf</a></br>
 <a href="images/HemeWalkthrough/PDF/scATAC_CD34_BMMC_R1-Doublet-Summary.pdf">Download PDF : scATAC_CD34_BMMC_R1-Doublet-Summary.pdf</a></br>

@@ -256,49 +256,51 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="setting-a-genome-and-geneannotation" class="section level2" number="1.3">
 <h2><span class="header-section-number">1.3</span> Setting a Genome and GeneAnnotation</h2>
-<p>ArchR requires information about the genome you want to work on to do common things such as TSSEnrichment, Nucleotide Content,
-Gene Scores etc. To provide this information we have made this streamlined for human and mouse and provide a solution for other genome builds. </br></p>
-<p>To set a global genome default to hg19 simply add the ArchR genome we have precompiled. This means that for all analysis it will use the genomeAnnotation and geneAnnotation associated with the <code>ArchRGenome</code>.</p>
+<p>ArchR requires gene and genome annotations to do things such as calculate TSS enrichment scores, nucleotide content, and gene activity scores. Because our tutorial dataset uses scATAC-seq data that has already been aligned to the hg19 reference genome, we have set “hg19” as the default genome above. However, ArchR supports “hg19”, “hg38”, “mm9”, and “mm10” natively but you can create your own using the <code>createGeneAnnotation()</code> and <code>createGenomeAnnotation()</code> functions.</p>
+<p>Providing this information to ArchR is streamlined through the <code>addArchRGenome()</code> function. This function tells ArchR that, for all analysis in the current session, it should use the <code>genomeAnnotation</code> and <code>geneAnnotation</code> associated with the defined <code>ArchRGenome</code>. Each of the natively supported genomes are composed of a <code>BSgenome</code> object and a <code>GRanges</code> object containing a set of blacklisted regions. Below are examples of how to load gene and genome annotations for the natively supported genomes as well as information on their <code>BSgenome</code> and blacklist components.</p>
+<p>The precompiled version of the <strong>hg19</strong> genome in ArchR uses <code>BSgenome.Hsapiens.UCSC.hg19</code> and a blacklist that was merged using <code>ArchR::mergeGR()</code> from the <a href="https://github.com/Boyle-Lab/Blacklist/blob/master/lists/hg19-blacklist.v2.bed.gz">hg19 v2 blacklist regions</a> and from <a href="https://github.com/caleblareau/mitoblacklist/blob/master/peaks/hg19_peaks.narrowPeak">mitochondrial regions that show high mappability to the hg19 nuclear genome</a> from Caleb Lareau and Jason Buenrostro. To set a global genome default to the precompiled hg19 genome:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="setting-a-genome-and-geneannotation.html#cb2-1"></a><span class="kw">addArchRGenome</span>(<span class="st">&quot;hg19&quot;</span>)</span>
 <span id="cb2-2"><a href="setting-a-genome-and-geneannotation.html#cb2-2"></a><span class="co"># Setting default genome to Hg19.</span></span></code></pre></div>
-<p>To set a global genome default to hg38 simply add the ArchR genome we have precompiled.</p>
+<p>The precompiled version of the <strong>hg38</strong> genome in ArchR uses <code>BSgenome.Hsapiens.UCSC.hg38</code> and a blacklist that was merged using <code>ArchR::mergeGR()</code> from the <a href="https://github.com/Boyle-Lab/Blacklist/blob/master/lists/hg38-blacklist.v2.bed.gz">hg38 v2 blacklist regions</a> and from <a href="https://github.com/caleblareau/mitoblacklist/blob/master/peaks/hg38_peaks.narrowPeak">mitochondrial regions that show high mappability to the hg38 nuclear genome</a> from Caleb Lareau and Jason Buenrostro. To set a global genome default to the precompiled hg38 genome:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="setting-a-genome-and-geneannotation.html#cb3-1"></a><span class="kw">addArchRGenome</span>(<span class="st">&quot;hg38&quot;</span>)</span>
 <span id="cb3-2"><a href="setting-a-genome-and-geneannotation.html#cb3-2"></a><span class="co"># Setting default genome to Hg38.</span></span></code></pre></div>
-<p>To set a global genome default to mm9 simply add the ArchR genome we have precompiled.</p>
+<p>The precompiled version of the <strong>mm9</strong> genome in ArchR uses <code>BSgenome.Mmusculus.UCSC.mm9</code> and a blacklist that was merged using <code>ArchR::mergeGR()</code> from the <a href="http://mitra.stanford.edu/kundaje/akundaje/release/blacklists/mm9-mouse/mm9-blacklist.bed.gz">mm9 v1 blacklist regions</a> from Anshul Kundaje and from <a href="https://github.com/caleblareau/mitoblacklist/blob/master/peaks/mm9_peaks.narrowPeak">mitochondrial regions that show high mappability to the mm9 nuclear genome</a> from Caleb Lareau and Jason Buenrostro. To set a global genome default to the precompiled mm9 genome:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="setting-a-genome-and-geneannotation.html#cb4-1"></a><span class="kw">addArchRGenome</span>(<span class="st">&quot;mm9&quot;</span>)</span>
 <span id="cb4-2"><a href="setting-a-genome-and-geneannotation.html#cb4-2"></a><span class="co"># Setting default genome to Mm9.</span></span></code></pre></div>
-<p>To set a global genome default to mm10 simply add the ArchR genome we have precompiled.</p>
+<p>The precompiled version of the <strong>mm10</strong> genome in ArchR uses <code>BSgenome.Mmusculus.UCSC.mm10</code> and a blacklist that was merged using <code>ArchR::mergeGR()</code> from the <a href="https://github.com/Boyle-Lab/Blacklist/blob/master/lists/mm10-blacklist.v2.bed.gz">mm10 v2 blacklist regions</a> and from <a href="https://github.com/caleblareau/mitoblacklist/blob/master/peaks/mm10_peaks.narrowPeak">mitochondrial regions that show high mappability to the mm10 nuclear genome</a> from Caleb Lareau and Jason Buenrostro. To set a global genome default to the precompiled hg38 genome:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="setting-a-genome-and-geneannotation.html#cb5-1"></a><span class="kw">addArchRGenome</span>(<span class="st">&quot;mm10&quot;</span>)</span>
 <span id="cb5-2"><a href="setting-a-genome-and-geneannotation.html#cb5-2"></a><span class="co"># Setting default genome to Mm10.</span></span></code></pre></div>
-<p>To create a custom genome annotation for use instead we can use <code>createGenomeAnnotation</code>. To do this,
-you will need the following information : </br>
-1. A BSgenome which contains the sequence information for a genome. These are commonly Bioconductor packages that can be easily found with google. </br>
-2. A blacklist genomic ranges object that will be used to filter out unwanted regions for downstream analysis. This isnt required but is recommended.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="setting-a-genome-and-geneannotation.html#cb6-1"></a><span class="kw">library</span>(BSgenome.Hsapiens.UCSC.hg19)</span>
-<span id="cb6-2"><a href="setting-a-genome-and-geneannotation.html#cb6-2"></a>genomeAnnotation &lt;-<span class="st"> </span><span class="kw">createGenomeAnnotation</span>(<span class="dt">genome =</span> BSgenome.Hsapiens.UCSC.hg19)</span>
-<span id="cb6-3"><a href="setting-a-genome-and-geneannotation.html#cb6-3"></a><span class="co"># List of length 3</span></span>
-<span id="cb6-4"><a href="setting-a-genome-and-geneannotation.html#cb6-4"></a><span class="co"># names(3): genome chromSizes blacklist</span></span></code></pre></div>
-<p>To create a custom gene annotation for use instead we can use <code>createGeneAnnotation</code>. To do this,
-you will need the following information : </br>
-1. A <code>TxDb</code> object (transcript database) from Bioconductor which contains information for gene/transcript coordinates. For example, from <code>txdb &lt;- TxDb.Hsapiens.UCSC.hg38.knownGene</code>. </br>
-2. An <code>OrgDb</code> object (organism database) from Bioconductor which contains information for gene/transcript symbols from ids. For example, from <code>orgdb &lt;- org.Hs.eg.db</code>. </br></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="setting-a-genome-and-geneannotation.html#cb7-1"></a><span class="kw">library</span>(TxDb.Hsapiens.UCSC.hg19.knownGene)</span>
-<span id="cb7-2"><a href="setting-a-genome-and-geneannotation.html#cb7-2"></a><span class="kw">library</span>(org.Hs.eg.db)</span>
-<span id="cb7-3"><a href="setting-a-genome-and-geneannotation.html#cb7-3"></a>txdb &lt;-<span class="st"> </span>TxDb.Hsapiens.UCSC.hg19.knownGene</span>
-<span id="cb7-4"><a href="setting-a-genome-and-geneannotation.html#cb7-4"></a>orgdb &lt;-<span class="st"> </span>org.Hs.eg.db</span>
-<span id="cb7-5"><a href="setting-a-genome-and-geneannotation.html#cb7-5"></a>geneAnnotation &lt;-<span class="st"> </span><span class="kw">createGeneAnnnotation</span>(<span class="dt">TxDb =</span> txdb, <span class="dt">OrgDb =</span> orgdb)</span>
+<p>To instead create a custom genome annotation, we can use <code>createGenomeAnnotation()</code>. To do this, you will need the following information: </br>
+1. A <code>BSgenome</code> object which contains the sequence information for a genome. These are commonly Bioconductor packages (for example, <code>BSgenome.Hsapiens.UCSC.hg38</code>) that can be easily found with google. </br>
+2. A <code>GRanges</code> genomic ranges object containing a set of blacklisted regions that will be used to filter out unwanted regions from downstream analysis. This is not required but is recommended.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="setting-a-genome-and-geneannotation.html#cb6-1"></a><span class="co">#QQQ CHANGED TO DROSOPHILA TO MAKE THIS RELEVANT SINCE HG38 IS ALREADY SUPPORTED</span></span>
+<span id="cb6-2"><a href="setting-a-genome-and-geneannotation.html#cb6-2"></a><span class="kw">library</span>(BSgenome.Dmelanogaster.UCSC.dm6)</span>
+<span id="cb6-3"><a href="setting-a-genome-and-geneannotation.html#cb6-3"></a>genomeAnnotation &lt;-<span class="st"> </span><span class="kw">createGenomeAnnotation</span>(<span class="dt">genome =</span> BSgenome.Dmelanogaster.UCSC.dm6)</span>
+<span id="cb6-4"><a href="setting-a-genome-and-geneannotation.html#cb6-4"></a><span class="co"># List of length 3</span></span>
+<span id="cb6-5"><a href="setting-a-genome-and-geneannotation.html#cb6-5"></a><span class="co"># names(3): genome chromSizes blacklist</span></span></code></pre></div>
+<p>To create a custom gene annotation for use instead we can use <code>createGeneAnnotation()</code>. To do this, you will need the following information: </br></p>
+<ol style="list-style-type: decimal">
+<li>A <code>TxDb</code> object (transcript database) from Bioconductor which contains information for gene/transcript coordinates. For example, from <code>txdb &lt;- TxDb.Hsapiens.UCSC.hg38.knownGene</code>. </br></li>
+<li>An <code>OrgDb</code> object (organism database) from Bioconductor which contains information for gene/transcript symbols from ids. For example, from <code>orgdb &lt;- org.Hs.eg.db</code>. </br></li>
+</ol>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="setting-a-genome-and-geneannotation.html#cb7-1"></a><span class="co">#QQQ DOUBLE CHECK. I CHANGED THIS TO REMOVE THE txdb &lt;- TxDb.Hsapiens.UCSC.hg38.knownGene ASSIGNMENTS TO MAKE IT THE SAME FORMAT AS genomeAnnotation ABOVE</span></span>
+<span id="cb7-2"><a href="setting-a-genome-and-geneannotation.html#cb7-2"></a><span class="co">#QQQ ALSO CHANGED TO DROSOPHILA</span></span>
+<span id="cb7-3"><a href="setting-a-genome-and-geneannotation.html#cb7-3"></a><span class="kw">library</span>(TxDb.Dmelanogaster.UCSC.dm6.ensGene)</span>
+<span id="cb7-4"><a href="setting-a-genome-and-geneannotation.html#cb7-4"></a><span class="kw">library</span>(org.Dm.eg.db)</span>
+<span id="cb7-5"><a href="setting-a-genome-and-geneannotation.html#cb7-5"></a>geneAnnotation &lt;-<span class="st"> </span><span class="kw">createGeneAnnnotation</span>(<span class="dt">TxDb =</span> TxDb.Dmelanogaster.UCSC.dm6.ensGene, <span class="dt">OrgDb =</span> org.Dm.eg.db)</span>
 <span id="cb7-6"><a href="setting-a-genome-and-geneannotation.html#cb7-6"></a><span class="co"># List of length 3</span></span>
 <span id="cb7-7"><a href="setting-a-genome-and-geneannotation.html#cb7-7"></a><span class="co"># names(3): genes exons TSS</span></span></code></pre></div>
-<p>or you will need the following information : </br></p>
+<p>Alternatively, if you dont have a <code>TxDb</code> and <code>OrgDb</code> object, you can create a <code>geneAnnotation</code> object from the following information : </br></p>
 <ol style="list-style-type: decimal">
 <li>A <code>GRanges</code> object containing gene coordinates (start to end). Must have a symbols column matching the symbols column of <code>exons</code>.</li>
 <li>A <code>GRanges</code> object containing gene exon coordinates. Must have a symbols column matching the symbols column of <code>genes</code>.</li>
-<li>A <code>GRanges</code> object containing standed transcription start site (<code>TSS</code>) coordinates for computing TSS enrichment scores downstream.</li>
+<li>A <code>GRanges</code> object containing standed transcription start site (<code>TSS</code>) coordinates.</li>
 </ol>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="setting-a-genome-and-geneannotation.html#cb8-1"></a>geneAnnotation &lt;-<span class="st"> </span><span class="kw">createGeneAnnnotation</span>(<span class="dt">TSS =</span> geneAnnotation<span class="op">$</span>TSS, <span class="dt">exons =</span> geneAnnotation<span class="op">$</span>exons, <span class="dt">genes =</span> geneAnnotation<span class="op">$</span>genes)</span>
-<span id="cb8-2"><a href="setting-a-genome-and-geneannotation.html#cb8-2"></a>geneAnnotation</span>
-<span id="cb8-3"><a href="setting-a-genome-and-geneannotation.html#cb8-3"></a><span class="co"># List of length 3</span></span>
-<span id="cb8-4"><a href="setting-a-genome-and-geneannotation.html#cb8-4"></a><span class="co"># names(3): genes exons TSS</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="setting-a-genome-and-geneannotation.html#cb8-1"></a><span class="co">#QQQ THIS SEEMS ODD. YOU ARE TAKING AN OBJECT NAMED geneAnnotation THAT ALREADY HAS ALL THESE THINGS AND MAKING IT INTO AN OBJECT NAMED geneAnnotation</span></span>
+<span id="cb8-2"><a href="setting-a-genome-and-geneannotation.html#cb8-2"></a>geneAnnotation &lt;-<span class="st"> </span><span class="kw">createGeneAnnnotation</span>(<span class="dt">TSS =</span> geneAnnotation<span class="op">$</span>TSS, <span class="dt">exons =</span> geneAnnotation<span class="op">$</span>exons, <span class="dt">genes =</span> geneAnnotation<span class="op">$</span>genes)</span>
+<span id="cb8-3"><a href="setting-a-genome-and-geneannotation.html#cb8-3"></a>geneAnnotation</span>
+<span id="cb8-4"><a href="setting-a-genome-and-geneannotation.html#cb8-4"></a><span class="co"># List of length 3</span></span>
+<span id="cb8-5"><a href="setting-a-genome-and-geneannotation.html#cb8-5"></a><span class="co"># names(3): genes exons TSS</span></span></code></pre></div>
 </div>
             </section>
 

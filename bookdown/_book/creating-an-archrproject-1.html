@@ -256,17 +256,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="creating-an-archrproject-1" class="section level2" number="3.1">
 <h2><span class="header-section-number">3.1</span> Creating An ArchRProject</h2>
+<p>First, we must create our <code>ArchRProject</code> by providing a list of Arrow files and a few other parameters. The <code>outputDirectory</code> here describes where all downstream analyses and plots will be saved. ArchR will automatically associate the <code>geneAnnotation</code> and <code>genomeAnnotation</code> with the new <code>ArchRProject</code>. These were stored when we ran <code>addArchRGenome("hg19")</code> in a previous chapter.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="creating-an-archrproject-1.html#cb12-1"></a><span class="co">#Create ArchRProject</span></span>
-<span id="cb12-2"><a href="creating-an-archrproject-1.html#cb12-2"></a><span class="co">#The outputDirectory here describes where all downstream analyses and plots go.</span></span>
-<span id="cb12-3"><a href="creating-an-archrproject-1.html#cb12-3"></a><span class="co">#ArchR will add geneAnnotation and genomeAnnotations related to addArchRGenome(&quot;hg19&quot;)</span></span>
-<span id="cb12-4"><a href="creating-an-archrproject-1.html#cb12-4"></a><span class="co">#as described above.</span></span>
-<span id="cb12-5"><a href="creating-an-archrproject-1.html#cb12-5"></a>projHeme1 &lt;-<span class="st"> </span><span class="kw">ArchRProject</span>(</span>
-<span id="cb12-6"><a href="creating-an-archrproject-1.html#cb12-6"></a>  <span class="dt">ArrowFiles =</span> ArrowFiles, </span>
-<span id="cb12-7"><a href="creating-an-archrproject-1.html#cb12-7"></a>  <span class="dt">outputDirectory =</span> <span class="st">&quot;HemeTutorial&quot;</span>,</span>
-<span id="cb12-8"><a href="creating-an-archrproject-1.html#cb12-8"></a>  <span class="dt">copyArrows =</span> <span class="ot">TRUE</span> <span class="co">#This is recommened so that if you modify the ArrowFiles you have an original copy for later usage.</span></span>
-<span id="cb12-9"><a href="creating-an-archrproject-1.html#cb12-9"></a>)</span></code></pre></div>
-<p>Lets look at our ArchRProject</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="creating-an-archrproject-1.html#cb13-1"></a>projHeme</span>
+<span id="cb12-2"><a href="creating-an-archrproject-1.html#cb12-2"></a>projHeme1 &lt;-<span class="st"> </span><span class="kw">ArchRProject</span>(</span>
+<span id="cb12-3"><a href="creating-an-archrproject-1.html#cb12-3"></a>  <span class="dt">ArrowFiles =</span> ArrowFiles, </span>
+<span id="cb12-4"><a href="creating-an-archrproject-1.html#cb12-4"></a>  <span class="dt">outputDirectory =</span> <span class="st">&quot;HemeTutorial&quot;</span>,</span>
+<span id="cb12-5"><a href="creating-an-archrproject-1.html#cb12-5"></a>  <span class="dt">copyArrows =</span> <span class="ot">TRUE</span> <span class="co">#This is recommened so that if you modify the ArrowFiles you have an original copy for later usage.</span></span>
+<span id="cb12-6"><a href="creating-an-archrproject-1.html#cb12-6"></a>)</span></code></pre></div>
+<p>We call this <code>ArchRProject</code> “projHeme1” because it is the first iteration of our hematopoiesis project. Throughout this walkthrough we will modify and update this <code>ArchRProject</code> and keep track of which version of the project we are using by iterating the project number (i.e. “projHeme2”).</p>
+<p>Lets look at our <code>ArchRProject</code>:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="creating-an-archrproject-1.html#cb13-1"></a>projHeme1</span>
 <span id="cb13-2"><a href="creating-an-archrproject-1.html#cb13-2"></a><span class="co"># class: ArchRProject </span></span>
 <span id="cb13-3"><a href="creating-an-archrproject-1.html#cb13-3"></a><span class="co"># outputDirectory: /Volumes/JG_SSD_2/ArchR_Walkthrough/HemeTutorial </span></span>
 <span id="cb13-4"><a href="creating-an-archrproject-1.html#cb13-4"></a><span class="co"># samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1</span></span>
@@ -276,12 +275,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb13-8"><a href="creating-an-archrproject-1.html#cb13-8"></a><span class="co"># numberOfCells(1): 10661</span></span>
 <span id="cb13-9"><a href="creating-an-archrproject-1.html#cb13-9"></a><span class="co"># medianTSS(1): 16.832</span></span>
 <span id="cb13-10"><a href="creating-an-archrproject-1.html#cb13-10"></a><span class="co"># medianFrags(1): 3050</span></span></code></pre></div>
-<p>We can see from above the specified outputDirectory, sampleNames, sampleColData (column data associated with each sample), cellColData (column data associated with each cell), the number of cells, median TSS enrichment and median number of fragments. Additionally since we already computed doublet enrichment scores
-we can see in cellColData a column name “DoubletEnrichment” and “DoubletScore” which are related to the above addition of <code>addDoubletScores</code>. </br></p>
-<p>How big is the created ArchRProject in memory in R.</p>
+<p>We can see from the above that our <code>ArchRProject</code> has been initialized with a few important attributes:</br>
+1. The specified <code>outputDirectory</code>.</br>
+2. The <code>sampleNames</code> of each sample which were obtained from the Arrow files.</br>
+3. A matrix called <code>sampleColData</code> which contains data associated with each sample.</br>
+4. A matrix called <code>cellColData</code> which contains data associated with each cell. Because we already computed doublet enrichment scores (using <code>addDoubletScores()</code>), which added those values to each cell in the Arrow files, we can see columns corresponding to the “DoubletEnrichment” and “DoubletScore” in the <code>cellColData</code> matrix.</br>
+5. The total number of cells in our project which represents all samples after doublet identification and removal.</br>
+6. The median TSS enrichment score and the median number of fragments across all cells and all samples.</br></p>
+<p>We can check how much memory is used to store the <code>ArchRProject</code> in memory within R:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="creating-an-archrproject-1.html#cb14-1"></a><span class="kw">paste0</span>(<span class="st">&quot;Memory Size = &quot;</span>, <span class="kw">round</span>(<span class="kw">object.size</span>(projHeme1) <span class="op">/</span><span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="dv">6</span>, <span class="dv">3</span>), <span class="st">&quot; MB&quot;</span>)</span>
 <span id="cb14-2"><a href="creating-an-archrproject-1.html#cb14-2"></a><span class="co">#[1] &quot;Memory Size = 37.135 MB&quot;</span></span></code></pre></div>
-<p>What matrices are available?</p>
+<p>We can also ask which data matrices are available within the <code>ArchRProject</code> which will be useful downstream once we start adding to this project:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="creating-an-archrproject-1.html#cb15-1"></a><span class="kw">getAvailableMatrices</span>(projHeme1)</span>
 <span id="cb15-2"><a href="creating-an-archrproject-1.html#cb15-2"></a><span class="co">#[1] &quot;GeneScoreMatrix&quot; &quot;TileMatrix&quot; </span></span></code></pre></div>
 </div>
