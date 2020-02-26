@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>4.1 Iterative Latent Semantic Indexing (LSI) | ArchR</title>
+  <title>4.2 Iterative Latent Semantic Indexing (LSI) | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
   <meta name="description" content="A guide to ArchR" />
   <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="4.1 Iterative Latent Semantic Indexing (LSI) | ArchR" />
+  <meta property="og:title" content="4.2 Iterative Latent Semantic Indexing (LSI) | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="GreenleafLab/ArchR" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="4.1 Iterative Latent Semantic Indexing (LSI) | ArchR" />
+  <meta name="twitter:title" content="4.2 Iterative Latent Semantic Indexing (LSI) | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   
   <meta name="twitter:description" content="A guide to ArchR" />
   
@@ -24,14 +24,14 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-02-19" />
+<meta name="date" content="2020-02-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="dimensionality-reduction-with-archr.html"/>
+<link rel="prev" href="archrs-lsi-implementation.html"/>
 <link rel="next" href="batch-effect-correction-wtih-harmony.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -129,10 +129,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="https://greenleaflab.github.io/ArchR/">Back to ArchR Home</a></li>
+<li><a href="../index.html">Back to ArchR Home</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li><a href="index.html#section"><img src="images/ArchR_Logo_Integrated.png" alt="" width="200"></a></li>
 <li class="chapter" data-level="1" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>1</b> Getting Started with ArchR</a>
 <ul>
 <li class="chapter" data-level="1.1" data-path="what-is-an-arrowfile-archrproject.html"><a href="what-is-an-arrowfile-archrproject.html"><i class="fa fa-check"></i><b>1.1</b> What is an <code>ArrowFile</code> / <code>ArchRProject</code>?</a></li>
@@ -154,8 +154,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4" data-path="dimensionality-reduction-with-archr.html"><a href="dimensionality-reduction-with-archr.html"><i class="fa fa-check"></i><b>4</b> Dimensionality Reduction with ArchR</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>4.1</b> Iterative Latent Semantic Indexing (LSI)</a></li>
-<li class="chapter" data-level="4.2" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.2</b> Batch Effect Correction wtih Harmony</a></li>
+<li class="chapter" data-level="4.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>4.1</b> ArchR’s LSI Implementation</a></li>
+<li class="chapter" data-level="4.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>4.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
+<li class="chapter" data-level="4.3" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.3</b> Batch Effect Correction wtih Harmony</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>5</b> Clustering with ArchR</a></li>
 <li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
@@ -193,36 +194,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="11" data-path="peak-annotation-enrichment-with-archr.html"><a href="peak-annotation-enrichment-with-archr.html"><i class="fa fa-check"></i><b>11</b> Peak Annotation Enrichment with ArchR</a>
 <ul>
 <li class="chapter" data-level="11.1" data-path="motif-enrichment.html"><a href="motif-enrichment.html"><i class="fa fa-check"></i><b>11.1</b> Motif Enrichment</a></li>
-<li class="chapter" data-level="11.2" data-path="archr-enrichment.html"><a href="archr-enrichment.html"><i class="fa fa-check"></i><b>11.2</b> ArchR Enrichment</a>
-<ul>
-<li class="chapter" data-level="11.2.1" data-path="archr-enrichment.html"><a href="archr-enrichment.html#encode-tfbs"><i class="fa fa-check"></i><b>11.2.1</b> Encode TFBS</a></li>
-<li class="chapter" data-level="11.2.2" data-path="archr-enrichment.html"><a href="archr-enrichment.html#bulk-atac-seq"><i class="fa fa-check"></i><b>11.2.2</b> Bulk ATAC-seq</a></li>
-<li class="chapter" data-level="11.2.3" data-path="archr-enrichment.html"><a href="archr-enrichment.html#codex-tfbs"><i class="fa fa-check"></i><b>11.2.3</b> Codex TFBS</a></li>
-</ul></li>
+<li class="chapter" data-level="11.2" data-path="archr-enrichment.html"><a href="archr-enrichment.html"><i class="fa fa-check"></i><b>11.2</b> ArchR Enrichment</a></li>
 <li class="chapter" data-level="11.3" data-path="custom-enrichment.html"><a href="custom-enrichment.html"><i class="fa fa-check"></i><b>11.3</b> Custom Enrichment</a></li>
 </ul></li>
 <li class="chapter" data-level="12" data-path="chromvar-deviatons-enrichment-with-archr.html"><a href="chromvar-deviatons-enrichment-with-archr.html"><i class="fa fa-check"></i><b>12</b> ChromVAR Deviatons Enrichment with ArchR</a>
 <ul>
 <li class="chapter" data-level="12.1" data-path="motif-deviations.html"><a href="motif-deviations.html"><i class="fa fa-check"></i><b>12.1</b> Motif Deviations</a></li>
-<li class="chapter" data-level="12.2" data-path="archr-deviations.html"><a href="archr-deviations.html"><i class="fa fa-check"></i><b>12.2</b> ArchR Deviations</a>
-<ul>
-<li class="chapter" data-level="12.2.1" data-path="archr-deviations.html"><a href="archr-deviations.html#encode-tfbs-1"><i class="fa fa-check"></i><b>12.2.1</b> Encode TFBS</a></li>
-<li class="chapter" data-level="12.2.2" data-path="archr-deviations.html"><a href="archr-deviations.html#bulk-atac-seq-1"><i class="fa fa-check"></i><b>12.2.2</b> Bulk ATAC-seq</a></li>
-</ul></li>
+<li class="chapter" data-level="12.2" data-path="archr-deviations.html"><a href="archr-deviations.html"><i class="fa fa-check"></i><b>12.2</b> ArchR Deviations</a></li>
 <li class="chapter" data-level="12.3" data-path="custom-deviations.html"><a href="custom-deviations.html"><i class="fa fa-check"></i><b>12.3</b> Custom Deviations</a></li>
 </ul></li>
 <li class="chapter" data-level="13" data-path="footprinting-with-archr.html"><a href="footprinting-with-archr.html"><i class="fa fa-check"></i><b>13</b> Footprinting with ArchR</a>
 <ul>
-<li class="chapter" data-level="13.1" data-path="motif-footprinting.html"><a href="motif-footprinting.html"><i class="fa fa-check"></i><b>13.1</b> Motif Footprinting</a>
-<ul>
-<li class="chapter" data-level="13.1.1" data-path="motif-footprinting.html"><a href="motif-footprinting.html#no-normalization"><i class="fa fa-check"></i><b>13.1.1</b> No Normalization</a></li>
-<li class="chapter" data-level="13.1.2" data-path="motif-footprinting.html"><a href="motif-footprinting.html#divide-tn5-bias"><i class="fa fa-check"></i><b>13.1.2</b> Divide Tn5 Bias</a></li>
-<li class="chapter" data-level="13.1.3" data-path="motif-footprinting.html"><a href="motif-footprinting.html#subtract-tn5-bias"><i class="fa fa-check"></i><b>13.1.3</b> Subtract Tn5 Bias</a></li>
-</ul></li>
-<li class="chapter" data-level="13.2" data-path="feature-footprinting.html"><a href="feature-footprinting.html"><i class="fa fa-check"></i><b>13.2</b> Feature Footprinting</a>
-<ul>
-<li class="chapter" data-level="13.2.1" data-path="feature-footprinting.html"><a href="feature-footprinting.html#no-normalization-1"><i class="fa fa-check"></i><b>13.2.1</b> No Normalization</a></li>
-</ul></li>
+<li class="chapter" data-level="13.1" data-path="motif-footprinting.html"><a href="motif-footprinting.html"><i class="fa fa-check"></i><b>13.1</b> Motif Footprinting</a></li>
+<li class="chapter" data-level="13.2" data-path="feature-footprinting.html"><a href="feature-footprinting.html"><i class="fa fa-check"></i><b>13.2</b> Feature Footprinting</a></li>
 </ul></li>
 <li class="chapter" data-level="14" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>14</b> Trajectory Analysis with ArchR</a>
 <ul>
@@ -246,7 +230,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">ArchR</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</a>
           </h1>
         </div>
 
@@ -254,11 +238,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="iterative-latent-semantic-indexing-lsi" class="section level2" number="4.1">
-<h2><span class="header-section-number">4.1</span> Iterative Latent Semantic Indexing (LSI)</h2>
-<p>Latent semantic indexing (LSI) was first introduced for scATAC-seq by Cusanovich et al (Science 2015) as a form for analyzing scATAC-seq data. LSI commonly refers to computing the term frequency (TF) and then normalization by the inverse document frequency (IDF) to get a normalized matrix (TF-IDF) and then Singular Value Decomposition (SVD). The term frequency is simply dividing depth normalization per single cell. The inverse document frequency refers to weighting each feature by how often it occurs to weight features that are more “specific” rather than commonly accessible. There are many different TF-IDF transformations with their own merits. ArchR has a few LSI implementations and we have tested out many of these methods across many different test data sets. The default LSI implementation is related to the one introduced by Timothy Stuart, which depth normalizes to a constant (10,000) followed by normalization with the inverse document frequency and then log-transforming the resultant matrix (log(TF-IDF)). </br></p>
-<p>In scRNA-seq identifying variable genes is a common way to compute dimensionality reduction (such as PCA). This is done becasue these genes are more likely to be biologically important and this reduces experimental noise. In scATAC-seq the data is binary and thus you cant identify variable peaks for dimensionality reduction. We have tried using the most accessible features instead, however the results when running multiple samples have had strong noise. To remedy this we introduced the iterative LSI approach (Satpathy+, Granja+ et al NBT 2019 and Granja+, Klemm+ and McGinnis+ et al NBT 2019). This approach computes an intial LSI transformation on the most accessible tiles and identifies lower resolution clusters that are not batch confounded (ie. in PBMCs just classifying T cells, B cells and Monocytes). Then ArchR computes the average accessibility for each of these clusters across all features creating “pseudobulks”. Then ArchR identifies the variable peaks across these “pseudobulks” and then use these features for LSI again as these peaks are more similar to scRNA-seq’s variable peaks. We have found this approach is very good for batch minimization and allows operations on a more reasonable sized matrix than a much larger sparse matrix.</p>
-<p>To do this we run <code>addIterativeLSI</code> with the default parameters which should cover most cases. See ?addIterativeLSI for more details on inputs.</p>
+<div id="iterative-latent-semantic-indexing-lsi" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Iterative Latent Semantic Indexing (LSI)</h2>
+<p>In scRNA-seq identifying variable genes is a common way to compute dimensionality reduction (such as PCA). This is done becasue these genes are more likely to be biologically important and this reduces experimental noise. In scATAC-seq the data is binary and thus you cannot identify variable peaks for dimensionality reduction. Rather than identifying the most variable peaks, we have tried using the most accessible features as input to LSI; however, the results when running multiple samples have shown high degrees of noise and low reproducibility. To remedy this we introduced the “iterative LSI” approach (<a href="https://www.ncbi.nlm.nih.gov/pubmed/31375813">Satpathy*, Granja* et al. Nature Biotechnology 2019</a> and <a href="https://www.ncbi.nlm.nih.gov/pubmed/31792411">Granja*, Klemm* and McGinnis* et al. Nature Biotechnology 2019</a>). This approach computes an intial LSI transformation on the most accessible tiles and identifies lower resolution clusters that are not batch confounded. For example, when performed on peripheral blood mononuclear cells, this will identify clusters corresponding to the major cell types (T cells, B cells, and monocytes). Then ArchR computes the average accessibility for each of these clusters across all features creating “pseudo-bulks”. ArchR then identifies the most variable peaks across these pseudo-bulks and uses these features for LSI again. In this second iteration, the most variable peaks are more similar to the variable genes used in scRNA-seq LSI implementations. The user can set how many iterations of LSI should be performed. QQQ add new info on LSI implementation. We have found this approach to be very good for batch minimization and allows operations on a more reasonably sized feature matrix.</p>
+<p>To perform iterative LSI in ArchR, we use the <code>addIterativeLSI()</code> function. The default parameters which should cover most cases but we encourage you to explore the available parameters and how they each affect your particular data set. See <code>?addIterativeLSI</code> for more details on inputs.</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="iterative-latent-semantic-indexing-lsi.html#cb34-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addIterativeLSI</span>(</span>
 <span id="cb34-2"><a href="iterative-latent-semantic-indexing-lsi.html#cb34-2"></a>    <span class="dt">ArchRProj =</span> projHeme2,</span>
 <span id="cb34-3"><a href="iterative-latent-semantic-indexing-lsi.html#cb34-3"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;TileMatrix&quot;</span>, </span>
@@ -272,7 +255,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb34-11"><a href="iterative-latent-semantic-indexing-lsi.html#cb34-11"></a>    <span class="dt">varFeatures =</span> <span class="dv">25000</span>, </span>
 <span id="cb34-12"><a href="iterative-latent-semantic-indexing-lsi.html#cb34-12"></a>    <span class="dt">dimsToUse =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">30</span></span>
 <span id="cb34-13"><a href="iterative-latent-semantic-indexing-lsi.html#cb34-13"></a>)</span></code></pre></div>
-<p>If you see downstream that you have subtle batch effects still another option is to add more LSI iterations and start from a lower intial clustering resolution as shown below. Additionally the number of variable features can be lowered to increase focus on the more variable features.</p>
+<p>If you see downstream that you have subtle batch effects, another option is to add more LSI iterations and to start from a lower intial clustering resolution as shown below. Additionally the number of variable features can be lowered to increase focus on the more variable features. QQQ would be nice to see an example of what these batch effects look like and how this corrects them</p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="iterative-latent-semantic-indexing-lsi.html#cb35-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addIterativeLSI</span>(</span>
 <span id="cb35-2"><a href="iterative-latent-semantic-indexing-lsi.html#cb35-2"></a>    <span class="dt">ArchRProj =</span> projHeme2,</span>
 <span id="cb35-3"><a href="iterative-latent-semantic-indexing-lsi.html#cb35-3"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;TileMatrix&quot;</span>, </span>
@@ -286,7 +269,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb35-11"><a href="iterative-latent-semantic-indexing-lsi.html#cb35-11"></a>    <span class="dt">varFeatures =</span> <span class="dv">15000</span>, </span>
 <span id="cb35-12"><a href="iterative-latent-semantic-indexing-lsi.html#cb35-12"></a>    <span class="dt">dimsToUse =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">30</span></span>
 <span id="cb35-13"><a href="iterative-latent-semantic-indexing-lsi.html#cb35-13"></a>)</span></code></pre></div>
-<p>Additionally ArchR allows for a normal LSI transformation with <code>addLSI</code>, however we recommend the iterative procedure.</p>
+<p>Additionally ArchR allows for a normal (non-iterative) LSI transformation via the <code>addLSI() function</code>, however we recommend the iterative procedure.</p>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="iterative-latent-semantic-indexing-lsi.html#cb36-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addLSI</span>(</span>
 <span id="cb36-2"><a href="iterative-latent-semantic-indexing-lsi.html#cb36-2"></a>    <span class="dt">ArchRProj =</span> projHeme2,</span>
 <span id="cb36-3"><a href="iterative-latent-semantic-indexing-lsi.html#cb36-3"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;TileMatrix&quot;</span>, </span>
@@ -294,7 +277,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb36-5"><a href="iterative-latent-semantic-indexing-lsi.html#cb36-5"></a>    <span class="dt">topFeatures =</span> <span class="dv">25000</span>, </span>
 <span id="cb36-6"><a href="iterative-latent-semantic-indexing-lsi.html#cb36-6"></a>    <span class="dt">dimsToUse =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">30</span></span>
 <span id="cb36-7"><a href="iterative-latent-semantic-indexing-lsi.html#cb36-7"></a>)</span></code></pre></div>
-<p>Lastly, lets compute the iterativeLSI for the ArchRProject still containing doublets.</p>
+<p>Lastly, lets compute the iterative LSI for the <code>ArchRProject</code> still containing doublets.</p>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="iterative-latent-semantic-indexing-lsi.html#cb37-1"></a>projHeme1 &lt;-<span class="st"> </span><span class="kw">addIterativeLSI</span>(</span>
 <span id="cb37-2"><a href="iterative-latent-semantic-indexing-lsi.html#cb37-2"></a>    <span class="dt">ArchRProj =</span> projHeme1,</span>
 <span id="cb37-3"><a href="iterative-latent-semantic-indexing-lsi.html#cb37-3"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;TileMatrix&quot;</span>, </span>
@@ -314,7 +297,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="dimensionality-reduction-with-archr.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="archrs-lsi-implementation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="batch-effect-correction-wtih-harmony.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
