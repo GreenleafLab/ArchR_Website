@@ -1,17 +1,18 @@
 # Creating an ArchRProject
 
-```{r , include=FALSE, eval = FALSE}
+```{r, include=FALSE, eval=FALSE}
 setwd("/Volumes/JG_SSD_2/ArchR_Walkthrough/")
 save.image("Save-ArchR-Walkthrough-Chapter1-Feb13.Rdata")
 ```
 
+An `ArchRProject` allows us to group multiple Arrow files together into a single project. This `ArchRProject` is small and is stored in memory. By interacting with the `ArchRProject` we can rapidly push and pull data from the Arrow files. As such, it forms the basis of nearly all ArchR functions and analytical workflows. This chapter describes how to create and interact with an `ArchRProject` object.
+
 ## Creating An ArchRProject
+
+First, we must create our `ArchRProject` by providing a list of Arrow files and a few other parameters. The `outputDirectory` here describes where all downstream analyses and plots will be saved. ArchR will automatically associate the `geneAnnotation` and `genomeAnnotation` with the new `ArchRProject`. These were stored when we ran `addArchRGenome("hg19")` in a previous chapter.
 
 ```{r eval=FALSE}
 #Create ArchRProject
-#The outputDirectory here describes where all downstream analyses and plots go.
-#ArchR will add geneAnnotation and genomeAnnotations related to addArchRGenome("hg19")
-#as described above.
 projHeme1 <- ArchRProject(
   ArrowFiles = ArrowFiles, 
   outputDirectory = "HemeTutorial",
@@ -19,10 +20,12 @@ projHeme1 <- ArchRProject(
 )
 ```
 
-Lets look at our ArchRProject
+We call this `ArchRProject` "projHeme1" because it is the first iteration of our hematopoiesis project. Throughout this walkthrough we will modify and update this `ArchRProject` and keep track of which version of the project we are using by iterating the project number (i.e. "projHeme2").
+
+Lets look at our `ArchRProject`:
 
 ```{r eval=FALSE}
-projHeme
+projHeme1
 # class: ArchRProject 
 # outputDirectory: /Volumes/JG_SSD_2/ArchR_Walkthrough/HemeTutorial 
 # samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1
@@ -33,17 +36,23 @@ projHeme
 # medianTSS(1): 16.832
 # medianFrags(1): 3050
 ```
-We can see from above the specified outputDirectory, sampleNames, sampleColData (column data associated with each sample), cellColData (column data associated with each cell), the number of cells, median TSS enrichment and median number of fragments. Additionally since we already computed doublet enrichment scores
-we can see in cellColData a column name "DoubletEnrichment" and "DoubletScore" which are related to the above addition of `addDoubletScores`. </br>
+We can see from the above that our `ArchRProject` has been initialized with a few important attributes:
 
-How big is the created ArchRProject in memory in R.
+1. The specified `outputDirectory`.
+2. The `sampleNames` of each sample which were obtained from the Arrow files.
+3. A matrix called `sampleColData` which contains data associated with each sample.
+4. A matrix called `cellColData` which contains data associated with each cell. Because we already computed doublet enrichment scores (using `addDoubletScores()`), which added those values to each cell in the Arrow files, we can see columns corresponding to the "DoubletEnrichment" and "DoubletScore" in the `cellColData` matrix.
+5. The total number of cells in our project which represents all samples after doublet identification and removal.
+6. The median TSS enrichment score and the median number of fragments across all cells and all samples.
+
+We can check how much memory is used to store the `ArchRProject` in memory within R:
 
 ```{r eval=FALSE}
 paste0("Memory Size = ", round(object.size(projHeme1) / 10^6, 3), " MB")
 #[1] "Memory Size = 37.135 MB"
 ```
 
-What matrices are available?
+We can also ask which data matrices are available within the `ArchRProject` which will be useful downstream once we start adding to this project:
 
 ```{r eval=FALSE}
 getAvailableMatrices(projHeme1)
@@ -52,9 +61,9 @@ getAvailableMatrices(projHeme1)
 
 
 ## Manipulating An ArchRProject
-Now that we have created an ArchRProject, there ample things that one can do to easily access/manipulate the data associated.
+Now that we have created an `ArchRProject`, there are many things that we can do to easily access or manipulate the associated data.
 
-Example 1. The `$` accessor, this allows direct access to cellColData
+<span style="font-size:20px;font-weight:bold">Example 1. The `$` accessor allows direct access to `cellColData`</span>
 
 ```{r eval=FALSE}
 #A. Access cell names associated with each cell
@@ -75,10 +84,10 @@ quantile(projHeme1$TSSEnrichment)
 # 4.027 13.922 16.832 19.937 41.782 
 ```
 
-Example 2. Subsetting an ArchRProject By Cells
+<span style="font-size:20px;font-weight:bold">Example 2. Subsetting an `ArchRProject` by cells</span>
 
 ```{r eval=FALSE}
-#A. Subsetting like a data.frame numerically
+#A. Subset the project numerically
 projHeme1[1:100, ] #First 100 cells
 # class: ArchRProject 
 # outputDirectory: /Volumes/JG_SSD_2/ArchR_Walkthrough/HemeTutorial 
@@ -90,7 +99,7 @@ projHeme1[1:100, ] #First 100 cells
 # medianTSS(1): 10.7725
 # medianFrags(1): 10200.5
 
-#B. Subetting like a data.frame with cellNames
+#B. Subset the project using cellNames
 projHeme1[projHeme1$cellNames[1:100], ]
 # class: ArchRProject 
 # outputDirectory: /Volumes/JG_SSD_2/ArchR_Walkthrough/HemeTutorial 
@@ -103,7 +112,7 @@ projHeme1[projHeme1$cellNames[1:100], ]
 # medianFrags(1): 10200.5
 
 
-#C. Subsetting for 1 sample
+#C. Subset the project to return all cells corresponding to a specific sample
 idxSample <- BiocGenerics::which(projHeme1$Sample %in% "scATAC_BMMC_R1")
 cellsSample <- projHeme1$cellNames[idxSample]
 projHeme1[cellsSample, ]
@@ -117,7 +126,7 @@ projHeme1[cellsSample, ]
 # medianTSS(1): 15.254
 # medianFrags(1): 2771
 
-#D. Increasing TSS cutoff
+#D. Subset the project based on a specific TSS enrichment score cutoff
 idxPass <- which(projHeme1$TSSEnrichment >= 8)
 cellsPass <- projHeme1$cellNames[idxPass]
 projHeme1[cellsPass, ]
@@ -132,10 +141,10 @@ projHeme1[cellsPass, ]
 # medianFrags(1): 3042
 ```
 
-Example 3. Adding data to an ArchRProject
+<span style="font-size:20px;font-weight:bold">Example 3. Adding data to an `ArchRProject`</span>
 
 ```{r eval=FALSE}
-#Add a column removing replicate info
+#Add a column to cellColData that contains more legible sample names by removing excess info from the original sample names
 bioNames <- gsub("_R2|_R1|scATAC_","",projHeme1$Sample)
 bioNames
 # character-Rle of length 10661 with 3 runs
@@ -143,12 +152,13 @@ bioNames
 #   Values :      "BMMC" "CD34_BMMC"      "PBMC"
 projHeme1$bioNames <- bioNames
 
-#Add a column with partial info
+#Add a column to cellColData that only contains information for a subset of cells
 bioNames <- bioNames[1:10]
 cellNames <- projHeme1$cellNames[1:10]
-projHeme1 <- addCellColData(ArchRProj = projHeme1, data = paste0(bioNames), cells = cellNames, name = "bioNames2")
+projHeme1 <- addCellColData(ArchRProj = projHeme1, data = paste0(bioNames),
+	cells = cellNames, name = "bioNames2")
 
-#Lets compare the results
+#We can compare these two columns to see "NA" filled in where data wasnt available for bioNames2
 getCellColData(projHeme1, select = c("bioNames", "bioNames2"))
 # DataFrame with 10661 rows and 2 columns
 #                                      bioNames   bioNames2
@@ -166,9 +176,11 @@ getCellColData(projHeme1, select = c("bioNames", "bioNames2"))
 # scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1        PBMC          NA
 ```
 
-Example 4. Log10 Unique Fragments
+<span style="font-size:20px;font-weight:bold">Example 4. Obtaining unique fragment counts</span>
 
 ```{r eval=FALSE}
+#Select the column from cellColData corresponding to the number of unique
+#nuclear (non-mitochondrial) fragments per cell
 df <- getCellColData(projHeme1, select = "nFrags")
 df
 # DataFrame with 10661 rows and 1 column
@@ -186,6 +198,8 @@ df
 # scATAC_PBMC_R1#TTCGTTACATTGAACC-1      1033
 # scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1      1002
 
+#Or, instead of selecting a column by name, we can actually perform operations on a given
+#column using its column name
 df <- getCellColData(projHeme1, select = c("log10(nFrags)", "nFrags - 1"))
 df
 # DataFrame with 10661 rows and 2 columns
@@ -204,7 +218,7 @@ df
 # scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1 3.00086772153123       1001
 ```
 
-Example 5. Log10 Unique Frags vs TSSEnrichment
+<span style="font-size:20px;font-weight:bold">Example 5. Plotting QC metrics - log10(Unique Fragments) vs TSS enrichment score</span>
 
 ```{r eval=FALSE}
 df <- getCellColData(projHeme1, select = c("log10(nFrags)", "TSSEnrichment"))
@@ -225,8 +239,8 @@ df
 # scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1 3.00086772153123        21.485
 ```
 
-Now lets plot the number of unique nuclear fragments (log10) by TSS enrichment. This type of plot is
-key in identifying high quality cells. We can further adjust our cutoffs based on this plot if need be.
+Now lets plot the number of unique nuclear fragments (log10) by the TSS enrichment score. This type of plot is
+key for identifying high quality cells. We can further adjust our cutoffs based on this plot if need be.
 
 ```{r eval=FALSE}
 p <- ggPoint(
@@ -245,8 +259,7 @@ p
 
 ![](images/HemeWalkthrough/PNG/TSS-vs-Frags_1.png){width=500 height=500}
 
-To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
-nice looking.
+To save an editable vectorized version of this plot, we use `plotPDF()`.
 
 ```{r eval=FALSE}
 plotPDF(p, name = "TSS-vs-Frags.pdf", ArchRProj = projHeme1, addDOC = FALSE)
@@ -256,7 +269,11 @@ plotPDF(p, name = "TSS-vs-Frags.pdf", ArchRProj = projHeme1, addDOC = FALSE)
 
 ## Plotting Sample Statistics from an ArchRProject
 
-Example 1. Make a Ridge Plot for each sample for the TSS Enrichment scores.
+When working with multiple distinct samples in a single integrated data set, it can be important to compare various metrics across all samples. ArchR provides two main plotting mechanisms for grouped data: ridge plots and violin plots. These are both accessed through the `plotGroups()` function. Of course, this plot type is not limited to sample-level data and can be used for plotting of downstream group-level information for groups such as clusters.
+
+<span style="font-size:20px;font-weight:bold">Example 1. Make a ridge plot for each sample for the TSS enrichment scores.</span>
+
+To make a ridge plot, we set `plotAs = "ridges"`.
 
 ```{r eval=FALSE}
 p1 <- plotGroups(
@@ -271,8 +288,9 @@ p1
 
 ![](images/HemeWalkthrough/PNG/QC-Sample-Statistics_1.png){width=500 height=500}
 
+<span style="font-size:20px;font-weight:bold">Example 2. Make a violin plot for each sample for the TSS enrichment scores.</span>
 
-Example 2. Make a Violin Plot for each sample for the TSS Enrichment scores.
+To make a violin plot, we set `plotAs = "violin"`.
 
 ```{r eval=FALSE}
 p2 <- plotGroups(
@@ -289,7 +307,7 @@ p2
 
 ![](images/HemeWalkthrough/PNG/QC-Sample-Statistics_2.png){width=500 height=500}
 
-Example 3. Make a Ridge Plot for each sample for the log10 unique nuclear fragments.
+<span style="font-size:20px;font-weight:bold">Example 3. Make a ridge plot for each sample for the log10(unique nuclear fragments).</span>
 
 ```{r eval=FALSE}
 p3 <- plotGroups(
@@ -304,7 +322,7 @@ p3
 
 ![](images/HemeWalkthrough/PNG/QC-Sample-Statistics_3.png){width=500 height=500}
 
-Example 4. Make a Violin Plot for each sample for the log10 unique nuclear fragments.
+<span style="font-size:20px;font-weight:bold">Example 4. Make a violin plot for each sample for the log10(unique nuclear fragments).</span>
 
 ```{r eval=FALSE}
 p4 <- plotGroups(
@@ -321,8 +339,7 @@ p4
 
 ![](images/HemeWalkthrough/PNG/QC-Sample-Statistics_4.png){width=500 height=500}
 
-To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
-nice looking.
+To save editable vectorized versions of these plots, we use `plotPDF()`.
 
 ```{r eval=FALSE}
 plotPDF(p1,p2,p3,p4, name = "QC-Sample-Statistics.pdf", ArchRProj = projHeme1, addDOC = FALSE, width = 4, height = 4)
@@ -332,7 +349,9 @@ plotPDF(p1,p2,p3,p4, name = "QC-Sample-Statistics.pdf", ArchRProj = projHeme1, a
 
 ## Plotting Sample Fragment Size Distribution and TSS Enrichment Profiles.
 
-ArchR can compute fragment size distributions after ArrowFile creation for all samples swiftly.
+Because of how the data is stored and accessed, ArchR can compute fragment size distributions and TSS enrichment profiles from Arrow files very quickly.
+
+<span style="font-size:16px;font-weight:bold">Fragment size distributions:</span>
 
 ```{r eval=FALSE}
 p1 <- plotFragmentSizes(ArchRProj = projHeme1)
@@ -341,7 +360,7 @@ p1
 
 ![](images/HemeWalkthrough/PNG/QC-Sample-FragSizes-TSSProfile_1.png){width=500 height=500}
 
-ArchR can compute TSS enrichment profiles after ArrowFile creation for all samples swiftly.
+<span style="font-size:16px;font-weight:bold">TSS enrichment profiles:</span>
 
 ```{r eval=FALSE}
 p2 <- plotTSSEnrichment(ArchRProj = projHeme1)
@@ -350,8 +369,7 @@ p2
 
 ![](images/HemeWalkthrough/PNG/QC-Sample-FragSizes-TSSProfile_2.png){width=500 height=500}
 
-To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
-nice looking.
+To save editable vectorized versions of these plots, we use `plotPDF()`.
 
 ```{r eval=FALSE}
 plotPDF(p1,p2, name = "QC-Sample-FragSizes-TSSProfile.pdf", ArchRProj = projHeme1, addDOC = FALSE, width = 5, height = 5)
@@ -361,9 +379,10 @@ plotPDF(p1,p2, name = "QC-Sample-FragSizes-TSSProfile.pdf", ArchRProj = projHeme
 
 ## Filtering Doublets from an ArchRProject
 
+After we have added information on the predicted doublets using `addDoubletScores()`, we can remove these predicted doublets using `filterDoublets()`. One of the key elements of this filtering step is the `filterRatio` which is the maximum ratio of predicted doublets to filter based on the number of pass-filter cells. For example, if there are 5000 cells, the maximum number of filtered predicted doublets would be `filterRatio * 5000^2 / (100000)` (which simplifies to `filterRatio * 5000 * 0.05`). This `filterRatio` allows you to apply a consistent filter across multiple different samples that may have different percentages of doublets because they were run with different cell loading concentrations. The higher the `filterRatio`, the greater the number of cells potentially removed as doublets.
+
 ```{r eval=FALSE}
 #Remove doublets as normal
-#If you feel there are more doublets try increasing filterRatio like below
 projHeme2 <- filterDoublets(projHeme1)
 # Filtering 410 cells from ArchRProject!
 # 	scATAC_BMMC_R1 : 243 of 4932 (4.9%)
@@ -383,8 +402,7 @@ projHeme2
 # medianFrags(1): 2994
 ```
 
-If you want to filter more cells from the ArchR Project try a higher filterRatio.
-To see additional arguments try ?filterDoublets
+If you wanted to filter more cells from the ArchR Project, you would try a higher `filterRatio`. To see additional arguments that can be tweaked, try `?filterDoublets`.
 
 ```{r eval=FALSE}
 projHemeTmp <- filterDoublets(projHeme1, filterRatio = 1.5)
@@ -395,9 +413,9 @@ projHemeTmp <- filterDoublets(projHeme1, filterRatio = 1.5)
 rm(projHemeTmp)
 ```
 
-We can now save our original projHeme1 using `saveArchRProject` from ArchR.
+We can now save our updated `projHeme2` using `saveArchRProject()` which will allow us to use this project in future chapters.
 
 ```{r eval=FALSE}
-saveArchRProject(projHeme1, copyArrows = FALSE)
+saveArchRProject(projHeme2, copyArrows = FALSE)
 ```
 
