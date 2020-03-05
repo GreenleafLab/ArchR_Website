@@ -24,13 +24,13 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-02-25" />
+<meta name="date" content="2020-02-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
-  
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
 <link rel="prev" href="batch-effect-correction-wtih-harmony.html"/>
 <link rel="next" href="single-cell-embeddings.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
@@ -240,7 +240,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="clustering-with-archr" class="section level1" number="5">
 <h1><span class="header-section-number">Chapter 5</span> Clustering with ArchR</h1>
-<p>Most single-cell clustering methods focus on computing nearest neighbor graphs in reduced dimensions and then identifying “communities” or clusters. These approaches work extremely well and are a standard practice in scRNA. For this reason, we import existing state of the art clustering methods from scRNA-seq packages for clustering. In our experience, we have had the most success using Seurat’s (<a href="https://github.com/satijalab/seurat" class="uri">https://github.com/satijalab/seurat</a>) graph clustering approach. Additional clustering params can be passed to <code>Seurat::FindClusters</code> from this function.</p>
+<p>Most single-cell clustering methods focus on computing nearest neighbor graphs in reduced dimensions and then identifying “communities” or clusters of cells. These approaches work extremely well and are a standard practice in scRNA-seq. For this reason, ArchR uses existing state-of-the-art clustering methods from scRNA-seq packages for clustering.</p>
+<div id="clustering-using-seurats-findclusters-function" class="section level3" number="5.0.1">
+<h3><span class="header-section-number">5.0.1</span> Clustering using Seurat’s <code>FindClusters()</code> function</h3>
+<p>We have had the most success using the graph clustering approach implemented by <a href="https://github.com/satijalab/seurat">Seurat</a>. In ArchR, clustering is performed using the <code>addClusters()</code> function which permits additional clustering parameters to be passed to the <code>Seurat::FindClusters()</code> function.</p>
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="clustering-with-archr.html#cb39-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addClusters</span>(</span>
 <span id="cb39-2"><a href="clustering-with-archr.html#cb39-2"></a>    <span class="dt">input =</span> projHeme2,</span>
 <span id="cb39-3"><a href="clustering-with-archr.html#cb39-3"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
@@ -257,7 +260,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb40-6"><a href="clustering-with-archr.html#cb40-6"></a><span class="co">#       28      1070       425       351       408       345      1330       562 </span></span>
 <span id="cb40-7"><a href="clustering-with-archr.html#cb40-7"></a><span class="co"># Cluster4  Cluster5  Cluster6  Cluster7  Cluster8  Cluster9 </span></span>
 <span id="cb40-8"><a href="clustering-with-archr.html#cb40-8"></a><span class="co">#      901       860      1218       974       274      1505</span></span></code></pre></div>
-<p>We can also create a cluster confusion matrix across each sample. JJJ</p>
+<p>We can also create a cluster confusion matrix across each sample to show which samples reside in which clusters. JJJ
+QQQ Seems weird to use a hidden function like this in the tutorial</p>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="clustering-with-archr.html#cb41-1"></a>ArchR<span class="op">:::</span><span class="kw">.confusionMatrix</span>(<span class="kw">paste0</span>(projHeme2<span class="op">$</span>Clusters), <span class="kw">paste0</span>(projHeme2<span class="op">$</span>Sample))</span>
 <span id="cb41-2"><a href="clustering-with-archr.html#cb41-2"></a><span class="co"># 14 x 3 sparse Matrix of class &quot;dgCMatrix&quot;</span></span>
 <span id="cb41-3"><a href="clustering-with-archr.html#cb41-3"></a><span class="co">#           scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1</span></span>
@@ -275,8 +279,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb41-15"><a href="clustering-with-archr.html#cb41-15"></a><span class="co"># Cluster10             84                   1            985</span></span>
 <span id="cb41-16"><a href="clustering-with-archr.html#cb41-16"></a><span class="co"># Cluster6             117                1101              .</span></span>
 <span id="cb41-17"><a href="clustering-with-archr.html#cb41-17"></a><span class="co"># Cluster13             80                 328              .</span></span></code></pre></div>
-<p>Determining the appropriate cluster params is useful once you have computed a 2-dimensional embedding. This is because you should be adjusting both the clustering and embedding params to where they both agree.</p>
-<p>Additionally, one can call clusters with scran (<a href="https://bioconductor.org/packages/release/bioc/html/scran.html" class="uri">https://bioconductor.org/packages/release/bioc/html/scran.html</a>).</p>
+<p>QQQ Show how to turn this confusion matrix into a plot</p>
+<p>QQQ This is confusing. Expand on this - Determining the appropriate cluster parameters is useful once you have computed a 2-dimensional embedding. This is because you should be adjusting both the clustering and embedding parameters to where they both agree.</p>
+</div>
+<div id="clustering-using-scran" class="section level3" number="5.0.2">
+<h3><span class="header-section-number">5.0.2</span> Clustering using <code>scran</code></h3>
+<p>Additionally, one can call clusters with <a href="https://bioconductor.org/packages/release/bioc/html/scran.html">scran</a>.</p>
 <div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="clustering-with-archr.html#cb42-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addClusters</span>(</span>
 <span id="cb42-2"><a href="clustering-with-archr.html#cb42-2"></a>    <span class="dt">input =</span> projHeme2,</span>
 <span id="cb42-3"><a href="clustering-with-archr.html#cb42-3"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
@@ -285,6 +293,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb42-6"><a href="clustering-with-archr.html#cb42-6"></a>    <span class="dt">k =</span> <span class="dv">15</span></span>
 <span id="cb42-7"><a href="clustering-with-archr.html#cb42-7"></a>)</span></code></pre></div>
 
+</div>
 </div>
             </section>
 

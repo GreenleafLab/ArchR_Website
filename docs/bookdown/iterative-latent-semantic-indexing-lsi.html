@@ -24,13 +24,13 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-02-25" />
+<meta name="date" content="2020-02-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
-  
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
 <link rel="prev" href="archrs-lsi-implementation.html"/>
 <link rel="next" href="batch-effect-correction-wtih-harmony.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
@@ -241,6 +241,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="iterative-latent-semantic-indexing-lsi" class="section level2" number="4.2">
 <h2><span class="header-section-number">4.2</span> Iterative Latent Semantic Indexing (LSI)</h2>
 <p>In scRNA-seq identifying variable genes is a common way to compute dimensionality reduction (such as PCA). This is done becasue these genes are more likely to be biologically important and this reduces experimental noise. In scATAC-seq the data is binary and thus you cannot identify variable peaks for dimensionality reduction. Rather than identifying the most variable peaks, we have tried using the most accessible features as input to LSI; however, the results when running multiple samples have shown high degrees of noise and low reproducibility. To remedy this we introduced the “iterative LSI” approach (<a href="https://www.ncbi.nlm.nih.gov/pubmed/31375813">Satpathy*, Granja* et al. Nature Biotechnology 2019</a> and <a href="https://www.ncbi.nlm.nih.gov/pubmed/31792411">Granja*, Klemm* and McGinnis* et al. Nature Biotechnology 2019</a>). This approach computes an intial LSI transformation on the most accessible tiles and identifies lower resolution clusters that are not batch confounded. For example, when performed on peripheral blood mononuclear cells, this will identify clusters corresponding to the major cell types (T cells, B cells, and monocytes). Then ArchR computes the average accessibility for each of these clusters across all features creating “pseudo-bulks”. ArchR then identifies the most variable peaks across these pseudo-bulks and uses these features for LSI again. In this second iteration, the most variable peaks are more similar to the variable genes used in scRNA-seq LSI implementations. The user can set how many iterations of LSI should be performed. QQQ add new info on LSI implementation. We have found this approach to be very good for batch minimization and allows operations on a more reasonably sized feature matrix.</p>
+<center>
+<img src="images/iterativeLSI.png" width="350" />
+</center>
 <p>To perform iterative LSI in ArchR, we use the <code>addIterativeLSI()</code> function. The default parameters which should cover most cases but we encourage you to explore the available parameters and how they each affect your particular data set. See <code>?addIterativeLSI</code> for more details on inputs.</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="iterative-latent-semantic-indexing-lsi.html#cb34-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addIterativeLSI</span>(</span>
 <span id="cb34-2"><a href="iterative-latent-semantic-indexing-lsi.html#cb34-2"></a>    <span class="dt">ArchRProj =</span> projHeme2,</span>

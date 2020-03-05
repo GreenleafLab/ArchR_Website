@@ -6,7 +6,10 @@ setwd("/Volumes/JG_SSD_2/ArchR_Walkthrough/")
 save.image("Save-ArchR-Walkthrough-Feb13-2130.Rdata")
 ```
 
-Most single-cell clustering methods focus on computing nearest neighbor graphs in reduced dimensions and then identifying "communities" or clusters. These approaches work extremely well and are a standard practice in scRNA. For this reason, we import existing state of the art clustering methods from scRNA-seq packages for clustering. In our experience, we have had the most success using Seurat's (https://github.com/satijalab/seurat) graph clustering approach. Additional clustering params can be passed to `Seurat::FindClusters` from this function.
+Most single-cell clustering methods focus on computing nearest neighbor graphs in reduced dimensions and then identifying "communities" or clusters of cells. These approaches work extremely well and are a standard practice in scRNA-seq. For this reason, ArchR uses existing state-of-the-art clustering methods from scRNA-seq packages for clustering.
+
+### Clustering using Seurat's `FindClusters()` function
+We have had the most success using the graph clustering approach implemented by [Seurat](https://github.com/satijalab/seurat). In ArchR, clustering is performed using the `addClusters()` function which permits additional clustering parameters to be passed to the `Seurat::FindClusters()` function.
 
 ```{r eval=FALSE}
 projHeme2 <- addClusters(
@@ -31,7 +34,8 @@ table(projHeme2$Clusters)
 #      901       860      1218       974       274      1505
 ```
 
-We can also create a cluster confusion matrix across each sample. JJJ
+We can also create a cluster confusion matrix across each sample to show which samples reside in which clusters. JJJ
+QQQ Seems weird to use a hidden function like this in the tutorial
 
 ```{r eval=FALSE}
 ArchR:::.confusionMatrix(paste0(projHeme2$Clusters), paste0(projHeme2$Sample))
@@ -53,9 +57,14 @@ ArchR:::.confusionMatrix(paste0(projHeme2$Clusters), paste0(projHeme2$Sample))
 # Cluster13             80                 328              .
 ```
 
-Determining the appropriate cluster params is useful once you have computed a 2-dimensional embedding. This is because you should be adjusting both the clustering and embedding params to where they both agree. 
+QQQ Show how to turn this confusion matrix into a plot
 
-Additionally, one can call clusters with scran (https://bioconductor.org/packages/release/bioc/html/scran.html).
+
+QQQ This is confusing. Expand on this - Determining the appropriate cluster parameters is useful once you have computed a 2-dimensional embedding. This is because you should be adjusting both the clustering and embedding parameters to where they both agree. 
+
+### Clustering using `scran`
+
+Additionally, one can call clusters with [scran](https://bioconductor.org/packages/release/bioc/html/scran.html).
 
 ```{r eval=FALSE}
 projHeme2 <- addClusters(
