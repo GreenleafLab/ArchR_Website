@@ -1,4 +1,4 @@
-# ArchR <img src="man/figures/ArchR_dartLogo_small.jpg" alt="" width="45" >
+# <img src="man/figures/ArchR_Logo_Integrated.png" alt="" width="200" >
 
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 
