@@ -24,13 +24,13 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-02-25" />
+<meta name="date" content="2020-03-31" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
-  
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
 <link rel="prev" href="iterative-latent-semantic-indexing-lsi.html"/>
 <link rel="next" href="clustering-with-archr.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
@@ -50,6 +50,8 @@
 
 
 
+<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -135,10 +137,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="index.html#section"><img src="images/ArchR_Logo_Integrated.png" alt="" width="200"></a></li>
 <li class="chapter" data-level="1" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>1</b> Getting Started with ArchR</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="what-is-an-arrowfile-archrproject.html"><a href="what-is-an-arrowfile-archrproject.html"><i class="fa fa-check"></i><b>1.1</b> What is an <code>ArrowFile</code> / <code>ArchRProject</code>?</a></li>
-<li class="chapter" data-level="1.2" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>1.2</b> Getting Set Up</a></li>
-<li class="chapter" data-level="1.3" data-path="setting-a-genome-and-geneannotation.html"><a href="setting-a-genome-and-geneannotation.html"><i class="fa fa-check"></i><b>1.3</b> Setting a Genome and GeneAnnotation</a></li>
-<li class="chapter" data-level="1.4" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>1.4</b> Creating Arrow Files</a></li>
+<li class="chapter" data-level="1.1" data-path="a-brief-primer-on-atac-seq-terminology.html"><a href="a-brief-primer-on-atac-seq-terminology.html"><i class="fa fa-check"></i><b>1.1</b> A Brief Primer on ATAC-seq Terminology</a></li>
+<li class="chapter" data-level="1.2" data-path="why-use-archr.html"><a href="why-use-archr.html"><i class="fa fa-check"></i><b>1.2</b> Why use ArchR?</a></li>
+<li class="chapter" data-level="1.3" data-path="what-is-an-arrow-file-archrproject.html"><a href="what-is-an-arrow-file-archrproject.html"><i class="fa fa-check"></i><b>1.3</b> What is an <code>Arrow file</code> / <code>ArchRProject</code>?</a></li>
+<li class="chapter" data-level="1.4" data-path="input-file-types-in-archr.html"><a href="input-file-types-in-archr.html"><i class="fa fa-check"></i><b>1.4</b> Input File Types in ArchR</a></li>
+<li class="chapter" data-level="1.5" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>1.5</b> Getting Set Up</a></li>
+<li class="chapter" data-level="1.6" data-path="setting-a-genome-and-geneannotation.html"><a href="setting-a-genome-and-geneannotation.html"><i class="fa fa-check"></i><b>1.6</b> Setting a Genome and GeneAnnotation</a></li>
+<li class="chapter" data-level="1.7" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>1.7</b> Creating Arrow Files</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="doublet-inference-with-archr.html"><a href="doublet-inference-with-archr.html"><i class="fa fa-check"></i><b>2</b> Doublet Inference with ArchR</a>
 <ul>
@@ -240,13 +245,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="batch-effect-correction-wtih-harmony" class="section level2" number="4.3">
 <h2><span class="header-section-number">4.3</span> Batch Effect Correction wtih Harmony</h2>
-<p>Sometimes the iterative LSI approach isnt enough of a correction for strong batch effect differences. For this reason, ArchR implements a commonly used batch effect correction tool called <a href="https://github.com/immunogenomics/harmony">Harmony</a> which was originally designed for scRNA-seq. We provide a wrapper that will pass a dimensionality reduction object from ArchR directly to the <code>HarmonyMatrix()</code> function. Additional arguments can be directly passed to <code>HarmonyMatrix</code> in the function. See <code>?addHarmony</code> for more details. Users should be aware of the caveats of batch correction for their particular application.</p>
+<p>Sometimes the iterative LSI approach isnt enough of a correction for strong batch effect differences. For this reason, ArchR implements a commonly used batch effect correction tool called <a href="https://github.com/immunogenomics/harmony">Harmony</a> which was originally designed for scRNA-seq. We provide a wrapper that will pass a dimensionality reduction object from ArchR directly to the <code>HarmonyMatrix()</code> function. Additional arguments can be directly passed to <code>HarmonyMatrix()</code> in the function via the additional parameters (<code>...</code>) . See <code>?addHarmony()</code> for more details. Users should be aware of the caveats of batch correction for their particular application.</p>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="batch-effect-correction-wtih-harmony.html#cb38-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addHarmony</span>(</span>
 <span id="cb38-2"><a href="batch-effect-correction-wtih-harmony.html#cb38-2"></a>    <span class="dt">ArchRProj =</span> projHeme2,</span>
 <span id="cb38-3"><a href="batch-effect-correction-wtih-harmony.html#cb38-3"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
 <span id="cb38-4"><a href="batch-effect-correction-wtih-harmony.html#cb38-4"></a>    <span class="dt">name =</span> <span class="st">&quot;Harmony&quot;</span>,</span>
 <span id="cb38-5"><a href="batch-effect-correction-wtih-harmony.html#cb38-5"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Sample&quot;</span></span>
 <span id="cb38-6"><a href="batch-effect-correction-wtih-harmony.html#cb38-6"></a>)</span></code></pre></div>
+<p>QQQ Would like to see a before and after batch correction plot here</p>
 
 </div>
 <!-- </div> -->
