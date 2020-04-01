@@ -24,13 +24,13 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-02-25" />
+<meta name="date" content="2020-03-31" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
-  
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
 
 <link rel="next" href="getting-started-with-archr.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
@@ -50,6 +50,8 @@
 
 
 
+<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -135,10 +137,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="index.html#section"><img src="images/ArchR_Logo_Integrated.png" alt="" width="200"></a></li>
 <li class="chapter" data-level="1" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>1</b> Getting Started with ArchR</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="what-is-an-arrowfile-archrproject.html"><a href="what-is-an-arrowfile-archrproject.html"><i class="fa fa-check"></i><b>1.1</b> What is an <code>ArrowFile</code> / <code>ArchRProject</code>?</a></li>
-<li class="chapter" data-level="1.2" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>1.2</b> Getting Set Up</a></li>
-<li class="chapter" data-level="1.3" data-path="setting-a-genome-and-geneannotation.html"><a href="setting-a-genome-and-geneannotation.html"><i class="fa fa-check"></i><b>1.3</b> Setting a Genome and GeneAnnotation</a></li>
-<li class="chapter" data-level="1.4" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>1.4</b> Creating Arrow Files</a></li>
+<li class="chapter" data-level="1.1" data-path="a-brief-primer-on-atac-seq-terminology.html"><a href="a-brief-primer-on-atac-seq-terminology.html"><i class="fa fa-check"></i><b>1.1</b> A Brief Primer on ATAC-seq Terminology</a></li>
+<li class="chapter" data-level="1.2" data-path="why-use-archr.html"><a href="why-use-archr.html"><i class="fa fa-check"></i><b>1.2</b> Why use ArchR?</a></li>
+<li class="chapter" data-level="1.3" data-path="what-is-an-arrow-file-archrproject.html"><a href="what-is-an-arrow-file-archrproject.html"><i class="fa fa-check"></i><b>1.3</b> What is an <code>Arrow file</code> / <code>ArchRProject</code>?</a></li>
+<li class="chapter" data-level="1.4" data-path="input-file-types-in-archr.html"><a href="input-file-types-in-archr.html"><i class="fa fa-check"></i><b>1.4</b> Input File Types in ArchR</a></li>
+<li class="chapter" data-level="1.5" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>1.5</b> Getting Set Up</a></li>
+<li class="chapter" data-level="1.6" data-path="setting-a-genome-and-geneannotation.html"><a href="setting-a-genome-and-geneannotation.html"><i class="fa fa-check"></i><b>1.6</b> Setting a Genome and GeneAnnotation</a></li>
+<li class="chapter" data-level="1.7" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>1.7</b> Creating Arrow Files</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="doublet-inference-with-archr.html"><a href="doublet-inference-with-archr.html"><i class="fa fa-check"></i><b>2</b> Doublet Inference with ArchR</a>
 <ul>
@@ -241,14 +246,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</h1>
 <p class="author"><em>Jeffrey Granja and Ryan Corces</em></p>
-<p class="date"><em>2020-02-25</em></p>
+<p class="date"><em>2020-03-31</em></p>
 </div>
 <div id="section" class="section level1 unnumbered" number="">
 <h1><img src="images/ArchR_Logo_Integrated.png" alt="" width="200"></h1>
 <p>ArchR is a full-featured software suite for the analysis of single-cell chromatin accessibility data. It is designed to handle hundreds of thousands of single cells without large memory or computational requirements, keeping pace with the experimental scale that is achievable with commercial platforms such as the 10x Genomics Chromium system.</p>
 <p>This website is a complete user’s guide to ArchR. We explain how to use ArchR by walking through examples of every analysis we could think of. We also include some more extensive documention on some of the more salient points of scATAC-seq analysis such as dimensionality reduction and clustering. All of the chapters will utilize the same gold-standard downsampled dataset of hematopoietic cells <a href="https://www.ncbi.nlm.nih.gov/pubmed/31792411">Granja* et al. Nature Biotechnology 2019</a>. Each chapter will build on the previous and we provide intermediate files for you to jump in at any point. <strong>Importantly, these tutorials assume that you are running ArchR locally</strong>.</p>
 <p>This walkthrough assumes that you have already successfully installed ArchR and all dependencies. If that is not the case, please <a href="https://greenleaflab.github.io/ArchR/index.html">visit the home page</a> for installation instructions.</p>
-<p><span style="font-size:30px;font-weight:bold">Cant find what you are looking for?</span></p>
+<p><i class="fa fa-search fa-2x"></i><span style="font-size:30px;font-weight:bold"> Cant find what you are looking for?</span></p>
 <p>There is a search feature that can be enabled using the magnifying glass in the navigation bar above which will help you find whatever it is you are looking for. If you dont find it in this book, or if you think the documentation on this website or in the function annotations is unclear, please submit an issue on <a href="https://github.com/GreenleafLab/ArchR/issues">Github</a> with the <em>documentation</em> tag and we will do our best to clarify. If none of these options help, <a href="mailto:archr.devs@gmail.com">send us an email</a> and we will do our best to respond in a timely fashion.</p>
 
 </div>

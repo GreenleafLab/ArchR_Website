@@ -7,20 +7,32 @@ save.image("Save-ArchR-Walkthrough-Chapter1-Feb13.Rdata")
 
 This chapter will introduce you to how to import data into ArchR and how to create ArrowFiles, the base unit of ArchR analysis.
 
-## What is an `ArrowFile` / `ArchRProject`?
+## A Brief Primer on ATAC-seq Terminology
 
-The base unit of an analytical project in ArchR is called an `ArrowFile`. Each `ArrowFile` stores all of the data associated with an individual sample (i.e. metadata, accessible fragments, and data matrices). Here, an "individual sample" would be the most detailed unit of analysis desired (for ex. a single replicate of a particular condition). During creation and as additional analyses are performed, ArchR updates and edits each `ArrowFile` to contain additional layers of information.
-It is worth noting that, to ArchR, an `ArrowFile` is actually just a path to an external file stored on disk. More explicitly, an `ArrowFile` is not an R-language object that is stored in memory but rather an HDF5-format file stored on disk. Because of this, we use an `ArchRProject` object to associate these `ArrowFiles` together into a single analytical framework that can be rapidly accessed in R. This `ArchRProject` object is small in size and is stored in memory.
+The most fundamental component of any ATAC-seq experiment is a "__fragment__". In ATAC-seq, a fragment refers to a sequenceable DNA molecule created by two transposition events. Each end of that fragment is sequenced using paired-end sequencing. The inferred single-base position of the start and end of the fragment is adjusted based on the insertion offset of Tn5. As reported previously26, Tn5 transposase binds to DNA as a homodimer with 9-bp of DNA between the two Tn5 molecules. Because of this, each Tn5 homodimer binding event creates two insertions, separated by 9 bp. Thus, the actual central point of the “accessible” site is in the very center of the Tn5 dimer, not the location of each Tn5 insertion. To account for this, we apply an offset to the individual Tn5 insertions, adjusting plus-stranded insertion events by +4 bp and minus-stranded insertion events by -5 bp. This is consistent with the convention put forth during the original description of ATAC-seq27. Thus, in ArchR, “__fragments__” refers to a table or genomic ranges containing the chromosome, offset-adjusted chromosome start position, offset-adjusted chromosome end position, and unique cellular barcode ID corresponding to each sequenced fragment. Similarly, "__insertions__" refer to the offset-adjuset single-base position at the very center of an accessible site.
+
+## Why use ArchR?
+
+QQQ include some benchmarking figures
+
+## What is an `Arrow file` / `ArchRProject`?
+
+The base unit of an analytical project in ArchR is called an `Arrow file`. Each `Arrow file` stores all of the data associated with an individual sample (i.e. metadata, accessible fragments, and data matrices). Here, an "individual sample" would be the most detailed unit of analysis desired (for ex. a single replicate of a particular condition). During creation and as additional analyses are performed, ArchR updates and edits each `Arrow file` to contain additional layers of information.
+It is worth noting that, to ArchR, an `Arrow file` is actually just a path to an external file stored on disk. More explicitly, an `Arrow file` is not an R-language object that is stored in memory but rather an HDF5-format file stored on disk. Because of this, we use an `ArchRProject` object to associate these `Arrow files` together into a single analytical framework that can be rapidly accessed in R. This `ArchRProject` object is small in size and is stored in memory.
 
 <center>
 ![](images/ArchRProject_Schematic.png){width=700px}
 </center>
 
-Certain actions can be taken directly on `ArrowFiles` while other actions are taken on an `ArchRProject` which in turn updates each associated `ArrowFile`. Because `ArrowFiles` are stored as large HDF5-format files, "get-er" functions in ArchR retrieve data by interacting with the `ArchRProject` while "add-er" functions either (i) add data directly to `ArrowFiles`, (ii) add data directly to an `ArchRProject`, or (iii) add data to `ArrowFiles` by interacting with an `ArchRProject`.
+Certain actions can be taken directly on `Arrow files` while other actions are taken on an `ArchRProject` which in turn updates each associated `Arrow file`. Because `Arrow files` are stored as large HDF5-format files, "get-er" functions in ArchR retrieve data by interacting with the `ArchRProject` while "add-er" functions either (i) add data directly to `Arrow files`, (ii) add data directly to an `ArchRProject`, or (iii) add data to `Arrow files` by interacting with an `ArchRProject`.
 
 <center>
 ![](images/ArchR_FunctionSchematic.png){width=400px}
 </center>
+
+## Input File Types in ArchR
+
+QQQ
 
 ## Getting Set Up
 
