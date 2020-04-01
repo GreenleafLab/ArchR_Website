@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-02-26" />
+<meta name="date" content="2020-03-31" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,6 +50,8 @@
 
 
 
+<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -135,10 +137,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="index.html#section"><img src="images/ArchR_Logo_Integrated.png" alt="" width="200"></a></li>
 <li class="chapter" data-level="1" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>1</b> Getting Started with ArchR</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="what-is-an-arrowfile-archrproject.html"><a href="what-is-an-arrowfile-archrproject.html"><i class="fa fa-check"></i><b>1.1</b> What is an <code>ArrowFile</code> / <code>ArchRProject</code>?</a></li>
-<li class="chapter" data-level="1.2" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>1.2</b> Getting Set Up</a></li>
-<li class="chapter" data-level="1.3" data-path="setting-a-genome-and-geneannotation.html"><a href="setting-a-genome-and-geneannotation.html"><i class="fa fa-check"></i><b>1.3</b> Setting a Genome and GeneAnnotation</a></li>
-<li class="chapter" data-level="1.4" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>1.4</b> Creating Arrow Files</a></li>
+<li class="chapter" data-level="1.1" data-path="a-brief-primer-on-atac-seq-terminology.html"><a href="a-brief-primer-on-atac-seq-terminology.html"><i class="fa fa-check"></i><b>1.1</b> A Brief Primer on ATAC-seq Terminology</a></li>
+<li class="chapter" data-level="1.2" data-path="why-use-archr.html"><a href="why-use-archr.html"><i class="fa fa-check"></i><b>1.2</b> Why use ArchR?</a></li>
+<li class="chapter" data-level="1.3" data-path="what-is-an-arrow-file-archrproject.html"><a href="what-is-an-arrow-file-archrproject.html"><i class="fa fa-check"></i><b>1.3</b> What is an <code>Arrow file</code> / <code>ArchRProject</code>?</a></li>
+<li class="chapter" data-level="1.4" data-path="input-file-types-in-archr.html"><a href="input-file-types-in-archr.html"><i class="fa fa-check"></i><b>1.4</b> Input File Types in ArchR</a></li>
+<li class="chapter" data-level="1.5" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>1.5</b> Getting Set Up</a></li>
+<li class="chapter" data-level="1.6" data-path="setting-a-genome-and-geneannotation.html"><a href="setting-a-genome-and-geneannotation.html"><i class="fa fa-check"></i><b>1.6</b> Setting a Genome and GeneAnnotation</a></li>
+<li class="chapter" data-level="1.7" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>1.7</b> Creating Arrow Files</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="doublet-inference-with-archr.html"><a href="doublet-inference-with-archr.html"><i class="fa fa-check"></i><b>2</b> Doublet Inference with ArchR</a>
 <ul>
@@ -260,7 +265,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb40-6"><a href="clustering-with-archr.html#cb40-6"></a><span class="co">#       28      1070       425       351       408       345      1330       562 </span></span>
 <span id="cb40-7"><a href="clustering-with-archr.html#cb40-7"></a><span class="co"># Cluster4  Cluster5  Cluster6  Cluster7  Cluster8  Cluster9 </span></span>
 <span id="cb40-8"><a href="clustering-with-archr.html#cb40-8"></a><span class="co">#      901       860      1218       974       274      1505</span></span></code></pre></div>
-<p>We can also create a cluster confusion matrix across each sample to show which samples reside in which clusters. JJJ
+<p>To better understand which samples reside in which clusters, we can create a cluster confusion matrix across each sample. JJJ
 QQQ Seems weird to use a hidden function like this in the tutorial</p>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="clustering-with-archr.html#cb41-1"></a>ArchR<span class="op">:::</span><span class="kw">.confusionMatrix</span>(<span class="kw">paste0</span>(projHeme2<span class="op">$</span>Clusters), <span class="kw">paste0</span>(projHeme2<span class="op">$</span>Sample))</span>
 <span id="cb41-2"><a href="clustering-with-archr.html#cb41-2"></a><span class="co"># 14 x 3 sparse Matrix of class &quot;dgCMatrix&quot;</span></span>
@@ -284,7 +289,7 @@ QQQ Seems weird to use a hidden function like this in the tutorial</p>
 </div>
 <div id="clustering-using-scran" class="section level3" number="5.0.2">
 <h3><span class="header-section-number">5.0.2</span> Clustering using <code>scran</code></h3>
-<p>Additionally, one can call clusters with <a href="https://bioconductor.org/packages/release/bioc/html/scran.html">scran</a>.</p>
+<p>Additionally, ArchR allows for the identification of clusters with <a href="https://bioconductor.org/packages/release/bioc/html/scran.html">scran</a> by changing the <code>method</code> parameter in <code>addClusters()</code>.</p>
 <div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="clustering-with-archr.html#cb42-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addClusters</span>(</span>
 <span id="cb42-2"><a href="clustering-with-archr.html#cb42-2"></a>    <span class="dt">input =</span> projHeme2,</span>
 <span id="cb42-3"><a href="clustering-with-archr.html#cb42-3"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>

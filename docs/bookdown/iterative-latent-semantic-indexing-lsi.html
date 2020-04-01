@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-02-26" />
+<meta name="date" content="2020-03-31" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,6 +50,8 @@
 
 
 
+<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -135,10 +137,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="index.html#section"><img src="images/ArchR_Logo_Integrated.png" alt="" width="200"></a></li>
 <li class="chapter" data-level="1" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>1</b> Getting Started with ArchR</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="what-is-an-arrowfile-archrproject.html"><a href="what-is-an-arrowfile-archrproject.html"><i class="fa fa-check"></i><b>1.1</b> What is an <code>ArrowFile</code> / <code>ArchRProject</code>?</a></li>
-<li class="chapter" data-level="1.2" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>1.2</b> Getting Set Up</a></li>
-<li class="chapter" data-level="1.3" data-path="setting-a-genome-and-geneannotation.html"><a href="setting-a-genome-and-geneannotation.html"><i class="fa fa-check"></i><b>1.3</b> Setting a Genome and GeneAnnotation</a></li>
-<li class="chapter" data-level="1.4" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>1.4</b> Creating Arrow Files</a></li>
+<li class="chapter" data-level="1.1" data-path="a-brief-primer-on-atac-seq-terminology.html"><a href="a-brief-primer-on-atac-seq-terminology.html"><i class="fa fa-check"></i><b>1.1</b> A Brief Primer on ATAC-seq Terminology</a></li>
+<li class="chapter" data-level="1.2" data-path="why-use-archr.html"><a href="why-use-archr.html"><i class="fa fa-check"></i><b>1.2</b> Why use ArchR?</a></li>
+<li class="chapter" data-level="1.3" data-path="what-is-an-arrow-file-archrproject.html"><a href="what-is-an-arrow-file-archrproject.html"><i class="fa fa-check"></i><b>1.3</b> What is an <code>Arrow file</code> / <code>ArchRProject</code>?</a></li>
+<li class="chapter" data-level="1.4" data-path="input-file-types-in-archr.html"><a href="input-file-types-in-archr.html"><i class="fa fa-check"></i><b>1.4</b> Input File Types in ArchR</a></li>
+<li class="chapter" data-level="1.5" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>1.5</b> Getting Set Up</a></li>
+<li class="chapter" data-level="1.6" data-path="setting-a-genome-and-geneannotation.html"><a href="setting-a-genome-and-geneannotation.html"><i class="fa fa-check"></i><b>1.6</b> Setting a Genome and GeneAnnotation</a></li>
+<li class="chapter" data-level="1.7" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>1.7</b> Creating Arrow Files</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="doublet-inference-with-archr.html"><a href="doublet-inference-with-archr.html"><i class="fa fa-check"></i><b>2</b> Doublet Inference with ArchR</a>
 <ul>
@@ -240,7 +245,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="iterative-latent-semantic-indexing-lsi" class="section level2" number="4.2">
 <h2><span class="header-section-number">4.2</span> Iterative Latent Semantic Indexing (LSI)</h2>
-<p>In scRNA-seq identifying variable genes is a common way to compute dimensionality reduction (such as PCA). This is done becasue these genes are more likely to be biologically important and this reduces experimental noise. In scATAC-seq the data is binary and thus you cannot identify variable peaks for dimensionality reduction. Rather than identifying the most variable peaks, we have tried using the most accessible features as input to LSI; however, the results when running multiple samples have shown high degrees of noise and low reproducibility. To remedy this we introduced the “iterative LSI” approach (<a href="https://www.ncbi.nlm.nih.gov/pubmed/31375813">Satpathy*, Granja* et al. Nature Biotechnology 2019</a> and <a href="https://www.ncbi.nlm.nih.gov/pubmed/31792411">Granja*, Klemm* and McGinnis* et al. Nature Biotechnology 2019</a>). This approach computes an intial LSI transformation on the most accessible tiles and identifies lower resolution clusters that are not batch confounded. For example, when performed on peripheral blood mononuclear cells, this will identify clusters corresponding to the major cell types (T cells, B cells, and monocytes). Then ArchR computes the average accessibility for each of these clusters across all features creating “pseudo-bulks”. ArchR then identifies the most variable peaks across these pseudo-bulks and uses these features for LSI again. In this second iteration, the most variable peaks are more similar to the variable genes used in scRNA-seq LSI implementations. The user can set how many iterations of LSI should be performed. QQQ add new info on LSI implementation. We have found this approach to be very good for batch minimization and allows operations on a more reasonably sized feature matrix.</p>
+<p>In scRNA-seq identifying variable genes is a common way to compute dimensionality reduction (such as PCA). This is done because these genes are more likely to be biologically important and this reduces experimental noise. In scATAC-seq the data is binary and thus you cannot identify variable peaks for dimensionality reduction. Rather than identifying the most variable peaks, we have tried using the most accessible features as input to LSI; however, the results when running multiple samples have shown high degrees of noise and low reproducibility. To remedy this we introduced the “iterative LSI” approach (<a href="https://www.ncbi.nlm.nih.gov/pubmed/31375813">Satpathy*, Granja* et al. Nature Biotechnology 2019</a> and <a href="https://www.ncbi.nlm.nih.gov/pubmed/31792411">Granja*, Klemm* and McGinnis* et al. Nature Biotechnology 2019</a>). This approach computes an inital LSI transformation on the most accessible tiles and identifies lower resolution clusters that are not batch confounded. For example, when performed on peripheral blood mononuclear cells, this will identify clusters corresponding to the major cell types (T cells, B cells, and monocytes). Then ArchR computes the average accessibility for each of these clusters across all features creating “pseudo-bulks”. ArchR then identifies the most variable peaks across these pseudo-bulks and uses these features for LSI again. In this second iteration, the most variable peaks are more similar to the variable genes used in scRNA-seq LSI implementations. The user can set how many iterations of LSI should be performed. QQQ add new info on LSI implementation. We have found this approach to be very good for batch minimization and allows operations on a more reasonably sized feature matrix.</p>
 <center>
 <img src="images/iterativeLSI.png" width="350" />
 </center>
@@ -280,7 +285,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb36-5"><a href="iterative-latent-semantic-indexing-lsi.html#cb36-5"></a>    <span class="dt">topFeatures =</span> <span class="dv">25000</span>, </span>
 <span id="cb36-6"><a href="iterative-latent-semantic-indexing-lsi.html#cb36-6"></a>    <span class="dt">dimsToUse =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">30</span></span>
 <span id="cb36-7"><a href="iterative-latent-semantic-indexing-lsi.html#cb36-7"></a>)</span></code></pre></div>
-<p>Lastly, lets compute the iterative LSI for the <code>ArchRProject</code> still containing doublets.</p>
+<p>For the purposes of this tutorial, we will compute the iterative LSI for the <code>ArchRProject</code> that still contains doublets.</p>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="iterative-latent-semantic-indexing-lsi.html#cb37-1"></a>projHeme1 &lt;-<span class="st"> </span><span class="kw">addIterativeLSI</span>(</span>
 <span id="cb37-2"><a href="iterative-latent-semantic-indexing-lsi.html#cb37-2"></a>    <span class="dt">ArchRProj =</span> projHeme1,</span>
 <span id="cb37-3"><a href="iterative-latent-semantic-indexing-lsi.html#cb37-3"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;TileMatrix&quot;</span>, </span>
