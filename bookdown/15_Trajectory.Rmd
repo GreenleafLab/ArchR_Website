@@ -1,0 +1,549 @@
+---
+title: "Chapter 15 - Cellular Trajectory Analysis with ArchR"
+output:
+  html_document:
+    theme: yeti  # many options for theme, this one is my favorite.
+params:
+  threads: 20
+  rdata: ""
+  token: ""
+  ref: ""
+  out: ""
+---
+
+```{r, include=FALSE, eval=FALSE}
+params2 <- params
+unlockBinding("params", env = .GlobalEnv)
+#load("Chapter-13-Footprints.Rdata")
+load(params$rdata)
+params <- params2
+rm(params2)
+devtools::install_github("GreenleafLab/ArchR", 
+  auth_token = params$token, 
+  ref = params$ref,
+  repos = BiocManager::repositories(),
+  dependencies = FALSE
+)
+library(ArchR)
+fn <- unclass(lsf.str(envir = asNamespace("ArchR"), all = TRUE))
+fn <- fn[!grepl("\\.", fn)]
+fn <- fn[fn!="ArchRProj"]
+for (i in seq_along(fn)){
+    tryCatch({
+        eval(parse(text = paste0(fn[i], "<-ArchR::", fn[i])))
+    }, error = function(x) {
+    })
+}
+addArchRThreads(threads = params$threads)
+addArchRGenome("hg19")
+# fn <- unclass(lsf.str(envir = asNamespace("ArchR"), all = TRUE))
+# fn <- fn[fn!="ArchRProj"]
+# for (i in seq_along(fn)) {
+#     tryCatch({
+#         eval(parse(text = paste0(fn[i], "<-ArchR:::", fn[i])))
+#     }, error = function(x) {
+#     })
+# }
+set.seed(1)
+```
+
+# Trajectory Analysis with ArchR
+
+## Myeloid Trajectory
+
+```{r eval=FALSE}
+p1 <- plotEmbedding(ArchRProj = projHeme5, colorBy = "cellColData", name = "Clusters", embedding = "UMAP")
+p2 <- plotEmbedding(ArchRProj = projHeme5, colorBy = "cellColData", name = "Clusters2", embedding = "UMAP")
+ggAlignPlots(p1, p2, type = "h")
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(
+    ggAlignPlots(p1, p2, type = "h", draw=FALSE), 
+    name = "Plot-UMAP-Clusters12-Combined.pdf", 
+    ArchRProj = projHeme5,
+    addDOC = FALSE,
+    width = 10, 
+    height = 5
+)
+ArchR:::.convertToPNG(ArchRProj = projHeme5)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/Plot-UMAP-Clusters12-Combined_1.png){width=800 height=400}
+
+```{r eval=FALSE}
+#Trajectory to add
+trajectory <- c("Progenitor", "GMP", "Mono")
+trajectory
+# [1] "Cluster6"  "Cluster7"  "Cluster8"  "Cluster9"  "Cluster10"
+
+#First we need to create a Trajectory and add it to ArchRProj cellColData
+projHeme5 <- addTrajectory(
+    ArchRProj = projHeme5, 
+    name = "MyeloidU", 
+    groupBy = "Clusters2",
+    trajectory = trajectory, 
+    embedding = "UMAP", 
+    force = TRUE
+)
+
+head(projHeme5$MyeloidU[!is.na(projHeme5$MyeloidU)]) #NA means not in trajectory
+# [1] 24.56879 44.02464 35.80082 38.66530 24.44559 38.37782
+```
+
+```{r eval=FALSE}
+p <- plotTrajectory(projHeme5, trajectory = "MyeloidU", colorBy = "colData", name = "MyeloidU")
+p[[1]]
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(p, name = "Plot-MyeloidU-Traj-UMAP.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 5, height = 5)
+ArchR:::.convertToPNG(ArchRProj = projHeme5)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/Plot-MyeloidU-Traj-UMAP_1.png){width=500 height=500}
+
+To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
+nice looking.
+
+```{r eval=FALSE}
+plotPDF(p, name = "Plot-MyeloidU-Traj-UMAP.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 5, height = 5)
+```
+
+We can overlay other features on the UMAP
+
+```{r eval=FALSE}
+projHeme5 <- addImputeWeights(projHeme5)
+
+p1 <- plotTrajectory(projHeme5, trajectory = "MyeloidU", colorBy = "GeneScoreMatrix", name = "CEBPB", continuousSet = "horizonExtra")
+p2 <- plotTrajectory(projHeme5, trajectory = "MyeloidU", colorBy = "GeneIntegrationMatrix", name = "CEBPB", continuousSet = "blueYellow")
+
+ggAlignPlots(p1[[1]], p2[[1]], type = "h")
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(
+    ggAlignPlots(p1[[1]], p2[[1]], type = "h", draw = FALSE), 
+    name = "Plot-UMAP-CEBPB-Combined.pdf", 
+    ArchRProj = projHeme5,
+    addDOC = FALSE,
+    width = 10, 
+    height = 5
+)
+
+plotPDF(
+    ggAlignPlots(p1[[2]], p2[[2]], type = "h", draw = FALSE), 
+    name = "Plot-UMAP-CEBPB-Combined2.pdf", 
+    ArchRProj = projHeme5,
+    addDOC = FALSE,
+    width = 10, 
+    height = 5
+)
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/Plot-UMAP-CEBPB-Combined_1.png){width=800 height=400}
+
+```{r eval=FALSE}
+ggAlignPlots(p1[[2]], p2[[2]], type = "h")
+```
+
+![](images/HemeWalkthrough/PNG/Plot-UMAP-CEBPB-Combined2_1.png){width=800 height=400}
+
+
+We can then make a heatmap for
+
+```{r eval=FALSE}
+trajMM  <- getTrajectory(ArchRProj = projHeme5, name = "MyeloidU", useMatrix = "MotifMatrix", log2Norm = FALSE)
+p1 <- trajectoryHeatmap(trajMM, pal = paletteContinuous(set = "solarExtra"))
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(p1, name = "Plot-MyeloidU-Traj-Heatmaps.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 6, height = 8)
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/Plot-MyeloidU-Traj-Heatmaps_1.png){width=600 height=800}
+
+```{r eval=FALSE}
+trajGSM <- getTrajectory(ArchRProj = projHeme5, name = "MyeloidU", useMatrix = "GeneScoreMatrix", log2Norm = TRUE)
+p2 <- trajectoryHeatmap(trajGSM,  pal = paletteContinuous(set = "horizonExtra"))
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(p1, p2, name = "Plot-MyeloidU-Traj-Heatmaps.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 6, height = 8)
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/Plot-MyeloidU-Traj-Heatmaps_2.png){width=600 height=800}
+
+
+```{r eval=FALSE}
+trajGIM <- getTrajectory(ArchRProj = projHeme5, name = "MyeloidU", useMatrix = "GeneIntegrationMatrix", log2Norm = FALSE)
+p3 <- trajectoryHeatmap(trajGIM,  pal = paletteContinuous(set = "blueYellow"))
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(p1, p2, p3, name = "Plot-MyeloidU-Traj-Heatmaps.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 6, height = 8)
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/Plot-MyeloidU-Traj-Heatmaps_3.png){width=600 height=800}
+
+```{r eval=FALSE}
+trajPM  <- getTrajectory(ArchRProj = projHeme5, name = "MyeloidU", useMatrix = "PeakMatrix", log2Norm = TRUE)
+p4 <- trajectoryHeatmap(trajPM, pal = paletteContinuous(set = "solarExtra"))
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(p1, p2, p3, p4, name = "Plot-MyeloidU-Traj-Heatmaps.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 6, height = 8)
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/Plot-MyeloidU-Traj-Heatmaps_4.png){width=600 height=800}
+
+To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
+nice looking.
+
+```{r eval=FALSE}
+plotPDF(p1, p2, p3, p4, name = "Plot-MyeloidU-Traj-Heatmaps.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 6, height = 8)
+```
+
+We can also perform integrative analyses such as identifying positive regulators with RNA
+
+```{r eval=FALSE}
+#Gene Scores
+corGSM_MM <- correlateTrajectories(trajGSM, trajMM)
+corGSM_MM[[1]]$matchname1
+corGSM_MM[[1]]
+
+#We can plot these identified regulators
+trajGSM2 <- trajGSM[corGSM_MM[[1]]$name1, ]
+trajMM2 <- trajMM[corGSM_MM[[1]]$name2, ]
+
+#To Order We Can Create a Trajectory of these assays Multiplied
+trajCombined <- trajGSM2
+assay(trajCombined) <- t(apply(assay(trajGSM2), 1, scale)) + t(apply(assay(trajMM2), 1, scale))
+
+#We can get the row order from the heatmap function
+combinedMat <- trajectoryHeatmap(trajCombined, returnMat = TRUE, varCutOff = 0)
+rowOrder <- match(rownames(combinedMat), rownames(trajGSM2))
+
+#Now we can plot the heatmaps
+ht1 <- trajectoryHeatmap(trajGSM2,  pal = paletteContinuous(set = "horizonExtra"),  varCutOff = 0, rowOrder = rowOrder)
+ht2 <- trajectoryHeatmap(trajMM2, pal = paletteContinuous(set = "solarExtra"), varCutOff = 0, rowOrder = rowOrder)
+
+ht1 + ht2
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(ht1 + ht2, name = "Plot-MyeloidU-GS-TF.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 8, height = 6)
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/Plot-MyeloidU-GS-TF_1.png){width=800 height=600}
+
+```{r eval=FALSE}
+#Gene Expression
+corGIM_MM <- correlateTrajectories(trajGIM, trajMM)
+corGIM_MM[[1]]$matchname1
+corGIM_MM[[1]]
+
+#We can plot these identified regulators
+trajGIM2 <- trajGIM[corGIM_MM[[1]]$name1, ]
+trajMM2 <- trajMM[corGIM_MM[[1]]$name2, ]
+
+#To Order We Can Create a Trajectory of these assays Multiplied
+trajCombined <- trajGIM2
+assay(trajCombined) <- t(apply(assay(trajGIM2), 1, scale)) + t(apply(assay(trajMM2), 1, scale))
+
+#We can get the row order from the heatmap function
+combinedMat <- trajectoryHeatmap(trajCombined, returnMat = TRUE, varCutOff = 0)
+rowOrder <- match(rownames(combinedMat), rownames(trajGIM2))
+
+#Now we can plot the heatmaps
+ht1 <- trajectoryHeatmap(trajGIM2,  pal = paletteContinuous(set = "blueYellow"),  varCutOff = 0, rowOrder = rowOrder)
+ht2 <- trajectoryHeatmap(trajMM2, pal = paletteContinuous(set = "solarExtra"), varCutOff = 0, rowOrder = rowOrder)
+
+ht1 + ht2
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(ht1 + ht2, name = "Plot-MyeloidU-GEx-TF.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 8, height = 6)
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/Plot-MyeloidU-GEx-TF_1.png){width=800 height=600}
+
+
+## Lymphoid Trajectory
+
+```{r eval=FALSE}
+p1 <- plotEmbedding(ArchRProj = projHeme5, colorBy = "cellColData", name = "Clusters", embedding = "UMAP")
+p2 <- plotEmbedding(ArchRProj = projHeme5, colorBy = "cellColData", name = "Clusters2", embedding = "UMAP")
+ggAlignPlots(p1, p2, type = "h")
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(
+    ggAlignPlots(p1, p2, type = "h", draw=FALSE), 
+    name = "Plot-UMAP-Clusters12-Combined.pdf", 
+    ArchRProj = projHeme5,
+    addDOC = FALSE,
+    width = 10, 
+    height = 5
+)
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/Plot-UMAP-Clusters12-Combined_1.png){width=800 height=400}
+
+```{r eval=FALSE}
+#Trajectory to add
+trajectory <- c("Progenitor", "CLP", "PreB", "B")
+trajectory
+# [1] "Cluster6"  "Cluster13" "Cluster12" "Cluster11"
+
+#First we need to create a Trajectory and add it to ArchRProj cellColData
+projHeme5 <- addTrajectory(
+    ArchRProj = projHeme5, 
+    name = "LymphoidU", 
+    groupBy = "Clusters2",
+    trajectory = trajectory, 
+    embedding = "UMAP", 
+    force = TRUE
+)
+
+head(projHeme5$LymphoidU[!is.na(projHeme5$LymphoidU)]) #NA means not in trajectory
+# [1]       NA       NA 80.56020       NA 79.47324       NA
+```
+
+```{r eval=FALSE}
+p <- plotTrajectory(projHeme5, trajectory = "LymphoidU", colorBy = "colData", name = "LymphoidU")
+p[[1]]
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(p, name = "Plot-LymphoidU-Traj-UMAP.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 5, height = 5)
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/Plot-LymphoidU-Traj-UMAP_1.png){width=500 height=500}
+
+To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
+nice looking.
+
+```{r eval=FALSE}
+plotPDF(p, name = "Plot-LymphoidU-Traj-UMAP.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 5, height = 5)
+```
+
+We can overlay other features on the UMAP
+
+```{r eval=FALSE}
+p1 <- plotTrajectory(projHeme5, trajectory = "LymphoidU", colorBy = "GeneScoreMatrix", name = "PAX5", continuousSet = "horizonExtra")
+p2 <- plotTrajectory(projHeme5, trajectory = "LymphoidU", colorBy = "GeneIntegrationMatrix", name = "PAX5", continuousSet = "blueYellow")
+ggAlignPlots(p1[[1]], p2[[1]], type = "h")
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(
+    ggAlignPlots(p1[[1]], p2[[1]], type = "h", draw = FALSE), 
+    name = "Plot-UMAP-PAX5-Combined.pdf", 
+    ArchRProj = projHeme5,
+    addDOC = FALSE,
+    width = 10, 
+    height = 5
+)
+
+plotPDF(
+    ggAlignPlots(p1[[2]], p2[[2]], type = "h", draw = FALSE), 
+    name = "Plot-UMAP-PAX5-Combined2.pdf", 
+    ArchRProj = projHeme5,
+    addDOC = FALSE,
+    width = 10, 
+    height = 5
+)
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/Plot-UMAP-PAX5-Combined_1.png){width=800 height=400}
+
+```{r eval=FALSE}
+ggAlignPlots(p1[[2]], p2[[2]], type = "h")
+```
+
+![](images/HemeWalkthrough/PNG/Plot-UMAP-PAX5-Combined2_1.png){width=800 height=400}
+
+We can then make a heatmap for
+
+```{r eval=FALSE}
+trajMM  <- getTrajectory(ArchRProj = projHeme5, name = "LymphoidU", useMatrix = "MotifMatrix", log2Norm = FALSE)
+p1 <- trajectoryHeatmap(trajMM, pal = paletteContinuous(set = "solarExtra"))
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(p1, name = "Plot-LymphoidU-Traj-Heatmaps.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 6, height = 8)
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/Plot-LymphoidU-Traj-Heatmaps_1.png){width=600 height=800}
+
+```{r eval=FALSE}
+trajGSM <- getTrajectory(ArchRProj = projHeme5, name = "LymphoidU", useMatrix = "GeneScoreMatrix", log2Norm = TRUE)
+p2 <- trajectoryHeatmap(trajGSM,  pal = paletteContinuous(set = "horizonExtra"))
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(p1, p2, name = "Plot-LymphoidU-Traj-Heatmaps.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 6, height = 8)
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/Plot-LymphoidU-Traj-Heatmaps_2.png){width=600 height=800}
+
+
+```{r eval=FALSE}
+trajGIM <- getTrajectory(ArchRProj = projHeme5, name = "LymphoidU", useMatrix = "GeneIntegrationMatrix", log2Norm = FALSE)
+p3 <- trajectoryHeatmap(trajGIM,  pal = paletteContinuous(set = "blueYellow"))
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(p1, p2, p3, name = "Plot-LymphoidU-Traj-Heatmaps.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 6, height = 8)
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/Plot-LymphoidU-Traj-Heatmaps_3.png){width=600 height=800}
+
+```{r eval=FALSE}
+trajPM  <- getTrajectory(ArchRProj = projHeme5, name = "LymphoidU", useMatrix = "PeakMatrix", log2Norm = TRUE)
+p4 <- trajectoryHeatmap(trajPM, pal = paletteContinuous(set = "solarExtra"))
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(p1, p2, p3, p4, name = "Plot-LymphoidU-Traj-Heatmaps.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 6, height = 8)
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/Plot-LymphoidU-Traj-Heatmaps_4.png){width=600 height=800}
+
+To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
+nice looking.
+
+```{r eval=FALSE}
+plotPDF(p1, p2, p3, p4, name = "Plot-LymphoidU-Traj-Heatmaps.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 6, height = 8)
+```
+
+We can also perform integrative analyses such as identifying positive regulators with RNA
+
+```{r eval=FALSE}
+#Gene Scores
+corGSM_MM <- correlateTrajectories(trajGSM, trajMM)
+corGSM_MM[[1]]$matchname1
+corGSM_MM[[1]]
+
+#We can plot these identified regulators
+trajGSM2 <- trajGSM[corGSM_MM[[1]]$name1, ]
+trajMM2 <- trajMM[corGSM_MM[[1]]$name2, ]
+
+#To Order We Can Create a Trajectory of these assays Multiplied
+trajCombined <- trajGSM2
+assay(trajCombined) <- t(apply(assay(trajGSM2), 1, scale)) + t(apply(assay(trajMM2), 1, scale))
+
+#We can get the row order from the heatmap function
+combinedMat <- trajectoryHeatmap(trajCombined, returnMat = TRUE, varCutOff = 0)
+rowOrder <- match(rownames(combinedMat), rownames(trajGSM2))
+
+ht1 <- trajectoryHeatmap(trajGSM2,  pal = paletteContinuous(set = "horizonExtra"),  varCutOff = 0, rowOrder = rowOrder)
+ht2 <- trajectoryHeatmap(trajMM2,  pal = paletteContinuous(set = "solarExtra"), varCutOff = 0, rowOrder = rowOrder)
+
+ht1 + ht2
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(ht1 + ht2, name = "Plot-LymphoidU-GS-TF.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 8, height = 6)
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/Plot-LymphoidU-GS-TF_1.png){width=800 height=600}
+
+```{r eval=FALSE}
+#Gene Expression
+corGIM_MM <- correlateTrajectories(trajGIM, trajMM)
+corGIM_MM[[1]]$matchname1
+corGIM_MM[[1]]
+
+#We can plot these identified regulators
+trajGIM2 <- trajGIM[corGIM_MM[[1]]$name1, ]
+trajMM2 <- trajMM[corGIM_MM[[1]]$name2, ]
+
+#To Order We Can Create a Trajectory of these assays Multiplied
+trajCombined <- trajGIM2
+assay(trajCombined) <- t(apply(assay(trajGIM2), 1, scale)) + t(apply(assay(trajMM2), 1, scale))
+
+#We can get the row order from the heatmap function
+combinedMat <- trajectoryHeatmap(trajCombined, returnMat = TRUE, varCutOff = 0)
+rowOrder <- match(rownames(combinedMat), rownames(trajGIM2))
+
+#Now we can plot the heatmaps
+ht1 <- trajectoryHeatmap(trajGIM2,  pal = paletteContinuous(set = "blueYellow"),  varCutOff = 0, rowOrder = rowOrder)
+ht2 <- trajectoryHeatmap(trajMM2, pal = paletteContinuous(set = "solarExtra"), varCutOff = 0, rowOrder = rowOrder)
+
+ht1 + ht2
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(ht1 + ht2, name = "Plot-LymphoidU-GEx-TF.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 8, height = 6)
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/Plot-LymphoidU-GEx-TF_1.png){width=800 height=600}
+
+
+## Session Information
+
+```{r eval=FALSE}
+Sys.Date()
+
+
+sessionInfo()
+```
+
+```{r, include=FALSE, eval=FALSE}
+save.image(params$out, compress = FALSE)
+```
+

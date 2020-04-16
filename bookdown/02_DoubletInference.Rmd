@@ -1,0 +1,129 @@
+---
+title: "Chapter 02 - Doublet Inference with ArchR"
+output:
+  html_document:
+    theme: yeti  # many options for theme, this one is my favorite.
+params:
+  threads: 20
+  rdata: ""
+  token: ""
+  ref: ""
+  out: ""
+---
+
+```{r, include=FALSE, eval=FALSE}
+params2 <- params
+unlockBinding("params", env = .GlobalEnv)
+#load("Chapter-13-Footprints.Rdata")
+load(params$rdata)
+params <- params2
+rm(params2)
+devtools::install_github("GreenleafLab/ArchR", 
+  auth_token = params$token, 
+  ref = params$ref,
+  repos = BiocManager::repositories(),
+  dependencies = FALSE
+)
+library(ArchR)
+fn <- unclass(lsf.str(envir = asNamespace("ArchR"), all = TRUE))
+fn <- fn[!grepl("\\.", fn)]
+fn <- fn[fn!="ArchRProj"]
+for (i in seq_along(fn)){
+    tryCatch({
+        eval(parse(text = paste0(fn[i], "<-ArchR::", fn[i])))
+    }, error = function(x) {
+    })
+}
+addArchRThreads(threads = params$threads)
+addArchRGenome("hg19")
+# fn <- unclass(lsf.str(envir = asNamespace("ArchR"), all = TRUE))
+# fn <- fn[fn!="ArchRProj"]
+# for (i in seq_along(fn)) {
+#     tryCatch({
+#         eval(parse(text = paste0(fn[i], "<-ArchR:::", fn[i])))
+#     }, error = function(x) {
+#     })
+# }
+set.seed(1)
+```
+
+# Doublet Inference with ArchR
+
+One major source of trouble in single-cell data is the contribution of "doublets" to the analysis. A doublet refers to a single droplet that received a single barcoded bead and more than one nucleus. This causes the reads from more than one cell to appear as a single cell that is effectively the average of the two cells. We remove these computationally and describe this doublet removal process in depth in this chapter.
+
+## Inferring scATAC-seq Doublets with ArchR
+
+Single-cell data generated on essentially any platform is susceptible to the presence of doublets. A doublet refers to a single droplet that received a single barcoded bead and more than one nucleus. This causes the reads from more than one cell to appear as a single cell. For 10x, the percentage of total "cells" that are actually doublets is proportional to the number of cells loaded into the reaction. Even at the lower levels of doublets that result from standard kit use, more than 5% of the data may come from doublets and this exerts substantial effects on clustering. This issue becomes particularly problematic in the context of developmental/trajectory data because doublets look like a mixture between two cell types and this can be confounded with intermediate cell types or cell states.
+
+To predict which "cells" are actually doublets, we synthesize in silico doublets from the data by mixing the reads from thousands of combinations of individual cells. We then project these synthetic doublets into the UMAP embedding and identify their nearest neighbor. By iterating this procedure thousands of times, we can identify "cells" in our data whose signal looks very similar to synthetic doublets.
+
+![](images/doubletRemoval.png){width=450px}
+
+By default ArchR uses the doublet parameters described in the ArchR manuscript. This is likely a good place to start but we encourage all users to inspect the pre- and post-doublet removal data to understand how doublet removal is affecting the cells. We show some of the main adjustable features below to illustrate how this can be customized to a given application.
+
+In ArchR, doublet removal is performed in a single step using `addDoubletScores()`.
+
+```{r eval=FALSE}
+#Add Infered Doublet Scores to each Arrow File (~2-5 min per sample)
+#Try ?addDoubletScores to see further documentation on parameters for doublet identification.
+doubScores <- addDoubletScores(
+	input = ArrowFiles,
+	k = 10, #Refers to how many cells near a "pseudo-doublet" to count.
+	knnMethod = "UMAP", #Refers to embedding to use for nearest neighbor search with doublet projection.
+	LSIMethod = 1
+)
+```
+
+```{r, include=FALSE, eval=FALSE}
+ArchR:::.convertToPNG()
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+This command will create plots in the "QualityControl" directory. There are 3 plots associated with each of your samples in this folder: </br>
+1. **Doublet Enrichments** - These represent the enrichment of simulated doublets nearby each single cell compared to the expected if we assume a uniform distribution. </br>
+
+2. **Doublet Scores** - These represent the significance (`-log10(binomial adjusted p-value)`) of simulated doublets nearby each single cell compared to the expected if we assume a uniform distribution. We have found this value to be less consistent than the doublet enrichments and therefore use doublet enrichments for doublet identification. </br>
+
+3. **Doublet Density** - This represents the density of the simulated doublet projections so you can visualize where the synthetic doublets were located after projection into your 2-dimensional embedding.</br>
+
+For **BMMC** : </br>
+
+![](images/HemeWalkthrough/PNG/scATAC_BMMC_R1-Doublet-Summary_1.png){width=250 height=250}
+![](images/HemeWalkthrough/PNG/scATAC_BMMC_R1-Doublet-Summary_2.png){width=250 height=250}
+![](images/HemeWalkthrough/PNG/scATAC_BMMC_R1-Doublet-Summary_3.png){width=250 height=250}
+
+</br>
+
+For **CD34 BMMC** : </br>
+
+![](images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-Doublet-Summary_1.png){width=250 height=250}
+![](images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-Doublet-Summary_2.png){width=250 height=250}
+![](images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-Doublet-Summary_3.png){width=250 height=250}
+
+</br>
+
+For **PBMC** : </br>
+
+![](images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Doublet-Summary_1.png){width=250 height=250}
+![](images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Doublet-Summary_2.png){width=250 height=250}
+![](images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Doublet-Summary_3.png){width=250 height=250}
+
+</br>
+
+QQQ - I would have liked to see a pre- and post- doublet removal UMAP here so that we can illustrate what happens.
+
+## Session Information
+
+```{r eval=FALSE}
+Sys.Date()
+
+
+sessionInfo()
+```
+
+```{r, include=FALSE, eval=FALSE}
+save.image(params$out, compress = FALSE)
+```
+
+

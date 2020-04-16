@@ -1,0 +1,153 @@
+---
+title: "Chapter 05 - Clustering with ArchR"
+output:
+  html_document:
+    theme: yeti  # many options for theme, this one is my favorite.
+params:
+  threads: 20
+  rdata: ""
+  token: ""
+  ref: ""
+  out: ""
+---
+
+```{r, include=FALSE, eval=FALSE}
+params2 <- params
+unlockBinding("params", env = .GlobalEnv)
+#load("Chapter-13-Footprints.Rdata")
+load(params$rdata)
+params <- params2
+rm(params2)
+devtools::install_github("GreenleafLab/ArchR", 
+  auth_token = params$token, 
+  ref = params$ref,
+  repos = BiocManager::repositories(),
+  dependencies = FALSE
+)
+library(ArchR)
+fn <- unclass(lsf.str(envir = asNamespace("ArchR"), all = TRUE))
+fn <- fn[!grepl("\\.", fn)]
+fn <- fn[fn!="ArchRProj"]
+for (i in seq_along(fn)){
+    tryCatch({
+        eval(parse(text = paste0(fn[i], "<-ArchR::", fn[i])))
+    }, error = function(x) {
+    })
+}
+addArchRThreads(threads = params$threads)
+addArchRGenome("hg19")
+# fn <- unclass(lsf.str(envir = asNamespace("ArchR"), all = TRUE))
+# fn <- fn[fn!="ArchRProj"]
+# for (i in seq_along(fn)) {
+#     tryCatch({
+#         eval(parse(text = paste0(fn[i], "<-ArchR:::", fn[i])))
+#     }, error = function(x) {
+#     })
+# }
+set.seed(1)
+```
+
+# Clustering with ArchR
+
+Most single-cell clustering methods focus on computing nearest neighbor graphs in reduced dimensions and then identifying "communities" or clusters of cells. These approaches work extremely well and are a standard practice in scRNA-seq. For this reason, ArchR uses existing state-of-the-art clustering methods from scRNA-seq packages for clustering.
+
+### Clustering using Seurat's `FindClusters()` function
+We have had the most success using the graph clustering approach implemented by [Seurat](https://github.com/satijalab/seurat). In ArchR, clustering is performed using the `addClusters()` function which permits additional clustering parameters to be passed to the `Seurat::FindClusters()` function.
+
+```{r eval=FALSE}
+projHeme2 <- addClusters(
+	input = projHeme2,
+    reducedDims = "IterativeLSI",
+    method = "Seurat",
+    name = "Clusters",
+    resolution = 0.8
+)
+```
+
+To access these clusters we can use the `$` accessor
+
+```{r eval=FALSE}
+head(projHeme2$Clusters)
+# [1] "Cluster11" "Cluster2"  "Cluster12" "Cluster1"  "Cluster12" "Cluster8"
+
+table(projHeme2$Clusters)
+# Cluster1 Cluster10 Cluster11 Cluster12 Cluster13 Cluster14  Cluster2  Cluster3 
+#       28      1070       425       351       408       345      1330       562 
+# Cluster4  Cluster5  Cluster6  Cluster7  Cluster8  Cluster9 
+#      901       860      1218       974       274      1505
+```
+
+To better understand which samples reside in which clusters, we can create a cluster confusion matrix across each sample. JJJ
+QQQ Seems weird to use a hidden function like this in the tutorial
+
+```{r eval=FALSE}
+cM <- confusionMatrix(paste0(projHeme2$Clusters), paste0(projHeme2$Sample))
+cM
+# 14 x 3 sparse Matrix of class "dgCMatrix"
+#           scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1
+# Cluster11            247                   6            172
+# Cluster2            1254                   .             76
+# Cluster12            351                   .              .
+# Cluster1              28                   .              .
+# Cluster8             247                  27              .
+# Cluster4             315                   .            586
+# Cluster9            1456                   5             44
+# Cluster5             214                 639              7
+# Cluster7              83                 887              4
+# Cluster14            161                 174             10
+# Cluster3              52                   .            510
+# Cluster10             84                   1            985
+# Cluster6             117                1101              .
+# Cluster13             80                 328              .
+```
+
+An example of plotting this confusion matrix as a heatmap
+
+```{r eval=FALSE}
+library(pheatmap)
+cM <- cM / Matrix::rowSums(cM)
+p <- pheatmap::pheatmap(
+    mat = as.matrix(cM), 
+    color = paletteContinuous("whiteBlue"), 
+    border_color = "black"
+)
+p
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(p, name = "ConfusionMatrix", ArchRProj = projHeme2, addDOC = FALSE)
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/ConfusionMatrix_1.png){width=500 height=500}
+
+QQQ This is confusing. Expand on this - Determining the appropriate cluster parameters is useful once you have computed a 2-dimensional embedding. This is because you should be adjusting both the clustering and embedding parameters to where they both agree. 
+
+### Clustering using `scran`
+
+Additionally, ArchR allows for the identification of clusters with [scran](https://bioconductor.org/packages/release/bioc/html/scran.html) by changing the `method` parameter in `addClusters()`.
+
+```{r eval=FALSE}
+projHeme2 <- addClusters(
+    input = projHeme2,
+    reducedDims = "IterativeLSI",
+    method = "scran",
+    name = "ScranClusters",
+    k = 15
+)
+```
+
+## Session Information
+
+```{r eval=FALSE}
+Sys.Date()
+
+
+sessionInfo()
+```
+
+```{r, include=FALSE, eval=FALSE}
+save.image(params$out, compress = FALSE)
+```

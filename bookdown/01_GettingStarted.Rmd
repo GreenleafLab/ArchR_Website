@@ -1,0 +1,290 @@
+---
+title: "Chapter 01 - Getting Started with ArchR"
+output:
+  html_document:
+    theme: yeti  # many options for theme, this one is my favorite.
+params:
+  threads: 20
+  rdata: ""
+  token: ""
+  ref: ""
+  out: ""
+---
+
+```{r, include=FALSE, eval=FALSE}
+# params2 <- params
+# unlockBinding("params", env = .GlobalEnv)
+# #load("Chapter-13-Footprints.Rdata")
+# load(params$rdata)
+# params <- params2
+# rm(params2)
+devtools::install_github("GreenleafLab/ArchR", 
+  auth_token = params$token, 
+  ref = params$ref,
+  repos = BiocManager::repositories(),
+  dependencies = FALSE
+)
+library(ArchR)
+fn <- unclass(lsf.str(envir = asNamespace("ArchR"), all = TRUE))
+fn <- fn[!grepl("\\.", fn)]
+fn <- fn[fn!="ArchRProj"]
+for (i in seq_along(fn)){
+    tryCatch({
+        eval(parse(text = paste0(fn[i], "<-ArchR::", fn[i])))
+    }, error = function(x) {
+    })
+}
+addArchRThreads(threads = params$threads)
+addArchRGenome("hg19")
+# fn <- unclass(lsf.str(envir = asNamespace("ArchR"), all = TRUE))
+# fn <- fn[fn!="ArchRProj"]
+# for (i in seq_along(fn)) {
+#     tryCatch({
+#         eval(parse(text = paste0(fn[i], "<-ArchR:::", fn[i])))
+#     }, error = function(x) {
+#     })
+# }
+set.seed(1)
+```
+
+# Getting Started with ArchR
+
+This chapter will introduce you to how to import data into ArchR and how to create ArrowFiles, the base unit of ArchR analysis.
+
+## A Brief Primer on ATAC-seq Terminology
+
+The most fundamental component of any ATAC-seq experiment is a "__fragment__". In ATAC-seq, a fragment refers to a sequenceable DNA molecule created by two transposition events. Each end of that fragment is sequenced using paired-end sequencing. The inferred single-base position of the start and end of the fragment is adjusted based on the insertion offset of Tn5. As reported previously26, Tn5 transposase binds to DNA as a homodimer with 9-bp of DNA between the two Tn5 molecules. Because of this, each Tn5 homodimer binding event creates two insertions, separated by 9 bp. Thus, the actual central point of the “accessible” site is in the very center of the Tn5 dimer, not the location of each Tn5 insertion. To account for this, we apply an offset to the individual Tn5 insertions, adjusting plus-stranded insertion events by +4 bp and minus-stranded insertion events by -5 bp. This is consistent with the convention put forth during the original description of ATAC-seq27. Thus, in ArchR, “__fragments__” refers to a table or genomic ranges containing the chromosome, offset-adjusted chromosome start position, offset-adjusted chromosome end position, and unique cellular barcode ID corresponding to each sequenced fragment. Similarly, "__insertions__" refer to the offset-adjuset single-base position at the very center of an accessible site.
+
+## Why use ArchR?
+
+QQQ include some benchmarking figures
+
+## What is an `Arrow file` / `ArchRProject`?
+
+The base unit of an analytical project in ArchR is called an `Arrow file`. Each `Arrow file` stores all of the data associated with an individual sample (i.e. metadata, accessible fragments, and data matrices). Here, an "individual sample" would be the most detailed unit of analysis desired (for ex. a single replicate of a particular condition). During creation and as additional analyses are performed, ArchR updates and edits each `Arrow file` to contain additional layers of information.
+It is worth noting that, to ArchR, an `Arrow file` is actually just a path to an external file stored on disk. More explicitly, an `Arrow file` is not an R-language object that is stored in memory but rather an HDF5-format file stored on disk. Because of this, we use an `ArchRProject` object to associate these `Arrow files` together into a single analytical framework that can be rapidly accessed in R. This `ArchRProject` object is small in size and is stored in memory.
+
+<center>
+![](images/ArchRProject_Schematic.png){width=700px}
+</center>
+
+Certain actions can be taken directly on `Arrow files` while other actions are taken on an `ArchRProject` which in turn updates each associated `Arrow file`. Because `Arrow files` are stored as large HDF5-format files, "get-er" functions in ArchR retrieve data by interacting with the `ArchRProject` while "add-er" functions either (i) add data directly to `Arrow files`, (ii) add data directly to an `ArchRProject`, or (iii) add data to `Arrow files` by interacting with an `ArchRProject`.
+
+<center>
+![](images/ArchR_FunctionSchematic.png){width=400px}
+</center>
+
+## Input File Types in ArchR
+
+QQQ
+
+## Getting Set Up
+
+The first thing we do is set up our working directory and set the number of threads we would like to use, and load our gene and genome annotations. Depending on the configuration of your local environment, you may need to modify the number of `threads` used below in `addArchRThreads()`. By default ArchR uses half of the total number of `threads` available but you can adjust this manually as you see fit. If you are using windows, the usable `threads` will automatically be set to 1 because the parallel processing in ArchR is build for Unix-based operating systems.
+
+```{r eval=FALSE}
+#Load R Libraries
+library(ArchR)
+
+#Set Default Threads for ArchR Functions
+#The recommendation is to set it around 1/2 to 3/4 of the total available cores.
+addArchRThreads(threads = 16) 
+```
+>\>Setting default number of Parallel threads to 16.
+```{r eval=FALSE}
+#Set Gene and Genome Annotations to be used
+addArchRGenome("hg19")
+```
+
+## Setting a Genome and GeneAnnotation
+
+ArchR requires gene and genome annotations to do things such as calculate TSS enrichment scores, nucleotide content, and gene activity scores. Because our tutorial dataset uses scATAC-seq data that has already been aligned to the hg19 reference genome, we have set "hg19" as the default genome above. However, ArchR supports "hg19", "hg38", "mm9", and "mm10" natively but you can create your own using the `createGeneAnnotation()` and `createGenomeAnnotation()` functions.
+
+Providing this information to ArchR is streamlined through the `addArchRGenome()` function. This function tells ArchR that, for all analyses in the current session, it should use the `genomeAnnotation` and `geneAnnotation` associated with the defined `ArchRGenome`. Each of the natively supported genomes are composed of a `BSgenome` object and a `GRanges` object containing a set of blacklisted regions. Below are examples of how to load gene and genome annotations for the natively supported genomes as well as information on their `BSgenome` and blacklist components. 
+
+<hr>
+
+The precompiled version of the __hg19__ genome in ArchR uses `BSgenome.Hsapiens.UCSC.hg19` and a blacklist that was merged using `ArchR::mergeGR()` from the [hg19 v2 blacklist regions](https://github.com/Boyle-Lab/Blacklist/blob/master/lists/hg19-blacklist.v2.bed.gz) and from [mitochondrial regions that show high mappability to the hg19 nuclear genome](https://github.com/caleblareau/mitoblacklist/blob/master/peaks/hg19_peaks.narrowPeak) from Caleb Lareau and Jason Buenrostro. To set a global genome default to the precompiled hg19 genome:
+
+```{r eval=FALSE}
+addArchRGenome("hg19")
+# Setting default genome to Hg19.
+```
+
+<hr>
+
+The precompiled version of the __hg38__ genome in ArchR uses `BSgenome.Hsapiens.UCSC.hg38` and a blacklist that was merged using `ArchR::mergeGR()` from the [hg38 v2 blacklist regions](https://github.com/Boyle-Lab/Blacklist/blob/master/lists/hg38-blacklist.v2.bed.gz) and from [mitochondrial regions that show high mappability to the hg38 nuclear genome](https://github.com/caleblareau/mitoblacklist/blob/master/peaks/hg38_peaks.narrowPeak) from Caleb Lareau and Jason Buenrostro. To set a global genome default to the precompiled hg38 genome:
+
+```{r eval=FALSE}
+addArchRGenome("hg38")
+# Setting default genome to Hg38.
+```
+
+<hr>
+
+The precompiled version of the __mm9__ genome in ArchR uses `BSgenome.Mmusculus.UCSC.mm9` and a blacklist that was merged using `ArchR::mergeGR()` from the [mm9 v1 blacklist regions](http://mitra.stanford.edu/kundaje/akundaje/release/blacklists/mm9-mouse/mm9-blacklist.bed.gz) from Anshul Kundaje and from [mitochondrial regions that show high mappability to the mm9 nuclear genome](https://github.com/caleblareau/mitoblacklist/blob/master/peaks/mm9_peaks.narrowPeak) from Caleb Lareau and Jason Buenrostro. To set a global genome default to the precompiled mm9 genome:
+
+```{r eval=FALSE}
+addArchRGenome("mm9")
+# Setting default genome to Mm9.
+```
+
+<hr>
+
+The precompiled version of the __mm10__ genome in ArchR uses `BSgenome.Mmusculus.UCSC.mm10` and a blacklist that was merged using `ArchR::mergeGR()` from the [mm10 v2 blacklist regions](https://github.com/Boyle-Lab/Blacklist/blob/master/lists/mm10-blacklist.v2.bed.gz) and from [mitochondrial regions that show high mappability to the mm10 nuclear genome](https://github.com/caleblareau/mitoblacklist/blob/master/peaks/mm10_peaks.narrowPeak) from Caleb Lareau and Jason Buenrostro. To set a global genome default to the precompiled hg38 genome:
+
+```{r eval=FALSE}
+addArchRGenome("mm10")
+# Setting default genome to Mm10.
+```
+
+<hr>
+
+### Creating a custom genome annotation
+
+To instead create a custom genome annotation, we can use `createGenomeAnnotation()`. To do this, you will need the following information:
+
+1. A `BSgenome` object which contains the sequence information for a genome. These are commonly Bioconductor packages (for example, `BSgenome.Hsapiens.UCSC.hg38`) that can be easily found with google.
+2. A `GRanges` genomic ranges object containing a set of blacklisted regions that will be used to filter out unwanted regions from downstream analysis. This is not required but is recommended.
+
+```{r eval=FALSE}
+if (!requireNamespace("BSgenome.Dmelanogaster.UCSC.dm6", quietly = TRUE)){
+  BiocManager::install("BSgenome.Dmelanogaster.UCSC.dm6")
+}
+#QQQ CHANGED TO DROSOPHILA TO MAKE THIS RELEVANT SINCE HG38 IS ALREADY SUPPORTED
+library(BSgenome.Dmelanogaster.UCSC.dm6)
+genomeAnnotation <- createGenomeAnnotation(genome = BSgenome.Dmelanogaster.UCSC.dm6)
+genomeAnnotation
+# List of length 3
+# names(3): genome chromSizes blacklist
+```
+
+To create a custom gene annotation for use instead we can use `createGeneAnnotation()`. To do this, you will need the following information:
+
+1. A `TxDb` object (transcript database) from Bioconductor which contains information for gene/transcript coordinates. For example, from `txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene`.
+2. An `OrgDb` object (organism database) from Bioconductor which contains information for gene/transcript symbols from ids. For example, from `orgdb <- org.Hs.eg.db`.
+
+
+```{r eval=FALSE}
+#QQQ DOUBLE CHECK. I CHANGED THIS TO REMOVE THE txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene ASSIGNMENTS TO MAKE IT THE SAME FORMAT AS genomeAnnotation ABOVE
+#QQQ ALSO CHANGED TO DROSOPHILA
+if (!requireNamespace("TxDb.Dmelanogaster.UCSC.dm6.ensGene", quietly = TRUE)){
+  BiocManager::install("TxDb.Dmelanogaster.UCSC.dm6.ensGene")
+}
+if (!requireNamespace("org.Dm.eg.db", quietly = TRUE)){
+  BiocManager::install("org.Dm.eg.db")
+}
+library(TxDb.Dmelanogaster.UCSC.dm6.ensGene)
+library(org.Dm.eg.db)
+geneAnnotation <- createGeneAnnnotation(TxDb = TxDb.Dmelanogaster.UCSC.dm6.ensGene, OrgDb = org.Dm.eg.db)
+geneAnnotation
+# List of length 3
+# names(3): genes exons TSS
+```
+
+Alternatively, if you dont have a `TxDb` and `OrgDb` object, you can create a `geneAnnotation` object from the following information :
+
+1. A `GRanges` object containing gene coordinates (start to end). Must have a symbols column matching the symbols column of `exons`.
+2. A `GRanges` object containing gene exon coordinates. Must have a symbols column matching the symbols column of `genes`.
+3. A `GRanges` object containing standed transcription start site (`TSS`) coordinates.
+
+```{r eval=FALSE}
+#QQQ THIS SEEMS ODD. YOU ARE TAKING AN OBJECT NAMED geneAnnotation THAT ALREADY HAS ALL THESE THINGS AND MAKING IT INTO AN OBJECT NAMED geneAnnotation
+geneAnnotation <- createGeneAnnnotation(
+  TSS = geneAnnotation$TSS, 
+  exons = geneAnnotation$exons, 
+  genes = geneAnnotation$genes
+)
+# geneAnnotation
+# List of length 3
+# names(3): genes exons TSS
+```
+
+## Creating Arrow Files
+
+For this tutorial, we will use data from a downsampled dataset of hematopoietic cells [Granja* et al. Nature Biotechnology 2019](https://www.ncbi.nlm.nih.gov/pubmed/31792411). This includes data from bone marrow mononuclear cells (BMMC), peripheral blood mononuclear cells (PBMC), and CD34+ hematopoietic stem and progenitor cells from bone marrow (CD34 BMMC).
+
+This data is downloaded as fragment files which contain the start and end genomic coordinates of all aligned sequenced fragments. Fragment files are one of the base file types of the 10x Genomics analytical platform (and other platforms) and can be easily created from any BAM file. See __QQQ__ for information on making your own fragment files for input to ArchR. Once we have our fragment files, we provide their paths as a character vector to `createArrowFiles()`. During creation, some basic metadata and matrices are added to each `ArrowFile` including a "TileMatrix" containing insertion counts across genome-wide 500-bp bins (see `addTileMatrix()`) and a "GeneScoreMatrix" that is determined based on weighting insertion counts in tiles nearby a gene promoter (see `addGeneScoreMatrix()`).
+
+```{r eval=FALSE}
+library(ArchR)
+
+#Get Tutorial Data ~0.5GB To Download (if downloaded already ArchR will bypass downloading).
+inputFiles <- getTutorialData("Hematopoiesis")
+inputFiles
+#                                      scATAC_BMMC_R1 
+#      "HemeFragments/scATAC_BMMC_R1.fragments.tsv.gz" 
+#                                  scATAC_CD34_BMMC_R1 
+# "HemeFragments/scATAC_CD34_BMMC_R1.fragments.tsv.gz" 
+#                                       scATAC_PBMC_R1 
+#      "HemeFragments/scATAC_PBMC_R1.fragments.tsv.gz" 
+```
+
+Now we will create our Arrow Files (10-15 minutes). For each sample, this step will:
+
+1. Read accessible fragments from the provided input files.
+2. Calculate quality control information for each cell (i.e. TSS enrichment scores and nucleosome info).
+3. Filter cells based on quality control parameters.
+4. Create a genome-wide TileMatrix using 500-bp bins.
+5. Create a GeneScoreMatrix using the custom `geneAnnotation` that was defined when we called `addArchRGenome()`.
+
+```{r eval=FALSE}
+#Set Genome Annotations to be used to hg19
+addArchRGenome("hg19")
+
+#Set Default Threads for ArchR Functions
+addArchRThreads(threads = 16) 
+
+ArrowFiles <- createArrowFiles(
+  inputFiles = inputFiles,
+  sampleNames = names(inputFiles),
+  filterTSS = 4, #Dont set this too high because you can always increase later
+  filterFrags = 1000, 
+  addTileMat = TRUE,
+  addGeneScoreMat = TRUE
+)
+ArrowFiles
+# [1] "scATAC_BMMC_R1.arrow"      "scATAC_CD34_BMMC_R1.arrow"
+# [3] "scATAC_PBMC_R1.arrow"
+```
+
+This step will create a folder called "QualityControl" in your current working directory that will contain 2 plots associated with each of your samples:
+
+```{r, include=FALSE, eval=FALSE}
+ArchR:::.convertToPNG()
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+<span style="font-size:16px;font-weight:bold">1. TSS Enrichment Score by log10(Unique Fragments)</span>
+<span style="font-size:16px;font-weight:bold">2. Fragment Size Distribution</span>
+
+For **BMMC**:</br>
+![](images/HemeWalkthrough/PNG/scATAC_BMMC_R1-TSS_by_Unique_Frags_1.png){width=350 height=350}
+![](images/HemeWalkthrough/PNG/scATAC_BMMC_R1-Fragment_Size_Distribution_1.png){width=450 height=350}
+
+For **CD34 BMMC**:</br>
+
+![](images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-TSS_by_Unique_Frags_1.png){width=350 height=350}
+![](images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-Fragment_Size_Distribution_1.png){width=450 height=350}
+
+For **PBMC**:</br>
+
+![](images/HemeWalkthrough/PNG/scATAC_PBMC_R1-TSS_by_Unique_Frags_1.png){width=350 height=350}
+![](images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Fragment_Size_Distribution_1.png){width=450 height=350}
+
+## Session Information
+
+```{r eval=FALSE}
+Sys.Date()
+
+
+sessionInfo()
+```
+
+```{r, include=FALSE, eval=FALSE}
+save.image(params$out, compress = FALSE)
+rm(params)
+```
+
+
