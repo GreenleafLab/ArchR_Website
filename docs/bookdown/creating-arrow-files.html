@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-15" />
+<meta name="date" content="2020-04-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -265,17 +265,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">1.7</span> Creating Arrow Files</h2>
 <p>For this tutorial, we will use data from a downsampled dataset of hematopoietic cells <a href="https://www.ncbi.nlm.nih.gov/pubmed/31792411">Granja* et al. Nature Biotechnology 2019</a>. This includes data from bone marrow mononuclear cells (BMMC), peripheral blood mononuclear cells (PBMC), and CD34+ hematopoietic stem and progenitor cells from bone marrow (CD34 BMMC).</p>
 <p>This data is downloaded as fragment files which contain the start and end genomic coordinates of all aligned sequenced fragments. Fragment files are one of the base file types of the 10x Genomics analytical platform (and other platforms) and can be easily created from any BAM file. See <strong>QQQ</strong> for information on making your own fragment files for input to ArchR. Once we have our fragment files, we provide their paths as a character vector to <code>createArrowFiles()</code>. During creation, some basic metadata and matrices are added to each <code>ArrowFile</code> including a “TileMatrix” containing insertion counts across genome-wide 500-bp bins (see <code>addTileMatrix()</code>) and a “GeneScoreMatrix” that is determined based on weighting insertion counts in tiles nearby a gene promoter (see <code>addGeneScoreMatrix()</code>).</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="creating-arrow-files.html#cb10-1"></a><span class="kw">library</span>(ArchR)</span>
-<span id="cb10-2"><a href="creating-arrow-files.html#cb10-2"></a></span>
-<span id="cb10-3"><a href="creating-arrow-files.html#cb10-3"></a><span class="co">#Get Tutorial Data ~0.5GB To Download (if downloaded already ArchR will bypass downloading).</span></span>
-<span id="cb10-4"><a href="creating-arrow-files.html#cb10-4"></a>inputFiles &lt;-<span class="st"> </span><span class="kw">getTutorialData</span>(<span class="st">&quot;Hematopoiesis&quot;</span>)</span>
-<span id="cb10-5"><a href="creating-arrow-files.html#cb10-5"></a>inputFiles</span>
-<span id="cb10-6"><a href="creating-arrow-files.html#cb10-6"></a><span class="co">#                                      scATAC_BMMC_R1 </span></span>
-<span id="cb10-7"><a href="creating-arrow-files.html#cb10-7"></a><span class="co">#      &quot;HemeFragments/scATAC_BMMC_R1.fragments.tsv.gz&quot; </span></span>
-<span id="cb10-8"><a href="creating-arrow-files.html#cb10-8"></a><span class="co">#                                  scATAC_CD34_BMMC_R1 </span></span>
-<span id="cb10-9"><a href="creating-arrow-files.html#cb10-9"></a><span class="co"># &quot;HemeFragments/scATAC_CD34_BMMC_R1.fragments.tsv.gz&quot; </span></span>
-<span id="cb10-10"><a href="creating-arrow-files.html#cb10-10"></a><span class="co">#                                       scATAC_PBMC_R1 </span></span>
-<span id="cb10-11"><a href="creating-arrow-files.html#cb10-11"></a><span class="co">#      &quot;HemeFragments/scATAC_PBMC_R1.fragments.tsv.gz&quot; </span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="creating-arrow-files.html#cb14-1"></a><span class="kw">library</span>(ArchR)</span>
+<span id="cb14-2"><a href="creating-arrow-files.html#cb14-2"></a></span>
+<span id="cb14-3"><a href="creating-arrow-files.html#cb14-3"></a><span class="co">#Get Tutorial Data ~0.5GB To Download (if downloaded already ArchR will bypass downloading).</span></span>
+<span id="cb14-4"><a href="creating-arrow-files.html#cb14-4"></a>inputFiles &lt;-<span class="st"> </span><span class="kw">getTutorialData</span>(<span class="st">&quot;Hematopoiesis&quot;</span>)</span>
+<span id="cb14-5"><a href="creating-arrow-files.html#cb14-5"></a>inputFiles</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; scATAC_BMMC_R1<br />
+&gt;&gt; “HemeFragments/scATAC_BMMC_R1.fragments.tsv.gz”<br />
+&gt;&gt; scATAC_CD34_BMMC_R1<br />
+&gt;&gt; “HemeFragments/scATAC_CD34_BMMC_R1.fragments.tsv.gz”<br />
+&gt;&gt; scATAC_PBMC_R1<br />
+&gt;&gt; “HemeFragments/scATAC_PBMC_R1.fragments.tsv.gz”</p>
+</blockquote>
 <p>Now we will create our Arrow Files (10-15 minutes). For each sample, this step will:</p>
 <ol style="list-style-type: decimal">
 <li>Read accessible fragments from the provided input files.</li>
@@ -284,35 +286,50 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Create a genome-wide TileMatrix using 500-bp bins.</li>
 <li>Create a GeneScoreMatrix using the custom <code>geneAnnotation</code> that was defined when we called <code>addArchRGenome()</code>.</li>
 </ol>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="creating-arrow-files.html#cb11-1"></a><span class="co">#Set Genome Annotations to be used to hg19</span></span>
-<span id="cb11-2"><a href="creating-arrow-files.html#cb11-2"></a><span class="kw">addArchRGenome</span>(<span class="st">&quot;hg19&quot;</span>)</span>
-<span id="cb11-3"><a href="creating-arrow-files.html#cb11-3"></a></span>
-<span id="cb11-4"><a href="creating-arrow-files.html#cb11-4"></a><span class="co">#Set Default Threads for ArchR Functions</span></span>
-<span id="cb11-5"><a href="creating-arrow-files.html#cb11-5"></a><span class="kw">addArchRThreads</span>(<span class="dt">threads =</span> <span class="dv">16</span>) </span>
-<span id="cb11-6"><a href="creating-arrow-files.html#cb11-6"></a></span>
-<span id="cb11-7"><a href="creating-arrow-files.html#cb11-7"></a>ArrowFiles &lt;-<span class="st"> </span><span class="kw">createArrowFiles</span>(</span>
-<span id="cb11-8"><a href="creating-arrow-files.html#cb11-8"></a>  <span class="dt">inputFiles =</span> inputFiles,</span>
-<span id="cb11-9"><a href="creating-arrow-files.html#cb11-9"></a>  <span class="dt">sampleNames =</span> <span class="kw">names</span>(inputFiles),</span>
-<span id="cb11-10"><a href="creating-arrow-files.html#cb11-10"></a>  <span class="dt">filterTSS =</span> <span class="dv">4</span>, <span class="co">#Dont set this too high because you can always increase later</span></span>
-<span id="cb11-11"><a href="creating-arrow-files.html#cb11-11"></a>  <span class="dt">filterFrags =</span> <span class="dv">1000</span>, </span>
-<span id="cb11-12"><a href="creating-arrow-files.html#cb11-12"></a>  <span class="dt">addTileMat =</span> <span class="ot">TRUE</span>,</span>
-<span id="cb11-13"><a href="creating-arrow-files.html#cb11-13"></a>  <span class="dt">addGeneScoreMat =</span> <span class="ot">TRUE</span></span>
-<span id="cb11-14"><a href="creating-arrow-files.html#cb11-14"></a>)</span>
-<span id="cb11-15"><a href="creating-arrow-files.html#cb11-15"></a>ArrowFiles</span>
-<span id="cb11-16"><a href="creating-arrow-files.html#cb11-16"></a><span class="co"># [1] &quot;scATAC_BMMC_R1.arrow&quot;      &quot;scATAC_CD34_BMMC_R1.arrow&quot;</span></span>
-<span id="cb11-17"><a href="creating-arrow-files.html#cb11-17"></a><span class="co"># [3] &quot;scATAC_PBMC_R1.arrow&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="creating-arrow-files.html#cb15-1"></a><span class="co">#Set Genome Annotations to be used to hg19</span></span>
+<span id="cb15-2"><a href="creating-arrow-files.html#cb15-2"></a><span class="kw">addArchRGenome</span>(<span class="st">&quot;hg19&quot;</span>)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; Setting default genome to Hg19.</p>
+</blockquote>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="creating-arrow-files.html#cb16-1"></a><span class="co">#Set Default Threads for ArchR Functions</span></span>
+<span id="cb16-2"><a href="creating-arrow-files.html#cb16-2"></a><span class="kw">addArchRThreads</span>(<span class="dt">threads =</span> <span class="dv">16</span>) </span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; Setting default number of Parallel threads to 16.</p>
+</blockquote>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="creating-arrow-files.html#cb17-1"></a>ArrowFiles &lt;-<span class="st"> </span><span class="kw">createArrowFiles</span>(</span>
+<span id="cb17-2"><a href="creating-arrow-files.html#cb17-2"></a>  <span class="dt">inputFiles =</span> inputFiles,</span>
+<span id="cb17-3"><a href="creating-arrow-files.html#cb17-3"></a>  <span class="dt">sampleNames =</span> <span class="kw">names</span>(inputFiles),</span>
+<span id="cb17-4"><a href="creating-arrow-files.html#cb17-4"></a>  <span class="dt">filterTSS =</span> <span class="dv">4</span>, <span class="co">#Dont set this too high because you can always increase later</span></span>
+<span id="cb17-5"><a href="creating-arrow-files.html#cb17-5"></a>  <span class="dt">filterFrags =</span> <span class="dv">1000</span>, </span>
+<span id="cb17-6"><a href="creating-arrow-files.html#cb17-6"></a>  <span class="dt">addTileMat =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb17-7"><a href="creating-arrow-files.html#cb17-7"></a>  <span class="dt">addGeneScoreMat =</span> <span class="ot">TRUE</span></span>
+<span id="cb17-8"><a href="creating-arrow-files.html#cb17-8"></a>)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; Using GeneAnnotation set by addArchRGenome(Hg19)!<br />
+&gt;&gt; Using GeneAnnotation set by addArchRGenome(Hg19)!<br />
+&gt;&gt; ArchR logging to : ArchRLogs/ArchR-createArrows-dfa159ddbf6e-Date-2020-04-15_Time-09-21-27.log<br />
+&gt;&gt; If there is an issue, please report to github with logFile!<br />
+&gt;&gt; Cleaning Temporary Files<br />
+&gt;&gt; 2020-04-15 09:21:28 : Batch Execution w/ safelapply!, 0 mins elapsed.<br />
+&gt;&gt; ArchR logging successful to : ArchRLogs/ArchR-createArrows-dfa159ddbf6e-Date-2020-04-15_Time-09-21-27.log</p>
+</blockquote>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="creating-arrow-files.html#cb18-1"></a>ArrowFiles</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; “scATAC_BMMC_R1.arrow” “scATAC_CD34_BMMC_R1.arrow”<br />
+&gt;&gt; “scATAC_PBMC_R1.arrow”</p>
+</blockquote>
 <p>This step will create a folder called “QualityControl” in your current working directory that will contain 2 plots associated with each of your samples:</p>
 <p><span style="font-size:16px;font-weight:bold">1. TSS Enrichment Score by log10(Unique Fragments)</span>
 <span style="font-size:16px;font-weight:bold">2. Fragment Size Distribution</span></p>
 <p>For <strong>BMMC</strong>:</br>
-<img src="images/HemeWalkthrough/PNG/scATAC_BMMC_R1-TSS_by_Unique_Frags_1.png" width="350" height="350" />
-<img src="images/HemeWalkthrough/PNG/scATAC_BMMC_R1-Fragment_Size_Distribution_1.png" width="450" height="350" /></p>
+<img src="images/HemeWalkthrough/PNG/scATAC_BMMC_R1-TSS_by_Unique_Frags_1.png" width="330" height="330" />
+<img src="images/HemeWalkthrough/PNG/scATAC_BMMC_R1-Fragment_Size_Distribution_1.png" width="430" height="330" /></p>
 <p>For <strong>CD34 BMMC</strong>:</br></p>
-<p><img src="images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-TSS_by_Unique_Frags_1.png" width="350" height="350" />
-<img src="images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-Fragment_Size_Distribution_1.png" width="450" height="350" /></p>
+<p><img src="images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-TSS_by_Unique_Frags_1.png" width="330" height="330" />
+<img src="images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-Fragment_Size_Distribution_1.png" width="430" height="330" /></p>
 <p>For <strong>PBMC</strong>:</br></p>
-<p><img src="images/HemeWalkthrough/PNG/scATAC_PBMC_R1-TSS_by_Unique_Frags_1.png" width="350" height="350" />
-<img src="images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Fragment_Size_Distribution_1.png" width="450" height="350" /></p>
+<p><img src="images/HemeWalkthrough/PNG/scATAC_PBMC_R1-TSS_by_Unique_Frags_1.png" width="330" height="330" />
+<img src="images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Fragment_Size_Distribution_1.png" width="430" height="330" /></p>
 </div>
             </section>
 

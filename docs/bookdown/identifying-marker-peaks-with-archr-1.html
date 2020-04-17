@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-15" />
+<meta name="date" content="2020-04-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -264,115 +264,115 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="identifying-marker-peaks-with-archr-1" class="section level2" number="10.1">
 <h2><span class="header-section-number">10.1</span> Identifying Marker Peaks with ArchR</h2>
 <p>Often times, we are interested to know which peaks are unique to an individual cluster or a small group of clusters. We can do this in an unsupervised fashion in ArchR:</p>
-<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="identifying-marker-peaks-with-archr-1.html#cb107-1"></a><span class="kw">addArchRThreads</span>(<span class="dv">8</span>)</span>
-<span id="cb107-2"><a href="identifying-marker-peaks-with-archr-1.html#cb107-2"></a></span>
-<span id="cb107-3"><a href="identifying-marker-peaks-with-archr-1.html#cb107-3"></a><span class="co">#Our scRNA labels</span></span>
-<span id="cb107-4"><a href="identifying-marker-peaks-with-archr-1.html#cb107-4"></a><span class="kw">table</span>(projHeme5<span class="op">$</span>Clusters2)</span>
-<span id="cb107-5"><a href="identifying-marker-peaks-with-archr-1.html#cb107-5"></a><span class="co"># C1_Early.Eryth C10_CD14.Mono.2           C11_B       C12_Pre.B       C13_CLP.2 </span></span>
-<span id="cb107-6"><a href="identifying-marker-peaks-with-archr-1.html#cb107-6"></a><span class="co">#             28            1070             425             351             408 </span></span>
-<span id="cb107-7"><a href="identifying-marker-peaks-with-archr-1.html#cb107-7"></a><span class="co">#        C14_pDC       C2_CD4.N1       C3_CD4.N2           C4_NK   C5_Late.Eryth </span></span>
-<span id="cb107-8"><a href="identifying-marker-peaks-with-archr-1.html#cb107-8"></a><span class="co">#            345            1330             562             901             860 </span></span>
-<span id="cb107-9"><a href="identifying-marker-peaks-with-archr-1.html#cb107-9"></a><span class="co">#         C6_HSC     C7_CMP.LMPP     C8_GMP.Neut  C9_CD14.Mono.1 </span></span>
-<span id="cb107-10"><a href="identifying-marker-peaks-with-archr-1.html#cb107-10"></a><span class="co">#           1218             974             274            1505 </span></span>
-<span id="cb107-11"><a href="identifying-marker-peaks-with-archr-1.html#cb107-11"></a></span>
-<span id="cb107-12"><a href="identifying-marker-peaks-with-archr-1.html#cb107-12"></a><span class="co">#Identify Marker Peaks while controling for TSS and Depth Biases</span></span>
-<span id="cb107-13"><a href="identifying-marker-peaks-with-archr-1.html#cb107-13"></a>markersPeaks &lt;-<span class="st"> </span><span class="kw">getMarkerFeatures</span>(</span>
-<span id="cb107-14"><a href="identifying-marker-peaks-with-archr-1.html#cb107-14"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
-<span id="cb107-15"><a href="identifying-marker-peaks-with-archr-1.html#cb107-15"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;PeakMatrix&quot;</span>, </span>
-<span id="cb107-16"><a href="identifying-marker-peaks-with-archr-1.html#cb107-16"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
-<span id="cb107-17"><a href="identifying-marker-peaks-with-archr-1.html#cb107-17"></a>  <span class="dt">bias =</span> <span class="kw">c</span>(<span class="st">&quot;TSSEnrichment&quot;</span>, <span class="st">&quot;log10(nFrags)&quot;</span>),</span>
-<span id="cb107-18"><a href="identifying-marker-peaks-with-archr-1.html#cb107-18"></a>  <span class="dt">testMethod =</span> <span class="st">&quot;wilcoxon&quot;</span></span>
-<span id="cb107-19"><a href="identifying-marker-peaks-with-archr-1.html#cb107-19"></a>)</span>
-<span id="cb107-20"><a href="identifying-marker-peaks-with-archr-1.html#cb107-20"></a></span>
-<span id="cb107-21"><a href="identifying-marker-peaks-with-archr-1.html#cb107-21"></a>markersPeaks</span>
-<span id="cb107-22"><a href="identifying-marker-peaks-with-archr-1.html#cb107-22"></a><span class="co"># class: SummarizedExperiment </span></span>
-<span id="cb107-23"><a href="identifying-marker-peaks-with-archr-1.html#cb107-23"></a><span class="co"># dim: 158378 14 </span></span>
-<span id="cb107-24"><a href="identifying-marker-peaks-with-archr-1.html#cb107-24"></a><span class="co"># metadata(2): MatchInfo Params</span></span>
-<span id="cb107-25"><a href="identifying-marker-peaks-with-archr-1.html#cb107-25"></a><span class="co"># assays(5): Log2FC Mean FDR AUC MeanBGD</span></span>
-<span id="cb107-26"><a href="identifying-marker-peaks-with-archr-1.html#cb107-26"></a><span class="co"># rownames(158378): 1 2 ... 158377 158378</span></span>
-<span id="cb107-27"><a href="identifying-marker-peaks-with-archr-1.html#cb107-27"></a><span class="co"># rowData names(4): seqnames idx start end</span></span>
-<span id="cb107-28"><a href="identifying-marker-peaks-with-archr-1.html#cb107-28"></a><span class="co"># colnames(14): C1_Early.Eryth C2_CD4.N1 ... C13_CLP.2 C14_pDC</span></span>
-<span id="cb107-29"><a href="identifying-marker-peaks-with-archr-1.html#cb107-29"></a><span class="co"># colData names(0):</span></span></code></pre></div>
+<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="identifying-marker-peaks-with-archr-1.html#cb130-1"></a><span class="kw">addArchRThreads</span>(<span class="dv">8</span>)</span>
+<span id="cb130-2"><a href="identifying-marker-peaks-with-archr-1.html#cb130-2"></a></span>
+<span id="cb130-3"><a href="identifying-marker-peaks-with-archr-1.html#cb130-3"></a><span class="co">#Our scRNA labels</span></span>
+<span id="cb130-4"><a href="identifying-marker-peaks-with-archr-1.html#cb130-4"></a><span class="kw">table</span>(projHeme5<span class="op">$</span>Clusters2)</span>
+<span id="cb130-5"><a href="identifying-marker-peaks-with-archr-1.html#cb130-5"></a><span class="co"># C1_Early.Eryth C10_CD14.Mono.2           C11_B       C12_Pre.B       C13_CLP.2 </span></span>
+<span id="cb130-6"><a href="identifying-marker-peaks-with-archr-1.html#cb130-6"></a><span class="co">#             28            1070             425             351             408 </span></span>
+<span id="cb130-7"><a href="identifying-marker-peaks-with-archr-1.html#cb130-7"></a><span class="co">#        C14_pDC       C2_CD4.N1       C3_CD4.N2           C4_NK   C5_Late.Eryth </span></span>
+<span id="cb130-8"><a href="identifying-marker-peaks-with-archr-1.html#cb130-8"></a><span class="co">#            345            1330             562             901             860 </span></span>
+<span id="cb130-9"><a href="identifying-marker-peaks-with-archr-1.html#cb130-9"></a><span class="co">#         C6_HSC     C7_CMP.LMPP     C8_GMP.Neut  C9_CD14.Mono.1 </span></span>
+<span id="cb130-10"><a href="identifying-marker-peaks-with-archr-1.html#cb130-10"></a><span class="co">#           1218             974             274            1505 </span></span>
+<span id="cb130-11"><a href="identifying-marker-peaks-with-archr-1.html#cb130-11"></a></span>
+<span id="cb130-12"><a href="identifying-marker-peaks-with-archr-1.html#cb130-12"></a><span class="co">#Identify Marker Peaks while controling for TSS and Depth Biases</span></span>
+<span id="cb130-13"><a href="identifying-marker-peaks-with-archr-1.html#cb130-13"></a>markersPeaks &lt;-<span class="st"> </span><span class="kw">getMarkerFeatures</span>(</span>
+<span id="cb130-14"><a href="identifying-marker-peaks-with-archr-1.html#cb130-14"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb130-15"><a href="identifying-marker-peaks-with-archr-1.html#cb130-15"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;PeakMatrix&quot;</span>, </span>
+<span id="cb130-16"><a href="identifying-marker-peaks-with-archr-1.html#cb130-16"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
+<span id="cb130-17"><a href="identifying-marker-peaks-with-archr-1.html#cb130-17"></a>  <span class="dt">bias =</span> <span class="kw">c</span>(<span class="st">&quot;TSSEnrichment&quot;</span>, <span class="st">&quot;log10(nFrags)&quot;</span>),</span>
+<span id="cb130-18"><a href="identifying-marker-peaks-with-archr-1.html#cb130-18"></a>  <span class="dt">testMethod =</span> <span class="st">&quot;wilcoxon&quot;</span></span>
+<span id="cb130-19"><a href="identifying-marker-peaks-with-archr-1.html#cb130-19"></a>)</span>
+<span id="cb130-20"><a href="identifying-marker-peaks-with-archr-1.html#cb130-20"></a></span>
+<span id="cb130-21"><a href="identifying-marker-peaks-with-archr-1.html#cb130-21"></a>markersPeaks</span>
+<span id="cb130-22"><a href="identifying-marker-peaks-with-archr-1.html#cb130-22"></a><span class="co"># class: SummarizedExperiment </span></span>
+<span id="cb130-23"><a href="identifying-marker-peaks-with-archr-1.html#cb130-23"></a><span class="co"># dim: 158378 14 </span></span>
+<span id="cb130-24"><a href="identifying-marker-peaks-with-archr-1.html#cb130-24"></a><span class="co"># metadata(2): MatchInfo Params</span></span>
+<span id="cb130-25"><a href="identifying-marker-peaks-with-archr-1.html#cb130-25"></a><span class="co"># assays(5): Log2FC Mean FDR AUC MeanBGD</span></span>
+<span id="cb130-26"><a href="identifying-marker-peaks-with-archr-1.html#cb130-26"></a><span class="co"># rownames(158378): 1 2 ... 158377 158378</span></span>
+<span id="cb130-27"><a href="identifying-marker-peaks-with-archr-1.html#cb130-27"></a><span class="co"># rowData names(4): seqnames idx start end</span></span>
+<span id="cb130-28"><a href="identifying-marker-peaks-with-archr-1.html#cb130-28"></a><span class="co"># colnames(14): C1_Early.Eryth C2_CD4.N1 ... C13_CLP.2 C14_pDC</span></span>
+<span id="cb130-29"><a href="identifying-marker-peaks-with-archr-1.html#cb130-29"></a><span class="co"># colData names(0):</span></span></code></pre></div>
 <p>We can get the peak regions for each marker as <code>DataFrame</code> or <code>GRanges</code>.</p>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="identifying-marker-peaks-with-archr-1.html#cb108-1"></a><span class="co">#DataFrame</span></span>
-<span id="cb108-2"><a href="identifying-marker-peaks-with-archr-1.html#cb108-2"></a>markerList &lt;-<span class="st"> </span><span class="kw">getMarkers</span>(markersPeaks, <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.01 &amp; Log2FC &gt;= 1&quot;</span>)</span>
-<span id="cb108-3"><a href="identifying-marker-peaks-with-archr-1.html#cb108-3"></a>markerList</span>
-<span id="cb108-4"><a href="identifying-marker-peaks-with-archr-1.html#cb108-4"></a><span class="co"># List of length 14</span></span>
-<span id="cb108-5"><a href="identifying-marker-peaks-with-archr-1.html#cb108-5"></a><span class="co"># names(14): C1_Early.Eryth C2_CD4.N1 C3_CD4.N2 ... C12_Pre.B C13_CLP.2 C14_pDC</span></span>
-<span id="cb108-6"><a href="identifying-marker-peaks-with-archr-1.html#cb108-6"></a></span>
-<span id="cb108-7"><a href="identifying-marker-peaks-with-archr-1.html#cb108-7"></a>markerList<span class="op">$</span>Erythroid</span>
-<span id="cb108-8"><a href="identifying-marker-peaks-with-archr-1.html#cb108-8"></a><span class="co"># DataFrame with 2262 rows and 6 columns</span></span>
-<span id="cb108-9"><a href="identifying-marker-peaks-with-archr-1.html#cb108-9"></a><span class="co">#        seqnames     idx     start       end           Log2FC</span></span>
-<span id="cb108-10"><a href="identifying-marker-peaks-with-archr-1.html#cb108-10"></a><span class="co">#           &lt;Rle&gt; &lt;array&gt;   &lt;array&gt;   &lt;array&gt;        &lt;numeric&gt;</span></span>
-<span id="cb108-11"><a href="identifying-marker-peaks-with-archr-1.html#cb108-11"></a><span class="co"># 97705     chr22    1313  30129829  30130329 3.51592607805769</span></span>
-<span id="cb108-12"><a href="identifying-marker-peaks-with-archr-1.html#cb108-12"></a><span class="co"># 10135      chr1   10135 164681301 164681801 4.44617535438744</span></span>
-<span id="cb108-13"><a href="identifying-marker-peaks-with-archr-1.html#cb108-13"></a><span class="co"># 48828     chr15    1349  50552672  50553172 5.18141784055201</span></span>
-<span id="cb108-14"><a href="identifying-marker-peaks-with-archr-1.html#cb108-14"></a><span class="co"># 54061     chr16    1457  15615745  15616245 8.33999798117364</span></span>
-<span id="cb108-15"><a href="identifying-marker-peaks-with-archr-1.html#cb108-15"></a><span class="co"># 2928       chr1    2928  27869062  27869562 5.21444029812509</span></span>
-<span id="cb108-16"><a href="identifying-marker-peaks-with-archr-1.html#cb108-16"></a><span class="co"># ...         ...     ...       ...       ...              ...</span></span>
-<span id="cb108-17"><a href="identifying-marker-peaks-with-archr-1.html#cb108-17"></a><span class="co"># 41787     chr13    3145 112037183 112037683 3.09392983218513</span></span>
-<span id="cb108-18"><a href="identifying-marker-peaks-with-archr-1.html#cb108-18"></a><span class="co"># 97647     chr22    1255  29702383  29702883 2.97001510006876</span></span>
-<span id="cb108-19"><a href="identifying-marker-peaks-with-archr-1.html#cb108-19"></a><span class="co"># 143218     chr8    1908  37949093  37949593  2.9624832757185</span></span>
-<span id="cb108-20"><a href="identifying-marker-peaks-with-archr-1.html#cb108-20"></a><span class="co"># 39746     chr13    1104  41255455  41255955 1.27203148042162</span></span>
-<span id="cb108-21"><a href="identifying-marker-peaks-with-archr-1.html#cb108-21"></a><span class="co"># 128023     chr6    3784  41169564  41170064 2.67070386367678</span></span>
-<span id="cb108-22"><a href="identifying-marker-peaks-with-archr-1.html#cb108-22"></a></span>
-<span id="cb108-23"><a href="identifying-marker-peaks-with-archr-1.html#cb108-23"></a><span class="co">#GRanges</span></span>
-<span id="cb108-24"><a href="identifying-marker-peaks-with-archr-1.html#cb108-24"></a>markerList &lt;-<span class="st"> </span><span class="kw">getMarkers</span>(markersPeaks, <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.01 &amp; Log2FC &gt;= 1&quot;</span>, <span class="dt">returnGR =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb108-25"><a href="identifying-marker-peaks-with-archr-1.html#cb108-25"></a>markerList</span>
-<span id="cb108-26"><a href="identifying-marker-peaks-with-archr-1.html#cb108-26"></a><span class="co"># GenomicRangesList of length 14</span></span>
-<span id="cb108-27"><a href="identifying-marker-peaks-with-archr-1.html#cb108-27"></a><span class="co"># names(14): C1_Early.Eryth C2_CD4.N1 C3_CD4.N2 ... C12_Pre.B C13_CLP.2 C14_pDC</span></span>
-<span id="cb108-28"><a href="identifying-marker-peaks-with-archr-1.html#cb108-28"></a></span>
-<span id="cb108-29"><a href="identifying-marker-peaks-with-archr-1.html#cb108-29"></a>markerList<span class="op">$</span>Erythroid</span>
-<span id="cb108-30"><a href="identifying-marker-peaks-with-archr-1.html#cb108-30"></a><span class="co"># GRanges object with 2262 ranges and 2 metadata columns:</span></span>
-<span id="cb108-31"><a href="identifying-marker-peaks-with-archr-1.html#cb108-31"></a><span class="co">#          seqnames              ranges strand |           Log2FC</span></span>
-<span id="cb108-32"><a href="identifying-marker-peaks-with-archr-1.html#cb108-32"></a><span class="co">#             &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |        &lt;numeric&gt;</span></span>
-<span id="cb108-33"><a href="identifying-marker-peaks-with-archr-1.html#cb108-33"></a><span class="co">#      [1]    chr22   30129829-30130329      * | 3.51592607805769</span></span>
-<span id="cb108-34"><a href="identifying-marker-peaks-with-archr-1.html#cb108-34"></a><span class="co">#      [2]     chr1 164681301-164681801      * | 4.44617535438744</span></span>
-<span id="cb108-35"><a href="identifying-marker-peaks-with-archr-1.html#cb108-35"></a><span class="co">#      [3]    chr15   50552672-50553172      * | 5.18141784055201</span></span>
-<span id="cb108-36"><a href="identifying-marker-peaks-with-archr-1.html#cb108-36"></a><span class="co">#      [4]    chr16   15615745-15616245      * | 8.33999798117364</span></span>
-<span id="cb108-37"><a href="identifying-marker-peaks-with-archr-1.html#cb108-37"></a><span class="co">#      [5]     chr1   27869062-27869562      * | 5.21444029812509</span></span>
-<span id="cb108-38"><a href="identifying-marker-peaks-with-archr-1.html#cb108-38"></a><span class="co">#      ...      ...                 ...    ... .              ...</span></span>
-<span id="cb108-39"><a href="identifying-marker-peaks-with-archr-1.html#cb108-39"></a><span class="co">#   [2258]    chr13 112037183-112037683      * | 3.09392983218513</span></span>
-<span id="cb108-40"><a href="identifying-marker-peaks-with-archr-1.html#cb108-40"></a><span class="co">#   [2259]    chr22   29702383-29702883      * | 2.97001510006876</span></span>
-<span id="cb108-41"><a href="identifying-marker-peaks-with-archr-1.html#cb108-41"></a><span class="co">#   [2260]     chr8   37949093-37949593      * |  2.9624832757185</span></span>
-<span id="cb108-42"><a href="identifying-marker-peaks-with-archr-1.html#cb108-42"></a><span class="co">#   [2261]    chr13   41255455-41255955      * | 1.27203148042162</span></span>
-<span id="cb108-43"><a href="identifying-marker-peaks-with-archr-1.html#cb108-43"></a><span class="co">#   [2262]     chr6   41169564-41170064      * | 2.67070386367678</span></span></code></pre></div>
+<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="identifying-marker-peaks-with-archr-1.html#cb131-1"></a><span class="co">#DataFrame</span></span>
+<span id="cb131-2"><a href="identifying-marker-peaks-with-archr-1.html#cb131-2"></a>markerList &lt;-<span class="st"> </span><span class="kw">getMarkers</span>(markersPeaks, <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.01 &amp; Log2FC &gt;= 1&quot;</span>)</span>
+<span id="cb131-3"><a href="identifying-marker-peaks-with-archr-1.html#cb131-3"></a>markerList</span>
+<span id="cb131-4"><a href="identifying-marker-peaks-with-archr-1.html#cb131-4"></a><span class="co"># List of length 14</span></span>
+<span id="cb131-5"><a href="identifying-marker-peaks-with-archr-1.html#cb131-5"></a><span class="co"># names(14): C1_Early.Eryth C2_CD4.N1 C3_CD4.N2 ... C12_Pre.B C13_CLP.2 C14_pDC</span></span>
+<span id="cb131-6"><a href="identifying-marker-peaks-with-archr-1.html#cb131-6"></a></span>
+<span id="cb131-7"><a href="identifying-marker-peaks-with-archr-1.html#cb131-7"></a>markerList<span class="op">$</span>Erythroid</span>
+<span id="cb131-8"><a href="identifying-marker-peaks-with-archr-1.html#cb131-8"></a><span class="co"># DataFrame with 2262 rows and 6 columns</span></span>
+<span id="cb131-9"><a href="identifying-marker-peaks-with-archr-1.html#cb131-9"></a><span class="co">#        seqnames     idx     start       end           Log2FC</span></span>
+<span id="cb131-10"><a href="identifying-marker-peaks-with-archr-1.html#cb131-10"></a><span class="co">#           &lt;Rle&gt; &lt;array&gt;   &lt;array&gt;   &lt;array&gt;        &lt;numeric&gt;</span></span>
+<span id="cb131-11"><a href="identifying-marker-peaks-with-archr-1.html#cb131-11"></a><span class="co"># 97705     chr22    1313  30129829  30130329 3.51592607805769</span></span>
+<span id="cb131-12"><a href="identifying-marker-peaks-with-archr-1.html#cb131-12"></a><span class="co"># 10135      chr1   10135 164681301 164681801 4.44617535438744</span></span>
+<span id="cb131-13"><a href="identifying-marker-peaks-with-archr-1.html#cb131-13"></a><span class="co"># 48828     chr15    1349  50552672  50553172 5.18141784055201</span></span>
+<span id="cb131-14"><a href="identifying-marker-peaks-with-archr-1.html#cb131-14"></a><span class="co"># 54061     chr16    1457  15615745  15616245 8.33999798117364</span></span>
+<span id="cb131-15"><a href="identifying-marker-peaks-with-archr-1.html#cb131-15"></a><span class="co"># 2928       chr1    2928  27869062  27869562 5.21444029812509</span></span>
+<span id="cb131-16"><a href="identifying-marker-peaks-with-archr-1.html#cb131-16"></a><span class="co"># ...         ...     ...       ...       ...              ...</span></span>
+<span id="cb131-17"><a href="identifying-marker-peaks-with-archr-1.html#cb131-17"></a><span class="co"># 41787     chr13    3145 112037183 112037683 3.09392983218513</span></span>
+<span id="cb131-18"><a href="identifying-marker-peaks-with-archr-1.html#cb131-18"></a><span class="co"># 97647     chr22    1255  29702383  29702883 2.97001510006876</span></span>
+<span id="cb131-19"><a href="identifying-marker-peaks-with-archr-1.html#cb131-19"></a><span class="co"># 143218     chr8    1908  37949093  37949593  2.9624832757185</span></span>
+<span id="cb131-20"><a href="identifying-marker-peaks-with-archr-1.html#cb131-20"></a><span class="co"># 39746     chr13    1104  41255455  41255955 1.27203148042162</span></span>
+<span id="cb131-21"><a href="identifying-marker-peaks-with-archr-1.html#cb131-21"></a><span class="co"># 128023     chr6    3784  41169564  41170064 2.67070386367678</span></span>
+<span id="cb131-22"><a href="identifying-marker-peaks-with-archr-1.html#cb131-22"></a></span>
+<span id="cb131-23"><a href="identifying-marker-peaks-with-archr-1.html#cb131-23"></a><span class="co">#GRanges</span></span>
+<span id="cb131-24"><a href="identifying-marker-peaks-with-archr-1.html#cb131-24"></a>markerList &lt;-<span class="st"> </span><span class="kw">getMarkers</span>(markersPeaks, <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.01 &amp; Log2FC &gt;= 1&quot;</span>, <span class="dt">returnGR =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb131-25"><a href="identifying-marker-peaks-with-archr-1.html#cb131-25"></a>markerList</span>
+<span id="cb131-26"><a href="identifying-marker-peaks-with-archr-1.html#cb131-26"></a><span class="co"># GenomicRangesList of length 14</span></span>
+<span id="cb131-27"><a href="identifying-marker-peaks-with-archr-1.html#cb131-27"></a><span class="co"># names(14): C1_Early.Eryth C2_CD4.N1 C3_CD4.N2 ... C12_Pre.B C13_CLP.2 C14_pDC</span></span>
+<span id="cb131-28"><a href="identifying-marker-peaks-with-archr-1.html#cb131-28"></a></span>
+<span id="cb131-29"><a href="identifying-marker-peaks-with-archr-1.html#cb131-29"></a>markerList<span class="op">$</span>Erythroid</span>
+<span id="cb131-30"><a href="identifying-marker-peaks-with-archr-1.html#cb131-30"></a><span class="co"># GRanges object with 2262 ranges and 2 metadata columns:</span></span>
+<span id="cb131-31"><a href="identifying-marker-peaks-with-archr-1.html#cb131-31"></a><span class="co">#          seqnames              ranges strand |           Log2FC</span></span>
+<span id="cb131-32"><a href="identifying-marker-peaks-with-archr-1.html#cb131-32"></a><span class="co">#             &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |        &lt;numeric&gt;</span></span>
+<span id="cb131-33"><a href="identifying-marker-peaks-with-archr-1.html#cb131-33"></a><span class="co">#      [1]    chr22   30129829-30130329      * | 3.51592607805769</span></span>
+<span id="cb131-34"><a href="identifying-marker-peaks-with-archr-1.html#cb131-34"></a><span class="co">#      [2]     chr1 164681301-164681801      * | 4.44617535438744</span></span>
+<span id="cb131-35"><a href="identifying-marker-peaks-with-archr-1.html#cb131-35"></a><span class="co">#      [3]    chr15   50552672-50553172      * | 5.18141784055201</span></span>
+<span id="cb131-36"><a href="identifying-marker-peaks-with-archr-1.html#cb131-36"></a><span class="co">#      [4]    chr16   15615745-15616245      * | 8.33999798117364</span></span>
+<span id="cb131-37"><a href="identifying-marker-peaks-with-archr-1.html#cb131-37"></a><span class="co">#      [5]     chr1   27869062-27869562      * | 5.21444029812509</span></span>
+<span id="cb131-38"><a href="identifying-marker-peaks-with-archr-1.html#cb131-38"></a><span class="co">#      ...      ...                 ...    ... .              ...</span></span>
+<span id="cb131-39"><a href="identifying-marker-peaks-with-archr-1.html#cb131-39"></a><span class="co">#   [2258]    chr13 112037183-112037683      * | 3.09392983218513</span></span>
+<span id="cb131-40"><a href="identifying-marker-peaks-with-archr-1.html#cb131-40"></a><span class="co">#   [2259]    chr22   29702383-29702883      * | 2.97001510006876</span></span>
+<span id="cb131-41"><a href="identifying-marker-peaks-with-archr-1.html#cb131-41"></a><span class="co">#   [2260]     chr8   37949093-37949593      * |  2.9624832757185</span></span>
+<span id="cb131-42"><a href="identifying-marker-peaks-with-archr-1.html#cb131-42"></a><span class="co">#   [2261]    chr13   41255455-41255955      * | 1.27203148042162</span></span>
+<span id="cb131-43"><a href="identifying-marker-peaks-with-archr-1.html#cb131-43"></a><span class="co">#   [2262]     chr6   41169564-41170064      * | 2.67070386367678</span></span></code></pre></div>
 <p>We can visualize this as a heatmap</p>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="identifying-marker-peaks-with-archr-1.html#cb109-1"></a><span class="co">#Visualize Markers as a heatmap</span></span>
-<span id="cb109-2"><a href="identifying-marker-peaks-with-archr-1.html#cb109-2"></a>heatmapPeaks &lt;-<span class="st"> </span><span class="kw">markerHeatmap</span>(</span>
-<span id="cb109-3"><a href="identifying-marker-peaks-with-archr-1.html#cb109-3"></a>  <span class="dt">seMarker =</span> markersPeaks, </span>
-<span id="cb109-4"><a href="identifying-marker-peaks-with-archr-1.html#cb109-4"></a>  <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 0.5&quot;</span>,</span>
-<span id="cb109-5"><a href="identifying-marker-peaks-with-archr-1.html#cb109-5"></a>  <span class="dt">transpose =</span> <span class="ot">TRUE</span></span>
-<span id="cb109-6"><a href="identifying-marker-peaks-with-archr-1.html#cb109-6"></a>)</span>
-<span id="cb109-7"><a href="identifying-marker-peaks-with-archr-1.html#cb109-7"></a></span>
-<span id="cb109-8"><a href="identifying-marker-peaks-with-archr-1.html#cb109-8"></a><span class="kw">draw</span>(heatmapPeaks, <span class="dt">heatmap_legend_side =</span> <span class="st">&quot;bot&quot;</span>, <span class="dt">annotation_legend_side =</span> <span class="st">&quot;bot&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="identifying-marker-peaks-with-archr-1.html#cb132-1"></a><span class="co">#Visualize Markers as a heatmap</span></span>
+<span id="cb132-2"><a href="identifying-marker-peaks-with-archr-1.html#cb132-2"></a>heatmapPeaks &lt;-<span class="st"> </span><span class="kw">markerHeatmap</span>(</span>
+<span id="cb132-3"><a href="identifying-marker-peaks-with-archr-1.html#cb132-3"></a>  <span class="dt">seMarker =</span> markersPeaks, </span>
+<span id="cb132-4"><a href="identifying-marker-peaks-with-archr-1.html#cb132-4"></a>  <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 0.5&quot;</span>,</span>
+<span id="cb132-5"><a href="identifying-marker-peaks-with-archr-1.html#cb132-5"></a>  <span class="dt">transpose =</span> <span class="ot">TRUE</span></span>
+<span id="cb132-6"><a href="identifying-marker-peaks-with-archr-1.html#cb132-6"></a>)</span>
+<span id="cb132-7"><a href="identifying-marker-peaks-with-archr-1.html#cb132-7"></a></span>
+<span id="cb132-8"><a href="identifying-marker-peaks-with-archr-1.html#cb132-8"></a><span class="kw">draw</span>(heatmapPeaks, <span class="dt">heatmap_legend_side =</span> <span class="st">&quot;bot&quot;</span>, <span class="dt">annotation_legend_side =</span> <span class="st">&quot;bot&quot;</span>)</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Peak-Marker-Heatmap_1.png" width="800" height="600" /></p>
 <p>We can then plot this</p>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="identifying-marker-peaks-with-archr-1.html#cb110-1"></a><span class="kw">plotPDF</span>(heatmapPeaks, <span class="dt">name =</span> <span class="st">&quot;Peak-Marker-Heatmap&quot;</span>, <span class="dt">width =</span> <span class="dv">8</span>, <span class="dt">height =</span> <span class="dv">6</span>, <span class="dt">ArchRProj =</span> projHeme5, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="identifying-marker-peaks-with-archr-1.html#cb133-1"></a><span class="kw">plotPDF</span>(heatmapPeaks, <span class="dt">name =</span> <span class="st">&quot;Peak-Marker-Heatmap&quot;</span>, <span class="dt">width =</span> <span class="dv">8</span>, <span class="dt">height =</span> <span class="dv">6</span>, <span class="dt">ArchRProj =</span> projHeme5, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 <p>We can also plot an MA/Volcano Plot for any individual cluster</p>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="identifying-marker-peaks-with-archr-1.html#cb111-1"></a><span class="co">#Marker Peaks for Erythroid</span></span>
-<span id="cb111-2"><a href="identifying-marker-peaks-with-archr-1.html#cb111-2"></a>pma &lt;-<span class="st"> </span><span class="kw">markerPlot</span>(<span class="dt">seMarker =</span> markersPeaks, <span class="dt">name =</span> <span class="st">&quot;Erythroid&quot;</span>, <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 1&quot;</span>, <span class="dt">plotAs =</span> <span class="st">&quot;MA&quot;</span>)</span>
-<span id="cb111-3"><a href="identifying-marker-peaks-with-archr-1.html#cb111-3"></a>pma</span></code></pre></div>
+<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="identifying-marker-peaks-with-archr-1.html#cb134-1"></a><span class="co">#Marker Peaks for Erythroid</span></span>
+<span id="cb134-2"><a href="identifying-marker-peaks-with-archr-1.html#cb134-2"></a>pma &lt;-<span class="st"> </span><span class="kw">markerPlot</span>(<span class="dt">seMarker =</span> markersPeaks, <span class="dt">name =</span> <span class="st">&quot;Erythroid&quot;</span>, <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 1&quot;</span>, <span class="dt">plotAs =</span> <span class="st">&quot;MA&quot;</span>)</span>
+<span id="cb134-3"><a href="identifying-marker-peaks-with-archr-1.html#cb134-3"></a>pma</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Erythroid-Markers-MA-Volcano_1.png" width="600" height="600" /></p>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="identifying-marker-peaks-with-archr-1.html#cb112-1"></a>pv &lt;-<span class="st"> </span><span class="kw">markerPlot</span>(<span class="dt">seMarker =</span> markersPeaks, <span class="dt">name =</span> <span class="st">&quot;Erythroid&quot;</span>, <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 1&quot;</span>, <span class="dt">plotAs =</span> <span class="st">&quot;Volcano&quot;</span>)</span>
-<span id="cb112-2"><a href="identifying-marker-peaks-with-archr-1.html#cb112-2"></a>pv</span></code></pre></div>
+<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="identifying-marker-peaks-with-archr-1.html#cb135-1"></a>pv &lt;-<span class="st"> </span><span class="kw">markerPlot</span>(<span class="dt">seMarker =</span> markersPeaks, <span class="dt">name =</span> <span class="st">&quot;Erythroid&quot;</span>, <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 1&quot;</span>, <span class="dt">plotAs =</span> <span class="st">&quot;Volcano&quot;</span>)</span>
+<span id="cb135-2"><a href="identifying-marker-peaks-with-archr-1.html#cb135-2"></a>pv</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Erythroid-Markers-MA-Volcano_2.png" width="600" height="600" /></p>
 <p>We can then plot this as a nice pdf</p>
-<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="identifying-marker-peaks-with-archr-1.html#cb113-1"></a><span class="kw">plotPDF</span>(pma, pv, <span class="dt">name =</span> <span class="st">&quot;Erythroid-Markers-MA-Volcano&quot;</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>, <span class="dt">ArchRProj =</span> projHeme5, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="identifying-marker-peaks-with-archr-1.html#cb136-1"></a><span class="kw">plotPDF</span>(pma, pv, <span class="dt">name =</span> <span class="st">&quot;Erythroid-Markers-MA-Volcano&quot;</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>, <span class="dt">ArchRProj =</span> projHeme5, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 <p>Additionally we can see these peak regions overlayed on our browser tracks</p>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="identifying-marker-peaks-with-archr-1.html#cb114-1"></a>p &lt;-<span class="st"> </span><span class="kw">ArchRBrowserTrack</span>(</span>
-<span id="cb114-2"><a href="identifying-marker-peaks-with-archr-1.html#cb114-2"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
-<span id="cb114-3"><a href="identifying-marker-peaks-with-archr-1.html#cb114-3"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>, </span>
-<span id="cb114-4"><a href="identifying-marker-peaks-with-archr-1.html#cb114-4"></a>    <span class="dt">geneSymbol =</span> <span class="kw">c</span>(<span class="st">&quot;GATA1&quot;</span>),</span>
-<span id="cb114-5"><a href="identifying-marker-peaks-with-archr-1.html#cb114-5"></a>    <span class="dt">features =</span>  <span class="kw">getMarkers</span>(markersPeaks, <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 1&quot;</span>, <span class="dt">returnGR =</span> <span class="ot">TRUE</span>)[<span class="st">&quot;Erythroid&quot;</span>],</span>
-<span id="cb114-6"><a href="identifying-marker-peaks-with-archr-1.html#cb114-6"></a>    <span class="dt">upstream =</span> <span class="dv">50000</span>,</span>
-<span id="cb114-7"><a href="identifying-marker-peaks-with-archr-1.html#cb114-7"></a>    <span class="dt">downstream =</span> <span class="dv">50000</span></span>
-<span id="cb114-8"><a href="identifying-marker-peaks-with-archr-1.html#cb114-8"></a>)</span>
-<span id="cb114-9"><a href="identifying-marker-peaks-with-archr-1.html#cb114-9"></a>grid<span class="op">::</span><span class="kw">grid.newpage</span>()</span>
-<span id="cb114-10"><a href="identifying-marker-peaks-with-archr-1.html#cb114-10"></a>grid<span class="op">::</span><span class="kw">grid.draw</span>(p<span class="op">$</span>GATA1)</span></code></pre></div>
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="identifying-marker-peaks-with-archr-1.html#cb137-1"></a>p &lt;-<span class="st"> </span><span class="kw">ArchRBrowserTrack</span>(</span>
+<span id="cb137-2"><a href="identifying-marker-peaks-with-archr-1.html#cb137-2"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb137-3"><a href="identifying-marker-peaks-with-archr-1.html#cb137-3"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>, </span>
+<span id="cb137-4"><a href="identifying-marker-peaks-with-archr-1.html#cb137-4"></a>    <span class="dt">geneSymbol =</span> <span class="kw">c</span>(<span class="st">&quot;GATA1&quot;</span>),</span>
+<span id="cb137-5"><a href="identifying-marker-peaks-with-archr-1.html#cb137-5"></a>    <span class="dt">features =</span>  <span class="kw">getMarkers</span>(markersPeaks, <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 1&quot;</span>, <span class="dt">returnGR =</span> <span class="ot">TRUE</span>)[<span class="st">&quot;Erythroid&quot;</span>],</span>
+<span id="cb137-6"><a href="identifying-marker-peaks-with-archr-1.html#cb137-6"></a>    <span class="dt">upstream =</span> <span class="dv">50000</span>,</span>
+<span id="cb137-7"><a href="identifying-marker-peaks-with-archr-1.html#cb137-7"></a>    <span class="dt">downstream =</span> <span class="dv">50000</span></span>
+<span id="cb137-8"><a href="identifying-marker-peaks-with-archr-1.html#cb137-8"></a>)</span>
+<span id="cb137-9"><a href="identifying-marker-peaks-with-archr-1.html#cb137-9"></a>grid<span class="op">::</span><span class="kw">grid.newpage</span>()</span>
+<span id="cb137-10"><a href="identifying-marker-peaks-with-archr-1.html#cb137-10"></a>grid<span class="op">::</span><span class="kw">grid.draw</span>(p<span class="op">$</span>GATA1)</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-Tracks-With-Features_1.png" width="600" height="600" /></p>
 <p>We can then plot this as a nice pdf</p>
-<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="identifying-marker-peaks-with-archr-1.html#cb115-1"></a><span class="kw">plotPDF</span>(p, <span class="dt">name =</span> <span class="st">&quot;Plot-Tracks-With-Features&quot;</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>, <span class="dt">ArchRProj =</span> projHeme5, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="identifying-marker-peaks-with-archr-1.html#cb138-1"></a><span class="kw">plotPDF</span>(p, <span class="dt">name =</span> <span class="st">&quot;Plot-Tracks-With-Features&quot;</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>, <span class="dt">ArchRProj =</span> projHeme5, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 </div>
             </section>
 

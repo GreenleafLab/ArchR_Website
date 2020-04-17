@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-15" />
+<meta name="date" content="2020-04-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -264,12 +264,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="batch-effect-correction-wtih-harmony" class="section level2" number="4.3">
 <h2><span class="header-section-number">4.3</span> Batch Effect Correction wtih Harmony</h2>
 <p>Sometimes the iterative LSI approach isnt enough of a correction for strong batch effect differences. For this reason, ArchR implements a commonly used batch effect correction tool called <a href="https://github.com/immunogenomics/harmony">Harmony</a> which was originally designed for scRNA-seq. We provide a wrapper that will pass a dimensionality reduction object from ArchR directly to the <code>HarmonyMatrix()</code> function. Additional arguments can be directly passed to <code>HarmonyMatrix()</code> in the function via the additional parameters (<code>...</code>) . See <code>?addHarmony()</code> for more details. Users should be aware of the caveats of batch correction for their particular application.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="batch-effect-correction-wtih-harmony.html#cb41-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addHarmony</span>(</span>
-<span id="cb41-2"><a href="batch-effect-correction-wtih-harmony.html#cb41-2"></a>    <span class="dt">ArchRProj =</span> projHeme2,</span>
-<span id="cb41-3"><a href="batch-effect-correction-wtih-harmony.html#cb41-3"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
-<span id="cb41-4"><a href="batch-effect-correction-wtih-harmony.html#cb41-4"></a>    <span class="dt">name =</span> <span class="st">&quot;Harmony&quot;</span>,</span>
-<span id="cb41-5"><a href="batch-effect-correction-wtih-harmony.html#cb41-5"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Sample&quot;</span></span>
-<span id="cb41-6"><a href="batch-effect-correction-wtih-harmony.html#cb41-6"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="batch-effect-correction-wtih-harmony.html#cb64-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addHarmony</span>(</span>
+<span id="cb64-2"><a href="batch-effect-correction-wtih-harmony.html#cb64-2"></a>    <span class="dt">ArchRProj =</span> projHeme2,</span>
+<span id="cb64-3"><a href="batch-effect-correction-wtih-harmony.html#cb64-3"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
+<span id="cb64-4"><a href="batch-effect-correction-wtih-harmony.html#cb64-4"></a>    <span class="dt">name =</span> <span class="st">&quot;Harmony&quot;</span>,</span>
+<span id="cb64-5"><a href="batch-effect-correction-wtih-harmony.html#cb64-5"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Sample&quot;</span></span>
+<span id="cb64-6"><a href="batch-effect-correction-wtih-harmony.html#cb64-6"></a>)</span></code></pre></div>
 <p>QQQ Would like to see a before and after batch correction plot here</p>
 </div>
             </section>

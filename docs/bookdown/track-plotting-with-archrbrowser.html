@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-15" />
+<meta name="date" content="2020-04-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -263,57 +263,57 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="track-plotting-with-archrbrowser" class="section level2" number="7.4">
 <h2><span class="header-section-number">7.4</span> Track Plotting with ArchRBrowser</h2>
-<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="track-plotting-with-archrbrowser.html#cb79-1"></a>markerGenes  &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
-<span id="cb79-2"><a href="track-plotting-with-archrbrowser.html#cb79-2"></a>    <span class="st">&quot;CD34&quot;</span>, <span class="co">#Early Progenitor</span></span>
-<span id="cb79-3"><a href="track-plotting-with-archrbrowser.html#cb79-3"></a>    <span class="st">&quot;GATA1&quot;</span>, <span class="co">#Erythroid</span></span>
-<span id="cb79-4"><a href="track-plotting-with-archrbrowser.html#cb79-4"></a>    <span class="st">&quot;PAX5&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="co">#B-Cell Trajectory</span></span>
-<span id="cb79-5"><a href="track-plotting-with-archrbrowser.html#cb79-5"></a>    <span class="st">&quot;CD14&quot;</span>, <span class="co">#Monocytes</span></span>
-<span id="cb79-6"><a href="track-plotting-with-archrbrowser.html#cb79-6"></a>    <span class="st">&quot;CD3D&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;IL7R&quot;</span> <span class="co">#TCells</span></span>
-<span id="cb79-7"><a href="track-plotting-with-archrbrowser.html#cb79-7"></a>  )</span>
-<span id="cb79-8"><a href="track-plotting-with-archrbrowser.html#cb79-8"></a></span>
-<span id="cb79-9"><a href="track-plotting-with-archrbrowser.html#cb79-9"></a>p &lt;-<span class="st"> </span><span class="kw">ArchRBrowserTrack</span>(</span>
-<span id="cb79-10"><a href="track-plotting-with-archrbrowser.html#cb79-10"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
-<span id="cb79-11"><a href="track-plotting-with-archrbrowser.html#cb79-11"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Clusters&quot;</span>, </span>
-<span id="cb79-12"><a href="track-plotting-with-archrbrowser.html#cb79-12"></a>    <span class="dt">geneSymbol =</span> markerGenes, </span>
-<span id="cb79-13"><a href="track-plotting-with-archrbrowser.html#cb79-13"></a>    <span class="dt">upstream =</span> <span class="dv">50000</span>,</span>
-<span id="cb79-14"><a href="track-plotting-with-archrbrowser.html#cb79-14"></a>    <span class="dt">downstream =</span> <span class="dv">50000</span></span>
-<span id="cb79-15"><a href="track-plotting-with-archrbrowser.html#cb79-15"></a>)</span>
-<span id="cb79-16"><a href="track-plotting-with-archrbrowser.html#cb79-16"></a><span class="co"># 2020-02-15 00:23:11 : Adding Bulk Tracks (1 of 9), 0 mins elapsed..</span></span>
-<span id="cb79-17"><a href="track-plotting-with-archrbrowser.html#cb79-17"></a><span class="co"># 2020-02-15 00:23:12 : Adding Gene Tracks (1 of 9), 0.015 mins elapsed..</span></span>
-<span id="cb79-18"><a href="track-plotting-with-archrbrowser.html#cb79-18"></a><span class="co"># 2020-02-15 00:23:12 : Plotting, 0.018 mins elapsed..</span></span>
-<span id="cb79-19"><a href="track-plotting-with-archrbrowser.html#cb79-19"></a><span class="co"># 2020-02-15 00:23:13 : Adding Bulk Tracks (2 of 9), 0.045 mins elapsed..</span></span>
-<span id="cb79-20"><a href="track-plotting-with-archrbrowser.html#cb79-20"></a><span class="co"># 2020-02-15 00:23:14 : Adding Gene Tracks (2 of 9), 0.055 mins elapsed..</span></span>
-<span id="cb79-21"><a href="track-plotting-with-archrbrowser.html#cb79-21"></a><span class="co"># 2020-02-15 00:23:14 : Plotting, 0.058 mins elapsed..</span></span>
-<span id="cb79-22"><a href="track-plotting-with-archrbrowser.html#cb79-22"></a><span class="co"># 2020-02-15 00:23:16 : Adding Bulk Tracks (3 of 9), 0.08 mins elapsed..</span></span>
-<span id="cb79-23"><a href="track-plotting-with-archrbrowser.html#cb79-23"></a><span class="co"># 2020-02-15 00:23:16 : Adding Gene Tracks (3 of 9), 0.09 mins elapsed..</span></span>
-<span id="cb79-24"><a href="track-plotting-with-archrbrowser.html#cb79-24"></a><span class="co"># 2020-02-15 00:23:16 : Plotting, 0.095 mins elapsed..</span></span>
-<span id="cb79-25"><a href="track-plotting-with-archrbrowser.html#cb79-25"></a><span class="co"># 2020-02-15 00:23:18 : Adding Bulk Tracks (4 of 9), 0.12 mins elapsed..</span></span>
-<span id="cb79-26"><a href="track-plotting-with-archrbrowser.html#cb79-26"></a><span class="co"># 2020-02-15 00:23:19 : Adding Gene Tracks (4 of 9), 0.131 mins elapsed..</span></span>
-<span id="cb79-27"><a href="track-plotting-with-archrbrowser.html#cb79-27"></a><span class="co"># 2020-02-15 00:23:19 : Plotting, 0.135 mins elapsed..</span></span>
-<span id="cb79-28"><a href="track-plotting-with-archrbrowser.html#cb79-28"></a><span class="co"># 2020-02-15 00:23:20 : Adding Bulk Tracks (5 of 9), 0.153 mins elapsed..</span></span>
-<span id="cb79-29"><a href="track-plotting-with-archrbrowser.html#cb79-29"></a><span class="co"># 2020-02-15 00:23:21 : Adding Gene Tracks (5 of 9), 0.167 mins elapsed..</span></span>
-<span id="cb79-30"><a href="track-plotting-with-archrbrowser.html#cb79-30"></a><span class="co"># 2020-02-15 00:23:21 : Plotting, 0.171 mins elapsed..</span></span>
-<span id="cb79-31"><a href="track-plotting-with-archrbrowser.html#cb79-31"></a><span class="co"># 2020-02-15 00:23:22 : Adding Bulk Tracks (6 of 9), 0.195 mins elapsed..</span></span>
-<span id="cb79-32"><a href="track-plotting-with-archrbrowser.html#cb79-32"></a><span class="co"># 2020-02-15 00:23:23 : Adding Gene Tracks (6 of 9), 0.206 mins elapsed..</span></span>
-<span id="cb79-33"><a href="track-plotting-with-archrbrowser.html#cb79-33"></a><span class="co"># 2020-02-15 00:23:23 : Plotting, 0.209 mins elapsed..</span></span>
-<span id="cb79-34"><a href="track-plotting-with-archrbrowser.html#cb79-34"></a><span class="co"># 2020-02-15 00:23:25 : Adding Bulk Tracks (7 of 9), 0.234 mins elapsed..</span></span>
-<span id="cb79-35"><a href="track-plotting-with-archrbrowser.html#cb79-35"></a><span class="co"># 2020-02-15 00:23:26 : Adding Gene Tracks (7 of 9), 0.247 mins elapsed..</span></span>
-<span id="cb79-36"><a href="track-plotting-with-archrbrowser.html#cb79-36"></a><span class="co"># 2020-02-15 00:23:26 : Plotting, 0.25 mins elapsed..</span></span>
-<span id="cb79-37"><a href="track-plotting-with-archrbrowser.html#cb79-37"></a><span class="co"># 2020-02-15 00:23:27 : Adding Bulk Tracks (8 of 9), 0.278 mins elapsed..</span></span>
-<span id="cb79-38"><a href="track-plotting-with-archrbrowser.html#cb79-38"></a><span class="co"># 2020-02-15 00:23:28 : Adding Gene Tracks (8 of 9), 0.291 mins elapsed..</span></span>
-<span id="cb79-39"><a href="track-plotting-with-archrbrowser.html#cb79-39"></a><span class="co"># 2020-02-15 00:23:28 : Plotting, 0.294 mins elapsed..</span></span>
-<span id="cb79-40"><a href="track-plotting-with-archrbrowser.html#cb79-40"></a><span class="co"># 2020-02-15 00:23:30 : Adding Bulk Tracks (9 of 9), 0.326 mins elapsed..</span></span>
-<span id="cb79-41"><a href="track-plotting-with-archrbrowser.html#cb79-41"></a><span class="co"># 2020-02-15 00:23:31 : Adding Gene Tracks (9 of 9), 0.338 mins elapsed..</span></span>
-<span id="cb79-42"><a href="track-plotting-with-archrbrowser.html#cb79-42"></a><span class="co"># 2020-02-15 00:23:31 : Plotting, 0.341 mins elapsed..</span></span></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="track-plotting-with-archrbrowser.html#cb102-1"></a>markerGenes  &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb102-2"><a href="track-plotting-with-archrbrowser.html#cb102-2"></a>    <span class="st">&quot;CD34&quot;</span>, <span class="co">#Early Progenitor</span></span>
+<span id="cb102-3"><a href="track-plotting-with-archrbrowser.html#cb102-3"></a>    <span class="st">&quot;GATA1&quot;</span>, <span class="co">#Erythroid</span></span>
+<span id="cb102-4"><a href="track-plotting-with-archrbrowser.html#cb102-4"></a>    <span class="st">&quot;PAX5&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="co">#B-Cell Trajectory</span></span>
+<span id="cb102-5"><a href="track-plotting-with-archrbrowser.html#cb102-5"></a>    <span class="st">&quot;CD14&quot;</span>, <span class="co">#Monocytes</span></span>
+<span id="cb102-6"><a href="track-plotting-with-archrbrowser.html#cb102-6"></a>    <span class="st">&quot;CD3D&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;IL7R&quot;</span> <span class="co">#TCells</span></span>
+<span id="cb102-7"><a href="track-plotting-with-archrbrowser.html#cb102-7"></a>  )</span>
+<span id="cb102-8"><a href="track-plotting-with-archrbrowser.html#cb102-8"></a></span>
+<span id="cb102-9"><a href="track-plotting-with-archrbrowser.html#cb102-9"></a>p &lt;-<span class="st"> </span><span class="kw">ArchRBrowserTrack</span>(</span>
+<span id="cb102-10"><a href="track-plotting-with-archrbrowser.html#cb102-10"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
+<span id="cb102-11"><a href="track-plotting-with-archrbrowser.html#cb102-11"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Clusters&quot;</span>, </span>
+<span id="cb102-12"><a href="track-plotting-with-archrbrowser.html#cb102-12"></a>    <span class="dt">geneSymbol =</span> markerGenes, </span>
+<span id="cb102-13"><a href="track-plotting-with-archrbrowser.html#cb102-13"></a>    <span class="dt">upstream =</span> <span class="dv">50000</span>,</span>
+<span id="cb102-14"><a href="track-plotting-with-archrbrowser.html#cb102-14"></a>    <span class="dt">downstream =</span> <span class="dv">50000</span></span>
+<span id="cb102-15"><a href="track-plotting-with-archrbrowser.html#cb102-15"></a>)</span>
+<span id="cb102-16"><a href="track-plotting-with-archrbrowser.html#cb102-16"></a><span class="co"># 2020-02-15 00:23:11 : Adding Bulk Tracks (1 of 9), 0 mins elapsed..</span></span>
+<span id="cb102-17"><a href="track-plotting-with-archrbrowser.html#cb102-17"></a><span class="co"># 2020-02-15 00:23:12 : Adding Gene Tracks (1 of 9), 0.015 mins elapsed..</span></span>
+<span id="cb102-18"><a href="track-plotting-with-archrbrowser.html#cb102-18"></a><span class="co"># 2020-02-15 00:23:12 : Plotting, 0.018 mins elapsed..</span></span>
+<span id="cb102-19"><a href="track-plotting-with-archrbrowser.html#cb102-19"></a><span class="co"># 2020-02-15 00:23:13 : Adding Bulk Tracks (2 of 9), 0.045 mins elapsed..</span></span>
+<span id="cb102-20"><a href="track-plotting-with-archrbrowser.html#cb102-20"></a><span class="co"># 2020-02-15 00:23:14 : Adding Gene Tracks (2 of 9), 0.055 mins elapsed..</span></span>
+<span id="cb102-21"><a href="track-plotting-with-archrbrowser.html#cb102-21"></a><span class="co"># 2020-02-15 00:23:14 : Plotting, 0.058 mins elapsed..</span></span>
+<span id="cb102-22"><a href="track-plotting-with-archrbrowser.html#cb102-22"></a><span class="co"># 2020-02-15 00:23:16 : Adding Bulk Tracks (3 of 9), 0.08 mins elapsed..</span></span>
+<span id="cb102-23"><a href="track-plotting-with-archrbrowser.html#cb102-23"></a><span class="co"># 2020-02-15 00:23:16 : Adding Gene Tracks (3 of 9), 0.09 mins elapsed..</span></span>
+<span id="cb102-24"><a href="track-plotting-with-archrbrowser.html#cb102-24"></a><span class="co"># 2020-02-15 00:23:16 : Plotting, 0.095 mins elapsed..</span></span>
+<span id="cb102-25"><a href="track-plotting-with-archrbrowser.html#cb102-25"></a><span class="co"># 2020-02-15 00:23:18 : Adding Bulk Tracks (4 of 9), 0.12 mins elapsed..</span></span>
+<span id="cb102-26"><a href="track-plotting-with-archrbrowser.html#cb102-26"></a><span class="co"># 2020-02-15 00:23:19 : Adding Gene Tracks (4 of 9), 0.131 mins elapsed..</span></span>
+<span id="cb102-27"><a href="track-plotting-with-archrbrowser.html#cb102-27"></a><span class="co"># 2020-02-15 00:23:19 : Plotting, 0.135 mins elapsed..</span></span>
+<span id="cb102-28"><a href="track-plotting-with-archrbrowser.html#cb102-28"></a><span class="co"># 2020-02-15 00:23:20 : Adding Bulk Tracks (5 of 9), 0.153 mins elapsed..</span></span>
+<span id="cb102-29"><a href="track-plotting-with-archrbrowser.html#cb102-29"></a><span class="co"># 2020-02-15 00:23:21 : Adding Gene Tracks (5 of 9), 0.167 mins elapsed..</span></span>
+<span id="cb102-30"><a href="track-plotting-with-archrbrowser.html#cb102-30"></a><span class="co"># 2020-02-15 00:23:21 : Plotting, 0.171 mins elapsed..</span></span>
+<span id="cb102-31"><a href="track-plotting-with-archrbrowser.html#cb102-31"></a><span class="co"># 2020-02-15 00:23:22 : Adding Bulk Tracks (6 of 9), 0.195 mins elapsed..</span></span>
+<span id="cb102-32"><a href="track-plotting-with-archrbrowser.html#cb102-32"></a><span class="co"># 2020-02-15 00:23:23 : Adding Gene Tracks (6 of 9), 0.206 mins elapsed..</span></span>
+<span id="cb102-33"><a href="track-plotting-with-archrbrowser.html#cb102-33"></a><span class="co"># 2020-02-15 00:23:23 : Plotting, 0.209 mins elapsed..</span></span>
+<span id="cb102-34"><a href="track-plotting-with-archrbrowser.html#cb102-34"></a><span class="co"># 2020-02-15 00:23:25 : Adding Bulk Tracks (7 of 9), 0.234 mins elapsed..</span></span>
+<span id="cb102-35"><a href="track-plotting-with-archrbrowser.html#cb102-35"></a><span class="co"># 2020-02-15 00:23:26 : Adding Gene Tracks (7 of 9), 0.247 mins elapsed..</span></span>
+<span id="cb102-36"><a href="track-plotting-with-archrbrowser.html#cb102-36"></a><span class="co"># 2020-02-15 00:23:26 : Plotting, 0.25 mins elapsed..</span></span>
+<span id="cb102-37"><a href="track-plotting-with-archrbrowser.html#cb102-37"></a><span class="co"># 2020-02-15 00:23:27 : Adding Bulk Tracks (8 of 9), 0.278 mins elapsed..</span></span>
+<span id="cb102-38"><a href="track-plotting-with-archrbrowser.html#cb102-38"></a><span class="co"># 2020-02-15 00:23:28 : Adding Gene Tracks (8 of 9), 0.291 mins elapsed..</span></span>
+<span id="cb102-39"><a href="track-plotting-with-archrbrowser.html#cb102-39"></a><span class="co"># 2020-02-15 00:23:28 : Plotting, 0.294 mins elapsed..</span></span>
+<span id="cb102-40"><a href="track-plotting-with-archrbrowser.html#cb102-40"></a><span class="co"># 2020-02-15 00:23:30 : Adding Bulk Tracks (9 of 9), 0.326 mins elapsed..</span></span>
+<span id="cb102-41"><a href="track-plotting-with-archrbrowser.html#cb102-41"></a><span class="co"># 2020-02-15 00:23:31 : Adding Gene Tracks (9 of 9), 0.338 mins elapsed..</span></span>
+<span id="cb102-42"><a href="track-plotting-with-archrbrowser.html#cb102-42"></a><span class="co"># 2020-02-15 00:23:31 : Plotting, 0.341 mins elapsed..</span></span></code></pre></div>
 <p>To plot a track we can simply print one from the list</p>
-<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="track-plotting-with-archrbrowser.html#cb80-1"></a>grid<span class="op">::</span><span class="kw">grid.newpage</span>()</span>
-<span id="cb80-2"><a href="track-plotting-with-archrbrowser.html#cb80-2"></a>grid<span class="op">::</span><span class="kw">grid.draw</span>(p<span class="op">$</span>CD14)</span></code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="track-plotting-with-archrbrowser.html#cb103-1"></a>grid<span class="op">::</span><span class="kw">grid.newpage</span>()</span>
+<span id="cb103-2"><a href="track-plotting-with-archrbrowser.html#cb103-2"></a>grid<span class="op">::</span><span class="kw">grid.draw</span>(p<span class="op">$</span>CD14)</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-Tracks-Marker-Genes_5.png" width="500" height="500" /></p>
 <p>We can save pdfs with plotPDF</p>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="track-plotting-with-archrbrowser.html#cb81-1"></a><span class="kw">plotPDF</span>(<span class="dt">plotList =</span> p, </span>
-<span id="cb81-2"><a href="track-plotting-with-archrbrowser.html#cb81-2"></a>    <span class="dt">name =</span> <span class="st">&quot;Plot-Tracks-Marker-Genes.pdf&quot;</span>, </span>
-<span id="cb81-3"><a href="track-plotting-with-archrbrowser.html#cb81-3"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
-<span id="cb81-4"><a href="track-plotting-with-archrbrowser.html#cb81-4"></a>    <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="track-plotting-with-archrbrowser.html#cb104-1"></a><span class="kw">plotPDF</span>(<span class="dt">plotList =</span> p, </span>
+<span id="cb104-2"><a href="track-plotting-with-archrbrowser.html#cb104-2"></a>    <span class="dt">name =</span> <span class="st">&quot;Plot-Tracks-Marker-Genes.pdf&quot;</span>, </span>
+<span id="cb104-3"><a href="track-plotting-with-archrbrowser.html#cb104-3"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
+<span id="cb104-4"><a href="track-plotting-with-archrbrowser.html#cb104-4"></a>    <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>)</span></code></pre></div>
 <p><a href="images/HemeWalkthrough/PDF/Plot-Tracks-Marker-Genes.pdf">Download PDF : Plot-Tracks-Marker-Genes.pdf</a></p>
 </div>
             </section>

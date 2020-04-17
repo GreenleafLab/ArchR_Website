@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-15" />
+<meta name="date" content="2020-04-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -264,50 +264,50 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="identification-of-marker-genes" class="section level2" number="7.1">
 <h2><span class="header-section-number">7.1</span> Identification of Marker Genes</h2>
 <p>Identify Marker Gene through Pairwise Test vs Bias-Matched Background</p>
-<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="identification-of-marker-genes.html#cb66-1"></a>markersGS &lt;-<span class="st"> </span><span class="kw">getMarkerFeatures</span>(</span>
-<span id="cb66-2"><a href="identification-of-marker-genes.html#cb66-2"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
-<span id="cb66-3"><a href="identification-of-marker-genes.html#cb66-3"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>, </span>
-<span id="cb66-4"><a href="identification-of-marker-genes.html#cb66-4"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Clusters&quot;</span>,</span>
-<span id="cb66-5"><a href="identification-of-marker-genes.html#cb66-5"></a>    <span class="dt">bias =</span> <span class="kw">c</span>(<span class="st">&quot;TSSEnrichment&quot;</span>, <span class="st">&quot;log10(nFrags)&quot;</span>),</span>
-<span id="cb66-6"><a href="identification-of-marker-genes.html#cb66-6"></a>    <span class="dt">testMethod =</span> <span class="st">&quot;wilcoxon&quot;</span></span>
-<span id="cb66-7"><a href="identification-of-marker-genes.html#cb66-7"></a>)</span></code></pre></div>
-<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="identification-of-marker-genes.html#cb67-1"></a>markerList &lt;-<span class="st"> </span><span class="kw">getMarkers</span>(markersGS, <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.01 &amp; Log2FC &gt;= 1.25&quot;</span>)</span>
-<span id="cb67-2"><a href="identification-of-marker-genes.html#cb67-2"></a>markerList<span class="op">$</span>C6</span>
-<span id="cb67-3"><a href="identification-of-marker-genes.html#cb67-3"></a><span class="co"># DataFrame with 210 rows and 6 columns</span></span>
-<span id="cb67-4"><a href="identification-of-marker-genes.html#cb67-4"></a><span class="co">#       seqnames     start           name     idx           Log2FC</span></span>
-<span id="cb67-5"><a href="identification-of-marker-genes.html#cb67-5"></a><span class="co">#          &lt;Rle&gt;   &lt;array&gt;        &lt;array&gt; &lt;array&gt;        &lt;numeric&gt;</span></span>
-<span id="cb67-6"><a href="identification-of-marker-genes.html#cb67-6"></a><span class="co"># 14759    chr22  37545962          IL2RB     301 2.09731361787433</span></span>
-<span id="cb67-7"><a href="identification-of-marker-genes.html#cb67-7"></a><span class="co"># 6856     chr14  99737822         BCL11B     595 1.42193213075962</span></span>
-<span id="cb67-8"><a href="identification-of-marker-genes.html#cb67-8"></a><span class="co"># 13123     chr2 192038902          STAT4    1064 1.90075014141832</span></span>
-<span id="cb67-9"><a href="identification-of-marker-genes.html#cb67-9"></a><span class="co"># 12597     chr2  87035519           CD8A     538 1.96747880033344</span></span>
-<span id="cb67-10"><a href="identification-of-marker-genes.html#cb67-10"></a><span class="co"># 9299     chr17  34207377           CCL5     540 2.65385587389937</span></span>
-<span id="cb67-11"><a href="identification-of-marker-genes.html#cb67-11"></a><span class="co"># ...        ...       ...            ...     ...              ...</span></span>
-<span id="cb67-12"><a href="identification-of-marker-genes.html#cb67-12"></a><span class="co"># 1488      chr1 156182779           PMF1    1488 1.35708770978464</span></span>
-<span id="cb67-13"><a href="identification-of-marker-genes.html#cb67-13"></a><span class="co"># 22735     chrX 101854276 ARMCX5-GPRASP2     518 1.59283344451927</span></span>
-<span id="cb67-14"><a href="identification-of-marker-genes.html#cb67-14"></a><span class="co"># 19680     chr7  45144641        SNORA5C     318 1.27027443652085</span></span>
-<span id="cb67-15"><a href="identification-of-marker-genes.html#cb67-15"></a><span class="co"># 1856      chr1 196659182          CFHR4    1856 1.92661384224492</span></span>
-<span id="cb67-16"><a href="identification-of-marker-genes.html#cb67-16"></a><span class="co"># 17830     chr5 140739703        PCDHGB2     690 2.93899133419389</span></span></code></pre></div>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="identification-of-marker-genes.html#cb89-1"></a>markersGS &lt;-<span class="st"> </span><span class="kw">getMarkerFeatures</span>(</span>
+<span id="cb89-2"><a href="identification-of-marker-genes.html#cb89-2"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
+<span id="cb89-3"><a href="identification-of-marker-genes.html#cb89-3"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>, </span>
+<span id="cb89-4"><a href="identification-of-marker-genes.html#cb89-4"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Clusters&quot;</span>,</span>
+<span id="cb89-5"><a href="identification-of-marker-genes.html#cb89-5"></a>    <span class="dt">bias =</span> <span class="kw">c</span>(<span class="st">&quot;TSSEnrichment&quot;</span>, <span class="st">&quot;log10(nFrags)&quot;</span>),</span>
+<span id="cb89-6"><a href="identification-of-marker-genes.html#cb89-6"></a>    <span class="dt">testMethod =</span> <span class="st">&quot;wilcoxon&quot;</span></span>
+<span id="cb89-7"><a href="identification-of-marker-genes.html#cb89-7"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="identification-of-marker-genes.html#cb90-1"></a>markerList &lt;-<span class="st"> </span><span class="kw">getMarkers</span>(markersGS, <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.01 &amp; Log2FC &gt;= 1.25&quot;</span>)</span>
+<span id="cb90-2"><a href="identification-of-marker-genes.html#cb90-2"></a>markerList<span class="op">$</span>C6</span>
+<span id="cb90-3"><a href="identification-of-marker-genes.html#cb90-3"></a><span class="co"># DataFrame with 210 rows and 6 columns</span></span>
+<span id="cb90-4"><a href="identification-of-marker-genes.html#cb90-4"></a><span class="co">#       seqnames     start           name     idx           Log2FC</span></span>
+<span id="cb90-5"><a href="identification-of-marker-genes.html#cb90-5"></a><span class="co">#          &lt;Rle&gt;   &lt;array&gt;        &lt;array&gt; &lt;array&gt;        &lt;numeric&gt;</span></span>
+<span id="cb90-6"><a href="identification-of-marker-genes.html#cb90-6"></a><span class="co"># 14759    chr22  37545962          IL2RB     301 2.09731361787433</span></span>
+<span id="cb90-7"><a href="identification-of-marker-genes.html#cb90-7"></a><span class="co"># 6856     chr14  99737822         BCL11B     595 1.42193213075962</span></span>
+<span id="cb90-8"><a href="identification-of-marker-genes.html#cb90-8"></a><span class="co"># 13123     chr2 192038902          STAT4    1064 1.90075014141832</span></span>
+<span id="cb90-9"><a href="identification-of-marker-genes.html#cb90-9"></a><span class="co"># 12597     chr2  87035519           CD8A     538 1.96747880033344</span></span>
+<span id="cb90-10"><a href="identification-of-marker-genes.html#cb90-10"></a><span class="co"># 9299     chr17  34207377           CCL5     540 2.65385587389937</span></span>
+<span id="cb90-11"><a href="identification-of-marker-genes.html#cb90-11"></a><span class="co"># ...        ...       ...            ...     ...              ...</span></span>
+<span id="cb90-12"><a href="identification-of-marker-genes.html#cb90-12"></a><span class="co"># 1488      chr1 156182779           PMF1    1488 1.35708770978464</span></span>
+<span id="cb90-13"><a href="identification-of-marker-genes.html#cb90-13"></a><span class="co"># 22735     chrX 101854276 ARMCX5-GPRASP2     518 1.59283344451927</span></span>
+<span id="cb90-14"><a href="identification-of-marker-genes.html#cb90-14"></a><span class="co"># 19680     chr7  45144641        SNORA5C     318 1.27027443652085</span></span>
+<span id="cb90-15"><a href="identification-of-marker-genes.html#cb90-15"></a><span class="co"># 1856      chr1 196659182          CFHR4    1856 1.92661384224492</span></span>
+<span id="cb90-16"><a href="identification-of-marker-genes.html#cb90-16"></a><span class="co"># 17830     chr5 140739703        PCDHGB2     690 2.93899133419389</span></span></code></pre></div>
 <p>We can then plot this as a heatmap</p>
-<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="identification-of-marker-genes.html#cb68-1"></a>markerGenes  &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
-<span id="cb68-2"><a href="identification-of-marker-genes.html#cb68-2"></a>    <span class="st">&quot;CD34&quot;</span>, <span class="co">#Early Progenitor</span></span>
-<span id="cb68-3"><a href="identification-of-marker-genes.html#cb68-3"></a>    <span class="st">&quot;GATA1&quot;</span>, <span class="co">#Erythroid</span></span>
-<span id="cb68-4"><a href="identification-of-marker-genes.html#cb68-4"></a>    <span class="st">&quot;PAX5&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="st">&quot;EBF1&quot;</span>, <span class="st">&quot;MME&quot;</span>, <span class="co">#B-Cell Trajectory</span></span>
-<span id="cb68-5"><a href="identification-of-marker-genes.html#cb68-5"></a>    <span class="st">&quot;CD14&quot;</span>, <span class="st">&quot;CEBPB&quot;</span>, <span class="st">&quot;MPO&quot;</span>, <span class="co">#Monocytes</span></span>
-<span id="cb68-6"><a href="identification-of-marker-genes.html#cb68-6"></a>    <span class="st">&quot;IRF8&quot;</span>, </span>
-<span id="cb68-7"><a href="identification-of-marker-genes.html#cb68-7"></a>    <span class="st">&quot;CD3D&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;IL7R&quot;</span> <span class="co">#TCells</span></span>
-<span id="cb68-8"><a href="identification-of-marker-genes.html#cb68-8"></a>  )</span>
-<span id="cb68-9"><a href="identification-of-marker-genes.html#cb68-9"></a></span>
-<span id="cb68-10"><a href="identification-of-marker-genes.html#cb68-10"></a>heatmapGS &lt;-<span class="st"> </span><span class="kw">markerHeatmap</span>(</span>
-<span id="cb68-11"><a href="identification-of-marker-genes.html#cb68-11"></a>  <span class="dt">seMarker =</span> markersGS, </span>
-<span id="cb68-12"><a href="identification-of-marker-genes.html#cb68-12"></a>  <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.01 &amp; Log2FC &gt;= 1.25&quot;</span>, </span>
-<span id="cb68-13"><a href="identification-of-marker-genes.html#cb68-13"></a>  <span class="dt">labelMarkers =</span> markerGenes,</span>
-<span id="cb68-14"><a href="identification-of-marker-genes.html#cb68-14"></a>  <span class="dt">transpose =</span> <span class="ot">TRUE</span></span>
-<span id="cb68-15"><a href="identification-of-marker-genes.html#cb68-15"></a>)</span>
-<span id="cb68-16"><a href="identification-of-marker-genes.html#cb68-16"></a></span>
-<span id="cb68-17"><a href="identification-of-marker-genes.html#cb68-17"></a><span class="kw">draw</span>(heatmapGS, <span class="dt">heatmap_legend_side =</span> <span class="st">&quot;bot&quot;</span>, <span class="dt">annotation_legend_side =</span> <span class="st">&quot;bot&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="identification-of-marker-genes.html#cb91-1"></a>markerGenes  &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb91-2"><a href="identification-of-marker-genes.html#cb91-2"></a>    <span class="st">&quot;CD34&quot;</span>, <span class="co">#Early Progenitor</span></span>
+<span id="cb91-3"><a href="identification-of-marker-genes.html#cb91-3"></a>    <span class="st">&quot;GATA1&quot;</span>, <span class="co">#Erythroid</span></span>
+<span id="cb91-4"><a href="identification-of-marker-genes.html#cb91-4"></a>    <span class="st">&quot;PAX5&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="st">&quot;EBF1&quot;</span>, <span class="st">&quot;MME&quot;</span>, <span class="co">#B-Cell Trajectory</span></span>
+<span id="cb91-5"><a href="identification-of-marker-genes.html#cb91-5"></a>    <span class="st">&quot;CD14&quot;</span>, <span class="st">&quot;CEBPB&quot;</span>, <span class="st">&quot;MPO&quot;</span>, <span class="co">#Monocytes</span></span>
+<span id="cb91-6"><a href="identification-of-marker-genes.html#cb91-6"></a>    <span class="st">&quot;IRF8&quot;</span>, </span>
+<span id="cb91-7"><a href="identification-of-marker-genes.html#cb91-7"></a>    <span class="st">&quot;CD3D&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;IL7R&quot;</span> <span class="co">#TCells</span></span>
+<span id="cb91-8"><a href="identification-of-marker-genes.html#cb91-8"></a>  )</span>
+<span id="cb91-9"><a href="identification-of-marker-genes.html#cb91-9"></a></span>
+<span id="cb91-10"><a href="identification-of-marker-genes.html#cb91-10"></a>heatmapGS &lt;-<span class="st"> </span><span class="kw">markerHeatmap</span>(</span>
+<span id="cb91-11"><a href="identification-of-marker-genes.html#cb91-11"></a>  <span class="dt">seMarker =</span> markersGS, </span>
+<span id="cb91-12"><a href="identification-of-marker-genes.html#cb91-12"></a>  <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.01 &amp; Log2FC &gt;= 1.25&quot;</span>, </span>
+<span id="cb91-13"><a href="identification-of-marker-genes.html#cb91-13"></a>  <span class="dt">labelMarkers =</span> markerGenes,</span>
+<span id="cb91-14"><a href="identification-of-marker-genes.html#cb91-14"></a>  <span class="dt">transpose =</span> <span class="ot">TRUE</span></span>
+<span id="cb91-15"><a href="identification-of-marker-genes.html#cb91-15"></a>)</span>
+<span id="cb91-16"><a href="identification-of-marker-genes.html#cb91-16"></a></span>
+<span id="cb91-17"><a href="identification-of-marker-genes.html#cb91-17"></a><span class="kw">draw</span>(heatmapGS, <span class="dt">heatmap_legend_side =</span> <span class="st">&quot;bot&quot;</span>, <span class="dt">annotation_legend_side =</span> <span class="st">&quot;bot&quot;</span>)</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/GeneScores-Marker-Heatmap_1.png" width="800" height="600" /></p>
 <p>We can then plot this to a pdf</p>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="identification-of-marker-genes.html#cb69-1"></a><span class="kw">plotPDF</span>(heatmapGS, <span class="dt">name =</span> <span class="st">&quot;GeneScores-Marker-Heatmap&quot;</span>, <span class="dt">width =</span> <span class="dv">8</span>, <span class="dt">height =</span> <span class="dv">6</span>, <span class="dt">ArchRProj =</span> projHeme2, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="identification-of-marker-genes.html#cb92-1"></a><span class="kw">plotPDF</span>(heatmapGS, <span class="dt">name =</span> <span class="st">&quot;GeneScores-Marker-Heatmap&quot;</span>, <span class="dt">width =</span> <span class="dv">8</span>, <span class="dt">height =</span> <span class="dv">6</span>, <span class="dt">ArchRProj =</span> projHeme2, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 <p><a href="images/HemeWalkthrough/PDF/GeneScores-Marker-Heatmap.pdf">Download PDF : GeneScores-Marker-Heatmap.pdf</a></p>
 </div>
             </section>

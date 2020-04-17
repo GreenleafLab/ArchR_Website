@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-15" />
+<meta name="date" content="2020-04-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -263,28 +263,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="feature-footprinting" class="section level2" number="13.2">
 <h2><span class="header-section-number">13.2</span> Feature Footprinting</h2>
-<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="feature-footprinting.html#cb182-1"></a><span class="co">#Create Group Coverage Files if you have not done so already</span></span>
-<span id="cb182-2"><a href="feature-footprinting.html#cb182-2"></a><span class="co">#projHeme5 &lt;- addGroupCoverages(ArchRProj = projHeme5, groupBy = &quot;Clusters2&quot;)</span></span></code></pre></div>
+<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="feature-footprinting.html#cb205-1"></a><span class="co">#Create Group Coverage Files if you have not done so already</span></span>
+<span id="cb205-2"><a href="feature-footprinting.html#cb205-2"></a><span class="co">#projHeme5 &lt;- addGroupCoverages(ArchRProj = projHeme5, groupBy = &quot;Clusters2&quot;)</span></span></code></pre></div>
 <div id="no-normalization-1" class="section level3" number="13.2.1">
 <h3><span class="header-section-number">13.2.1</span> No Normalization</h3>
-<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="feature-footprinting.html#cb183-1"></a><span class="co">#Plot Motif Footprints from positions list</span></span>
-<span id="cb183-2"><a href="feature-footprinting.html#cb183-2"></a><span class="co">#Recommend doing a few motifs not entire motif set</span></span>
-<span id="cb183-3"><a href="feature-footprinting.html#cb183-3"></a>seTSS &lt;-<span class="st"> </span><span class="kw">getFootprints</span>(</span>
-<span id="cb183-4"><a href="feature-footprinting.html#cb183-4"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>
-<span id="cb183-5"><a href="feature-footprinting.html#cb183-5"></a>  <span class="dt">positions =</span> <span class="kw">GRangesList</span>(<span class="dt">TSS =</span> <span class="kw">getTSS</span>(projHeme5)), </span>
-<span id="cb183-6"><a href="feature-footprinting.html#cb183-6"></a>  <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
-<span id="cb183-7"><a href="feature-footprinting.html#cb183-7"></a>  <span class="dt">flank =</span> <span class="dv">2000</span></span>
-<span id="cb183-8"><a href="feature-footprinting.html#cb183-8"></a>)</span>
-<span id="cb183-9"><a href="feature-footprinting.html#cb183-9"></a></span>
-<span id="cb183-10"><a href="feature-footprinting.html#cb183-10"></a><span class="kw">plotFootprints</span>(</span>
-<span id="cb183-11"><a href="feature-footprinting.html#cb183-11"></a>  <span class="dt">seFoot =</span> seTSS,</span>
-<span id="cb183-12"><a href="feature-footprinting.html#cb183-12"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>
-<span id="cb183-13"><a href="feature-footprinting.html#cb183-13"></a>  <span class="dt">normMethod =</span> <span class="st">&quot;None&quot;</span>,</span>
-<span id="cb183-14"><a href="feature-footprinting.html#cb183-14"></a>  <span class="dt">plotName =</span> <span class="st">&quot;TSS-No-Normalization&quot;</span>,</span>
-<span id="cb183-15"><a href="feature-footprinting.html#cb183-15"></a>  <span class="dt">addDOC =</span> <span class="ot">FALSE</span>,</span>
-<span id="cb183-16"><a href="feature-footprinting.html#cb183-16"></a>  <span class="dt">flank =</span> <span class="dv">2000</span>,</span>
-<span id="cb183-17"><a href="feature-footprinting.html#cb183-17"></a>  <span class="dt">flankNorm =</span> <span class="dv">100</span></span>
-<span id="cb183-18"><a href="feature-footprinting.html#cb183-18"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="feature-footprinting.html#cb206-1"></a><span class="co">#Plot Motif Footprints from positions list</span></span>
+<span id="cb206-2"><a href="feature-footprinting.html#cb206-2"></a><span class="co">#Recommend doing a few motifs not entire motif set</span></span>
+<span id="cb206-3"><a href="feature-footprinting.html#cb206-3"></a>seTSS &lt;-<span class="st"> </span><span class="kw">getFootprints</span>(</span>
+<span id="cb206-4"><a href="feature-footprinting.html#cb206-4"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb206-5"><a href="feature-footprinting.html#cb206-5"></a>  <span class="dt">positions =</span> <span class="kw">GRangesList</span>(<span class="dt">TSS =</span> <span class="kw">getTSS</span>(projHeme5)), </span>
+<span id="cb206-6"><a href="feature-footprinting.html#cb206-6"></a>  <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
+<span id="cb206-7"><a href="feature-footprinting.html#cb206-7"></a>  <span class="dt">flank =</span> <span class="dv">2000</span></span>
+<span id="cb206-8"><a href="feature-footprinting.html#cb206-8"></a>)</span>
+<span id="cb206-9"><a href="feature-footprinting.html#cb206-9"></a></span>
+<span id="cb206-10"><a href="feature-footprinting.html#cb206-10"></a><span class="kw">plotFootprints</span>(</span>
+<span id="cb206-11"><a href="feature-footprinting.html#cb206-11"></a>  <span class="dt">seFoot =</span> seTSS,</span>
+<span id="cb206-12"><a href="feature-footprinting.html#cb206-12"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb206-13"><a href="feature-footprinting.html#cb206-13"></a>  <span class="dt">normMethod =</span> <span class="st">&quot;None&quot;</span>,</span>
+<span id="cb206-14"><a href="feature-footprinting.html#cb206-14"></a>  <span class="dt">plotName =</span> <span class="st">&quot;TSS-No-Normalization&quot;</span>,</span>
+<span id="cb206-15"><a href="feature-footprinting.html#cb206-15"></a>  <span class="dt">addDOC =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb206-16"><a href="feature-footprinting.html#cb206-16"></a>  <span class="dt">flank =</span> <span class="dv">2000</span>,</span>
+<span id="cb206-17"><a href="feature-footprinting.html#cb206-17"></a>  <span class="dt">flankNorm =</span> <span class="dv">100</span></span>
+<span id="cb206-18"><a href="feature-footprinting.html#cb206-18"></a>)</span></code></pre></div>
 <p>By default the plots will be in the outputDirectory of the ArchRProject. The challenge is that if you requested to plot all motifs and returned this as a ggplot object it could be extremely large. An example of motif footprints ran from this function are seen below.</p>
 <center>
 <img src="images/HemeWalkthrough/PNG/TSS-No-Normalization_1.png" width="250" height="400" />

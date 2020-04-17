@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-15" />
+<meta name="date" content="2020-04-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -266,52 +266,52 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>When working with multiple distinct samples in a single integrated data set, it can be important to compare various metrics across all samples. ArchR provides two main plotting mechanisms for grouped data: ridge plots and violin plots. These are both accessed through the <code>plotGroups()</code> function. Of course, this plot type is not limited to sample-level data and can be used for plotting of downstream group-level information for groups such as clusters.</p>
 <p><span style="font-size:20px;font-weight:bold">Example 1. Make a ridge plot for each sample for the TSS enrichment scores.</span></p>
 <p>To make a ridge plot, we set <code>plotAs = "ridges"</code>.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="plotting-sample-statistics-from-an-archrproject.html#cb26-1"></a>p1 &lt;-<span class="st"> </span><span class="kw">plotGroups</span>(</span>
-<span id="cb26-2"><a href="plotting-sample-statistics-from-an-archrproject.html#cb26-2"></a>    <span class="dt">ArchRProj =</span> projHeme1, </span>
-<span id="cb26-3"><a href="plotting-sample-statistics-from-an-archrproject.html#cb26-3"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Sample&quot;</span>, </span>
-<span id="cb26-4"><a href="plotting-sample-statistics-from-an-archrproject.html#cb26-4"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, </span>
-<span id="cb26-5"><a href="plotting-sample-statistics-from-an-archrproject.html#cb26-5"></a>    <span class="dt">name =</span> <span class="st">&quot;TSSEnrichment&quot;</span>,</span>
-<span id="cb26-6"><a href="plotting-sample-statistics-from-an-archrproject.html#cb26-6"></a>    <span class="dt">plotAs =</span> <span class="st">&quot;ridges&quot;</span></span>
-<span id="cb26-7"><a href="plotting-sample-statistics-from-an-archrproject.html#cb26-7"></a>   )</span>
-<span id="cb26-8"><a href="plotting-sample-statistics-from-an-archrproject.html#cb26-8"></a>p1</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="plotting-sample-statistics-from-an-archrproject.html#cb42-1"></a>p1 &lt;-<span class="st"> </span><span class="kw">plotGroups</span>(</span>
+<span id="cb42-2"><a href="plotting-sample-statistics-from-an-archrproject.html#cb42-2"></a>    <span class="dt">ArchRProj =</span> projHeme1, </span>
+<span id="cb42-3"><a href="plotting-sample-statistics-from-an-archrproject.html#cb42-3"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Sample&quot;</span>, </span>
+<span id="cb42-4"><a href="plotting-sample-statistics-from-an-archrproject.html#cb42-4"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, </span>
+<span id="cb42-5"><a href="plotting-sample-statistics-from-an-archrproject.html#cb42-5"></a>    <span class="dt">name =</span> <span class="st">&quot;TSSEnrichment&quot;</span>,</span>
+<span id="cb42-6"><a href="plotting-sample-statistics-from-an-archrproject.html#cb42-6"></a>    <span class="dt">plotAs =</span> <span class="st">&quot;ridges&quot;</span></span>
+<span id="cb42-7"><a href="plotting-sample-statistics-from-an-archrproject.html#cb42-7"></a>   )</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="plotting-sample-statistics-from-an-archrproject.html#cb43-1"></a>p1</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/QC-Sample-Statistics_1.png" width="500" height="500" /></p>
 <p><span style="font-size:20px;font-weight:bold">Example 2. Make a violin plot for each sample for the TSS enrichment scores.</span></p>
 <p>To make a violin plot, we set <code>plotAs = "violin"</code>.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="plotting-sample-statistics-from-an-archrproject.html#cb27-1"></a>p2 &lt;-<span class="st"> </span><span class="kw">plotGroups</span>(</span>
-<span id="cb27-2"><a href="plotting-sample-statistics-from-an-archrproject.html#cb27-2"></a>    <span class="dt">ArchRProj =</span> projHeme1, </span>
-<span id="cb27-3"><a href="plotting-sample-statistics-from-an-archrproject.html#cb27-3"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Sample&quot;</span>, </span>
-<span id="cb27-4"><a href="plotting-sample-statistics-from-an-archrproject.html#cb27-4"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, </span>
-<span id="cb27-5"><a href="plotting-sample-statistics-from-an-archrproject.html#cb27-5"></a>    <span class="dt">name =</span> <span class="st">&quot;TSSEnrichment&quot;</span>,</span>
-<span id="cb27-6"><a href="plotting-sample-statistics-from-an-archrproject.html#cb27-6"></a>    <span class="dt">plotAs =</span> <span class="st">&quot;violin&quot;</span>,</span>
-<span id="cb27-7"><a href="plotting-sample-statistics-from-an-archrproject.html#cb27-7"></a>    <span class="dt">alpha =</span> <span class="fl">0.4</span>,</span>
-<span id="cb27-8"><a href="plotting-sample-statistics-from-an-archrproject.html#cb27-8"></a>    <span class="dt">addBoxPlot =</span> <span class="ot">TRUE</span></span>
-<span id="cb27-9"><a href="plotting-sample-statistics-from-an-archrproject.html#cb27-9"></a>   )</span>
-<span id="cb27-10"><a href="plotting-sample-statistics-from-an-archrproject.html#cb27-10"></a>p2</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="plotting-sample-statistics-from-an-archrproject.html#cb44-1"></a>p2 &lt;-<span class="st"> </span><span class="kw">plotGroups</span>(</span>
+<span id="cb44-2"><a href="plotting-sample-statistics-from-an-archrproject.html#cb44-2"></a>    <span class="dt">ArchRProj =</span> projHeme1, </span>
+<span id="cb44-3"><a href="plotting-sample-statistics-from-an-archrproject.html#cb44-3"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Sample&quot;</span>, </span>
+<span id="cb44-4"><a href="plotting-sample-statistics-from-an-archrproject.html#cb44-4"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, </span>
+<span id="cb44-5"><a href="plotting-sample-statistics-from-an-archrproject.html#cb44-5"></a>    <span class="dt">name =</span> <span class="st">&quot;TSSEnrichment&quot;</span>,</span>
+<span id="cb44-6"><a href="plotting-sample-statistics-from-an-archrproject.html#cb44-6"></a>    <span class="dt">plotAs =</span> <span class="st">&quot;violin&quot;</span>,</span>
+<span id="cb44-7"><a href="plotting-sample-statistics-from-an-archrproject.html#cb44-7"></a>    <span class="dt">alpha =</span> <span class="fl">0.4</span>,</span>
+<span id="cb44-8"><a href="plotting-sample-statistics-from-an-archrproject.html#cb44-8"></a>    <span class="dt">addBoxPlot =</span> <span class="ot">TRUE</span></span>
+<span id="cb44-9"><a href="plotting-sample-statistics-from-an-archrproject.html#cb44-9"></a>   )</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="plotting-sample-statistics-from-an-archrproject.html#cb45-1"></a>p2</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/QC-Sample-Statistics_2.png" width="500" height="500" /></p>
 <p><span style="font-size:20px;font-weight:bold">Example 3. Make a ridge plot for each sample for the log10(unique nuclear fragments).</span></p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="plotting-sample-statistics-from-an-archrproject.html#cb28-1"></a>p3 &lt;-<span class="st"> </span><span class="kw">plotGroups</span>(</span>
-<span id="cb28-2"><a href="plotting-sample-statistics-from-an-archrproject.html#cb28-2"></a>    <span class="dt">ArchRProj =</span> projHeme1, </span>
-<span id="cb28-3"><a href="plotting-sample-statistics-from-an-archrproject.html#cb28-3"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Sample&quot;</span>, </span>
-<span id="cb28-4"><a href="plotting-sample-statistics-from-an-archrproject.html#cb28-4"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, </span>
-<span id="cb28-5"><a href="plotting-sample-statistics-from-an-archrproject.html#cb28-5"></a>    <span class="dt">name =</span> <span class="st">&quot;log10(nFrags)&quot;</span>,</span>
-<span id="cb28-6"><a href="plotting-sample-statistics-from-an-archrproject.html#cb28-6"></a>    <span class="dt">plotAs =</span> <span class="st">&quot;ridges&quot;</span></span>
-<span id="cb28-7"><a href="plotting-sample-statistics-from-an-archrproject.html#cb28-7"></a>   )</span>
-<span id="cb28-8"><a href="plotting-sample-statistics-from-an-archrproject.html#cb28-8"></a>p3</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="plotting-sample-statistics-from-an-archrproject.html#cb46-1"></a>p3 &lt;-<span class="st"> </span><span class="kw">plotGroups</span>(</span>
+<span id="cb46-2"><a href="plotting-sample-statistics-from-an-archrproject.html#cb46-2"></a>    <span class="dt">ArchRProj =</span> projHeme1, </span>
+<span id="cb46-3"><a href="plotting-sample-statistics-from-an-archrproject.html#cb46-3"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Sample&quot;</span>, </span>
+<span id="cb46-4"><a href="plotting-sample-statistics-from-an-archrproject.html#cb46-4"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, </span>
+<span id="cb46-5"><a href="plotting-sample-statistics-from-an-archrproject.html#cb46-5"></a>    <span class="dt">name =</span> <span class="st">&quot;log10(nFrags)&quot;</span>,</span>
+<span id="cb46-6"><a href="plotting-sample-statistics-from-an-archrproject.html#cb46-6"></a>    <span class="dt">plotAs =</span> <span class="st">&quot;ridges&quot;</span></span>
+<span id="cb46-7"><a href="plotting-sample-statistics-from-an-archrproject.html#cb46-7"></a>   )</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="plotting-sample-statistics-from-an-archrproject.html#cb47-1"></a>p3</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/QC-Sample-Statistics_3.png" width="500" height="500" /></p>
 <p><span style="font-size:20px;font-weight:bold">Example 4. Make a violin plot for each sample for the log10(unique nuclear fragments).</span></p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="plotting-sample-statistics-from-an-archrproject.html#cb29-1"></a>p4 &lt;-<span class="st"> </span><span class="kw">plotGroups</span>(</span>
-<span id="cb29-2"><a href="plotting-sample-statistics-from-an-archrproject.html#cb29-2"></a>    <span class="dt">ArchRProj =</span> projHeme1, </span>
-<span id="cb29-3"><a href="plotting-sample-statistics-from-an-archrproject.html#cb29-3"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Sample&quot;</span>, </span>
-<span id="cb29-4"><a href="plotting-sample-statistics-from-an-archrproject.html#cb29-4"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, </span>
-<span id="cb29-5"><a href="plotting-sample-statistics-from-an-archrproject.html#cb29-5"></a>    <span class="dt">name =</span> <span class="st">&quot;log10(nFrags)&quot;</span>,</span>
-<span id="cb29-6"><a href="plotting-sample-statistics-from-an-archrproject.html#cb29-6"></a>    <span class="dt">plotAs =</span> <span class="st">&quot;violin&quot;</span>,</span>
-<span id="cb29-7"><a href="plotting-sample-statistics-from-an-archrproject.html#cb29-7"></a>    <span class="dt">alpha =</span> <span class="fl">0.4</span>,</span>
-<span id="cb29-8"><a href="plotting-sample-statistics-from-an-archrproject.html#cb29-8"></a>    <span class="dt">addBoxPlot =</span> <span class="ot">TRUE</span></span>
-<span id="cb29-9"><a href="plotting-sample-statistics-from-an-archrproject.html#cb29-9"></a>   )</span>
-<span id="cb29-10"><a href="plotting-sample-statistics-from-an-archrproject.html#cb29-10"></a>p4</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="plotting-sample-statistics-from-an-archrproject.html#cb48-1"></a>p4 &lt;-<span class="st"> </span><span class="kw">plotGroups</span>(</span>
+<span id="cb48-2"><a href="plotting-sample-statistics-from-an-archrproject.html#cb48-2"></a>    <span class="dt">ArchRProj =</span> projHeme1, </span>
+<span id="cb48-3"><a href="plotting-sample-statistics-from-an-archrproject.html#cb48-3"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Sample&quot;</span>, </span>
+<span id="cb48-4"><a href="plotting-sample-statistics-from-an-archrproject.html#cb48-4"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, </span>
+<span id="cb48-5"><a href="plotting-sample-statistics-from-an-archrproject.html#cb48-5"></a>    <span class="dt">name =</span> <span class="st">&quot;log10(nFrags)&quot;</span>,</span>
+<span id="cb48-6"><a href="plotting-sample-statistics-from-an-archrproject.html#cb48-6"></a>    <span class="dt">plotAs =</span> <span class="st">&quot;violin&quot;</span>,</span>
+<span id="cb48-7"><a href="plotting-sample-statistics-from-an-archrproject.html#cb48-7"></a>    <span class="dt">alpha =</span> <span class="fl">0.4</span>,</span>
+<span id="cb48-8"><a href="plotting-sample-statistics-from-an-archrproject.html#cb48-8"></a>    <span class="dt">addBoxPlot =</span> <span class="ot">TRUE</span></span>
+<span id="cb48-9"><a href="plotting-sample-statistics-from-an-archrproject.html#cb48-9"></a>   )</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="plotting-sample-statistics-from-an-archrproject.html#cb49-1"></a>p4</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/QC-Sample-Statistics_4.png" width="500" height="500" /></p>
 <p>To save editable vectorized versions of these plots, we use <code>plotPDF()</code>.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="plotting-sample-statistics-from-an-archrproject.html#cb30-1"></a><span class="kw">plotPDF</span>(p1,p2,p3,p4, <span class="dt">name =</span> <span class="st">&quot;QC-Sample-Statistics.pdf&quot;</span>, <span class="dt">ArchRProj =</span> projHeme1, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">4</span>, <span class="dt">height =</span> <span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="plotting-sample-statistics-from-an-archrproject.html#cb50-1"></a><span class="kw">plotPDF</span>(p1,p2,p3,p4, <span class="dt">name =</span> <span class="st">&quot;QC-Sample-Statistics.pdf&quot;</span>, <span class="dt">ArchRProj =</span> projHeme1, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">4</span>, <span class="dt">height =</span> <span class="dv">4</span>)</span></code></pre></div>
 <p><a href="images/HemeWalkthrough/PDF/QC-Sample-Statistics.pdf">Download PDF : QC-Sample-Statistics.pdf</a></p>
 </div>
             </section>

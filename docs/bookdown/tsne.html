@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-15" />
+<meta name="date" content="2020-04-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -263,28 +263,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="tsne" class="section level2" number="6.2">
 <h2><span class="header-section-number">6.2</span> tSNE</h2>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="tsne.html#cb54-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addTSNE</span>(</span>
-<span id="cb54-2"><a href="tsne.html#cb54-2"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
-<span id="cb54-3"><a href="tsne.html#cb54-3"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>, </span>
-<span id="cb54-4"><a href="tsne.html#cb54-4"></a>    <span class="dt">name =</span> <span class="st">&quot;TSNE&quot;</span>, </span>
-<span id="cb54-5"><a href="tsne.html#cb54-5"></a>    <span class="dt">perplexity =</span> <span class="dv">30</span></span>
-<span id="cb54-6"><a href="tsne.html#cb54-6"></a>)</span></code></pre></div>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="tsne.html#cb55-1"></a>p1 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(<span class="dt">ArchRProj =</span> projHeme2, <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;Sample&quot;</span>, <span class="dt">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span>
-<span id="cb55-2"><a href="tsne.html#cb55-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(<span class="dt">ArchRProj =</span> projHeme2, <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;Clusters&quot;</span>, <span class="dt">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span>
-<span id="cb55-3"><a href="tsne.html#cb55-3"></a><span class="kw">ggAlignPlots</span>(p1, p2, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="tsne.html#cb77-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addTSNE</span>(</span>
+<span id="cb77-2"><a href="tsne.html#cb77-2"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
+<span id="cb77-3"><a href="tsne.html#cb77-3"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>, </span>
+<span id="cb77-4"><a href="tsne.html#cb77-4"></a>    <span class="dt">name =</span> <span class="st">&quot;TSNE&quot;</span>, </span>
+<span id="cb77-5"><a href="tsne.html#cb77-5"></a>    <span class="dt">perplexity =</span> <span class="dv">30</span></span>
+<span id="cb77-6"><a href="tsne.html#cb77-6"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="tsne.html#cb78-1"></a>p1 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(<span class="dt">ArchRProj =</span> projHeme2, <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;Sample&quot;</span>, <span class="dt">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span>
+<span id="cb78-2"><a href="tsne.html#cb78-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(<span class="dt">ArchRProj =</span> projHeme2, <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;Clusters&quot;</span>, <span class="dt">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span>
+<span id="cb78-3"><a href="tsne.html#cb78-3"></a><span class="kw">ggAlignPlots</span>(p1, p2, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>)</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-TSNE-Sample-Clusters-Combined_1.png" width="800" height="400" /></p>
 <p>To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
 nice looking.</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="tsne.html#cb56-1"></a><span class="kw">plotPDF</span>(p1,p2, <span class="dt">name =</span> <span class="st">&quot;Plot-TSNE-Sample-Clusters.pdf&quot;</span>, <span class="dt">ArchRProj =</span> projHeme2, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="tsne.html#cb79-1"></a><span class="kw">plotPDF</span>(p1,p2, <span class="dt">name =</span> <span class="st">&quot;Plot-TSNE-Sample-Clusters.pdf&quot;</span>, <span class="dt">ArchRProj =</span> projHeme2, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>)</span></code></pre></div>
 <p><a href="images/HemeWalkthrough/PDF/Plot-TSNE-Sample-Clusters.pdf">Download PDF : Plot-TSNE-Sample-Clusters.pdf</a></p>
 <p>We can also see the results from scran clustering</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="tsne.html#cb57-1"></a>p1 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(<span class="dt">ArchRProj =</span> projHeme2, <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;Sample&quot;</span>, <span class="dt">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span>
-<span id="cb57-2"><a href="tsne.html#cb57-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(<span class="dt">ArchRProj =</span> projHeme2, <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;ScranClusters&quot;</span>, <span class="dt">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span>
-<span id="cb57-3"><a href="tsne.html#cb57-3"></a><span class="kw">ggAlignPlots</span>(p1, p2, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="tsne.html#cb80-1"></a>p1 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(<span class="dt">ArchRProj =</span> projHeme2, <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;Sample&quot;</span>, <span class="dt">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span>
+<span id="cb80-2"><a href="tsne.html#cb80-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(<span class="dt">ArchRProj =</span> projHeme2, <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;ScranClusters&quot;</span>, <span class="dt">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span>
+<span id="cb80-3"><a href="tsne.html#cb80-3"></a><span class="kw">ggAlignPlots</span>(p1, p2, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>)</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-tSNE-Sample-ScranClusters-Combined_1.png" width="800" height="400" /></p>
 <p>To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
 nice looking.</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="tsne.html#cb58-1"></a><span class="kw">plotPDF</span>(p1,p2, <span class="dt">name =</span> <span class="st">&quot;Plot-tSNE-Sample-ScranClusters.pdf&quot;</span>, <span class="dt">ArchRProj =</span> projHeme2, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="tsne.html#cb81-1"></a><span class="kw">plotPDF</span>(p1,p2, <span class="dt">name =</span> <span class="st">&quot;Plot-tSNE-Sample-ScranClusters.pdf&quot;</span>, <span class="dt">ArchRProj =</span> projHeme2, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>)</span></code></pre></div>
 <p><a href="images/HemeWalkthrough/PDF/Plot-tSNE-Sample-ScranClusters.pdf">Download PDF : Plot-tSNE-Sample-ScranClusters.pdf</a></p>
 </div>
             </section>

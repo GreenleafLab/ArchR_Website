@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-15" />
+<meta name="date" content="2020-04-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -267,64 +267,64 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="clustering-using-seurats-findclusters-function" class="section level3" number="5.0.1">
 <h3><span class="header-section-number">5.0.1</span> Clustering using Seurat’s <code>FindClusters()</code> function</h3>
 <p>We have had the most success using the graph clustering approach implemented by <a href="https://github.com/satijalab/seurat">Seurat</a>. In ArchR, clustering is performed using the <code>addClusters()</code> function which permits additional clustering parameters to be passed to the <code>Seurat::FindClusters()</code> function.</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="clustering-with-archr.html#cb43-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addClusters</span>(</span>
-<span id="cb43-2"><a href="clustering-with-archr.html#cb43-2"></a>    <span class="dt">input =</span> projHeme2,</span>
-<span id="cb43-3"><a href="clustering-with-archr.html#cb43-3"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
-<span id="cb43-4"><a href="clustering-with-archr.html#cb43-4"></a>    <span class="dt">method =</span> <span class="st">&quot;Seurat&quot;</span>,</span>
-<span id="cb43-5"><a href="clustering-with-archr.html#cb43-5"></a>    <span class="dt">name =</span> <span class="st">&quot;Clusters&quot;</span>,</span>
-<span id="cb43-6"><a href="clustering-with-archr.html#cb43-6"></a>    <span class="dt">resolution =</span> <span class="fl">0.8</span></span>
-<span id="cb43-7"><a href="clustering-with-archr.html#cb43-7"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="clustering-with-archr.html#cb66-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addClusters</span>(</span>
+<span id="cb66-2"><a href="clustering-with-archr.html#cb66-2"></a>    <span class="dt">input =</span> projHeme2,</span>
+<span id="cb66-3"><a href="clustering-with-archr.html#cb66-3"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
+<span id="cb66-4"><a href="clustering-with-archr.html#cb66-4"></a>    <span class="dt">method =</span> <span class="st">&quot;Seurat&quot;</span>,</span>
+<span id="cb66-5"><a href="clustering-with-archr.html#cb66-5"></a>    <span class="dt">name =</span> <span class="st">&quot;Clusters&quot;</span>,</span>
+<span id="cb66-6"><a href="clustering-with-archr.html#cb66-6"></a>    <span class="dt">resolution =</span> <span class="fl">0.8</span></span>
+<span id="cb66-7"><a href="clustering-with-archr.html#cb66-7"></a>)</span></code></pre></div>
 <p>To access these clusters we can use the <code>$</code> accessor</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="clustering-with-archr.html#cb44-1"></a><span class="kw">head</span>(projHeme2<span class="op">$</span>Clusters)</span>
-<span id="cb44-2"><a href="clustering-with-archr.html#cb44-2"></a><span class="co"># [1] &quot;Cluster11&quot; &quot;Cluster2&quot;  &quot;Cluster12&quot; &quot;Cluster1&quot;  &quot;Cluster12&quot; &quot;Cluster8&quot;</span></span>
-<span id="cb44-3"><a href="clustering-with-archr.html#cb44-3"></a></span>
-<span id="cb44-4"><a href="clustering-with-archr.html#cb44-4"></a><span class="kw">table</span>(projHeme2<span class="op">$</span>Clusters)</span>
-<span id="cb44-5"><a href="clustering-with-archr.html#cb44-5"></a><span class="co"># Cluster1 Cluster10 Cluster11 Cluster12 Cluster13 Cluster14  Cluster2  Cluster3 </span></span>
-<span id="cb44-6"><a href="clustering-with-archr.html#cb44-6"></a><span class="co">#       28      1070       425       351       408       345      1330       562 </span></span>
-<span id="cb44-7"><a href="clustering-with-archr.html#cb44-7"></a><span class="co"># Cluster4  Cluster5  Cluster6  Cluster7  Cluster8  Cluster9 </span></span>
-<span id="cb44-8"><a href="clustering-with-archr.html#cb44-8"></a><span class="co">#      901       860      1218       974       274      1505</span></span></code></pre></div>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="clustering-with-archr.html#cb67-1"></a><span class="kw">head</span>(projHeme2<span class="op">$</span>Clusters)</span>
+<span id="cb67-2"><a href="clustering-with-archr.html#cb67-2"></a><span class="co"># [1] &quot;Cluster11&quot; &quot;Cluster2&quot;  &quot;Cluster12&quot; &quot;Cluster1&quot;  &quot;Cluster12&quot; &quot;Cluster8&quot;</span></span>
+<span id="cb67-3"><a href="clustering-with-archr.html#cb67-3"></a></span>
+<span id="cb67-4"><a href="clustering-with-archr.html#cb67-4"></a><span class="kw">table</span>(projHeme2<span class="op">$</span>Clusters)</span>
+<span id="cb67-5"><a href="clustering-with-archr.html#cb67-5"></a><span class="co"># Cluster1 Cluster10 Cluster11 Cluster12 Cluster13 Cluster14  Cluster2  Cluster3 </span></span>
+<span id="cb67-6"><a href="clustering-with-archr.html#cb67-6"></a><span class="co">#       28      1070       425       351       408       345      1330       562 </span></span>
+<span id="cb67-7"><a href="clustering-with-archr.html#cb67-7"></a><span class="co"># Cluster4  Cluster5  Cluster6  Cluster7  Cluster8  Cluster9 </span></span>
+<span id="cb67-8"><a href="clustering-with-archr.html#cb67-8"></a><span class="co">#      901       860      1218       974       274      1505</span></span></code></pre></div>
 <p>To better understand which samples reside in which clusters, we can create a cluster confusion matrix across each sample. JJJ
 QQQ Seems weird to use a hidden function like this in the tutorial</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="clustering-with-archr.html#cb45-1"></a>cM &lt;-<span class="st"> </span><span class="kw">confusionMatrix</span>(<span class="kw">paste0</span>(projHeme2<span class="op">$</span>Clusters), <span class="kw">paste0</span>(projHeme2<span class="op">$</span>Sample))</span>
-<span id="cb45-2"><a href="clustering-with-archr.html#cb45-2"></a>cM</span>
-<span id="cb45-3"><a href="clustering-with-archr.html#cb45-3"></a><span class="co"># 14 x 3 sparse Matrix of class &quot;dgCMatrix&quot;</span></span>
-<span id="cb45-4"><a href="clustering-with-archr.html#cb45-4"></a><span class="co">#           scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1</span></span>
-<span id="cb45-5"><a href="clustering-with-archr.html#cb45-5"></a><span class="co"># Cluster11            247                   6            172</span></span>
-<span id="cb45-6"><a href="clustering-with-archr.html#cb45-6"></a><span class="co"># Cluster2            1254                   .             76</span></span>
-<span id="cb45-7"><a href="clustering-with-archr.html#cb45-7"></a><span class="co"># Cluster12            351                   .              .</span></span>
-<span id="cb45-8"><a href="clustering-with-archr.html#cb45-8"></a><span class="co"># Cluster1              28                   .              .</span></span>
-<span id="cb45-9"><a href="clustering-with-archr.html#cb45-9"></a><span class="co"># Cluster8             247                  27              .</span></span>
-<span id="cb45-10"><a href="clustering-with-archr.html#cb45-10"></a><span class="co"># Cluster4             315                   .            586</span></span>
-<span id="cb45-11"><a href="clustering-with-archr.html#cb45-11"></a><span class="co"># Cluster9            1456                   5             44</span></span>
-<span id="cb45-12"><a href="clustering-with-archr.html#cb45-12"></a><span class="co"># Cluster5             214                 639              7</span></span>
-<span id="cb45-13"><a href="clustering-with-archr.html#cb45-13"></a><span class="co"># Cluster7              83                 887              4</span></span>
-<span id="cb45-14"><a href="clustering-with-archr.html#cb45-14"></a><span class="co"># Cluster14            161                 174             10</span></span>
-<span id="cb45-15"><a href="clustering-with-archr.html#cb45-15"></a><span class="co"># Cluster3              52                   .            510</span></span>
-<span id="cb45-16"><a href="clustering-with-archr.html#cb45-16"></a><span class="co"># Cluster10             84                   1            985</span></span>
-<span id="cb45-17"><a href="clustering-with-archr.html#cb45-17"></a><span class="co"># Cluster6             117                1101              .</span></span>
-<span id="cb45-18"><a href="clustering-with-archr.html#cb45-18"></a><span class="co"># Cluster13             80                 328              .</span></span></code></pre></div>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="clustering-with-archr.html#cb68-1"></a>cM &lt;-<span class="st"> </span><span class="kw">confusionMatrix</span>(<span class="kw">paste0</span>(projHeme2<span class="op">$</span>Clusters), <span class="kw">paste0</span>(projHeme2<span class="op">$</span>Sample))</span>
+<span id="cb68-2"><a href="clustering-with-archr.html#cb68-2"></a>cM</span>
+<span id="cb68-3"><a href="clustering-with-archr.html#cb68-3"></a><span class="co"># 14 x 3 sparse Matrix of class &quot;dgCMatrix&quot;</span></span>
+<span id="cb68-4"><a href="clustering-with-archr.html#cb68-4"></a><span class="co">#           scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1</span></span>
+<span id="cb68-5"><a href="clustering-with-archr.html#cb68-5"></a><span class="co"># Cluster11            247                   6            172</span></span>
+<span id="cb68-6"><a href="clustering-with-archr.html#cb68-6"></a><span class="co"># Cluster2            1254                   .             76</span></span>
+<span id="cb68-7"><a href="clustering-with-archr.html#cb68-7"></a><span class="co"># Cluster12            351                   .              .</span></span>
+<span id="cb68-8"><a href="clustering-with-archr.html#cb68-8"></a><span class="co"># Cluster1              28                   .              .</span></span>
+<span id="cb68-9"><a href="clustering-with-archr.html#cb68-9"></a><span class="co"># Cluster8             247                  27              .</span></span>
+<span id="cb68-10"><a href="clustering-with-archr.html#cb68-10"></a><span class="co"># Cluster4             315                   .            586</span></span>
+<span id="cb68-11"><a href="clustering-with-archr.html#cb68-11"></a><span class="co"># Cluster9            1456                   5             44</span></span>
+<span id="cb68-12"><a href="clustering-with-archr.html#cb68-12"></a><span class="co"># Cluster5             214                 639              7</span></span>
+<span id="cb68-13"><a href="clustering-with-archr.html#cb68-13"></a><span class="co"># Cluster7              83                 887              4</span></span>
+<span id="cb68-14"><a href="clustering-with-archr.html#cb68-14"></a><span class="co"># Cluster14            161                 174             10</span></span>
+<span id="cb68-15"><a href="clustering-with-archr.html#cb68-15"></a><span class="co"># Cluster3              52                   .            510</span></span>
+<span id="cb68-16"><a href="clustering-with-archr.html#cb68-16"></a><span class="co"># Cluster10             84                   1            985</span></span>
+<span id="cb68-17"><a href="clustering-with-archr.html#cb68-17"></a><span class="co"># Cluster6             117                1101              .</span></span>
+<span id="cb68-18"><a href="clustering-with-archr.html#cb68-18"></a><span class="co"># Cluster13             80                 328              .</span></span></code></pre></div>
 <p>An example of plotting this confusion matrix as a heatmap</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="clustering-with-archr.html#cb46-1"></a><span class="kw">library</span>(pheatmap)</span>
-<span id="cb46-2"><a href="clustering-with-archr.html#cb46-2"></a>cM &lt;-<span class="st"> </span>cM <span class="op">/</span><span class="st"> </span>Matrix<span class="op">::</span><span class="kw">rowSums</span>(cM)</span>
-<span id="cb46-3"><a href="clustering-with-archr.html#cb46-3"></a>p &lt;-<span class="st"> </span>pheatmap<span class="op">::</span><span class="kw">pheatmap</span>(</span>
-<span id="cb46-4"><a href="clustering-with-archr.html#cb46-4"></a>    <span class="dt">mat =</span> <span class="kw">as.matrix</span>(cM), </span>
-<span id="cb46-5"><a href="clustering-with-archr.html#cb46-5"></a>    <span class="dt">color =</span> <span class="kw">paletteContinuous</span>(<span class="st">&quot;whiteBlue&quot;</span>), </span>
-<span id="cb46-6"><a href="clustering-with-archr.html#cb46-6"></a>    <span class="dt">border_color =</span> <span class="st">&quot;black&quot;</span></span>
-<span id="cb46-7"><a href="clustering-with-archr.html#cb46-7"></a>)</span>
-<span id="cb46-8"><a href="clustering-with-archr.html#cb46-8"></a>p</span></code></pre></div>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="clustering-with-archr.html#cb69-1"></a><span class="kw">library</span>(pheatmap)</span>
+<span id="cb69-2"><a href="clustering-with-archr.html#cb69-2"></a>cM &lt;-<span class="st"> </span>cM <span class="op">/</span><span class="st"> </span>Matrix<span class="op">::</span><span class="kw">rowSums</span>(cM)</span>
+<span id="cb69-3"><a href="clustering-with-archr.html#cb69-3"></a>p &lt;-<span class="st"> </span>pheatmap<span class="op">::</span><span class="kw">pheatmap</span>(</span>
+<span id="cb69-4"><a href="clustering-with-archr.html#cb69-4"></a>    <span class="dt">mat =</span> <span class="kw">as.matrix</span>(cM), </span>
+<span id="cb69-5"><a href="clustering-with-archr.html#cb69-5"></a>    <span class="dt">color =</span> <span class="kw">paletteContinuous</span>(<span class="st">&quot;whiteBlue&quot;</span>), </span>
+<span id="cb69-6"><a href="clustering-with-archr.html#cb69-6"></a>    <span class="dt">border_color =</span> <span class="st">&quot;black&quot;</span></span>
+<span id="cb69-7"><a href="clustering-with-archr.html#cb69-7"></a>)</span>
+<span id="cb69-8"><a href="clustering-with-archr.html#cb69-8"></a>p</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/ConfusionMatrix_1.png" width="500" height="500" /></p>
 <p>QQQ This is confusing. Expand on this - Determining the appropriate cluster parameters is useful once you have computed a 2-dimensional embedding. This is because you should be adjusting both the clustering and embedding parameters to where they both agree.</p>
 </div>
 <div id="clustering-using-scran" class="section level3" number="5.0.2">
 <h3><span class="header-section-number">5.0.2</span> Clustering using <code>scran</code></h3>
 <p>Additionally, ArchR allows for the identification of clusters with <a href="https://bioconductor.org/packages/release/bioc/html/scran.html">scran</a> by changing the <code>method</code> parameter in <code>addClusters()</code>.</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="clustering-with-archr.html#cb47-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addClusters</span>(</span>
-<span id="cb47-2"><a href="clustering-with-archr.html#cb47-2"></a>    <span class="dt">input =</span> projHeme2,</span>
-<span id="cb47-3"><a href="clustering-with-archr.html#cb47-3"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
-<span id="cb47-4"><a href="clustering-with-archr.html#cb47-4"></a>    <span class="dt">method =</span> <span class="st">&quot;scran&quot;</span>,</span>
-<span id="cb47-5"><a href="clustering-with-archr.html#cb47-5"></a>    <span class="dt">name =</span> <span class="st">&quot;ScranClusters&quot;</span>,</span>
-<span id="cb47-6"><a href="clustering-with-archr.html#cb47-6"></a>    <span class="dt">k =</span> <span class="dv">15</span></span>
-<span id="cb47-7"><a href="clustering-with-archr.html#cb47-7"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="clustering-with-archr.html#cb70-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addClusters</span>(</span>
+<span id="cb70-2"><a href="clustering-with-archr.html#cb70-2"></a>    <span class="dt">input =</span> projHeme2,</span>
+<span id="cb70-3"><a href="clustering-with-archr.html#cb70-3"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
+<span id="cb70-4"><a href="clustering-with-archr.html#cb70-4"></a>    <span class="dt">method =</span> <span class="st">&quot;scran&quot;</span>,</span>
+<span id="cb70-5"><a href="clustering-with-archr.html#cb70-5"></a>    <span class="dt">name =</span> <span class="st">&quot;ScranClusters&quot;</span>,</span>
+<span id="cb70-6"><a href="clustering-with-archr.html#cb70-6"></a>    <span class="dt">k =</span> <span class="dv">15</span></span>
+<span id="cb70-7"><a href="clustering-with-archr.html#cb70-7"></a>)</span></code></pre></div>
 </div> 
 </div>
             </section>

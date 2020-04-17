@@ -90,11 +90,12 @@ library(ArchR)
 #The recommendation is to set it around 1/2 to 3/4 of the total available cores.
 addArchRThreads(threads = 16) 
 ```
->\>Setting default number of Parallel threads to 16.
+>\>\> Setting default number of Parallel threads to 16.
 ```{r eval=FALSE}
 #Set Gene and Genome Annotations to be used
 addArchRGenome("hg19")
 ```
+>\>\> Setting default genome to Hg19.
 
 ## Setting a Genome and GeneAnnotation
 
@@ -108,8 +109,8 @@ The precompiled version of the __hg19__ genome in ArchR uses `BSgenome.Hsapiens.
 
 ```{r eval=FALSE}
 addArchRGenome("hg19")
-# Setting default genome to Hg19.
 ```
+>\>\> Setting default genome to Hg19.
 
 <hr>
 
@@ -117,8 +118,8 @@ The precompiled version of the __hg38__ genome in ArchR uses `BSgenome.Hsapiens.
 
 ```{r eval=FALSE}
 addArchRGenome("hg38")
-# Setting default genome to Hg38.
 ```
+>\>\> Setting default genome to Hg38.
 
 <hr>
 
@@ -126,8 +127,8 @@ The precompiled version of the __mm9__ genome in ArchR uses `BSgenome.Mmusculus.
 
 ```{r eval=FALSE}
 addArchRGenome("mm9")
-# Setting default genome to Mm9.
 ```
+>\>\> Setting default genome to Mm9.
 
 <hr>
 
@@ -135,8 +136,8 @@ The precompiled version of the __mm10__ genome in ArchR uses `BSgenome.Mmusculus
 
 ```{r eval=FALSE}
 addArchRGenome("mm10")
-# Setting default genome to Mm10.
 ```
+>\>\> Setting default genome to Mm10.
 
 <hr>
 
@@ -151,23 +152,33 @@ To instead create a custom genome annotation, we can use `createGenomeAnnotation
 if (!requireNamespace("BSgenome.Dmelanogaster.UCSC.dm6", quietly = TRUE)){
   BiocManager::install("BSgenome.Dmelanogaster.UCSC.dm6")
 }
-#QQQ CHANGED TO DROSOPHILA TO MAKE THIS RELEVANT SINCE HG38 IS ALREADY SUPPORTED
 library(BSgenome.Dmelanogaster.UCSC.dm6)
-genomeAnnotation <- createGenomeAnnotation(genome = BSgenome.Dmelanogaster.UCSC.dm6)
-genomeAnnotation
-# List of length 3
-# names(3): genome chromSizes blacklist
 ```
+>\>\> Loading required package: BSgenome  
+>\>\> Loading required package: Biostrings  
+>\>\> Loading required package: XVector  
+>\>\> Attaching package: 'Biostrings'  
+>\>\> The following object is masked from 'package:base': strsplit  
+
+```{r eval=FALSE}
+genomeAnnotation <- createGenomeAnnotation(genome = BSgenome.Dmelanogaster.UCSC.dm6)
+```
+>\>\> Getting genome..  
+>\>\> Getting chromSizes..  
+>\>\> Getting blacklist..  
+>\>\> Blacklist not downloaded! Continuing without, be careful for downstream biases..  
+```{r eval=FALSE}
+genomeAnnotation
+```
+>\>\> List of length 3  
+>\>\> names(3): genome chromSizes blacklist  
 
 To create a custom gene annotation for use instead we can use `createGeneAnnotation()`. To do this, you will need the following information:
 
 1. A `TxDb` object (transcript database) from Bioconductor which contains information for gene/transcript coordinates. For example, from `txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene`.
 2. An `OrgDb` object (organism database) from Bioconductor which contains information for gene/transcript symbols from ids. For example, from `orgdb <- org.Hs.eg.db`.
 
-
 ```{r eval=FALSE}
-#QQQ DOUBLE CHECK. I CHANGED THIS TO REMOVE THE txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene ASSIGNMENTS TO MAKE IT THE SAME FORMAT AS genomeAnnotation ABOVE
-#QQQ ALSO CHANGED TO DROSOPHILA
 if (!requireNamespace("TxDb.Dmelanogaster.UCSC.dm6.ensGene", quietly = TRUE)){
   BiocManager::install("TxDb.Dmelanogaster.UCSC.dm6.ensGene")
 }
@@ -175,12 +186,22 @@ if (!requireNamespace("org.Dm.eg.db", quietly = TRUE)){
   BiocManager::install("org.Dm.eg.db")
 }
 library(TxDb.Dmelanogaster.UCSC.dm6.ensGene)
+```
+>\>\> Loading required package: GenomicFeatures  
+>\>\> Loading required package: AnnotationDbi  
+```{r eval=FALSE}
 library(org.Dm.eg.db)
 geneAnnotation <- createGeneAnnnotation(TxDb = TxDb.Dmelanogaster.UCSC.dm6.ensGene, OrgDb = org.Dm.eg.db)
-geneAnnotation
-# List of length 3
-# names(3): genes exons TSS
 ```
+>\>\> Getting Genes..  
+>\>\> Determined Annotation Style = ENSEMBL  
+>\>\> Getting Exons..  
+>\>\> Getting TSS..  
+```{r eval=FALSE}
+geneAnnotation
+```
+>\>\> List of length 3  
+>\>\> names(3): genes exons TSS  
 
 Alternatively, if you dont have a `TxDb` and `OrgDb` object, you can create a `geneAnnotation` object from the following information :
 
@@ -189,15 +210,11 @@ Alternatively, if you dont have a `TxDb` and `OrgDb` object, you can create a `g
 3. A `GRanges` object containing standed transcription start site (`TSS`) coordinates.
 
 ```{r eval=FALSE}
-#QQQ THIS SEEMS ODD. YOU ARE TAKING AN OBJECT NAMED geneAnnotation THAT ALREADY HAS ALL THESE THINGS AND MAKING IT INTO AN OBJECT NAMED geneAnnotation
 geneAnnotation <- createGeneAnnnotation(
   TSS = geneAnnotation$TSS, 
   exons = geneAnnotation$exons, 
   genes = geneAnnotation$genes
 )
-# geneAnnotation
-# List of length 3
-# names(3): genes exons TSS
 ```
 
 ## Creating Arrow Files
@@ -212,13 +229,13 @@ library(ArchR)
 #Get Tutorial Data ~0.5GB To Download (if downloaded already ArchR will bypass downloading).
 inputFiles <- getTutorialData("Hematopoiesis")
 inputFiles
-#                                      scATAC_BMMC_R1 
-#      "HemeFragments/scATAC_BMMC_R1.fragments.tsv.gz" 
-#                                  scATAC_CD34_BMMC_R1 
-# "HemeFragments/scATAC_CD34_BMMC_R1.fragments.tsv.gz" 
-#                                       scATAC_PBMC_R1 
-#      "HemeFragments/scATAC_PBMC_R1.fragments.tsv.gz" 
 ```
+>\>\>                                       scATAC_BMMC_R1  
+>\>\>      "HemeFragments/scATAC_BMMC_R1.fragments.tsv.gz"  
+>\>\>                                  scATAC_CD34_BMMC_R1  
+>\>\> "HemeFragments/scATAC_CD34_BMMC_R1.fragments.tsv.gz"  
+>\>\>                                       scATAC_PBMC_R1  
+>\>\>      "HemeFragments/scATAC_PBMC_R1.fragments.tsv.gz"  
 
 Now we will create our Arrow Files (10-15 minutes). For each sample, this step will:
 
@@ -231,10 +248,14 @@ Now we will create our Arrow Files (10-15 minutes). For each sample, this step w
 ```{r eval=FALSE}
 #Set Genome Annotations to be used to hg19
 addArchRGenome("hg19")
-
+```
+>\>\> Setting default genome to Hg19.  
+```{r eval=FALSE}
 #Set Default Threads for ArchR Functions
 addArchRThreads(threads = 16) 
-
+```
+>\>\> Setting default number of Parallel threads to 16.  
+```{r eval=FALSE}
 ArrowFiles <- createArrowFiles(
   inputFiles = inputFiles,
   sampleNames = names(inputFiles),
@@ -243,10 +264,19 @@ ArrowFiles <- createArrowFiles(
   addTileMat = TRUE,
   addGeneScoreMat = TRUE
 )
-ArrowFiles
-# [1] "scATAC_BMMC_R1.arrow"      "scATAC_CD34_BMMC_R1.arrow"
-# [3] "scATAC_PBMC_R1.arrow"
 ```
+>\>\> Using GeneAnnotation set by addArchRGenome(Hg19)!  
+>\>\> Using GeneAnnotation set by addArchRGenome(Hg19)!  
+>\>\> ArchR logging to : ArchRLogs/ArchR-createArrows-dfa159ddbf6e-Date-2020-04-15_Time-09-21-27.log  
+>\>\> If there is an issue, please report to github with logFile!  
+>\>\> Cleaning Temporary Files  
+>\>\> 2020-04-15 09:21:28 : Batch Execution w/ safelapply!, 0 mins elapsed.  
+>\>\> ArchR logging successful to : ArchRLogs/ArchR-createArrows-dfa159ddbf6e-Date-2020-04-15_Time-09-21-27.log  
+```{r eval=FALSE}
+ArrowFiles
+```
+>\>\> "scATAC_BMMC_R1.arrow"      "scATAC_CD34_BMMC_R1.arrow"  
+>\>\> "scATAC_PBMC_R1.arrow"  
 
 This step will create a folder called "QualityControl" in your current working directory that will contain 2 plots associated with each of your samples:
 
@@ -260,25 +290,26 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 <span style="font-size:16px;font-weight:bold">2. Fragment Size Distribution</span>
 
 For **BMMC**:</br>
-![](images/HemeWalkthrough/PNG/scATAC_BMMC_R1-TSS_by_Unique_Frags_1.png){width=350 height=350}
-![](images/HemeWalkthrough/PNG/scATAC_BMMC_R1-Fragment_Size_Distribution_1.png){width=450 height=350}
+![](images/HemeWalkthrough/PNG/scATAC_BMMC_R1-TSS_by_Unique_Frags_1.png){width=330 height=330}
+![](images/HemeWalkthrough/PNG/scATAC_BMMC_R1-Fragment_Size_Distribution_1.png){width=430 height=330}
 
 For **CD34 BMMC**:</br>
 
-![](images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-TSS_by_Unique_Frags_1.png){width=350 height=350}
-![](images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-Fragment_Size_Distribution_1.png){width=450 height=350}
+![](images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-TSS_by_Unique_Frags_1.png){width=330 height=330}
+![](images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-Fragment_Size_Distribution_1.png){width=430 height=330}
 
 For **PBMC**:</br>
 
-![](images/HemeWalkthrough/PNG/scATAC_PBMC_R1-TSS_by_Unique_Frags_1.png){width=350 height=350}
-![](images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Fragment_Size_Distribution_1.png){width=450 height=350}
+![](images/HemeWalkthrough/PNG/scATAC_PBMC_R1-TSS_by_Unique_Frags_1.png){width=330 height=330}
+![](images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Fragment_Size_Distribution_1.png){width=430 height=330}
 
 ## Session Information
 
 ```{r eval=FALSE}
 Sys.Date()
+```
 
-
+```{r eval=FALSE}
 sessionInfo()
 ```
 

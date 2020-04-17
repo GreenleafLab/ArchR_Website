@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-15" />
+<meta name="date" content="2020-04-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -264,36 +264,36 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="calling-peaks-w-macs2" class="section level2" number="9.1">
 <h2><span class="header-section-number">9.1</span> Calling Peaks w/ Macs2</h2>
 <p>We can now save our original projHeme3 using <code>saveArchRProject</code> from ArchR.</p>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="calling-peaks-w-macs2.html#cb100-1"></a><span class="kw">saveArchRProject</span>(<span class="dt">ArchRProj =</span> projHeme3, <span class="dt">outputDirectory =</span> <span class="st">&quot;Save-ProjHeme3&quot;</span>, <span class="dt">load =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="calling-peaks-w-macs2.html#cb101-1"></a><span class="co">#Create Group Coverage Files that can be used for downstream analysis (~5-10 minutes)</span></span>
-<span id="cb101-2"><a href="calling-peaks-w-macs2.html#cb101-2"></a>projHeme4 &lt;-<span class="st"> </span><span class="kw">addGroupCoverages</span>(<span class="dt">ArchRProj =</span> projHeme3, <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>)</span>
-<span id="cb101-3"><a href="calling-peaks-w-macs2.html#cb101-3"></a></span>
-<span id="cb101-4"><a href="calling-peaks-w-macs2.html#cb101-4"></a><span class="co">#Find Path to Macs2 binary. This function sometimes struggles if you are using conda environment</span></span>
-<span id="cb101-5"><a href="calling-peaks-w-macs2.html#cb101-5"></a><span class="co">#for installation of python packages. If this function fails try providing a direct path manually</span></span>
-<span id="cb101-6"><a href="calling-peaks-w-macs2.html#cb101-6"></a>pathToMacs2 &lt;-<span class="st"> </span><span class="kw">findMacs2</span>()</span>
-<span id="cb101-7"><a href="calling-peaks-w-macs2.html#cb101-7"></a></span>
-<span id="cb101-8"><a href="calling-peaks-w-macs2.html#cb101-8"></a><span class="co">#Call Reproducible Peaks w/ Macs2 (~5-10 minutes)</span></span>
-<span id="cb101-9"><a href="calling-peaks-w-macs2.html#cb101-9"></a>projHeme4 &lt;-<span class="st"> </span><span class="kw">addReproduciblePeakSet</span>(</span>
-<span id="cb101-10"><a href="calling-peaks-w-macs2.html#cb101-10"></a>    <span class="dt">ArchRProj =</span> projHeme4, </span>
-<span id="cb101-11"><a href="calling-peaks-w-macs2.html#cb101-11"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>, </span>
-<span id="cb101-12"><a href="calling-peaks-w-macs2.html#cb101-12"></a>    <span class="dt">pathToMacs2 =</span> pathToMacs2</span>
-<span id="cb101-13"><a href="calling-peaks-w-macs2.html#cb101-13"></a>)</span>
-<span id="cb101-14"><a href="calling-peaks-w-macs2.html#cb101-14"></a></span>
-<span id="cb101-15"><a href="calling-peaks-w-macs2.html#cb101-15"></a><span class="kw">getPeakSet</span>(projHeme4)</span>
-<span id="cb101-16"><a href="calling-peaks-w-macs2.html#cb101-16"></a><span class="co"># GRanges object with 158378 ranges and 12 metadata columns:</span></span>
-<span id="cb101-17"><a href="calling-peaks-w-macs2.html#cb101-17"></a><span class="co">#             seqnames              ranges strand |     score</span></span>
-<span id="cb101-18"><a href="calling-peaks-w-macs2.html#cb101-18"></a><span class="co">#                &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;</span></span>
-<span id="cb101-19"><a href="calling-peaks-w-macs2.html#cb101-19"></a><span class="co">#   Cluster10     chr1       752327-752827      * |   2.74288</span></span>
-<span id="cb101-20"><a href="calling-peaks-w-macs2.html#cb101-20"></a><span class="co">#    Cluster9     chr1       760866-761366      * |   2.65888</span></span>
-<span id="cb101-21"><a href="calling-peaks-w-macs2.html#cb101-21"></a><span class="co">#    Cluster2     chr1       762700-763200      * |   18.7147</span></span>
-<span id="cb101-22"><a href="calling-peaks-w-macs2.html#cb101-22"></a><span class="co">#    Cluster2     chr1       779639-780139      * |   2.81931</span></span>
-<span id="cb101-23"><a href="calling-peaks-w-macs2.html#cb101-23"></a><span class="co">#    Cluster8     chr1       793519-794019      * |   3.74498</span></span>
-<span id="cb101-24"><a href="calling-peaks-w-macs2.html#cb101-24"></a><span class="co">#         ...      ...                 ...    ... .       ...</span></span>
-<span id="cb101-25"><a href="calling-peaks-w-macs2.html#cb101-25"></a><span class="co">#    Cluster5     chrX 154841853-154842353      * |   3.43901</span></span>
-<span id="cb101-26"><a href="calling-peaks-w-macs2.html#cb101-26"></a><span class="co">#   Cluster12     chrX 154842354-154842854      * |   7.60796</span></span>
-<span id="cb101-27"><a href="calling-peaks-w-macs2.html#cb101-27"></a><span class="co">#    Cluster4     chrX 154862032-154862532      * |   9.27826</span></span>
-<span id="cb101-28"><a href="calling-peaks-w-macs2.html#cb101-28"></a><span class="co">#    Cluster5     chrX 154912371-154912871      * |   6.27394</span></span>
-<span id="cb101-29"><a href="calling-peaks-w-macs2.html#cb101-29"></a><span class="co">#    Cluster6     chrX 154996898-154997398      * |   2.65432</span></span></code></pre></div>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="calling-peaks-w-macs2.html#cb123-1"></a><span class="kw">saveArchRProject</span>(<span class="dt">ArchRProj =</span> projHeme3, <span class="dt">outputDirectory =</span> <span class="st">&quot;Save-ProjHeme3&quot;</span>, <span class="dt">load =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="calling-peaks-w-macs2.html#cb124-1"></a><span class="co">#Create Group Coverage Files that can be used for downstream analysis (~5-10 minutes)</span></span>
+<span id="cb124-2"><a href="calling-peaks-w-macs2.html#cb124-2"></a>projHeme4 &lt;-<span class="st"> </span><span class="kw">addGroupCoverages</span>(<span class="dt">ArchRProj =</span> projHeme3, <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>)</span>
+<span id="cb124-3"><a href="calling-peaks-w-macs2.html#cb124-3"></a></span>
+<span id="cb124-4"><a href="calling-peaks-w-macs2.html#cb124-4"></a><span class="co">#Find Path to Macs2 binary. This function sometimes struggles if you are using conda environment</span></span>
+<span id="cb124-5"><a href="calling-peaks-w-macs2.html#cb124-5"></a><span class="co">#for installation of python packages. If this function fails try providing a direct path manually</span></span>
+<span id="cb124-6"><a href="calling-peaks-w-macs2.html#cb124-6"></a>pathToMacs2 &lt;-<span class="st"> </span><span class="kw">findMacs2</span>()</span>
+<span id="cb124-7"><a href="calling-peaks-w-macs2.html#cb124-7"></a></span>
+<span id="cb124-8"><a href="calling-peaks-w-macs2.html#cb124-8"></a><span class="co">#Call Reproducible Peaks w/ Macs2 (~5-10 minutes)</span></span>
+<span id="cb124-9"><a href="calling-peaks-w-macs2.html#cb124-9"></a>projHeme4 &lt;-<span class="st"> </span><span class="kw">addReproduciblePeakSet</span>(</span>
+<span id="cb124-10"><a href="calling-peaks-w-macs2.html#cb124-10"></a>    <span class="dt">ArchRProj =</span> projHeme4, </span>
+<span id="cb124-11"><a href="calling-peaks-w-macs2.html#cb124-11"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>, </span>
+<span id="cb124-12"><a href="calling-peaks-w-macs2.html#cb124-12"></a>    <span class="dt">pathToMacs2 =</span> pathToMacs2</span>
+<span id="cb124-13"><a href="calling-peaks-w-macs2.html#cb124-13"></a>)</span>
+<span id="cb124-14"><a href="calling-peaks-w-macs2.html#cb124-14"></a></span>
+<span id="cb124-15"><a href="calling-peaks-w-macs2.html#cb124-15"></a><span class="kw">getPeakSet</span>(projHeme4)</span>
+<span id="cb124-16"><a href="calling-peaks-w-macs2.html#cb124-16"></a><span class="co"># GRanges object with 158378 ranges and 12 metadata columns:</span></span>
+<span id="cb124-17"><a href="calling-peaks-w-macs2.html#cb124-17"></a><span class="co">#             seqnames              ranges strand |     score</span></span>
+<span id="cb124-18"><a href="calling-peaks-w-macs2.html#cb124-18"></a><span class="co">#                &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;</span></span>
+<span id="cb124-19"><a href="calling-peaks-w-macs2.html#cb124-19"></a><span class="co">#   Cluster10     chr1       752327-752827      * |   2.74288</span></span>
+<span id="cb124-20"><a href="calling-peaks-w-macs2.html#cb124-20"></a><span class="co">#    Cluster9     chr1       760866-761366      * |   2.65888</span></span>
+<span id="cb124-21"><a href="calling-peaks-w-macs2.html#cb124-21"></a><span class="co">#    Cluster2     chr1       762700-763200      * |   18.7147</span></span>
+<span id="cb124-22"><a href="calling-peaks-w-macs2.html#cb124-22"></a><span class="co">#    Cluster2     chr1       779639-780139      * |   2.81931</span></span>
+<span id="cb124-23"><a href="calling-peaks-w-macs2.html#cb124-23"></a><span class="co">#    Cluster8     chr1       793519-794019      * |   3.74498</span></span>
+<span id="cb124-24"><a href="calling-peaks-w-macs2.html#cb124-24"></a><span class="co">#         ...      ...                 ...    ... .       ...</span></span>
+<span id="cb124-25"><a href="calling-peaks-w-macs2.html#cb124-25"></a><span class="co">#    Cluster5     chrX 154841853-154842353      * |   3.43901</span></span>
+<span id="cb124-26"><a href="calling-peaks-w-macs2.html#cb124-26"></a><span class="co">#   Cluster12     chrX 154842354-154842854      * |   7.60796</span></span>
+<span id="cb124-27"><a href="calling-peaks-w-macs2.html#cb124-27"></a><span class="co">#    Cluster4     chrX 154862032-154862532      * |   9.27826</span></span>
+<span id="cb124-28"><a href="calling-peaks-w-macs2.html#cb124-28"></a><span class="co">#    Cluster5     chrX 154912371-154912871      * |   6.27394</span></span>
+<span id="cb124-29"><a href="calling-peaks-w-macs2.html#cb124-29"></a><span class="co">#    Cluster6     chrX 154996898-154997398      * |   2.65432</span></span></code></pre></div>
 </div>
             </section>
 

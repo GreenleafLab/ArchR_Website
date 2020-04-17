@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-15" />
+<meta name="date" content="2020-04-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -264,144 +264,144 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="labeling-scatac-cells-with-scrna-clusters" class="section level2" number="8.1">
 <h2><span class="header-section-number">8.1</span> Labeling scATAC cells with scRNA clusters</h2>
 <p>First we need to download scRNA data for hematopoiesis from Granja* et al (2019).</p>
-<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-1"></a><span class="co">#111 MB Download</span></span>
-<span id="cb84-2"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-2"></a><span class="cf">if</span>(<span class="op">!</span><span class="kw">file.exists</span>(<span class="st">&quot;scRNA-Hematopoiesis-Granja-2019.rds&quot;</span>)){</span>
-<span id="cb84-3"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-3"></a>    <span class="kw">download.file</span>(</span>
-<span id="cb84-4"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-4"></a>        <span class="dt">url =</span> <span class="st">&quot;https://jeffgranja.s3.amazonaws.com/ArchR/TestData/scRNA-Hematopoiesis-Granja-2019.rds&quot;</span>,</span>
-<span id="cb84-5"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-5"></a>        <span class="dt">destfile =</span> <span class="st">&quot;scRNA-Hematopoiesis-Granja-2019.rds&quot;</span></span>
-<span id="cb84-6"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-6"></a>    )</span>
-<span id="cb84-7"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-7"></a>}</span>
-<span id="cb84-8"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-8"></a></span>
-<span id="cb84-9"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-9"></a>seRNA &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;scRNA-Hematopoiesis-Granja-2019.rds&quot;</span>)</span>
-<span id="cb84-10"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-10"></a>seRNA</span>
-<span id="cb84-11"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-11"></a><span class="co"># class: RangedSummarizedExperiment </span></span>
-<span id="cb84-12"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-12"></a><span class="co"># dim: 20287 35582 </span></span>
-<span id="cb84-13"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-13"></a><span class="co"># metadata(6): variableGenes optimizeLSI ... UMAP_Params colorMap</span></span>
-<span id="cb84-14"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-14"></a><span class="co"># assays(1): counts</span></span>
-<span id="cb84-15"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-15"></a><span class="co"># rownames(20287): FAM138A OR4F5 ... S100B PRMT2</span></span>
-<span id="cb84-16"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-16"></a><span class="co"># rowData names(3): gene_name gene_id exonLength</span></span>
-<span id="cb84-17"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-17"></a><span class="co"># colnames(35582): CD34_32_R5:AAACCTGAGTATCGAA-1</span></span>
-<span id="cb84-18"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-18"></a><span class="co">#   CD34_32_R5:AAACCTGAGTCGTTTG-1 ...</span></span>
-<span id="cb84-19"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-19"></a><span class="co">#   BMMC_10x_GREENLEAF_REP2:TTTGTTGCATGTGTCA-1</span></span>
-<span id="cb84-20"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-20"></a><span class="co">#   BMMC_10x_GREENLEAF_REP2:TTTGTTGCATTGAAAG-1</span></span>
-<span id="cb84-21"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-21"></a><span class="co"># colData names(10): Group nUMI_pre ... BioClassification Barcode</span></span>
-<span id="cb84-22"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-22"></a></span>
-<span id="cb84-23"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-23"></a><span class="kw">colnames</span>(<span class="kw">colData</span>(seRNA))</span>
-<span id="cb84-24"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-24"></a><span class="co"># [1] &quot;Group&quot;             &quot;nUMI_pre&quot;          &quot;nUMI&quot;             </span></span>
-<span id="cb84-25"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-25"></a><span class="co"># [4] &quot;nGene&quot;             &quot;initialClusters&quot;   &quot;UMAP1&quot;            </span></span>
-<span id="cb84-26"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-26"></a><span class="co"># [7] &quot;UMAP2&quot;             &quot;Clusters&quot;          &quot;BioClassification&quot;</span></span>
-<span id="cb84-27"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-27"></a><span class="co"># [10] &quot;Barcode&quot;          </span></span>
-<span id="cb84-28"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-28"></a></span>
-<span id="cb84-29"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-29"></a><span class="kw">table</span>(<span class="kw">colData</span>(seRNA)<span class="op">$</span>BioClassification)</span>
-<span id="cb84-30"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-30"></a><span class="co">#         01_HSC 02_Early.Eryth  03_Late.Eryth  04_Early.Baso    05_CMP.LMPP </span></span>
-<span id="cb84-31"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-31"></a><span class="co">#           1425           1653            446            111           2260 </span></span>
-<span id="cb84-32"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-32"></a><span class="co">#       06_CLP.1         07_GMP    08_GMP.Neut         09_pDC         10_cDC </span></span>
-<span id="cb84-33"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-33"></a><span class="co">#            903           2097           1050            544            325 </span></span>
-<span id="cb84-34"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-34"></a><span class="co"># 11_CD14.Mono.1 12_CD14.Mono.2   13_CD16.Mono         14_Unk       15_CLP.2 </span></span>
-<span id="cb84-35"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-35"></a><span class="co">#           1800           4222            292            520            377 </span></span>
-<span id="cb84-36"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-36"></a><span class="co">#       16_Pre.B           17_B      18_Plasma       19_CD8.N      20_CD4.N1 </span></span>
-<span id="cb84-37"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-37"></a><span class="co">#            710           1711             62           1521           2470 </span></span>
-<span id="cb84-38"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-38"></a><span class="co">#      21_CD4.N2       22_CD4.M      23_CD8.EM      24_CD8.CM          25_NK </span></span>
-<span id="cb84-39"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-39"></a><span class="co">#           2364           3539            796           2080           2143 </span></span>
-<span id="cb84-40"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-40"></a><span class="co">#         26_Unk </span></span>
-<span id="cb84-41"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb84-41"></a><span class="co">#            161 </span></span></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-1"></a><span class="co">#111 MB Download</span></span>
+<span id="cb107-2"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-2"></a><span class="cf">if</span>(<span class="op">!</span><span class="kw">file.exists</span>(<span class="st">&quot;scRNA-Hematopoiesis-Granja-2019.rds&quot;</span>)){</span>
+<span id="cb107-3"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-3"></a>    <span class="kw">download.file</span>(</span>
+<span id="cb107-4"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-4"></a>        <span class="dt">url =</span> <span class="st">&quot;https://jeffgranja.s3.amazonaws.com/ArchR/TestData/scRNA-Hematopoiesis-Granja-2019.rds&quot;</span>,</span>
+<span id="cb107-5"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-5"></a>        <span class="dt">destfile =</span> <span class="st">&quot;scRNA-Hematopoiesis-Granja-2019.rds&quot;</span></span>
+<span id="cb107-6"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-6"></a>    )</span>
+<span id="cb107-7"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-7"></a>}</span>
+<span id="cb107-8"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-8"></a></span>
+<span id="cb107-9"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-9"></a>seRNA &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;scRNA-Hematopoiesis-Granja-2019.rds&quot;</span>)</span>
+<span id="cb107-10"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-10"></a>seRNA</span>
+<span id="cb107-11"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-11"></a><span class="co"># class: RangedSummarizedExperiment </span></span>
+<span id="cb107-12"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-12"></a><span class="co"># dim: 20287 35582 </span></span>
+<span id="cb107-13"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-13"></a><span class="co"># metadata(6): variableGenes optimizeLSI ... UMAP_Params colorMap</span></span>
+<span id="cb107-14"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-14"></a><span class="co"># assays(1): counts</span></span>
+<span id="cb107-15"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-15"></a><span class="co"># rownames(20287): FAM138A OR4F5 ... S100B PRMT2</span></span>
+<span id="cb107-16"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-16"></a><span class="co"># rowData names(3): gene_name gene_id exonLength</span></span>
+<span id="cb107-17"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-17"></a><span class="co"># colnames(35582): CD34_32_R5:AAACCTGAGTATCGAA-1</span></span>
+<span id="cb107-18"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-18"></a><span class="co">#   CD34_32_R5:AAACCTGAGTCGTTTG-1 ...</span></span>
+<span id="cb107-19"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-19"></a><span class="co">#   BMMC_10x_GREENLEAF_REP2:TTTGTTGCATGTGTCA-1</span></span>
+<span id="cb107-20"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-20"></a><span class="co">#   BMMC_10x_GREENLEAF_REP2:TTTGTTGCATTGAAAG-1</span></span>
+<span id="cb107-21"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-21"></a><span class="co"># colData names(10): Group nUMI_pre ... BioClassification Barcode</span></span>
+<span id="cb107-22"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-22"></a></span>
+<span id="cb107-23"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-23"></a><span class="kw">colnames</span>(<span class="kw">colData</span>(seRNA))</span>
+<span id="cb107-24"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-24"></a><span class="co"># [1] &quot;Group&quot;             &quot;nUMI_pre&quot;          &quot;nUMI&quot;             </span></span>
+<span id="cb107-25"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-25"></a><span class="co"># [4] &quot;nGene&quot;             &quot;initialClusters&quot;   &quot;UMAP1&quot;            </span></span>
+<span id="cb107-26"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-26"></a><span class="co"># [7] &quot;UMAP2&quot;             &quot;Clusters&quot;          &quot;BioClassification&quot;</span></span>
+<span id="cb107-27"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-27"></a><span class="co"># [10] &quot;Barcode&quot;          </span></span>
+<span id="cb107-28"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-28"></a></span>
+<span id="cb107-29"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-29"></a><span class="kw">table</span>(<span class="kw">colData</span>(seRNA)<span class="op">$</span>BioClassification)</span>
+<span id="cb107-30"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-30"></a><span class="co">#         01_HSC 02_Early.Eryth  03_Late.Eryth  04_Early.Baso    05_CMP.LMPP </span></span>
+<span id="cb107-31"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-31"></a><span class="co">#           1425           1653            446            111           2260 </span></span>
+<span id="cb107-32"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-32"></a><span class="co">#       06_CLP.1         07_GMP    08_GMP.Neut         09_pDC         10_cDC </span></span>
+<span id="cb107-33"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-33"></a><span class="co">#            903           2097           1050            544            325 </span></span>
+<span id="cb107-34"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-34"></a><span class="co"># 11_CD14.Mono.1 12_CD14.Mono.2   13_CD16.Mono         14_Unk       15_CLP.2 </span></span>
+<span id="cb107-35"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-35"></a><span class="co">#           1800           4222            292            520            377 </span></span>
+<span id="cb107-36"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-36"></a><span class="co">#       16_Pre.B           17_B      18_Plasma       19_CD8.N      20_CD4.N1 </span></span>
+<span id="cb107-37"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-37"></a><span class="co">#            710           1711             62           1521           2470 </span></span>
+<span id="cb107-38"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-38"></a><span class="co">#      21_CD4.N2       22_CD4.M      23_CD8.EM      24_CD8.CM          25_NK </span></span>
+<span id="cb107-39"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-39"></a><span class="co">#           2364           3539            796           2080           2143 </span></span>
+<span id="cb107-40"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-40"></a><span class="co">#         26_Unk </span></span>
+<span id="cb107-41"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb107-41"></a><span class="co">#            161 </span></span></code></pre></div>
 <p>Unconstrained Integration (not-recommended)</p>
-<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb85-1"></a><span class="co">#~5 minutes</span></span>
-<span id="cb85-2"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb85-2"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addGeneIntegrationMatrix</span>(</span>
-<span id="cb85-3"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb85-3"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
-<span id="cb85-4"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb85-4"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>,</span>
-<span id="cb85-5"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb85-5"></a>    <span class="dt">matrixName =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>,</span>
-<span id="cb85-6"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb85-6"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
-<span id="cb85-7"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb85-7"></a>    <span class="dt">seRNA =</span> seRNA,</span>
-<span id="cb85-8"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb85-8"></a>    <span class="dt">addToArrow =</span> <span class="ot">FALSE</span>,</span>
-<span id="cb85-9"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb85-9"></a>    <span class="dt">groupRNA =</span> <span class="st">&quot;BioClassification&quot;</span>,</span>
-<span id="cb85-10"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb85-10"></a>    <span class="dt">nameCell =</span> <span class="st">&quot;predictedCell_Un&quot;</span>, <span class="co">#Name of column where cell from scRNA is matched to each cell</span></span>
-<span id="cb85-11"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb85-11"></a>    <span class="dt">nameGroup =</span> <span class="st">&quot;predictedGroup_Un&quot;</span>, <span class="co">#Name of column where group from scRNA is matched to each cell</span></span>
-<span id="cb85-12"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb85-12"></a>    <span class="dt">nameScore =</span> <span class="st">&quot;predictedScore_Un&quot;</span> <span class="co">#Name of column where prediction score from scRNA</span></span>
-<span id="cb85-13"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb85-13"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb108-1"></a><span class="co">#~5 minutes</span></span>
+<span id="cb108-2"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb108-2"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addGeneIntegrationMatrix</span>(</span>
+<span id="cb108-3"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb108-3"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
+<span id="cb108-4"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb108-4"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>,</span>
+<span id="cb108-5"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb108-5"></a>    <span class="dt">matrixName =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>,</span>
+<span id="cb108-6"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb108-6"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
+<span id="cb108-7"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb108-7"></a>    <span class="dt">seRNA =</span> seRNA,</span>
+<span id="cb108-8"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb108-8"></a>    <span class="dt">addToArrow =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb108-9"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb108-9"></a>    <span class="dt">groupRNA =</span> <span class="st">&quot;BioClassification&quot;</span>,</span>
+<span id="cb108-10"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb108-10"></a>    <span class="dt">nameCell =</span> <span class="st">&quot;predictedCell_Un&quot;</span>, <span class="co">#Name of column where cell from scRNA is matched to each cell</span></span>
+<span id="cb108-11"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb108-11"></a>    <span class="dt">nameGroup =</span> <span class="st">&quot;predictedGroup_Un&quot;</span>, <span class="co">#Name of column where group from scRNA is matched to each cell</span></span>
+<span id="cb108-12"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb108-12"></a>    <span class="dt">nameScore =</span> <span class="st">&quot;predictedScore_Un&quot;</span> <span class="co">#Name of column where prediction score from scRNA</span></span>
+<span id="cb108-13"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb108-13"></a>)</span></code></pre></div>
 <p>Constrained Integration (recommended)</p>
-<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-1"></a><span class="co">#We can use the unconstrained fits to help identify which are T/NK Cells</span></span>
-<span id="cb86-2"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-2"></a>cM &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(<span class="kw">confusionMatrix</span>(projHeme2<span class="op">$</span>Clusters, projHeme2<span class="op">$</span>predictedGroup_Un))</span>
-<span id="cb86-3"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-3"></a>preClust &lt;-<span class="st"> </span><span class="kw">colnames</span>(cM)[<span class="kw">apply</span>(cM, <span class="dv">1</span> , which.max)]</span>
-<span id="cb86-4"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-4"></a><span class="kw">cbind</span>(preClust, <span class="kw">rownames</span>(cM)) <span class="co">#Assignments</span></span>
-<span id="cb86-5"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-5"></a></span>
-<span id="cb86-6"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-6"></a><span class="co">#From scRNA</span></span>
-<span id="cb86-7"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-7"></a>cTNK &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">paste0</span>(<span class="dv">19</span><span class="op">:</span><span class="dv">25</span>), <span class="dt">collapse=</span><span class="st">&quot;|&quot;</span>)</span>
-<span id="cb86-8"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-8"></a>cTNK</span>
-<span id="cb86-9"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-9"></a>cNonTNK &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">c</span>(<span class="kw">paste0</span>(<span class="st">&quot;0&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">9</span>), <span class="dv">10</span><span class="op">:</span><span class="dv">13</span>, <span class="dv">15</span><span class="op">:</span><span class="dv">18</span>), <span class="dt">collapse=</span><span class="st">&quot;|&quot;</span>)</span>
-<span id="cb86-10"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-10"></a>cNonTNK</span>
-<span id="cb86-11"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-11"></a></span>
-<span id="cb86-12"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-12"></a><span class="co">#Assign scATAC to these categories</span></span>
-<span id="cb86-13"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-13"></a>clustTNK &lt;-<span class="st"> </span><span class="kw">rownames</span>(cM)[<span class="kw">grep</span>(cTNK, preClust)]</span>
-<span id="cb86-14"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-14"></a>clustTNK</span>
-<span id="cb86-15"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-15"></a>clustNonTNK &lt;-<span class="st"> </span><span class="kw">rownames</span>(cM)[<span class="kw">grep</span>(cNonTNK, preClust)]</span>
-<span id="cb86-16"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-16"></a>clustNonTNK</span>
-<span id="cb86-17"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-17"></a></span>
-<span id="cb86-18"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-18"></a><span class="co">#RNA get cells in these categories</span></span>
-<span id="cb86-19"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-19"></a>rnaTNK &lt;-<span class="st"> </span><span class="kw">colnames</span>(seRNA)[<span class="kw">grep</span>(cTNK, <span class="kw">colData</span>(seRNA)<span class="op">$</span>BioClassification)]</span>
-<span id="cb86-20"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-20"></a><span class="kw">head</span>(rnaTNK)</span>
-<span id="cb86-21"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-21"></a>rnaNonTNK &lt;-<span class="st"> </span><span class="kw">colnames</span>(seRNA)[<span class="kw">grep</span>(cNonTNK, <span class="kw">colData</span>(seRNA)<span class="op">$</span>BioClassification)]</span>
-<span id="cb86-22"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-22"></a><span class="kw">head</span>(rnaNonTNK)</span>
-<span id="cb86-23"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-23"></a></span>
-<span id="cb86-24"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-24"></a>groupList &lt;-<span class="st"> </span><span class="kw">SimpleList</span>(</span>
-<span id="cb86-25"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-25"></a>    <span class="dt">TNK =</span> <span class="kw">SimpleList</span>(</span>
-<span id="cb86-26"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-26"></a>        <span class="dt">ATAC =</span> projHeme2<span class="op">$</span>cellNames[projHeme2<span class="op">$</span>Clusters <span class="op">%in%</span><span class="st"> </span>clustTNK],</span>
-<span id="cb86-27"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-27"></a>        <span class="dt">RNA =</span> rnaTNK</span>
-<span id="cb86-28"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-28"></a>    ),</span>
-<span id="cb86-29"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-29"></a>    <span class="dt">NonTNK =</span> <span class="kw">SimpleList</span>(</span>
-<span id="cb86-30"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-30"></a>        <span class="dt">ATAC =</span> projHeme2<span class="op">$</span>cellNames[projHeme2<span class="op">$</span>Clusters <span class="op">%in%</span><span class="st"> </span>clustNonTNK],</span>
-<span id="cb86-31"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-31"></a>        <span class="dt">RNA =</span> rnaNonTNK</span>
-<span id="cb86-32"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-32"></a>    )    </span>
-<span id="cb86-33"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-33"></a>)</span>
-<span id="cb86-34"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-34"></a></span>
-<span id="cb86-35"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-35"></a><span class="co">#~5 minutes</span></span>
-<span id="cb86-36"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-36"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addGeneIntegrationMatrix</span>(</span>
-<span id="cb86-37"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-37"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
-<span id="cb86-38"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-38"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>,</span>
-<span id="cb86-39"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-39"></a>    <span class="dt">matrixName =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>,</span>
-<span id="cb86-40"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-40"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
-<span id="cb86-41"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-41"></a>    <span class="dt">seRNA =</span> seRNA,</span>
-<span id="cb86-42"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-42"></a>    <span class="dt">addToArrow =</span> <span class="ot">FALSE</span>, </span>
-<span id="cb86-43"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-43"></a>    <span class="dt">groupList =</span> groupList, <span class="co">#Constrain List</span></span>
-<span id="cb86-44"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-44"></a>    <span class="dt">groupRNA =</span> <span class="st">&quot;BioClassification&quot;</span>,</span>
-<span id="cb86-45"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-45"></a>    <span class="dt">nameCell =</span> <span class="st">&quot;predictedCell_Co&quot;</span>, <span class="co">#Name of column where cell from scRNA is matched to each cell</span></span>
-<span id="cb86-46"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-46"></a>    <span class="dt">nameGroup =</span> <span class="st">&quot;predictedGroup_Co&quot;</span>, <span class="co">#Name of column where group from scRNA is matched to each cell</span></span>
-<span id="cb86-47"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-47"></a>    <span class="dt">nameScore =</span> <span class="st">&quot;predictedScore_Co&quot;</span> <span class="co">#Name of column where prediction score from scRNA</span></span>
-<span id="cb86-48"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb86-48"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-1"></a><span class="co">#We can use the unconstrained fits to help identify which are T/NK Cells</span></span>
+<span id="cb109-2"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-2"></a>cM &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(<span class="kw">confusionMatrix</span>(projHeme2<span class="op">$</span>Clusters, projHeme2<span class="op">$</span>predictedGroup_Un))</span>
+<span id="cb109-3"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-3"></a>preClust &lt;-<span class="st"> </span><span class="kw">colnames</span>(cM)[<span class="kw">apply</span>(cM, <span class="dv">1</span> , which.max)]</span>
+<span id="cb109-4"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-4"></a><span class="kw">cbind</span>(preClust, <span class="kw">rownames</span>(cM)) <span class="co">#Assignments</span></span>
+<span id="cb109-5"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-5"></a></span>
+<span id="cb109-6"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-6"></a><span class="co">#From scRNA</span></span>
+<span id="cb109-7"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-7"></a>cTNK &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">paste0</span>(<span class="dv">19</span><span class="op">:</span><span class="dv">25</span>), <span class="dt">collapse=</span><span class="st">&quot;|&quot;</span>)</span>
+<span id="cb109-8"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-8"></a>cTNK</span>
+<span id="cb109-9"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-9"></a>cNonTNK &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">c</span>(<span class="kw">paste0</span>(<span class="st">&quot;0&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">9</span>), <span class="dv">10</span><span class="op">:</span><span class="dv">13</span>, <span class="dv">15</span><span class="op">:</span><span class="dv">18</span>), <span class="dt">collapse=</span><span class="st">&quot;|&quot;</span>)</span>
+<span id="cb109-10"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-10"></a>cNonTNK</span>
+<span id="cb109-11"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-11"></a></span>
+<span id="cb109-12"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-12"></a><span class="co">#Assign scATAC to these categories</span></span>
+<span id="cb109-13"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-13"></a>clustTNK &lt;-<span class="st"> </span><span class="kw">rownames</span>(cM)[<span class="kw">grep</span>(cTNK, preClust)]</span>
+<span id="cb109-14"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-14"></a>clustTNK</span>
+<span id="cb109-15"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-15"></a>clustNonTNK &lt;-<span class="st"> </span><span class="kw">rownames</span>(cM)[<span class="kw">grep</span>(cNonTNK, preClust)]</span>
+<span id="cb109-16"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-16"></a>clustNonTNK</span>
+<span id="cb109-17"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-17"></a></span>
+<span id="cb109-18"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-18"></a><span class="co">#RNA get cells in these categories</span></span>
+<span id="cb109-19"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-19"></a>rnaTNK &lt;-<span class="st"> </span><span class="kw">colnames</span>(seRNA)[<span class="kw">grep</span>(cTNK, <span class="kw">colData</span>(seRNA)<span class="op">$</span>BioClassification)]</span>
+<span id="cb109-20"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-20"></a><span class="kw">head</span>(rnaTNK)</span>
+<span id="cb109-21"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-21"></a>rnaNonTNK &lt;-<span class="st"> </span><span class="kw">colnames</span>(seRNA)[<span class="kw">grep</span>(cNonTNK, <span class="kw">colData</span>(seRNA)<span class="op">$</span>BioClassification)]</span>
+<span id="cb109-22"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-22"></a><span class="kw">head</span>(rnaNonTNK)</span>
+<span id="cb109-23"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-23"></a></span>
+<span id="cb109-24"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-24"></a>groupList &lt;-<span class="st"> </span><span class="kw">SimpleList</span>(</span>
+<span id="cb109-25"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-25"></a>    <span class="dt">TNK =</span> <span class="kw">SimpleList</span>(</span>
+<span id="cb109-26"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-26"></a>        <span class="dt">ATAC =</span> projHeme2<span class="op">$</span>cellNames[projHeme2<span class="op">$</span>Clusters <span class="op">%in%</span><span class="st"> </span>clustTNK],</span>
+<span id="cb109-27"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-27"></a>        <span class="dt">RNA =</span> rnaTNK</span>
+<span id="cb109-28"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-28"></a>    ),</span>
+<span id="cb109-29"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-29"></a>    <span class="dt">NonTNK =</span> <span class="kw">SimpleList</span>(</span>
+<span id="cb109-30"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-30"></a>        <span class="dt">ATAC =</span> projHeme2<span class="op">$</span>cellNames[projHeme2<span class="op">$</span>Clusters <span class="op">%in%</span><span class="st"> </span>clustNonTNK],</span>
+<span id="cb109-31"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-31"></a>        <span class="dt">RNA =</span> rnaNonTNK</span>
+<span id="cb109-32"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-32"></a>    )    </span>
+<span id="cb109-33"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-33"></a>)</span>
+<span id="cb109-34"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-34"></a></span>
+<span id="cb109-35"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-35"></a><span class="co">#~5 minutes</span></span>
+<span id="cb109-36"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-36"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addGeneIntegrationMatrix</span>(</span>
+<span id="cb109-37"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-37"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
+<span id="cb109-38"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-38"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>,</span>
+<span id="cb109-39"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-39"></a>    <span class="dt">matrixName =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>,</span>
+<span id="cb109-40"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-40"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
+<span id="cb109-41"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-41"></a>    <span class="dt">seRNA =</span> seRNA,</span>
+<span id="cb109-42"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-42"></a>    <span class="dt">addToArrow =</span> <span class="ot">FALSE</span>, </span>
+<span id="cb109-43"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-43"></a>    <span class="dt">groupList =</span> groupList, <span class="co">#Constrain List</span></span>
+<span id="cb109-44"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-44"></a>    <span class="dt">groupRNA =</span> <span class="st">&quot;BioClassification&quot;</span>,</span>
+<span id="cb109-45"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-45"></a>    <span class="dt">nameCell =</span> <span class="st">&quot;predictedCell_Co&quot;</span>, <span class="co">#Name of column where cell from scRNA is matched to each cell</span></span>
+<span id="cb109-46"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-46"></a>    <span class="dt">nameGroup =</span> <span class="st">&quot;predictedGroup_Co&quot;</span>, <span class="co">#Name of column where group from scRNA is matched to each cell</span></span>
+<span id="cb109-47"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-47"></a>    <span class="dt">nameScore =</span> <span class="st">&quot;predictedScore_Co&quot;</span> <span class="co">#Name of column where prediction score from scRNA</span></span>
+<span id="cb109-48"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb109-48"></a>)</span></code></pre></div>
 <p>Compare results</p>
-<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb87-1"></a>pal &lt;-<span class="st"> </span><span class="kw">paletteDiscrete</span>(<span class="dt">values =</span> <span class="kw">colData</span>(seRNA)<span class="op">$</span>BioClassification)</span>
-<span id="cb87-2"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb87-2"></a>pal</span>
-<span id="cb87-3"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb87-3"></a><span class="co">#         01_HSC 02_Early.Eryth  03_Late.Eryth  04_Early.Baso    05_CMP.LMPP </span></span>
-<span id="cb87-4"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb87-4"></a><span class="co">#      &quot;#D51F26&quot;      &quot;#502A59&quot;      &quot;#235D55&quot;      &quot;#3D6E57&quot;      &quot;#8D2B8B&quot; </span></span>
-<span id="cb87-5"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb87-5"></a><span class="co">#       06_CLP.1         07_GMP    08_GMP.Neut         09_pDC         10_cDC </span></span>
-<span id="cb87-6"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb87-6"></a><span class="co">#      &quot;#DE6C3E&quot;      &quot;#F9B712&quot;      &quot;#D8CE42&quot;      &quot;#8E9ACD&quot;      &quot;#B774B1&quot; </span></span>
-<span id="cb87-7"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb87-7"></a><span class="co"># 11_CD14.Mono.1 12_CD14.Mono.2   13_CD16.Mono         14_Unk       15_CLP.2 </span></span>
-<span id="cb87-8"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb87-8"></a><span class="co">#      &quot;#D69FC8&quot;      &quot;#C7C8DE&quot;      &quot;#8FD3D4&quot;      &quot;#89C86E&quot;      &quot;#CC9672&quot; </span></span>
-<span id="cb87-9"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb87-9"></a><span class="co">#       16_Pre.B           17_B      18_Plasma       19_CD8.N      20_CD4.N1 </span></span>
-<span id="cb87-10"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb87-10"></a><span class="co">#      &quot;#CF7E96&quot;      &quot;#A27AA4&quot;      &quot;#CD4F32&quot;      &quot;#6B977E&quot;      &quot;#518AA3&quot; </span></span>
-<span id="cb87-11"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb87-11"></a><span class="co">#      21_CD4.N2       22_CD4.M      23_CD8.EM      24_CD8.CM          25_NK </span></span>
-<span id="cb87-12"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb87-12"></a><span class="co">#      &quot;#5A5297&quot;      &quot;#0F707D&quot;      &quot;#5E2E32&quot;      &quot;#A95A3C&quot;      &quot;#B28D5C&quot; </span></span>
-<span id="cb87-13"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb87-13"></a><span class="co">#         26_Unk </span></span>
-<span id="cb87-14"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb87-14"></a><span class="co">#      &quot;#3D3D3D&quot;</span></span></code></pre></div>
-<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb88-1"></a>p1 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
-<span id="cb88-2"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb88-2"></a>    projHeme2, </span>
-<span id="cb88-3"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb88-3"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, </span>
-<span id="cb88-4"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb88-4"></a>    <span class="dt">name =</span> <span class="st">&quot;predictedGroup_Un&quot;</span>, </span>
-<span id="cb88-5"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb88-5"></a>    <span class="dt">pal =</span> pal</span>
-<span id="cb88-6"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb88-6"></a>)</span>
-<span id="cb88-7"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb88-7"></a>p1</span></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb110-1"></a>pal &lt;-<span class="st"> </span><span class="kw">paletteDiscrete</span>(<span class="dt">values =</span> <span class="kw">colData</span>(seRNA)<span class="op">$</span>BioClassification)</span>
+<span id="cb110-2"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb110-2"></a>pal</span>
+<span id="cb110-3"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb110-3"></a><span class="co">#         01_HSC 02_Early.Eryth  03_Late.Eryth  04_Early.Baso    05_CMP.LMPP </span></span>
+<span id="cb110-4"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb110-4"></a><span class="co">#      &quot;#D51F26&quot;      &quot;#502A59&quot;      &quot;#235D55&quot;      &quot;#3D6E57&quot;      &quot;#8D2B8B&quot; </span></span>
+<span id="cb110-5"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb110-5"></a><span class="co">#       06_CLP.1         07_GMP    08_GMP.Neut         09_pDC         10_cDC </span></span>
+<span id="cb110-6"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb110-6"></a><span class="co">#      &quot;#DE6C3E&quot;      &quot;#F9B712&quot;      &quot;#D8CE42&quot;      &quot;#8E9ACD&quot;      &quot;#B774B1&quot; </span></span>
+<span id="cb110-7"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb110-7"></a><span class="co"># 11_CD14.Mono.1 12_CD14.Mono.2   13_CD16.Mono         14_Unk       15_CLP.2 </span></span>
+<span id="cb110-8"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb110-8"></a><span class="co">#      &quot;#D69FC8&quot;      &quot;#C7C8DE&quot;      &quot;#8FD3D4&quot;      &quot;#89C86E&quot;      &quot;#CC9672&quot; </span></span>
+<span id="cb110-9"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb110-9"></a><span class="co">#       16_Pre.B           17_B      18_Plasma       19_CD8.N      20_CD4.N1 </span></span>
+<span id="cb110-10"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb110-10"></a><span class="co">#      &quot;#CF7E96&quot;      &quot;#A27AA4&quot;      &quot;#CD4F32&quot;      &quot;#6B977E&quot;      &quot;#518AA3&quot; </span></span>
+<span id="cb110-11"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb110-11"></a><span class="co">#      21_CD4.N2       22_CD4.M      23_CD8.EM      24_CD8.CM          25_NK </span></span>
+<span id="cb110-12"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb110-12"></a><span class="co">#      &quot;#5A5297&quot;      &quot;#0F707D&quot;      &quot;#5E2E32&quot;      &quot;#A95A3C&quot;      &quot;#B28D5C&quot; </span></span>
+<span id="cb110-13"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb110-13"></a><span class="co">#         26_Unk </span></span>
+<span id="cb110-14"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb110-14"></a><span class="co">#      &quot;#3D3D3D&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb111-1"></a>p1 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
+<span id="cb111-2"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb111-2"></a>    projHeme2, </span>
+<span id="cb111-3"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb111-3"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, </span>
+<span id="cb111-4"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb111-4"></a>    <span class="dt">name =</span> <span class="st">&quot;predictedGroup_Un&quot;</span>, </span>
+<span id="cb111-5"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb111-5"></a>    <span class="dt">pal =</span> pal</span>
+<span id="cb111-6"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb111-6"></a>)</span>
+<span id="cb111-7"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb111-7"></a>p1</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-RNA-Integration_1.png" width="600" height="600" /></p>
-<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb89-1"></a>p2 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
-<span id="cb89-2"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb89-2"></a>    projHeme2, </span>
-<span id="cb89-3"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb89-3"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, </span>
-<span id="cb89-4"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb89-4"></a>    <span class="dt">name =</span> <span class="st">&quot;predictedGroup_Co&quot;</span>, </span>
-<span id="cb89-5"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb89-5"></a>    <span class="dt">pal =</span> pal</span>
-<span id="cb89-6"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb89-6"></a>)</span>
-<span id="cb89-7"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb89-7"></a>p2</span></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb112-1"></a>p2 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
+<span id="cb112-2"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb112-2"></a>    projHeme2, </span>
+<span id="cb112-3"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb112-3"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, </span>
+<span id="cb112-4"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb112-4"></a>    <span class="dt">name =</span> <span class="st">&quot;predictedGroup_Co&quot;</span>, </span>
+<span id="cb112-5"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb112-5"></a>    <span class="dt">pal =</span> pal</span>
+<span id="cb112-6"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb112-6"></a>)</span>
+<span id="cb112-7"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb112-7"></a>p2</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-RNA-Integration_2.png" width="600" height="600" /></p>
 <p>To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
 nice looking.</p>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb90-1"></a><span class="kw">plotPDF</span>(p1,p2, <span class="dt">name =</span> <span class="st">&quot;Plot-UMAP-RNA-Integration.pdf&quot;</span>, <span class="dt">ArchRProj =</span> projHeme2, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="labeling-scatac-cells-with-scrna-clusters.html#cb113-1"></a><span class="kw">plotPDF</span>(p1,p2, <span class="dt">name =</span> <span class="st">&quot;Plot-UMAP-RNA-Integration.pdf&quot;</span>, <span class="dt">ArchRProj =</span> projHeme2, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>)</span></code></pre></div>
 </div>
             </section>
 

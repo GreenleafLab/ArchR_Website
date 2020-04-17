@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-15" />
+<meta name="date" content="2020-04-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -268,14 +268,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="images/doubletRemoval.png" width="450" /></p>
 <p>By default ArchR uses the doublet parameters described in the ArchR manuscript. This is likely a good place to start but we encourage all users to inspect the pre- and post-doublet removal data to understand how doublet removal is affecting the cells. We show some of the main adjustable features below to illustrate how this can be customized to a given application.</p>
 <p>In ArchR, doublet removal is performed in a single step using <code>addDoubletScores()</code>.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="inferring-scatac-seq-doublets-with-archr.html#cb13-1"></a><span class="co">#Add Infered Doublet Scores to each Arrow File (~2-5 min per sample)</span></span>
-<span id="cb13-2"><a href="inferring-scatac-seq-doublets-with-archr.html#cb13-2"></a><span class="co">#Try ?addDoubletScores to see further documentation on parameters for doublet identification.</span></span>
-<span id="cb13-3"><a href="inferring-scatac-seq-doublets-with-archr.html#cb13-3"></a>doubScores &lt;-<span class="st"> </span><span class="kw">addDoubletScores</span>(</span>
-<span id="cb13-4"><a href="inferring-scatac-seq-doublets-with-archr.html#cb13-4"></a>    <span class="dt">input =</span> ArrowFiles,</span>
-<span id="cb13-5"><a href="inferring-scatac-seq-doublets-with-archr.html#cb13-5"></a>    <span class="dt">k =</span> <span class="dv">10</span>, <span class="co">#Refers to how many cells near a &quot;pseudo-doublet&quot; to count.</span></span>
-<span id="cb13-6"><a href="inferring-scatac-seq-doublets-with-archr.html#cb13-6"></a>    <span class="dt">knnMethod =</span> <span class="st">&quot;UMAP&quot;</span>, <span class="co">#Refers to embedding to use for nearest neighbor search with doublet projection.</span></span>
-<span id="cb13-7"><a href="inferring-scatac-seq-doublets-with-archr.html#cb13-7"></a>    <span class="dt">LSIMethod =</span> <span class="dv">1</span></span>
-<span id="cb13-8"><a href="inferring-scatac-seq-doublets-with-archr.html#cb13-8"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="inferring-scatac-seq-doublets-with-archr.html#cb21-1"></a><span class="co">#Add Infered Doublet Scores to each Arrow File (~2-5 min per sample)</span></span>
+<span id="cb21-2"><a href="inferring-scatac-seq-doublets-with-archr.html#cb21-2"></a><span class="co">#Try ?addDoubletScores to see further documentation on parameters for doublet identification.</span></span>
+<span id="cb21-3"><a href="inferring-scatac-seq-doublets-with-archr.html#cb21-3"></a>doubScores &lt;-<span class="st"> </span><span class="kw">addDoubletScores</span>(</span>
+<span id="cb21-4"><a href="inferring-scatac-seq-doublets-with-archr.html#cb21-4"></a>    <span class="dt">input =</span> ArrowFiles,</span>
+<span id="cb21-5"><a href="inferring-scatac-seq-doublets-with-archr.html#cb21-5"></a>    <span class="dt">k =</span> <span class="dv">10</span>, <span class="co">#Refers to how many cells near a &quot;pseudo-doublet&quot; to count.</span></span>
+<span id="cb21-6"><a href="inferring-scatac-seq-doublets-with-archr.html#cb21-6"></a>    <span class="dt">knnMethod =</span> <span class="st">&quot;UMAP&quot;</span>, <span class="co">#Refers to embedding to use for nearest neighbor search with doublet projection.</span></span>
+<span id="cb21-7"><a href="inferring-scatac-seq-doublets-with-archr.html#cb21-7"></a>    <span class="dt">LSIMethod =</span> <span class="dv">1</span></span>
+<span id="cb21-8"><a href="inferring-scatac-seq-doublets-with-archr.html#cb21-8"></a>)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; ArchR logging to : ArchRLogs/ArchR-addDoubletScores-e60f2395c3f7-Date-2020-04-15_Time-09-28-44.log<br />
+&gt;&gt; If there is an issue, please report to github with logFile!<br />
+&gt;&gt; 2020-04-15 09:28:44 : Batch Execution w/ safelapply!, 0 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:28:44 : scATAC_BMMC_R1 (1 of 3) : Computing Doublet Statistics, 0.001 mins elapsed.<br />
+&gt;&gt; scATAC_BMMC_R1 (1 of 3) : UMAP Projection R^2 = 0.9736<br />
+&gt;&gt; scATAC_BMMC_R1 (1 of 3) : UMAP Projection R^2 = 0.9736<br />
+&gt;&gt; 2020-04-15 09:31:15 : scATAC_CD34_BMMC_R1 (2 of 3) : Computing Doublet Statistics, 2.511 mins elapsed.<br />
+&gt;&gt; scATAC_CD34_BMMC_R1 (2 of 3) : UMAP Projection R^2 = 0.99046<br />
+&gt;&gt; scATAC_CD34_BMMC_R1 (2 of 3) : UMAP Projection R^2 = 0.99046<br />
+&gt;&gt; 2020-04-15 09:32:40 : scATAC_PBMC_R1 (3 of 3) : Computing Doublet Statistics, 3.936 mins elapsed.<br />
+&gt;&gt; scATAC_PBMC_R1 (3 of 3) : UMAP Projection R^2 = 0.97507<br />
+&gt;&gt; scATAC_PBMC_R1 (3 of 3) : UMAP Projection R^2 = 0.97507<br />
+&gt;&gt; ArchR logging successful to : ArchRLogs/ArchR-addDoubletScores-e60f2395c3f7-Date-2020-04-15_Time-09-28-44.log</p>
+</blockquote>
 <p>This command will create plots in the “QualityControl” directory. There are 3 plots associated with each of your samples in this folder: </br>
 1. <strong>Doublet Enrichments</strong> - These represent the enrichment of simulated doublets nearby each single cell compared to the expected if we assume a uniform distribution. </br></p>
 <ol start="2" style="list-style-type: decimal">
@@ -297,7 +312,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <img src="images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Doublet-Summary_2.png" width="250" height="250" />
 <img src="images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Doublet-Summary_3.png" width="250" height="250" /></p>
 <p></br></p>
-<p>QQQ - I would have liked to see a pre- and post- doublet removal UMAP here so that we can illustrate what happens.</p>
 </div>
             </section>
 

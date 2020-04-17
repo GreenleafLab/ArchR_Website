@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-15" />
+<meta name="date" content="2020-04-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -264,62 +264,62 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="custom-deviations" class="section level2" number="12.3">
 <h2><span class="header-section-number">12.3</span> Custom Deviations</h2>
 <p>If you have not added motif annotations</p>
-<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="custom-deviations.html#cb167-1"></a><span class="co">#Custom Peak Annotations</span></span>
-<span id="cb167-2"><a href="custom-deviations.html#cb167-2"></a>EncodePeaks &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
-<span id="cb167-3"><a href="custom-deviations.html#cb167-3"></a>  <span class="dt">Encode_K562_GATA1 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF632NQI/@@download/ENCFF632NQI.bed.gz&quot;</span>,</span>
-<span id="cb167-4"><a href="custom-deviations.html#cb167-4"></a>  <span class="dt">Encode_GM12878_CEBPB =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF761MGJ/@@download/ENCFF761MGJ.bed.gz&quot;</span>,</span>
-<span id="cb167-5"><a href="custom-deviations.html#cb167-5"></a>  <span class="dt">Encode_K562_Ebf1 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF868VSY/@@download/ENCFF868VSY.bed.gz&quot;</span>,</span>
-<span id="cb167-6"><a href="custom-deviations.html#cb167-6"></a>  <span class="dt">Encode_K562_Pax5 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF339KUO/@@download/ENCFF339KUO.bed.gz&quot;</span></span>
-<span id="cb167-7"><a href="custom-deviations.html#cb167-7"></a>)</span>
-<span id="cb167-8"><a href="custom-deviations.html#cb167-8"></a><span class="cf">if</span>(<span class="st">&quot;ChIP&quot;</span> <span class="op">%ni%</span><span class="st"> </span><span class="kw">names</span>(projHeme5<span class="op">@</span>peakAnnotation)){</span>
-<span id="cb167-9"><a href="custom-deviations.html#cb167-9"></a>    projHeme5 &lt;-<span class="st"> </span><span class="kw">addPeakAnnotations</span>(<span class="dt">ArchRProj =</span> projHeme5, <span class="dt">regions =</span> EncodePeaks, <span class="dt">name =</span> <span class="st">&quot;ChIP&quot;</span>)</span>
-<span id="cb167-10"><a href="custom-deviations.html#cb167-10"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="custom-deviations.html#cb190-1"></a><span class="co">#Custom Peak Annotations</span></span>
+<span id="cb190-2"><a href="custom-deviations.html#cb190-2"></a>EncodePeaks &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb190-3"><a href="custom-deviations.html#cb190-3"></a>  <span class="dt">Encode_K562_GATA1 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF632NQI/@@download/ENCFF632NQI.bed.gz&quot;</span>,</span>
+<span id="cb190-4"><a href="custom-deviations.html#cb190-4"></a>  <span class="dt">Encode_GM12878_CEBPB =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF761MGJ/@@download/ENCFF761MGJ.bed.gz&quot;</span>,</span>
+<span id="cb190-5"><a href="custom-deviations.html#cb190-5"></a>  <span class="dt">Encode_K562_Ebf1 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF868VSY/@@download/ENCFF868VSY.bed.gz&quot;</span>,</span>
+<span id="cb190-6"><a href="custom-deviations.html#cb190-6"></a>  <span class="dt">Encode_K562_Pax5 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF339KUO/@@download/ENCFF339KUO.bed.gz&quot;</span></span>
+<span id="cb190-7"><a href="custom-deviations.html#cb190-7"></a>)</span>
+<span id="cb190-8"><a href="custom-deviations.html#cb190-8"></a><span class="cf">if</span>(<span class="st">&quot;ChIP&quot;</span> <span class="op">%ni%</span><span class="st"> </span><span class="kw">names</span>(projHeme5<span class="op">@</span>peakAnnotation)){</span>
+<span id="cb190-9"><a href="custom-deviations.html#cb190-9"></a>    projHeme5 &lt;-<span class="st"> </span><span class="kw">addPeakAnnotations</span>(<span class="dt">ArchRProj =</span> projHeme5, <span class="dt">regions =</span> EncodePeaks, <span class="dt">name =</span> <span class="st">&quot;ChIP&quot;</span>)</span>
+<span id="cb190-10"><a href="custom-deviations.html#cb190-10"></a>}</span></code></pre></div>
 <p>Add ChromVAR Deviations for Motifs</p>
-<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="custom-deviations.html#cb168-1"></a>projHeme5 &lt;-<span class="st"> </span><span class="kw">addDeviationsMatrix</span>(</span>
-<span id="cb168-2"><a href="custom-deviations.html#cb168-2"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>
-<span id="cb168-3"><a href="custom-deviations.html#cb168-3"></a>  <span class="dt">peakAnnotation =</span> <span class="st">&quot;ChIP&quot;</span>,</span>
-<span id="cb168-4"><a href="custom-deviations.html#cb168-4"></a>  <span class="dt">force =</span> <span class="ot">TRUE</span></span>
-<span id="cb168-5"><a href="custom-deviations.html#cb168-5"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="custom-deviations.html#cb191-1"></a>projHeme5 &lt;-<span class="st"> </span><span class="kw">addDeviationsMatrix</span>(</span>
+<span id="cb191-2"><a href="custom-deviations.html#cb191-2"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb191-3"><a href="custom-deviations.html#cb191-3"></a>  <span class="dt">peakAnnotation =</span> <span class="st">&quot;ChIP&quot;</span>,</span>
+<span id="cb191-4"><a href="custom-deviations.html#cb191-4"></a>  <span class="dt">force =</span> <span class="ot">TRUE</span></span>
+<span id="cb191-5"><a href="custom-deviations.html#cb191-5"></a>)</span></code></pre></div>
 <p>Plot Variable Motif Annotations</p>
-<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="custom-deviations.html#cb169-1"></a>plotVarDev &lt;-<span class="st"> </span><span class="kw">getVarDeviations</span>(projHeme5, <span class="dt">plot =</span> <span class="ot">TRUE</span>, <span class="dt">name =</span> <span class="st">&quot;ChIPMatrix&quot;</span>)</span>
-<span id="cb169-2"><a href="custom-deviations.html#cb169-2"></a><span class="co"># DataFrame with 4 rows and 6 columns</span></span>
-<span id="cb169-3"><a href="custom-deviations.html#cb169-3"></a><span class="co">#    seqnames     idx                 name      combinedVars        combinedMeans</span></span>
-<span id="cb169-4"><a href="custom-deviations.html#cb169-4"></a><span class="co">#       &lt;Rle&gt; &lt;array&gt;              &lt;array&gt;         &lt;numeric&gt;            &lt;numeric&gt;</span></span>
-<span id="cb169-5"><a href="custom-deviations.html#cb169-5"></a><span class="co"># f1        z       1    Encode_K562_GATA1  6.19256551652079  -0.0229048763845575</span></span>
-<span id="cb169-6"><a href="custom-deviations.html#cb169-6"></a><span class="co"># f3        z       3     Encode_K562_Ebf1  3.31156290837234   0.0394899516880888</span></span>
-<span id="cb169-7"><a href="custom-deviations.html#cb169-7"></a><span class="co"># f4        z       4     Encode_K562_Pax5  2.93016136274537 -0.00867706262058369</span></span>
-<span id="cb169-8"><a href="custom-deviations.html#cb169-8"></a><span class="co"># f2        z       2 Encode_GM12878_CEBPB 0.779863387389073  0.00919359271019273</span></span>
-<span id="cb169-9"><a href="custom-deviations.html#cb169-9"></a>plotVarDev</span></code></pre></div>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="custom-deviations.html#cb192-1"></a>plotVarDev &lt;-<span class="st"> </span><span class="kw">getVarDeviations</span>(projHeme5, <span class="dt">plot =</span> <span class="ot">TRUE</span>, <span class="dt">name =</span> <span class="st">&quot;ChIPMatrix&quot;</span>)</span>
+<span id="cb192-2"><a href="custom-deviations.html#cb192-2"></a><span class="co"># DataFrame with 4 rows and 6 columns</span></span>
+<span id="cb192-3"><a href="custom-deviations.html#cb192-3"></a><span class="co">#    seqnames     idx                 name      combinedVars        combinedMeans</span></span>
+<span id="cb192-4"><a href="custom-deviations.html#cb192-4"></a><span class="co">#       &lt;Rle&gt; &lt;array&gt;              &lt;array&gt;         &lt;numeric&gt;            &lt;numeric&gt;</span></span>
+<span id="cb192-5"><a href="custom-deviations.html#cb192-5"></a><span class="co"># f1        z       1    Encode_K562_GATA1  6.19256551652079  -0.0229048763845575</span></span>
+<span id="cb192-6"><a href="custom-deviations.html#cb192-6"></a><span class="co"># f3        z       3     Encode_K562_Ebf1  3.31156290837234   0.0394899516880888</span></span>
+<span id="cb192-7"><a href="custom-deviations.html#cb192-7"></a><span class="co"># f4        z       4     Encode_K562_Pax5  2.93016136274537 -0.00867706262058369</span></span>
+<span id="cb192-8"><a href="custom-deviations.html#cb192-8"></a><span class="co"># f2        z       2 Encode_GM12878_CEBPB 0.779863387389073  0.00919359271019273</span></span>
+<span id="cb192-9"><a href="custom-deviations.html#cb192-9"></a>plotVarDev</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Variable-ATAC-Deviation-Scores_1.png" width="500" height="500" /></p>
 <p>We can then plot this as a nice PDF</p>
-<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="custom-deviations.html#cb170-1"></a><span class="kw">plotPDF</span>(plotVarDev, <span class="dt">name =</span> <span class="st">&quot;Variable-ChIP-Deviation-Scores&quot;</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>, <span class="dt">ArchRProj =</span> projHeme5, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="custom-deviations.html#cb193-1"></a><span class="kw">plotPDF</span>(plotVarDev, <span class="dt">name =</span> <span class="st">&quot;Variable-ChIP-Deviation-Scores&quot;</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>, <span class="dt">ArchRProj =</span> projHeme5, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 <p>To get deviation z-scores</p>
-<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="custom-deviations.html#cb171-1"></a>markerChIP &lt;-<span class="st"> </span><span class="kw">getFeatures</span>(projHeme5, <span class="dt">useMatrix =</span> <span class="st">&quot;ChIPMatrix&quot;</span>)</span>
-<span id="cb171-2"><a href="custom-deviations.html#cb171-2"></a>markerChIP &lt;-<span class="st"> </span><span class="kw">sort</span>(<span class="kw">grep</span>(<span class="st">&quot;z:&quot;</span>, markerChIP, <span class="dt">value =</span> <span class="ot">TRUE</span>))</span>
-<span id="cb171-3"><a href="custom-deviations.html#cb171-3"></a>markerChIP</span>
-<span id="cb171-4"><a href="custom-deviations.html#cb171-4"></a><span class="co"># [1] &quot;z:Encode_GM12878_CEBPB&quot; &quot;z:Encode_K562_Ebf1&quot;     &quot;z:Encode_K562_GATA1&quot;   </span></span>
-<span id="cb171-5"><a href="custom-deviations.html#cb171-5"></a><span class="co"># [4] &quot;z:Encode_K562_Pax5&quot;    </span></span></code></pre></div>
-<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="custom-deviations.html#cb172-1"></a>p &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
-<span id="cb172-2"><a href="custom-deviations.html#cb172-2"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
-<span id="cb172-3"><a href="custom-deviations.html#cb172-3"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;ChIPMatrix&quot;</span>, </span>
-<span id="cb172-4"><a href="custom-deviations.html#cb172-4"></a>    <span class="dt">name =</span> markerChIP, </span>
-<span id="cb172-5"><a href="custom-deviations.html#cb172-5"></a>    <span class="dt">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
-<span id="cb172-6"><a href="custom-deviations.html#cb172-6"></a>    <span class="dt">imputeWeights =</span> <span class="kw">getImputeWeights</span>(projHeme5)</span>
-<span id="cb172-7"><a href="custom-deviations.html#cb172-7"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="custom-deviations.html#cb194-1"></a>markerChIP &lt;-<span class="st"> </span><span class="kw">getFeatures</span>(projHeme5, <span class="dt">useMatrix =</span> <span class="st">&quot;ChIPMatrix&quot;</span>)</span>
+<span id="cb194-2"><a href="custom-deviations.html#cb194-2"></a>markerChIP &lt;-<span class="st"> </span><span class="kw">sort</span>(<span class="kw">grep</span>(<span class="st">&quot;z:&quot;</span>, markerChIP, <span class="dt">value =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb194-3"><a href="custom-deviations.html#cb194-3"></a>markerChIP</span>
+<span id="cb194-4"><a href="custom-deviations.html#cb194-4"></a><span class="co"># [1] &quot;z:Encode_GM12878_CEBPB&quot; &quot;z:Encode_K562_Ebf1&quot;     &quot;z:Encode_K562_GATA1&quot;   </span></span>
+<span id="cb194-5"><a href="custom-deviations.html#cb194-5"></a><span class="co"># [4] &quot;z:Encode_K562_Pax5&quot;    </span></span></code></pre></div>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="custom-deviations.html#cb195-1"></a>p &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
+<span id="cb195-2"><a href="custom-deviations.html#cb195-2"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb195-3"><a href="custom-deviations.html#cb195-3"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;ChIPMatrix&quot;</span>, </span>
+<span id="cb195-4"><a href="custom-deviations.html#cb195-4"></a>    <span class="dt">name =</span> markerChIP, </span>
+<span id="cb195-5"><a href="custom-deviations.html#cb195-5"></a>    <span class="dt">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
+<span id="cb195-6"><a href="custom-deviations.html#cb195-6"></a>    <span class="dt">imputeWeights =</span> <span class="kw">getImputeWeights</span>(projHeme5)</span>
+<span id="cb195-7"><a href="custom-deviations.html#cb195-7"></a>)</span></code></pre></div>
 <p>To plot all motifs we can use cowplot</p>
-<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="custom-deviations.html#cb173-1"></a><span class="co">#Rearrange for grid plotting</span></span>
-<span id="cb173-2"><a href="custom-deviations.html#cb173-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
-<span id="cb173-3"><a href="custom-deviations.html#cb173-3"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb173-4"><a href="custom-deviations.html#cb173-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
-<span id="cb173-5"><a href="custom-deviations.html#cb173-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
-<span id="cb173-6"><a href="custom-deviations.html#cb173-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
-<span id="cb173-7"><a href="custom-deviations.html#cb173-7"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb173-8"><a href="custom-deviations.html#cb173-8"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb173-9"><a href="custom-deviations.html#cb173-9"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb173-10"><a href="custom-deviations.html#cb173-10"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
-<span id="cb173-11"><a href="custom-deviations.html#cb173-11"></a>    )</span>
-<span id="cb173-12"><a href="custom-deviations.html#cb173-12"></a>})</span>
-<span id="cb173-13"><a href="custom-deviations.html#cb173-13"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">2</span>),p2))</span></code></pre></div>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="custom-deviations.html#cb196-1"></a><span class="co">#Rearrange for grid plotting</span></span>
+<span id="cb196-2"><a href="custom-deviations.html#cb196-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
+<span id="cb196-3"><a href="custom-deviations.html#cb196-3"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb196-4"><a href="custom-deviations.html#cb196-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
+<span id="cb196-5"><a href="custom-deviations.html#cb196-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
+<span id="cb196-6"><a href="custom-deviations.html#cb196-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
+<span id="cb196-7"><a href="custom-deviations.html#cb196-7"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb196-8"><a href="custom-deviations.html#cb196-8"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb196-9"><a href="custom-deviations.html#cb196-9"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb196-10"><a href="custom-deviations.html#cb196-10"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
+<span id="cb196-11"><a href="custom-deviations.html#cb196-11"></a>    )</span>
+<span id="cb196-12"><a href="custom-deviations.html#cb196-12"></a>})</span>
+<span id="cb196-13"><a href="custom-deviations.html#cb196-13"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">2</span>),p2))</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-MarkerChIP-W-Imputation_1.png" width="800" height="800" /></p>
 </div>
             </section>

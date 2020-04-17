@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-15" />
+<meta name="date" content="2020-04-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -268,47 +268,47 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <img src="images/iterativeLSI.png" width="350" />
 </center>
 <p>To perform iterative LSI in ArchR, we use the <code>addIterativeLSI()</code> function. The default parameters which should cover most cases but we encourage you to explore the available parameters and how they each affect your particular data set. See <code>?addIterativeLSI</code> for more details on inputs.</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="iterative-latent-semantic-indexing-lsi.html#cb38-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addIterativeLSI</span>(</span>
-<span id="cb38-2"><a href="iterative-latent-semantic-indexing-lsi.html#cb38-2"></a>    <span class="dt">ArchRProj =</span> projHeme2,</span>
-<span id="cb38-3"><a href="iterative-latent-semantic-indexing-lsi.html#cb38-3"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;TileMatrix&quot;</span>, </span>
-<span id="cb38-4"><a href="iterative-latent-semantic-indexing-lsi.html#cb38-4"></a>    <span class="dt">name =</span> <span class="st">&quot;IterativeLSI&quot;</span>, </span>
-<span id="cb38-5"><a href="iterative-latent-semantic-indexing-lsi.html#cb38-5"></a>    <span class="dt">iterations =</span> <span class="dv">2</span>, </span>
-<span id="cb38-6"><a href="iterative-latent-semantic-indexing-lsi.html#cb38-6"></a>    <span class="dt">clusterParams =</span> <span class="kw">list</span>( <span class="co">#See Seurat::FindClusters</span></span>
-<span id="cb38-7"><a href="iterative-latent-semantic-indexing-lsi.html#cb38-7"></a>        <span class="dt">resolution =</span> <span class="kw">c</span>(<span class="fl">0.2</span>), </span>
-<span id="cb38-8"><a href="iterative-latent-semantic-indexing-lsi.html#cb38-8"></a>        <span class="dt">sampleCells =</span> <span class="dv">10000</span>, </span>
-<span id="cb38-9"><a href="iterative-latent-semantic-indexing-lsi.html#cb38-9"></a>        <span class="dt">n.start =</span> <span class="dv">10</span></span>
-<span id="cb38-10"><a href="iterative-latent-semantic-indexing-lsi.html#cb38-10"></a>    ), </span>
-<span id="cb38-11"><a href="iterative-latent-semantic-indexing-lsi.html#cb38-11"></a>    <span class="dt">varFeatures =</span> <span class="dv">25000</span>, </span>
-<span id="cb38-12"><a href="iterative-latent-semantic-indexing-lsi.html#cb38-12"></a>    <span class="dt">dimsToUse =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">30</span></span>
-<span id="cb38-13"><a href="iterative-latent-semantic-indexing-lsi.html#cb38-13"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="iterative-latent-semantic-indexing-lsi.html#cb61-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addIterativeLSI</span>(</span>
+<span id="cb61-2"><a href="iterative-latent-semantic-indexing-lsi.html#cb61-2"></a>    <span class="dt">ArchRProj =</span> projHeme2,</span>
+<span id="cb61-3"><a href="iterative-latent-semantic-indexing-lsi.html#cb61-3"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;TileMatrix&quot;</span>, </span>
+<span id="cb61-4"><a href="iterative-latent-semantic-indexing-lsi.html#cb61-4"></a>    <span class="dt">name =</span> <span class="st">&quot;IterativeLSI&quot;</span>, </span>
+<span id="cb61-5"><a href="iterative-latent-semantic-indexing-lsi.html#cb61-5"></a>    <span class="dt">iterations =</span> <span class="dv">2</span>, </span>
+<span id="cb61-6"><a href="iterative-latent-semantic-indexing-lsi.html#cb61-6"></a>    <span class="dt">clusterParams =</span> <span class="kw">list</span>( <span class="co">#See Seurat::FindClusters</span></span>
+<span id="cb61-7"><a href="iterative-latent-semantic-indexing-lsi.html#cb61-7"></a>        <span class="dt">resolution =</span> <span class="kw">c</span>(<span class="fl">0.2</span>), </span>
+<span id="cb61-8"><a href="iterative-latent-semantic-indexing-lsi.html#cb61-8"></a>        <span class="dt">sampleCells =</span> <span class="dv">10000</span>, </span>
+<span id="cb61-9"><a href="iterative-latent-semantic-indexing-lsi.html#cb61-9"></a>        <span class="dt">n.start =</span> <span class="dv">10</span></span>
+<span id="cb61-10"><a href="iterative-latent-semantic-indexing-lsi.html#cb61-10"></a>    ), </span>
+<span id="cb61-11"><a href="iterative-latent-semantic-indexing-lsi.html#cb61-11"></a>    <span class="dt">varFeatures =</span> <span class="dv">25000</span>, </span>
+<span id="cb61-12"><a href="iterative-latent-semantic-indexing-lsi.html#cb61-12"></a>    <span class="dt">dimsToUse =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">30</span></span>
+<span id="cb61-13"><a href="iterative-latent-semantic-indexing-lsi.html#cb61-13"></a>)</span></code></pre></div>
 <p>If you see downstream that you have subtle batch effects, another option is to add more LSI iterations and to start from a lower intial clustering resolution as shown below. Additionally the number of variable features can be lowered to increase focus on the more variable features. QQQ would be nice to see an example of what these batch effects look like and how this corrects them</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="iterative-latent-semantic-indexing-lsi.html#cb39-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addIterativeLSI</span>(</span>
-<span id="cb39-2"><a href="iterative-latent-semantic-indexing-lsi.html#cb39-2"></a>    <span class="dt">ArchRProj =</span> projHeme2,</span>
-<span id="cb39-3"><a href="iterative-latent-semantic-indexing-lsi.html#cb39-3"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;TileMatrix&quot;</span>, </span>
-<span id="cb39-4"><a href="iterative-latent-semantic-indexing-lsi.html#cb39-4"></a>    <span class="dt">name =</span> <span class="st">&quot;IterativeLSI2&quot;</span>, </span>
-<span id="cb39-5"><a href="iterative-latent-semantic-indexing-lsi.html#cb39-5"></a>    <span class="dt">iterations =</span> <span class="dv">4</span>, </span>
-<span id="cb39-6"><a href="iterative-latent-semantic-indexing-lsi.html#cb39-6"></a>    <span class="dt">clusterParams =</span> <span class="kw">list</span>( <span class="co">#See Seurat::FindClusters</span></span>
-<span id="cb39-7"><a href="iterative-latent-semantic-indexing-lsi.html#cb39-7"></a>        <span class="dt">resolution =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.4</span>), </span>
-<span id="cb39-8"><a href="iterative-latent-semantic-indexing-lsi.html#cb39-8"></a>        <span class="dt">sampleCells =</span> <span class="dv">10000</span>, </span>
-<span id="cb39-9"><a href="iterative-latent-semantic-indexing-lsi.html#cb39-9"></a>        <span class="dt">n.start =</span> <span class="dv">10</span></span>
-<span id="cb39-10"><a href="iterative-latent-semantic-indexing-lsi.html#cb39-10"></a>    ), </span>
-<span id="cb39-11"><a href="iterative-latent-semantic-indexing-lsi.html#cb39-11"></a>    <span class="dt">varFeatures =</span> <span class="dv">15000</span>, </span>
-<span id="cb39-12"><a href="iterative-latent-semantic-indexing-lsi.html#cb39-12"></a>    <span class="dt">dimsToUse =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">30</span></span>
-<span id="cb39-13"><a href="iterative-latent-semantic-indexing-lsi.html#cb39-13"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="iterative-latent-semantic-indexing-lsi.html#cb62-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addIterativeLSI</span>(</span>
+<span id="cb62-2"><a href="iterative-latent-semantic-indexing-lsi.html#cb62-2"></a>    <span class="dt">ArchRProj =</span> projHeme2,</span>
+<span id="cb62-3"><a href="iterative-latent-semantic-indexing-lsi.html#cb62-3"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;TileMatrix&quot;</span>, </span>
+<span id="cb62-4"><a href="iterative-latent-semantic-indexing-lsi.html#cb62-4"></a>    <span class="dt">name =</span> <span class="st">&quot;IterativeLSI2&quot;</span>, </span>
+<span id="cb62-5"><a href="iterative-latent-semantic-indexing-lsi.html#cb62-5"></a>    <span class="dt">iterations =</span> <span class="dv">4</span>, </span>
+<span id="cb62-6"><a href="iterative-latent-semantic-indexing-lsi.html#cb62-6"></a>    <span class="dt">clusterParams =</span> <span class="kw">list</span>( <span class="co">#See Seurat::FindClusters</span></span>
+<span id="cb62-7"><a href="iterative-latent-semantic-indexing-lsi.html#cb62-7"></a>        <span class="dt">resolution =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.4</span>), </span>
+<span id="cb62-8"><a href="iterative-latent-semantic-indexing-lsi.html#cb62-8"></a>        <span class="dt">sampleCells =</span> <span class="dv">10000</span>, </span>
+<span id="cb62-9"><a href="iterative-latent-semantic-indexing-lsi.html#cb62-9"></a>        <span class="dt">n.start =</span> <span class="dv">10</span></span>
+<span id="cb62-10"><a href="iterative-latent-semantic-indexing-lsi.html#cb62-10"></a>    ), </span>
+<span id="cb62-11"><a href="iterative-latent-semantic-indexing-lsi.html#cb62-11"></a>    <span class="dt">varFeatures =</span> <span class="dv">15000</span>, </span>
+<span id="cb62-12"><a href="iterative-latent-semantic-indexing-lsi.html#cb62-12"></a>    <span class="dt">dimsToUse =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">30</span></span>
+<span id="cb62-13"><a href="iterative-latent-semantic-indexing-lsi.html#cb62-13"></a>)</span></code></pre></div>
 <p>For the purposes of this tutorial, we will compute the iterative LSI for the <code>ArchRProject</code> that still contains doublets.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="iterative-latent-semantic-indexing-lsi.html#cb40-1"></a>projHeme1 &lt;-<span class="st"> </span><span class="kw">addIterativeLSI</span>(</span>
-<span id="cb40-2"><a href="iterative-latent-semantic-indexing-lsi.html#cb40-2"></a>    <span class="dt">ArchRProj =</span> projHeme1,</span>
-<span id="cb40-3"><a href="iterative-latent-semantic-indexing-lsi.html#cb40-3"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;TileMatrix&quot;</span>, </span>
-<span id="cb40-4"><a href="iterative-latent-semantic-indexing-lsi.html#cb40-4"></a>    <span class="dt">name =</span> <span class="st">&quot;IterativeLSI&quot;</span>, </span>
-<span id="cb40-5"><a href="iterative-latent-semantic-indexing-lsi.html#cb40-5"></a>    <span class="dt">iterations =</span> <span class="dv">2</span>, </span>
-<span id="cb40-6"><a href="iterative-latent-semantic-indexing-lsi.html#cb40-6"></a>    <span class="dt">clusterParams =</span> <span class="kw">list</span>( <span class="co">#See Seurat::FindClusters</span></span>
-<span id="cb40-7"><a href="iterative-latent-semantic-indexing-lsi.html#cb40-7"></a>        <span class="dt">resolution =</span> <span class="kw">c</span>(<span class="fl">0.2</span>), </span>
-<span id="cb40-8"><a href="iterative-latent-semantic-indexing-lsi.html#cb40-8"></a>        <span class="dt">sampleCells =</span> <span class="dv">10000</span>, </span>
-<span id="cb40-9"><a href="iterative-latent-semantic-indexing-lsi.html#cb40-9"></a>        <span class="dt">n.start =</span> <span class="dv">10</span></span>
-<span id="cb40-10"><a href="iterative-latent-semantic-indexing-lsi.html#cb40-10"></a>    ), </span>
-<span id="cb40-11"><a href="iterative-latent-semantic-indexing-lsi.html#cb40-11"></a>    <span class="dt">varFeatures =</span> <span class="dv">25000</span>, </span>
-<span id="cb40-12"><a href="iterative-latent-semantic-indexing-lsi.html#cb40-12"></a>    <span class="dt">dimsToUse =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">30</span></span>
-<span id="cb40-13"><a href="iterative-latent-semantic-indexing-lsi.html#cb40-13"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="iterative-latent-semantic-indexing-lsi.html#cb63-1"></a>projHeme1 &lt;-<span class="st"> </span><span class="kw">addIterativeLSI</span>(</span>
+<span id="cb63-2"><a href="iterative-latent-semantic-indexing-lsi.html#cb63-2"></a>    <span class="dt">ArchRProj =</span> projHeme1,</span>
+<span id="cb63-3"><a href="iterative-latent-semantic-indexing-lsi.html#cb63-3"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;TileMatrix&quot;</span>, </span>
+<span id="cb63-4"><a href="iterative-latent-semantic-indexing-lsi.html#cb63-4"></a>    <span class="dt">name =</span> <span class="st">&quot;IterativeLSI&quot;</span>, </span>
+<span id="cb63-5"><a href="iterative-latent-semantic-indexing-lsi.html#cb63-5"></a>    <span class="dt">iterations =</span> <span class="dv">2</span>, </span>
+<span id="cb63-6"><a href="iterative-latent-semantic-indexing-lsi.html#cb63-6"></a>    <span class="dt">clusterParams =</span> <span class="kw">list</span>( <span class="co">#See Seurat::FindClusters</span></span>
+<span id="cb63-7"><a href="iterative-latent-semantic-indexing-lsi.html#cb63-7"></a>        <span class="dt">resolution =</span> <span class="kw">c</span>(<span class="fl">0.2</span>), </span>
+<span id="cb63-8"><a href="iterative-latent-semantic-indexing-lsi.html#cb63-8"></a>        <span class="dt">sampleCells =</span> <span class="dv">10000</span>, </span>
+<span id="cb63-9"><a href="iterative-latent-semantic-indexing-lsi.html#cb63-9"></a>        <span class="dt">n.start =</span> <span class="dv">10</span></span>
+<span id="cb63-10"><a href="iterative-latent-semantic-indexing-lsi.html#cb63-10"></a>    ), </span>
+<span id="cb63-11"><a href="iterative-latent-semantic-indexing-lsi.html#cb63-11"></a>    <span class="dt">varFeatures =</span> <span class="dv">25000</span>, </span>
+<span id="cb63-12"><a href="iterative-latent-semantic-indexing-lsi.html#cb63-12"></a>    <span class="dt">dimsToUse =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">30</span></span>
+<span id="cb63-13"><a href="iterative-latent-semantic-indexing-lsi.html#cb63-13"></a>)</span></code></pre></div>
 </div>
             </section>
 

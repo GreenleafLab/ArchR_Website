@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-15" />
+<meta name="date" content="2020-04-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -263,51 +263,51 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="marker-genes-imputation-with-magic" class="section level2" number="7.3">
 <h2><span class="header-section-number">7.3</span> Marker Genes Imputation with Magic</h2>
-<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="marker-genes-imputation-with-magic.html#cb74-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addImputeWeights</span>(projHeme2)</span>
-<span id="cb74-2"><a href="marker-genes-imputation-with-magic.html#cb74-2"></a><span class="co"># 2020-02-15 00:15:35 : Computing Impute Weights Using Magic (Cell 2018), 0 mins elapsed..</span></span>
-<span id="cb74-3"><a href="marker-genes-imputation-with-magic.html#cb74-3"></a><span class="co"># 2020-02-15 00:15:35 : Computing Partial Diffusion Matrix with Magic (1 of 2), 0 mins elapsed..</span></span>
-<span id="cb74-4"><a href="marker-genes-imputation-with-magic.html#cb74-4"></a><span class="co"># 2020-02-15 00:15:37 : Computing Partial Diffusion Matrix with Magic (2 of 2), 0.047 mins elapsed..</span></span>
-<span id="cb74-5"><a href="marker-genes-imputation-with-magic.html#cb74-5"></a><span class="co"># 2020-02-15 00:15:41 : Completed Getting Magic Weights (Size = 0.197 GB)!, 0.112 mins elapsed..</span></span></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="marker-genes-imputation-with-magic.html#cb97-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addImputeWeights</span>(projHeme2)</span>
+<span id="cb97-2"><a href="marker-genes-imputation-with-magic.html#cb97-2"></a><span class="co"># 2020-02-15 00:15:35 : Computing Impute Weights Using Magic (Cell 2018), 0 mins elapsed..</span></span>
+<span id="cb97-3"><a href="marker-genes-imputation-with-magic.html#cb97-3"></a><span class="co"># 2020-02-15 00:15:35 : Computing Partial Diffusion Matrix with Magic (1 of 2), 0 mins elapsed..</span></span>
+<span id="cb97-4"><a href="marker-genes-imputation-with-magic.html#cb97-4"></a><span class="co"># 2020-02-15 00:15:37 : Computing Partial Diffusion Matrix with Magic (2 of 2), 0.047 mins elapsed..</span></span>
+<span id="cb97-5"><a href="marker-genes-imputation-with-magic.html#cb97-5"></a><span class="co"># 2020-02-15 00:15:41 : Completed Getting Magic Weights (Size = 0.197 GB)!, 0.112 mins elapsed..</span></span></code></pre></div>
 <p>Now lets see how this effects our marker gene scores overlayed on our 2-d embedding.</p>
-<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="marker-genes-imputation-with-magic.html#cb75-1"></a>markerGenes  &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
-<span id="cb75-2"><a href="marker-genes-imputation-with-magic.html#cb75-2"></a>    <span class="st">&quot;CD34&quot;</span>,  <span class="co">#Early Progenitor</span></span>
-<span id="cb75-3"><a href="marker-genes-imputation-with-magic.html#cb75-3"></a>    <span class="st">&quot;GATA1&quot;</span>, <span class="co">#Erythroid</span></span>
-<span id="cb75-4"><a href="marker-genes-imputation-with-magic.html#cb75-4"></a>    <span class="st">&quot;PAX5&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="st">&quot;MME&quot;</span>, <span class="co">#B-Cell Trajectory</span></span>
-<span id="cb75-5"><a href="marker-genes-imputation-with-magic.html#cb75-5"></a>    <span class="st">&quot;CD14&quot;</span>, <span class="st">&quot;MPO&quot;</span>, <span class="co">#Monocytes</span></span>
-<span id="cb75-6"><a href="marker-genes-imputation-with-magic.html#cb75-6"></a>    <span class="st">&quot;CD3D&quot;</span>, <span class="st">&quot;CD8A&quot;</span><span class="co">#TCells</span></span>
-<span id="cb75-7"><a href="marker-genes-imputation-with-magic.html#cb75-7"></a>  )</span>
-<span id="cb75-8"><a href="marker-genes-imputation-with-magic.html#cb75-8"></a></span>
-<span id="cb75-9"><a href="marker-genes-imputation-with-magic.html#cb75-9"></a>p &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
-<span id="cb75-10"><a href="marker-genes-imputation-with-magic.html#cb75-10"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
-<span id="cb75-11"><a href="marker-genes-imputation-with-magic.html#cb75-11"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>, </span>
-<span id="cb75-12"><a href="marker-genes-imputation-with-magic.html#cb75-12"></a>    <span class="dt">name =</span> markerGenes, </span>
-<span id="cb75-13"><a href="marker-genes-imputation-with-magic.html#cb75-13"></a>    <span class="dt">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
-<span id="cb75-14"><a href="marker-genes-imputation-with-magic.html#cb75-14"></a>    <span class="dt">imputeWeights =</span> <span class="kw">getImputeWeights</span>(projHeme2)</span>
-<span id="cb75-15"><a href="marker-genes-imputation-with-magic.html#cb75-15"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="marker-genes-imputation-with-magic.html#cb98-1"></a>markerGenes  &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb98-2"><a href="marker-genes-imputation-with-magic.html#cb98-2"></a>    <span class="st">&quot;CD34&quot;</span>,  <span class="co">#Early Progenitor</span></span>
+<span id="cb98-3"><a href="marker-genes-imputation-with-magic.html#cb98-3"></a>    <span class="st">&quot;GATA1&quot;</span>, <span class="co">#Erythroid</span></span>
+<span id="cb98-4"><a href="marker-genes-imputation-with-magic.html#cb98-4"></a>    <span class="st">&quot;PAX5&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="st">&quot;MME&quot;</span>, <span class="co">#B-Cell Trajectory</span></span>
+<span id="cb98-5"><a href="marker-genes-imputation-with-magic.html#cb98-5"></a>    <span class="st">&quot;CD14&quot;</span>, <span class="st">&quot;MPO&quot;</span>, <span class="co">#Monocytes</span></span>
+<span id="cb98-6"><a href="marker-genes-imputation-with-magic.html#cb98-6"></a>    <span class="st">&quot;CD3D&quot;</span>, <span class="st">&quot;CD8A&quot;</span><span class="co">#TCells</span></span>
+<span id="cb98-7"><a href="marker-genes-imputation-with-magic.html#cb98-7"></a>  )</span>
+<span id="cb98-8"><a href="marker-genes-imputation-with-magic.html#cb98-8"></a></span>
+<span id="cb98-9"><a href="marker-genes-imputation-with-magic.html#cb98-9"></a>p &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
+<span id="cb98-10"><a href="marker-genes-imputation-with-magic.html#cb98-10"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
+<span id="cb98-11"><a href="marker-genes-imputation-with-magic.html#cb98-11"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>, </span>
+<span id="cb98-12"><a href="marker-genes-imputation-with-magic.html#cb98-12"></a>    <span class="dt">name =</span> markerGenes, </span>
+<span id="cb98-13"><a href="marker-genes-imputation-with-magic.html#cb98-13"></a>    <span class="dt">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
+<span id="cb98-14"><a href="marker-genes-imputation-with-magic.html#cb98-14"></a>    <span class="dt">imputeWeights =</span> <span class="kw">getImputeWeights</span>(projHeme2)</span>
+<span id="cb98-15"><a href="marker-genes-imputation-with-magic.html#cb98-15"></a>)</span></code></pre></div>
 <p>To plot a specific gene try</p>
-<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="marker-genes-imputation-with-magic.html#cb76-1"></a>p<span class="op">$</span>CD14</span></code></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="marker-genes-imputation-with-magic.html#cb99-1"></a>p<span class="op">$</span>CD14</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-Marker-Genes-W-Imputation_6.png" width="800" height="800" /></p>
 <p>To plot all genes we can use cowplot</p>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="marker-genes-imputation-with-magic.html#cb77-1"></a><span class="co">#Rearrange for grid plotting</span></span>
-<span id="cb77-2"><a href="marker-genes-imputation-with-magic.html#cb77-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
-<span id="cb77-3"><a href="marker-genes-imputation-with-magic.html#cb77-3"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb77-4"><a href="marker-genes-imputation-with-magic.html#cb77-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
-<span id="cb77-5"><a href="marker-genes-imputation-with-magic.html#cb77-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
-<span id="cb77-6"><a href="marker-genes-imputation-with-magic.html#cb77-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
-<span id="cb77-7"><a href="marker-genes-imputation-with-magic.html#cb77-7"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb77-8"><a href="marker-genes-imputation-with-magic.html#cb77-8"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb77-9"><a href="marker-genes-imputation-with-magic.html#cb77-9"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb77-10"><a href="marker-genes-imputation-with-magic.html#cb77-10"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
-<span id="cb77-11"><a href="marker-genes-imputation-with-magic.html#cb77-11"></a>    )</span>
-<span id="cb77-12"><a href="marker-genes-imputation-with-magic.html#cb77-12"></a>})</span>
-<span id="cb77-13"><a href="marker-genes-imputation-with-magic.html#cb77-13"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>),p2))</span></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="marker-genes-imputation-with-magic.html#cb100-1"></a><span class="co">#Rearrange for grid plotting</span></span>
+<span id="cb100-2"><a href="marker-genes-imputation-with-magic.html#cb100-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
+<span id="cb100-3"><a href="marker-genes-imputation-with-magic.html#cb100-3"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb100-4"><a href="marker-genes-imputation-with-magic.html#cb100-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
+<span id="cb100-5"><a href="marker-genes-imputation-with-magic.html#cb100-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
+<span id="cb100-6"><a href="marker-genes-imputation-with-magic.html#cb100-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
+<span id="cb100-7"><a href="marker-genes-imputation-with-magic.html#cb100-7"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb100-8"><a href="marker-genes-imputation-with-magic.html#cb100-8"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb100-9"><a href="marker-genes-imputation-with-magic.html#cb100-9"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb100-10"><a href="marker-genes-imputation-with-magic.html#cb100-10"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
+<span id="cb100-11"><a href="marker-genes-imputation-with-magic.html#cb100-11"></a>    )</span>
+<span id="cb100-12"><a href="marker-genes-imputation-with-magic.html#cb100-12"></a>})</span>
+<span id="cb100-13"><a href="marker-genes-imputation-with-magic.html#cb100-13"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>),p2))</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-Markers-W-Imputation_1.png" width="800" height="800" /></p>
 <p>To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
 nice looking.</p>
-<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="marker-genes-imputation-with-magic.html#cb78-1"></a><span class="kw">plotPDF</span>(<span class="dt">plotList =</span> p, </span>
-<span id="cb78-2"><a href="marker-genes-imputation-with-magic.html#cb78-2"></a>    <span class="dt">name =</span> <span class="st">&quot;Plot-UMAP-Marker-Genes-W-Imputation.pdf&quot;</span>, </span>
-<span id="cb78-3"><a href="marker-genes-imputation-with-magic.html#cb78-3"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
-<span id="cb78-4"><a href="marker-genes-imputation-with-magic.html#cb78-4"></a>    <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="marker-genes-imputation-with-magic.html#cb101-1"></a><span class="kw">plotPDF</span>(<span class="dt">plotList =</span> p, </span>
+<span id="cb101-2"><a href="marker-genes-imputation-with-magic.html#cb101-2"></a>    <span class="dt">name =</span> <span class="st">&quot;Plot-UMAP-Marker-Genes-W-Imputation.pdf&quot;</span>, </span>
+<span id="cb101-3"><a href="marker-genes-imputation-with-magic.html#cb101-3"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
+<span id="cb101-4"><a href="marker-genes-imputation-with-magic.html#cb101-4"></a>    <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>)</span></code></pre></div>
 <p><a href="images/HemeWalkthrough/PDF/Plot-UMAP-Marker-Genes-W-Imputation.pdf">Download PDF : Plot-UMAP-Marker-Genes-W-Imputation.pdf</a></p>
 </div>
             </section>

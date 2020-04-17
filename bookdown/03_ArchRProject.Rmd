@@ -63,6 +63,17 @@ projHeme1 <- ArchRProject(
   copyArrows = TRUE #This is recommened so that if you modify the ArrowFiles you have an original copy for later usage.
 )
 ```
+>\>\> Using GeneAnnotation set by addArchRGenome(Hg19)!  
+>\>\> Using GeneAnnotation set by addArchRGenome(Hg19)!  
+>\>\> Validating Arrows...  
+>\>\> Getting SampleNames...  
+>\>\>   
+>\>\> Copying ArrowFiles to Ouptut Directory! If you want to save disk space set copyArrows = FALSE  
+>\>\> 1 2 3   
+>\>\> Getting Cell Metadata...  
+>\>\>   
+>\>\> Merging Cell Metadata...  
+>\>\> Initializing ArchRProject...  
 
 We call this `ArchRProject` "projHeme1" because it is the first iteration of our hematopoiesis project. Throughout this walkthrough we will modify and update this `ArchRProject` and keep track of which version of the project we are using by iterating the project number (i.e. "projHeme2").
 
@@ -70,16 +81,8 @@ Lets look at our `ArchRProject`:
 
 ```{r eval=FALSE}
 projHeme1
-# class: ArchRProject 
-# outputDirectory: /Volumes/JG_SSD_2/ArchR_Walkthrough/HemeTutorial 
-# samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1
-# sampleColData names(1): ArrowFiles
-# cellColData names(11): DoubletEnrichment DoubletScore ... Sample
-#   TSSEnrichment
-# numberOfCells(1): 10661
-# medianTSS(1): 16.832
-# medianFrags(1): 3050
 ```
+
 We can see from the above that our `ArchRProject` has been initialized with a few important attributes:
 
 1. The specified `outputDirectory`.
@@ -93,14 +96,12 @@ We can check how much memory is used to store the `ArchRProject` in memory withi
 
 ```{r eval=FALSE}
 paste0("Memory Size = ", round(object.size(projHeme1) / 10^6, 3), " MB")
-#[1] "Memory Size = 37.135 MB"
 ```
 
 We can also ask which data matrices are available within the `ArchRProject` which will be useful downstream once we start adding to this project:
 
 ```{r eval=FALSE}
 getAvailableMatrices(projHeme1)
-#[1] "GeneScoreMatrix" "TileMatrix" 
 ```
 
 
@@ -112,20 +113,16 @@ Now that we have created an `ArchRProject`, there are many things that we can do
 ```{r eval=FALSE}
 #A. Access cell names associated with each cell
 head(projHeme1$cellNames)
-# [1] "scATAC_BMMC_R1#TTATGTCAGTGATTAG-1" "scATAC_BMMC_R1#AAGATAGTCACCGCGA-1"
-# [3] "scATAC_BMMC_R1#GCATTGAAGATTCCGT-1" "scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1"
-# [5] "scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1" "scATAC_BMMC_R1#AGTTACGAGAACGTCG-1"
+```
 
+```{r eval=FALSE}
 #B. Access sample names associated with each cell
 head(projHeme1$Sample)
-# character-Rle of length 10661 with 3 runs
-#   Lengths:                  4932                  3275                  2454
-#   Values :      "scATAC_BMMC_R1" "scATAC_CD34_BMMC_R1"      "scATAC_PBMC_R1"
+```
 
+```{r eval=FALSE}
 #C. Access TSS Enrichment Scores for each cell
 quantile(projHeme1$TSSEnrichment)
-#    0%    25%    50%    75%   100% 
-# 4.027 13.922 16.832 19.937 41.782 
 ```
 
 <span style="font-size:20px;font-weight:bold">Example 2. Subsetting an `ArchRProject` by cells</span>
@@ -133,56 +130,25 @@ quantile(projHeme1$TSSEnrichment)
 ```{r eval=FALSE}
 #A. Subset the project numerically
 projHeme1[1:100, ] #First 100 cells
-# class: ArchRProject 
-# outputDirectory: /Volumes/JG_SSD_2/ArchR_Walkthrough/HemeTutorial 
-# samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1
-# sampleColData names(1): ArrowFiles
-# cellColData names(11): DoubletEnrichment DoubletScore ... Sample
-#   TSSEnrichment
-# numberOfCells(1): 100
-# medianTSS(1): 10.7725
-# medianFrags(1): 10200.5
+```
 
+```{r eval=FALSE}
 #B. Subset the project using cellNames
 projHeme1[projHeme1$cellNames[1:100], ]
-# class: ArchRProject 
-# outputDirectory: /Volumes/JG_SSD_2/ArchR_Walkthrough/HemeTutorial 
-# samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1
-# sampleColData names(1): ArrowFiles
-# cellColData names(11): DoubletEnrichment DoubletScore ... Sample
-#   TSSEnrichment
-# numberOfCells(1): 100
-# medianTSS(1): 10.7725
-# medianFrags(1): 10200.5
+```
 
-
+```{r eval=FALSE}
 #C. Subset the project to return all cells corresponding to a specific sample
 idxSample <- BiocGenerics::which(projHeme1$Sample %in% "scATAC_BMMC_R1")
 cellsSample <- projHeme1$cellNames[idxSample]
 projHeme1[cellsSample, ]
-# class: ArchRProject 
-# outputDirectory: /Volumes/JG_SSD_2/ArchR_Walkthrough/HemeTutorial 
-# samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1
-# sampleColData names(1): ArrowFiles
-# cellColData names(11): DoubletEnrichment DoubletScore ... Sample
-#   TSSEnrichment
-# numberOfCells(1): 4932
-# medianTSS(1): 15.254
-# medianFrags(1): 2771
+```
 
+```{r eval=FALSE}
 #D. Subset the project based on a specific TSS enrichment score cutoff
 idxPass <- which(projHeme1$TSSEnrichment >= 8)
 cellsPass <- projHeme1$cellNames[idxPass]
 projHeme1[cellsPass, ]
-# class: ArchRProject 
-# outputDirectory: /Volumes/JG_SSD_2/ArchR_Walkthrough/HemeTutorial 
-# samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1
-# sampleColData names(1): ArrowFiles
-# cellColData names(11): DoubletEnrichment DoubletScore ... Sample
-#   TSSEnrichment
-# numberOfCells(1): 10500
-# medianTSS(1): 16.9275
-# medianFrags(1): 3042
 ```
 
 <span style="font-size:20px;font-weight:bold">Example 3. Adding data to an `ArchRProject`</span>
@@ -191,9 +157,9 @@ projHeme1[cellsPass, ]
 #Add a column to cellColData that contains more legible sample names by removing excess info from the original sample names
 bioNames <- gsub("_R2|_R1|scATAC_","",projHeme1$Sample)
 bioNames
-# character-Rle of length 10661 with 3 runs
-#   Lengths:        4932        3275        2454
-#   Values :      "BMMC" "CD34_BMMC"      "PBMC"
+```
+
+```{r eval=FALSE}
 projHeme1$bioNames <- bioNames
 
 #Add a column to cellColData that only contains information for a subset of cells
@@ -204,20 +170,6 @@ projHeme1 <- addCellColData(ArchRProj = projHeme1, data = paste0(bioNames),
 
 #We can compare these two columns to see "NA" filled in where data wasnt available for bioNames2
 getCellColData(projHeme1, select = c("bioNames", "bioNames2"))
-# DataFrame with 10661 rows and 2 columns
-#                                      bioNames   bioNames2
-#                                   <character> <character>
-# scATAC_BMMC_R1#TTATGTCAGTGATTAG-1        BMMC        BMMC
-# scATAC_BMMC_R1#AAGATAGTCACCGCGA-1        BMMC        BMMC
-# scATAC_BMMC_R1#GCATTGAAGATTCCGT-1        BMMC        BMMC
-# scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1        BMMC        BMMC
-# scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1        BMMC        BMMC
-# ...                                       ...         ...
-# scATAC_PBMC_R1#GCTGCGAAGATCCGAG-1        PBMC          NA
-# scATAC_PBMC_R1#GCAGCTGGTGGCCTTG-1        PBMC          NA
-# scATAC_PBMC_R1#GCAGATTGTACGCAAG-1        PBMC          NA
-# scATAC_PBMC_R1#TTCGTTACATTGAACC-1        PBMC          NA
-# scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1        PBMC          NA
 ```
 
 <span style="font-size:20px;font-weight:bold">Example 4. Obtaining unique fragment counts</span>
@@ -227,39 +179,13 @@ getCellColData(projHeme1, select = c("bioNames", "bioNames2"))
 #nuclear (non-mitochondrial) fragments per cell
 df <- getCellColData(projHeme1, select = "nFrags")
 df
-# DataFrame with 10661 rows and 1 column
-#                                      nFrags
-#                                   <numeric>
-# scATAC_BMMC_R1#TTATGTCAGTGATTAG-1     26189
-# scATAC_BMMC_R1#AAGATAGTCACCGCGA-1     20648
-# scATAC_BMMC_R1#GCATTGAAGATTCCGT-1     18991
-# scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1     18296
-# scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1     17458
-# ...                                     ...
-# scATAC_PBMC_R1#GCTGCGAAGATCCGAG-1      1038
-# scATAC_PBMC_R1#GCAGCTGGTGGCCTTG-1      1037
-# scATAC_PBMC_R1#GCAGATTGTACGCAAG-1      1033
-# scATAC_PBMC_R1#TTCGTTACATTGAACC-1      1033
-# scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1      1002
+```
 
+```{r eval=FALSE}
 #Or, instead of selecting a column by name, we can actually perform operations on a given
 #column using its column name
 df <- getCellColData(projHeme1, select = c("log10(nFrags)", "nFrags - 1"))
 df
-# DataFrame with 10661 rows and 2 columns
-#                                      log10(nFrags) nFrags - 1
-#                                          <numeric>  <numeric>
-# scATAC_BMMC_R1#TTATGTCAGTGATTAG-1  4.4181189156542      26188
-# scATAC_BMMC_R1#AAGATAGTCACCGCGA-1 4.31487799153581      20647
-# scATAC_BMMC_R1#GCATTGAAGATTCCGT-1 4.27854783377585      18990
-# scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1 4.26235615159869      18295
-# scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1 4.24199448915678      17457
-# ...                                            ...        ...
-# scATAC_PBMC_R1#GCTGCGAAGATCCGAG-1 3.01619735351244       1037
-# scATAC_PBMC_R1#GCAGCTGGTGGCCTTG-1 3.01577875638904       1036
-# scATAC_PBMC_R1#GCAGATTGTACGCAAG-1 3.01410032151962       1032
-# scATAC_PBMC_R1#TTCGTTACATTGAACC-1 3.01410032151962       1032
-# scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1 3.00086772153123       1001
 ```
 
 <span style="font-size:20px;font-weight:bold">Example 5. Plotting QC metrics - log10(Unique Fragments) vs TSS enrichment score</span>
@@ -267,20 +193,6 @@ df
 ```{r eval=FALSE}
 df <- getCellColData(projHeme1, select = c("log10(nFrags)", "TSSEnrichment"))
 df
-# DataFrame with 10661 rows and 2 columns
-#                                      log10(nFrags) TSSEnrichment
-#                                          <numeric>     <numeric>
-# scATAC_BMMC_R1#TTATGTCAGTGATTAG-1  4.4181189156542         7.149
-# scATAC_BMMC_R1#AAGATAGTCACCGCGA-1 4.31487799153581         7.911
-# scATAC_BMMC_R1#GCATTGAAGATTCCGT-1 4.27854783377585         4.505
-# scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1 4.26235615159869         6.946
-# scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1 4.24199448915678         4.799
-# ...                                            ...           ...
-# scATAC_PBMC_R1#GCTGCGAAGATCCGAG-1 3.01619735351244        24.356
-# scATAC_PBMC_R1#GCAGCTGGTGGCCTTG-1 3.01577875638904        22.537
-# scATAC_PBMC_R1#GCAGATTGTACGCAAG-1 3.01410032151962        20.146
-# scATAC_PBMC_R1#TTCGTTACATTGAACC-1 3.01410032151962        30.198
-# scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1 3.00086772153123        21.485
 ```
 
 Now lets plot the number of unique nuclear fragments (log10) by the TSS enrichment score. This type of plot is
@@ -334,6 +246,9 @@ p1 <- plotGroups(
     name = "TSSEnrichment",
     plotAs = "ridges"
    )
+```
+
+```{r eval=FALSE}
 p1
 ```
 
@@ -360,6 +275,9 @@ p2 <- plotGroups(
     alpha = 0.4,
     addBoxPlot = TRUE
    )
+```
+
+```{r eval=FALSE}
 p2
 ```
 
@@ -382,6 +300,9 @@ p3 <- plotGroups(
     name = "log10(nFrags)",
     plotAs = "ridges"
    )
+```
+
+```{r eval=FALSE}
 p3
 ```
 
@@ -406,6 +327,9 @@ p4 <- plotGroups(
     alpha = 0.4,
     addBoxPlot = TRUE
    )
+```
+
+```{r eval=FALSE}
 p4
 ```
 
@@ -487,32 +411,20 @@ After we have added information on the predicted doublets using `addDoubletScore
 ```{r eval=FALSE}
 #Remove doublets as normal
 projHeme2 <- filterDoublets(projHeme1)
-# Filtering 410 cells from ArchRProject!
-# 	scATAC_BMMC_R1 : 243 of 4932 (4.9%)
-# 	scATAC_CD34_BMMC_R1 : 107 of 3275 (3.3%)
-# 	scATAC_PBMC_R1 : 60 of 2454 (2.4%)
+```
 
+```{r eval=FALSE}
 #Lets see the project now
 projHeme2
-# class: ArchRProject 
-# outputDirectory: /Volumes/JG_SSD_2/ArchR_Walkthrough/HemeTutorial 
-# samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1
-# sampleColData names(1): ArrowFiles
-# cellColData names(11): DoubletEnrichment DoubletScore ... Sample
-#   TSSEnrichment
-# numberOfCells(1): 10251
-# medianTSS(1): 16.851
-# medianFrags(1): 2994
 ```
 
 If you wanted to filter more cells from the ArchR Project, you would try a higher `filterRatio`. To see additional arguments that can be tweaked, try `?filterDoublets`.
 
 ```{r eval=FALSE}
 projHemeTmp <- filterDoublets(projHeme1, filterRatio = 1.5)
-# Filtering 614 cells from ArchRProject!
-# 	scATAC_BMMC_R1 : 364 of 4932 (7.4%)
-# 	scATAC_CD34_BMMC_R1 : 160 of 3275 (4.9%)
-# 	scATAC_PBMC_R1 : 90 of 2454 (3.7%)
+```
+
+```{r eval=FALSE}
 rm(projHemeTmp)
 ```
 
@@ -526,8 +438,9 @@ saveArchRProject(ArchRProj = projHeme1, outputDirectory = "Save-ProjHeme1", load
 
 ```{r eval=FALSE}
 Sys.Date()
+```
 
-
+```{r eval=FALSE}
 sessionInfo()
 ```
 
