@@ -1,17 +1,60 @@
-# Marker Genes with scATAC
+---
+title: "Chapter 07 - Marker Genes with ArchR"
+output:
+  html_document:
+    theme: yeti  # many options for theme, this one is my favorite.
+params:
+  threads: 20
+  rdata: ""
+  token: ""
+  ref: ""
+  out: ""
+---
 
 ```{r, include=FALSE, eval=FALSE}
-setwd("/Volumes/JG_SSD_2/ArchR_Walkthrough/")
-#load("Save-ArchR-Walkthrough-Chapter1-Feb13.Rdata")
-save.image("Save-ArchR-Walkthrough-Feb16-1317.Rdata")
+params2 <- params
+unlockBinding("params", env = .GlobalEnv)
+#load("Chapter-13-Footprints.Rdata")
+load(params$rdata)
+params <- params2
+rm(params2)
+devtools::install_github("GreenleafLab/ArchR", 
+  auth_token = params$token, 
+  ref = params$ref,
+  repos = BiocManager::repositories(),
+  dependencies = FALSE
+)
+library(ArchR)
+fn <- unclass(lsf.str(envir = asNamespace("ArchR"), all = TRUE))
+fn <- fn[!grepl("\\.", fn)]
+fn <- fn[fn!="ArchRProj"]
+for (i in seq_along(fn)){
+    tryCatch({
+        eval(parse(text = paste0(fn[i], "<-ArchR::", fn[i])))
+    }, error = function(x) {
+    })
+}
+addArchRThreads(threads = params$threads)
+addArchRGenome("hg19")
+# fn <- unclass(lsf.str(envir = asNamespace("ArchR"), all = TRUE))
+# fn <- fn[fn!="ArchRProj"]
+# for (i in seq_along(fn)) {
+#     tryCatch({
+#         eval(parse(text = paste0(fn[i], "<-ArchR:::", fn[i])))
+#     }, error = function(x) {
+#     })
+# }
+set.seed(1)
 ```
+
+# Marker Genes with ArchR
 
 ## Identification of Marker Genes
 
 Identify Marker Gene through Pairwise Test vs Bias-Matched Background
 
 ```{r eval=FALSE}
-markersGS <- markerFeatures(
+markersGS <- getMarkerFeatures(
     ArchRProj = projHeme2, 
     useMatrix = "GeneScoreMatrix", 
     groupBy = "Clusters",
@@ -19,25 +62,47 @@ markersGS <- markerFeatures(
     testMethod = "wilcoxon"
 )
 ```
+> \## ArchR logging to : ArchRLogs/ArchR-getMarkerFeatures-f4e4232fa80b-Date-2020-04-15_Time-10-04-48.log  
+## If there is an issue, please report to github with logFile!  
+## MatrixClass = Sparse.Double.Matrix  
+## 2020-04-15 10:04:49 : Matching Known Biases, 0.009 mins elapsed. 
+##   
+## ###########  
+## 2020-04-15 10:05:23 : Completed Pairwise Tests, 0.585 mins elapsed.  
+## ###########  
+## ArchR logging successful to : ArchRLogs/ArchR-getMarkerFeatures-f4e4232fa80b-Date-2020-04-15_Time-10-04-48.log  
 
 ```{r eval=FALSE}
 markerList <- getMarkers(markersGS, cutOff = "FDR <= 0.01 & Log2FC >= 1.25")
-markerList$Cluster4
-# DataFrame with 210 rows and 6 columns
-#       seqnames     start           name     idx           Log2FC
-#          <Rle>   <array>        <array> <array>        <numeric>
-# 14759    chr22  37545962          IL2RB     301 2.09731361787433
-# 6856     chr14  99737822         BCL11B     595 1.42193213075962
-# 13123     chr2 192038902          STAT4    1064 1.90075014141832
-# 12597     chr2  87035519           CD8A     538 1.96747880033344
-# 9299     chr17  34207377           CCL5     540 2.65385587389937
-# ...        ...       ...            ...     ...              ...
-# 1488      chr1 156182779           PMF1    1488 1.35708770978464
-# 22735     chrX 101854276 ARMCX5-GPRASP2     518 1.59283344451927
-# 19680     chr7  45144641        SNORA5C     318 1.27027443652085
-# 1856      chr1 196659182          CFHR4    1856 1.92661384224492
-# 17830     chr5 140739703        PCDHGB2     690 2.93899133419389
+markerList$C6
 ```
+> \## DataFrame with 291 rows and 9 columns  
+##       seqnames     start       end  strand         name     idx  
+##          <Rle>   <array>   <array> <array>      <array> <array>  
+## 8362     chr16  49891830  49524515       2       ZNF423     539  
+## 7025     chr14 105714879 105717430       1        BTBD6     764  
+## 8726     chr16  89043504  88941263       2      CBFA2T3     903  
+## 7024     chr14 105781914 105675623       2         BRF1     763  
+## 17158     chr5    997455    988425       2 LOC100506688      18  
+## ...        ...       ...       ...     ...          ...     ...  
+## 19084     chr6 119812467 119773712       2    LOC285762     925  
+## 18913     chr6  83072923  83077133       1         TPBG     754  
+## 12814     chr2 124782864 125672863       1      CNTNAP5     755  
+## 20390     chr7 150147962 150176483       1       GIMAP8    1028  
+## 7384     chr15  52569397  52569314       2      MIR1266     347  
+##                 Log2FC                  FDR          MeanDiff  
+##              <numeric>            <numeric>         <numeric>  
+## 8362  1.94888141545084 2.95473053609015e-21  2.08129078745695  
+## 7025  1.88748443360838 3.25360925877231e-15  2.29925343722754  
+## 8726   1.5858058377813 3.25360925877231e-15  2.11727644857422  
+## 7024  1.41061475820385 2.00400144783449e-14   1.9923490244715  
+## 17158 3.16686924437513 2.00400144783449e-14 0.693424444489265  
+## ...                ...                  ...               ...  
+## 19084 1.36625245611966  0.00853516274073803 0.211727000065234  
+## 18913 2.30499450627443  0.00854168013784213 0.544454051635953  
+## 12814 2.28305835231306  0.00893526022954534  0.82240450922043  
+## 20390 1.52933035478039  0.00910586862792073 0.516763460205267  
+## 7384  2.16292224987129  0.00986664274558125  0.22839476831448  
 
 We can then plot this as a heatmap
 
@@ -45,8 +110,9 @@ We can then plot this as a heatmap
 markerGenes  <- c(
     "CD34", #Early Progenitor
     "GATA1", #Erythroid
-    "PAX5", "MS4A1", #B-Cell Trajectory
-    "CD14", #Monocytes
+    "PAX5", "MS4A1", "EBF1", "MME", #B-Cell Trajectory
+    "CD14", "CEBPB", "MPO", #Monocytes
+    "IRF8", 
     "CD3D", "CD8A", "TBX21", "IL7R" #TCells
   )
 
@@ -56,17 +122,55 @@ heatmapGS <- markerHeatmap(
   labelMarkers = markerGenes,
   transpose = TRUE
 )
+```
+> \## Printing Top Marker Genes:  
+## C1:  
+##  PADI4, PADI6, CDA, LINC01226, TMEM61, RPE65, PIN1P1, GNAT2, HSD3BP4, SRGAP2D, SNX27, THEM5, S100A8, FCAMR, UCN3, MIR604, MIR938, MIR4679-2, OR56B4, OR52B2  
+## C2:  
+##  HES4, FHAD1, PLA2G2C, CELA3A, RHD, FGR, MYCL, BTBD19, TCTEX1D4, SLC5A9, L1TD1, PALMD, FRRS1, GPR88, MYBPHL, CASQ2, NHLH2, SLC22A15, CTSS, S100A11  
+## C3:  
+##  PLEKHM2, MIR4422, CLCA3P, LOC729970, ALG14, TMEM56, SLC16A4, FCRL3, AIM2, SLAMF6, C1orf220, MIR4424, RALGPS2, RHEX, FCMR, BPNT1, KMO, LINC00700, ARID5B, MIR548AV  
+## C4:  
+##  LINC01342, LINC01346, SERINC2, RIMS3, SLFNL1-AS1, EDN2, ROR1, C1orf141, CACNA1S, KLHDC8A, SLC16A9, MIR346, GLYATL2, FAM111B, OR5AN1, RAB30-AS1, BTG4, TEAD4, CD9, PIANP  
+## C5:  
+##  LRRC38, FAM131C, PLA2G2D, LOC653160, TSPAN1, TTC39A, GBP1P1, LOC100129046, HAO2, RORC, S100A5, S100A4, ILDR2, FMO1, ANGPTL1, LAD1, TNNI1, VASH2, GJC2, KCNK1  
+## C6:  
+##  TTLL10, ATP13A2, PAX7, CSMD2, MIR3659, TRABD2B, ERICH3, ABCA4, NTNG1, LOR, FAM189B, UCK2, PHLDA3, LEMD1, SERTAD4-AS1, ESRRG, TRIM67, LOC149373, C1orf131, DEPP1  
+## C7:  
+##  TNFRSF4, RUNX3, LEXM, IL12RB2, VCAM1, CHIA, BCL2L15, CD160, PDZK1, SH2D2A, NTRK1, PYHIN1, SLAMF7, FCGR3A, CD247, LOC100505918, FASLG, GAS5-AS1, ATP6V1G3, GREM2  
+## C8:  
+##  RCAN3, HPCAL4, ANKRD13C, HHLA3, ZRANB2, PLPPR5, PRMT6, AMIGO1, CHI3L2, CD2, PTGFRN, ACP6, NIT1, NUF2, MIR557, IL19, MIR1265, ANKRD26, ZEB1, ZEB1-AS1  
+## C9:  
+##  ESPN, MIR4252, RCAN3AS, HOOK1, ZNF37BP, ZNF239, SLC10A1, TMEM202, RRN3P1, TP53TG3D, MT1F, ZNF286B, FOXO3B, TRIM16L, PEX12, LOC729966, PDCD2L, ZNF283, ZNF610, TLX2  
+## C10:  
+##  MIR4689, HES2, NPPA-AS1, MFN2, FBLIM1, KLHDC7A, RPS14P3, FAM43B, MIR378F, GRHL3, TRIM63, GJB3, GJA4, EPHA10, RHBDL2, PPIE, RIMKLA, FAM183A, LINC00853, PDZK1IP1  
+## C11:  
+##  NPPA, SFTA1P, WT1-AS, MIR4488, LRRC10B, CACNA1C-AS4, LOC728739, CCNA1, LPO, MPO, TTR, PRTN3, ELANE, OR10H2, NCAN, OXER1, INSM1, BPIFA1, EMILIN3, COL9A3  
+## C12:  
+##  LINC02593, VWA1, CHD5, TMEM51-AS1, MFAP2, PADI3, HSPG2, C1QB, MIR4253, KIAA1522, C1orf94, LINC01343, KNCN, DMRTB1, CDCP2, ACOT11, ASB17, CYR61, SLC6A17, LOC643441  
+## Identified 2662 markers!  
+## Adding Annotations..  
+## Preparing Main Heatmap..  
 
+```{r eval=FALSE}
 draw(heatmapGS, heatmap_legend_side = "bot", annotation_legend_side = "bot")
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(heatmapGS, name = "GeneScores-Marker-Heatmap", width = 8, height = 6, ArchRProj = projHeme2, addDOC = FALSE)
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 ```
 
 ![](images/HemeWalkthrough/PNG/GeneScores-Marker-Heatmap_1.png){width=800 height=600}
 
-We can then plot this 
+We can then plot this to a pdf 
 
 ```{r eval=FALSE}
 plotPDF(heatmapGS, name = "GeneScores-Marker-Heatmap", width = 8, height = 6, ArchRProj = projHeme2, addDOC = FALSE)
 ```
+> \## [1] 0
 
 [Download PDF : GeneScores-Marker-Heatmap.pdf](images/HemeWalkthrough/PDF/GeneScores-Marker-Heatmap.pdf)
 
@@ -74,11 +178,11 @@ plotPDF(heatmapGS, name = "GeneScores-Marker-Heatmap", width = 8, height = 6, Ar
 
 ```{r eval=FALSE}
 markerGenes  <- c(
-    "CD34", #Early Progenitor
+    "CD34",  #Early Progenitor
     "GATA1", #Erythroid
-    "PAX5", "MS4A1", #B-Cell Trajectory
-    "CD14", #Monocytes
-    "CD3D", "CD8A", "TBX21", "IL7R" #TCells
+    "PAX5", "MS4A1", "MME", #B-Cell Trajectory
+    "CD14", "MPO", #Monocytes
+    "CD3D", "CD8A"#TCells
   )
 
 p <- plotEmbedding(
@@ -90,17 +194,27 @@ p <- plotEmbedding(
     imputeWeights = NULL
 )
 ```
+> \## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-f4e44c020f3e-Date-2020-04-15_Time-10-05-43.log  
+## If there is an issue, please report to github with logFile!  
+## Getting UMAP Embedding  
+## ColorBy = GeneScoreMatrix  
+## Getting Matrix Values...  
+## Getting Matrix Values...  
+##   
+## Plotting Embedding  
+## 1 2 3 4 5 6 7 8 9   
+## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-f4e44c020f3e-Date-2020-04-15_Time-10-05-43.log  
 
 To plot a specific gene try
 
-```{r, eval = FALSE}
+```{r, eval=FALSE}
 p$CD14
 ```
-![](images/HemeWalkthrough/PNG/Plot-UMAP-Marker-Genes-WO-Imputation_5.png){width=800 height=800}
+![](images/HemeWalkthrough/PNG/Plot-UMAP-Marker-Genes-WO-Imputation_6.png){width=800 height=800}
 
 To plot all genes we can use cowplot
 
-```{r, eval = FALSE}
+```{r, eval=FALSE}
 #Rearrange for grid plotting
 p2 <- lapply(p, function(x){
     x + guides(color = FALSE, fill = FALSE) + 
@@ -116,10 +230,7 @@ p2 <- lapply(p, function(x){
 do.call(cowplot::plot_grid, c(list(ncol = 3),p2))
 ```
 
-![](images/HemeWalkthrough/PNG/Plot-UMAP-Markers-WO-Imputation_1.png){width=800 height=800}
-
-
-```{r, include=FALSE, eval = FALSE}
+```{r, include=FALSE, eval=FALSE}
 plotPDF(
     do.call(cowplot::plot_grid, c(list(ncol = 3),p2)), 
     name = "Plot-UMAP-Markers-WO-Imputation.pdf", 
@@ -128,7 +239,13 @@ plotPDF(
     width = 10, 
     height = 10
 )
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 ```
+
+![](images/HemeWalkthrough/PNG/Plot-UMAP-Markers-WO-Imputation_1.png){width=800 height=800}
+
 
 To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
 nice looking.
@@ -139,6 +256,16 @@ plotPDF(plotList = p,
     ArchRProj = projHeme2, 
     addDOC = FALSE, width = 5, height = 5)
 ```
+> \## [1] "plotting ggplot!"  
+## [1] "plotting ggplot!"  
+## [1] "plotting ggplot!"  
+## [1] "plotting ggplot!"  
+## [1] "plotting ggplot!"  
+## [1] "plotting ggplot!"  
+## [1] "plotting ggplot!"  
+## [1] "plotting ggplot!"  
+## [1] "plotting ggplot!"  
+## [1] 0  
 
 [Download PDF : Plot-UMAP-Marker-Genes-WO-Imputation.pdf](images/HemeWalkthrough/PDF/Plot-UMAP-Marker-Genes-WO-Imputation.pdf)
 
@@ -146,21 +273,19 @@ plotPDF(plotList = p,
 
 ```{r eval=FALSE}
 projHeme2 <- addImputeWeights(projHeme2)
-# 2020-02-15 00:15:35 : Computing Impute Weights Using Magic (Cell 2018), 0 mins elapsed..
-# 2020-02-15 00:15:35 : Computing Partial Diffusion Matrix with Magic (1 of 2), 0 mins elapsed..
-# 2020-02-15 00:15:37 : Computing Partial Diffusion Matrix with Magic (2 of 2), 0.047 mins elapsed..
-# 2020-02-15 00:15:41 : Completed Getting Magic Weights (Size = 0.197 GB)!, 0.112 mins elapsed..
 ```
+> \## 2020-04-15 10:06:25 : Computing Impute Weights Using Magic (Cell 2018), 0 mins elapsed.  
+## 2020-04-15 10:06:36 : Completed Getting Magic Weights!, 0.19 mins elapsed.  
 
 Now lets see how this effects our marker gene scores overlayed on our 2-d embedding.
 
 ```{r eval=FALSE}
 markerGenes  <- c(
-    "CD34", #Early Progenitor
+    "CD34",  #Early Progenitor
     "GATA1", #Erythroid
-    "PAX5", "MS4A1", #B-Cell Trajectory
-    "CD14", #Monocytes
-    "CD3D", "CD8A", "TBX21", "IL7R" #TCells
+    "PAX5", "MS4A1", "MME", #B-Cell Trajectory
+    "CD14", "MPO", #Monocytes
+    "CD3D", "CD8A"#TCells
   )
 
 p <- plotEmbedding(
@@ -171,17 +296,32 @@ p <- plotEmbedding(
     imputeWeights = getImputeWeights(projHeme2)
 )
 ```
+> \## Getting ImputeWeights  
+## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-f4e41cd9b447-Date-2020-04-15_Time-10-06-36.log  
+## If there is an issue, please report to github with logFile!  
+## Getting UMAP Embedding  
+## ColorBy = GeneScoreMatrix  
+## Getting Matrix Values...  
+## Getting Matrix Values...  
+##   
+## Imputing Matrix  
+## Using weights on disk  
+## Using weights on disk  
+## Plotting Embedding  
+## 1 2 3 4 5 6 7 8 9   
+## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-f4e41cd9b447-Date-2020-04-15_Time-10-06-36.log  
 
 To plot a specific gene try
 
-```{r, eval = FALSE}
+```{r, eval=FALSE}
 p$CD14
 ```
-![](images/HemeWalkthrough/PNG/Plot-UMAP-Marker-Genes-W-Imputation_5.png){width=800 height=800}
+
+![](images/HemeWalkthrough/PNG/Plot-UMAP-Marker-Genes-W-Imputation_6.png){width=800 height=800}
 
 To plot all genes we can use cowplot
 
-```{r, eval = FALSE}
+```{r, eval=FALSE}
 #Rearrange for grid plotting
 p2 <- lapply(p, function(x){
     x + guides(color = FALSE, fill = FALSE) + 
@@ -197,9 +337,7 @@ p2 <- lapply(p, function(x){
 do.call(cowplot::plot_grid, c(list(ncol = 3),p2))
 ```
 
-![](images/HemeWalkthrough/PNG/Plot-UMAP-Markers-W-Imputation_1.png){width=800 height=800}
-
-```{r, include=FALSE, eval = FALSE}
+```{r, include=FALSE, eval=FALSE}
 plotPDF(
     do.call(cowplot::plot_grid, c(list(ncol = 3),p2)), 
     name = "Plot-UMAP-Markers-W-Imputation.pdf", 
@@ -208,7 +346,12 @@ plotPDF(
     width = 10, 
     height = 10
 )
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 ```
+
+![](images/HemeWalkthrough/PNG/Plot-UMAP-Markers-W-Imputation_1.png){width=800 height=800}
 
 To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
 nice looking.
@@ -219,6 +362,16 @@ plotPDF(plotList = p,
     ArchRProj = projHeme2, 
     addDOC = FALSE, width = 5, height = 5)
 ```
+> \## [1] "plotting ggplot!"  
+## [1] "plotting ggplot!"  
+## [1] "plotting ggplot!"  
+## [1] "plotting ggplot!"  
+## [1] "plotting ggplot!"  
+## [1] "plotting ggplot!"  
+## [1] "plotting ggplot!"  
+## [1] "plotting ggplot!"  
+## [1] "plotting ggplot!"  
+## [1] 0  
 
 [Download PDF : Plot-UMAP-Marker-Genes-W-Imputation.pdf](images/HemeWalkthrough/PDF/Plot-UMAP-Marker-Genes-W-Imputation.pdf)
 
@@ -240,34 +393,52 @@ p <- ArchRBrowserTrack(
     upstream = 50000,
     downstream = 50000
 )
-# 2020-02-15 00:23:11 : Adding Bulk Tracks (1 of 9), 0 mins elapsed..
-# 2020-02-15 00:23:12 : Adding Gene Tracks (1 of 9), 0.015 mins elapsed..
-# 2020-02-15 00:23:12 : Plotting, 0.018 mins elapsed..
-# 2020-02-15 00:23:13 : Adding Bulk Tracks (2 of 9), 0.045 mins elapsed..
-# 2020-02-15 00:23:14 : Adding Gene Tracks (2 of 9), 0.055 mins elapsed..
-# 2020-02-15 00:23:14 : Plotting, 0.058 mins elapsed..
-# 2020-02-15 00:23:16 : Adding Bulk Tracks (3 of 9), 0.08 mins elapsed..
-# 2020-02-15 00:23:16 : Adding Gene Tracks (3 of 9), 0.09 mins elapsed..
-# 2020-02-15 00:23:16 : Plotting, 0.095 mins elapsed..
-# 2020-02-15 00:23:18 : Adding Bulk Tracks (4 of 9), 0.12 mins elapsed..
-# 2020-02-15 00:23:19 : Adding Gene Tracks (4 of 9), 0.131 mins elapsed..
-# 2020-02-15 00:23:19 : Plotting, 0.135 mins elapsed..
-# 2020-02-15 00:23:20 : Adding Bulk Tracks (5 of 9), 0.153 mins elapsed..
-# 2020-02-15 00:23:21 : Adding Gene Tracks (5 of 9), 0.167 mins elapsed..
-# 2020-02-15 00:23:21 : Plotting, 0.171 mins elapsed..
-# 2020-02-15 00:23:22 : Adding Bulk Tracks (6 of 9), 0.195 mins elapsed..
-# 2020-02-15 00:23:23 : Adding Gene Tracks (6 of 9), 0.206 mins elapsed..
-# 2020-02-15 00:23:23 : Plotting, 0.209 mins elapsed..
-# 2020-02-15 00:23:25 : Adding Bulk Tracks (7 of 9), 0.234 mins elapsed..
-# 2020-02-15 00:23:26 : Adding Gene Tracks (7 of 9), 0.247 mins elapsed..
-# 2020-02-15 00:23:26 : Plotting, 0.25 mins elapsed..
-# 2020-02-15 00:23:27 : Adding Bulk Tracks (8 of 9), 0.278 mins elapsed..
-# 2020-02-15 00:23:28 : Adding Gene Tracks (8 of 9), 0.291 mins elapsed..
-# 2020-02-15 00:23:28 : Plotting, 0.294 mins elapsed..
-# 2020-02-15 00:23:30 : Adding Bulk Tracks (9 of 9), 0.326 mins elapsed..
-# 2020-02-15 00:23:31 : Adding Gene Tracks (9 of 9), 0.338 mins elapsed..
-# 2020-02-15 00:23:31 : Plotting, 0.341 mins elapsed..
 ```
+> \## ArchR logging to : ArchRLogs/ArchR-ArchRBrowserTrack-f4e46f9da45e-Date-2020-04-15_Time-10-07-24.log  
+## If there is an issue, please report to github with logFile!  
+## 2020-04-15 10:07:24 : Validating Region, 0.006 mins elapsed.  
+## GRanges object with 9 ranges and 2 metadata columns:   
+##       seqnames              ranges strand |     gene_id      symbol  
+##          <Rle>           <IRanges>  <Rle> | <character> <character>  
+##   [1]     chr1 208059883-208084683      - |         947        CD34  
+##   [2]     chrX   48644982-48652717      + |        2623       GATA1  
+##   [3]     chr9   36838531-37034476      - |        5079        PAX5  
+##   [4]    chr11   60223282-60238225      + |         931       MS4A1  
+##   [5]     chr5 140011313-140013286      - |         929        CD14  
+##   [6]    chr11 118209789-118213459      - |         915        CD3D  
+##   [7]     chr2   87011728-87035519      - |         925        CD8A  
+##   [8]    chr17   45810610-45823485      + |       30009       TBX21  
+##   [9]     chr5   35856977-35879705      + |        3575        IL7R  
+##   -------  
+##   seqinfo: 24 sequences from hg19 genome  
+## 2020-04-15 10:07:25 : Adding Bulk Tracks (1 of 9), 0.009 mins elapsed.  
+## 2020-04-15 10:07:27 : Adding Gene Tracks (1 of 9), 0.044 mins elapsed.  
+## 2020-04-15 10:07:27 : Plotting, 0.054 mins elapsed.  
+## 2020-04-15 10:07:29 : Adding Bulk Tracks (2 of 9), 0.09 mins elapsed.  
+## 2020-04-15 10:07:31 : Adding Gene Tracks (2 of 9), 0.108 mins elapsed.  
+## 2020-04-15 10:07:31 : Plotting, 0.117 mins elapsed.  
+## 2020-04-15 10:07:34 : Adding Bulk Tracks (3 of 9), 0.157 mins elapsed.  
+## 2020-04-15 10:07:35 : Adding Gene Tracks (3 of 9), 0.175 mins elapsed.  
+## 2020-04-15 10:07:35 : Plotting, 0.183 mins elapsed.  
+## 2020-04-15 10:07:37 : Adding Bulk Tracks (4 of 9), 0.221 mins elapsed.  
+## 2020-04-15 10:07:38 : Adding Gene Tracks (4 of 9), 0.239 mins elapsed.  
+## 2020-04-15 10:07:39 : Plotting, 0.249 mins elapsed.  
+## 2020-04-15 10:07:41 : Adding Bulk Tracks (5 of 9), 0.279 mins elapsed.  
+## 2020-04-15 10:07:42 : Adding Gene Tracks (5 of 9), 0.295 mins elapsed.  
+## 2020-04-15 10:07:42 : Plotting, 0.301 mins elapsed.  
+## 2020-04-15 10:07:44 : Adding Bulk Tracks (6 of 9), 0.339 mins elapsed.  
+## 2020-04-15 10:07:46 : Adding Gene Tracks (6 of 9), 0.358 mins elapsed.  
+## 2020-04-15 10:07:46 : Plotting, 0.367 mins elapsed.  
+## 2020-04-15 10:07:49 : Adding Bulk Tracks (7 of 9), 0.409 mins elapsed.  
+## 2020-04-15 10:07:50 : Adding Gene Tracks (7 of 9), 0.429 mins elapsed.  
+## 2020-04-15 10:07:50 : Plotting, 0.44 mins elapsed.  
+## 2020-04-15 10:07:54 : Adding Bulk Tracks (8 of 9), 0.502 mins elapsed.  
+## 2020-04-15 10:07:55 : Adding Gene Tracks (8 of 9), 0.52 mins elapsed.  
+## 2020-04-15 10:07:56 : Plotting, 0.528 mins elapsed.  
+## 2020-04-15 10:07:58 : Adding Bulk Tracks (9 of 9), 0.567 mins elapsed.  
+## 2020-04-15 10:07:59 : Adding Gene Tracks (9 of 9), 0.585 mins elapsed.  
+## 2020-04-15 10:08:00 : Plotting, 0.593 mins elapsed.  
+## ArchR logging successful to : ArchRLogs/ArchR-ArchRBrowserTrack-f4e46f9da45e-Date-2020-04-15_Time-10-07-24.log  
 
 To plot a track we can simply print one from the list
 
@@ -276,7 +447,22 @@ grid::grid.newpage()
 grid::grid.draw(p$CD14)
 ```
 
+```{r, include=FALSE, eval=FALSE}
+plotPDF(plotList = p, 
+    name = "Plot-Tracks-Marker-Genes.pdf", 
+    ArchRProj = projHeme2, 
+    addDOC = FALSE, 
+    width = 5, 
+    height = 5
+)
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
 ![](images/HemeWalkthrough/PNG/Plot-Tracks-Marker-Genes_5.png){width=500 height=500}
+
+We can save pdfs with plotPDF
 
 ```{r eval=FALSE}
 plotPDF(plotList = p, 
@@ -284,6 +470,16 @@ plotPDF(plotList = p,
     ArchRProj = projHeme2, 
     addDOC = FALSE, width = 5, height = 5)
 ```
+> \## NULL  
+## NULL  
+## NULL  
+## NULL  
+## NULL  
+## NULL  
+## NULL  
+## NULL  
+## NULL  
+## [1] 0  
 
 [Download PDF : Plot-Tracks-Marker-Genes.pdf](images/HemeWalkthrough/PDF/Plot-Tracks-Marker-Genes.pdf)
 
@@ -291,7 +487,7 @@ plotPDF(plotList = p,
 ## Launching the ArchRBrowser
 
 ```{r eval=FALSE}
-ArchRBrowser(projHeme2)
+#ArchRBrowser(projHeme2)
 ```
 
 ![](images/HemeWalkthrough/PNG/ArchR_Browser_1.png){width=800 height=500}
@@ -301,14 +497,20 @@ ArchRBrowser(projHeme2)
 ![](images/HemeWalkthrough/PNG/ArchR_Browser_5.png){width=800 height=500}
 ![](images/HemeWalkthrough/PNG/ArchR_Browser_6.png){width=800 height=500}
 
-
-We can now save our original projHeme1 using `saveArchRProject` from ArchR.
+## Session Information
 
 ```{r eval=FALSE}
-saveArchRProject(projHeme2)
+Sys.Date()
+```
+> \## [1] "2020-04-15"
+
+```{r eval=FALSE}
+sessionInfo()
 ```
 
-
+```{r, include=FALSE, eval=FALSE}
+save.image(params$out, compress = FALSE)
+```
 
 
 

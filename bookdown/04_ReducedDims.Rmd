@@ -1,10 +1,53 @@
-# Dimensionality Reduction with ArchR
+---
+title: "Chapter 04 - Dimensionality Reduction with ArchR"
+output:
+  html_document:
+    theme: yeti  # many options for theme, this one is my favorite.
+params:
+  threads: 20
+  rdata: ""
+  token: ""
+  ref: ""
+  out: ""
+---
 
 ```{r, include=FALSE, eval=FALSE}
-setwd("/Volumes/JG_SSD_2/ArchR_Walkthrough/")
-#load("Save-ArchR-Walkthrough-Chapter1-Feb13.Rdata")
-save.image("Save-ArchR-Walkthrough-Feb13-2130.Rdata")
+params2 <- params
+unlockBinding("params", env = .GlobalEnv)
+#load("Chapter-13-Footprints.Rdata")
+load(params$rdata)
+params <- params2
+rm(params2)
+devtools::install_github("GreenleafLab/ArchR", 
+  auth_token = params$token, 
+  ref = params$ref,
+  repos = BiocManager::repositories(),
+  dependencies = FALSE
+)
+library(ArchR)
+fn <- unclass(lsf.str(envir = asNamespace("ArchR"), all = TRUE))
+fn <- fn[!grepl("\\.", fn)]
+fn <- fn[fn!="ArchRProj"]
+for (i in seq_along(fn)){
+    tryCatch({
+        eval(parse(text = paste0(fn[i], "<-ArchR::", fn[i])))
+    }, error = function(x) {
+    })
+}
+addArchRThreads(threads = params$threads)
+addArchRGenome("hg19")
+# fn <- unclass(lsf.str(envir = asNamespace("ArchR"), all = TRUE))
+# fn <- fn[fn!="ArchRProj"]
+# for (i in seq_along(fn)) {
+#     tryCatch({
+#         eval(parse(text = paste0(fn[i], "<-ArchR:::", fn[i])))
+#     }, error = function(x) {
+#     })
+# }
+set.seed(1)
 ```
+
+# Dimensionality Reduction with ArchR
 
 Dimensionality reduction with scATAC-seq is challenging due to the _sparsity_ of the data. In scATAC-seq, a particular site can either be accessible on one allele, both alleles, or no alleles. Even in higher-quality scATAC-seq data, the majority of accesible regions are not transposed and this leads to many loci having 0 accessibile alleles. Moreover, when we see (for example) three Tn5 insertions within a single peak region in a single cell, the sparsity of the data prevents us from confidently determining that this site in this cell is actually three times more accessible than another cell that only has one insertion in the same site. For this reason a lot of analytical strategies work on a binarized scATAC-seq data matrix. This binarized matrix still ends up being mostly 0s because transposition is rare. However, it is important to note that a 0 in scATAC-seq could mean "non-accessible" or "not sampled" and these two inferences are very different from a biological standpoint. Because of this, the 1s have information and the 0s do not. This low information content is what makes our scATAC-seq data _sparse_.
 
@@ -25,6 +68,9 @@ In scRNA-seq identifying variable genes is a common way to compute dimensionalit
 <center>
 ![](images/iterativeLSI.png){width=350px}
 </center>
+```{r include=FALSE, eval=FALSE, echo=FALSE}
+#QQQ This figure is wrong?
+```
 
 To perform iterative LSI in ArchR, we use the `addIterativeLSI()` function. The default parameters which should cover most cases but we encourage you to explore the available parameters and how they each affect your particular data set. See `?addIterativeLSI` for more details on inputs.
 
@@ -34,7 +80,7 @@ projHeme2 <- addIterativeLSI(
 	useMatrix = "TileMatrix", 
 	name = "IterativeLSI", 
     iterations = 2, 
-    clusterParams = list(
+    clusterParams = list( #See Seurat::FindClusters
     	resolution = c(0.2), 
         sampleCells = 10000, 
         n.start = 10
@@ -43,6 +89,28 @@ projHeme2 <- addIterativeLSI(
     dimsToUse = 1:30
 )
 ```
+>\>\> Checking Inputs...  
+>\>\> ArchR logging to : ArchRLogs/ArchR-addIterativeLSI-ea2d75dd89ad-Date-2020-04-15_Time-09-36-28.log  
+>\>\> If there is an issue, please report to github with logFile!  
+>\>\> 2020-04-15 09:36:29 : Computing Total Accessibility Across All Features, 0.003 mins elapsed.  
+>\>\> 2020-04-15 09:36:35 : Computing Top Features, 0.102 mins elapsed.  
+>\>\> ###########  
+>\>\> 2020-04-15 09:36:35 : Running LSI (1 of 2) on Top Features, 0.111 mins elapsed.  
+>\>\> ###########  
+>\>\> 2020-04-15 09:36:35 : Sampling Cells (N = 10002) for Estimated LSI, 0.112 mins elapsed.  
+>\>\> 2020-04-15 09:36:35 : Creating Sampled Partial Matrix, 0.112 mins elapsed.  
+>\>\> 2020-04-15 09:36:45 : Computing Estimated LSI (projectAll = FALSE), 0.276 mins elapsed.  
+>\>\> 2020-04-15 09:37:22 : Identifying Clusters, 0.887 mins elapsed.  
+>\>\> 2020-04-15 09:37:53 : Identified 5 Clusters, 1.407 mins elapsed.  
+>\>\> 2020-04-15 09:37:53 : Saving LSI Iteration, 1.407 mins elapsed.  
+>\>\> 2020-04-15 09:38:10 : Creating Cluster Matrix on the total Group Features, 1.696 mins elapsed.  
+>\>\> 2020-04-15 09:38:21 : Computing Variable Features, 1.867 mins elapsed.  
+>\>\> ###########  
+>\>\> 2020-04-15 09:38:21 : Running LSI (2 of 2) on Variable Features, 1.871 mins elapsed.  
+>\>\> ###########  
+>\>\> 2020-04-15 09:38:21 : Creating Partial Matrix, 1.871 mins elapsed.  
+>\>\> 2020-04-15 09:38:30 : Computing LSI, 2.018 mins elapsed.  
+>\>\> 2020-04-15 09:39:05 : Finished Running IterativeLSI, 2.606 mins elapsed.  
 
 If you see downstream that you have subtle batch effects, another option is to add more LSI iterations and to start from a lower intial clustering resolution as shown below. Additionally the number of variable features can be lowered to increase focus on the more variable features. QQQ would be nice to see an example of what these batch effects look like and how this corrects them
 
@@ -52,7 +120,7 @@ projHeme2 <- addIterativeLSI(
 	useMatrix = "TileMatrix", 
 	name = "IterativeLSI2", 
     iterations = 4, 
-    clusterParams = list(
+    clusterParams = list( #See Seurat::FindClusters
     	resolution = c(0.1, 0.2, 0.4), 
         sampleCells = 10000, 
         n.start = 10
@@ -61,18 +129,50 @@ projHeme2 <- addIterativeLSI(
     dimsToUse = 1:30
 )
 ```
-
-Additionally ArchR allows for a normal (non-iterative) LSI transformation via the `addLSI() function`, however we recommend the iterative procedure.
-
-```{r eval=FALSE}
-projHeme2 <- addLSI(
-	ArchRProj = projHeme2,
-	useMatrix = "TileMatrix", 
-	name = "LSI", 
-    topFeatures = 25000, 
-    dimsToUse = 1:30
-)
-```
+>\>\> Checking Inputs...  
+>\>\> ArchR logging to : ArchRLogs/ArchR-addIterativeLSI-ea2d349ff558-Date-2020-04-15_Time-09-39-05.log  
+>\>\> If there is an issue, please report to github with logFile!  
+>\>\> 2020-04-15 09:39:06 : Computing Total Accessibility Across All Features, 0.004 mins elapsed.  
+>\>\> 2020-04-15 09:39:09 : Computing Top Features, 0.06 mins elapsed.  
+>\>\> ###########  
+>\>\> 2020-04-15 09:39:10 : Running LSI (1 of 4) on Top Features, 0.07 mins elapsed.  
+>\>\> ###########  
+>\>\> 2020-04-15 09:39:10 : Sampling Cells (N = 10002) for Estimated LSI, 0.071 mins elapsed.  
+>\>\> 2020-04-15 09:39:10 : Creating Sampled Partial Matrix, 0.071 mins elapsed.  
+>\>\> 2020-04-15 09:39:17 : Computing Estimated LSI (projectAll = FALSE), 0.192 mins elapsed.  
+>\>\> 2020-04-15 09:39:42 : Identifying Clusters, 0.611 mins elapsed.  
+>\>\> 2020-04-15 09:40:05 : Identified 4 Clusters, 0.987 mins elapsed.  
+>\>\> 2020-04-15 09:40:05 : Saving LSI Iteration, 0.987 mins elapsed.  
+>\>\> 2020-04-15 09:40:26 : Creating Cluster Matrix on the total Group Features, 1.343 mins elapsed.  
+>\>\> 2020-04-15 09:40:38 : Computing Variable Features, 1.54 mins elapsed.  
+>\>\> ###########  
+>\>\> 2020-04-15 09:40:38 : Running LSI (2 of 4) on Variable Features, 1.542 mins elapsed.  
+>\>\> ###########  
+>\>\> 2020-04-15 09:40:38 : Sampling Cells (N = 10002) for Estimated LSI, 1.544 mins elapsed.  
+>\>\> 2020-04-15 09:40:38 : Creating Sampled Partial Matrix, 1.544 mins elapsed.  
+>\>\> 2020-04-15 09:40:47 : Computing Estimated LSI (projectAll = FALSE), 1.687 mins elapsed.  
+>\>\> 2020-04-15 09:41:09 : Identifying Clusters, 2.048 mins elapsed.  
+>\>\> 2020-04-15 09:41:31 : Identified 7 Clusters, 2.421 mins elapsed.  
+>\>\> 2020-04-15 09:41:31 : Saving LSI Iteration, 2.421 mins elapsed.  
+>\>\> 2020-04-15 09:41:54 : Creating Cluster Matrix on the total Group Features, 2.807 mins elapsed.  
+>\>\> 2020-04-15 09:42:05 : Computing Variable Features, 2.995 mins elapsed.  
+>\>\> ###########  
+>\>\> 2020-04-15 09:42:06 : Running LSI (3 of 4) on Variable Features, 3 mins elapsed.  
+>\>\> ###########  
+>\>\> 2020-04-15 09:42:06 : Sampling Cells (N = 10002) for Estimated LSI, 3.001 mins elapsed.  
+>\>\> 2020-04-15 09:42:06 : Creating Sampled Partial Matrix, 3.001 mins elapsed.  
+>\>\> 2020-04-15 09:42:13 : Computing Estimated LSI (projectAll = FALSE), 3.121 mins elapsed.  
+>\>\> 2020-04-15 09:42:33 : Identifying Clusters, 3.461 mins elapsed.  
+>\>\> 2020-04-15 09:42:55 : Identified 9 Clusters, 3.829 mins elapsed.  
+>\>\> 2020-04-15 09:42:55 : Saving LSI Iteration, 3.829 mins elapsed.  
+>\>\> 2020-04-15 09:43:13 : Creating Cluster Matrix on the total Group Features, 4.129 mins elapsed.  
+>\>\> 2020-04-15 09:43:26 : Computing Variable Features, 4.341 mins elapsed.  
+>\>\> ###########  
+>\>\> 2020-04-15 09:43:26 : Running LSI (4 of 4) on Variable Features, 4.346 mins elapsed.  
+>\>\> ###########  
+>\>\> 2020-04-15 09:43:26 : Creating Partial Matrix, 4.347 mins elapsed.  
+>\>\> 2020-04-15 09:43:33 : Computing LSI, 4.462 mins elapsed.  
+>\>\> 2020-04-15 09:43:55 : Finished Running IterativeLSI, 4.829 mins elapsed.  
 
 For the purposes of this tutorial, we will compute the iterative LSI for the `ArchRProject` that still contains doublets.
 
@@ -82,7 +182,7 @@ projHeme1 <- addIterativeLSI(
     useMatrix = "TileMatrix", 
     name = "IterativeLSI", 
     iterations = 2, 
-    clusterParams = list(
+    clusterParams = list( #See Seurat::FindClusters
         resolution = c(0.2), 
         sampleCells = 10000, 
         n.start = 10
@@ -91,6 +191,34 @@ projHeme1 <- addIterativeLSI(
     dimsToUse = 1:30
 )
 ```
+>\>\> Checking Inputs...  
+>\>\> ArchR logging to : ArchRLogs/ArchR-addIterativeLSI-ea2d717d926a-Date-2020-04-15_Time-09-43-55.log  
+>\>\> If there is an issue, please report to github with logFile!  
+>\>\> 2020-04-15 09:43:57 : Computing Total Accessibility Across All Features, 0.005 mins elapsed.  
+>\>\> 2020-04-15 09:44:00 : Computing Top Features, 0.071 mins elapsed.  
+>\>\> ###########  
+>\>\> 2020-04-15 09:44:01 : Running LSI (1 of 2) on Top Features, 0.079 mins elapsed.  
+>\>\> ###########  
+>\>\> 2020-04-15 09:44:01 : Sampling Cells (N = 10001) for Estimated LSI, 0.081 mins elapsed.  
+>\>\> 2020-04-15 09:44:01 : Creating Sampled Partial Matrix, 0.081 mins elapsed.  
+>\>\> 2020-04-15 09:44:10 : Computing Estimated LSI (projectAll = FALSE), 0.237 mins elapsed.  
+>\>\> 2020-04-15 09:44:50 : Identifying Clusters, 0.899 mins elapsed.  
+>\>\> 2020-04-15 09:45:11 : Identified 5 Clusters, 1.253 mins elapsed.  
+>\>\> 2020-04-15 09:45:11 : Saving LSI Iteration, 1.253 mins elapsed.  
+>\>\> 2020-04-15 09:45:30 : Creating Cluster Matrix on the total Group Features, 1.568 mins elapsed.  
+>\>\> 2020-04-15 09:45:44 : Computing Variable Features, 1.804 mins elapsed.  
+>\>\> ###########  
+>\>\> 2020-04-15 09:45:45 : Running LSI (2 of 2) on Variable Features, 1.808 mins elapsed.  
+>\>\> ###########  
+>\>\> 2020-04-15 09:45:45 : Creating Partial Matrix, 1.808 mins elapsed.  
+>\>\> 2020-04-15 09:45:54 : Computing LSI, 1.96 mins elapsed.  
+>\>\> 2020-04-15 09:46:28 : Finished Running IterativeLSI, 2.523 mins elapsed.  
+
+## Estimated LSI
+```{r include=FALSE, eval=FALSE,echo=FALSE}
+#JJJ We need to explain estimated LSI?
+```
+
 
 ## Batch Effect Correction wtih Harmony
 
@@ -104,5 +232,26 @@ projHeme2 <- addHarmony(
 	groupBy = "Sample"
 )
 ```
+>\>\> Harmony 1/10  
+>\>\> Harmony 2/10  
+>\>\> Harmony 3/10  
+>\>\> Harmony converged after 3 iterations  
 
-QQQ Would like to see a before and after batch correction plot here
+```{r include=FALSE, eval=FALSE,echo=FALSE}
+#JJJ Would like to see a before and after batch correction plot here
+```
+
+## Session Information
+
+```{r eval=FALSE}
+Sys.Date()
+```
+>\>\> [1] "2020-04-15"
+
+```{r eval=FALSE}
+sessionInfo()
+```
+
+```{r, include=FALSE, eval=FALSE}
+save.image(params$out, compress = FALSE)
+```
