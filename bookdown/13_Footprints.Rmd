@@ -57,28 +57,28 @@ Transcription factor footprinting can also be done in ArchR with a single comman
 ```{r eval=FALSE}
 motifPositions <- getPositions(projHeme5)
 motifPositions
-# GRangesList object of length 870:
-# $TFAP2B_1 
-# GRanges object with 18839 ranges and 1 metadata column:
-#           seqnames              ranges strand |            score
-#              <Rle>           <IRanges>  <Rle> |        <numeric>
-#       [1]     chr1       874977-874988      + |  8.1040240314385
-#       [2]     chr1       876278-876289      + | 9.07480855168228
-#       [3]     chr1       878394-878405      + | 8.13251230888635
-#       [4]     chr1       878394-878405      - | 8.55091380875033
-#       [5]     chr1       896470-896481      + | 8.82805137346104
-#       ...      ...                 ...    ... .              ...
-#   [18835]     chrX 154299568-154299579      + | 8.86292599058688
-#   [18836]     chrX 154299568-154299579      - | 8.08701861760796
-#   [18837]     chrX 154664929-154664940      - | 8.12813446630685
-#   [18838]     chrX 154807684-154807695      + | 9.53908578301561
-#   [18839]     chrX 154807684-154807695      - | 10.5729555847813
-
-# ...
-# <869 more elements>
-# -------
-# seqinfo: 23 sequences from an unspecified genome; no seqlengths
 ```
+> \## GRangesList object of length 870:  
+## $TFAP2B_1  
+## GRanges object with 16773 ranges and 1 metadata column:  
+##           seqnames              ranges strand |            score  
+##              <Rle>           <IRanges>  <Rle> |        <numeric>  
+##       [1]     chr1       852468-852479      + | 8.17731199746359  
+##       [2]     chr1       873916-873927      + | 8.32673820065588  
+##       [3]     chr1       873916-873927      - | 8.32673820065588  
+##       [4]     chr1       896671-896682      + | 9.96223327271814  
+##       [5]     chr1       896671-896682      - | 8.92408377606486  
+##       ...      ...                 ...    ... .              ...  
+##   [16769]     chrX 153991101-153991112      + | 8.39549159740639  
+##   [16770]     chrX 154299568-154299579      + | 8.90119825654299  
+##   [16771]     chrX 154664929-154664940      - | 8.16690864294221  
+##   [16772]     chrX 154807684-154807695      + | 9.57636587154549  
+##   [16773]     chrX 154807684-154807695      - | 10.6117355833828  
+##   -------  
+##   seqinfo: 23 sequences from an unspecified genome; no seqlengths  
+##   
+## ...  
+## <869 more elements>
 
 Find TF-Motifs
 
@@ -87,12 +87,12 @@ motifs <- c("GATA1", "CEBPA", "EBF1", "IRF4", "TBX21", "PAX5")
 markerMotifs <- unlist(lapply(motifs, function(x) grep(x, names(motifPositions), value = TRUE)))
 markerMotifs <- markerMotifs[markerMotifs %ni% "SREBF1_22"]
 markerMotifs
-# [1] "GATA1_383" "CEBPA_155" "EBF1_67"   "IRF4_632"  "TBX21_780" "PAX5_709" 
 ```
+> \## [1] "GATA1_383" "CEBPA_155" "EBF1_67"   "IRF4_632"  "TBX21_780" "PAX5_709"
 
 ```{r eval=FALSE}
 #Create Group Coverage Files if you have not done so already
-#projHeme5 <- addGroupCoverages(ArchRProj = projHeme5, groupBy = "Clusters2")
+projHeme5 <- addGroupCoverages(ArchRProj = projHeme5, groupBy = "Clusters2")
 ```
 
 Now we can compute footprints
@@ -106,6 +106,13 @@ seFoot <- getFootprints(
   groupBy = "Clusters2"
 )
 ```
+> \## ArchR logging to : ArchRLogs/ArchR-getFootprints-10b7a1d11042e-Date-2020-04-15_Time-11-15-50.log  
+## If there is an issue, please report to github with logFile!  
+## 2020-04-15 11:15:51 : Computing Kmer Bias Table, 0.024 mins elapsed.  
+## 2020-04-15 11:16:13 : Finished Computing Kmer Tables, 0.361 mins elapsed.  
+## 2020-04-15 11:16:13 : Computing Footprints, 0.385 mins elapsed.  
+## 2020-04-15 11:16:22 : Computing Footprints Bias, 0.539 mins elapsed.   
+## 2020-04-15 11:16:28 : Summarizing Footprints, 0.642 mins elapsed.  
 
 ### No Normalization
 
@@ -121,6 +128,33 @@ plotFootprints(
   smoothWindow = 5
 )
 ```
+> \## ArchR logging to : ArchRLogs/ArchR-plotFootprints-10b7a22669572-Date-2020-04-15_Time-11-16-30.log  
+## If there is an issue, please report to github with logFile!  
+## 2020-04-15 11:16:31 : Plotting Footprint : GATA1_383 (1 of 6), 0.009 mins elapsed.  
+## Applying smoothing window to footprint  
+## Normalizing by flanking regions    
+## NormMethod = None  
+## 2020-04-15 11:16:35 : Plotting Footprint : CEBPA_155 (2 of 6), 0.077 mins elapsed.  
+## Applying smoothing window to footprint  
+## Normalizing by flanking regions  
+## NormMethod = None  
+## 2020-04-15 11:16:38 : Plotting Footprint : EBF1_67 (3 of 6), 0.125 mins elapsed.  
+## Applying smoothing window to footprint  
+## Normalizing by flanking regions  
+## NormMethod = None  
+## 2020-04-15 11:16:41 : Plotting Footprint : IRF4_632 (4 of 6), 0.173 mins elapsed.    
+## Applying smoothing window to footprint  
+## Normalizing by flanking regions  
+## NormMethod = None  
+## 2020-04-15 11:16:44 : Plotting Footprint : TBX21_780 (5 of 6), 0.221 mins elapsed.  
+## Applying smoothing window to footprint  
+## Normalizing by flanking regions  
+## NormMethod = None  
+## 2020-04-15 11:16:46 : Plotting Footprint : PAX5_709 (6 of 6), 0.27 mins elapsed.  
+## Applying smoothing window to footprint  
+## Normalizing by flanking regions  
+## NormMethod = None  
+## ArchR logging successful to : ArchRLogs/ArchR-plotFootprints-10b7a22669572-Date-2020-04-15_Time-11-16-30.log  
 
 ```{r, include=FALSE, eval=FALSE}
 ArchR:::.convertToPNG(ArchRProj = projHeme2)
@@ -147,6 +181,33 @@ plotFootprints(
   smoothWindow = 5
 )
 ```
+> \## ArchR logging to : ArchRLogs/ArchR-plotFootprints-10b7a2038428-Date-2020-04-15_Time-11-16-59.log  
+## If there is an issue, please report to github with logFile!  
+## 2020-04-15 11:16:59 : Plotting Footprint : GATA1_383 (1 of 6), 0.007 mins elapsed.  
+## Applying smoothing window to footprint  
+## Normalizing by flanking regions   
+## NormMethod = Subtract  
+## 2020-04-15 11:17:02 : Plotting Footprint : CEBPA_155 (2 of 6), 0.065 mins elapsed.  
+## Applying smoothing window to footprint  
+## Normalizing by flanking regions  
+## NormMethod = Subtract  
+## 2020-04-15 11:17:05 : Plotting Footprint : EBF1_67 (3 of 6), 0.109 mins elapsed.  
+## Applying smoothing window to footprint  
+## Normalizing by flanking regions  
+## NormMethod = Subtract  
+## 2020-04-15 11:17:08 : Plotting Footprint : IRF4_632 (4 of 6), 0.155 mins elapsed.  
+## Applying smoothing window to footprint  
+## Normalizing by flanking regions  
+## NormMethod = Subtract  
+## 2020-04-15 11:17:11 : Plotting Footprint : TBX21_780 (5 of 6), 0.199 mins elapsed.  
+## Applying smoothing window to footprint  
+## Normalizing by flanking regions  
+## NormMethod = Subtract  
+## 2020-04-15 11:17:13 : Plotting Footprint : PAX5_709 (6 of 6), 0.245 mins elapsed.  
+## Applying smoothing window to footprint  
+## Normalizing by flanking regions  
+## NormMethod = Subtract  
+## ArchR logging successful to : ArchRLogs/ArchR-plotFootprints-10b7a2038428-Date-2020-04-15_Time-11-16-59.log  
 
 ```{r, include=FALSE, eval=FALSE}
 ArchR:::.convertToPNG(ArchRProj = projHeme2)
@@ -173,6 +234,33 @@ plotFootprints(
   smoothWindow = 5
 )
 ```
+> \## ArchR logging to : ArchRLogs/ArchR-plotFootprints-10b7a703225b0-Date-2020-04-15_Time-11-17-23.log  
+## If there is an issue, please report to github with logFile!  
+## 2020-04-15 11:17:23 : Plotting Footprint : GATA1_383 (1 of 6), 0.008 mins elapsed.  
+## Applying smoothing window to footprint  
+## Normalizing by flanking regions  
+## NormMethod = Divide  
+## 2020-04-15 11:17:27 : Plotting Footprint : CEBPA_155 (2 of 6), 0.073 mins elapsed.  
+## Applying smoothing window to footprint  
+## Normalizing by flanking regions  
+## NormMethod = Divide  
+## 2020-04-15 11:17:30 : Plotting Footprint : EBF1_67 (3 of 6), 0.13 mins elapsed.  
+## Applying smoothing window to footprint  
+## Normalizing by flanking regions  
+## NormMethod = Divide  
+## 2020-04-15 11:17:34 : Plotting Footprint : IRF4_632 (4 of 6), 0.189 mins elapsed.  
+## Applying smoothing window to footprint  
+## Normalizing by flanking regions  
+## NormMethod = Divide  
+## 2020-04-15 11:17:38 : Plotting Footprint : TBX21_780 (5 of 6), 0.248 mins elapsed.  
+## Applying smoothing window to footprint  
+## Normalizing by flanking regions    
+## NormMethod = Divide  
+## 2020-04-15 11:17:41 : Plotting Footprint : PAX5_709 (6 of 6), 0.307 mins elapsed.  
+## Applying smoothing window to footprint  
+## Normalizing by flanking regions  
+## NormMethod = Divide  
+## ArchR logging successful to : ArchRLogs/ArchR-plotFootprints-10b7a703225b0-Date-2020-04-15_Time-11-17-23.log  
 
 ```{r, include=FALSE, eval=FALSE}
 ArchR:::.convertToPNG(ArchRProj = projHeme2)
@@ -190,7 +278,7 @@ By default the plots will be in the outputDirectory of the ArchRProject. The cha
 
 ```{r eval=FALSE}
 #Create Group Coverage Files if you have not done so already
-#projHeme5 <- addGroupCoverages(ArchRProj = projHeme5, groupBy = "Clusters2")
+projHeme5 <- addGroupCoverages(ArchRProj = projHeme5, groupBy = "Clusters2")
 ```
 
 ### No Normalization
@@ -204,7 +292,16 @@ seTSS <- getFootprints(
   groupBy = "Clusters2",
   flank = 2000
 )
+```
+> \## ArchR logging to : ArchRLogs/ArchR-getFootprints-10b7a47a82723-Date-2020-04-15_Time-11-17-52.log  
+## If there is an issue, please report to github with logFile!   
+## 2020-04-15 11:17:52 : Computing Kmer Bias Table, 0.012 mins elapsed.  
+## 2020-04-15 11:18:24 : Finished Computing Kmer Tables, 0.535 mins elapsed.  
+## 2020-04-15 11:18:24 : Computing Footprints, 0.547 mins elapsed.  
+## 2020-04-15 11:18:36 : Computing Footprints Bias, 0.734 mins elapsed.  
+## 2020-04-15 11:18:43 : Summarizing Footprints, 0.852 mins elapsed.  
 
+```{r eval=FALSE}
 plotFootprints(
   seFoot = seTSS,
   ArchRProj = projHeme5, 
@@ -215,6 +312,13 @@ plotFootprints(
   flankNorm = 100
 )
 ```
+> \## ArchR logging to : ArchRLogs/ArchR-plotFootprints-10b7a1b7faa1-Date-2020-04-15_Time-11-18-46.log  
+## If there is an issue, please report to github with logFile!  
+## 2020-04-15 11:18:46 : Plotting Footprint : TSS (1 of 1), 0.007 mins elapsed.  
+## Normalizing by flanking regions  
+## NormMethod = None  
+## ArchR logging successful to : ArchRLogs/ArchR-plotFootprints-10b7a1b7faa1-Date-2020-04-15_Time-11-18-46.log  
+
 By default the plots will be in the outputDirectory of the ArchRProject. The challenge is that if you requested to plot all motifs and returned this as a ggplot object it could be extremely large. An example of motif footprints ran from this function are seen below.
 
 ```{r, include=FALSE, eval=FALSE}
@@ -231,8 +335,10 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ```{r eval=FALSE}
 Sys.Date()
+```
+> \## [1] "2020-04-15"
 
-
+```{r eval=FALSE}
 sessionInfo()
 ```
 

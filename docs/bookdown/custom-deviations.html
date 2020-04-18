@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-16" />
+<meta name="date" content="2020-04-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -164,12 +164,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="4.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>4.1</b> ArchR’s LSI Implementation</a></li>
 <li class="chapter" data-level="4.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>4.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
-<li class="chapter" data-level="4.3" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.3</b> Batch Effect Correction wtih Harmony</a></li>
-<li class="chapter" data-level="4.4" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.4</b> Session Information</a></li>
+<li class="chapter" data-level="4.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>4.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="4.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.4</b> Batch Effect Correction wtih Harmony</a></li>
+<li class="chapter" data-level="4.5" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.5</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>5</b> Clustering with ArchR</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.1</b> Session Information</a></li>
+<li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="5.2" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.2</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
 <ul>
@@ -230,7 +232,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="14" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>14</b> Integrative Analysis with ArchR</a>
 <ul>
-<li class="chapter" data-level="14.1" data-path="coaccessibility-with-archr.html"><a href="coaccessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> CoAccessibility with ArchR</a></li>
+<li class="chapter" data-level="14.1" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> Co-accessibility with ArchR</a></li>
 <li class="chapter" data-level="14.2" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>14.2</b> Peak2GeneLinkage with ArchR</a></li>
 <li class="chapter" data-level="14.3" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>14.3</b> Identification of Positive TF-Regulators</a></li>
 <li class="chapter" data-level="14.4" data-path="session-information-13.html"><a href="session-information-13.html"><i class="fa fa-check"></i><b>14.4</b> Session Information</a></li>
@@ -264,62 +266,108 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="custom-deviations" class="section level2" number="12.3">
 <h2><span class="header-section-number">12.3</span> Custom Deviations</h2>
 <p>If you have not added motif annotations</p>
-<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="custom-deviations.html#cb190-1"></a><span class="co">#Custom Peak Annotations</span></span>
-<span id="cb190-2"><a href="custom-deviations.html#cb190-2"></a>EncodePeaks &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
-<span id="cb190-3"><a href="custom-deviations.html#cb190-3"></a>  <span class="dt">Encode_K562_GATA1 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF632NQI/@@download/ENCFF632NQI.bed.gz&quot;</span>,</span>
-<span id="cb190-4"><a href="custom-deviations.html#cb190-4"></a>  <span class="dt">Encode_GM12878_CEBPB =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF761MGJ/@@download/ENCFF761MGJ.bed.gz&quot;</span>,</span>
-<span id="cb190-5"><a href="custom-deviations.html#cb190-5"></a>  <span class="dt">Encode_K562_Ebf1 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF868VSY/@@download/ENCFF868VSY.bed.gz&quot;</span>,</span>
-<span id="cb190-6"><a href="custom-deviations.html#cb190-6"></a>  <span class="dt">Encode_K562_Pax5 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF339KUO/@@download/ENCFF339KUO.bed.gz&quot;</span></span>
-<span id="cb190-7"><a href="custom-deviations.html#cb190-7"></a>)</span>
-<span id="cb190-8"><a href="custom-deviations.html#cb190-8"></a><span class="cf">if</span>(<span class="st">&quot;ChIP&quot;</span> <span class="op">%ni%</span><span class="st"> </span><span class="kw">names</span>(projHeme5<span class="op">@</span>peakAnnotation)){</span>
-<span id="cb190-9"><a href="custom-deviations.html#cb190-9"></a>    projHeme5 &lt;-<span class="st"> </span><span class="kw">addPeakAnnotations</span>(<span class="dt">ArchRProj =</span> projHeme5, <span class="dt">regions =</span> EncodePeaks, <span class="dt">name =</span> <span class="st">&quot;ChIP&quot;</span>)</span>
-<span id="cb190-10"><a href="custom-deviations.html#cb190-10"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb289"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb289-1"><a href="custom-deviations.html#cb289-1"></a><span class="co">#Custom Peak Annotations</span></span>
+<span id="cb289-2"><a href="custom-deviations.html#cb289-2"></a>EncodePeaks &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb289-3"><a href="custom-deviations.html#cb289-3"></a>  <span class="dt">Encode_K562_GATA1 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF632NQI/@@download/ENCFF632NQI.bed.gz&quot;</span>,</span>
+<span id="cb289-4"><a href="custom-deviations.html#cb289-4"></a>  <span class="dt">Encode_GM12878_CEBPB =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF761MGJ/@@download/ENCFF761MGJ.bed.gz&quot;</span>,</span>
+<span id="cb289-5"><a href="custom-deviations.html#cb289-5"></a>  <span class="dt">Encode_K562_Ebf1 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF868VSY/@@download/ENCFF868VSY.bed.gz&quot;</span>,</span>
+<span id="cb289-6"><a href="custom-deviations.html#cb289-6"></a>  <span class="dt">Encode_K562_Pax5 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF339KUO/@@download/ENCFF339KUO.bed.gz&quot;</span></span>
+<span id="cb289-7"><a href="custom-deviations.html#cb289-7"></a>)</span>
+<span id="cb289-8"><a href="custom-deviations.html#cb289-8"></a><span class="cf">if</span>(<span class="st">&quot;ChIP&quot;</span> <span class="op">%ni%</span><span class="st"> </span><span class="kw">names</span>(projHeme5<span class="op">@</span>peakAnnotation)){</span>
+<span id="cb289-9"><a href="custom-deviations.html#cb289-9"></a>    projHeme5 &lt;-<span class="st"> </span><span class="kw">addPeakAnnotations</span>(<span class="dt">ArchRProj =</span> projHeme5, <span class="dt">regions =</span> EncodePeaks, <span class="dt">name =</span> <span class="st">&quot;ChIP&quot;</span>)</span>
+<span id="cb289-10"><a href="custom-deviations.html#cb289-10"></a>}</span></code></pre></div>
 <p>Add ChromVAR Deviations for Motifs</p>
-<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="custom-deviations.html#cb191-1"></a>projHeme5 &lt;-<span class="st"> </span><span class="kw">addDeviationsMatrix</span>(</span>
-<span id="cb191-2"><a href="custom-deviations.html#cb191-2"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>
-<span id="cb191-3"><a href="custom-deviations.html#cb191-3"></a>  <span class="dt">peakAnnotation =</span> <span class="st">&quot;ChIP&quot;</span>,</span>
-<span id="cb191-4"><a href="custom-deviations.html#cb191-4"></a>  <span class="dt">force =</span> <span class="ot">TRUE</span></span>
-<span id="cb191-5"><a href="custom-deviations.html#cb191-5"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb290"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb290-1"><a href="custom-deviations.html#cb290-1"></a>projHeme5 &lt;-<span class="st"> </span><span class="kw">addDeviationsMatrix</span>(</span>
+<span id="cb290-2"><a href="custom-deviations.html#cb290-2"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb290-3"><a href="custom-deviations.html#cb290-3"></a>  <span class="dt">peakAnnotation =</span> <span class="st">&quot;ChIP&quot;</span>,</span>
+<span id="cb290-4"><a href="custom-deviations.html#cb290-4"></a>  <span class="dt">force =</span> <span class="ot">TRUE</span></span>
+<span id="cb290-5"><a href="custom-deviations.html#cb290-5"></a>)</span></code></pre></div>
+<blockquote>
+<p>## Using Previous Background Peaks!<br />
+## ArchR logging to : ArchRLogs/ArchR-addDeviationsMatrix-10374246a529b-Date-2020-04-15_Time-11-13-54.log<br />
+## If there is an issue, please report to github with logFile!<br />
+## NULL<br />
+## 2020-04-15 11:13:59 : Batch Execution w/ safelapply!, 0 mins elapsed.<br />
+## ###########<br />
+## 2020-04-15 11:14:24 : Completed Computing Deviations!, 0.505 mins elapsed.<br />
+## ###########<br />
+## ArchR logging successful to : ArchRLogs/ArchR-addDeviationsMatrix-10374246a529b-Date-2020-04-15_Time-11-13-54.log</p>
+</blockquote>
 <p>Plot Variable Motif Annotations</p>
-<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="custom-deviations.html#cb192-1"></a>plotVarDev &lt;-<span class="st"> </span><span class="kw">getVarDeviations</span>(projHeme5, <span class="dt">plot =</span> <span class="ot">TRUE</span>, <span class="dt">name =</span> <span class="st">&quot;ChIPMatrix&quot;</span>)</span>
-<span id="cb192-2"><a href="custom-deviations.html#cb192-2"></a><span class="co"># DataFrame with 4 rows and 6 columns</span></span>
-<span id="cb192-3"><a href="custom-deviations.html#cb192-3"></a><span class="co">#    seqnames     idx                 name      combinedVars        combinedMeans</span></span>
-<span id="cb192-4"><a href="custom-deviations.html#cb192-4"></a><span class="co">#       &lt;Rle&gt; &lt;array&gt;              &lt;array&gt;         &lt;numeric&gt;            &lt;numeric&gt;</span></span>
-<span id="cb192-5"><a href="custom-deviations.html#cb192-5"></a><span class="co"># f1        z       1    Encode_K562_GATA1  6.19256551652079  -0.0229048763845575</span></span>
-<span id="cb192-6"><a href="custom-deviations.html#cb192-6"></a><span class="co"># f3        z       3     Encode_K562_Ebf1  3.31156290837234   0.0394899516880888</span></span>
-<span id="cb192-7"><a href="custom-deviations.html#cb192-7"></a><span class="co"># f4        z       4     Encode_K562_Pax5  2.93016136274537 -0.00867706262058369</span></span>
-<span id="cb192-8"><a href="custom-deviations.html#cb192-8"></a><span class="co"># f2        z       2 Encode_GM12878_CEBPB 0.779863387389073  0.00919359271019273</span></span>
-<span id="cb192-9"><a href="custom-deviations.html#cb192-9"></a>plotVarDev</span></code></pre></div>
+<div class="sourceCode" id="cb291"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb291-1"><a href="custom-deviations.html#cb291-1"></a>plotVarDev &lt;-<span class="st"> </span><span class="kw">getVarDeviations</span>(projHeme5, <span class="dt">plot =</span> <span class="ot">TRUE</span>, <span class="dt">name =</span> <span class="st">&quot;ChIPMatrix&quot;</span>)</span></code></pre></div>
+<blockquote>
+<p>## DataFrame with 4 rows and 6 columns<br />
+## seqnames idx name combinedVars combinedMeans<br />
+## <Rle> <array> <array> <numeric> <numeric><br />
+## f1 z 1 Encode_K562_GATA1 6.33176528990239 -0.0165812177586936<br />
+## f3 z 3 Encode_K562_Ebf1 3.41531511621115 0.0355188580388895<br />
+## f4 z 4 Encode_K562_Pax5 3.24513143947069 -0.00960057929930531<br />
+## f2 z 2 Encode_GM12878_CEBPB 0.822128491900276 0.00742820197777246<br />
+## rank<br />
+## <integer><br />
+## f1 1<br />
+## f3 2<br />
+## f4 3<br />
+## f2 4</p>
+</blockquote>
+<div class="sourceCode" id="cb292"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb292-1"><a href="custom-deviations.html#cb292-1"></a>plotVarDev</span></code></pre></div>
+<blockquote>
+<p>## Warning: Removed 21 rows containing missing values (geom_label_repel).</p>
+</blockquote>
 <p><img src="images/HemeWalkthrough/PNG/Variable-ATAC-Deviation-Scores_1.png" width="500" height="500" /></p>
 <p>We can then plot this as a nice PDF</p>
-<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="custom-deviations.html#cb193-1"></a><span class="kw">plotPDF</span>(plotVarDev, <span class="dt">name =</span> <span class="st">&quot;Variable-ChIP-Deviation-Scores&quot;</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>, <span class="dt">ArchRProj =</span> projHeme5, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb293"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb293-1"><a href="custom-deviations.html#cb293-1"></a><span class="kw">plotPDF</span>(plotVarDev, <span class="dt">name =</span> <span class="st">&quot;Variable-ChIP-Deviation-Scores&quot;</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>, <span class="dt">ArchRProj =</span> projHeme5, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<blockquote>
+<p>## [1] “plotting ggplot!”<br />
+## Warning: Removed 21 rows containing missing values (geom_label_repel).<br />
+## Warning: Removed 21 rows containing missing values (geom_label_repel).<br />
+## [1] 0</p>
+</blockquote>
 <p>To get deviation z-scores</p>
-<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="custom-deviations.html#cb194-1"></a>markerChIP &lt;-<span class="st"> </span><span class="kw">getFeatures</span>(projHeme5, <span class="dt">useMatrix =</span> <span class="st">&quot;ChIPMatrix&quot;</span>)</span>
-<span id="cb194-2"><a href="custom-deviations.html#cb194-2"></a>markerChIP &lt;-<span class="st"> </span><span class="kw">sort</span>(<span class="kw">grep</span>(<span class="st">&quot;z:&quot;</span>, markerChIP, <span class="dt">value =</span> <span class="ot">TRUE</span>))</span>
-<span id="cb194-3"><a href="custom-deviations.html#cb194-3"></a>markerChIP</span>
-<span id="cb194-4"><a href="custom-deviations.html#cb194-4"></a><span class="co"># [1] &quot;z:Encode_GM12878_CEBPB&quot; &quot;z:Encode_K562_Ebf1&quot;     &quot;z:Encode_K562_GATA1&quot;   </span></span>
-<span id="cb194-5"><a href="custom-deviations.html#cb194-5"></a><span class="co"># [4] &quot;z:Encode_K562_Pax5&quot;    </span></span></code></pre></div>
-<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="custom-deviations.html#cb195-1"></a>p &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
-<span id="cb195-2"><a href="custom-deviations.html#cb195-2"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
-<span id="cb195-3"><a href="custom-deviations.html#cb195-3"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;ChIPMatrix&quot;</span>, </span>
-<span id="cb195-4"><a href="custom-deviations.html#cb195-4"></a>    <span class="dt">name =</span> markerChIP, </span>
-<span id="cb195-5"><a href="custom-deviations.html#cb195-5"></a>    <span class="dt">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
-<span id="cb195-6"><a href="custom-deviations.html#cb195-6"></a>    <span class="dt">imputeWeights =</span> <span class="kw">getImputeWeights</span>(projHeme5)</span>
-<span id="cb195-7"><a href="custom-deviations.html#cb195-7"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb294"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb294-1"><a href="custom-deviations.html#cb294-1"></a>markerChIP &lt;-<span class="st"> </span><span class="kw">getFeatures</span>(projHeme5, <span class="dt">useMatrix =</span> <span class="st">&quot;ChIPMatrix&quot;</span>)</span>
+<span id="cb294-2"><a href="custom-deviations.html#cb294-2"></a>markerChIP &lt;-<span class="st"> </span><span class="kw">sort</span>(<span class="kw">grep</span>(<span class="st">&quot;z:&quot;</span>, markerChIP, <span class="dt">value =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb294-3"><a href="custom-deviations.html#cb294-3"></a>markerChIP</span></code></pre></div>
+<blockquote>
+<p>## [1] “z:Encode_GM12878_CEBPB” “z:Encode_K562_Ebf1” “z:Encode_K562_GATA1”<br />
+## [4] “z:Encode_K562_Pax5”</p>
+</blockquote>
+<div class="sourceCode" id="cb295"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb295-1"><a href="custom-deviations.html#cb295-1"></a>p &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
+<span id="cb295-2"><a href="custom-deviations.html#cb295-2"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb295-3"><a href="custom-deviations.html#cb295-3"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;ChIPMatrix&quot;</span>, </span>
+<span id="cb295-4"><a href="custom-deviations.html#cb295-4"></a>    <span class="dt">name =</span> markerChIP, </span>
+<span id="cb295-5"><a href="custom-deviations.html#cb295-5"></a>    <span class="dt">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
+<span id="cb295-6"><a href="custom-deviations.html#cb295-6"></a>    <span class="dt">imputeWeights =</span> <span class="kw">getImputeWeights</span>(projHeme5)</span>
+<span id="cb295-7"><a href="custom-deviations.html#cb295-7"></a>)</span></code></pre></div>
+<blockquote>
+<p>## Getting ImputeWeights<br />
+## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-10374635d5970-Date-2020-04-15_Time-11-14-35.log<br />
+## If there is an issue, please report to github with logFile!<br />
+## Getting UMAP Embedding<br />
+## ColorBy = ChIPMatrix<br />
+## Getting Matrix Values…<br />
+## Getting Matrix Values…<br />
+##<br />
+## Imputing Matrix<br />
+## Using weights on disk<br />
+## Using weights on disk<br />
+## Plotting Embedding<br />
+## 1 2 3 4<br />
+## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-10374635d5970-Date-2020-04-15_Time-11-14-35.log</p>
+</blockquote>
 <p>To plot all motifs we can use cowplot</p>
-<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="custom-deviations.html#cb196-1"></a><span class="co">#Rearrange for grid plotting</span></span>
-<span id="cb196-2"><a href="custom-deviations.html#cb196-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
-<span id="cb196-3"><a href="custom-deviations.html#cb196-3"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb196-4"><a href="custom-deviations.html#cb196-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
-<span id="cb196-5"><a href="custom-deviations.html#cb196-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
-<span id="cb196-6"><a href="custom-deviations.html#cb196-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
-<span id="cb196-7"><a href="custom-deviations.html#cb196-7"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb196-8"><a href="custom-deviations.html#cb196-8"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb196-9"><a href="custom-deviations.html#cb196-9"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb196-10"><a href="custom-deviations.html#cb196-10"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
-<span id="cb196-11"><a href="custom-deviations.html#cb196-11"></a>    )</span>
-<span id="cb196-12"><a href="custom-deviations.html#cb196-12"></a>})</span>
-<span id="cb196-13"><a href="custom-deviations.html#cb196-13"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">2</span>),p2))</span></code></pre></div>
+<div class="sourceCode" id="cb296"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb296-1"><a href="custom-deviations.html#cb296-1"></a><span class="co">#Rearrange for grid plotting</span></span>
+<span id="cb296-2"><a href="custom-deviations.html#cb296-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
+<span id="cb296-3"><a href="custom-deviations.html#cb296-3"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb296-4"><a href="custom-deviations.html#cb296-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
+<span id="cb296-5"><a href="custom-deviations.html#cb296-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
+<span id="cb296-6"><a href="custom-deviations.html#cb296-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
+<span id="cb296-7"><a href="custom-deviations.html#cb296-7"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb296-8"><a href="custom-deviations.html#cb296-8"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb296-9"><a href="custom-deviations.html#cb296-9"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb296-10"><a href="custom-deviations.html#cb296-10"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
+<span id="cb296-11"><a href="custom-deviations.html#cb296-11"></a>    )</span>
+<span id="cb296-12"><a href="custom-deviations.html#cb296-12"></a>})</span>
+<span id="cb296-13"><a href="custom-deviations.html#cb296-13"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">2</span>),p2))</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-MarkerChIP-W-Imputation_1.png" width="800" height="800" /></p>
 </div>
             </section>

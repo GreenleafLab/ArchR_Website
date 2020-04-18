@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-16" />
+<meta name="date" content="2020-04-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -164,12 +164,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="4.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>4.1</b> ArchR’s LSI Implementation</a></li>
 <li class="chapter" data-level="4.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>4.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
-<li class="chapter" data-level="4.3" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.3</b> Batch Effect Correction wtih Harmony</a></li>
-<li class="chapter" data-level="4.4" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.4</b> Session Information</a></li>
+<li class="chapter" data-level="4.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>4.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="4.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.4</b> Batch Effect Correction wtih Harmony</a></li>
+<li class="chapter" data-level="4.5" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.5</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>5</b> Clustering with ArchR</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.1</b> Session Information</a></li>
+<li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="5.2" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.2</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
 <ul>
@@ -230,7 +232,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="14" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>14</b> Integrative Analysis with ArchR</a>
 <ul>
-<li class="chapter" data-level="14.1" data-path="coaccessibility-with-archr.html"><a href="coaccessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> CoAccessibility with ArchR</a></li>
+<li class="chapter" data-level="14.1" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> Co-accessibility with ArchR</a></li>
 <li class="chapter" data-level="14.2" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>14.2</b> Peak2GeneLinkage with ArchR</a></li>
 <li class="chapter" data-level="14.3" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>14.3</b> Identification of Positive TF-Regulators</a></li>
 <li class="chapter" data-level="14.4" data-path="session-information-13.html"><a href="session-information-13.html"><i class="fa fa-check"></i><b>14.4</b> Session Information</a></li>
@@ -263,28 +265,44 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="feature-footprinting" class="section level2" number="13.2">
 <h2><span class="header-section-number">13.2</span> Feature Footprinting</h2>
-<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="feature-footprinting.html#cb205-1"></a><span class="co">#Create Group Coverage Files if you have not done so already</span></span>
-<span id="cb205-2"><a href="feature-footprinting.html#cb205-2"></a><span class="co">#projHeme5 &lt;- addGroupCoverages(ArchRProj = projHeme5, groupBy = &quot;Clusters2&quot;)</span></span></code></pre></div>
+<div class="sourceCode" id="cb306"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb306-1"><a href="feature-footprinting.html#cb306-1"></a><span class="co">#Create Group Coverage Files if you have not done so already</span></span>
+<span id="cb306-2"><a href="feature-footprinting.html#cb306-2"></a>projHeme5 &lt;-<span class="st"> </span><span class="kw">addGroupCoverages</span>(<span class="dt">ArchRProj =</span> projHeme5, <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>)</span></code></pre></div>
 <div id="no-normalization-1" class="section level3" number="13.2.1">
 <h3><span class="header-section-number">13.2.1</span> No Normalization</h3>
-<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="feature-footprinting.html#cb206-1"></a><span class="co">#Plot Motif Footprints from positions list</span></span>
-<span id="cb206-2"><a href="feature-footprinting.html#cb206-2"></a><span class="co">#Recommend doing a few motifs not entire motif set</span></span>
-<span id="cb206-3"><a href="feature-footprinting.html#cb206-3"></a>seTSS &lt;-<span class="st"> </span><span class="kw">getFootprints</span>(</span>
-<span id="cb206-4"><a href="feature-footprinting.html#cb206-4"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>
-<span id="cb206-5"><a href="feature-footprinting.html#cb206-5"></a>  <span class="dt">positions =</span> <span class="kw">GRangesList</span>(<span class="dt">TSS =</span> <span class="kw">getTSS</span>(projHeme5)), </span>
-<span id="cb206-6"><a href="feature-footprinting.html#cb206-6"></a>  <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
-<span id="cb206-7"><a href="feature-footprinting.html#cb206-7"></a>  <span class="dt">flank =</span> <span class="dv">2000</span></span>
-<span id="cb206-8"><a href="feature-footprinting.html#cb206-8"></a>)</span>
-<span id="cb206-9"><a href="feature-footprinting.html#cb206-9"></a></span>
-<span id="cb206-10"><a href="feature-footprinting.html#cb206-10"></a><span class="kw">plotFootprints</span>(</span>
-<span id="cb206-11"><a href="feature-footprinting.html#cb206-11"></a>  <span class="dt">seFoot =</span> seTSS,</span>
-<span id="cb206-12"><a href="feature-footprinting.html#cb206-12"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>
-<span id="cb206-13"><a href="feature-footprinting.html#cb206-13"></a>  <span class="dt">normMethod =</span> <span class="st">&quot;None&quot;</span>,</span>
-<span id="cb206-14"><a href="feature-footprinting.html#cb206-14"></a>  <span class="dt">plotName =</span> <span class="st">&quot;TSS-No-Normalization&quot;</span>,</span>
-<span id="cb206-15"><a href="feature-footprinting.html#cb206-15"></a>  <span class="dt">addDOC =</span> <span class="ot">FALSE</span>,</span>
-<span id="cb206-16"><a href="feature-footprinting.html#cb206-16"></a>  <span class="dt">flank =</span> <span class="dv">2000</span>,</span>
-<span id="cb206-17"><a href="feature-footprinting.html#cb206-17"></a>  <span class="dt">flankNorm =</span> <span class="dv">100</span></span>
-<span id="cb206-18"><a href="feature-footprinting.html#cb206-18"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb307"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb307-1"><a href="feature-footprinting.html#cb307-1"></a><span class="co">#Plot Motif Footprints from positions list</span></span>
+<span id="cb307-2"><a href="feature-footprinting.html#cb307-2"></a><span class="co">#Recommend doing a few motifs not entire motif set</span></span>
+<span id="cb307-3"><a href="feature-footprinting.html#cb307-3"></a>seTSS &lt;-<span class="st"> </span><span class="kw">getFootprints</span>(</span>
+<span id="cb307-4"><a href="feature-footprinting.html#cb307-4"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb307-5"><a href="feature-footprinting.html#cb307-5"></a>  <span class="dt">positions =</span> <span class="kw">GRangesList</span>(<span class="dt">TSS =</span> <span class="kw">getTSS</span>(projHeme5)), </span>
+<span id="cb307-6"><a href="feature-footprinting.html#cb307-6"></a>  <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
+<span id="cb307-7"><a href="feature-footprinting.html#cb307-7"></a>  <span class="dt">flank =</span> <span class="dv">2000</span></span>
+<span id="cb307-8"><a href="feature-footprinting.html#cb307-8"></a>)</span></code></pre></div>
+<blockquote>
+<p>## ArchR logging to : ArchRLogs/ArchR-getFootprints-10b7a47a82723-Date-2020-04-15_Time-11-17-52.log<br />
+## If there is an issue, please report to github with logFile!<br />
+## 2020-04-15 11:17:52 : Computing Kmer Bias Table, 0.012 mins elapsed.<br />
+## 2020-04-15 11:18:24 : Finished Computing Kmer Tables, 0.535 mins elapsed.<br />
+## 2020-04-15 11:18:24 : Computing Footprints, 0.547 mins elapsed.<br />
+## 2020-04-15 11:18:36 : Computing Footprints Bias, 0.734 mins elapsed.<br />
+## 2020-04-15 11:18:43 : Summarizing Footprints, 0.852 mins elapsed.</p>
+</blockquote>
+<div class="sourceCode" id="cb308"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb308-1"><a href="feature-footprinting.html#cb308-1"></a><span class="kw">plotFootprints</span>(</span>
+<span id="cb308-2"><a href="feature-footprinting.html#cb308-2"></a>  <span class="dt">seFoot =</span> seTSS,</span>
+<span id="cb308-3"><a href="feature-footprinting.html#cb308-3"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb308-4"><a href="feature-footprinting.html#cb308-4"></a>  <span class="dt">normMethod =</span> <span class="st">&quot;None&quot;</span>,</span>
+<span id="cb308-5"><a href="feature-footprinting.html#cb308-5"></a>  <span class="dt">plotName =</span> <span class="st">&quot;TSS-No-Normalization&quot;</span>,</span>
+<span id="cb308-6"><a href="feature-footprinting.html#cb308-6"></a>  <span class="dt">addDOC =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb308-7"><a href="feature-footprinting.html#cb308-7"></a>  <span class="dt">flank =</span> <span class="dv">2000</span>,</span>
+<span id="cb308-8"><a href="feature-footprinting.html#cb308-8"></a>  <span class="dt">flankNorm =</span> <span class="dv">100</span></span>
+<span id="cb308-9"><a href="feature-footprinting.html#cb308-9"></a>)</span></code></pre></div>
+<blockquote>
+<p>## ArchR logging to : ArchRLogs/ArchR-plotFootprints-10b7a1b7faa1-Date-2020-04-15_Time-11-18-46.log<br />
+## If there is an issue, please report to github with logFile!<br />
+## 2020-04-15 11:18:46 : Plotting Footprint : TSS (1 of 1), 0.007 mins elapsed.<br />
+## Normalizing by flanking regions<br />
+## NormMethod = None<br />
+## ArchR logging successful to : ArchRLogs/ArchR-plotFootprints-10b7a1b7faa1-Date-2020-04-15_Time-11-18-46.log</p>
+</blockquote>
 <p>By default the plots will be in the outputDirectory of the ArchRProject. The challenge is that if you requested to plot all motifs and returned this as a ggplot object it could be extremely large. An example of motif footprints ran from this function are seen below.</p>
 <center>
 <img src="images/HemeWalkthrough/PNG/TSS-No-Normalization_1.png" width="250" height="400" />

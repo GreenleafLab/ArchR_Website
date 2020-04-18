@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-16" />
+<meta name="date" content="2020-04-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -164,12 +164,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="4.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>4.1</b> ArchR’s LSI Implementation</a></li>
 <li class="chapter" data-level="4.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>4.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
-<li class="chapter" data-level="4.3" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.3</b> Batch Effect Correction wtih Harmony</a></li>
-<li class="chapter" data-level="4.4" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.4</b> Session Information</a></li>
+<li class="chapter" data-level="4.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>4.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="4.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.4</b> Batch Effect Correction wtih Harmony</a></li>
+<li class="chapter" data-level="4.5" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.5</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>5</b> Clustering with ArchR</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.1</b> Session Information</a></li>
+<li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="5.2" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.2</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
 <ul>
@@ -230,7 +232,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="14" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>14</b> Integrative Analysis with ArchR</a>
 <ul>
-<li class="chapter" data-level="14.1" data-path="coaccessibility-with-archr.html"><a href="coaccessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> CoAccessibility with ArchR</a></li>
+<li class="chapter" data-level="14.1" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> Co-accessibility with ArchR</a></li>
 <li class="chapter" data-level="14.2" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>14.2</b> Peak2GeneLinkage with ArchR</a></li>
 <li class="chapter" data-level="14.3" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>14.3</b> Identification of Positive TF-Regulators</a></li>
 <li class="chapter" data-level="14.4" data-path="session-information-13.html"><a href="session-information-13.html"><i class="fa fa-check"></i><b>14.4</b> Session Information</a></li>
@@ -281,24 +283,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 &gt;&gt; Getting Cell Metadata…<br />
 &gt;&gt;<br />
 &gt;&gt; Merging Cell Metadata…<br />
-&gt;&gt; Initializing ArchRProject…<br />
-&gt;&gt;<br />
-&gt;&gt; / |<br />
-&gt;&gt; /  
-&gt;&gt; . / |.<br />
-&gt;&gt; \  / |.<br />
-&gt;&gt; \  / <code>|.   \&gt;\&gt;                 \\\                      /              |.   \&gt;\&gt;                   \                    /                |\   \&gt;\&gt;                   \\#####\           /                  ||   \&gt;\&gt;                 ==###########&gt;      /                   ||   \&gt;\&gt;                  \\##==......\    /                     ||   \&gt;\&gt;             ______ =       =|__ /__                     ||      \\\   \&gt;\&gt;         ,--' ,----</code>-,__ <strong><em>/’ –,-<code>-===================##========&gt;   \&gt;\&gt;        \               '        ##_______ _____ ,--,__,=##,__   ///   \&gt;\&gt;         ,    __==    ___,-,__,--'#'  ==='</code>-’ | ##,-/<br />
-&gt;&gt; -,</em></strong>_,—’ \####\________________,–\<em>##,/<br />
-&gt;&gt; </em>__ .______ ______ __ __ .______<br />
-&gt;&gt; /   | _   / || | | | | _  <br />
-&gt;&gt; / ^   | |<em>) | | ,—-’| |<strong>| | | |<em>) |<br />
-&gt;&gt; / /</em>    | / | | | </strong> | | /<br />
-&gt;&gt; / </em>____   | |  \___ | <code>----.|  |  |  | |  |\  \\___.   \&gt;\&gt;       /__/     \__\ | _|</code>._____| ______||<strong>| |</strong>| | <em>| `.</em>____|<br />
-&gt;&gt;</p>
+&gt;&gt; Initializing ArchRProject…</p>
 </blockquote>
 <p>We call this <code>ArchRProject</code> “projHeme1” because it is the first iteration of our hematopoiesis project. Throughout this walkthrough we will modify and update this <code>ArchRProject</code> and keep track of which version of the project we are using by iterating the project number (i.e. “projHeme2”).</p>
 <p>Lets look at our <code>ArchRProject</code>:</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="creating-an-archrproject-1.html#cb25-1"></a>projHeme1</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; class: ArchRProject<br />
+&gt;&gt; outputDirectory: /oak/stanford/groups/howchang/users/jgranja/ArchRTutorial/ArchRBook/BookOutput4/HemeTutorial<br />
+&gt;&gt; samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1<br />
+&gt;&gt; sampleColData names(1): ArrowFiles<br />
+&gt;&gt; cellColData names(11): Sample TSSEnrichment … DoubletScore<br />
+&gt;&gt; DoubletEnrichment<br />
+&gt;&gt; numberOfCells(1): 10661<br />
+&gt;&gt; medianTSS(1): 16.832<br />
+&gt;&gt; medianFrags(1): 3050</p>
+</blockquote>
 <p>We can see from the above that our <code>ArchRProject</code> has been initialized with a few important attributes:</p>
 <ol style="list-style-type: decimal">
 <li>The specified <code>outputDirectory</code>.</li>
@@ -310,8 +310,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ol>
 <p>We can check how much memory is used to store the <code>ArchRProject</code> in memory within R:</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="creating-an-archrproject-1.html#cb26-1"></a><span class="kw">paste0</span>(<span class="st">&quot;Memory Size = &quot;</span>, <span class="kw">round</span>(<span class="kw">object.size</span>(projHeme1) <span class="op">/</span><span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="dv">6</span>, <span class="dv">3</span>), <span class="st">&quot; MB&quot;</span>)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; [1] “Memory Size = 37.135 MB”</p>
+</blockquote>
 <p>We can also ask which data matrices are available within the <code>ArchRProject</code> which will be useful downstream once we start adding to this project:</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="creating-an-archrproject-1.html#cb27-1"></a><span class="kw">getAvailableMatrices</span>(projHeme1)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; [1] “GeneScoreMatrix” “TileMatrix”</p>
+</blockquote>
 </div>
             </section>
 

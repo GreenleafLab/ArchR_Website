@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-16" />
+<meta name="date" content="2020-04-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -164,12 +164,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="4.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>4.1</b> ArchR’s LSI Implementation</a></li>
 <li class="chapter" data-level="4.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>4.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
-<li class="chapter" data-level="4.3" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.3</b> Batch Effect Correction wtih Harmony</a></li>
-<li class="chapter" data-level="4.4" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.4</b> Session Information</a></li>
+<li class="chapter" data-level="4.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>4.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="4.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.4</b> Batch Effect Correction wtih Harmony</a></li>
+<li class="chapter" data-level="4.5" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.5</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>5</b> Clustering with ArchR</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.1</b> Session Information</a></li>
+<li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="5.2" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.2</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
 <ul>
@@ -230,7 +232,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="14" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>14</b> Integrative Analysis with ArchR</a>
 <ul>
-<li class="chapter" data-level="14.1" data-path="coaccessibility-with-archr.html"><a href="coaccessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> CoAccessibility with ArchR</a></li>
+<li class="chapter" data-level="14.1" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> Co-accessibility with ArchR</a></li>
 <li class="chapter" data-level="14.2" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>14.2</b> Peak2GeneLinkage with ArchR</a></li>
 <li class="chapter" data-level="14.3" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>14.3</b> Identification of Positive TF-Regulators</a></li>
 <li class="chapter" data-level="14.4" data-path="session-information-13.html"><a href="session-information-13.html"><i class="fa fa-check"></i><b>14.4</b> Session Information</a></li>
@@ -263,41 +265,110 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="calling-peaks-w-tilematrix" class="section level2" number="9.2">
 <h2><span class="header-section-number">9.2</span> Calling Peaks w/ TileMatrix</h2>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="calling-peaks-w-tilematrix.html#cb125-1"></a><span class="co">#Call Reproducible Peaks w/ TileMatrix (~2 minutes)</span></span>
-<span id="cb125-2"><a href="calling-peaks-w-tilematrix.html#cb125-2"></a>projHemeTmp &lt;-<span class="st"> </span><span class="kw">addReproduciblePeakSet</span>(</span>
-<span id="cb125-3"><a href="calling-peaks-w-tilematrix.html#cb125-3"></a>    <span class="dt">ArchRProj =</span> projHeme4, </span>
-<span id="cb125-4"><a href="calling-peaks-w-tilematrix.html#cb125-4"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
-<span id="cb125-5"><a href="calling-peaks-w-tilematrix.html#cb125-5"></a>    <span class="dt">peakMethod =</span> <span class="st">&quot;Tiles&quot;</span>,</span>
-<span id="cb125-6"><a href="calling-peaks-w-tilematrix.html#cb125-6"></a>    <span class="dt">method =</span> <span class="st">&quot;p&quot;</span></span>
-<span id="cb125-7"><a href="calling-peaks-w-tilematrix.html#cb125-7"></a>)</span>
-<span id="cb125-8"><a href="calling-peaks-w-tilematrix.html#cb125-8"></a></span>
-<span id="cb125-9"><a href="calling-peaks-w-tilematrix.html#cb125-9"></a><span class="kw">getPeakSet</span>(projHemeTmp)</span>
-<span id="cb125-10"><a href="calling-peaks-w-tilematrix.html#cb125-10"></a><span class="co"># GRanges object with 277187 ranges and 9 metadata columns:</span></span>
-<span id="cb125-11"><a href="calling-peaks-w-tilematrix.html#cb125-11"></a><span class="co">#            seqnames              ranges strand |   mlog10p     Group</span></span>
-<span id="cb125-12"><a href="calling-peaks-w-tilematrix.html#cb125-12"></a><span class="co">#               &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;     &lt;Rle&gt;</span></span>
-<span id="cb125-13"><a href="calling-peaks-w-tilematrix.html#cb125-13"></a><span class="co">#        [1]     chr1       752000-752499      * |     1.682 Cluster10</span></span>
-<span id="cb125-14"><a href="calling-peaks-w-tilematrix.html#cb125-14"></a><span class="co">#        [2]     chr1       752500-752999      * |     4.952 Cluster10</span></span>
-<span id="cb125-15"><a href="calling-peaks-w-tilematrix.html#cb125-15"></a><span class="co">#        [3]     chr1       758500-758999      * |     1.037  Cluster4</span></span>
-<span id="cb125-16"><a href="calling-peaks-w-tilematrix.html#cb125-16"></a><span class="co">#        [4]     chr1       761000-761499      * |     2.204  Cluster9</span></span>
-<span id="cb125-17"><a href="calling-peaks-w-tilematrix.html#cb125-17"></a><span class="co">#        [5]     chr1       762000-762499      * |     3.246  Cluster4</span></span>
-<span id="cb125-18"><a href="calling-peaks-w-tilematrix.html#cb125-18"></a><span class="co">#        ...      ...                 ...    ... .       ...       ...</span></span>
-<span id="cb125-19"><a href="calling-peaks-w-tilematrix.html#cb125-19"></a><span class="co">#   [277183]     chrX 154842000-154842499      * |     8.936 Cluster12</span></span>
-<span id="cb125-20"><a href="calling-peaks-w-tilematrix.html#cb125-20"></a><span class="co">#   [277184]     chrX 154842500-154842999      * |    12.546 Cluster12</span></span>
-<span id="cb125-21"><a href="calling-peaks-w-tilematrix.html#cb125-21"></a><span class="co">#   [277185]     chrX 154862000-154862499      * |     2.449  Cluster4</span></span>
-<span id="cb125-22"><a href="calling-peaks-w-tilematrix.html#cb125-22"></a><span class="co">#   [277186]     chrX 154912500-154912999      * |     2.484  Cluster5</span></span>
-<span id="cb125-23"><a href="calling-peaks-w-tilematrix.html#cb125-23"></a><span class="co">#   [277187]     chrX 154997000-154997499      * |     4.236  Cluster8</span></span></code></pre></div>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="calling-peaks-w-tilematrix.html#cb170-1"></a><span class="co">#Call Reproducible Peaks w/ TileMatrix (~2 minutes)</span></span>
+<span id="cb170-2"><a href="calling-peaks-w-tilematrix.html#cb170-2"></a>projHemeTmp &lt;-<span class="st"> </span><span class="kw">addReproduciblePeakSet</span>(</span>
+<span id="cb170-3"><a href="calling-peaks-w-tilematrix.html#cb170-3"></a>    <span class="dt">ArchRProj =</span> projHeme4, </span>
+<span id="cb170-4"><a href="calling-peaks-w-tilematrix.html#cb170-4"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
+<span id="cb170-5"><a href="calling-peaks-w-tilematrix.html#cb170-5"></a>    <span class="dt">peakMethod =</span> <span class="st">&quot;Tiles&quot;</span>,</span>
+<span id="cb170-6"><a href="calling-peaks-w-tilematrix.html#cb170-6"></a>    <span class="dt">method =</span> <span class="st">&quot;p&quot;</span></span>
+<span id="cb170-7"><a href="calling-peaks-w-tilematrix.html#cb170-7"></a>)</span></code></pre></div>
+<blockquote>
+<p>## ArchR logging to : ArchRLogs/ArchR-addReproduciblePeakSet-faba49485623-Date-2020-04-15_Time-10-27-15.log<br />
+## If there is an issue, please report to github with logFile!<br />
+## Calling Peaks with TileMatrix<br />
+## Group Coverages Already Computed Returning Groups, Set force = TRUE to Recompute!<br />
+## List of length 11<br />
+## names(11): B CD4.M CD4.N CLP Erythroid GMP Mono NK pDC PreB Progenitor<br />
+## 2020-04-15 10:27:16 : Peak Calling Parameters!, 0.012 mins elapsed.<br />
+## Group nCells nCellsUsed nReplicates nMin nMax maxPeaks<br />
+## B B 439 433 2 182 251 150000<br />
+## CD4.M CD4.M 678 617 2 117 500 150000<br />
+## CD4.N CD4.N 1271 552 2 52 500 150000<br />
+## CLP CLP 387 387 2 82 305 150000<br />
+## Erythroid Erythroid 879 694 2 194 500 150000<br />
+## GMP GMP 793 751 2 251 500 150000<br />
+## Mono Mono 2632 1000 2 500 500 150000<br />
+## NK NK 851 801 2 301 500 150000<br />
+## pDC pDC 320 311 2 150 161 150000<br />
+## PreB PreB 351 351 2 40 311 150000<br />
+## Progenitor Progenitor 1650 672 2 172 500 150000<br />
+## 2020-04-15 10:27:24 : Computing Total Accessibility Across All Features, 0.138 mins elapsed.<br />
+## 2020-04-15 10:27:27 : Computing Pseudo-Grouped Tile Matrix, 0.19 mins elapsed.<br />
+## 2020-04-15 10:28:07 : Created Pseudo-Grouped Tile Matrix (0.474 GB), 0.866 mins elapsed.<br />
+## Expectation = 0.137769200114613Expectation = 0.170233276575844Expectation = 0.502430087836881Expectation = 0.0743484690298421Expectation = 0.231170400914268Expectation = 0.0293481232153502Expectation = 0.188425424281447Expectation = 0.0412872862125409Expectation = 0.369108556109225Expectation = 0.120760726012825Expectation = 0.33554874172927Expectation = 0.330837760307742Expectation = 0.41068352704434Expectation = 0.343789007051322Expectation = 0.571660173038985Expectation = 0.180700422552374Expectation = 0.126306931769154Expectation = 0.107652051338631Expectation = 0.200607316117261Expectation = 0.0248573103536859Expectation = 0.38762741617292Expectation = 0.0990605372969163<br />
+## 2020-04-15 10:28:51 : Creating Group Peak Sets with Annotations!, 1.59 mins elapsed.<br />
+## 2020-04-15 10:29:03 : Creating Union Peak Set with Annotations!, 1.789 mins elapsed.<br />
+## Annotating Peaks : Nearest Gene<br />
+## Annotating Peaks : Gene<br />
+## Annotating Peaks : TSS<br />
+## Annotating Peaks : GC<br />
+## [1] “plotting ggplot!”<br />
+## 2020-04-15 10:29:22 : Finished Creating Union Peak Set (271917)!, 2.104 mins elapsed.</p>
+</blockquote>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="calling-peaks-w-tilematrix.html#cb171-1"></a><span class="kw">getPeakSet</span>(projHemeTmp)</span></code></pre></div>
+<blockquote>
+<p>## GRanges object with 271917 ranges and 9 metadata columns:<br />
+## seqnames ranges strand | mlog10p Group<br />
+## <Rle> <IRanges> <Rle> | <numeric> <Rle><br />
+## [1] chr1 752000-752499 * | 0.742 Mono<br />
+## [2] chr1 752500-752999 * | 6.561 Mono<br />
+## [3] chr1 758500-758999 * | 1.11 NK<br />
+## [4] chr1 762000-762499 * | 2.461 NK<br />
+## [5] chr1 762500-762999 * | 22.536 NK<br />
+## … … … … . … …<br />
+## [271913] chrX 154862000-154862499 * | 1.966 NK<br />
+## [271914] chrX 154862500-154862999 * | 1.334 NK<br />
+## [271915] chrX 154912500-154912999 * | 2.01 Erythroid<br />
+## [271916] chrX 154997000-154997499 * | 1.349 Progenitor<br />
+## [271917] chrX 154998000-154998499 * | 1.227 Mono<br />
+## distToGeneStart nearestGene peakType distToTSS nearestTSS<br />
+## <integer> <character> <character> <integer> <character><br />
+## [1] 10652 LINC00115 Distal 10652 uc001aau.3<br />
+## [2] 10152 LINC00115 Distal 10152 uc001aau.3<br />
+## [3] 4152 LINC00115 Distal 4152 uc001aau.3<br />
+## [4] 652 LINC00115 Promoter 652 uc001aau.3<br />
+## [5] 152 LINC00115 Promoter 152 uc001aau.3<br />
+## … … … … … …<br />
+## [271913] 19626 TMLHE Distal 19626 uc004cin.3<br />
+## [271914] 20126 TMLHE Distal 20126 uc004cin.3<br />
+## [271915] 70126 TMLHE Distal 70126 uc004cin.3<br />
+## [271916] 154626 TMLHE Distal 201 uc004cin.3<br />
+## [271917] 155626 TMLHE Distal 797 uc004cin.3<br />
+## GC idx<br />
+## <numeric> <integer><br />
+## [1] 0.376 1<br />
+## [2] 0.484 2<br />
+## [3] 0.56 3<br />
+## [4] 0.574 4<br />
+## [5] 0.684 5<br />
+## … … …<br />
+## [271913] 0.43 6212<br />
+## [271914] 0.42 6213<br />
+## [271915] 0.368 6214<br />
+## [271916] 0.542 6215<br />
+## [271917] 0.476 6216<br />
+## ——-<br />
+## seqinfo: 23 sequences from an unspecified genome; no seqlengths</p>
+</blockquote>
 <p>Lets see how well this compares to Macs2</p>
-<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="calling-peaks-w-tilematrix.html#cb126-1"></a><span class="co">#Peak Overlap</span></span>
-<span id="cb126-2"><a href="calling-peaks-w-tilematrix.html#cb126-2"></a><span class="kw">length</span>(<span class="kw">subsetByOverlaps</span>(<span class="kw">getPeakSet</span>(projHeme4), <span class="kw">getPeakSet</span>(projHemeTmp))) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(<span class="kw">getPeakSet</span>(projHeme4))</span>
-<span id="cb126-3"><a href="calling-peaks-w-tilematrix.html#cb126-3"></a><span class="co"># 0.9681079</span></span>
-<span id="cb126-4"><a href="calling-peaks-w-tilematrix.html#cb126-4"></a><span class="kw">length</span>(<span class="kw">subsetByOverlaps</span>(<span class="kw">getPeakSet</span>(projHemeTmp), <span class="kw">getPeakSet</span>(projHeme4))) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(<span class="kw">getPeakSet</span>(projHemeTmp))</span>
-<span id="cb126-5"><a href="calling-peaks-w-tilematrix.html#cb126-5"></a><span class="co"># 0.7902066</span></span>
-<span id="cb126-6"><a href="calling-peaks-w-tilematrix.html#cb126-6"></a></span>
-<span id="cb126-7"><a href="calling-peaks-w-tilematrix.html#cb126-7"></a><span class="co">#Extend to 1kb</span></span>
-<span id="cb126-8"><a href="calling-peaks-w-tilematrix.html#cb126-8"></a><span class="kw">length</span>(<span class="kw">subsetByOverlaps</span>(<span class="kw">resize</span>(<span class="kw">getPeakSet</span>(projHeme4), <span class="dv">1000</span>, <span class="st">&quot;center&quot;</span>), <span class="kw">getPeakSet</span>(projHemeTmp))) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(<span class="kw">getPeakSet</span>(projHeme4))</span>
-<span id="cb126-9"><a href="calling-peaks-w-tilematrix.html#cb126-9"></a><span class="co"># 0.9750028</span></span>
-<span id="cb126-10"><a href="calling-peaks-w-tilematrix.html#cb126-10"></a><span class="kw">length</span>(<span class="kw">subsetByOverlaps</span>(<span class="kw">getPeakSet</span>(projHemeTmp), <span class="kw">resize</span>(<span class="kw">getPeakSet</span>(projHeme4), <span class="dv">1000</span>, <span class="st">&quot;center&quot;</span>))) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(<span class="kw">getPeakSet</span>(projHemeTmp))</span>
-<span id="cb126-11"><a href="calling-peaks-w-tilematrix.html#cb126-11"></a><span class="co"># 0.858287</span></span></code></pre></div>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="calling-peaks-w-tilematrix.html#cb172-1"></a><span class="co">#Peak Overlap</span></span>
+<span id="cb172-2"><a href="calling-peaks-w-tilematrix.html#cb172-2"></a><span class="kw">length</span>(<span class="kw">subsetByOverlaps</span>(<span class="kw">getPeakSet</span>(projHeme4), <span class="kw">getPeakSet</span>(projHemeTmp))) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(<span class="kw">getPeakSet</span>(projHeme4))</span></code></pre></div>
+<blockquote>
+<p>## [1] 0.9627246</p>
+</blockquote>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="calling-peaks-w-tilematrix.html#cb173-1"></a><span class="kw">length</span>(<span class="kw">subsetByOverlaps</span>(<span class="kw">getPeakSet</span>(projHemeTmp), <span class="kw">getPeakSet</span>(projHeme4))) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(<span class="kw">getPeakSet</span>(projHemeTmp))</span></code></pre></div>
+<blockquote>
+<p>## [1] 0.7533365</p>
+</blockquote>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="calling-peaks-w-tilematrix.html#cb174-1"></a><span class="co">#Extend to 1kb</span></span>
+<span id="cb174-2"><a href="calling-peaks-w-tilematrix.html#cb174-2"></a><span class="kw">length</span>(<span class="kw">subsetByOverlaps</span>(<span class="kw">resize</span>(<span class="kw">getPeakSet</span>(projHeme4), <span class="dv">1000</span>, <span class="st">&quot;center&quot;</span>), <span class="kw">getPeakSet</span>(projHemeTmp))) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(<span class="kw">getPeakSet</span>(projHeme4))</span></code></pre></div>
+<blockquote>
+<p>## [1] 0.9676687</p>
+</blockquote>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="calling-peaks-w-tilematrix.html#cb175-1"></a><span class="kw">length</span>(<span class="kw">subsetByOverlaps</span>(<span class="kw">getPeakSet</span>(projHemeTmp), <span class="kw">resize</span>(<span class="kw">getPeakSet</span>(projHeme4), <span class="dv">1000</span>, <span class="st">&quot;center&quot;</span>))) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(<span class="kw">getPeakSet</span>(projHemeTmp))</span></code></pre></div>
+<blockquote>
+<p>## [1] 0.8287639</p>
+</blockquote>
 </div>
             </section>
 

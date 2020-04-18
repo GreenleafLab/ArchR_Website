@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-16" />
+<meta name="date" content="2020-04-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -164,12 +164,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="4.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>4.1</b> ArchR’s LSI Implementation</a></li>
 <li class="chapter" data-level="4.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>4.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
-<li class="chapter" data-level="4.3" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.3</b> Batch Effect Correction wtih Harmony</a></li>
-<li class="chapter" data-level="4.4" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.4</b> Session Information</a></li>
+<li class="chapter" data-level="4.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>4.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="4.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.4</b> Batch Effect Correction wtih Harmony</a></li>
+<li class="chapter" data-level="4.5" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.5</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>5</b> Clustering with ArchR</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.1</b> Session Information</a></li>
+<li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="5.2" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.2</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
 <ul>
@@ -230,7 +232,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="14" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>14</b> Integrative Analysis with ArchR</a>
 <ul>
-<li class="chapter" data-level="14.1" data-path="coaccessibility-with-archr.html"><a href="coaccessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> CoAccessibility with ArchR</a></li>
+<li class="chapter" data-level="14.1" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> Co-accessibility with ArchR</a></li>
 <li class="chapter" data-level="14.2" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>14.2</b> Peak2GeneLinkage with ArchR</a></li>
 <li class="chapter" data-level="14.3" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>14.3</b> Identification of Positive TF-Regulators</a></li>
 <li class="chapter" data-level="14.4" data-path="session-information-13.html"><a href="session-information-13.html"><i class="fa fa-check"></i><b>14.4</b> Session Information</a></li>
@@ -267,27 +269,88 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><span style="font-size:20px;font-weight:bold">Example 1. The <code>$</code> accessor allows direct access to <code>cellColData</code></span></p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="manipulating-an-archrproject.html#cb28-1"></a><span class="co">#A. Access cell names associated with each cell</span></span>
 <span id="cb28-2"><a href="manipulating-an-archrproject.html#cb28-2"></a><span class="kw">head</span>(projHeme1<span class="op">$</span>cellNames)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; [1] “scATAC_BMMC_R1#TTATGTCAGTGATTAG-1” “scATAC_BMMC_R1#AAGATAGTCACCGCGA-1”<br />
+&gt;&gt; [3] “scATAC_BMMC_R1#GCATTGAAGATTCCGT-1” “scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1”<br />
+&gt;&gt; [5] “scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1” “scATAC_BMMC_R1#AGTTACGAGAACGTCG-1”</p>
+</blockquote>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="manipulating-an-archrproject.html#cb29-1"></a><span class="co">#B. Access sample names associated with each cell</span></span>
 <span id="cb29-2"><a href="manipulating-an-archrproject.html#cb29-2"></a><span class="kw">head</span>(projHeme1<span class="op">$</span>Sample)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; [1] “scATAC_BMMC_R1” “scATAC_BMMC_R1” “scATAC_BMMC_R1” “scATAC_BMMC_R1”<br />
+&gt;&gt; [5] “scATAC_BMMC_R1” “scATAC_BMMC_R1”</p>
+</blockquote>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="manipulating-an-archrproject.html#cb30-1"></a><span class="co">#C. Access TSS Enrichment Scores for each cell</span></span>
 <span id="cb30-2"><a href="manipulating-an-archrproject.html#cb30-2"></a><span class="kw">quantile</span>(projHeme1<span class="op">$</span>TSSEnrichment)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; 0% 25% 50% 75% 100%<br />
+&gt;&gt; 4.027 13.922 16.832 19.937 41.782</p>
+</blockquote>
 <p><span style="font-size:20px;font-weight:bold">Example 2. Subsetting an <code>ArchRProject</code> by cells</span></p>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="manipulating-an-archrproject.html#cb31-1"></a><span class="co">#A. Subset the project numerically</span></span>
 <span id="cb31-2"><a href="manipulating-an-archrproject.html#cb31-2"></a>projHeme1[<span class="dv">1</span><span class="op">:</span><span class="dv">100</span>, ] <span class="co">#First 100 cells</span></span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; class: ArchRProject<br />
+&gt;&gt; outputDirectory: /oak/stanford/groups/howchang/users/jgranja/ArchRTutorial/ArchRBook/BookOutput4/HemeTutorial<br />
+&gt;&gt; samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1<br />
+&gt;&gt; sampleColData names(1): ArrowFiles<br />
+&gt;&gt; cellColData names(11): Sample TSSEnrichment … DoubletScore<br />
+&gt;&gt; DoubletEnrichment<br />
+&gt;&gt; numberOfCells(1): 100<br />
+&gt;&gt; medianTSS(1): 10.7725<br />
+&gt;&gt; medianFrags(1): 10200.5</p>
+</blockquote>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="manipulating-an-archrproject.html#cb32-1"></a><span class="co">#B. Subset the project using cellNames</span></span>
 <span id="cb32-2"><a href="manipulating-an-archrproject.html#cb32-2"></a>projHeme1[projHeme1<span class="op">$</span>cellNames[<span class="dv">1</span><span class="op">:</span><span class="dv">100</span>], ]</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; class: ArchRProject<br />
+&gt;&gt; outputDirectory: /oak/stanford/groups/howchang/users/jgranja/ArchRTutorial/ArchRBook/BookOutput4/HemeTutorial<br />
+&gt;&gt; samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1<br />
+&gt;&gt; sampleColData names(1): ArrowFiles<br />
+&gt;&gt; cellColData names(11): Sample TSSEnrichment … DoubletScore<br />
+&gt;&gt; DoubletEnrichment<br />
+&gt;&gt; numberOfCells(1): 100<br />
+&gt;&gt; medianTSS(1): 10.7725<br />
+&gt;&gt; medianFrags(1): 10200.5</p>
+</blockquote>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="manipulating-an-archrproject.html#cb33-1"></a><span class="co">#C. Subset the project to return all cells corresponding to a specific sample</span></span>
 <span id="cb33-2"><a href="manipulating-an-archrproject.html#cb33-2"></a>idxSample &lt;-<span class="st"> </span>BiocGenerics<span class="op">::</span><span class="kw">which</span>(projHeme1<span class="op">$</span>Sample <span class="op">%in%</span><span class="st"> &quot;scATAC_BMMC_R1&quot;</span>)</span>
 <span id="cb33-3"><a href="manipulating-an-archrproject.html#cb33-3"></a>cellsSample &lt;-<span class="st"> </span>projHeme1<span class="op">$</span>cellNames[idxSample]</span>
 <span id="cb33-4"><a href="manipulating-an-archrproject.html#cb33-4"></a>projHeme1[cellsSample, ]</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; class: ArchRProject<br />
+&gt;&gt; outputDirectory: /oak/stanford/groups/howchang/users/jgranja/ArchRTutorial/ArchRBook/BookOutput4/HemeTutorial<br />
+&gt;&gt; samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1<br />
+&gt;&gt; sampleColData names(1): ArrowFiles<br />
+&gt;&gt; cellColData names(11): Sample TSSEnrichment … DoubletScore<br />
+&gt;&gt; DoubletEnrichment<br />
+&gt;&gt; numberOfCells(1): 4932<br />
+&gt;&gt; medianTSS(1): 15.254<br />
+&gt;&gt; medianFrags(1): 2771</p>
+</blockquote>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="manipulating-an-archrproject.html#cb34-1"></a><span class="co">#D. Subset the project based on a specific TSS enrichment score cutoff</span></span>
 <span id="cb34-2"><a href="manipulating-an-archrproject.html#cb34-2"></a>idxPass &lt;-<span class="st"> </span><span class="kw">which</span>(projHeme1<span class="op">$</span>TSSEnrichment <span class="op">&gt;=</span><span class="st"> </span><span class="dv">8</span>)</span>
 <span id="cb34-3"><a href="manipulating-an-archrproject.html#cb34-3"></a>cellsPass &lt;-<span class="st"> </span>projHeme1<span class="op">$</span>cellNames[idxPass]</span>
 <span id="cb34-4"><a href="manipulating-an-archrproject.html#cb34-4"></a>projHeme1[cellsPass, ]</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; class: ArchRProject
+&gt;&gt; outputDirectory: /oak/stanford/groups/howchang/users/jgranja/ArchRTutorial/ArchRBook/BookOutput4/HemeTutorial<br />
+&gt;&gt; samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1<br />
+&gt;&gt; sampleColData names(1): ArrowFiles<br />
+&gt;&gt; cellColData names(11): Sample TSSEnrichment … DoubletScore<br />
+&gt;&gt; DoubletEnrichment<br />
+&gt;&gt; numberOfCells(1): 10500<br />
+&gt;&gt; medianTSS(1): 16.9275<br />
+&gt;&gt; medianFrags(1): 3042</p>
+</blockquote>
 <p><span style="font-size:20px;font-weight:bold">Example 3. Adding data to an <code>ArchRProject</code></span></p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="manipulating-an-archrproject.html#cb35-1"></a><span class="co">#Add a column to cellColData that contains more legible sample names by removing excess info from the original sample names</span></span>
 <span id="cb35-2"><a href="manipulating-an-archrproject.html#cb35-2"></a>bioNames &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;_R2|_R1|scATAC_&quot;</span>,<span class="st">&quot;&quot;</span>,projHeme1<span class="op">$</span>Sample)</span>
-<span id="cb35-3"><a href="manipulating-an-archrproject.html#cb35-3"></a>bioNames</span></code></pre></div>
+<span id="cb35-3"><a href="manipulating-an-archrproject.html#cb35-3"></a><span class="kw">head</span>(bioNames)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; [1] “BMMC” “BMMC” “BMMC” “BMMC” “BMMC” “BMMC”<br />
+&gt;&gt; [7] “BMMC” “BMMC” “BMMC” “BMMC” “BMMC” “BMMC”</p>
+</blockquote>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="manipulating-an-archrproject.html#cb36-1"></a>projHeme1<span class="op">$</span>bioNames &lt;-<span class="st"> </span>bioNames</span>
 <span id="cb36-2"><a href="manipulating-an-archrproject.html#cb36-2"></a></span>
 <span id="cb36-3"><a href="manipulating-an-archrproject.html#cb36-3"></a><span class="co">#Add a column to cellColData that only contains information for a subset of cells</span></span>
@@ -298,18 +361,82 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb36-8"><a href="manipulating-an-archrproject.html#cb36-8"></a></span>
 <span id="cb36-9"><a href="manipulating-an-archrproject.html#cb36-9"></a><span class="co">#We can compare these two columns to see &quot;NA&quot; filled in where data wasnt available for bioNames2</span></span>
 <span id="cb36-10"><a href="manipulating-an-archrproject.html#cb36-10"></a><span class="kw">getCellColData</span>(projHeme1, <span class="dt">select =</span> <span class="kw">c</span>(<span class="st">&quot;bioNames&quot;</span>, <span class="st">&quot;bioNames2&quot;</span>))</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; DataFrame with 10661 rows and 2 columns<br />
+&gt;&gt; bioNames bioNames2<br />
+&gt;&gt; <character> <character><br />
+&gt;&gt; scATAC_BMMC_R1#TTATGTCAGTGATTAG-1 BMMC BMMC<br />
+&gt;&gt; scATAC_BMMC_R1#AAGATAGTCACCGCGA-1 BMMC BMMC<br />
+&gt;&gt; scATAC_BMMC_R1#GCATTGAAGATTCCGT-1 BMMC BMMC<br />
+&gt;&gt; scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1 BMMC BMMC<br />
+&gt;&gt; scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1 BMMC BMMC<br />
+&gt;&gt; … … …<br />
+&gt;&gt; scATAC_PBMC_R1#GCTGCGAAGATCCGAG-1 PBMC NA<br />
+&gt;&gt; scATAC_PBMC_R1#GCAGCTGGTGGCCTTG-1 PBMC NA<br />
+&gt;&gt; scATAC_PBMC_R1#GCAGATTGTACGCAAG-1 PBMC NA<br />
+&gt;&gt; scATAC_PBMC_R1#TTCGTTACATTGAACC-1 PBMC NA<br />
+&gt;&gt; scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1 PBMC NA</p>
+</blockquote>
 <p><span style="font-size:20px;font-weight:bold">Example 4. Obtaining unique fragment counts</span></p>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="manipulating-an-archrproject.html#cb37-1"></a><span class="co">#Select the column from cellColData corresponding to the number of unique</span></span>
 <span id="cb37-2"><a href="manipulating-an-archrproject.html#cb37-2"></a><span class="co">#nuclear (non-mitochondrial) fragments per cell</span></span>
 <span id="cb37-3"><a href="manipulating-an-archrproject.html#cb37-3"></a>df &lt;-<span class="st"> </span><span class="kw">getCellColData</span>(projHeme1, <span class="dt">select =</span> <span class="st">&quot;nFrags&quot;</span>)</span>
 <span id="cb37-4"><a href="manipulating-an-archrproject.html#cb37-4"></a>df</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; DataFrame with 10661 rows and 1 column<br />
+&gt;&gt; nFrags<br />
+&gt;&gt; <numeric><br />
+&gt;&gt; scATAC_BMMC_R1#TTATGTCAGTGATTAG-1 26189<br />
+&gt;&gt; scATAC_BMMC_R1#AAGATAGTCACCGCGA-1 20648<br />
+&gt;&gt; scATAC_BMMC_R1#GCATTGAAGATTCCGT-1 18991<br />
+&gt;&gt; scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1 18296<br />
+&gt;&gt; scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1 17458<br />
+&gt;&gt; … …<br />
+&gt;&gt; scATAC_PBMC_R1#GCTGCGAAGATCCGAG-1 1038<br />
+&gt;&gt; scATAC_PBMC_R1#GCAGCTGGTGGCCTTG-1 1037<br />
+&gt;&gt; scATAC_PBMC_R1#GCAGATTGTACGCAAG-1 1033<br />
+&gt;&gt; scATAC_PBMC_R1#TTCGTTACATTGAACC-1 1033<br />
+&gt;&gt; scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1 1002</p>
+</blockquote>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="manipulating-an-archrproject.html#cb38-1"></a><span class="co">#Or, instead of selecting a column by name, we can actually perform operations on a given</span></span>
 <span id="cb38-2"><a href="manipulating-an-archrproject.html#cb38-2"></a><span class="co">#column using its column name</span></span>
 <span id="cb38-3"><a href="manipulating-an-archrproject.html#cb38-3"></a>df &lt;-<span class="st"> </span><span class="kw">getCellColData</span>(projHeme1, <span class="dt">select =</span> <span class="kw">c</span>(<span class="st">&quot;log10(nFrags)&quot;</span>, <span class="st">&quot;nFrags - 1&quot;</span>))</span>
 <span id="cb38-4"><a href="manipulating-an-archrproject.html#cb38-4"></a>df</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; DataFrame with 10661 rows and 2 columns<br />
+&gt;&gt; log10(nFrags) nFrags - 1<br />
+&gt;&gt; <numeric> <numeric><br />
+&gt;&gt; scATAC_BMMC_R1#TTATGTCAGTGATTAG-1 4.4181189156542 26188<br />
+&gt;&gt; scATAC_BMMC_R1#AAGATAGTCACCGCGA-1 4.31487799153581 20647<br />
+&gt;&gt; scATAC_BMMC_R1#GCATTGAAGATTCCGT-1 4.27854783377585 18990<br />
+&gt;&gt; scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1 4.26235615159869 18295<br />
+&gt;&gt; scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1 4.24199448915678 17457<br />
+&gt;&gt; … … …<br />
+&gt;&gt; scATAC_PBMC_R1#GCTGCGAAGATCCGAG-1 3.01619735351244 1037<br />
+&gt;&gt; scATAC_PBMC_R1#GCAGCTGGTGGCCTTG-1 3.01577875638904 1036<br />
+&gt;&gt; scATAC_PBMC_R1#GCAGATTGTACGCAAG-1 3.01410032151962 1032<br />
+&gt;&gt; scATAC_PBMC_R1#TTCGTTACATTGAACC-1 3.01410032151962 1032<br />
+&gt;&gt; scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1 3.00086772153123 1001</p>
+</blockquote>
 <p><span style="font-size:20px;font-weight:bold">Example 5. Plotting QC metrics - log10(Unique Fragments) vs TSS enrichment score</span></p>
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="manipulating-an-archrproject.html#cb39-1"></a>df &lt;-<span class="st"> </span><span class="kw">getCellColData</span>(projHeme1, <span class="dt">select =</span> <span class="kw">c</span>(<span class="st">&quot;log10(nFrags)&quot;</span>, <span class="st">&quot;TSSEnrichment&quot;</span>))</span>
 <span id="cb39-2"><a href="manipulating-an-archrproject.html#cb39-2"></a>df</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; DataFrame with 10661 rows and 2 columns<br />
+&gt;&gt; log10(nFrags) TSSEnrichment<br />
+&gt;&gt; <numeric> <numeric><br />
+&gt;&gt; scATAC_BMMC_R1#TTATGTCAGTGATTAG-1 4.4181189156542 7.149<br />
+&gt;&gt; scATAC_BMMC_R1#AAGATAGTCACCGCGA-1 4.31487799153581 7.911<br />
+&gt;&gt; scATAC_BMMC_R1#GCATTGAAGATTCCGT-1 4.27854783377585 4.505<br />
+&gt;&gt; scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1 4.26235615159869 6.946<br />
+&gt;&gt; scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1 4.24199448915678 4.799<br />
+&gt;&gt; … … …<br />
+&gt;&gt; scATAC_PBMC_R1#GCTGCGAAGATCCGAG-1 3.01619735351244 24.356<br />
+&gt;&gt; scATAC_PBMC_R1#GCAGCTGGTGGCCTTG-1 3.01577875638904 22.537<br />
+&gt;&gt; scATAC_PBMC_R1#GCAGATTGTACGCAAG-1 3.01410032151962 20.146<br />
+&gt;&gt; scATAC_PBMC_R1#TTCGTTACATTGAACC-1 3.01410032151962 30.198<br />
+&gt;&gt; scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1 3.00086772153123 21.485</p>
+</blockquote>
 <p>Now lets plot the number of unique nuclear fragments (log10) by the TSS enrichment score. This type of plot is
 key for identifying high quality cells. We can further adjust our cutoffs based on this plot if need be.</p>
 <div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="manipulating-an-archrproject.html#cb40-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggPoint</span>(</span>
@@ -327,6 +454,10 @@ key for identifying high quality cells. We can further adjust our cutoffs based 
 <p><img src="images/HemeWalkthrough/PNG/TSS-vs-Frags_1.png" width="500" height="500" /></p>
 <p>To save an editable vectorized version of this plot, we use <code>plotPDF()</code>.</p>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="manipulating-an-archrproject.html#cb41-1"></a><span class="kw">plotPDF</span>(p, <span class="dt">name =</span> <span class="st">&quot;TSS-vs-Frags.pdf&quot;</span>, <span class="dt">ArchRProj =</span> projHeme1, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; [1] “plotting ggplot!”<br />
+&gt;&gt; [1] 0</p>
+</blockquote>
 <p><a href="images/HemeWalkthrough/PDF/TSS-vs-Frags.pdf">Download PDF : TSS-vs-Frags.pdf</a></p>
 </div>
             </section>

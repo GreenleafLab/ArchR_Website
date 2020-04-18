@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-16" />
+<meta name="date" content="2020-04-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -164,12 +164,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="4.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>4.1</b> ArchR’s LSI Implementation</a></li>
 <li class="chapter" data-level="4.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>4.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
-<li class="chapter" data-level="4.3" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.3</b> Batch Effect Correction wtih Harmony</a></li>
-<li class="chapter" data-level="4.4" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.4</b> Session Information</a></li>
+<li class="chapter" data-level="4.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>4.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="4.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.4</b> Batch Effect Correction wtih Harmony</a></li>
+<li class="chapter" data-level="4.5" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.5</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>5</b> Clustering with ArchR</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.1</b> Session Information</a></li>
+<li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="5.2" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.2</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
 <ul>
@@ -230,7 +232,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="14" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>14</b> Integrative Analysis with ArchR</a>
 <ul>
-<li class="chapter" data-level="14.1" data-path="coaccessibility-with-archr.html"><a href="coaccessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> CoAccessibility with ArchR</a></li>
+<li class="chapter" data-level="14.1" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> Co-accessibility with ArchR</a></li>
 <li class="chapter" data-level="14.2" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>14.2</b> Peak2GeneLinkage with ArchR</a></li>
 <li class="chapter" data-level="14.3" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>14.3</b> Identification of Positive TF-Regulators</a></li>
 <li class="chapter" data-level="14.4" data-path="session-information-13.html"><a href="session-information-13.html"><i class="fa fa-check"></i><b>14.4</b> Session Information</a></li>
@@ -263,28 +265,106 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="tsne" class="section level2" number="6.2">
 <h2><span class="header-section-number">6.2</span> tSNE</h2>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="tsne.html#cb77-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addTSNE</span>(</span>
-<span id="cb77-2"><a href="tsne.html#cb77-2"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
-<span id="cb77-3"><a href="tsne.html#cb77-3"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>, </span>
-<span id="cb77-4"><a href="tsne.html#cb77-4"></a>    <span class="dt">name =</span> <span class="st">&quot;TSNE&quot;</span>, </span>
-<span id="cb77-5"><a href="tsne.html#cb77-5"></a>    <span class="dt">perplexity =</span> <span class="dv">30</span></span>
-<span id="cb77-6"><a href="tsne.html#cb77-6"></a>)</span></code></pre></div>
-<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="tsne.html#cb78-1"></a>p1 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(<span class="dt">ArchRProj =</span> projHeme2, <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;Sample&quot;</span>, <span class="dt">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span>
-<span id="cb78-2"><a href="tsne.html#cb78-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(<span class="dt">ArchRProj =</span> projHeme2, <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;Clusters&quot;</span>, <span class="dt">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span>
-<span id="cb78-3"><a href="tsne.html#cb78-3"></a><span class="kw">ggAlignPlots</span>(p1, p2, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="tsne.html#cb84-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addTSNE</span>(</span>
+<span id="cb84-2"><a href="tsne.html#cb84-2"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
+<span id="cb84-3"><a href="tsne.html#cb84-3"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>, </span>
+<span id="cb84-4"><a href="tsne.html#cb84-4"></a>    <span class="dt">name =</span> <span class="st">&quot;TSNE&quot;</span>, </span>
+<span id="cb84-5"><a href="tsne.html#cb84-5"></a>    <span class="dt">perplexity =</span> <span class="dv">30</span></span>
+<span id="cb84-6"><a href="tsne.html#cb84-6"></a>)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; Read the 10251 x 30 data matrix successfully!<br />
+&gt;&gt; OpenMP is working. 9 threads.<br />
+&gt;&gt; Using no_dims = 2, perplexity = 30.000000, and theta = 0.500000<br />
+&gt;&gt; Computing input similarities…<br />
+&gt;&gt; Building tree…<br />
+&gt;&gt; - point 10000 of 10251<br />
+&gt;&gt; - point 10000 of 10251<br />
+&gt;&gt; Done in 9.33 seconds (sparsity = 0.013318)!<br />
+&gt;&gt; Learning embedding…<br />
+&gt;&gt; Iteration 50: error is 96.116599 (50 iterations in 7.59 seconds)<br />
+&gt;&gt; Iteration 100: error is 84.202047 (50 iterations in 7.93 seconds)<br />
+&gt;&gt; Iteration 150: error is 81.634548 (50 iterations in 6.24 seconds)<br />
+&gt;&gt; Iteration 200: error is 80.924221 (50 iterations in 6.33 seconds)<br />
+&gt;&gt; Iteration 250: error is 80.681514 (50 iterations in 6.60 seconds)<br />
+&gt;&gt; Iteration 300: error is 3.272456 (50 iterations in 5.98 seconds)<br />
+&gt;&gt; Iteration 350: error is 3.003011 (50 iterations in 5.69 seconds)<br />
+&gt;&gt; Iteration 400: error is 2.860067 (50 iterations in 5.58 seconds)<br />
+&gt;&gt; Iteration 450: error is 2.771029 (50 iterations in 5.53 seconds)<br />
+&gt;&gt; Iteration 500: error is 2.708926 (50 iterations in 5.58 seconds)<br />
+&gt;&gt; Iteration 550: error is 2.662250 (50 iterations in 5.49 seconds)<br />
+&gt;&gt; Iteration 600: error is 2.626274 (50 iterations in 5.53 seconds)<br />
+&gt;&gt; Iteration 650: error is 2.597377 (50 iterations in 5.48 seconds)<br />
+&gt;&gt; Iteration 700: error is 2.573140 (50 iterations in 5.48 seconds)<br />
+&gt;&gt; Iteration 750: error is 2.553895 (50 iterations in 5.43 seconds)<br />
+&gt;&gt; Iteration 800: error is 2.540270 (50 iterations in 5.46 seconds)<br />
+&gt;&gt; Iteration 850: error is 2.531147 (50 iterations in 5.64 seconds)<br />
+&gt;&gt; Iteration 900: error is 2.524095 (50 iterations in 5.73 seconds)<br />
+&gt;&gt; Iteration 950: error is 2.517901 (50 iterations in 5.63 seconds)<br />
+&gt;&gt; Iteration 1000: error is 2.511794 (50 iterations in 5.47 seconds)<br />
+&gt;&gt; Fitting performed in 118.39 seconds.</p>
+</blockquote>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="tsne.html#cb85-1"></a>p1 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(<span class="dt">ArchRProj =</span> projHeme2, <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;Sample&quot;</span>, <span class="dt">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; ArchR logging to : ArchRLogs/ArchR-plotEmbedding-efee11770af1-Date-2020-04-15_Time-09-52-22.log<br />
+&gt;&gt; If there is an issue, please report to github with logFile!<br />
+&gt;&gt; Getting UMAP Embedding<br />
+&gt;&gt; ColorBy = cellColData<br />
+&gt;&gt; Plotting Embedding<br />
+&gt;&gt; 1<br />
+&gt;&gt; ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-efee11770af1-Date-2020-04-15_Time-09-52-22.log</p>
+</blockquote>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="tsne.html#cb86-1"></a>p2 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(<span class="dt">ArchRProj =</span> projHeme2, <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;Clusters&quot;</span>, <span class="dt">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; ArchR logging to : ArchRLogs/ArchR-plotEmbedding-efee339a10ad-Date-2020-04-15_Time-09-52-23.log<br />
+&gt;&gt; If there is an issue, please report to github with logFile!<br />
+&gt;&gt; Getting UMAP Embedding<br />
+&gt;&gt; ColorBy = cellColData<br />
+&gt;&gt; Plotting Embedding<br />
+&gt;&gt; 1<br />
+&gt;&gt; ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-efee339a10ad-Date-2020-04-15_Time-09-52-23.log</p>
+</blockquote>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="tsne.html#cb87-1"></a><span class="kw">ggAlignPlots</span>(p1, p2, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>)</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-TSNE-Sample-Clusters-Combined_1.png" width="800" height="400" /></p>
 <p>To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
 nice looking.</p>
-<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="tsne.html#cb79-1"></a><span class="kw">plotPDF</span>(p1,p2, <span class="dt">name =</span> <span class="st">&quot;Plot-TSNE-Sample-Clusters.pdf&quot;</span>, <span class="dt">ArchRProj =</span> projHeme2, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="tsne.html#cb88-1"></a><span class="kw">plotPDF</span>(p1,p2, <span class="dt">name =</span> <span class="st">&quot;Plot-TSNE-Sample-Clusters.pdf&quot;</span>, <span class="dt">ArchRProj =</span> projHeme2, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; [1] “plotting ggplot!”<br />
+&gt;&gt; [1] “plotting ggplot!”<br />
+&gt;&gt; [1] 0</p>
+</blockquote>
 <p><a href="images/HemeWalkthrough/PDF/Plot-TSNE-Sample-Clusters.pdf">Download PDF : Plot-TSNE-Sample-Clusters.pdf</a></p>
 <p>We can also see the results from scran clustering</p>
-<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="tsne.html#cb80-1"></a>p1 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(<span class="dt">ArchRProj =</span> projHeme2, <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;Sample&quot;</span>, <span class="dt">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span>
-<span id="cb80-2"><a href="tsne.html#cb80-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(<span class="dt">ArchRProj =</span> projHeme2, <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;ScranClusters&quot;</span>, <span class="dt">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span>
-<span id="cb80-3"><a href="tsne.html#cb80-3"></a><span class="kw">ggAlignPlots</span>(p1, p2, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="tsne.html#cb89-1"></a>p1 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(<span class="dt">ArchRProj =</span> projHeme2, <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;Sample&quot;</span>, <span class="dt">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; ArchR logging to : ArchRLogs/ArchR-plotEmbedding-efeeb55d566-Date-2020-04-15_Time-09-52-45.log<br />
+&gt;&gt; If there is an issue, please report to github with logFile!<br />
+&gt;&gt; Getting UMAP Embedding<br />
+&gt;&gt; ColorBy = cellColData<br />
+&gt;&gt; Plotting Embedding<br />
+&gt;&gt; 1<br />
+&gt;&gt; ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-efeeb55d566-Date-2020-04-15_Time-09-52-45.log</p>
+</blockquote>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="tsne.html#cb90-1"></a>p2 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(<span class="dt">ArchRProj =</span> projHeme2, <span class="dt">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;ScranClusters&quot;</span>, <span class="dt">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; ArchR logging to : ArchRLogs/ArchR-plotEmbedding-efee4843c8ed-Date-2020-04-15_Time-09-52-46.log<br />
+&gt;&gt; If there is an issue, please report to github with logFile!<br />
+&gt;&gt; Getting UMAP Embedding<br />
+&gt;&gt; ColorBy = cellColData<br />
+&gt;&gt; Plotting Embedding<br />
+&gt;&gt; 1<br />
+&gt;&gt; ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-efee4843c8ed-Date-2020-04-15_Time-09-52-46.log</p>
+</blockquote>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="tsne.html#cb91-1"></a><span class="kw">ggAlignPlots</span>(p1, p2, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>)</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-tSNE-Sample-ScranClusters-Combined_1.png" width="800" height="400" /></p>
 <p>To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
 nice looking.</p>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="tsne.html#cb81-1"></a><span class="kw">plotPDF</span>(p1,p2, <span class="dt">name =</span> <span class="st">&quot;Plot-tSNE-Sample-ScranClusters.pdf&quot;</span>, <span class="dt">ArchRProj =</span> projHeme2, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="tsne.html#cb92-1"></a><span class="kw">plotPDF</span>(p1,p2, <span class="dt">name =</span> <span class="st">&quot;Plot-tSNE-Sample-ScranClusters.pdf&quot;</span>, <span class="dt">ArchRProj =</span> projHeme2, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; [1] “plotting ggplot!”<br />
+&gt;&gt; [1] “plotting ggplot!”<br />
+&gt;&gt; [1] 0</p>
+</blockquote>
 <p><a href="images/HemeWalkthrough/PDF/Plot-tSNE-Sample-ScranClusters.pdf">Download PDF : Plot-tSNE-Sample-ScranClusters.pdf</a></p>
 </div>
             </section>

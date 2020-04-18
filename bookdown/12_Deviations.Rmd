@@ -64,6 +64,8 @@ If you have not added background peaks
 ```{r eval=FALSE}
 projHeme5 <- addBgdPeaks(projHeme5)
 ```
+> \## Identifying Background Peaks!  
+## No methods found in package 'IRanges' for request: 'score' when loading 'TFBSTools'
 
 Add ChromVAR Deviations for Motifs
 
@@ -74,22 +76,43 @@ projHeme5 <- addDeviationsMatrix(
   force = TRUE
 )
 ```
+> \## Using Previous Background Peaks!  
+## ArchR logging to : ArchRLogs/ArchR-addDeviationsMatrix-103741bce39ff-Date-2020-04-15_Time-10-45-35.log  
+## If there is an issue, please report to github with logFile!  
+## NULL  
+## 2020-04-15 10:45:40 : Batch Execution w/ safelapply!, 0 mins elapsed.  
+## ###########  
+## 2020-04-15 10:57:19 : Completed Computing Deviations!, 11.734 mins elapsed.  
+## ###########  
+## ArchR logging successful to : ArchRLogs/ArchR-addDeviationsMatrix-103741bce39ff-Date-2020-04-15_Time-10-45-35.log  
 
 Plot Variable Motif Annotations
 
 ```{r eval=FALSE}
 plotVarDev <- getVarDeviations(projHeme5, plot = TRUE)
-# DataFrame with 6 rows and 6 columns
-#      seqnames     idx      name     combinedVars       combinedMeans      rank
-#         <Rle> <array>   <array>        <numeric>           <numeric> <integer>
-# f383        z     383 GATA1_383 12.5587654919393 -0.0467737461797836         1
-# f388        z     388 GATA2_388 12.5232684663532 -0.0437582624045581         2
-# f336        z     336  SPIB_336 11.1449104702032 -0.0563199587385128         3
-# f385        z     385 GATA5_385 10.9268531272974 -0.0433659077435513         4
-# f155        z     155 CEBPA_155 10.6045910511329   -0.14514233730257         5
-# f384        z     384 GATA3_384 10.4460730802746 -0.0428770420598439         6
+```
+> \## DataFrame with 6 rows and 6 columns  
+##      seqnames     idx        name     combinedVars       combinedMeans  
+##         <Rle> <array>     <array>        <numeric>           <numeric>  
+## f388        z     388   GATA2_388 11.9292478607949  -0.034894792575792  
+## f155        z     155   CEBPA_155 11.8070700579364  -0.174087405321135  
+## f383        z     383   GATA1_383 11.8045825337775 -0.0378306234562619  
+## f336        z     336    SPIB_336 11.3432739583017 -0.0819836042460723  
+## f385        z     385   GATA5_385 10.8828679211543  -0.036867577013264  
+## f651        z     651 SMARCC1_651 10.2885493109675  -0.131812047523969  
+##           rank  
+##      <integer>  
+## f388         1  
+## f155         2  
+## f383         3  
+## f336         4  
+## f385         5  
+## f651         6  
+
+```{r eval=FALSE}
 plotVarDev
 ```
+> \## Warning: Removed 1 rows containing missing values (geom_point).
 
 ```{r, include=FALSE, eval=FALSE}
 plotPDF(plotVarDev, name = "Variable-Motif-Deviation-Scores", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
@@ -105,18 +128,22 @@ We can then plot this as a nice PDF
 ```{r eval=FALSE}
 plotPDF(plotVarDev, name = "Variable-Motif-Deviation-Scores", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
 ```
+> \## [1] "plotting ggplot!"  
+## Warning: Removed 1 rows containing missing values (geom_point).  
+## Warning: Removed 1 rows containing missing values (geom_point).  
+## [1] 0  
 
 If we want to get motif feature names for downstream plotting
 
 ```{r eval=FALSE}
 motifs <- c("GATA1", "CEBPA", "EBF1", "IRF4", "TBX21", "PAX5")
 getFeatures(projHeme5, select = paste(motifs, collapse="|"), useMatrix = "MotifMatrix")
-#  [1] "z:TBX21_780"          "z:PAX5_709"           "z:IRF4_632"          
-#  [4] "z:GATA1_383"          "z:CEBPA_155"          "z:EBF1_67"           
-#  [7] "z:SREBF1_22"          "deviations:TBX21_780" "deviations:PAX5_709" 
-# [10] "deviations:IRF4_632"  "deviations:GATA1_383" "deviations:CEBPA_155"
-# [13] "deviations:EBF1_67"   "deviations:SREBF1_22"
 ```
+> \##  [1] "z:TBX21_780"          "z:PAX5_709"           "z:IRF4_632"          
+##  [4] "z:GATA1_383"          "z:CEBPA_155"          "z:EBF1_67"           
+##  [7] "z:SREBF1_22"          "deviations:TBX21_780" "deviations:PAX5_709"  
+## [10] "deviations:IRF4_632"  "deviations:GATA1_383" "deviations:CEBPA_155"  
+## [13] "deviations:EBF1_67"   "deviations:SREBF1_22"  
 
 To get deviation z-scores
 
@@ -125,9 +152,10 @@ markerMotifs <- getFeatures(projHeme5, select = paste(motifs, collapse="|"), use
 markerMotifs <- grep("z:", markerMotifs, value = TRUE)
 markerMotifs <- markerMotifs[markerMotifs %ni% "z:SREBF1_22"]
 markerMotifs
-# [1] "z:TBX21_780" "z:PAX5_709"  "z:IRF4_632"  "z:GATA1_383" "z:CEBPA_155"
-# [6] "z:EBF1_67"  
 ```
+> \## [1] "z:TBX21_780" "z:PAX5_709"  "z:IRF4_632"  "z:GATA1_383" "z:CEBPA_155"  
+## [6] "z:EBF1_67"
+
 
 We can also now plot the distribution of chromVAR deviation scores for each cluster
 
@@ -139,6 +167,15 @@ p <- plotGroups(ArchRProj = projHeme5,
   imputeWeights = getImputeWeights(projHeme5)
 )
 ```
+> \## Getting ImputeWeights  
+## Getting Matrix Values...  
+## Getting Matrix Values...  
+##   
+## ArchR logging to : ArchRLogs/ArchR-imputeMatrix-103746efc5207-Date-2020-04-15_Time-10-57-40.log  
+## If there is an issue, please report to github with logFile!  
+## Using weights on disk  
+## Using weights on disk  
+## 1 2 3 4 5 6  
 
 To plot all genes we can use cowplot
 
@@ -166,6 +203,12 @@ p2 <- lapply(seq_along(p), function(x){
 })
 do.call(cowplot::plot_grid, c(list(nrow = 1, rel_widths = c(2, rep(1, length(p2) - 1))),p2))
 ```
+> \## Picking joint bandwidth of 0.0181  
+## Picking joint bandwidth of 0.02  
+## Picking joint bandwidth of 0.07  
+## Picking joint bandwidth of 0.109  
+## Picking joint bandwidth of 0.102  
+## Picking joint bandwidth of 0.0703  
 
 ```{r, include=FALSE, eval=FALSE}
 plotPDF(
@@ -188,9 +231,27 @@ We can then plot this as a nice PDF
 ```{r eval=FALSE}
 plotPDF(p, name = "Plot-Groups-Deviations-w-Imputation", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
 ```
+> \## [1] "plotting ggplot!"  
+## Picking joint bandwidth of 0.0181  
+## Picking joint bandwidth of 0.0181  
+## [1] "plotting ggplot!"  
+## Picking joint bandwidth of 0.02  
+## Picking joint bandwidth of 0.02  
+## [1] "plotting ggplot!"  
+## Picking joint bandwidth of 0.07  
+## Picking joint bandwidth of 0.07  
+## [1] "plotting ggplot!"  
+## Picking joint bandwidth of 0.109  
+## Picking joint bandwidth of 0.109  
+## [1] "plotting ggplot!"  
+## Picking joint bandwidth of 0.102  
+## Picking joint bandwidth of 0.102  
+## [1] "plotting ggplot!"  
+## Picking joint bandwidth of 0.0703  
+## Picking joint bandwidth of 0.0703  
+## [1] 0  
 
 We can now overlay these motif deviation scores on the UMAP embedding
-
 
 ```{r eval=FALSE}
 p <- plotEmbedding(
@@ -201,6 +262,20 @@ p <- plotEmbedding(
     imputeWeights = getImputeWeights(projHeme5)
 )
 ```
+> \## Getting ImputeWeights  
+## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-10374bec190f-Date-2020-04-15_Time-10-58-03.log  
+## If there is an issue, please report to github with logFile!  
+## Getting UMAP Embedding  
+## ColorBy = MotifMatrix  
+## Getting Matrix Values...  
+## Getting Matrix Values...  
+##   
+## Imputing Matrix    
+## Using weights on disk  
+## Using weights on disk  
+## Plotting Embedding  
+## 1 2 3 4 5 6   
+## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-10374bec190f-Date-2020-04-15_Time-10-58-03.log  
 
 To plot all motifs we can use cowplot
 
@@ -237,14 +312,19 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 ![](images/HemeWalkthrough/PNG/Plot-UMAP-MarkerMotifs-W-Imputation_1.png){width=800 height=800}
 
 
+```{r include=FALSE, eval=FALSE,echo=FALSE}
+#JJJ This has two sections that say "gene expression" and use "markerRNA" but one is for gene score and the other for RNA
+```
 We can also plot the gene expression profiles for each of these TFs
 
 ```{r eval=FALSE}
 markerRNA <- getFeatures(projHeme5, select = paste(motifs, collapse="|"), useMatrix = "GeneScoreMatrix")
 markerRNA <- markerRNA[markerRNA %ni% c("SREBF1","CEBPA-DT")]
 markerRNA
-#[1] "TBX21" "CEBPA" "EBF1"  "IRF4"  "PAX5"  "GATA1"
+```
+> \## [1] "TBX21" "CEBPA" "EBF1"  "IRF4"  "PAX5"  "GATA1"
 
+```{r eval=FALSE}
 p <- plotEmbedding(
     ArchRProj = projHeme5, 
     colorBy = "GeneScoreMatrix", 
@@ -252,7 +332,23 @@ p <- plotEmbedding(
     embedding = "UMAP",
     imputeWeights = getImputeWeights(projHeme5)
 )
+```
+> \## Getting ImputeWeights  
+## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-1037475e6dc52-Date-2020-04-15_Time-10-58-30.log  
+## If there is an issue, please report to github with logFile!  
+## Getting UMAP Embedding  
+## ColorBy = GeneScoreMatrix  
+## Getting Matrix Values...  
+## Getting Matrix Values...  
+##   
+## Imputing Matrix   
+## Using weights on disk  
+## Using weights on disk  
+## Plotting Embedding  
+## 1 2 3 4 5 6   
+## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-1037475e6dc52-Date-2020-04-15_Time-10-58-30.log  
 
+```{r eval=FALSE}
 #Rearrange for grid plotting
 p2 <- lapply(p, function(x){
     x + guides(color = FALSE, fill = FALSE) + 
@@ -292,7 +388,10 @@ We can also plot the gene expression profiles for each of these TFs
 markerRNA <- getFeatures(projHeme5, select = paste(motifs, collapse="|"), useMatrix = "GeneIntegrationMatrix")
 markerRNA <- markerRNA[markerRNA %ni% c("SREBF1","CEBPA-DT")]
 markerRNA
-#[1] "TBX21" "CEBPA" "EBF1"  "IRF4"  "PAX5"  "GATA1"
+```
+> \## [1] "TBX21" "CEBPA" "EBF1"  "IRF4"  "PAX5"  "GATA1"
+
+```{r eval=FALSE}
 
 p <- plotEmbedding(
     ArchRProj = projHeme5, 
@@ -302,7 +401,23 @@ p <- plotEmbedding(
     continuousSet = "blueYellow",
     imputeWeights = getImputeWeights(projHeme5)
 )
+```
+> \## Getting ImputeWeights  
+## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-10374438d3144-Date-2020-04-15_Time-10-58-56.log  
+## If there is an issue, please report to github with logFile!  
+## Getting UMAP Embedding  
+## ColorBy = GeneIntegrationMatrix  
+## Getting Matrix Values...  
+## Getting Matrix Values...  
+##   
+## Imputing Matrix  
+## Using weights on disk  
+## Using weights on disk  
+## Plotting Embedding  
+## 1 2 3 4 5 6   
+## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-10374438d3144-Date-2020-04-15_Time-10-58-56.log  
 
+```{r eval=FALSE}
 #Rearrange for grid plotting
 p2 <- lapply(p, function(x){
     x + guides(color = FALSE, fill = FALSE) + 
@@ -356,22 +471,43 @@ projHeme5 <- addDeviationsMatrix(
   force = TRUE
 )
 ```
+> \## Using Previous Background Peaks!  
+## ArchR logging to : ArchRLogs/ArchR-addDeviationsMatrix-10374737762a7-Date-2020-04-15_Time-10-59-20.log  
+## If there is an issue, please report to github with logFile!  
+## NULL  
+## 2020-04-15 10:59:26 : Batch Execution w/ safelapply!, 0 mins elapsed.  
+## ###########  
+## 2020-04-15 11:08:11 : Completed Computing Deviations!, 8.864 mins elapsed.  
+## ###########  
+## ArchR logging successful to : ArchRLogs/ArchR-addDeviationsMatrix-10374737762a7-Date-2020-04-15_Time-10-59-20.log  
 
 Plot Variable Motif Annotations
 
 ```{r eval=FALSE}
 plotVarDev <- getVarDeviations(projHeme5, plot = TRUE, name = "EncodeTFBSMatrix")
-# DataFrame with 6 rows and 6 columns
-#      seqnames     idx                    name     combinedVars
-#         <Rle> <array>                 <array>        <numeric>
-# f222        z     222     222.GATA2_S-K562... 13.3776606277002
-# f41         z      41      41.EZH2_39-NHEK... 12.9568688227648
-# f542        z     542     542.TAL1_SC-K562... 11.3037382536044
-# f498        z     498      498.GATA_2-K562... 10.2006515402356
-# f584        z     584 584.GATA_1-PBDEFetal... 10.0732825204346
-# f44         z      44      44.EZH2_39-NHLF... 9.67400298749933
+```
+> \## DataFrame with 6 rows and 6 columns  
+##      seqnames     idx                    name     combinedVars  
+##         <Rle> <array>                 <array>        <numeric>  
+## f222        z     222     222.GATA2_S-K562... 13.6382687713858  
+## f41         z      41      41.EZH2_39-NHEK... 12.9150554355261  
+## f542        z     542     542.TAL1_SC-K562... 11.5490744327685   
+## f584        z     584 584.GATA_1-PBDEFetal... 10.7653053700024  
+## f498        z     498      498.GATA_2-K562... 10.2384173319845  
+## f44         z      44      44.EZH2_39-NHLF... 9.92292044310219  
+##             combinedMeans      rank  
+##                 <numeric> <integer>  
+## f222  -0.0312421757573656         1  
+## f41     0.113221166775704         2  
+## f542  -0.0155915927183644         3  
+## f584 -0.00997025022971285         4  
+## f498  -0.0317577572129743         5  
+## f44    0.0707460230932926         6  
+
+```{r eval=FALSE}
 plotVarDev
 ```
+> \## Warning: Removed 7 rows containing missing values (geom_point).
 
 ```{r, include=FALSE, eval=FALSE}
 plotPDF(plotVarDev, name = "Variable-EncodeTFBS-Deviation-Scores", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
@@ -387,33 +523,37 @@ We can then plot this as a nice PDF
 ```{r eval=FALSE}
 plotPDF(plotVarDev, name = "Variable-EncodeTFBS-Deviation-Scores", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
 ```
+> \## [1] "plotting ggplot!"  
+## Warning: Removed 7 rows containing missing values (geom_point).  
+## Warning: Removed 7 rows containing missing values (geom_point).  
+## [1] 0  
 
 If we want to get TF feature names for downstream plotting
 
 ```{r eval=FALSE}
 tfs <- c("GATA_1", "CEBPB", "EBF1", "IRF4", "TBX21", "PAX5")
 getFeatures(projHeme5, select = paste(tfs, collapse="|"), useMatrix = "EncodeTFBSMatrix")
-#  [1] "z:584.GATA_1-PBDEFetal..."          "z:582.GATA_1-PBDE..."              
-#  [3] "z:497.GATA_1-K562..."               "z:477.CEBPB-K562..."               
-#  [5] "z:462.CEBPB-IMR90..."               "z:427.CEBPB-HepG2..."              
-#  [7] "z:426.CEBPB-HepG2..."               "z:379.CEBPB-HeLa_S3..."            
-#  [9] "z:344.CEBPB-H1_hESC..."             "z:293.EBF1_SC-GM12878..."          
-# [11] "z:278.CEBPB-A549..."                "z:213.CEBPB_S-K562..."             
-# [13] "z:173.CEBPB_S-HepG2..."             "z:130.PAX5_C2-GM12892..."          
-# [15] "z:123.PAX5_C2-GM12891..."           "z:102.PAX5_N1-GM12878..."          
-# [17] "z:101.PAX5_C2-GM12878..."           "z:93.IRF4_SC-GM12878..."           
-# [19] "z:87.EBF1_SC-GM12878..."            "z:86.CEBPB_S-GM12878..."           
-# [21] "deviations:584.GATA_1-PBDEFetal..." "deviations:582.GATA_1-PBDE..."     
-# [23] "deviations:497.GATA_1-K562..."      "deviations:477.CEBPB-K562..."      
-# [25] "deviations:462.CEBPB-IMR90..."      "deviations:427.CEBPB-HepG2..."     
-# [27] "deviations:426.CEBPB-HepG2..."      "deviations:379.CEBPB-HeLa_S3..."   
-# [29] "deviations:344.CEBPB-H1_hESC..."    "deviations:293.EBF1_SC-GM12878..." 
-# [31] "deviations:278.CEBPB-A549..."       "deviations:213.CEBPB_S-K562..."    
-# [33] "deviations:173.CEBPB_S-HepG2..."    "deviations:130.PAX5_C2-GM12892..." 
-# [35] "deviations:123.PAX5_C2-GM12891..."  "deviations:102.PAX5_N1-GM12878..." 
-# [37] "deviations:101.PAX5_C2-GM12878..."  "deviations:93.IRF4_SC-GM12878..."  
-# [39] "deviations:87.EBF1_SC-GM12878..."   "deviations:86.CEBPB_S-GM12878..."
 ```
+> \##  [1] "z:584.GATA_1-PBDEFetal..."          "z:582.GATA_1-PBDE..."               
+##  [3] "z:497.GATA_1-K562..."               "z:477.CEBPB-K562..."               
+##  [5] "z:462.CEBPB-IMR90..."               "z:427.CEBPB-HepG2..."              
+##  [7] "z:426.CEBPB-HepG2..."               "z:379.CEBPB-HeLa_S3..."            
+##  [9] "z:344.CEBPB-H1_hESC..."             "z:293.EBF1_SC-GM12878..."          
+## [11] "z:278.CEBPB-A549..."                "z:213.CEBPB_S-K562..."             
+## [13] "z:173.CEBPB_S-HepG2..."             "z:130.PAX5_C2-GM12892..."          
+## [15] "z:123.PAX5_C2-GM12891..."           "z:102.PAX5_N1-GM12878..."          
+## [17] "z:101.PAX5_C2-GM12878..."           "z:93.IRF4_SC-GM12878..."           
+## [19] "z:87.EBF1_SC-GM12878..."            "z:86.CEBPB_S-GM12878..."           
+## [21] "deviations:584.GATA_1-PBDEFetal..." "deviations:582.GATA_1-PBDE..."     
+## [23] "deviations:497.GATA_1-K562..."      "deviations:477.CEBPB-K562..."      
+## [25] "deviations:462.CEBPB-IMR90..."      "deviations:427.CEBPB-HepG2..."     
+## [27] "deviations:426.CEBPB-HepG2..."      "deviations:379.CEBPB-HeLa_S3..."   
+## [29] "deviations:344.CEBPB-H1_hESC..."    "deviations:293.EBF1_SC-GM12878..."  
+## [31] "deviations:278.CEBPB-A549..."       "deviations:213.CEBPB_S-K562..."    
+## [33] "deviations:173.CEBPB_S-HepG2..."    "deviations:130.PAX5_C2-GM12892..."  
+## [35] "deviations:123.PAX5_C2-GM12891..."  "deviations:102.PAX5_N1-GM12878..."  
+## [37] "deviations:101.PAX5_C2-GM12878..."  "deviations:93.IRF4_SC-GM12878..."   
+## [39] "deviations:87.EBF1_SC-GM12878..."   "deviations:86.CEBPB_S-GM12878..."  
 
 To get deviation z-scores
 
@@ -423,11 +563,11 @@ markerTFs <- sort(grep("z:", markerTFs, value = TRUE))
 TFnames <- stringr::str_split(stringr::str_split(markerTFs, pattern = "\\.", simplify=TRUE)[,2], pattern = "-", simplify = TRUE)[,1]
 markerTFs <- markerTFs[!duplicated(TFnames)]
 markerTFs
-# [1] "z:101.PAX5_C2-GM12878..." "z:102.PAX5_N1-GM12878..."
-# [3] "z:173.CEBPB_S-HepG2..."   "z:278.CEBPB-A549..."     
-# [5] "z:293.EBF1_SC-GM12878..." "z:497.GATA_1-K562..."    
-# [7] "z:93.IRF4_SC-GM12878..." 
 ```
+> \## [1] "z:101.PAX5_C2-GM12878..." "z:102.PAX5_N1-GM12878..."  
+## [3] "z:173.CEBPB_S-HepG2..."   "z:278.CEBPB-A549..."     
+## [5] "z:293.EBF1_SC-GM12878..." "z:497.GATA_1-K562..."     
+## [7] "z:93.IRF4_SC-GM12878..."  
 
 ```{r eval=FALSE}
 p <- plotEmbedding(
@@ -438,6 +578,20 @@ p <- plotEmbedding(
     imputeWeights = getImputeWeights(projHeme5)
 )
 ```
+> \## Getting ImputeWeights  
+## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-103747b681a1c-Date-2020-04-15_Time-11-08-26.log  
+## If there is an issue, please report to github with logFile!  
+## Getting UMAP Embedding  
+## ColorBy = EncodeTFBSMatrix  
+## Getting Matrix Values...  
+## Getting Matrix Values...  
+##   
+## Imputing Matrix  
+## Using weights on disk  
+## Using weights on disk  
+## Plotting Embedding  
+## 1 2 3 4 5 6 7  
+## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-103747b681a1c-Date-2020-04-15_Time-11-08-26.log  
 
 To plot all motifs we can use cowplot
 
@@ -479,8 +633,10 @@ We can also plot the gene expression profiles for each of these TFs
 markerRNA <- getFeatures(projHeme5, select = paste(gsub("_","",tfs), collapse="|"), useMatrix = "GeneScoreMatrix")
 markerRNA <- markerRNA[markerRNA %ni% c("SREBF1")]
 markerRNA
-#[1] "TBX21" "CEBPA" "EBF1"  "IRF4"  "PAX5"  "GATA1"
+```
+> \## [1] "TBX21" "CEBPB" "EBF1"  "IRF4"  "PAX5"  "GATA1"
 
+```{r eval=FALSE}
 p <- plotEmbedding(
     ArchRProj = projHeme5, 
     colorBy = "GeneScoreMatrix", 
@@ -488,7 +644,23 @@ p <- plotEmbedding(
     embedding = "UMAP",
     imputeWeights = getImputeWeights(projHeme5)
 )
+```
+> \## Getting ImputeWeights  
+## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-103747bae5e9f-Date-2020-04-15_Time-11-08-53.log  
+## If there is an issue, please report to github with logFile!  
+## Getting UMAP Embedding  
+## ColorBy = GeneScoreMatrix  
+## Getting Matrix Values...  
+## Getting Matrix Values...  
+##   
+## Imputing Matrix  
+## Using weights on disk  
+## Using weights on disk  
+## Plotting Embedding  
+## 1 2 3 4 5 6   
+## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-103747bae5e9f-Date-2020-04-15_Time-11-08-53.log  
 
+```{r eval=FALSE}
 #Rearrange for grid plotting
 p2 <- lapply(p, function(x){
     x + guides(color = FALSE, fill = FALSE) + 
@@ -527,8 +699,10 @@ We can also plot the gene expression profiles for each of these TFs
 markerRNA <- getFeatures(projHeme5, select = paste(gsub("_","",tfs), collapse="|"), useMatrix = "GeneIntegrationMatrix")
 markerRNA <- markerRNA[markerRNA %ni% c("SREBF1","CEBPA-DT")]
 markerRNA
-#[1] "TBX21" "CEBPA" "EBF1"  "IRF4"  "PAX5"  "GATA1"
+```
+> \## [1] "TBX21" "CEBPB" "EBF1"  "IRF4"  "PAX5"  "GATA1"
 
+```{r eval=FALSE}
 p <- plotEmbedding(
     ArchRProj = projHeme5, 
     colorBy = "GeneIntegrationMatrix", 
@@ -537,7 +711,23 @@ p <- plotEmbedding(
     continuousSet = "blueYellow",
     imputeWeights = getImputeWeights(projHeme5)
 )
+```
+> \## Getting ImputeWeights  
+## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-103746f7eeb66-Date-2020-04-15_Time-11-09-21.log  
+## If there is an issue, please report to github with logFile!  
+## Getting UMAP Embedding  
+## ColorBy = GeneIntegrationMatrix  
+## Getting Matrix Values...  
+## Getting Matrix Values...  
+##   
+## Imputing Matrix  
+## Using weights on disk  
+## Using weights on disk  
+## Plotting Embedding  
+## 1 2 3 4 5 6   
+## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-103746f7eeb66-Date-2020-04-15_Time-11-09-21.log  
 
+```{r eval=FALSE}
 #Rearrange for grid plotting
 p2 <- lapply(p, function(x){
     x + guides(color = FALSE, fill = FALSE) + 
@@ -590,20 +780,40 @@ projHeme5 <- addDeviationsMatrix(
   force = TRUE
 )
 ```
+> \## Using Previous Background Peaks!  
+## ArchR logging to : ArchRLogs/ArchR-addDeviationsMatrix-103743481be2a-Date-2020-04-15_Time-11-09-46.log  
+## If there is an issue, please report to github with logFile!  
+## NULL  
+## 2020-04-15 11:09:52 : Batch Execution w/ safelapply!, 0 mins elapsed.  
+## ###########  
+## 2020-04-15 11:13:09 : Completed Computing Deviations!, 3.376 mins elapsed.  
+## ###########  
+## ArchR logging successful to : ArchRLogs/ArchR-addDeviationsMatrix-103743481be2a-Date-2020-04-15_Time-11-09-46.log  
 
 Plot Variable Motif Annotations
 
 ```{r eval=FALSE}
 plotVarDev <- getVarDeviations(projHeme5, plot = TRUE, name = "ATACMatrix")
-# DataFrame with 6 rows and 6 columns
-#     seqnames     idx                    name     combinedVars
-#        <Rle> <array>                 <array>        <numeric>
-# f22        z      22   IAtlas_T_CD8posCenMem 12.0581125421541
-# f86        z      86                Heme_CD8 11.6532963605177
-# f85        z      85                Heme_CD4 11.5670776340581
-# f23        z      23   IAtlas_T_CD8posEffMem 11.4627247478874
-# f33        z      33   IAtlas_T_Th1Precursor 11.4097813814495
-# f19        z      19 IAtlas_T_CD4posEffector  11.398315976261
+```
+> \## DataFrame with 6 rows and 6 columns  
+##     seqnames     idx                  name     combinedVars       combinedMeans  
+##        <Rle> <array>               <array>        <numeric>           <numeric>  
+## f22        z      22 IAtlas_T_CD8posCenMem 12.8413703976471 -0.0972946574781075  
+## f86        z      86              Heme_CD8 12.5070480860108  -0.079462324469343  
+## f85        z      85              Heme_CD4 12.2753260246254 -0.0561621531675016  
+## f23        z      23 IAtlas_T_CD8posEffMem 12.2250185804317  -0.104389732164243  
+## f21        z      21       IAtlas_T_CD8pos 12.1998071900673   -0.09178088897301  
+## f33        z      33 IAtlas_T_Th1Precursor 12.1352640996498 -0.0819315630754632  
+##          rank  
+##     <integer>  
+## f22         1  
+## f86         2  
+## f85         3  
+## f23         4  
+## f21         5  
+## f33         6  
+
+```{r eval=FALSE}
 plotVarDev
 ```
 
@@ -621,22 +831,24 @@ We can then plot this as a nice PDF
 ```{r eval=FALSE}
 plotPDF(plotVarDev, name = "Variable-ATAC-Deviation-Scores", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
 ```
+> \## [1] "plotting ggplot!"  
+## [1] 0
 
 If we want to get TF feature names for downstream plotting
 
 ```{r eval=FALSE}
 ATACPeaks <- c("Heme_HSC", "Heme_LMPP", "Heme_Ery", "Heme_Mono", "Heme_CD4", "Heme_CD8", "Heme_B", "Heme_NK", "IAtlas_DC_Plasmacytoid")
 getFeatures(projHeme5, select = paste(ATACPeaks, collapse="|"), useMatrix = "ATACMatrix")
-#  [1] "z:Heme_NK"                         "z:Heme_Mono"                      
-#  [3] "z:Heme_MEP"                        "z:Heme_LMPP"                      
-#  [5] "z:Heme_HSC"                        "z:Heme_CD8"                       
-#  [7] "z:Heme_CD4"                        "z:Heme_B"                         
-#  [9] "z:IAtlas_DC_Plasmacytoid"          "deviations:Heme_NK"               
-# [11] "deviations:Heme_Mono"              "deviations:Heme_MEP"              
-# [13] "deviations:Heme_LMPP"              "deviations:Heme_HSC"              
-# [15] "deviations:Heme_CD8"               "deviations:Heme_CD4"              
-# [17] "deviations:Heme_B"                 "deviations:IAtlas_DC_Plasmacytoid"
 ```
+> \##  [1] "z:Heme_NK"                         "z:Heme_Mono"                      
+##  [3] "z:Heme_LMPP"                       "z:Heme_HSC"                       
+##  [5] "z:Heme_Ery"                        "z:Heme_CD8"                       
+##  [7] "z:Heme_CD4"                        "z:Heme_B"                         
+##  [9] "z:IAtlas_DC_Plasmacytoid"          "deviations:Heme_NK"               
+## [11] "deviations:Heme_Mono"              "deviations:Heme_LMPP"             
+## [13] "deviations:Heme_HSC"               "deviations:Heme_Ery"              
+## [15] "deviations:Heme_CD8"               "deviations:Heme_CD4"              
+## [17] "deviations:Heme_B"                 "deviations:IAtlas_DC_Plasmacytoid"  
 
 To get deviation z-scores
 
@@ -644,11 +856,12 @@ To get deviation z-scores
 markerATAC <- getFeatures(projHeme5, select = paste(ATACPeaks, collapse="|"), useMatrix = "ATACMatrix")
 markerATAC <- sort(grep("z:", markerATAC, value = TRUE))
 markerATAC
-# [1] "z:Heme_B"                 "z:Heme_CD4"              
-# [3] "z:Heme_CD8"               "z:Heme_HSC"              
-# [5] "z:Heme_MEP"               "z:Heme_Mono"             
-# [7] "z:Heme_NK"                "z:IAtlas_DC_Plasmacytoid"
 ```
+> \## [1] "z:Heme_B"                 "z:Heme_CD4"              
+## [3] "z:Heme_CD8"               "z:Heme_Ery"              
+## [5] "z:Heme_HSC"               "z:Heme_LMPP"             
+## [7] "z:Heme_Mono"              "z:Heme_NK"               
+## [9] "z:IAtlas_DC_Plasmacytoid"  
 
 ```{r eval=FALSE}
 p <- plotEmbedding(
@@ -659,6 +872,20 @@ p <- plotEmbedding(
     imputeWeights = getImputeWeights(projHeme5)
 )
 ```
+> \## Getting ImputeWeights  
+## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-1037416f3cb56-Date-2020-04-15_Time-11-13-23.log  
+## If there is an issue, please report to github with logFile!  
+## Getting UMAP Embedding  
+## ColorBy = ATACMatrix  
+## Getting Matrix Values...  
+## Getting Matrix Values...  
+##  
+## Imputing Matrix  
+## Using weights on disk  
+## Using weights on disk  
+## Plotting Embedding  
+## 1 2 3 4 5 6 7 8 9   
+## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-1037416f3cb56-Date-2020-04-15_Time-11-13-23.log  
 
 To plot all motifs we can use cowplot
 
@@ -720,20 +947,39 @@ projHeme5 <- addDeviationsMatrix(
   force = TRUE
 )
 ```
+> \## Using Previous Background Peaks!  
+## ArchR logging to : ArchRLogs/ArchR-addDeviationsMatrix-10374246a529b-Date-2020-04-15_Time-11-13-54.log  
+## If there is an issue, please report to github with logFile!  
+## NULL  
+## 2020-04-15 11:13:59 : Batch Execution w/ safelapply!, 0 mins elapsed.  
+## ###########  
+## 2020-04-15 11:14:24 : Completed Computing Deviations!, 0.505 mins elapsed.  
+## ###########  
+## ArchR logging successful to : ArchRLogs/ArchR-addDeviationsMatrix-10374246a529b-Date-2020-04-15_Time-11-13-54.log  
 
 Plot Variable Motif Annotations
 
 ```{r eval=FALSE}
 plotVarDev <- getVarDeviations(projHeme5, plot = TRUE, name = "ChIPMatrix")
-# DataFrame with 4 rows and 6 columns
-#    seqnames     idx                 name      combinedVars        combinedMeans
-#       <Rle> <array>              <array>         <numeric>            <numeric>
-# f1        z       1    Encode_K562_GATA1  6.19256551652079  -0.0229048763845575
-# f3        z       3     Encode_K562_Ebf1  3.31156290837234   0.0394899516880888
-# f4        z       4     Encode_K562_Pax5  2.93016136274537 -0.00867706262058369
-# f2        z       2 Encode_GM12878_CEBPB 0.779863387389073  0.00919359271019273
+```
+> \## DataFrame with 4 rows and 6 columns  
+##    seqnames     idx                 name      combinedVars        combinedMeans  
+##       <Rle> <array>              <array>         <numeric>            <numeric>  
+## f1        z       1    Encode_K562_GATA1  6.33176528990239  -0.0165812177586936  
+## f3        z       3     Encode_K562_Ebf1  3.41531511621115   0.0355188580388895  
+## f4        z       4     Encode_K562_Pax5  3.24513143947069 -0.00960057929930531  
+## f2        z       2 Encode_GM12878_CEBPB 0.822128491900276  0.00742820197777246  
+##         rank  
+##    <integer>  
+## f1         1  
+## f3         2  
+## f4         3  
+## f2         4  
+
+```{r eval=FALSE}
 plotVarDev
 ```
+> \## Warning: Removed 21 rows containing missing values (geom_label_repel).
 
 ```{r, include=FALSE, eval=FALSE}
 plotPDF(plotVarDev, name = "Variable-ChIP-Deviation-Scores", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
@@ -749,6 +995,10 @@ We can then plot this as a nice PDF
 ```{r eval=FALSE}
 plotPDF(plotVarDev, name = "Variable-ChIP-Deviation-Scores", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
 ```
+> \## [1] "plotting ggplot!"  
+## Warning: Removed 21 rows containing missing values (geom_label_repel).  
+## Warning: Removed 21 rows containing missing values (geom_label_repel).  
+## [1] 0
 
 To get deviation z-scores
 
@@ -756,9 +1006,9 @@ To get deviation z-scores
 markerChIP <- getFeatures(projHeme5, useMatrix = "ChIPMatrix")
 markerChIP <- sort(grep("z:", markerChIP, value = TRUE))
 markerChIP
-# [1] "z:Encode_GM12878_CEBPB" "z:Encode_K562_Ebf1"     "z:Encode_K562_GATA1"   
-# [4] "z:Encode_K562_Pax5"    
 ```
+> \## [1] "z:Encode_GM12878_CEBPB" "z:Encode_K562_Ebf1"     "z:Encode_K562_GATA1"    
+## [4] "z:Encode_K562_Pax5"
 
 ```{r eval=FALSE}
 p <- plotEmbedding(
@@ -769,6 +1019,20 @@ p <- plotEmbedding(
     imputeWeights = getImputeWeights(projHeme5)
 )
 ```
+> \## Getting ImputeWeights  
+## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-10374635d5970-Date-2020-04-15_Time-11-14-35.log  
+## If there is an issue, please report to github with logFile!  
+## Getting UMAP Embedding  
+## ColorBy = ChIPMatrix  
+## Getting Matrix Values...  
+## Getting Matrix Values...  
+##   
+## Imputing Matrix  
+## Using weights on disk  
+## Using weights on disk  
+## Plotting Embedding  
+## 1 2 3 4   
+## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-10374635d5970-Date-2020-04-15_Time-11-14-35.log  
 
 To plot all motifs we can use cowplot
 
@@ -808,8 +1072,10 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ```{r eval=FALSE}
 Sys.Date()
+```
+> \## [1] "2020-04-15"
 
-
+```{r eval=FALSE}
 sessionInfo()
 ```
 

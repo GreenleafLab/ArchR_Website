@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-16" />
+<meta name="date" content="2020-04-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -164,12 +164,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="4.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>4.1</b> ArchR’s LSI Implementation</a></li>
 <li class="chapter" data-level="4.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>4.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
-<li class="chapter" data-level="4.3" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.3</b> Batch Effect Correction wtih Harmony</a></li>
-<li class="chapter" data-level="4.4" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.4</b> Session Information</a></li>
+<li class="chapter" data-level="4.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>4.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="4.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.4</b> Batch Effect Correction wtih Harmony</a></li>
+<li class="chapter" data-level="4.5" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.5</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>5</b> Clustering with ArchR</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.1</b> Session Information</a></li>
+<li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="5.2" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.2</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
 <ul>
@@ -230,7 +232,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="14" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>14</b> Integrative Analysis with ArchR</a>
 <ul>
-<li class="chapter" data-level="14.1" data-path="coaccessibility-with-archr.html"><a href="coaccessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> CoAccessibility with ArchR</a></li>
+<li class="chapter" data-level="14.1" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> Co-accessibility with ArchR</a></li>
 <li class="chapter" data-level="14.2" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>14.2</b> Peak2GeneLinkage with ArchR</a></li>
 <li class="chapter" data-level="14.3" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>14.3</b> Identification of Positive TF-Regulators</a></li>
 <li class="chapter" data-level="14.4" data-path="session-information-13.html"><a href="session-information-13.html"><i class="fa fa-check"></i><b>14.4</b> Session Information</a></li>
@@ -266,211 +268,339 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="encode-tfbs-1" class="section level3" number="12.2.1">
 <h3><span class="header-section-number">12.2.1</span> Encode TFBS</h3>
 <p>If you have not added motif annotations</p>
-<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="archr-deviations.html#cb172-1"></a><span class="cf">if</span>(<span class="st">&quot;EncodeTFBS&quot;</span> <span class="op">%ni%</span><span class="st"> </span><span class="kw">names</span>(projHeme5<span class="op">@</span>peakAnnotation)){</span>
-<span id="cb172-2"><a href="archr-deviations.html#cb172-2"></a>    projHeme5 &lt;-<span class="st"> </span><span class="kw">addArchRAnnotations</span>(<span class="dt">ArchRProj =</span> projHeme5, <span class="dt">collection =</span> <span class="st">&quot;EncodeTFBS&quot;</span>)</span>
-<span id="cb172-3"><a href="archr-deviations.html#cb172-3"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb265"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb265-1"><a href="archr-deviations.html#cb265-1"></a><span class="cf">if</span>(<span class="st">&quot;EncodeTFBS&quot;</span> <span class="op">%ni%</span><span class="st"> </span><span class="kw">names</span>(projHeme5<span class="op">@</span>peakAnnotation)){</span>
+<span id="cb265-2"><a href="archr-deviations.html#cb265-2"></a>    projHeme5 &lt;-<span class="st"> </span><span class="kw">addArchRAnnotations</span>(<span class="dt">ArchRProj =</span> projHeme5, <span class="dt">collection =</span> <span class="st">&quot;EncodeTFBS&quot;</span>)</span>
+<span id="cb265-3"><a href="archr-deviations.html#cb265-3"></a>}</span></code></pre></div>
 <p>Add ChromVAR Deviations for Motifs</p>
-<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="archr-deviations.html#cb173-1"></a>projHeme5 &lt;-<span class="st"> </span><span class="kw">addDeviationsMatrix</span>(</span>
-<span id="cb173-2"><a href="archr-deviations.html#cb173-2"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>
-<span id="cb173-3"><a href="archr-deviations.html#cb173-3"></a>  <span class="dt">peakAnnotation =</span> <span class="st">&quot;EncodeTFBS&quot;</span>,</span>
-<span id="cb173-4"><a href="archr-deviations.html#cb173-4"></a>  <span class="dt">force =</span> <span class="ot">TRUE</span></span>
-<span id="cb173-5"><a href="archr-deviations.html#cb173-5"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb266"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb266-1"><a href="archr-deviations.html#cb266-1"></a>projHeme5 &lt;-<span class="st"> </span><span class="kw">addDeviationsMatrix</span>(</span>
+<span id="cb266-2"><a href="archr-deviations.html#cb266-2"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb266-3"><a href="archr-deviations.html#cb266-3"></a>  <span class="dt">peakAnnotation =</span> <span class="st">&quot;EncodeTFBS&quot;</span>,</span>
+<span id="cb266-4"><a href="archr-deviations.html#cb266-4"></a>  <span class="dt">force =</span> <span class="ot">TRUE</span></span>
+<span id="cb266-5"><a href="archr-deviations.html#cb266-5"></a>)</span></code></pre></div>
+<blockquote>
+<p>## Using Previous Background Peaks!<br />
+## ArchR logging to : ArchRLogs/ArchR-addDeviationsMatrix-10374737762a7-Date-2020-04-15_Time-10-59-20.log<br />
+## If there is an issue, please report to github with logFile!<br />
+## NULL<br />
+## 2020-04-15 10:59:26 : Batch Execution w/ safelapply!, 0 mins elapsed.<br />
+## ###########<br />
+## 2020-04-15 11:08:11 : Completed Computing Deviations!, 8.864 mins elapsed.<br />
+## ###########<br />
+## ArchR logging successful to : ArchRLogs/ArchR-addDeviationsMatrix-10374737762a7-Date-2020-04-15_Time-10-59-20.log</p>
+</blockquote>
 <p>Plot Variable Motif Annotations</p>
-<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="archr-deviations.html#cb174-1"></a>plotVarDev &lt;-<span class="st"> </span><span class="kw">getVarDeviations</span>(projHeme5, <span class="dt">plot =</span> <span class="ot">TRUE</span>, <span class="dt">name =</span> <span class="st">&quot;EncodeTFBSMatrix&quot;</span>)</span>
-<span id="cb174-2"><a href="archr-deviations.html#cb174-2"></a><span class="co"># DataFrame with 6 rows and 6 columns</span></span>
-<span id="cb174-3"><a href="archr-deviations.html#cb174-3"></a><span class="co">#      seqnames     idx                    name     combinedVars</span></span>
-<span id="cb174-4"><a href="archr-deviations.html#cb174-4"></a><span class="co">#         &lt;Rle&gt; &lt;array&gt;                 &lt;array&gt;        &lt;numeric&gt;</span></span>
-<span id="cb174-5"><a href="archr-deviations.html#cb174-5"></a><span class="co"># f222        z     222     222.GATA2_S-K562... 13.3776606277002</span></span>
-<span id="cb174-6"><a href="archr-deviations.html#cb174-6"></a><span class="co"># f41         z      41      41.EZH2_39-NHEK... 12.9568688227648</span></span>
-<span id="cb174-7"><a href="archr-deviations.html#cb174-7"></a><span class="co"># f542        z     542     542.TAL1_SC-K562... 11.3037382536044</span></span>
-<span id="cb174-8"><a href="archr-deviations.html#cb174-8"></a><span class="co"># f498        z     498      498.GATA_2-K562... 10.2006515402356</span></span>
-<span id="cb174-9"><a href="archr-deviations.html#cb174-9"></a><span class="co"># f584        z     584 584.GATA_1-PBDEFetal... 10.0732825204346</span></span>
-<span id="cb174-10"><a href="archr-deviations.html#cb174-10"></a><span class="co"># f44         z      44      44.EZH2_39-NHLF... 9.67400298749933</span></span>
-<span id="cb174-11"><a href="archr-deviations.html#cb174-11"></a>plotVarDev</span></code></pre></div>
+<div class="sourceCode" id="cb267"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb267-1"><a href="archr-deviations.html#cb267-1"></a>plotVarDev &lt;-<span class="st"> </span><span class="kw">getVarDeviations</span>(projHeme5, <span class="dt">plot =</span> <span class="ot">TRUE</span>, <span class="dt">name =</span> <span class="st">&quot;EncodeTFBSMatrix&quot;</span>)</span></code></pre></div>
+<blockquote>
+<p>## DataFrame with 6 rows and 6 columns<br />
+## seqnames idx name combinedVars<br />
+## <Rle> <array> <array> <numeric><br />
+## f222 z 222 222.GATA2_S-K562… 13.6382687713858<br />
+## f41 z 41 41.EZH2_39-NHEK… 12.9150554355261<br />
+## f542 z 542 542.TAL1_SC-K562… 11.5490744327685<br />
+## f584 z 584 584.GATA_1-PBDEFetal… 10.7653053700024<br />
+## f498 z 498 498.GATA_2-K562… 10.2384173319845<br />
+## f44 z 44 44.EZH2_39-NHLF… 9.92292044310219<br />
+## combinedMeans rank<br />
+## <numeric> <integer><br />
+## f222 -0.0312421757573656 1<br />
+## f41 0.113221166775704 2<br />
+## f542 -0.0155915927183644 3<br />
+## f584 -0.00997025022971285 4<br />
+## f498 -0.0317577572129743 5<br />
+## f44 0.0707460230932926 6</p>
+</blockquote>
+<div class="sourceCode" id="cb268"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb268-1"><a href="archr-deviations.html#cb268-1"></a>plotVarDev</span></code></pre></div>
+<blockquote>
+<p>## Warning: Removed 7 rows containing missing values (geom_point).</p>
+</blockquote>
 <p><img src="images/HemeWalkthrough/PNG/Variable-EncodeTFBS-Deviation-Scores_1.png" width="500" height="500" /></p>
 <p>We can then plot this as a nice PDF</p>
-<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="archr-deviations.html#cb175-1"></a><span class="kw">plotPDF</span>(plotVarDev, <span class="dt">name =</span> <span class="st">&quot;Variable-EncodeTFBS-Deviation-Scores&quot;</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>, <span class="dt">ArchRProj =</span> projHeme5, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb269"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb269-1"><a href="archr-deviations.html#cb269-1"></a><span class="kw">plotPDF</span>(plotVarDev, <span class="dt">name =</span> <span class="st">&quot;Variable-EncodeTFBS-Deviation-Scores&quot;</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>, <span class="dt">ArchRProj =</span> projHeme5, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<blockquote>
+<p>## [1] “plotting ggplot!”<br />
+## Warning: Removed 7 rows containing missing values (geom_point).<br />
+## Warning: Removed 7 rows containing missing values (geom_point).<br />
+## [1] 0</p>
+</blockquote>
 <p>If we want to get TF feature names for downstream plotting</p>
-<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="archr-deviations.html#cb176-1"></a>tfs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;GATA_1&quot;</span>, <span class="st">&quot;CEBPB&quot;</span>, <span class="st">&quot;EBF1&quot;</span>, <span class="st">&quot;IRF4&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;PAX5&quot;</span>)</span>
-<span id="cb176-2"><a href="archr-deviations.html#cb176-2"></a><span class="kw">getFeatures</span>(projHeme5, <span class="dt">select =</span> <span class="kw">paste</span>(tfs, <span class="dt">collapse=</span><span class="st">&quot;|&quot;</span>), <span class="dt">useMatrix =</span> <span class="st">&quot;EncodeTFBSMatrix&quot;</span>)</span>
-<span id="cb176-3"><a href="archr-deviations.html#cb176-3"></a><span class="co">#  [1] &quot;z:584.GATA_1-PBDEFetal...&quot;          &quot;z:582.GATA_1-PBDE...&quot;              </span></span>
-<span id="cb176-4"><a href="archr-deviations.html#cb176-4"></a><span class="co">#  [3] &quot;z:497.GATA_1-K562...&quot;               &quot;z:477.CEBPB-K562...&quot;               </span></span>
-<span id="cb176-5"><a href="archr-deviations.html#cb176-5"></a><span class="co">#  [5] &quot;z:462.CEBPB-IMR90...&quot;               &quot;z:427.CEBPB-HepG2...&quot;              </span></span>
-<span id="cb176-6"><a href="archr-deviations.html#cb176-6"></a><span class="co">#  [7] &quot;z:426.CEBPB-HepG2...&quot;               &quot;z:379.CEBPB-HeLa_S3...&quot;            </span></span>
-<span id="cb176-7"><a href="archr-deviations.html#cb176-7"></a><span class="co">#  [9] &quot;z:344.CEBPB-H1_hESC...&quot;             &quot;z:293.EBF1_SC-GM12878...&quot;          </span></span>
-<span id="cb176-8"><a href="archr-deviations.html#cb176-8"></a><span class="co"># [11] &quot;z:278.CEBPB-A549...&quot;                &quot;z:213.CEBPB_S-K562...&quot;             </span></span>
-<span id="cb176-9"><a href="archr-deviations.html#cb176-9"></a><span class="co"># [13] &quot;z:173.CEBPB_S-HepG2...&quot;             &quot;z:130.PAX5_C2-GM12892...&quot;          </span></span>
-<span id="cb176-10"><a href="archr-deviations.html#cb176-10"></a><span class="co"># [15] &quot;z:123.PAX5_C2-GM12891...&quot;           &quot;z:102.PAX5_N1-GM12878...&quot;          </span></span>
-<span id="cb176-11"><a href="archr-deviations.html#cb176-11"></a><span class="co"># [17] &quot;z:101.PAX5_C2-GM12878...&quot;           &quot;z:93.IRF4_SC-GM12878...&quot;           </span></span>
-<span id="cb176-12"><a href="archr-deviations.html#cb176-12"></a><span class="co"># [19] &quot;z:87.EBF1_SC-GM12878...&quot;            &quot;z:86.CEBPB_S-GM12878...&quot;           </span></span>
-<span id="cb176-13"><a href="archr-deviations.html#cb176-13"></a><span class="co"># [21] &quot;deviations:584.GATA_1-PBDEFetal...&quot; &quot;deviations:582.GATA_1-PBDE...&quot;     </span></span>
-<span id="cb176-14"><a href="archr-deviations.html#cb176-14"></a><span class="co"># [23] &quot;deviations:497.GATA_1-K562...&quot;      &quot;deviations:477.CEBPB-K562...&quot;      </span></span>
-<span id="cb176-15"><a href="archr-deviations.html#cb176-15"></a><span class="co"># [25] &quot;deviations:462.CEBPB-IMR90...&quot;      &quot;deviations:427.CEBPB-HepG2...&quot;     </span></span>
-<span id="cb176-16"><a href="archr-deviations.html#cb176-16"></a><span class="co"># [27] &quot;deviations:426.CEBPB-HepG2...&quot;      &quot;deviations:379.CEBPB-HeLa_S3...&quot;   </span></span>
-<span id="cb176-17"><a href="archr-deviations.html#cb176-17"></a><span class="co"># [29] &quot;deviations:344.CEBPB-H1_hESC...&quot;    &quot;deviations:293.EBF1_SC-GM12878...&quot; </span></span>
-<span id="cb176-18"><a href="archr-deviations.html#cb176-18"></a><span class="co"># [31] &quot;deviations:278.CEBPB-A549...&quot;       &quot;deviations:213.CEBPB_S-K562...&quot;    </span></span>
-<span id="cb176-19"><a href="archr-deviations.html#cb176-19"></a><span class="co"># [33] &quot;deviations:173.CEBPB_S-HepG2...&quot;    &quot;deviations:130.PAX5_C2-GM12892...&quot; </span></span>
-<span id="cb176-20"><a href="archr-deviations.html#cb176-20"></a><span class="co"># [35] &quot;deviations:123.PAX5_C2-GM12891...&quot;  &quot;deviations:102.PAX5_N1-GM12878...&quot; </span></span>
-<span id="cb176-21"><a href="archr-deviations.html#cb176-21"></a><span class="co"># [37] &quot;deviations:101.PAX5_C2-GM12878...&quot;  &quot;deviations:93.IRF4_SC-GM12878...&quot;  </span></span>
-<span id="cb176-22"><a href="archr-deviations.html#cb176-22"></a><span class="co"># [39] &quot;deviations:87.EBF1_SC-GM12878...&quot;   &quot;deviations:86.CEBPB_S-GM12878...&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb270"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb270-1"><a href="archr-deviations.html#cb270-1"></a>tfs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;GATA_1&quot;</span>, <span class="st">&quot;CEBPB&quot;</span>, <span class="st">&quot;EBF1&quot;</span>, <span class="st">&quot;IRF4&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;PAX5&quot;</span>)</span>
+<span id="cb270-2"><a href="archr-deviations.html#cb270-2"></a><span class="kw">getFeatures</span>(projHeme5, <span class="dt">select =</span> <span class="kw">paste</span>(tfs, <span class="dt">collapse=</span><span class="st">&quot;|&quot;</span>), <span class="dt">useMatrix =</span> <span class="st">&quot;EncodeTFBSMatrix&quot;</span>)</span></code></pre></div>
+<blockquote>
+<p>## [1] “z:584.GATA_1-PBDEFetal…” “z:582.GATA_1-PBDE…”<br />
+## [3] “z:497.GATA_1-K562…” “z:477.CEBPB-K562…”<br />
+## [5] “z:462.CEBPB-IMR90…” “z:427.CEBPB-HepG2…”<br />
+## [7] “z:426.CEBPB-HepG2…” “z:379.CEBPB-HeLa_S3…”<br />
+## [9] “z:344.CEBPB-H1_hESC…” “z:293.EBF1_SC-GM12878…”<br />
+## [11] “z:278.CEBPB-A549…” “z:213.CEBPB_S-K562…”<br />
+## [13] “z:173.CEBPB_S-HepG2…” “z:130.PAX5_C2-GM12892…”<br />
+## [15] “z:123.PAX5_C2-GM12891…” “z:102.PAX5_N1-GM12878…”<br />
+## [17] “z:101.PAX5_C2-GM12878…” “z:93.IRF4_SC-GM12878…”<br />
+## [19] “z:87.EBF1_SC-GM12878…” “z:86.CEBPB_S-GM12878…”<br />
+## [21] “deviations:584.GATA_1-PBDEFetal…” “deviations:582.GATA_1-PBDE…”<br />
+## [23] “deviations:497.GATA_1-K562…” “deviations:477.CEBPB-K562…”<br />
+## [25] “deviations:462.CEBPB-IMR90…” “deviations:427.CEBPB-HepG2…”<br />
+## [27] “deviations:426.CEBPB-HepG2…” “deviations:379.CEBPB-HeLa_S3…”<br />
+## [29] “deviations:344.CEBPB-H1_hESC…” “deviations:293.EBF1_SC-GM12878…”<br />
+## [31] “deviations:278.CEBPB-A549…” “deviations:213.CEBPB_S-K562…”<br />
+## [33] “deviations:173.CEBPB_S-HepG2…” “deviations:130.PAX5_C2-GM12892…”<br />
+## [35] “deviations:123.PAX5_C2-GM12891…” “deviations:102.PAX5_N1-GM12878…”<br />
+## [37] “deviations:101.PAX5_C2-GM12878…” “deviations:93.IRF4_SC-GM12878…”<br />
+## [39] “deviations:87.EBF1_SC-GM12878…” “deviations:86.CEBPB_S-GM12878…”</p>
+</blockquote>
 <p>To get deviation z-scores</p>
-<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="archr-deviations.html#cb177-1"></a>markerTFs &lt;-<span class="st"> </span><span class="kw">getFeatures</span>(projHeme5, <span class="dt">select =</span> <span class="kw">paste</span>(tfs, <span class="dt">collapse=</span><span class="st">&quot;|&quot;</span>), <span class="dt">useMatrix =</span> <span class="st">&quot;EncodeTFBSMatrix&quot;</span>)</span>
-<span id="cb177-2"><a href="archr-deviations.html#cb177-2"></a>markerTFs &lt;-<span class="st"> </span><span class="kw">sort</span>(<span class="kw">grep</span>(<span class="st">&quot;z:&quot;</span>, markerTFs, <span class="dt">value =</span> <span class="ot">TRUE</span>))</span>
-<span id="cb177-3"><a href="archr-deviations.html#cb177-3"></a>TFnames &lt;-<span class="st"> </span>stringr<span class="op">::</span><span class="kw">str_split</span>(stringr<span class="op">::</span><span class="kw">str_split</span>(markerTFs, <span class="dt">pattern =</span> <span class="st">&quot;</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="dt">simplify=</span><span class="ot">TRUE</span>)[,<span class="dv">2</span>], <span class="dt">pattern =</span> <span class="st">&quot;-&quot;</span>, <span class="dt">simplify =</span> <span class="ot">TRUE</span>)[,<span class="dv">1</span>]</span>
-<span id="cb177-4"><a href="archr-deviations.html#cb177-4"></a>markerTFs &lt;-<span class="st"> </span>markerTFs[<span class="op">!</span><span class="kw">duplicated</span>(TFnames)]</span>
-<span id="cb177-5"><a href="archr-deviations.html#cb177-5"></a>markerTFs</span>
-<span id="cb177-6"><a href="archr-deviations.html#cb177-6"></a><span class="co"># [1] &quot;z:101.PAX5_C2-GM12878...&quot; &quot;z:102.PAX5_N1-GM12878...&quot;</span></span>
-<span id="cb177-7"><a href="archr-deviations.html#cb177-7"></a><span class="co"># [3] &quot;z:173.CEBPB_S-HepG2...&quot;   &quot;z:278.CEBPB-A549...&quot;     </span></span>
-<span id="cb177-8"><a href="archr-deviations.html#cb177-8"></a><span class="co"># [5] &quot;z:293.EBF1_SC-GM12878...&quot; &quot;z:497.GATA_1-K562...&quot;    </span></span>
-<span id="cb177-9"><a href="archr-deviations.html#cb177-9"></a><span class="co"># [7] &quot;z:93.IRF4_SC-GM12878...&quot; </span></span></code></pre></div>
-<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="archr-deviations.html#cb178-1"></a>p &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
-<span id="cb178-2"><a href="archr-deviations.html#cb178-2"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
-<span id="cb178-3"><a href="archr-deviations.html#cb178-3"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;EncodeTFBSMatrix&quot;</span>, </span>
-<span id="cb178-4"><a href="archr-deviations.html#cb178-4"></a>    <span class="dt">name =</span> markerTFs, </span>
-<span id="cb178-5"><a href="archr-deviations.html#cb178-5"></a>    <span class="dt">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
-<span id="cb178-6"><a href="archr-deviations.html#cb178-6"></a>    <span class="dt">imputeWeights =</span> <span class="kw">getImputeWeights</span>(projHeme5)</span>
-<span id="cb178-7"><a href="archr-deviations.html#cb178-7"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb271"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb271-1"><a href="archr-deviations.html#cb271-1"></a>markerTFs &lt;-<span class="st"> </span><span class="kw">getFeatures</span>(projHeme5, <span class="dt">select =</span> <span class="kw">paste</span>(tfs, <span class="dt">collapse=</span><span class="st">&quot;|&quot;</span>), <span class="dt">useMatrix =</span> <span class="st">&quot;EncodeTFBSMatrix&quot;</span>)</span>
+<span id="cb271-2"><a href="archr-deviations.html#cb271-2"></a>markerTFs &lt;-<span class="st"> </span><span class="kw">sort</span>(<span class="kw">grep</span>(<span class="st">&quot;z:&quot;</span>, markerTFs, <span class="dt">value =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb271-3"><a href="archr-deviations.html#cb271-3"></a>TFnames &lt;-<span class="st"> </span>stringr<span class="op">::</span><span class="kw">str_split</span>(stringr<span class="op">::</span><span class="kw">str_split</span>(markerTFs, <span class="dt">pattern =</span> <span class="st">&quot;</span><span class="ch">\\</span><span class="st">.&quot;</span>, <span class="dt">simplify=</span><span class="ot">TRUE</span>)[,<span class="dv">2</span>], <span class="dt">pattern =</span> <span class="st">&quot;-&quot;</span>, <span class="dt">simplify =</span> <span class="ot">TRUE</span>)[,<span class="dv">1</span>]</span>
+<span id="cb271-4"><a href="archr-deviations.html#cb271-4"></a>markerTFs &lt;-<span class="st"> </span>markerTFs[<span class="op">!</span><span class="kw">duplicated</span>(TFnames)]</span>
+<span id="cb271-5"><a href="archr-deviations.html#cb271-5"></a>markerTFs</span></code></pre></div>
+<blockquote>
+<p>## [1] “z:101.PAX5_C2-GM12878…” “z:102.PAX5_N1-GM12878…”<br />
+## [3] “z:173.CEBPB_S-HepG2…” “z:278.CEBPB-A549…”<br />
+## [5] “z:293.EBF1_SC-GM12878…” “z:497.GATA_1-K562…”<br />
+## [7] “z:93.IRF4_SC-GM12878…”</p>
+</blockquote>
+<div class="sourceCode" id="cb272"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb272-1"><a href="archr-deviations.html#cb272-1"></a>p &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
+<span id="cb272-2"><a href="archr-deviations.html#cb272-2"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb272-3"><a href="archr-deviations.html#cb272-3"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;EncodeTFBSMatrix&quot;</span>, </span>
+<span id="cb272-4"><a href="archr-deviations.html#cb272-4"></a>    <span class="dt">name =</span> markerTFs, </span>
+<span id="cb272-5"><a href="archr-deviations.html#cb272-5"></a>    <span class="dt">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
+<span id="cb272-6"><a href="archr-deviations.html#cb272-6"></a>    <span class="dt">imputeWeights =</span> <span class="kw">getImputeWeights</span>(projHeme5)</span>
+<span id="cb272-7"><a href="archr-deviations.html#cb272-7"></a>)</span></code></pre></div>
+<blockquote>
+<p>## Getting ImputeWeights<br />
+## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-103747b681a1c-Date-2020-04-15_Time-11-08-26.log<br />
+## If there is an issue, please report to github with logFile!<br />
+## Getting UMAP Embedding<br />
+## ColorBy = EncodeTFBSMatrix<br />
+## Getting Matrix Values…<br />
+## Getting Matrix Values…<br />
+##<br />
+## Imputing Matrix<br />
+## Using weights on disk<br />
+## Using weights on disk<br />
+## Plotting Embedding<br />
+## 1 2 3 4 5 6 7<br />
+## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-103747b681a1c-Date-2020-04-15_Time-11-08-26.log</p>
+</blockquote>
 <p>To plot all motifs we can use cowplot</p>
-<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="archr-deviations.html#cb179-1"></a><span class="co">#Rearrange for grid plotting</span></span>
-<span id="cb179-2"><a href="archr-deviations.html#cb179-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
-<span id="cb179-3"><a href="archr-deviations.html#cb179-3"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb179-4"><a href="archr-deviations.html#cb179-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
-<span id="cb179-5"><a href="archr-deviations.html#cb179-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
-<span id="cb179-6"><a href="archr-deviations.html#cb179-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
-<span id="cb179-7"><a href="archr-deviations.html#cb179-7"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb179-8"><a href="archr-deviations.html#cb179-8"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb179-9"><a href="archr-deviations.html#cb179-9"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb179-10"><a href="archr-deviations.html#cb179-10"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
-<span id="cb179-11"><a href="archr-deviations.html#cb179-11"></a>    )</span>
-<span id="cb179-12"><a href="archr-deviations.html#cb179-12"></a>})</span>
-<span id="cb179-13"><a href="archr-deviations.html#cb179-13"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>),p2))</span></code></pre></div>
+<div class="sourceCode" id="cb273"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb273-1"><a href="archr-deviations.html#cb273-1"></a><span class="co">#Rearrange for grid plotting</span></span>
+<span id="cb273-2"><a href="archr-deviations.html#cb273-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
+<span id="cb273-3"><a href="archr-deviations.html#cb273-3"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb273-4"><a href="archr-deviations.html#cb273-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
+<span id="cb273-5"><a href="archr-deviations.html#cb273-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
+<span id="cb273-6"><a href="archr-deviations.html#cb273-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
+<span id="cb273-7"><a href="archr-deviations.html#cb273-7"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb273-8"><a href="archr-deviations.html#cb273-8"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb273-9"><a href="archr-deviations.html#cb273-9"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb273-10"><a href="archr-deviations.html#cb273-10"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
+<span id="cb273-11"><a href="archr-deviations.html#cb273-11"></a>    )</span>
+<span id="cb273-12"><a href="archr-deviations.html#cb273-12"></a>})</span>
+<span id="cb273-13"><a href="archr-deviations.html#cb273-13"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>),p2))</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-EncodeTFBS-W-Imputation_1.png" width="800" height="800" /></p>
 <p>We can also plot the gene expression profiles for each of these TFs</p>
-<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="archr-deviations.html#cb180-1"></a>markerRNA &lt;-<span class="st"> </span><span class="kw">getFeatures</span>(projHeme5, <span class="dt">select =</span> <span class="kw">paste</span>(<span class="kw">gsub</span>(<span class="st">&quot;_&quot;</span>,<span class="st">&quot;&quot;</span>,tfs), <span class="dt">collapse=</span><span class="st">&quot;|&quot;</span>), <span class="dt">useMatrix =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>)</span>
-<span id="cb180-2"><a href="archr-deviations.html#cb180-2"></a>markerRNA &lt;-<span class="st"> </span>markerRNA[markerRNA <span class="op">%ni%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;SREBF1&quot;</span>)]</span>
-<span id="cb180-3"><a href="archr-deviations.html#cb180-3"></a>markerRNA</span>
-<span id="cb180-4"><a href="archr-deviations.html#cb180-4"></a><span class="co">#[1] &quot;TBX21&quot; &quot;CEBPA&quot; &quot;EBF1&quot;  &quot;IRF4&quot;  &quot;PAX5&quot;  &quot;GATA1&quot;</span></span>
-<span id="cb180-5"><a href="archr-deviations.html#cb180-5"></a></span>
-<span id="cb180-6"><a href="archr-deviations.html#cb180-6"></a>p &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
-<span id="cb180-7"><a href="archr-deviations.html#cb180-7"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
-<span id="cb180-8"><a href="archr-deviations.html#cb180-8"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>, </span>
-<span id="cb180-9"><a href="archr-deviations.html#cb180-9"></a>    <span class="dt">name =</span> <span class="kw">sort</span>(markerRNA), </span>
-<span id="cb180-10"><a href="archr-deviations.html#cb180-10"></a>    <span class="dt">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
-<span id="cb180-11"><a href="archr-deviations.html#cb180-11"></a>    <span class="dt">imputeWeights =</span> <span class="kw">getImputeWeights</span>(projHeme5)</span>
-<span id="cb180-12"><a href="archr-deviations.html#cb180-12"></a>)</span>
-<span id="cb180-13"><a href="archr-deviations.html#cb180-13"></a></span>
-<span id="cb180-14"><a href="archr-deviations.html#cb180-14"></a><span class="co">#Rearrange for grid plotting</span></span>
-<span id="cb180-15"><a href="archr-deviations.html#cb180-15"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
-<span id="cb180-16"><a href="archr-deviations.html#cb180-16"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb180-17"><a href="archr-deviations.html#cb180-17"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
-<span id="cb180-18"><a href="archr-deviations.html#cb180-18"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
-<span id="cb180-19"><a href="archr-deviations.html#cb180-19"></a><span class="st">    </span><span class="kw">theme</span>(</span>
-<span id="cb180-20"><a href="archr-deviations.html#cb180-20"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb180-21"><a href="archr-deviations.html#cb180-21"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb180-22"><a href="archr-deviations.html#cb180-22"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb180-23"><a href="archr-deviations.html#cb180-23"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
-<span id="cb180-24"><a href="archr-deviations.html#cb180-24"></a>    )</span>
-<span id="cb180-25"><a href="archr-deviations.html#cb180-25"></a>})</span>
-<span id="cb180-26"><a href="archr-deviations.html#cb180-26"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>),p2))</span></code></pre></div>
+<div class="sourceCode" id="cb274"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb274-1"><a href="archr-deviations.html#cb274-1"></a>markerRNA &lt;-<span class="st"> </span><span class="kw">getFeatures</span>(projHeme5, <span class="dt">select =</span> <span class="kw">paste</span>(<span class="kw">gsub</span>(<span class="st">&quot;_&quot;</span>,<span class="st">&quot;&quot;</span>,tfs), <span class="dt">collapse=</span><span class="st">&quot;|&quot;</span>), <span class="dt">useMatrix =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>)</span>
+<span id="cb274-2"><a href="archr-deviations.html#cb274-2"></a>markerRNA &lt;-<span class="st"> </span>markerRNA[markerRNA <span class="op">%ni%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;SREBF1&quot;</span>)]</span>
+<span id="cb274-3"><a href="archr-deviations.html#cb274-3"></a>markerRNA</span></code></pre></div>
+<blockquote>
+<p>## [1] “TBX21” “CEBPB” “EBF1” “IRF4” “PAX5” “GATA1”</p>
+</blockquote>
+<div class="sourceCode" id="cb275"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb275-1"><a href="archr-deviations.html#cb275-1"></a>p &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
+<span id="cb275-2"><a href="archr-deviations.html#cb275-2"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb275-3"><a href="archr-deviations.html#cb275-3"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>, </span>
+<span id="cb275-4"><a href="archr-deviations.html#cb275-4"></a>    <span class="dt">name =</span> <span class="kw">sort</span>(markerRNA), </span>
+<span id="cb275-5"><a href="archr-deviations.html#cb275-5"></a>    <span class="dt">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
+<span id="cb275-6"><a href="archr-deviations.html#cb275-6"></a>    <span class="dt">imputeWeights =</span> <span class="kw">getImputeWeights</span>(projHeme5)</span>
+<span id="cb275-7"><a href="archr-deviations.html#cb275-7"></a>)</span></code></pre></div>
+<blockquote>
+<p>## Getting ImputeWeights<br />
+## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-103747bae5e9f-Date-2020-04-15_Time-11-08-53.log<br />
+## If there is an issue, please report to github with logFile!<br />
+## Getting UMAP Embedding<br />
+## ColorBy = GeneScoreMatrix<br />
+## Getting Matrix Values…<br />
+## Getting Matrix Values…<br />
+##<br />
+## Imputing Matrix<br />
+## Using weights on disk<br />
+## Using weights on disk<br />
+## Plotting Embedding<br />
+## 1 2 3 4 5 6<br />
+## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-103747bae5e9f-Date-2020-04-15_Time-11-08-53.log</p>
+</blockquote>
+<div class="sourceCode" id="cb276"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb276-1"><a href="archr-deviations.html#cb276-1"></a><span class="co">#Rearrange for grid plotting</span></span>
+<span id="cb276-2"><a href="archr-deviations.html#cb276-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
+<span id="cb276-3"><a href="archr-deviations.html#cb276-3"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb276-4"><a href="archr-deviations.html#cb276-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
+<span id="cb276-5"><a href="archr-deviations.html#cb276-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
+<span id="cb276-6"><a href="archr-deviations.html#cb276-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
+<span id="cb276-7"><a href="archr-deviations.html#cb276-7"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb276-8"><a href="archr-deviations.html#cb276-8"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb276-9"><a href="archr-deviations.html#cb276-9"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb276-10"><a href="archr-deviations.html#cb276-10"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
+<span id="cb276-11"><a href="archr-deviations.html#cb276-11"></a>    )</span>
+<span id="cb276-12"><a href="archr-deviations.html#cb276-12"></a>})</span>
+<span id="cb276-13"><a href="archr-deviations.html#cb276-13"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>),p2))</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-EncodeTFBSGS-W-Imputation_1.png" width="800" height="800" /></p>
 <p>We can also plot the gene expression profiles for each of these TFs</p>
-<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="archr-deviations.html#cb181-1"></a>markerRNA &lt;-<span class="st"> </span><span class="kw">getFeatures</span>(projHeme5, <span class="dt">select =</span> <span class="kw">paste</span>(<span class="kw">gsub</span>(<span class="st">&quot;_&quot;</span>,<span class="st">&quot;&quot;</span>,tfs), <span class="dt">collapse=</span><span class="st">&quot;|&quot;</span>), <span class="dt">useMatrix =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>)</span>
-<span id="cb181-2"><a href="archr-deviations.html#cb181-2"></a>markerRNA &lt;-<span class="st"> </span>markerRNA[markerRNA <span class="op">%ni%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;SREBF1&quot;</span>,<span class="st">&quot;CEBPA-DT&quot;</span>)]</span>
-<span id="cb181-3"><a href="archr-deviations.html#cb181-3"></a>markerRNA</span>
-<span id="cb181-4"><a href="archr-deviations.html#cb181-4"></a><span class="co">#[1] &quot;TBX21&quot; &quot;CEBPA&quot; &quot;EBF1&quot;  &quot;IRF4&quot;  &quot;PAX5&quot;  &quot;GATA1&quot;</span></span>
-<span id="cb181-5"><a href="archr-deviations.html#cb181-5"></a></span>
-<span id="cb181-6"><a href="archr-deviations.html#cb181-6"></a>p &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
-<span id="cb181-7"><a href="archr-deviations.html#cb181-7"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
-<span id="cb181-8"><a href="archr-deviations.html#cb181-8"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>, </span>
-<span id="cb181-9"><a href="archr-deviations.html#cb181-9"></a>    <span class="dt">name =</span> <span class="kw">sort</span>(markerRNA), </span>
-<span id="cb181-10"><a href="archr-deviations.html#cb181-10"></a>    <span class="dt">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
-<span id="cb181-11"><a href="archr-deviations.html#cb181-11"></a>    <span class="dt">continuousSet =</span> <span class="st">&quot;blueYellow&quot;</span>,</span>
-<span id="cb181-12"><a href="archr-deviations.html#cb181-12"></a>    <span class="dt">imputeWeights =</span> <span class="kw">getImputeWeights</span>(projHeme5)</span>
-<span id="cb181-13"><a href="archr-deviations.html#cb181-13"></a>)</span>
-<span id="cb181-14"><a href="archr-deviations.html#cb181-14"></a></span>
-<span id="cb181-15"><a href="archr-deviations.html#cb181-15"></a><span class="co">#Rearrange for grid plotting</span></span>
-<span id="cb181-16"><a href="archr-deviations.html#cb181-16"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
-<span id="cb181-17"><a href="archr-deviations.html#cb181-17"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb181-18"><a href="archr-deviations.html#cb181-18"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
-<span id="cb181-19"><a href="archr-deviations.html#cb181-19"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
-<span id="cb181-20"><a href="archr-deviations.html#cb181-20"></a><span class="st">    </span><span class="kw">theme</span>(</span>
-<span id="cb181-21"><a href="archr-deviations.html#cb181-21"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb181-22"><a href="archr-deviations.html#cb181-22"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb181-23"><a href="archr-deviations.html#cb181-23"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb181-24"><a href="archr-deviations.html#cb181-24"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
-<span id="cb181-25"><a href="archr-deviations.html#cb181-25"></a>    )</span>
-<span id="cb181-26"><a href="archr-deviations.html#cb181-26"></a>})</span>
-<span id="cb181-27"><a href="archr-deviations.html#cb181-27"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>),p2))</span></code></pre></div>
+<div class="sourceCode" id="cb277"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb277-1"><a href="archr-deviations.html#cb277-1"></a>markerRNA &lt;-<span class="st"> </span><span class="kw">getFeatures</span>(projHeme5, <span class="dt">select =</span> <span class="kw">paste</span>(<span class="kw">gsub</span>(<span class="st">&quot;_&quot;</span>,<span class="st">&quot;&quot;</span>,tfs), <span class="dt">collapse=</span><span class="st">&quot;|&quot;</span>), <span class="dt">useMatrix =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>)</span>
+<span id="cb277-2"><a href="archr-deviations.html#cb277-2"></a>markerRNA &lt;-<span class="st"> </span>markerRNA[markerRNA <span class="op">%ni%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;SREBF1&quot;</span>,<span class="st">&quot;CEBPA-DT&quot;</span>)]</span>
+<span id="cb277-3"><a href="archr-deviations.html#cb277-3"></a>markerRNA</span></code></pre></div>
+<blockquote>
+<p>## [1] “TBX21” “CEBPB” “EBF1” “IRF4” “PAX5” “GATA1”</p>
+</blockquote>
+<div class="sourceCode" id="cb278"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb278-1"><a href="archr-deviations.html#cb278-1"></a>p &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
+<span id="cb278-2"><a href="archr-deviations.html#cb278-2"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb278-3"><a href="archr-deviations.html#cb278-3"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>, </span>
+<span id="cb278-4"><a href="archr-deviations.html#cb278-4"></a>    <span class="dt">name =</span> <span class="kw">sort</span>(markerRNA), </span>
+<span id="cb278-5"><a href="archr-deviations.html#cb278-5"></a>    <span class="dt">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
+<span id="cb278-6"><a href="archr-deviations.html#cb278-6"></a>    <span class="dt">continuousSet =</span> <span class="st">&quot;blueYellow&quot;</span>,</span>
+<span id="cb278-7"><a href="archr-deviations.html#cb278-7"></a>    <span class="dt">imputeWeights =</span> <span class="kw">getImputeWeights</span>(projHeme5)</span>
+<span id="cb278-8"><a href="archr-deviations.html#cb278-8"></a>)</span></code></pre></div>
+<blockquote>
+<p>## Getting ImputeWeights<br />
+## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-103746f7eeb66-Date-2020-04-15_Time-11-09-21.log<br />
+## If there is an issue, please report to github with logFile!<br />
+## Getting UMAP Embedding<br />
+## ColorBy = GeneIntegrationMatrix<br />
+## Getting Matrix Values…<br />
+## Getting Matrix Values…<br />
+##<br />
+## Imputing Matrix<br />
+## Using weights on disk<br />
+## Using weights on disk<br />
+## Plotting Embedding<br />
+## 1 2 3 4 5 6<br />
+## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-103746f7eeb66-Date-2020-04-15_Time-11-09-21.log</p>
+</blockquote>
+<div class="sourceCode" id="cb279"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb279-1"><a href="archr-deviations.html#cb279-1"></a><span class="co">#Rearrange for grid plotting</span></span>
+<span id="cb279-2"><a href="archr-deviations.html#cb279-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
+<span id="cb279-3"><a href="archr-deviations.html#cb279-3"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb279-4"><a href="archr-deviations.html#cb279-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
+<span id="cb279-5"><a href="archr-deviations.html#cb279-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
+<span id="cb279-6"><a href="archr-deviations.html#cb279-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
+<span id="cb279-7"><a href="archr-deviations.html#cb279-7"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb279-8"><a href="archr-deviations.html#cb279-8"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb279-9"><a href="archr-deviations.html#cb279-9"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb279-10"><a href="archr-deviations.html#cb279-10"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
+<span id="cb279-11"><a href="archr-deviations.html#cb279-11"></a>    )</span>
+<span id="cb279-12"><a href="archr-deviations.html#cb279-12"></a>})</span>
+<span id="cb279-13"><a href="archr-deviations.html#cb279-13"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>),p2))</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-EncodeTFBSRNA-W-Imputation_1.png" width="800" height="800" /></p>
 </div>
 <div id="bulk-atac-seq-1" class="section level3" number="12.2.2">
 <h3><span class="header-section-number">12.2.2</span> Bulk ATAC-seq</h3>
 <p>If you have not added motif annotations</p>
-<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="archr-deviations.html#cb182-1"></a><span class="cf">if</span>(<span class="st">&quot;ATAC&quot;</span> <span class="op">%ni%</span><span class="st"> </span><span class="kw">names</span>(projHeme5<span class="op">@</span>peakAnnotation)){</span>
-<span id="cb182-2"><a href="archr-deviations.html#cb182-2"></a>    projHeme5 &lt;-<span class="st"> </span><span class="kw">addArchRAnnotations</span>(<span class="dt">ArchRProj =</span> projHeme5, <span class="dt">collection =</span> <span class="st">&quot;ATAC&quot;</span>)</span>
-<span id="cb182-3"><a href="archr-deviations.html#cb182-3"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb280"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb280-1"><a href="archr-deviations.html#cb280-1"></a><span class="cf">if</span>(<span class="st">&quot;ATAC&quot;</span> <span class="op">%ni%</span><span class="st"> </span><span class="kw">names</span>(projHeme5<span class="op">@</span>peakAnnotation)){</span>
+<span id="cb280-2"><a href="archr-deviations.html#cb280-2"></a>    projHeme5 &lt;-<span class="st"> </span><span class="kw">addArchRAnnotations</span>(<span class="dt">ArchRProj =</span> projHeme5, <span class="dt">collection =</span> <span class="st">&quot;ATAC&quot;</span>)</span>
+<span id="cb280-3"><a href="archr-deviations.html#cb280-3"></a>}</span></code></pre></div>
 <p>Add ChromVAR Deviations for Motifs</p>
-<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="archr-deviations.html#cb183-1"></a>projHeme5 &lt;-<span class="st"> </span><span class="kw">addDeviationsMatrix</span>(</span>
-<span id="cb183-2"><a href="archr-deviations.html#cb183-2"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>
-<span id="cb183-3"><a href="archr-deviations.html#cb183-3"></a>  <span class="dt">peakAnnotation =</span> <span class="st">&quot;ATAC&quot;</span>,</span>
-<span id="cb183-4"><a href="archr-deviations.html#cb183-4"></a>  <span class="dt">force =</span> <span class="ot">TRUE</span></span>
-<span id="cb183-5"><a href="archr-deviations.html#cb183-5"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb281"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb281-1"><a href="archr-deviations.html#cb281-1"></a>projHeme5 &lt;-<span class="st"> </span><span class="kw">addDeviationsMatrix</span>(</span>
+<span id="cb281-2"><a href="archr-deviations.html#cb281-2"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb281-3"><a href="archr-deviations.html#cb281-3"></a>  <span class="dt">peakAnnotation =</span> <span class="st">&quot;ATAC&quot;</span>,</span>
+<span id="cb281-4"><a href="archr-deviations.html#cb281-4"></a>  <span class="dt">force =</span> <span class="ot">TRUE</span></span>
+<span id="cb281-5"><a href="archr-deviations.html#cb281-5"></a>)</span></code></pre></div>
+<blockquote>
+<p>## Using Previous Background Peaks!<br />
+## ArchR logging to : ArchRLogs/ArchR-addDeviationsMatrix-103743481be2a-Date-2020-04-15_Time-11-09-46.log<br />
+## If there is an issue, please report to github with logFile!<br />
+## NULL<br />
+## 2020-04-15 11:09:52 : Batch Execution w/ safelapply!, 0 mins elapsed.<br />
+## ###########<br />
+## 2020-04-15 11:13:09 : Completed Computing Deviations!, 3.376 mins elapsed.<br />
+## ###########<br />
+## ArchR logging successful to : ArchRLogs/ArchR-addDeviationsMatrix-103743481be2a-Date-2020-04-15_Time-11-09-46.log</p>
+</blockquote>
 <p>Plot Variable Motif Annotations</p>
-<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="archr-deviations.html#cb184-1"></a>plotVarDev &lt;-<span class="st"> </span><span class="kw">getVarDeviations</span>(projHeme5, <span class="dt">plot =</span> <span class="ot">TRUE</span>, <span class="dt">name =</span> <span class="st">&quot;ATACMatrix&quot;</span>)</span>
-<span id="cb184-2"><a href="archr-deviations.html#cb184-2"></a><span class="co"># DataFrame with 6 rows and 6 columns</span></span>
-<span id="cb184-3"><a href="archr-deviations.html#cb184-3"></a><span class="co">#     seqnames     idx                    name     combinedVars</span></span>
-<span id="cb184-4"><a href="archr-deviations.html#cb184-4"></a><span class="co">#        &lt;Rle&gt; &lt;array&gt;                 &lt;array&gt;        &lt;numeric&gt;</span></span>
-<span id="cb184-5"><a href="archr-deviations.html#cb184-5"></a><span class="co"># f22        z      22   IAtlas_T_CD8posCenMem 12.0581125421541</span></span>
-<span id="cb184-6"><a href="archr-deviations.html#cb184-6"></a><span class="co"># f86        z      86                Heme_CD8 11.6532963605177</span></span>
-<span id="cb184-7"><a href="archr-deviations.html#cb184-7"></a><span class="co"># f85        z      85                Heme_CD4 11.5670776340581</span></span>
-<span id="cb184-8"><a href="archr-deviations.html#cb184-8"></a><span class="co"># f23        z      23   IAtlas_T_CD8posEffMem 11.4627247478874</span></span>
-<span id="cb184-9"><a href="archr-deviations.html#cb184-9"></a><span class="co"># f33        z      33   IAtlas_T_Th1Precursor 11.4097813814495</span></span>
-<span id="cb184-10"><a href="archr-deviations.html#cb184-10"></a><span class="co"># f19        z      19 IAtlas_T_CD4posEffector  11.398315976261</span></span>
-<span id="cb184-11"><a href="archr-deviations.html#cb184-11"></a>plotVarDev</span></code></pre></div>
+<div class="sourceCode" id="cb282"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb282-1"><a href="archr-deviations.html#cb282-1"></a>plotVarDev &lt;-<span class="st"> </span><span class="kw">getVarDeviations</span>(projHeme5, <span class="dt">plot =</span> <span class="ot">TRUE</span>, <span class="dt">name =</span> <span class="st">&quot;ATACMatrix&quot;</span>)</span></code></pre></div>
+<blockquote>
+<p>## DataFrame with 6 rows and 6 columns<br />
+## seqnames idx name combinedVars combinedMeans<br />
+## <Rle> <array> <array> <numeric> <numeric><br />
+## f22 z 22 IAtlas_T_CD8posCenMem 12.8413703976471 -0.0972946574781075<br />
+## f86 z 86 Heme_CD8 12.5070480860108 -0.079462324469343<br />
+## f85 z 85 Heme_CD4 12.2753260246254 -0.0561621531675016<br />
+## f23 z 23 IAtlas_T_CD8posEffMem 12.2250185804317 -0.104389732164243<br />
+## f21 z 21 IAtlas_T_CD8pos 12.1998071900673 -0.09178088897301<br />
+## f33 z 33 IAtlas_T_Th1Precursor 12.1352640996498 -0.0819315630754632<br />
+## rank<br />
+## <integer><br />
+## f22 1<br />
+## f86 2<br />
+## f85 3<br />
+## f23 4<br />
+## f21 5<br />
+## f33 6</p>
+</blockquote>
+<div class="sourceCode" id="cb283"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb283-1"><a href="archr-deviations.html#cb283-1"></a>plotVarDev</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Variable-ATAC-Deviation-Scores_1.png" width="500" height="500" /></p>
 <p>We can then plot this as a nice PDF</p>
-<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="archr-deviations.html#cb185-1"></a><span class="kw">plotPDF</span>(plotVarDev, <span class="dt">name =</span> <span class="st">&quot;Variable-ATAC-Deviation-Scores&quot;</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>, <span class="dt">ArchRProj =</span> projHeme5, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb284"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb284-1"><a href="archr-deviations.html#cb284-1"></a><span class="kw">plotPDF</span>(plotVarDev, <span class="dt">name =</span> <span class="st">&quot;Variable-ATAC-Deviation-Scores&quot;</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>, <span class="dt">ArchRProj =</span> projHeme5, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<blockquote>
+<p>## [1] “plotting ggplot!”<br />
+## [1] 0</p>
+</blockquote>
 <p>If we want to get TF feature names for downstream plotting</p>
-<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="archr-deviations.html#cb186-1"></a>ATACPeaks &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Heme_HSC&quot;</span>, <span class="st">&quot;Heme_LMPP&quot;</span>, <span class="st">&quot;Heme_Ery&quot;</span>, <span class="st">&quot;Heme_Mono&quot;</span>, <span class="st">&quot;Heme_CD4&quot;</span>, <span class="st">&quot;Heme_CD8&quot;</span>, <span class="st">&quot;Heme_B&quot;</span>, <span class="st">&quot;Heme_NK&quot;</span>, <span class="st">&quot;IAtlas_DC_Plasmacytoid&quot;</span>)</span>
-<span id="cb186-2"><a href="archr-deviations.html#cb186-2"></a><span class="kw">getFeatures</span>(projHeme5, <span class="dt">select =</span> <span class="kw">paste</span>(ATACPeaks, <span class="dt">collapse=</span><span class="st">&quot;|&quot;</span>), <span class="dt">useMatrix =</span> <span class="st">&quot;ATACMatrix&quot;</span>)</span>
-<span id="cb186-3"><a href="archr-deviations.html#cb186-3"></a><span class="co">#  [1] &quot;z:Heme_NK&quot;                         &quot;z:Heme_Mono&quot;                      </span></span>
-<span id="cb186-4"><a href="archr-deviations.html#cb186-4"></a><span class="co">#  [3] &quot;z:Heme_MEP&quot;                        &quot;z:Heme_LMPP&quot;                      </span></span>
-<span id="cb186-5"><a href="archr-deviations.html#cb186-5"></a><span class="co">#  [5] &quot;z:Heme_HSC&quot;                        &quot;z:Heme_CD8&quot;                       </span></span>
-<span id="cb186-6"><a href="archr-deviations.html#cb186-6"></a><span class="co">#  [7] &quot;z:Heme_CD4&quot;                        &quot;z:Heme_B&quot;                         </span></span>
-<span id="cb186-7"><a href="archr-deviations.html#cb186-7"></a><span class="co">#  [9] &quot;z:IAtlas_DC_Plasmacytoid&quot;          &quot;deviations:Heme_NK&quot;               </span></span>
-<span id="cb186-8"><a href="archr-deviations.html#cb186-8"></a><span class="co"># [11] &quot;deviations:Heme_Mono&quot;              &quot;deviations:Heme_MEP&quot;              </span></span>
-<span id="cb186-9"><a href="archr-deviations.html#cb186-9"></a><span class="co"># [13] &quot;deviations:Heme_LMPP&quot;              &quot;deviations:Heme_HSC&quot;              </span></span>
-<span id="cb186-10"><a href="archr-deviations.html#cb186-10"></a><span class="co"># [15] &quot;deviations:Heme_CD8&quot;               &quot;deviations:Heme_CD4&quot;              </span></span>
-<span id="cb186-11"><a href="archr-deviations.html#cb186-11"></a><span class="co"># [17] &quot;deviations:Heme_B&quot;                 &quot;deviations:IAtlas_DC_Plasmacytoid&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb285"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb285-1"><a href="archr-deviations.html#cb285-1"></a>ATACPeaks &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Heme_HSC&quot;</span>, <span class="st">&quot;Heme_LMPP&quot;</span>, <span class="st">&quot;Heme_Ery&quot;</span>, <span class="st">&quot;Heme_Mono&quot;</span>, <span class="st">&quot;Heme_CD4&quot;</span>, <span class="st">&quot;Heme_CD8&quot;</span>, <span class="st">&quot;Heme_B&quot;</span>, <span class="st">&quot;Heme_NK&quot;</span>, <span class="st">&quot;IAtlas_DC_Plasmacytoid&quot;</span>)</span>
+<span id="cb285-2"><a href="archr-deviations.html#cb285-2"></a><span class="kw">getFeatures</span>(projHeme5, <span class="dt">select =</span> <span class="kw">paste</span>(ATACPeaks, <span class="dt">collapse=</span><span class="st">&quot;|&quot;</span>), <span class="dt">useMatrix =</span> <span class="st">&quot;ATACMatrix&quot;</span>)</span></code></pre></div>
+<blockquote>
+<p>## [1] “z:Heme_NK” “z:Heme_Mono”<br />
+## [3] “z:Heme_LMPP” “z:Heme_HSC”<br />
+## [5] “z:Heme_Ery” “z:Heme_CD8”<br />
+## [7] “z:Heme_CD4” “z:Heme_B”<br />
+## [9] “z:IAtlas_DC_Plasmacytoid” “deviations:Heme_NK”<br />
+## [11] “deviations:Heme_Mono” “deviations:Heme_LMPP”<br />
+## [13] “deviations:Heme_HSC” “deviations:Heme_Ery”<br />
+## [15] “deviations:Heme_CD8” “deviations:Heme_CD4”<br />
+## [17] “deviations:Heme_B” “deviations:IAtlas_DC_Plasmacytoid”</p>
+</blockquote>
 <p>To get deviation z-scores</p>
-<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="archr-deviations.html#cb187-1"></a>markerATAC &lt;-<span class="st"> </span><span class="kw">getFeatures</span>(projHeme5, <span class="dt">select =</span> <span class="kw">paste</span>(ATACPeaks, <span class="dt">collapse=</span><span class="st">&quot;|&quot;</span>), <span class="dt">useMatrix =</span> <span class="st">&quot;ATACMatrix&quot;</span>)</span>
-<span id="cb187-2"><a href="archr-deviations.html#cb187-2"></a>markerATAC &lt;-<span class="st"> </span><span class="kw">sort</span>(<span class="kw">grep</span>(<span class="st">&quot;z:&quot;</span>, markerATAC, <span class="dt">value =</span> <span class="ot">TRUE</span>))</span>
-<span id="cb187-3"><a href="archr-deviations.html#cb187-3"></a>markerATAC</span>
-<span id="cb187-4"><a href="archr-deviations.html#cb187-4"></a><span class="co"># [1] &quot;z:Heme_B&quot;                 &quot;z:Heme_CD4&quot;              </span></span>
-<span id="cb187-5"><a href="archr-deviations.html#cb187-5"></a><span class="co"># [3] &quot;z:Heme_CD8&quot;               &quot;z:Heme_HSC&quot;              </span></span>
-<span id="cb187-6"><a href="archr-deviations.html#cb187-6"></a><span class="co"># [5] &quot;z:Heme_MEP&quot;               &quot;z:Heme_Mono&quot;             </span></span>
-<span id="cb187-7"><a href="archr-deviations.html#cb187-7"></a><span class="co"># [7] &quot;z:Heme_NK&quot;                &quot;z:IAtlas_DC_Plasmacytoid&quot;</span></span></code></pre></div>
-<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="archr-deviations.html#cb188-1"></a>p &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
-<span id="cb188-2"><a href="archr-deviations.html#cb188-2"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
-<span id="cb188-3"><a href="archr-deviations.html#cb188-3"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;ATACMatrix&quot;</span>, </span>
-<span id="cb188-4"><a href="archr-deviations.html#cb188-4"></a>    <span class="dt">name =</span> markerATAC, </span>
-<span id="cb188-5"><a href="archr-deviations.html#cb188-5"></a>    <span class="dt">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
-<span id="cb188-6"><a href="archr-deviations.html#cb188-6"></a>    <span class="dt">imputeWeights =</span> <span class="kw">getImputeWeights</span>(projHeme5)</span>
-<span id="cb188-7"><a href="archr-deviations.html#cb188-7"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb286"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb286-1"><a href="archr-deviations.html#cb286-1"></a>markerATAC &lt;-<span class="st"> </span><span class="kw">getFeatures</span>(projHeme5, <span class="dt">select =</span> <span class="kw">paste</span>(ATACPeaks, <span class="dt">collapse=</span><span class="st">&quot;|&quot;</span>), <span class="dt">useMatrix =</span> <span class="st">&quot;ATACMatrix&quot;</span>)</span>
+<span id="cb286-2"><a href="archr-deviations.html#cb286-2"></a>markerATAC &lt;-<span class="st"> </span><span class="kw">sort</span>(<span class="kw">grep</span>(<span class="st">&quot;z:&quot;</span>, markerATAC, <span class="dt">value =</span> <span class="ot">TRUE</span>))</span>
+<span id="cb286-3"><a href="archr-deviations.html#cb286-3"></a>markerATAC</span></code></pre></div>
+<blockquote>
+<p>## [1] “z:Heme_B” “z:Heme_CD4”<br />
+## [3] “z:Heme_CD8” “z:Heme_Ery”<br />
+## [5] “z:Heme_HSC” “z:Heme_LMPP”<br />
+## [7] “z:Heme_Mono” “z:Heme_NK”<br />
+## [9] “z:IAtlas_DC_Plasmacytoid”</p>
+</blockquote>
+<div class="sourceCode" id="cb287"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb287-1"><a href="archr-deviations.html#cb287-1"></a>p &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
+<span id="cb287-2"><a href="archr-deviations.html#cb287-2"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb287-3"><a href="archr-deviations.html#cb287-3"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;ATACMatrix&quot;</span>, </span>
+<span id="cb287-4"><a href="archr-deviations.html#cb287-4"></a>    <span class="dt">name =</span> markerATAC, </span>
+<span id="cb287-5"><a href="archr-deviations.html#cb287-5"></a>    <span class="dt">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
+<span id="cb287-6"><a href="archr-deviations.html#cb287-6"></a>    <span class="dt">imputeWeights =</span> <span class="kw">getImputeWeights</span>(projHeme5)</span>
+<span id="cb287-7"><a href="archr-deviations.html#cb287-7"></a>)</span></code></pre></div>
+<blockquote>
+<p>## Getting ImputeWeights<br />
+## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-1037416f3cb56-Date-2020-04-15_Time-11-13-23.log<br />
+## If there is an issue, please report to github with logFile!<br />
+## Getting UMAP Embedding<br />
+## ColorBy = ATACMatrix<br />
+## Getting Matrix Values…<br />
+## Getting Matrix Values…<br />
+##<br />
+## Imputing Matrix<br />
+## Using weights on disk<br />
+## Using weights on disk<br />
+## Plotting Embedding<br />
+## 1 2 3 4 5 6 7 8 9<br />
+## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-1037416f3cb56-Date-2020-04-15_Time-11-13-23.log</p>
+</blockquote>
 <p>To plot all motifs we can use cowplot</p>
-<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="archr-deviations.html#cb189-1"></a><span class="co">#Rearrange for grid plotting</span></span>
-<span id="cb189-2"><a href="archr-deviations.html#cb189-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
-<span id="cb189-3"><a href="archr-deviations.html#cb189-3"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb189-4"><a href="archr-deviations.html#cb189-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
-<span id="cb189-5"><a href="archr-deviations.html#cb189-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
-<span id="cb189-6"><a href="archr-deviations.html#cb189-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
-<span id="cb189-7"><a href="archr-deviations.html#cb189-7"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb189-8"><a href="archr-deviations.html#cb189-8"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb189-9"><a href="archr-deviations.html#cb189-9"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb189-10"><a href="archr-deviations.html#cb189-10"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
-<span id="cb189-11"><a href="archr-deviations.html#cb189-11"></a>    )</span>
-<span id="cb189-12"><a href="archr-deviations.html#cb189-12"></a>})</span>
-<span id="cb189-13"><a href="archr-deviations.html#cb189-13"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>),p2))</span></code></pre></div>
+<div class="sourceCode" id="cb288"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb288-1"><a href="archr-deviations.html#cb288-1"></a><span class="co">#Rearrange for grid plotting</span></span>
+<span id="cb288-2"><a href="archr-deviations.html#cb288-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
+<span id="cb288-3"><a href="archr-deviations.html#cb288-3"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb288-4"><a href="archr-deviations.html#cb288-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
+<span id="cb288-5"><a href="archr-deviations.html#cb288-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
+<span id="cb288-6"><a href="archr-deviations.html#cb288-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
+<span id="cb288-7"><a href="archr-deviations.html#cb288-7"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb288-8"><a href="archr-deviations.html#cb288-8"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb288-9"><a href="archr-deviations.html#cb288-9"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb288-10"><a href="archr-deviations.html#cb288-10"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
+<span id="cb288-11"><a href="archr-deviations.html#cb288-11"></a>    )</span>
+<span id="cb288-12"><a href="archr-deviations.html#cb288-12"></a>})</span>
+<span id="cb288-13"><a href="archr-deviations.html#cb288-13"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>),p2))</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-MarkerATAC-W-Imputation_1.png" width="800" height="800" /></p>
 </div>
 </div>

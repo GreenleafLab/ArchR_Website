@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-16" />
+<meta name="date" content="2020-04-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -164,12 +164,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="4.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>4.1</b> ArchR’s LSI Implementation</a></li>
 <li class="chapter" data-level="4.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>4.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
-<li class="chapter" data-level="4.3" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.3</b> Batch Effect Correction wtih Harmony</a></li>
-<li class="chapter" data-level="4.4" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.4</b> Session Information</a></li>
+<li class="chapter" data-level="4.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>4.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="4.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.4</b> Batch Effect Correction wtih Harmony</a></li>
+<li class="chapter" data-level="4.5" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.5</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>5</b> Clustering with ArchR</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.1</b> Session Information</a></li>
+<li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="5.2" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.2</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
 <ul>
@@ -230,7 +232,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="14" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>14</b> Integrative Analysis with ArchR</a>
 <ul>
-<li class="chapter" data-level="14.1" data-path="coaccessibility-with-archr.html"><a href="coaccessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> CoAccessibility with ArchR</a></li>
+<li class="chapter" data-level="14.1" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> Co-accessibility with ArchR</a></li>
 <li class="chapter" data-level="14.2" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>14.2</b> Peak2GeneLinkage with ArchR</a></li>
 <li class="chapter" data-level="14.3" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>14.3</b> Identification of Positive TF-Regulators</a></li>
 <li class="chapter" data-level="14.4" data-path="session-information-13.html"><a href="session-information-13.html"><i class="fa fa-check"></i><b>14.4</b> Session Information</a></li>
@@ -263,39 +265,62 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="custom-enrichment" class="section level2" number="11.3">
 <h2><span class="header-section-number">11.3</span> Custom Enrichment</h2>
-<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="custom-enrichment.html#cb155-1"></a><span class="co">#Custom Peak Annotations</span></span>
-<span id="cb155-2"><a href="custom-enrichment.html#cb155-2"></a>EncodePeaks &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
-<span id="cb155-3"><a href="custom-enrichment.html#cb155-3"></a>  <span class="dt">Encode_K562_GATA1 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF632NQI/@@download/ENCFF632NQI.bed.gz&quot;</span>,</span>
-<span id="cb155-4"><a href="custom-enrichment.html#cb155-4"></a>  <span class="dt">Encode_GM12878_CEBPB =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF761MGJ/@@download/ENCFF761MGJ.bed.gz&quot;</span>,</span>
-<span id="cb155-5"><a href="custom-enrichment.html#cb155-5"></a>  <span class="dt">Encode_K562_Ebf1 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF868VSY/@@download/ENCFF868VSY.bed.gz&quot;</span>,</span>
-<span id="cb155-6"><a href="custom-enrichment.html#cb155-6"></a>  <span class="dt">Encode_K562_Pax5 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF339KUO/@@download/ENCFF339KUO.bed.gz&quot;</span></span>
-<span id="cb155-7"><a href="custom-enrichment.html#cb155-7"></a>)</span>
-<span id="cb155-8"><a href="custom-enrichment.html#cb155-8"></a>projHeme5 &lt;-<span class="st"> </span><span class="kw">addPeakAnnotations</span>(<span class="dt">ArchRProj =</span> projHeme5, <span class="dt">regions =</span> EncodePeaks, <span class="dt">name =</span> <span class="st">&quot;ChIP&quot;</span>)</span>
-<span id="cb155-9"><a href="custom-enrichment.html#cb155-9"></a></span>
-<span id="cb155-10"><a href="custom-enrichment.html#cb155-10"></a><span class="co">#Identify ChIP Enrichments</span></span>
-<span id="cb155-11"><a href="custom-enrichment.html#cb155-11"></a>enrichRegions &lt;-<span class="st"> </span><span class="kw">peakAnnoEnrichment</span>(</span>
-<span id="cb155-12"><a href="custom-enrichment.html#cb155-12"></a>    <span class="dt">seMarker =</span> markersPeaks,</span>
-<span id="cb155-13"><a href="custom-enrichment.html#cb155-13"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
-<span id="cb155-14"><a href="custom-enrichment.html#cb155-14"></a>    <span class="dt">peakAnnotation =</span> <span class="st">&quot;ChIP&quot;</span>,</span>
-<span id="cb155-15"><a href="custom-enrichment.html#cb155-15"></a>    <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 0.5&quot;</span></span>
-<span id="cb155-16"><a href="custom-enrichment.html#cb155-16"></a>  )</span>
-<span id="cb155-17"><a href="custom-enrichment.html#cb155-17"></a>enrichRegions</span>
-<span id="cb155-18"><a href="custom-enrichment.html#cb155-18"></a><span class="co"># class: SummarizedExperiment </span></span>
-<span id="cb155-19"><a href="custom-enrichment.html#cb155-19"></a><span class="co"># dim: 4 14 </span></span>
-<span id="cb155-20"><a href="custom-enrichment.html#cb155-20"></a><span class="co"># metadata(0):</span></span>
-<span id="cb155-21"><a href="custom-enrichment.html#cb155-21"></a><span class="co"># assays(10): mlog10Padj mlog10p ... CompareFrequency feature</span></span>
-<span id="cb155-22"><a href="custom-enrichment.html#cb155-22"></a><span class="co"># rownames(4): Encode_K562_GATA1 Encode_GM12878_CEBPB Encode_K562_Ebf1</span></span>
-<span id="cb155-23"><a href="custom-enrichment.html#cb155-23"></a><span class="co">#   Encode_K562_Pax5</span></span>
-<span id="cb155-24"><a href="custom-enrichment.html#cb155-24"></a><span class="co"># rowData names(0):</span></span>
-<span id="cb155-25"><a href="custom-enrichment.html#cb155-25"></a><span class="co"># colnames(14): C1_Early.Eryth C2_CD4.N1 ... C13_CLP.2 C14_pDC</span></span>
-<span id="cb155-26"><a href="custom-enrichment.html#cb155-26"></a><span class="co"># colData names(0):</span></span>
-<span id="cb155-27"><a href="custom-enrichment.html#cb155-27"></a></span>
-<span id="cb155-28"><a href="custom-enrichment.html#cb155-28"></a><span class="co">#Heatmap</span></span>
-<span id="cb155-29"><a href="custom-enrichment.html#cb155-29"></a>heatmapRegions &lt;-<span class="st"> </span><span class="kw">enrichHeatmap</span>(enrichRegions, <span class="dt">n =</span> <span class="dv">7</span>, <span class="dt">transpose =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb155-30"><a href="custom-enrichment.html#cb155-30"></a><span class="kw">draw</span>(heatmapRegions, <span class="dt">heatmap_legend_side =</span> <span class="st">&quot;bot&quot;</span>, <span class="dt">annotation_legend_side =</span> <span class="st">&quot;bot&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="custom-enrichment.html#cb238-1"></a><span class="co">#Custom Peak Annotations</span></span>
+<span id="cb238-2"><a href="custom-enrichment.html#cb238-2"></a>EncodePeaks &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb238-3"><a href="custom-enrichment.html#cb238-3"></a>  <span class="dt">Encode_K562_GATA1 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF632NQI/@@download/ENCFF632NQI.bed.gz&quot;</span>,</span>
+<span id="cb238-4"><a href="custom-enrichment.html#cb238-4"></a>  <span class="dt">Encode_GM12878_CEBPB =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF761MGJ/@@download/ENCFF761MGJ.bed.gz&quot;</span>,</span>
+<span id="cb238-5"><a href="custom-enrichment.html#cb238-5"></a>  <span class="dt">Encode_K562_Ebf1 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF868VSY/@@download/ENCFF868VSY.bed.gz&quot;</span>,</span>
+<span id="cb238-6"><a href="custom-enrichment.html#cb238-6"></a>  <span class="dt">Encode_K562_Pax5 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF339KUO/@@download/ENCFF339KUO.bed.gz&quot;</span></span>
+<span id="cb238-7"><a href="custom-enrichment.html#cb238-7"></a>)</span>
+<span id="cb238-8"><a href="custom-enrichment.html#cb238-8"></a>projHeme5 &lt;-<span class="st"> </span><span class="kw">addPeakAnnotations</span>(<span class="dt">ArchRProj =</span> projHeme5, <span class="dt">regions =</span> EncodePeaks, <span class="dt">name =</span> <span class="st">&quot;ChIP&quot;</span>)</span></code></pre></div>
+<blockquote>
+<p>## 2020-04-15 10:44:23 : Creating Peak Overlap Matrix, 0.036 mins elapsed.</p>
+</blockquote>
+<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb239-1"><a href="custom-enrichment.html#cb239-1"></a><span class="co">#Identify ChIP Enrichments</span></span>
+<span id="cb239-2"><a href="custom-enrichment.html#cb239-2"></a>enrichRegions &lt;-<span class="st"> </span><span class="kw">peakAnnoEnrichment</span>(</span>
+<span id="cb239-3"><a href="custom-enrichment.html#cb239-3"></a>    <span class="dt">seMarker =</span> markersPeaks,</span>
+<span id="cb239-4"><a href="custom-enrichment.html#cb239-4"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
+<span id="cb239-5"><a href="custom-enrichment.html#cb239-5"></a>    <span class="dt">peakAnnotation =</span> <span class="st">&quot;ChIP&quot;</span>,</span>
+<span id="cb239-6"><a href="custom-enrichment.html#cb239-6"></a>    <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 0.5&quot;</span></span>
+<span id="cb239-7"><a href="custom-enrichment.html#cb239-7"></a>  )</span></code></pre></div>
+<blockquote>
+<p>## 2020-04-15 10:44:25 : Computing Enrichments 1 of 11, 0.027 mins elapsed.<br />
+## 2020-04-15 10:44:25 : Computing Enrichments 2 of 11, 0.027 mins elapsed.<br />
+## 2020-04-15 10:44:25 : Computing Enrichments 3 of 11, 0.027 mins elapsed.<br />
+## 2020-04-15 10:44:25 : Computing Enrichments 4 of 11, 0.028 mins elapsed.<br />
+## 2020-04-15 10:44:25 : Computing Enrichments 5 of 11, 0.028 mins elapsed.<br />
+## 2020-04-15 10:44:25 : Computing Enrichments 6 of 11, 0.029 mins elapsed.<br />
+## 2020-04-15 10:44:25 : Computing Enrichments 7 of 11, 0.029 mins elapsed.<br />
+## 2020-04-15 10:44:25 : Computing Enrichments 8 of 11, 0.03 mins elapsed.<br />
+## 2020-04-15 10:44:25 : Computing Enrichments 9 of 11, 0.03 mins elapsed.<br />
+## 2020-04-15 10:44:25 : Computing Enrichments 10 of 11, 0.03 mins elapsed.<br />
+## 2020-04-15 10:44:26 : Computing Enrichments 11 of 11, 0.033 mins elapsed.</p>
+</blockquote>
+<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="custom-enrichment.html#cb240-1"></a>enrichRegions</span></code></pre></div>
+<blockquote>
+<p>## class: SummarizedExperiment
+## dim: 4 11
+## metadata(0):
+## assays(10): mlog10Padj mlog10p … CompareFrequency feature
+## rownames(4): Encode_K562_GATA1 Encode_GM12878_CEBPB Encode_K562_Ebf1
+## Encode_K562_Pax5
+## rowData names(0):
+## colnames(11): B CD4.M … PreB Progenitor
+## colData names(0):</p>
+</blockquote>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="custom-enrichment.html#cb241-1"></a><span class="co">#Heatmap</span></span>
+<span id="cb241-2"><a href="custom-enrichment.html#cb241-2"></a>heatmapRegions &lt;-<span class="st"> </span><span class="kw">enrichHeatmap</span>(enrichRegions, <span class="dt">n =</span> <span class="dv">7</span>, <span class="dt">transpose =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<blockquote>
+<p>## Adding Annotations..<br />
+## Preparing Main Heatmap..</p>
+</blockquote>
+<div class="sourceCode" id="cb242"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb242-1"><a href="custom-enrichment.html#cb242-1"></a><span class="kw">draw</span>(heatmapRegions, <span class="dt">heatmap_legend_side =</span> <span class="st">&quot;bot&quot;</span>, <span class="dt">annotation_legend_side =</span> <span class="st">&quot;bot&quot;</span>)</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Regions-Enriched-Marker-Heatmap_1.png" width="800" height="600" /></p>
 <p>We can then plot this</p>
-<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="custom-enrichment.html#cb156-1"></a><span class="kw">plotPDF</span>(heatmapRegions, <span class="dt">name =</span> <span class="st">&quot;Regions-Enriched-Marker-Heatmap&quot;</span>, <span class="dt">width =</span> <span class="dv">8</span>, <span class="dt">height =</span> <span class="dv">6</span>, <span class="dt">ArchRProj =</span> projHeme5, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb243-1"><a href="custom-enrichment.html#cb243-1"></a><span class="kw">plotPDF</span>(heatmapRegions, <span class="dt">name =</span> <span class="st">&quot;Regions-Enriched-Marker-Heatmap&quot;</span>, <span class="dt">width =</span> <span class="dv">8</span>, <span class="dt">height =</span> <span class="dv">6</span>, <span class="dt">ArchRProj =</span> projHeme5, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<blockquote>
+<p>## [1] 0</p>
+</blockquote>
 </div>
             </section>
 

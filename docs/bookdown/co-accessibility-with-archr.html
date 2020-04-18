@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 6 Single Cell Embeddings | Chapter 15 - Cellular Trajectory Analysis with ArchR</title>
+  <title>14.1 Co-accessibility with ArchR | Chapter 15 - Cellular Trajectory Analysis with ArchR</title>
   <meta name="description" content="A guide to ArchR" />
   <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 6 Single Cell Embeddings | Chapter 15 - Cellular Trajectory Analysis with ArchR" />
+  <meta property="og:title" content="14.1 Co-accessibility with ArchR | Chapter 15 - Cellular Trajectory Analysis with ArchR" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="GreenleafLab/ArchR" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 6 Single Cell Embeddings | Chapter 15 - Cellular Trajectory Analysis with ArchR" />
+  <meta name="twitter:title" content="14.1 Co-accessibility with ArchR | Chapter 15 - Cellular Trajectory Analysis with ArchR" />
   
   <meta name="twitter:description" content="A guide to ArchR" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
-<link rel="prev" href="session-information-4.html"/>
-<link rel="next" href="umap.html"/>
+<link rel="prev" href="integrative-analysis-with-archr.html"/>
+<link rel="next" href="peak2genelinkage-with-archr.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -263,18 +263,275 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="single-cell-embeddings" class="section level1" number="6">
-<h1><span class="header-section-number">Chapter 6</span> Single Cell Embeddings</h1>
-<p>In ArchR, <em>embeddings</em>, such as Uniform Manifold Approximation and Projection (UMAP) or t-distributed stochastic neighbor embedding (t-SNE), are used to visualize single cells in reduced dimension space. These embeddings each have distinct advantages and disadvantages. We call these “embeddings” because they are strictly used to visualize the clusters and are not used to identify clusters which is done using LSI as mentioned in previous chapters. The primary difference between UMAP and t-SNE is the interpretatino of the distance between cells or clusters. t-SNE is designed to preserve the <em>local</em> structure in the data while UMAP is designed to preserve <em>both the local and most of the global</em> structure in the data. In theory, this means that the distance between two clusters is not informative in t-SNE but is informative in UMAP. For example, t-SNE does not allow you to say that Cluster A is more similar to Cluster B than it is to Cluster C based on the observation that Cluster A is located closer to Cluster B than Cluster C on the t-SNE. UMAP, on the other hand, is designed to permit this type of comparison, though it is worth noting that UMAP is a new enough method that this is still being flushed out in the literature.</p>
-<p>It is important to note that neither t-SNE nor UMAP are <em>deterministic</em>. Moreover, tweaking the input parameters will lead to different results. In the context of t-SNE and UMAP, you can effectively make the algorithm deterministic by using the same random <code>seed</code>. However, the remaining input parameters still have drastic effects on the resulting embedding. Because of this, it is important to understand the various input parameters and to tweak these to best meet the needs of your own data. ArchR implements a default set of input parameters that work for most applications but there is really no single set of parameters that will produce the desired results for datasets that vary greatly in cell number, complexity, and quality.</p> 
+<div id="co-accessibility-with-archr" class="section level2" number="14.1">
+<h2><span class="header-section-number">14.1</span> Co-accessibility with ArchR</h2>
+<div class="sourceCode" id="cb311"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb311-1"><a href="co-accessibility-with-archr.html#cb311-1"></a>projHeme5 &lt;-<span class="st"> </span><span class="kw">addCoAccessibility</span>(</span>
+<span id="cb311-2"><a href="co-accessibility-with-archr.html#cb311-2"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
+<span id="cb311-3"><a href="co-accessibility-with-archr.html#cb311-3"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span></span>
+<span id="cb311-4"><a href="co-accessibility-with-archr.html#cb311-4"></a>)</span></code></pre></div>
+<blockquote>
+<p>## ArchR logging to : ArchRLogs/ArchR-addCoAccessibility-11a706a1e44aa-Date-2020-04-15_Time-11-54-46.log<br />
+## If there is an issue, please report to github with logFile!<br />
+## 2020-04-15 11:54:46 : Computing KNN, 0.009 mins elapsed.<br />
+## 2020-04-15 11:54:48 : Identifying Non-Overlapping KNN pairs, 0.032 mins elapsed.<br />
+## 2020-04-15 11:54:51 : Identified 491 Groupings!, 0.084 mins elapsed.<br />
+## 2020-04-15 11:54:54 : Computing Co-Accessibility chr1 (1 of 23), 0.134 mins elapsed.<br />
+## 2020-04-15 11:55:00 : Computing Co-Accessibility chr2 (2 of 23), 0.245 mins elapsed.<br />
+## 2020-04-15 11:55:05 : Computing Co-Accessibility chr3 (3 of 23), 0.325 mins elapsed.<br />
+## 2020-04-15 11:55:09 : Computing Co-Accessibility chr4 (4 of 23), 0.386 mins elapsed.<br />
+## 2020-04-15 11:55:12 : Computing Co-Accessibility chr5 (5 of 23), 0.438 mins elapsed.<br />
+## 2020-04-15 11:55:15 : Computing Co-Accessibility chr6 (6 of 23), 0.493 mins elapsed.<br />
+## 2020-04-15 11:55:20 : Computing Co-Accessibility chr7 (7 of 23), 0.564 mins elapsed.<br />
+## 2020-04-15 11:55:24 : Computing Co-Accessibility chr8 (8 of 23), 0.634 mins elapsed.<br />
+## 2020-04-15 11:55:27 : Computing Co-Accessibility chr9 (9 of 23), 0.685 mins elapsed.<br />
+## 2020-04-15 11:55:30 : Computing Co-Accessibility chr10 (10 of 23), 0.737 mins elapsed.<br />
+## 2020-04-15 11:55:34 : Computing Co-Accessibility chr11 (11 of 23), 0.805 mins elapsed.<br />
+## 2020-04-15 11:55:38 : Computing Co-Accessibility chr12 (12 of 23), 0.874 mins elapsed.<br />
+## 2020-04-15 11:55:42 : Computing Co-Accessibility chr13 (13 of 23), 0.937 mins elapsed.<br />
+## 2020-04-15 11:55:44 : Computing Co-Accessibility chr14 (14 of 23), 0.979 mins elapsed.<br />
+## 2020-04-15 11:55:47 : Computing Co-Accessibility chr15 (15 of 23), 1.028 mins elapsed.<br />
+## 2020-04-15 11:55:51 : Computing Co-Accessibility chr16 (16 of 23), 1.085 mins elapsed.<br />
+## 2020-04-15 11:55:55 : Computing Co-Accessibility chr17 (17 of 23), 1.146 mins elapsed.<br />
+## 2020-04-15 11:55:58 : Computing Co-Accessibility chr18 (18 of 23), 1.206 mins elapsed.<br />
+## 2020-04-15 11:56:01 : Computing Co-Accessibility chr19 (19 of 23), 1.251 mins elapsed.<br />
+## 2020-04-15 11:56:05 : Computing Co-Accessibility chr20 (20 of 23), 1.327 mins elapsed.<br />
+## 2020-04-15 11:56:09 : Computing Co-Accessibility chr21 (21 of 23), 1.384 mins elapsed.<br />
+## 2020-04-15 11:56:11 : Computing Co-Accessibility chr22 (22 of 23), 1.424 mins elapsed.<br />
+## 2020-04-15 11:56:14 : Computing Co-Accessibility chrX (23 of 23), 1.468 mins elapsed.<br />
+## ArchR logging successful to : ArchRLogs/ArchR-addCoAccessibility-11a706a1e44aa-Date-2020-04-15_Time-11-54-46.log</p>
+</blockquote>
+<div class="sourceCode" id="cb312"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb312-1"><a href="co-accessibility-with-archr.html#cb312-1"></a>cA &lt;-<span class="st"> </span><span class="kw">getCoAccessibility</span>(</span>
+<span id="cb312-2"><a href="co-accessibility-with-archr.html#cb312-2"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
+<span id="cb312-3"><a href="co-accessibility-with-archr.html#cb312-3"></a>    <span class="dt">corCutOff =</span> <span class="fl">0.5</span>,</span>
+<span id="cb312-4"><a href="co-accessibility-with-archr.html#cb312-4"></a>    <span class="dt">resolution =</span> <span class="dv">1</span>,</span>
+<span id="cb312-5"><a href="co-accessibility-with-archr.html#cb312-5"></a>    <span class="dt">returnLoops =</span> <span class="ot">FALSE</span></span>
+<span id="cb312-6"><a href="co-accessibility-with-archr.html#cb312-6"></a>)</span>
+<span id="cb312-7"><a href="co-accessibility-with-archr.html#cb312-7"></a></span>
+<span id="cb312-8"><a href="co-accessibility-with-archr.html#cb312-8"></a>cA</span></code></pre></div>
+<blockquote>
+<p>## DataFrame with 64824 rows and 4 columns<br />
+## queryHits subjectHits seqnames correlation<br />
+## <integer> <integer> <Rle> <numeric><br />
+## 1 5 10 chr1 0.63855416236086<br />
+## 2 10 5 chr1 0.63855416236086<br />
+## 3 21 22 chr1 0.551520040138677<br />
+## 4 22 21 chr1 0.551520040138677<br />
+## 5 25 37 chr1 0.535392737290744<br />
+## … … … … …<br />
+## 64820 143907 143906 chrX 0.510896735395573<br />
+## 64821 143932 143936 chrX 0.501021498357938<br />
+## 64822 143936 143932 chrX 0.501021498357938<br />
+## 64823 143977 143978 chrX 0.550319862774772<br />
+## 64824 143978 143977 chrX 0.550319862774772</p>
+</blockquote>
+<div class="sourceCode" id="cb313"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb313-1"><a href="co-accessibility-with-archr.html#cb313-1"></a><span class="kw">metadata</span>(cA)[[<span class="dv">1</span>]]</span></code></pre></div>
+<blockquote>
+<p>## GRanges object with 144009 ranges and 0 metadata columns:<br />
+## seqnames ranges strand<br />
+## <Rle> <IRanges> <Rle><br />
+## Mono chr1 752499-752999 *<br />
+## NK chr1 762651-763151 *<br />
+## B chr1 801006-801506 *<br />
+## B chr1 805039-805539 *<br />
+## CLP chr1 845325-845825 *<br />
+## … … … …<br />
+## Erythroid chrX 154664540-154665040 *<br />
+## NK chrX 154807324-154807824 *<br />
+## PreB chrX 154840785-154841285 *<br />
+## PreB chrX 154842404-154842904 *<br />
+## NK chrX 154862017-154862517 *<br />
+## ——-<br />
+## seqinfo: 23 sequences from an unspecified genome; no seqlengths</p>
+</blockquote>
+<div class="sourceCode" id="cb314"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb314-1"><a href="co-accessibility-with-archr.html#cb314-1"></a>cA &lt;-<span class="st"> </span><span class="kw">getCoAccessibility</span>(</span>
+<span id="cb314-2"><a href="co-accessibility-with-archr.html#cb314-2"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
+<span id="cb314-3"><a href="co-accessibility-with-archr.html#cb314-3"></a>    <span class="dt">corCutOff =</span> <span class="fl">0.5</span>,</span>
+<span id="cb314-4"><a href="co-accessibility-with-archr.html#cb314-4"></a>    <span class="dt">resolution =</span> <span class="dv">1</span>,</span>
+<span id="cb314-5"><a href="co-accessibility-with-archr.html#cb314-5"></a>    <span class="dt">returnLoops =</span> <span class="ot">TRUE</span></span>
+<span id="cb314-6"><a href="co-accessibility-with-archr.html#cb314-6"></a>)</span>
+<span id="cb314-7"><a href="co-accessibility-with-archr.html#cb314-7"></a></span>
+<span id="cb314-8"><a href="co-accessibility-with-archr.html#cb314-8"></a>cA[[<span class="dv">1</span>]]</span></code></pre></div>
+<blockquote>
+<p>## GRanges object with 32412 ranges and 1 metadata column:<br />
+## seqnames ranges strand | value<br />
+## <Rle> <IRanges> <Rle> | <numeric><br />
+## [1] chr1 845575-856640 * | 0.63855416236086<br />
+## [2] chr1 894704-895233 * | 0.551520040138677<br />
+## [3] chr1 901499-940519 * | 0.535392737290744<br />
+## [4] chr1 968584-1004206 * | 0.541750176412625<br />
+## [5] chr1 974287-975116 * | 0.614286275264492<br />
+## … … … … . …<br />
+## [32408] chrX 153306085-153342739 * | 0.54575277183448<br />
+## [32409] chrX 153523581-153529374 * | 0.539921104229481<br />
+## [32410] chrX 153582820-153583471 * | 0.510896735395573<br />
+## [32411] chrX 153637615-153656023 * | 0.501021498357938<br />
+## [32412] chrX 153980218-153990364 * | 0.550319862774772<br />
+## ——-<br />
+## seqinfo: 23 sequences from an unspecified genome; no seqlengths</p>
+</blockquote>
+<div class="sourceCode" id="cb315"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb315-1"><a href="co-accessibility-with-archr.html#cb315-1"></a>cA &lt;-<span class="st"> </span><span class="kw">getCoAccessibility</span>(</span>
+<span id="cb315-2"><a href="co-accessibility-with-archr.html#cb315-2"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
+<span id="cb315-3"><a href="co-accessibility-with-archr.html#cb315-3"></a>    <span class="dt">corCutOff =</span> <span class="fl">0.5</span>,</span>
+<span id="cb315-4"><a href="co-accessibility-with-archr.html#cb315-4"></a>    <span class="dt">resolution =</span> <span class="dv">1000</span>,</span>
+<span id="cb315-5"><a href="co-accessibility-with-archr.html#cb315-5"></a>    <span class="dt">returnLoops =</span> <span class="ot">TRUE</span></span>
+<span id="cb315-6"><a href="co-accessibility-with-archr.html#cb315-6"></a>)</span>
+<span id="cb315-7"><a href="co-accessibility-with-archr.html#cb315-7"></a></span>
+<span id="cb315-8"><a href="co-accessibility-with-archr.html#cb315-8"></a>cA[[<span class="dv">1</span>]]</span></code></pre></div>
+<blockquote>
+<p>## GRanges object with 30997 ranges and 1 metadata column:<br />
+## seqnames ranges strand | value<br />
+## <Rle> <IRanges> <Rle> | <numeric><br />
+## [1] chr1 845500-856500 * | 0.63855416236086<br />
+## [2] chr1 894500-895500 * | 0.551520040138677<br />
+## [3] chr1 901500-940500 * | 0.535392737290744<br />
+## [4] chr1 968500-1004500 * | 0.541750176412625<br />
+## [5] chr1 974500-975500 * | 0.614286275264492<br />
+## … … … … . …<br />
+## [30993] chrX 153306500-153342500 * | 0.54575277183448<br />
+## [30994] chrX 153523500-153529500 * | 0.539921104229481<br />
+## [30995] chrX 153582500-153583500 * | 0.510896735395573<br />
+## [30996] chrX 153637500-153656500 * | 0.501021498357938<br />
+## [30997] chrX 153980500-153990500 * | 0.550319862774772<br />
+## ——-<br />
+## seqinfo: 23 sequences from an unspecified genome; no seqlengths</p>
+</blockquote>
+<div class="sourceCode" id="cb316"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb316-1"><a href="co-accessibility-with-archr.html#cb316-1"></a>cA &lt;-<span class="st"> </span><span class="kw">getCoAccessibility</span>(</span>
+<span id="cb316-2"><a href="co-accessibility-with-archr.html#cb316-2"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
+<span id="cb316-3"><a href="co-accessibility-with-archr.html#cb316-3"></a>    <span class="dt">corCutOff =</span> <span class="fl">0.5</span>,</span>
+<span id="cb316-4"><a href="co-accessibility-with-archr.html#cb316-4"></a>    <span class="dt">resolution =</span> <span class="dv">10000</span>,</span>
+<span id="cb316-5"><a href="co-accessibility-with-archr.html#cb316-5"></a>    <span class="dt">returnLoops =</span> <span class="ot">TRUE</span></span>
+<span id="cb316-6"><a href="co-accessibility-with-archr.html#cb316-6"></a>)</span>
+<span id="cb316-7"><a href="co-accessibility-with-archr.html#cb316-7"></a></span>
+<span id="cb316-8"><a href="co-accessibility-with-archr.html#cb316-8"></a>cA[[<span class="dv">1</span>]]</span></code></pre></div>
+<blockquote>
+<p>## GRanges object with 21142 ranges and 1 metadata column:<br />
+## seqnames ranges strand | value<br />
+## <Rle> <IRanges> <Rle> | <numeric><br />
+## [1] chr1 845000-855000 * | 0.63855416236086<br />
+## [2] chr1 895000 * | 0.551520040138677<br />
+## [3] chr1 905000-945000 * | 0.535392737290744<br />
+## [4] chr1 965000-1005000 * | 0.541750176412625<br />
+## [5] chr1 975000 * | 0.614286275264492<br />
+## … … … … . …<br />
+## [21138] chrX 153305000-153345000 * | 0.54575277183448<br />
+## [21139] chrX 153525000 * | 0.539921104229481<br />
+## [21140] chrX 153585000 * | 0.510896735395573<br />
+## [21141] chrX 153635000-153655000 * | 0.501021498357938<br />
+## [21142] chrX 153985000-153995000 * | 0.550319862774772<br />
+## ——-<br />
+## seqinfo: 23 sequences from an unspecified genome; no seqlengths</p>
+</blockquote>
+<p>Plotting browser tracks with CoAccessibility</p>
+<div class="sourceCode" id="cb317"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb317-1"><a href="co-accessibility-with-archr.html#cb317-1"></a>markerGenes  &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb317-2"><a href="co-accessibility-with-archr.html#cb317-2"></a>    <span class="st">&quot;CD34&quot;</span>, <span class="co">#Early Progenitor</span></span>
+<span id="cb317-3"><a href="co-accessibility-with-archr.html#cb317-3"></a>    <span class="st">&quot;GATA1&quot;</span>, <span class="co">#Erythroid</span></span>
+<span id="cb317-4"><a href="co-accessibility-with-archr.html#cb317-4"></a>    <span class="st">&quot;PAX5&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="co">#B-Cell Trajectory</span></span>
+<span id="cb317-5"><a href="co-accessibility-with-archr.html#cb317-5"></a>    <span class="st">&quot;CD14&quot;</span>, <span class="co">#Monocytes</span></span>
+<span id="cb317-6"><a href="co-accessibility-with-archr.html#cb317-6"></a>    <span class="st">&quot;CD3D&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;IL7R&quot;</span> <span class="co">#TCells</span></span>
+<span id="cb317-7"><a href="co-accessibility-with-archr.html#cb317-7"></a>  )</span>
+<span id="cb317-8"><a href="co-accessibility-with-archr.html#cb317-8"></a></span>
+<span id="cb317-9"><a href="co-accessibility-with-archr.html#cb317-9"></a>p &lt;-<span class="st"> </span><span class="kw">ArchRBrowserTrack</span>(</span>
+<span id="cb317-10"><a href="co-accessibility-with-archr.html#cb317-10"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb317-11"><a href="co-accessibility-with-archr.html#cb317-11"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>, </span>
+<span id="cb317-12"><a href="co-accessibility-with-archr.html#cb317-12"></a>    <span class="dt">geneSymbol =</span> markerGenes, </span>
+<span id="cb317-13"><a href="co-accessibility-with-archr.html#cb317-13"></a>    <span class="dt">upstream =</span> <span class="dv">50000</span>,</span>
+<span id="cb317-14"><a href="co-accessibility-with-archr.html#cb317-14"></a>    <span class="dt">downstream =</span> <span class="dv">50000</span>,</span>
+<span id="cb317-15"><a href="co-accessibility-with-archr.html#cb317-15"></a>    <span class="dt">loops =</span> <span class="kw">getCoAccessibility</span>(projHeme5)</span>
+<span id="cb317-16"><a href="co-accessibility-with-archr.html#cb317-16"></a>)</span></code></pre></div>
+<blockquote>
+<p>## ArchR logging to : ArchRLogs/ArchR-ArchRBrowserTrack-11a703dda2936-Date-2020-04-15_Time-11-56-18.log<br />
+## If there is an issue, please report to github with logFile!<br />
+## 2020-04-15 11:56:18 : Validating Region, 0.007 mins elapsed.<br />
+## GRanges object with 9 ranges and 2 metadata columns:<br />
+## seqnames ranges strand | gene_id symbol<br />
+## <Rle> <IRanges> <Rle> | <character> <character><br />
+## [1] chr1 208059883-208084683 - | 947 CD34<br />
+## [2] chrX 48644982-48652717 + | 2623 GATA1<br />
+## [3] chr9 36838531-37034476 - | 5079 PAX5<br />
+## [4] chr11 60223282-60238225 + | 931 MS4A1<br />
+## [5] chr5 140011313-140013286 - | 929 CD14<br />
+## [6] chr11 118209789-118213459 - | 915 CD3D<br />
+## [7] chr2 87011728-87035519 - | 925 CD8A<br />
+## [8] chr17 45810610-45823485 + | 30009 TBX21<br />
+## [9] chr5 35856977-35879705 + | 3575 IL7R<br />
+## ——-<br />
+## seqinfo: 24 sequences from hg19 genome
+## 2020-04-15 11:56:18 : Adding Bulk Tracks (1 of 9), 0.01 mins elapsed.<br />
+## 2020-04-15 11:56:21 : Adding Feature Tracks (1 of 9), 0.053 mins elapsed.<br />
+## 2020-04-15 11:56:21 : Adding Loop Tracks (1 of 9), 0.056 mins elapsed.<br />
+## 2020-04-15 11:56:21 : Adding Gene Tracks (1 of 9), 0.059 mins elapsed.<br />
+## 2020-04-15 11:56:21 : Plotting, 0.065 mins elapsed.<br />
+## 2020-04-15 11:56:24 : Adding Bulk Tracks (2 of 9), 0.1 mins elapsed.<br />
+## 2020-04-15 11:56:26 : Adding Feature Tracks (2 of 9), 0.137 mins elapsed.<br />
+## 2020-04-15 11:56:26 : Adding Loop Tracks (2 of 9), 0.139 mins elapsed.<br />
+## 2020-04-15 11:56:26 : Adding Gene Tracks (2 of 9), 0.144 mins elapsed.<br />
+## 2020-04-15 11:56:27 : Plotting, 0.151 mins elapsed.<br />
+## 2020-04-15 11:56:28 : Adding Bulk Tracks (3 of 9), 0.181 mins elapsed.<br />
+## 2020-04-15 11:56:30 : Adding Feature Tracks (3 of 9), 0.202 mins elapsed.<br />
+## 2020-04-15 11:56:30 : Adding Loop Tracks (3 of 9), 0.205 mins elapsed.<br />
+## 2020-04-15 11:56:31 : Adding Gene Tracks (3 of 9), 0.217 mins elapsed.<br />
+## 2020-04-15 11:56:31 : Plotting, 0.223 mins elapsed.<br />
+## 2020-04-15 11:56:33 : Adding Bulk Tracks (4 of 9), 0.257 mins elapsed.<br />
+## 2020-04-15 11:56:34 : Adding Feature Tracks (4 of 9), 0.272 mins elapsed.<br />
+## 2020-04-15 11:56:34 : Adding Loop Tracks (4 of 9), 0.275 mins elapsed.<br />
+## 2020-04-15 11:56:34 : Adding Gene Tracks (4 of 9), 0.281 mins elapsed.<br />
+## 2020-04-15 11:56:35 : Plotting, 0.287 mins elapsed.<br />
+## 2020-04-15 11:56:36 : Adding Bulk Tracks (5 of 9), 0.31 mins elapsed.<br />
+## 2020-04-15 11:56:37 : Adding Feature Tracks (5 of 9), 0.327 mins elapsed.<br />
+## 2020-04-15 11:56:37 : Adding Loop Tracks (5 of 9), 0.329 mins elapsed.<br />
+## 2020-04-15 11:56:38 : Adding Gene Tracks (5 of 9), 0.335 mins elapsed.<br />
+## 2020-04-15 11:56:38 : Plotting, 0.339 mins elapsed.<br />
+## 2020-04-15 11:56:40 : Adding Bulk Tracks (6 of 9), 0.367 mins elapsed.<br />
+## 2020-04-15 11:56:41 : Adding Feature Tracks (6 of 9), 0.384 mins elapsed.<br />
+## 2020-04-15 11:56:41 : Adding Loop Tracks (6 of 9), 0.385 mins elapsed.<br />
+## 2020-04-15 11:56:41 : Adding Gene Tracks (6 of 9), 0.391 mins elapsed.<br />
+## 2020-04-15 11:56:41 : Plotting, 0.395 mins elapsed.<br />
+## 2020-04-15 11:56:43 : Adding Bulk Tracks (7 of 9), 0.422 mins elapsed.<br />
+## 2020-04-15 11:56:44 : Adding Feature Tracks (7 of 9), 0.443 mins elapsed.<br />
+## 2020-04-15 11:56:44 : Adding Loop Tracks (7 of 9), 0.447 mins elapsed.<br />
+## 2020-04-15 11:56:45 : Adding Gene Tracks (7 of 9), 0.455 mins elapsed.<br />
+## 2020-04-15 11:56:45 : Plotting, 0.459 mins elapsed.<br />
+## 2020-04-15 11:56:47 : Adding Bulk Tracks (8 of 9), 0.489 mins elapsed.<br />
+## 2020-04-15 11:56:48 : Adding Feature Tracks (8 of 9), 0.506 mins elapsed.<br />
+## 2020-04-15 11:56:48 : Adding Loop Tracks (8 of 9), 0.51 mins elapsed.<br />
+## 2020-04-15 11:56:49 : Adding Gene Tracks (8 of 9), 0.522 mins elapsed.<br />
+## 2020-04-15 11:56:49 : Plotting, 0.526 mins elapsed.<br />
+## 2020-04-15 11:56:51 : Adding Bulk Tracks (9 of 9), 0.562 mins elapsed.<br />
+## 2020-04-15 11:56:52 : Adding Feature Tracks (9 of 9), 0.578 mins elapsed.<br />
+## 2020-04-15 11:56:52 : Adding Loop Tracks (9 of 9), 0.58 mins elapsed.<br />
+## 2020-04-15 11:56:53 : Adding Gene Tracks (9 of 9), 0.589 mins elapsed.<br />
+## 2020-04-15 11:56:53 : Plotting, 0.594 mins elapsed.<br />
+## ArchR logging successful to : ArchRLogs/ArchR-ArchRBrowserTrack-11a703dda2936-Date-2020-04-15_Time-11-56-18.log</p>
+</blockquote>
+<p>To plot a track we can simply print one from the list</p>
+<div class="sourceCode" id="cb318"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb318-1"><a href="co-accessibility-with-archr.html#cb318-1"></a>grid<span class="op">::</span><span class="kw">grid.newpage</span>()</span>
+<span id="cb318-2"><a href="co-accessibility-with-archr.html#cb318-2"></a>grid<span class="op">::</span><span class="kw">grid.draw</span>(p<span class="op">$</span>CD14)</span></code></pre></div>
+<p><img src="images/HemeWalkthrough/PNG/Plot-Tracks-Marker-Genes-with-CoAccessibility_5.png" width="500" height="500" /></p>
+<div class="sourceCode" id="cb319"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb319-1"><a href="co-accessibility-with-archr.html#cb319-1"></a><span class="kw">plotPDF</span>(<span class="dt">plotList =</span> p, </span>
+<span id="cb319-2"><a href="co-accessibility-with-archr.html#cb319-2"></a>    <span class="dt">name =</span> <span class="st">&quot;Plot-Tracks-Marker-Genes-with-CoAccessibility.pdf&quot;</span>, </span>
+<span id="cb319-3"><a href="co-accessibility-with-archr.html#cb319-3"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb319-4"><a href="co-accessibility-with-archr.html#cb319-4"></a>    <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>)</span></code></pre></div>
+<blockquote>
+<p>## NULL<br />
+## NULL<br />
+## NULL<br />
+## NULL<br />
+## NULL<br />
+## NULL<br />
+## NULL<br />
+## NULL<br />
+## NULL<br />
+## [1] 0</p>
+</blockquote>
+<p><a href="images/HemeWalkthrough/PDF/Plot-Tracks-Marker-Genes-with-CoAccessibility.pdf">Download PDF : Plot-Tracks-Marker-Genes.pdf</a></p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="session-information-4.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="umap.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="integrative-analysis-with-archr.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="peak2genelinkage-with-archr.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -302,11 +559,11 @@ gitbook.start({
 "fontsettings": null,
 "edit": null,
 "history": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/commits/dev/06_Embedding.Rmd",
+"link": "https://github.com/GreenleafLab/ArchR_Website/commits/dev/14_IntegrativeAnalysis.Rmd",
 "text": "Chapter edit history"
 },
 "view": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/view/dev/06_Embedding.Rmd",
+"link": "https://github.com/GreenleafLab/ArchR_Website/view/dev/14_IntegrativeAnalysis.Rmd",
 "text": "View source on GitHub"
 },
 "download": ["ArchR.pdf"],

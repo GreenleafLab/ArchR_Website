@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-16" />
+<meta name="date" content="2020-04-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -164,12 +164,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="4.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>4.1</b> ArchR’s LSI Implementation</a></li>
 <li class="chapter" data-level="4.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>4.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
-<li class="chapter" data-level="4.3" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.3</b> Batch Effect Correction wtih Harmony</a></li>
-<li class="chapter" data-level="4.4" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.4</b> Session Information</a></li>
+<li class="chapter" data-level="4.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>4.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="4.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.4</b> Batch Effect Correction wtih Harmony</a></li>
+<li class="chapter" data-level="4.5" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.5</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>5</b> Clustering with ArchR</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.1</b> Session Information</a></li>
+<li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="5.2" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.2</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
 <ul>
@@ -230,7 +232,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="14" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>14</b> Integrative Analysis with ArchR</a>
 <ul>
-<li class="chapter" data-level="14.1" data-path="coaccessibility-with-archr.html"><a href="coaccessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> CoAccessibility with ArchR</a></li>
+<li class="chapter" data-level="14.1" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> Co-accessibility with ArchR</a></li>
 <li class="chapter" data-level="14.2" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>14.2</b> Peak2GeneLinkage with ArchR</a></li>
 <li class="chapter" data-level="14.3" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>14.3</b> Identification of Positive TF-Regulators</a></li>
 <li class="chapter" data-level="14.4" data-path="session-information-13.html"><a href="session-information-13.html"><i class="fa fa-check"></i><b>14.4</b> Session Information</a></li>
@@ -264,104 +266,183 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="adding-pseudo-scrna-profiles-for-each-scatac-cell" class="section level2" number="8.2">
 <h2><span class="header-section-number">8.2</span> Adding Pseudo-scRNA profiles for each scATAC cell</h2>
 <p>We can save our original projHeme2 using <code>saveArchRProject</code> from ArchR.</p>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb114-1"></a><span class="kw">saveArchRProject</span>(<span class="dt">ArchRProj =</span> projHeme2, <span class="dt">outputDirectory =</span> <span class="st">&quot;Save-ProjHeme2&quot;</span>, <span class="dt">load =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb152-1"></a><span class="kw">saveArchRProject</span>(<span class="dt">ArchRProj =</span> projHeme2, <span class="dt">outputDirectory =</span> <span class="st">&quot;Save-ProjHeme2&quot;</span>, <span class="dt">load =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<blockquote>
+<p>## Copying ArchRProject to new outputDirectory : /oak/stanford/groups/howchang/users/jgranja/ArchRTutorial/ArchRBook/BookOutput4/Save-ProjHeme2<br />
+## Copying Arrow Files…<br />
+## Copying Arrow Files (1 of 3)<br />
+## Copying Arrow Files (2 of 3)<br />
+## Copying Arrow Files (3 of 3)<br />
+## Getting ImputeWeights<br />
+## Dropping ImputeWeights…<br />
+## Copying Other Files…<br />
+## Copying Other Files (1 of 4): Embeddings<br />
+## Copying Other Files (2 of 4): IterativeLSI<br />
+## Copying Other Files (3 of 4): IterativeLSI2<br />
+## Copying Other Files (4 of 4): Plots<br />
+## Saving ArchRProject…</p>
+</blockquote>
 <p>Once you are satisfied with the results you can re-run with adding the gene
 expression to the Arrow Files</p>
-<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-1"></a>groupList &lt;-<span class="st"> </span><span class="kw">SimpleList</span>(</span>
-<span id="cb115-2"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-2"></a>    <span class="dt">TNK =</span> <span class="kw">SimpleList</span>(</span>
-<span id="cb115-3"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-3"></a>        <span class="dt">ATAC =</span> projHeme2<span class="op">$</span>cellNames[projHeme2<span class="op">$</span>Clusters <span class="op">%in%</span><span class="st"> </span>clustTNK],</span>
-<span id="cb115-4"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-4"></a>        <span class="dt">RNA =</span> rnaTNK</span>
-<span id="cb115-5"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-5"></a>    ),</span>
-<span id="cb115-6"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-6"></a>    <span class="dt">NonTNK =</span> <span class="kw">SimpleList</span>(</span>
-<span id="cb115-7"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-7"></a>        <span class="dt">ATAC =</span> projHeme2<span class="op">$</span>cellNames[projHeme2<span class="op">$</span>Clusters <span class="op">%in%</span><span class="st"> </span>clustNonTNK],</span>
-<span id="cb115-8"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-8"></a>        <span class="dt">RNA =</span> rnaNonTNK</span>
-<span id="cb115-9"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-9"></a>    )    </span>
-<span id="cb115-10"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-10"></a>)</span>
-<span id="cb115-11"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-11"></a>groupList</span>
-<span id="cb115-12"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-12"></a></span>
-<span id="cb115-13"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-13"></a><span class="co">#~5 minutes</span></span>
-<span id="cb115-14"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-14"></a>projHeme3 &lt;-<span class="st"> </span><span class="kw">addGeneIntegrationMatrix</span>(</span>
-<span id="cb115-15"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-15"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
-<span id="cb115-16"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-16"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>,</span>
-<span id="cb115-17"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-17"></a>    <span class="dt">matrixName =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>,</span>
-<span id="cb115-18"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-18"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
-<span id="cb115-19"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-19"></a>    <span class="dt">seRNA =</span> seRNA,</span>
-<span id="cb115-20"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-20"></a>    <span class="dt">addToArrow =</span> <span class="ot">TRUE</span>, <span class="co">#Now we add gene expression to Arrow Files </span></span>
-<span id="cb115-21"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-21"></a>    <span class="dt">force=</span> <span class="ot">TRUE</span>,</span>
-<span id="cb115-22"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-22"></a>    <span class="dt">groupList =</span> groupList, <span class="co">#Constrain List</span></span>
-<span id="cb115-23"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-23"></a>    <span class="dt">groupRNA =</span> <span class="st">&quot;BioClassification&quot;</span>,</span>
-<span id="cb115-24"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-24"></a>    <span class="dt">nameCell =</span> <span class="st">&quot;predictedCell&quot;</span>, <span class="co">#Name of column where cell from scRNA is matched to each cell</span></span>
-<span id="cb115-25"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-25"></a>    <span class="dt">nameGroup =</span> <span class="st">&quot;predictedGroup&quot;</span>, <span class="co">#Name of column where group from scRNA is matched to each cell</span></span>
-<span id="cb115-26"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-26"></a>    <span class="dt">nameScore =</span> <span class="st">&quot;predictedScore&quot;</span> <span class="co">#Name of column where prediction score from scRNA</span></span>
-<span id="cb115-27"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb115-27"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb153-1"></a>groupList &lt;-<span class="st"> </span><span class="kw">SimpleList</span>(</span>
+<span id="cb153-2"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb153-2"></a>    <span class="dt">TNK =</span> <span class="kw">SimpleList</span>(</span>
+<span id="cb153-3"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb153-3"></a>        <span class="dt">ATAC =</span> projHeme2<span class="op">$</span>cellNames[projHeme2<span class="op">$</span>Clusters <span class="op">%in%</span><span class="st"> </span>clustTNK],</span>
+<span id="cb153-4"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb153-4"></a>        <span class="dt">RNA =</span> rnaTNK</span>
+<span id="cb153-5"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb153-5"></a>    ),</span>
+<span id="cb153-6"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb153-6"></a>    <span class="dt">NonTNK =</span> <span class="kw">SimpleList</span>(</span>
+<span id="cb153-7"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb153-7"></a>        <span class="dt">ATAC =</span> projHeme2<span class="op">$</span>cellNames[projHeme2<span class="op">$</span>Clusters <span class="op">%in%</span><span class="st"> </span>clustNonTNK],</span>
+<span id="cb153-8"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb153-8"></a>        <span class="dt">RNA =</span> rnaNonTNK</span>
+<span id="cb153-9"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb153-9"></a>    )    </span>
+<span id="cb153-10"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb153-10"></a>)</span>
+<span id="cb153-11"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb153-11"></a>groupList</span></code></pre></div>
+<blockquote>
+<p>## List of length 2<br />
+## names(2): TNK NonTNK</p>
+</blockquote>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb154-1"></a><span class="co">#~5 minutes</span></span>
+<span id="cb154-2"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb154-2"></a>projHeme3 &lt;-<span class="st"> </span><span class="kw">addGeneIntegrationMatrix</span>(</span>
+<span id="cb154-3"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb154-3"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
+<span id="cb154-4"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb154-4"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>,</span>
+<span id="cb154-5"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb154-5"></a>    <span class="dt">matrixName =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>,</span>
+<span id="cb154-6"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb154-6"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
+<span id="cb154-7"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb154-7"></a>    <span class="dt">seRNA =</span> seRNA,</span>
+<span id="cb154-8"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb154-8"></a>    <span class="dt">addToArrow =</span> <span class="ot">TRUE</span>, <span class="co">#Now we add gene expression to Arrow Files </span></span>
+<span id="cb154-9"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb154-9"></a>    <span class="dt">force=</span> <span class="ot">TRUE</span>,</span>
+<span id="cb154-10"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb154-10"></a>    <span class="dt">groupList =</span> groupList, <span class="co">#Constrain List</span></span>
+<span id="cb154-11"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb154-11"></a>    <span class="dt">groupRNA =</span> <span class="st">&quot;BioClassification&quot;</span>,</span>
+<span id="cb154-12"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb154-12"></a>    <span class="dt">nameCell =</span> <span class="st">&quot;predictedCell&quot;</span>, <span class="co">#Name of column where cell from scRNA is matched to each cell</span></span>
+<span id="cb154-13"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb154-13"></a>    <span class="dt">nameGroup =</span> <span class="st">&quot;predictedGroup&quot;</span>, <span class="co">#Name of column where group from scRNA is matched to each cell</span></span>
+<span id="cb154-14"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb154-14"></a>    <span class="dt">nameScore =</span> <span class="st">&quot;predictedScore&quot;</span> <span class="co">#Name of column where prediction score from scRNA</span></span>
+<span id="cb154-15"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb154-15"></a>)</span></code></pre></div>
+<blockquote>
+<p>## ArchR logging to : ArchRLogs/ArchR-addGeneIntegrationMatrix-f66317d3557e-Date-2020-04-15_Time-10-16-26.log<br />
+## If there is an issue, please report to github with logFile!<br />
+## 2020-04-15 10:16:26 : Running Seurat’s Integration Stuart* et al 2019, 0.009 mins elapsed.<br />
+## 2020-04-15 10:16:27 : Checking ATAC Input, 0.021 mins elapsed.<br />
+## 2020-04-15 10:16:27 : Checking RNA Input, 0.021 mins elapsed.<br />
+## 2020-04-15 10:16:38 : Creating Integration Blocks, 0.211 mins elapsed.<br />
+## 2020-04-15 10:16:39 : Prepping Interation Data, 0.215 mins elapsed.<br />
+## 2020-04-15 10:16:39 : Computing Integration in 2 Integration Blocks!, 0 mins elapsed.<br />
+## 2020-04-15 10:19:30 : Transferring Data to ArrowFiles, 2.843 mins elapsed.<br />
+## 2020-04-15 10:20:47 : Completed Integration with RNA Matrix, 4.133 mins elapsed.<br />
+## ArchR logging successful to : ArchRLogs/ArchR-addGeneIntegrationMatrix-f66317d3557e-Date-2020-04-15_Time-10-16-26.log</p>
+</blockquote>
 <p>What matrices are available?</p>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb116-1"></a><span class="kw">getAvailableMatrices</span>(projHeme3)</span>
-<span id="cb116-2"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb116-2"></a><span class="co">#[1] &quot;GeneIntegrationMatrix&quot; &quot;GeneScoreMatrix&quot;       &quot;TileMatrix&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb155-1"></a><span class="kw">getAvailableMatrices</span>(projHeme3)</span></code></pre></div>
+<blockquote>
+<p>## [1] “GeneIntegrationMatrix” “GeneScoreMatrix” “TileMatrix”</p>
+</blockquote>
 <p>Now lets see how this effects our marker gene scores overlayed on our 2-d embedding.</p>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-1"></a>projHeme3 &lt;-<span class="st"> </span><span class="kw">addImputeWeights</span>(projHeme3)</span>
-<span id="cb117-2"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-2"></a></span>
-<span id="cb117-3"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-3"></a>markerGenes  &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
-<span id="cb117-4"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-4"></a>    <span class="st">&quot;CD34&quot;</span>, <span class="co">#Early Progenitor</span></span>
-<span id="cb117-5"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-5"></a>    <span class="st">&quot;GATA1&quot;</span>, <span class="co">#Erythroid</span></span>
-<span id="cb117-6"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-6"></a>    <span class="st">&quot;PAX5&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="co">#B-Cell Trajectory</span></span>
-<span id="cb117-7"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-7"></a>    <span class="st">&quot;CD14&quot;</span>, <span class="co">#Monocytes</span></span>
-<span id="cb117-8"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-8"></a>    <span class="st">&quot;CD3D&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;IL7R&quot;</span> <span class="co">#TCells</span></span>
-<span id="cb117-9"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-9"></a>  )</span>
-<span id="cb117-10"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-10"></a></span>
-<span id="cb117-11"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-11"></a>p1 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
-<span id="cb117-12"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-12"></a>    <span class="dt">ArchRProj =</span> projHeme3, </span>
-<span id="cb117-13"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-13"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>, </span>
-<span id="cb117-14"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-14"></a>    <span class="dt">name =</span> markerGenes, </span>
-<span id="cb117-15"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-15"></a>    <span class="dt">continuousSet =</span> <span class="st">&quot;horizonExtra&quot;</span>,</span>
-<span id="cb117-16"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-16"></a>    <span class="dt">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
-<span id="cb117-17"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-17"></a>    <span class="dt">imputeWeights =</span> <span class="kw">getImputeWeights</span>(projHeme3)</span>
-<span id="cb117-18"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-18"></a>)</span>
-<span id="cb117-19"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-19"></a></span>
-<span id="cb117-20"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-20"></a>p2 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
-<span id="cb117-21"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-21"></a>    <span class="dt">ArchRProj =</span> projHeme3, </span>
-<span id="cb117-22"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-22"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>, </span>
-<span id="cb117-23"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-23"></a>    <span class="dt">continuousSet =</span> <span class="st">&quot;horizonExtra&quot;</span>,</span>
-<span id="cb117-24"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-24"></a>    <span class="dt">name =</span> markerGenes, </span>
-<span id="cb117-25"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-25"></a>    <span class="dt">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
-<span id="cb117-26"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-26"></a>    <span class="dt">imputeWeights =</span> <span class="kw">getImputeWeights</span>(projHeme3)</span>
-<span id="cb117-27"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb117-27"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb156-1"></a>projHeme3 &lt;-<span class="st"> </span><span class="kw">addImputeWeights</span>(projHeme3)</span></code></pre></div>
+<blockquote>
+<p>## 2020-04-15 10:20:49 : Computing Impute Weights Using Magic (Cell 2018), 0 mins elapsed.<br />
+## 2020-04-15 10:20:59 : Completed Getting Magic Weights!, 0.176 mins elapsed.</p>
+</blockquote>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb157-1"></a>markerGenes  &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb157-2"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb157-2"></a>    <span class="st">&quot;CD34&quot;</span>, <span class="co">#Early Progenitor</span></span>
+<span id="cb157-3"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb157-3"></a>    <span class="st">&quot;GATA1&quot;</span>, <span class="co">#Erythroid</span></span>
+<span id="cb157-4"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb157-4"></a>    <span class="st">&quot;PAX5&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="co">#B-Cell Trajectory</span></span>
+<span id="cb157-5"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb157-5"></a>    <span class="st">&quot;CD14&quot;</span>, <span class="co">#Monocytes</span></span>
+<span id="cb157-6"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb157-6"></a>    <span class="st">&quot;CD3D&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;IL7R&quot;</span> <span class="co">#TCells</span></span>
+<span id="cb157-7"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb157-7"></a>  )</span>
+<span id="cb157-8"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb157-8"></a></span>
+<span id="cb157-9"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb157-9"></a>p1 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
+<span id="cb157-10"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb157-10"></a>    <span class="dt">ArchRProj =</span> projHeme3, </span>
+<span id="cb157-11"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb157-11"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>, </span>
+<span id="cb157-12"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb157-12"></a>    <span class="dt">name =</span> markerGenes, </span>
+<span id="cb157-13"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb157-13"></a>    <span class="dt">continuousSet =</span> <span class="st">&quot;horizonExtra&quot;</span>,</span>
+<span id="cb157-14"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb157-14"></a>    <span class="dt">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
+<span id="cb157-15"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb157-15"></a>    <span class="dt">imputeWeights =</span> <span class="kw">getImputeWeights</span>(projHeme3)</span>
+<span id="cb157-16"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb157-16"></a>)</span></code></pre></div>
+<blockquote>
+<p>## Getting ImputeWeights<br />
+## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-f66370e499ac-Date-2020-04-15_Time-10-20-59.log<br />
+## If there is an issue, please report to github with logFile!<br />
+## Getting UMAP Embedding<br />
+## ColorBy = GeneIntegrationMatrix<br />
+## Getting Matrix Values…<br />
+## Getting Matrix Values…<br />
+##<br />
+## Imputing Matrix<br />
+## Using weights on disk<br />
+## Using weights on disk<br />
+## Plotting Embedding<br />
+## 1 2 3 4 5 6 7 8 9<br />
+## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-f66370e499ac-Date-2020-04-15_Time-10-20-59.log</p>
+</blockquote>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb158-1"></a>p2 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
+<span id="cb158-2"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb158-2"></a>    <span class="dt">ArchRProj =</span> projHeme3, </span>
+<span id="cb158-3"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb158-3"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>, </span>
+<span id="cb158-4"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb158-4"></a>    <span class="dt">continuousSet =</span> <span class="st">&quot;horizonExtra&quot;</span>,</span>
+<span id="cb158-5"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb158-5"></a>    <span class="dt">name =</span> markerGenes, </span>
+<span id="cb158-6"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb158-6"></a>    <span class="dt">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
+<span id="cb158-7"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb158-7"></a>    <span class="dt">imputeWeights =</span> <span class="kw">getImputeWeights</span>(projHeme3)</span>
+<span id="cb158-8"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb158-8"></a>)</span></code></pre></div>
+<blockquote>
+<p>## Getting ImputeWeights<br />
+## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-f6632d4259ce-Date-2020-04-15_Time-10-21-15.log<br />
+## If there is an issue, please report to github with logFile!<br />
+## Getting UMAP Embedding<br />
+## ColorBy = GeneScoreMatrix<br />
+## Getting Matrix Values…<br />
+## Getting Matrix Values…<br />
+##<br />
+## Imputing Matrix<br />
+## Using weights on disk<br />
+## Using weights on disk<br />
+## Plotting Embedding<br />
+## 1 2 3 4 5 6 7 8 9<br />
+## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-f6632d4259ce-Date-2020-04-15_Time-10-21-15.log</p>
+</blockquote>
 <p>To plot all marker genes we can use cowplot</p>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-1"></a><span class="co">#Rearrange for grid plotting</span></span>
-<span id="cb118-2"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-2"></a>p1c &lt;-<span class="st"> </span><span class="kw">lapply</span>(p1, <span class="cf">function</span>(x){</span>
-<span id="cb118-3"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-3"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb118-4"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
-<span id="cb118-5"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
-<span id="cb118-6"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
-<span id="cb118-7"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-7"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb118-8"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-8"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb118-9"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-9"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb118-10"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-10"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
-<span id="cb118-11"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-11"></a>    )</span>
-<span id="cb118-12"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-12"></a>})</span>
-<span id="cb118-13"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-13"></a></span>
-<span id="cb118-14"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-14"></a><span class="co">#Rearrange for grid plotting</span></span>
-<span id="cb118-15"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-15"></a>p2c &lt;-<span class="st"> </span><span class="kw">lapply</span>(p2, <span class="cf">function</span>(x){</span>
-<span id="cb118-16"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-16"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb118-17"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-17"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
-<span id="cb118-18"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-18"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
-<span id="cb118-19"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-19"></a><span class="st">    </span><span class="kw">theme</span>(</span>
-<span id="cb118-20"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-20"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb118-21"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-21"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb118-22"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-22"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb118-23"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-23"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
-<span id="cb118-24"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-24"></a>    )</span>
-<span id="cb118-25"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-25"></a>})</span>
-<span id="cb118-26"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-26"></a></span>
-<span id="cb118-27"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb118-27"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>), p1c))</span></code></pre></div>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-1"></a><span class="co">#Rearrange for grid plotting</span></span>
+<span id="cb159-2"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-2"></a>p1c &lt;-<span class="st"> </span><span class="kw">lapply</span>(p1, <span class="cf">function</span>(x){</span>
+<span id="cb159-3"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-3"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb159-4"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
+<span id="cb159-5"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
+<span id="cb159-6"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
+<span id="cb159-7"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-7"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb159-8"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-8"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb159-9"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-9"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb159-10"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-10"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
+<span id="cb159-11"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-11"></a>    )</span>
+<span id="cb159-12"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-12"></a>})</span>
+<span id="cb159-13"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-13"></a></span>
+<span id="cb159-14"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-14"></a><span class="co">#Rearrange for grid plotting</span></span>
+<span id="cb159-15"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-15"></a>p2c &lt;-<span class="st"> </span><span class="kw">lapply</span>(p2, <span class="cf">function</span>(x){</span>
+<span id="cb159-16"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-16"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb159-17"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-17"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
+<span id="cb159-18"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-18"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
+<span id="cb159-19"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-19"></a><span class="st">    </span><span class="kw">theme</span>(</span>
+<span id="cb159-20"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-20"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb159-21"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-21"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb159-22"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-22"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb159-23"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-23"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
+<span id="cb159-24"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-24"></a>    )</span>
+<span id="cb159-25"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-25"></a>})</span>
+<span id="cb159-26"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-26"></a></span>
+<span id="cb159-27"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb159-27"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>), p1c))</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-Markers-RNA-W-Imputation_1.png" width="800" height="800" /></p>
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb119-1"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>), p2c))</span></code></pre></div>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb160-1"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>), p2c))</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-Markers-RNA-W-Imputation_2.png" width="800" height="800" /></p>
 <p>To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
 nice looking.</p>
-<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb120-1"></a><span class="kw">plotPDF</span>(<span class="dt">plotList =</span> p1, </span>
-<span id="cb120-2"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb120-2"></a>    <span class="dt">name =</span> <span class="st">&quot;Plot-UMAP-Marker-Genes-RNA-W-Imputation.pdf&quot;</span>, </span>
-<span id="cb120-3"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb120-3"></a>    <span class="dt">ArchRProj =</span> projHeme3, </span>
-<span id="cb120-4"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb120-4"></a>    <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb161-1"></a><span class="kw">plotPDF</span>(<span class="dt">plotList =</span> p1, </span>
+<span id="cb161-2"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb161-2"></a>    <span class="dt">name =</span> <span class="st">&quot;Plot-UMAP-Marker-Genes-RNA-W-Imputation.pdf&quot;</span>, </span>
+<span id="cb161-3"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb161-3"></a>    <span class="dt">ArchRProj =</span> projHeme3, </span>
+<span id="cb161-4"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html#cb161-4"></a>    <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>)</span></code></pre></div>
+<blockquote>
+<p>## [1] “plotting ggplot!”<br />
+## [1] “plotting ggplot!”<br />
+## [1] “plotting ggplot!”<br />
+## [1] “plotting ggplot!”<br />
+## [1] “plotting ggplot!”<br />
+## [1] “plotting ggplot!”<br />
+## [1] “plotting ggplot!”<br />
+## [1] “plotting ggplot!”<br />
+## [1] “plotting ggplot!”<br />
+## [1] 0</p>
+</blockquote>
 </div>
             </section>
 

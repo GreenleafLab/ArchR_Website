@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-16" />
+<meta name="date" content="2020-04-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -164,12 +164,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="4.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>4.1</b> ArchR’s LSI Implementation</a></li>
 <li class="chapter" data-level="4.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>4.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
-<li class="chapter" data-level="4.3" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.3</b> Batch Effect Correction wtih Harmony</a></li>
-<li class="chapter" data-level="4.4" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.4</b> Session Information</a></li>
+<li class="chapter" data-level="4.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>4.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="4.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.4</b> Batch Effect Correction wtih Harmony</a></li>
+<li class="chapter" data-level="4.5" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.5</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>5</b> Clustering with ArchR</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.1</b> Session Information</a></li>
+<li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="5.2" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.2</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
 <ul>
@@ -230,7 +232,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="14" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>14</b> Integrative Analysis with ArchR</a>
 <ul>
-<li class="chapter" data-level="14.1" data-path="coaccessibility-with-archr.html"><a href="coaccessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> CoAccessibility with ArchR</a></li>
+<li class="chapter" data-level="14.1" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> Co-accessibility with ArchR</a></li>
 <li class="chapter" data-level="14.2" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>14.2</b> Peak2GeneLinkage with ArchR</a></li>
 <li class="chapter" data-level="14.3" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>14.3</b> Identification of Positive TF-Regulators</a></li>
 <li class="chapter" data-level="14.4" data-path="session-information-13.html"><a href="session-information-13.html"><i class="fa fa-check"></i><b>14.4</b> Session Information</a></li>
@@ -266,13 +268,47 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>After we have added information on the predicted doublets using <code>addDoubletScores()</code>, we can remove these predicted doublets using <code>filterDoublets()</code>. One of the key elements of this filtering step is the <code>filterRatio</code> which is the maximum ratio of predicted doublets to filter based on the number of pass-filter cells. For example, if there are 5000 cells, the maximum number of filtered predicted doublets would be <code>filterRatio * 5000^2 / (100000)</code> (which simplifies to <code>filterRatio * 5000 * 0.05</code>). This <code>filterRatio</code> allows you to apply a consistent filter across multiple different samples that may have different percentages of doublets because they were run with different cell loading concentrations. The higher the <code>filterRatio</code>, the greater the number of cells potentially removed as doublets.</p>
 <div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="filtering-doublets-from-an-archrproject.html#cb54-1"></a><span class="co">#Remove doublets as normal</span></span>
 <span id="cb54-2"><a href="filtering-doublets-from-an-archrproject.html#cb54-2"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">filterDoublets</span>(projHeme1)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; Filtering 410 cells from ArchRProject!<br />
+&gt;&gt; scATAC_BMMC_R1 : 243 of 4932 (4.9%)<br />
+&gt;&gt; scATAC_CD34_BMMC_R1 : 107 of 3275 (3.3%)<br />
+&gt;&gt; scATAC_PBMC_R1 : 60 of 2454 (2.4%)</p>
+</blockquote>
 <div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="filtering-doublets-from-an-archrproject.html#cb55-1"></a><span class="co">#Lets see the project now</span></span>
 <span id="cb55-2"><a href="filtering-doublets-from-an-archrproject.html#cb55-2"></a>projHeme2</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; class: ArchRProject<br />
+&gt;&gt; outputDirectory: /oak/stanford/groups/howchang/users/jgranja/ArchRTutorial/ArchRBook/BookOutput4/HemeTutorial<br />
+&gt;&gt; samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1<br />
+&gt;&gt; sampleColData names(1): ArrowFiles<br />
+&gt;&gt; cellColData names(13): Sample TSSEnrichment … bioNames bioNames2<br />
+&gt;&gt; numberOfCells(1): 10251<br />
+&gt;&gt; medianTSS(1): 16.856<br />
+&gt;&gt; medianFrags(1): 2991</p>
+</blockquote>
 <p>If you wanted to filter more cells from the ArchR Project, you would try a higher <code>filterRatio</code>. To see additional arguments that can be tweaked, try <code>?filterDoublets</code>.</p>
 <div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="filtering-doublets-from-an-archrproject.html#cb56-1"></a>projHemeTmp &lt;-<span class="st"> </span><span class="kw">filterDoublets</span>(projHeme1, <span class="dt">filterRatio =</span> <span class="fl">1.5</span>)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; Filtering 614 cells from ArchRProject!<br />
+&gt;&gt; scATAC_BMMC_R1 : 364 of 4932 (7.4%)<br />
+&gt;&gt; scATAC_CD34_BMMC_R1 : 160 of 3275 (4.9%)<br />
+&gt;&gt; scATAC_PBMC_R1 : 90 of 2454 (3.7%)</p>
+</blockquote>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="filtering-doublets-from-an-archrproject.html#cb57-1"></a><span class="kw">rm</span>(projHemeTmp)</span></code></pre></div>
 <p>We can now save our updated <code>projHeme2</code> using <code>saveArchRProject()</code> which will allow us to use this project in future chapters.</p>
 <div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="filtering-doublets-from-an-archrproject.html#cb58-1"></a><span class="kw">saveArchRProject</span>(<span class="dt">ArchRProj =</span> projHeme1, <span class="dt">outputDirectory =</span> <span class="st">&quot;Save-ProjHeme1&quot;</span>, <span class="dt">load =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; Copying ArchRProject to new outputDirectory : /oak/stanford/groups/howchang/users/jgranja/ArchRTutorial/ArchRBook/BookOutput4/Save-ProjHeme1<br />
+&gt;&gt; Copying Arrow Files…<br />
+&gt;&gt; Copying Arrow Files (1 of 3)<br />
+&gt;&gt; Copying Arrow Files (2 of 3)<br />
+&gt;&gt; Copying Arrow Files (3 of 3)<br />
+&gt;&gt; Getting ImputeWeights<br />
+&gt;&gt; No imputeWeights found, returning NULL<br />
+&gt;&gt; Copying Other Files…<br />
+&gt;&gt; Copying Other Files (1 of 1): Plots<br />
+&gt;&gt; Saving ArchRProject…</p>
+</blockquote>
 </div>
             </section>
 

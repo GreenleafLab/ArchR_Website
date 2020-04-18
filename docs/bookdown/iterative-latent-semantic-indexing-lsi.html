@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-16" />
+<meta name="date" content="2020-04-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
 <link rel="prev" href="archrs-lsi-implementation.html"/>
-<link rel="next" href="batch-effect-correction-wtih-harmony.html"/>
+<link rel="next" href="estimated-lsi.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -164,12 +164,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="4.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>4.1</b> ArchR’s LSI Implementation</a></li>
 <li class="chapter" data-level="4.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>4.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
-<li class="chapter" data-level="4.3" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.3</b> Batch Effect Correction wtih Harmony</a></li>
-<li class="chapter" data-level="4.4" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.4</b> Session Information</a></li>
+<li class="chapter" data-level="4.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>4.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="4.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.4</b> Batch Effect Correction wtih Harmony</a></li>
+<li class="chapter" data-level="4.5" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.5</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>5</b> Clustering with ArchR</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.1</b> Session Information</a></li>
+<li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="5.2" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.2</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
 <ul>
@@ -230,7 +232,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="14" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>14</b> Integrative Analysis with ArchR</a>
 <ul>
-<li class="chapter" data-level="14.1" data-path="coaccessibility-with-archr.html"><a href="coaccessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> CoAccessibility with ArchR</a></li>
+<li class="chapter" data-level="14.1" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> Co-accessibility with ArchR</a></li>
 <li class="chapter" data-level="14.2" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>14.2</b> Peak2GeneLinkage with ArchR</a></li>
 <li class="chapter" data-level="14.3" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>14.3</b> Identification of Positive TF-Regulators</a></li>
 <li class="chapter" data-level="14.4" data-path="session-information-13.html"><a href="session-information-13.html"><i class="fa fa-check"></i><b>14.4</b> Session Information</a></li>
@@ -281,6 +283,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb61-11"><a href="iterative-latent-semantic-indexing-lsi.html#cb61-11"></a>    <span class="dt">varFeatures =</span> <span class="dv">25000</span>, </span>
 <span id="cb61-12"><a href="iterative-latent-semantic-indexing-lsi.html#cb61-12"></a>    <span class="dt">dimsToUse =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">30</span></span>
 <span id="cb61-13"><a href="iterative-latent-semantic-indexing-lsi.html#cb61-13"></a>)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; Checking Inputs…<br />
+&gt;&gt; ArchR logging to : ArchRLogs/ArchR-addIterativeLSI-ea2d75dd89ad-Date-2020-04-15_Time-09-36-28.log<br />
+&gt;&gt; If there is an issue, please report to github with logFile!<br />
+&gt;&gt; 2020-04-15 09:36:29 : Computing Total Accessibility Across All Features, 0.003 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:36:35 : Computing Top Features, 0.102 mins elapsed.<br />
+&gt;&gt; ###########<br />
+&gt;&gt; 2020-04-15 09:36:35 : Running LSI (1 of 2) on Top Features, 0.111 mins elapsed.<br />
+&gt;&gt; ###########<br />
+&gt;&gt; 2020-04-15 09:36:35 : Sampling Cells (N = 10002) for Estimated LSI, 0.112 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:36:35 : Creating Sampled Partial Matrix, 0.112 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:36:45 : Computing Estimated LSI (projectAll = FALSE), 0.276 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:37:22 : Identifying Clusters, 0.887 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:37:53 : Identified 5 Clusters, 1.407 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:37:53 : Saving LSI Iteration, 1.407 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:38:10 : Creating Cluster Matrix on the total Group Features, 1.696 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:38:21 : Computing Variable Features, 1.867 mins elapsed.<br />
+&gt;&gt; ###########<br />
+&gt;&gt; 2020-04-15 09:38:21 : Running LSI (2 of 2) on Variable Features, 1.871 mins elapsed.<br />
+&gt;&gt; ###########<br />
+&gt;&gt; 2020-04-15 09:38:21 : Creating Partial Matrix, 1.871 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:38:30 : Computing LSI, 2.018 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:39:05 : Finished Running IterativeLSI, 2.606 mins elapsed.</p>
+</blockquote>
 <p>If you see downstream that you have subtle batch effects, another option is to add more LSI iterations and to start from a lower intial clustering resolution as shown below. Additionally the number of variable features can be lowered to increase focus on the more variable features. QQQ would be nice to see an example of what these batch effects look like and how this corrects them</p>
 <div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="iterative-latent-semantic-indexing-lsi.html#cb62-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addIterativeLSI</span>(</span>
 <span id="cb62-2"><a href="iterative-latent-semantic-indexing-lsi.html#cb62-2"></a>    <span class="dt">ArchRProj =</span> projHeme2,</span>
@@ -295,6 +321,52 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb62-11"><a href="iterative-latent-semantic-indexing-lsi.html#cb62-11"></a>    <span class="dt">varFeatures =</span> <span class="dv">15000</span>, </span>
 <span id="cb62-12"><a href="iterative-latent-semantic-indexing-lsi.html#cb62-12"></a>    <span class="dt">dimsToUse =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">30</span></span>
 <span id="cb62-13"><a href="iterative-latent-semantic-indexing-lsi.html#cb62-13"></a>)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; Checking Inputs…<br />
+&gt;&gt; ArchR logging to : ArchRLogs/ArchR-addIterativeLSI-ea2d349ff558-Date-2020-04-15_Time-09-39-05.log<br />
+&gt;&gt; If there is an issue, please report to github with logFile!<br />
+&gt;&gt; 2020-04-15 09:39:06 : Computing Total Accessibility Across All Features, 0.004 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:39:09 : Computing Top Features, 0.06 mins elapsed.<br />
+&gt;&gt; ###########<br />
+&gt;&gt; 2020-04-15 09:39:10 : Running LSI (1 of 4) on Top Features, 0.07 mins elapsed.<br />
+&gt;&gt; ###########<br />
+&gt;&gt; 2020-04-15 09:39:10 : Sampling Cells (N = 10002) for Estimated LSI, 0.071 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:39:10 : Creating Sampled Partial Matrix, 0.071 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:39:17 : Computing Estimated LSI (projectAll = FALSE), 0.192 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:39:42 : Identifying Clusters, 0.611 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:40:05 : Identified 4 Clusters, 0.987 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:40:05 : Saving LSI Iteration, 0.987 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:40:26 : Creating Cluster Matrix on the total Group Features, 1.343 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:40:38 : Computing Variable Features, 1.54 mins elapsed.<br />
+&gt;&gt; ###########<br />
+&gt;&gt; 2020-04-15 09:40:38 : Running LSI (2 of 4) on Variable Features, 1.542 mins elapsed.<br />
+&gt;&gt; ###########<br />
+&gt;&gt; 2020-04-15 09:40:38 : Sampling Cells (N = 10002) for Estimated LSI, 1.544 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:40:38 : Creating Sampled Partial Matrix, 1.544 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:40:47 : Computing Estimated LSI (projectAll = FALSE), 1.687 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:41:09 : Identifying Clusters, 2.048 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:41:31 : Identified 7 Clusters, 2.421 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:41:31 : Saving LSI Iteration, 2.421 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:41:54 : Creating Cluster Matrix on the total Group Features, 2.807 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:42:05 : Computing Variable Features, 2.995 mins elapsed.<br />
+&gt;&gt; ###########<br />
+&gt;&gt; 2020-04-15 09:42:06 : Running LSI (3 of 4) on Variable Features, 3 mins elapsed.<br />
+&gt;&gt; ###########<br />
+&gt;&gt; 2020-04-15 09:42:06 : Sampling Cells (N = 10002) for Estimated LSI, 3.001 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:42:06 : Creating Sampled Partial Matrix, 3.001 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:42:13 : Computing Estimated LSI (projectAll = FALSE), 3.121 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:42:33 : Identifying Clusters, 3.461 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:42:55 : Identified 9 Clusters, 3.829 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:42:55 : Saving LSI Iteration, 3.829 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:43:13 : Creating Cluster Matrix on the total Group Features, 4.129 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:43:26 : Computing Variable Features, 4.341 mins elapsed.<br />
+&gt;&gt; ###########<br />
+&gt;&gt; 2020-04-15 09:43:26 : Running LSI (4 of 4) on Variable Features, 4.346 mins elapsed.<br />
+&gt;&gt; ###########<br />
+&gt;&gt; 2020-04-15 09:43:26 : Creating Partial Matrix, 4.347 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:43:33 : Computing LSI, 4.462 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:43:55 : Finished Running IterativeLSI, 4.829 mins elapsed.</p>
+</blockquote>
 <p>For the purposes of this tutorial, we will compute the iterative LSI for the <code>ArchRProject</code> that still contains doublets.</p>
 <div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="iterative-latent-semantic-indexing-lsi.html#cb63-1"></a>projHeme1 &lt;-<span class="st"> </span><span class="kw">addIterativeLSI</span>(</span>
 <span id="cb63-2"><a href="iterative-latent-semantic-indexing-lsi.html#cb63-2"></a>    <span class="dt">ArchRProj =</span> projHeme1,</span>
@@ -309,6 +381,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb63-11"><a href="iterative-latent-semantic-indexing-lsi.html#cb63-11"></a>    <span class="dt">varFeatures =</span> <span class="dv">25000</span>, </span>
 <span id="cb63-12"><a href="iterative-latent-semantic-indexing-lsi.html#cb63-12"></a>    <span class="dt">dimsToUse =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">30</span></span>
 <span id="cb63-13"><a href="iterative-latent-semantic-indexing-lsi.html#cb63-13"></a>)</span></code></pre></div>
+<blockquote>
+<p>&gt;&gt; Checking Inputs…<br />
+&gt;&gt; ArchR logging to : ArchRLogs/ArchR-addIterativeLSI-ea2d717d926a-Date-2020-04-15_Time-09-43-55.log<br />
+&gt;&gt; If there is an issue, please report to github with logFile!<br />
+&gt;&gt; 2020-04-15 09:43:57 : Computing Total Accessibility Across All Features, 0.005 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:44:00 : Computing Top Features, 0.071 mins elapsed.<br />
+&gt;&gt; ###########<br />
+&gt;&gt; 2020-04-15 09:44:01 : Running LSI (1 of 2) on Top Features, 0.079 mins elapsed.<br />
+&gt;&gt; ###########<br />
+&gt;&gt; 2020-04-15 09:44:01 : Sampling Cells (N = 10001) for Estimated LSI, 0.081 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:44:01 : Creating Sampled Partial Matrix, 0.081 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:44:10 : Computing Estimated LSI (projectAll = FALSE), 0.237 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:44:50 : Identifying Clusters, 0.899 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:45:11 : Identified 5 Clusters, 1.253 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:45:11 : Saving LSI Iteration, 1.253 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:45:30 : Creating Cluster Matrix on the total Group Features, 1.568 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:45:44 : Computing Variable Features, 1.804 mins elapsed.<br />
+&gt;&gt; ###########<br />
+&gt;&gt; 2020-04-15 09:45:45 : Running LSI (2 of 2) on Variable Features, 1.808 mins elapsed.<br />
+&gt;&gt; ###########<br />
+&gt;&gt; 2020-04-15 09:45:45 : Creating Partial Matrix, 1.808 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:45:54 : Computing LSI, 1.96 mins elapsed.<br />
+&gt;&gt; 2020-04-15 09:46:28 : Finished Running IterativeLSI, 2.523 mins elapsed.</p>
+</blockquote>
 </div>
             </section>
 
@@ -316,7 +412,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
         </div>
       </div>
 <a href="archrs-lsi-implementation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="batch-effect-correction-wtih-harmony.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="estimated-lsi.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

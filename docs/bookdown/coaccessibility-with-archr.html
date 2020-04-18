@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-16" />
+<meta name="date" content="2020-04-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -164,12 +164,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="4.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>4.1</b> ArchR’s LSI Implementation</a></li>
 <li class="chapter" data-level="4.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>4.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
-<li class="chapter" data-level="4.3" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.3</b> Batch Effect Correction wtih Harmony</a></li>
-<li class="chapter" data-level="4.4" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.4</b> Session Information</a></li>
+<li class="chapter" data-level="4.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>4.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="4.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.4</b> Batch Effect Correction wtih Harmony</a></li>
+<li class="chapter" data-level="4.5" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.5</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>5</b> Clustering with ArchR</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.1</b> Session Information</a></li>
+<li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="5.2" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.2</b> Session Information</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
 <ul>
@@ -263,148 +265,148 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="coaccessibility-with-archr" class="section level2" number="14.1">
 <h2><span class="header-section-number">14.1</span> CoAccessibility with ArchR</h2>
-<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="coaccessibility-with-archr.html#cb208-1"></a>projHeme5 &lt;-<span class="st"> </span><span class="kw">addCoAccessibility</span>(</span>
-<span id="cb208-2"><a href="coaccessibility-with-archr.html#cb208-2"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
-<span id="cb208-3"><a href="coaccessibility-with-archr.html#cb208-3"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span></span>
-<span id="cb208-4"><a href="coaccessibility-with-archr.html#cb208-4"></a>)</span></code></pre></div>
-<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="coaccessibility-with-archr.html#cb209-1"></a>cA &lt;-<span class="st"> </span><span class="kw">getCoAccessibility</span>(</span>
-<span id="cb209-2"><a href="coaccessibility-with-archr.html#cb209-2"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
-<span id="cb209-3"><a href="coaccessibility-with-archr.html#cb209-3"></a>    <span class="dt">corCutOff =</span> <span class="fl">0.5</span>,</span>
-<span id="cb209-4"><a href="coaccessibility-with-archr.html#cb209-4"></a>    <span class="dt">resolution =</span> <span class="dv">1</span>,</span>
-<span id="cb209-5"><a href="coaccessibility-with-archr.html#cb209-5"></a>    <span class="dt">returnLoops =</span> <span class="ot">FALSE</span></span>
-<span id="cb209-6"><a href="coaccessibility-with-archr.html#cb209-6"></a>)</span>
-<span id="cb209-7"><a href="coaccessibility-with-archr.html#cb209-7"></a></span>
-<span id="cb209-8"><a href="coaccessibility-with-archr.html#cb209-8"></a>cA</span>
-<span id="cb209-9"><a href="coaccessibility-with-archr.html#cb209-9"></a><span class="co"># DataFrame with 65736 rows and 4 columns</span></span>
-<span id="cb209-10"><a href="coaccessibility-with-archr.html#cb209-10"></a><span class="co">#       queryHits subjectHits seqnames       correlation</span></span>
-<span id="cb209-11"><a href="coaccessibility-with-archr.html#cb209-11"></a><span class="co">#       &lt;integer&gt;   &lt;integer&gt;    &lt;Rle&gt;         &lt;numeric&gt;</span></span>
-<span id="cb209-12"><a href="coaccessibility-with-archr.html#cb209-12"></a><span class="co"># 1             8          13     chr1  0.69736362363962</span></span>
-<span id="cb209-13"><a href="coaccessibility-with-archr.html#cb209-13"></a><span class="co"># 2            13           8     chr1  0.69736362363962</span></span>
-<span id="cb209-14"><a href="coaccessibility-with-archr.html#cb209-14"></a><span class="co"># 3            52          64     chr1 0.502479053390956</span></span>
-<span id="cb209-15"><a href="coaccessibility-with-archr.html#cb209-15"></a><span class="co"># 4            54          55     chr1 0.573405135422231</span></span>
-<span id="cb209-16"><a href="coaccessibility-with-archr.html#cb209-16"></a><span class="co"># 5            55          54     chr1 0.573405135422231</span></span>
-<span id="cb209-17"><a href="coaccessibility-with-archr.html#cb209-17"></a><span class="co"># ...         ...         ...      ...               ...</span></span>
-<span id="cb209-18"><a href="coaccessibility-with-archr.html#cb209-18"></a><span class="co"># 65732    158297      158296     chrX   0.5541398895206</span></span>
-<span id="cb209-19"><a href="coaccessibility-with-archr.html#cb209-19"></a><span class="co"># 65733    158332      158333     chrX 0.504941172383233</span></span>
-<span id="cb209-20"><a href="coaccessibility-with-archr.html#cb209-20"></a><span class="co"># 65734    158333      158332     chrX 0.504941172383233</span></span>
-<span id="cb209-21"><a href="coaccessibility-with-archr.html#cb209-21"></a><span class="co"># 65735    158339      158340     chrX 0.506143160385986</span></span>
-<span id="cb209-22"><a href="coaccessibility-with-archr.html#cb209-22"></a><span class="co"># 65736    158340      158339     chrX 0.506143160385985</span></span>
-<span id="cb209-23"><a href="coaccessibility-with-archr.html#cb209-23"></a></span>
-<span id="cb209-24"><a href="coaccessibility-with-archr.html#cb209-24"></a><span class="kw">metadata</span>(cA)[[<span class="dv">1</span>]]</span>
-<span id="cb209-25"><a href="coaccessibility-with-archr.html#cb209-25"></a><span class="co"># GRanges object with 158378 ranges and 0 metadata columns:</span></span>
-<span id="cb209-26"><a href="coaccessibility-with-archr.html#cb209-26"></a><span class="co">#             seqnames              ranges strand</span></span>
-<span id="cb209-27"><a href="coaccessibility-with-archr.html#cb209-27"></a><span class="co">#                &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt;</span></span>
-<span id="cb209-28"><a href="coaccessibility-with-archr.html#cb209-28"></a><span class="co">#   Cluster10     chr1       752327-752827      *</span></span>
-<span id="cb209-29"><a href="coaccessibility-with-archr.html#cb209-29"></a><span class="co">#    Cluster9     chr1       760866-761366      *</span></span>
-<span id="cb209-30"><a href="coaccessibility-with-archr.html#cb209-30"></a><span class="co">#    Cluster2     chr1       762700-763200      *</span></span>
-<span id="cb209-31"><a href="coaccessibility-with-archr.html#cb209-31"></a><span class="co">#    Cluster2     chr1       779639-780139      *</span></span>
-<span id="cb209-32"><a href="coaccessibility-with-archr.html#cb209-32"></a><span class="co">#    Cluster8     chr1       793519-794019      *</span></span>
-<span id="cb209-33"><a href="coaccessibility-with-archr.html#cb209-33"></a><span class="co">#         ...      ...                 ...    ...</span></span>
-<span id="cb209-34"><a href="coaccessibility-with-archr.html#cb209-34"></a><span class="co">#    Cluster5     chrX 154841853-154842353      *</span></span>
-<span id="cb209-35"><a href="coaccessibility-with-archr.html#cb209-35"></a><span class="co">#   Cluster12     chrX 154842354-154842854      *</span></span>
-<span id="cb209-36"><a href="coaccessibility-with-archr.html#cb209-36"></a><span class="co">#    Cluster4     chrX 154862032-154862532      *</span></span>
-<span id="cb209-37"><a href="coaccessibility-with-archr.html#cb209-37"></a><span class="co">#    Cluster5     chrX 154912371-154912871      *</span></span>
-<span id="cb209-38"><a href="coaccessibility-with-archr.html#cb209-38"></a><span class="co">#    Cluster6     chrX 154996898-154997398      *</span></span>
-<span id="cb209-39"><a href="coaccessibility-with-archr.html#cb209-39"></a></span>
-<span id="cb209-40"><a href="coaccessibility-with-archr.html#cb209-40"></a></span>
-<span id="cb209-41"><a href="coaccessibility-with-archr.html#cb209-41"></a>cA &lt;-<span class="st"> </span><span class="kw">getCoAccessibility</span>(</span>
-<span id="cb209-42"><a href="coaccessibility-with-archr.html#cb209-42"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
-<span id="cb209-43"><a href="coaccessibility-with-archr.html#cb209-43"></a>    <span class="dt">corCutOff =</span> <span class="fl">0.5</span>,</span>
-<span id="cb209-44"><a href="coaccessibility-with-archr.html#cb209-44"></a>    <span class="dt">resolution =</span> <span class="dv">1</span>,</span>
-<span id="cb209-45"><a href="coaccessibility-with-archr.html#cb209-45"></a>    <span class="dt">returnLoops =</span> <span class="ot">TRUE</span></span>
-<span id="cb209-46"><a href="coaccessibility-with-archr.html#cb209-46"></a>)</span>
-<span id="cb209-47"><a href="coaccessibility-with-archr.html#cb209-47"></a></span>
-<span id="cb209-48"><a href="coaccessibility-with-archr.html#cb209-48"></a><span class="co"># GenomicRangesList of length 1</span></span>
-<span id="cb209-49"><a href="coaccessibility-with-archr.html#cb209-49"></a><span class="co"># names(1): CoAccessibility</span></span>
-<span id="cb209-50"><a href="coaccessibility-with-archr.html#cb209-50"></a></span>
-<span id="cb209-51"><a href="coaccessibility-with-archr.html#cb209-51"></a>cA[[<span class="dv">1</span>]]</span>
-<span id="cb209-52"><a href="coaccessibility-with-archr.html#cb209-52"></a><span class="co"># GRanges object with 32868 ranges and 1 metadata column:</span></span>
-<span id="cb209-53"><a href="coaccessibility-with-archr.html#cb209-53"></a><span class="co">#           seqnames              ranges strand |             value</span></span>
-<span id="cb209-54"><a href="coaccessibility-with-archr.html#cb209-54"></a><span class="co">#              &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |         &lt;numeric&gt;</span></span>
-<span id="cb209-55"><a href="coaccessibility-with-archr.html#cb209-55"></a><span class="co">#       [1]     chr1       845640-856561      * |  0.69736362363962</span></span>
-<span id="cb209-56"><a href="coaccessibility-with-archr.html#cb209-56"></a><span class="co">#       [2]     chr1      968601-1004143      * | 0.502479053390956</span></span>
-<span id="cb209-57"><a href="coaccessibility-with-archr.html#cb209-57"></a><span class="co">#       [3]     chr1       974287-975100      * | 0.573405135422231</span></span>
-<span id="cb209-58"><a href="coaccessibility-with-archr.html#cb209-58"></a><span class="co">#       [4]     chr1     1034332-1034887      * | 0.807870076075987</span></span>
-<span id="cb209-59"><a href="coaccessibility-with-archr.html#cb209-59"></a><span class="co">#       [5]     chr1     1072846-1079621      * | 0.591975205782561</span></span>
-<span id="cb209-60"><a href="coaccessibility-with-archr.html#cb209-60"></a><span class="co">#       ...      ...                 ...    ... .               ...</span></span>
-<span id="cb209-61"><a href="coaccessibility-with-archr.html#cb209-61"></a><span class="co">#   [32864]     chrX 153597267-153637554      * | 0.501648373320333</span></span>
-<span id="cb209-62"><a href="coaccessibility-with-archr.html#cb209-62"></a><span class="co">#   [32865]     chrX 153637554-153659408      * | 0.534554389595235</span></span>
-<span id="cb209-63"><a href="coaccessibility-with-archr.html#cb209-63"></a><span class="co">#   [32866]     chrX 153659408-153659914      * |   0.5541398895206</span></span>
-<span id="cb209-64"><a href="coaccessibility-with-archr.html#cb209-64"></a><span class="co">#   [32867]     chrX 153959662-153960350      * | 0.504941172383233</span></span>
-<span id="cb209-65"><a href="coaccessibility-with-archr.html#cb209-65"></a><span class="co">#   [32868]     chrX 153980214-153990355      * | 0.506143160385986</span></span></code></pre></div>
-<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="coaccessibility-with-archr.html#cb210-1"></a>cA &lt;-<span class="st"> </span><span class="kw">getCoAccessibility</span>(</span>
-<span id="cb210-2"><a href="coaccessibility-with-archr.html#cb210-2"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
-<span id="cb210-3"><a href="coaccessibility-with-archr.html#cb210-3"></a>    <span class="dt">corCutOff =</span> <span class="fl">0.5</span>,</span>
-<span id="cb210-4"><a href="coaccessibility-with-archr.html#cb210-4"></a>    <span class="dt">resolution =</span> <span class="dv">1000</span>,</span>
-<span id="cb210-5"><a href="coaccessibility-with-archr.html#cb210-5"></a>    <span class="dt">returnLoops =</span> <span class="ot">TRUE</span></span>
-<span id="cb210-6"><a href="coaccessibility-with-archr.html#cb210-6"></a>)</span>
-<span id="cb210-7"><a href="coaccessibility-with-archr.html#cb210-7"></a></span>
-<span id="cb210-8"><a href="coaccessibility-with-archr.html#cb210-8"></a>cA[[<span class="dv">1</span>]]</span>
-<span id="cb210-9"><a href="coaccessibility-with-archr.html#cb210-9"></a><span class="co"># GRanges object with 30315 ranges and 1 metadata column:</span></span>
-<span id="cb210-10"><a href="coaccessibility-with-archr.html#cb210-10"></a><span class="co">#           seqnames              ranges strand |             value</span></span>
-<span id="cb210-11"><a href="coaccessibility-with-archr.html#cb210-11"></a><span class="co">#              &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |         &lt;numeric&gt;</span></span>
-<span id="cb210-12"><a href="coaccessibility-with-archr.html#cb210-12"></a><span class="co">#       [1]     chr1       845500-856500      * |  0.69736362363962</span></span>
-<span id="cb210-13"><a href="coaccessibility-with-archr.html#cb210-13"></a><span class="co">#       [2]     chr1      968500-1004500      * | 0.502479053390956</span></span>
-<span id="cb210-14"><a href="coaccessibility-with-archr.html#cb210-14"></a><span class="co">#       [3]     chr1       974500-975500      * | 0.573405135422231</span></span>
-<span id="cb210-15"><a href="coaccessibility-with-archr.html#cb210-15"></a><span class="co">#       [4]     chr1     1072500-1079500      * | 0.591975205782561</span></span>
-<span id="cb210-16"><a href="coaccessibility-with-archr.html#cb210-16"></a><span class="co">#       [5]     chr1     1072500-1109500      * | 0.509755959269061</span></span>
-<span id="cb210-17"><a href="coaccessibility-with-archr.html#cb210-17"></a><span class="co">#       ...      ...                 ...    ... .               ...</span></span>
-<span id="cb210-18"><a href="coaccessibility-with-archr.html#cb210-18"></a><span class="co">#   [30311]     chrX 153596500-153597500      * | 0.526200963980073</span></span>
-<span id="cb210-19"><a href="coaccessibility-with-archr.html#cb210-19"></a><span class="co">#   [30312]     chrX 153597500-153637500      * | 0.501648373320333</span></span>
-<span id="cb210-20"><a href="coaccessibility-with-archr.html#cb210-20"></a><span class="co">#   [30313]     chrX 153637500-153659500      * | 0.534554389595235</span></span>
-<span id="cb210-21"><a href="coaccessibility-with-archr.html#cb210-21"></a><span class="co">#   [30314]     chrX 153959500-153960500      * | 0.504941172383233</span></span>
-<span id="cb210-22"><a href="coaccessibility-with-archr.html#cb210-22"></a><span class="co">#   [30315]     chrX 153980500-153990500      * | 0.506143160385986</span></span>
-<span id="cb210-23"><a href="coaccessibility-with-archr.html#cb210-23"></a><span class="co">#   -------</span></span>
-<span id="cb210-24"><a href="coaccessibility-with-archr.html#cb210-24"></a><span class="co">#   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
-<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="coaccessibility-with-archr.html#cb211-1"></a>cA &lt;-<span class="st"> </span><span class="kw">getCoAccessibility</span>(</span>
-<span id="cb211-2"><a href="coaccessibility-with-archr.html#cb211-2"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
-<span id="cb211-3"><a href="coaccessibility-with-archr.html#cb211-3"></a>    <span class="dt">corCutOff =</span> <span class="fl">0.5</span>,</span>
-<span id="cb211-4"><a href="coaccessibility-with-archr.html#cb211-4"></a>    <span class="dt">resolution =</span> <span class="dv">10000</span>,</span>
-<span id="cb211-5"><a href="coaccessibility-with-archr.html#cb211-5"></a>    <span class="dt">returnLoops =</span> <span class="ot">TRUE</span></span>
-<span id="cb211-6"><a href="coaccessibility-with-archr.html#cb211-6"></a>)</span>
-<span id="cb211-7"><a href="coaccessibility-with-archr.html#cb211-7"></a></span>
-<span id="cb211-8"><a href="coaccessibility-with-archr.html#cb211-8"></a>cA[[<span class="dv">1</span>]]</span>
-<span id="cb211-9"><a href="coaccessibility-with-archr.html#cb211-9"></a><span class="co"># GRanges object with 15990 ranges and 1 metadata column:</span></span>
-<span id="cb211-10"><a href="coaccessibility-with-archr.html#cb211-10"></a><span class="co">#           seqnames              ranges strand |             value</span></span>
-<span id="cb211-11"><a href="coaccessibility-with-archr.html#cb211-11"></a><span class="co">#              &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |         &lt;numeric&gt;</span></span>
-<span id="cb211-12"><a href="coaccessibility-with-archr.html#cb211-12"></a><span class="co">#       [1]     chr1       845000-855000      * |  0.69736362363962</span></span>
-<span id="cb211-13"><a href="coaccessibility-with-archr.html#cb211-13"></a><span class="co">#       [2]     chr1      965000-1005000      * | 0.502479053390956</span></span>
-<span id="cb211-14"><a href="coaccessibility-with-archr.html#cb211-14"></a><span class="co">#       [3]     chr1     1075000-1085000      * | 0.542909007799088</span></span>
-<span id="cb211-15"><a href="coaccessibility-with-archr.html#cb211-15"></a><span class="co">#       [4]     chr1     1075000-1105000      * | 0.522706329518404</span></span>
-<span id="cb211-16"><a href="coaccessibility-with-archr.html#cb211-16"></a><span class="co">#       [5]     chr1     1105000-1115000      * | 0.607428937524039</span></span>
-<span id="cb211-17"><a href="coaccessibility-with-archr.html#cb211-17"></a><span class="co">#       ...      ...                 ...    ... .               ...</span></span>
-<span id="cb211-18"><a href="coaccessibility-with-archr.html#cb211-18"></a><span class="co">#   [15986]     chrX 153305000-153345000      * |  0.63313940661629</span></span>
-<span id="cb211-19"><a href="coaccessibility-with-archr.html#cb211-19"></a><span class="co">#   [15987]     chrX 153595000-153635000      * | 0.501648373320333</span></span>
-<span id="cb211-20"><a href="coaccessibility-with-archr.html#cb211-20"></a><span class="co">#   [15988]     chrX 153635000-153655000      * | 0.534554389595235</span></span>
-<span id="cb211-21"><a href="coaccessibility-with-archr.html#cb211-21"></a><span class="co">#   [15989]     chrX 153955000-153965000      * | 0.504941172383233</span></span>
-<span id="cb211-22"><a href="coaccessibility-with-archr.html#cb211-22"></a><span class="co">#   [15990]     chrX 153985000-153995000      * | 0.506143160385986</span></span>
-<span id="cb211-23"><a href="coaccessibility-with-archr.html#cb211-23"></a><span class="co">#   -------</span></span>
-<span id="cb211-24"><a href="coaccessibility-with-archr.html#cb211-24"></a><span class="co">#   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
+<div class="sourceCode" id="cb309"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb309-1"><a href="coaccessibility-with-archr.html#cb309-1"></a>projHeme5 &lt;-<span class="st"> </span><span class="kw">addCoAccessibility</span>(</span>
+<span id="cb309-2"><a href="coaccessibility-with-archr.html#cb309-2"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
+<span id="cb309-3"><a href="coaccessibility-with-archr.html#cb309-3"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span></span>
+<span id="cb309-4"><a href="coaccessibility-with-archr.html#cb309-4"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb310"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb310-1"><a href="coaccessibility-with-archr.html#cb310-1"></a>cA &lt;-<span class="st"> </span><span class="kw">getCoAccessibility</span>(</span>
+<span id="cb310-2"><a href="coaccessibility-with-archr.html#cb310-2"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
+<span id="cb310-3"><a href="coaccessibility-with-archr.html#cb310-3"></a>    <span class="dt">corCutOff =</span> <span class="fl">0.5</span>,</span>
+<span id="cb310-4"><a href="coaccessibility-with-archr.html#cb310-4"></a>    <span class="dt">resolution =</span> <span class="dv">1</span>,</span>
+<span id="cb310-5"><a href="coaccessibility-with-archr.html#cb310-5"></a>    <span class="dt">returnLoops =</span> <span class="ot">FALSE</span></span>
+<span id="cb310-6"><a href="coaccessibility-with-archr.html#cb310-6"></a>)</span>
+<span id="cb310-7"><a href="coaccessibility-with-archr.html#cb310-7"></a></span>
+<span id="cb310-8"><a href="coaccessibility-with-archr.html#cb310-8"></a>cA</span>
+<span id="cb310-9"><a href="coaccessibility-with-archr.html#cb310-9"></a><span class="co"># DataFrame with 65736 rows and 4 columns</span></span>
+<span id="cb310-10"><a href="coaccessibility-with-archr.html#cb310-10"></a><span class="co">#       queryHits subjectHits seqnames       correlation</span></span>
+<span id="cb310-11"><a href="coaccessibility-with-archr.html#cb310-11"></a><span class="co">#       &lt;integer&gt;   &lt;integer&gt;    &lt;Rle&gt;         &lt;numeric&gt;</span></span>
+<span id="cb310-12"><a href="coaccessibility-with-archr.html#cb310-12"></a><span class="co"># 1             8          13     chr1  0.69736362363962</span></span>
+<span id="cb310-13"><a href="coaccessibility-with-archr.html#cb310-13"></a><span class="co"># 2            13           8     chr1  0.69736362363962</span></span>
+<span id="cb310-14"><a href="coaccessibility-with-archr.html#cb310-14"></a><span class="co"># 3            52          64     chr1 0.502479053390956</span></span>
+<span id="cb310-15"><a href="coaccessibility-with-archr.html#cb310-15"></a><span class="co"># 4            54          55     chr1 0.573405135422231</span></span>
+<span id="cb310-16"><a href="coaccessibility-with-archr.html#cb310-16"></a><span class="co"># 5            55          54     chr1 0.573405135422231</span></span>
+<span id="cb310-17"><a href="coaccessibility-with-archr.html#cb310-17"></a><span class="co"># ...         ...         ...      ...               ...</span></span>
+<span id="cb310-18"><a href="coaccessibility-with-archr.html#cb310-18"></a><span class="co"># 65732    158297      158296     chrX   0.5541398895206</span></span>
+<span id="cb310-19"><a href="coaccessibility-with-archr.html#cb310-19"></a><span class="co"># 65733    158332      158333     chrX 0.504941172383233</span></span>
+<span id="cb310-20"><a href="coaccessibility-with-archr.html#cb310-20"></a><span class="co"># 65734    158333      158332     chrX 0.504941172383233</span></span>
+<span id="cb310-21"><a href="coaccessibility-with-archr.html#cb310-21"></a><span class="co"># 65735    158339      158340     chrX 0.506143160385986</span></span>
+<span id="cb310-22"><a href="coaccessibility-with-archr.html#cb310-22"></a><span class="co"># 65736    158340      158339     chrX 0.506143160385985</span></span>
+<span id="cb310-23"><a href="coaccessibility-with-archr.html#cb310-23"></a></span>
+<span id="cb310-24"><a href="coaccessibility-with-archr.html#cb310-24"></a><span class="kw">metadata</span>(cA)[[<span class="dv">1</span>]]</span>
+<span id="cb310-25"><a href="coaccessibility-with-archr.html#cb310-25"></a><span class="co"># GRanges object with 158378 ranges and 0 metadata columns:</span></span>
+<span id="cb310-26"><a href="coaccessibility-with-archr.html#cb310-26"></a><span class="co">#             seqnames              ranges strand</span></span>
+<span id="cb310-27"><a href="coaccessibility-with-archr.html#cb310-27"></a><span class="co">#                &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt;</span></span>
+<span id="cb310-28"><a href="coaccessibility-with-archr.html#cb310-28"></a><span class="co">#   Cluster10     chr1       752327-752827      *</span></span>
+<span id="cb310-29"><a href="coaccessibility-with-archr.html#cb310-29"></a><span class="co">#    Cluster9     chr1       760866-761366      *</span></span>
+<span id="cb310-30"><a href="coaccessibility-with-archr.html#cb310-30"></a><span class="co">#    Cluster2     chr1       762700-763200      *</span></span>
+<span id="cb310-31"><a href="coaccessibility-with-archr.html#cb310-31"></a><span class="co">#    Cluster2     chr1       779639-780139      *</span></span>
+<span id="cb310-32"><a href="coaccessibility-with-archr.html#cb310-32"></a><span class="co">#    Cluster8     chr1       793519-794019      *</span></span>
+<span id="cb310-33"><a href="coaccessibility-with-archr.html#cb310-33"></a><span class="co">#         ...      ...                 ...    ...</span></span>
+<span id="cb310-34"><a href="coaccessibility-with-archr.html#cb310-34"></a><span class="co">#    Cluster5     chrX 154841853-154842353      *</span></span>
+<span id="cb310-35"><a href="coaccessibility-with-archr.html#cb310-35"></a><span class="co">#   Cluster12     chrX 154842354-154842854      *</span></span>
+<span id="cb310-36"><a href="coaccessibility-with-archr.html#cb310-36"></a><span class="co">#    Cluster4     chrX 154862032-154862532      *</span></span>
+<span id="cb310-37"><a href="coaccessibility-with-archr.html#cb310-37"></a><span class="co">#    Cluster5     chrX 154912371-154912871      *</span></span>
+<span id="cb310-38"><a href="coaccessibility-with-archr.html#cb310-38"></a><span class="co">#    Cluster6     chrX 154996898-154997398      *</span></span>
+<span id="cb310-39"><a href="coaccessibility-with-archr.html#cb310-39"></a></span>
+<span id="cb310-40"><a href="coaccessibility-with-archr.html#cb310-40"></a></span>
+<span id="cb310-41"><a href="coaccessibility-with-archr.html#cb310-41"></a>cA &lt;-<span class="st"> </span><span class="kw">getCoAccessibility</span>(</span>
+<span id="cb310-42"><a href="coaccessibility-with-archr.html#cb310-42"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
+<span id="cb310-43"><a href="coaccessibility-with-archr.html#cb310-43"></a>    <span class="dt">corCutOff =</span> <span class="fl">0.5</span>,</span>
+<span id="cb310-44"><a href="coaccessibility-with-archr.html#cb310-44"></a>    <span class="dt">resolution =</span> <span class="dv">1</span>,</span>
+<span id="cb310-45"><a href="coaccessibility-with-archr.html#cb310-45"></a>    <span class="dt">returnLoops =</span> <span class="ot">TRUE</span></span>
+<span id="cb310-46"><a href="coaccessibility-with-archr.html#cb310-46"></a>)</span>
+<span id="cb310-47"><a href="coaccessibility-with-archr.html#cb310-47"></a></span>
+<span id="cb310-48"><a href="coaccessibility-with-archr.html#cb310-48"></a><span class="co"># GenomicRangesList of length 1</span></span>
+<span id="cb310-49"><a href="coaccessibility-with-archr.html#cb310-49"></a><span class="co"># names(1): CoAccessibility</span></span>
+<span id="cb310-50"><a href="coaccessibility-with-archr.html#cb310-50"></a></span>
+<span id="cb310-51"><a href="coaccessibility-with-archr.html#cb310-51"></a>cA[[<span class="dv">1</span>]]</span>
+<span id="cb310-52"><a href="coaccessibility-with-archr.html#cb310-52"></a><span class="co"># GRanges object with 32868 ranges and 1 metadata column:</span></span>
+<span id="cb310-53"><a href="coaccessibility-with-archr.html#cb310-53"></a><span class="co">#           seqnames              ranges strand |             value</span></span>
+<span id="cb310-54"><a href="coaccessibility-with-archr.html#cb310-54"></a><span class="co">#              &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |         &lt;numeric&gt;</span></span>
+<span id="cb310-55"><a href="coaccessibility-with-archr.html#cb310-55"></a><span class="co">#       [1]     chr1       845640-856561      * |  0.69736362363962</span></span>
+<span id="cb310-56"><a href="coaccessibility-with-archr.html#cb310-56"></a><span class="co">#       [2]     chr1      968601-1004143      * | 0.502479053390956</span></span>
+<span id="cb310-57"><a href="coaccessibility-with-archr.html#cb310-57"></a><span class="co">#       [3]     chr1       974287-975100      * | 0.573405135422231</span></span>
+<span id="cb310-58"><a href="coaccessibility-with-archr.html#cb310-58"></a><span class="co">#       [4]     chr1     1034332-1034887      * | 0.807870076075987</span></span>
+<span id="cb310-59"><a href="coaccessibility-with-archr.html#cb310-59"></a><span class="co">#       [5]     chr1     1072846-1079621      * | 0.591975205782561</span></span>
+<span id="cb310-60"><a href="coaccessibility-with-archr.html#cb310-60"></a><span class="co">#       ...      ...                 ...    ... .               ...</span></span>
+<span id="cb310-61"><a href="coaccessibility-with-archr.html#cb310-61"></a><span class="co">#   [32864]     chrX 153597267-153637554      * | 0.501648373320333</span></span>
+<span id="cb310-62"><a href="coaccessibility-with-archr.html#cb310-62"></a><span class="co">#   [32865]     chrX 153637554-153659408      * | 0.534554389595235</span></span>
+<span id="cb310-63"><a href="coaccessibility-with-archr.html#cb310-63"></a><span class="co">#   [32866]     chrX 153659408-153659914      * |   0.5541398895206</span></span>
+<span id="cb310-64"><a href="coaccessibility-with-archr.html#cb310-64"></a><span class="co">#   [32867]     chrX 153959662-153960350      * | 0.504941172383233</span></span>
+<span id="cb310-65"><a href="coaccessibility-with-archr.html#cb310-65"></a><span class="co">#   [32868]     chrX 153980214-153990355      * | 0.506143160385986</span></span></code></pre></div>
+<div class="sourceCode" id="cb311"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb311-1"><a href="coaccessibility-with-archr.html#cb311-1"></a>cA &lt;-<span class="st"> </span><span class="kw">getCoAccessibility</span>(</span>
+<span id="cb311-2"><a href="coaccessibility-with-archr.html#cb311-2"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
+<span id="cb311-3"><a href="coaccessibility-with-archr.html#cb311-3"></a>    <span class="dt">corCutOff =</span> <span class="fl">0.5</span>,</span>
+<span id="cb311-4"><a href="coaccessibility-with-archr.html#cb311-4"></a>    <span class="dt">resolution =</span> <span class="dv">1000</span>,</span>
+<span id="cb311-5"><a href="coaccessibility-with-archr.html#cb311-5"></a>    <span class="dt">returnLoops =</span> <span class="ot">TRUE</span></span>
+<span id="cb311-6"><a href="coaccessibility-with-archr.html#cb311-6"></a>)</span>
+<span id="cb311-7"><a href="coaccessibility-with-archr.html#cb311-7"></a></span>
+<span id="cb311-8"><a href="coaccessibility-with-archr.html#cb311-8"></a>cA[[<span class="dv">1</span>]]</span>
+<span id="cb311-9"><a href="coaccessibility-with-archr.html#cb311-9"></a><span class="co"># GRanges object with 30315 ranges and 1 metadata column:</span></span>
+<span id="cb311-10"><a href="coaccessibility-with-archr.html#cb311-10"></a><span class="co">#           seqnames              ranges strand |             value</span></span>
+<span id="cb311-11"><a href="coaccessibility-with-archr.html#cb311-11"></a><span class="co">#              &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |         &lt;numeric&gt;</span></span>
+<span id="cb311-12"><a href="coaccessibility-with-archr.html#cb311-12"></a><span class="co">#       [1]     chr1       845500-856500      * |  0.69736362363962</span></span>
+<span id="cb311-13"><a href="coaccessibility-with-archr.html#cb311-13"></a><span class="co">#       [2]     chr1      968500-1004500      * | 0.502479053390956</span></span>
+<span id="cb311-14"><a href="coaccessibility-with-archr.html#cb311-14"></a><span class="co">#       [3]     chr1       974500-975500      * | 0.573405135422231</span></span>
+<span id="cb311-15"><a href="coaccessibility-with-archr.html#cb311-15"></a><span class="co">#       [4]     chr1     1072500-1079500      * | 0.591975205782561</span></span>
+<span id="cb311-16"><a href="coaccessibility-with-archr.html#cb311-16"></a><span class="co">#       [5]     chr1     1072500-1109500      * | 0.509755959269061</span></span>
+<span id="cb311-17"><a href="coaccessibility-with-archr.html#cb311-17"></a><span class="co">#       ...      ...                 ...    ... .               ...</span></span>
+<span id="cb311-18"><a href="coaccessibility-with-archr.html#cb311-18"></a><span class="co">#   [30311]     chrX 153596500-153597500      * | 0.526200963980073</span></span>
+<span id="cb311-19"><a href="coaccessibility-with-archr.html#cb311-19"></a><span class="co">#   [30312]     chrX 153597500-153637500      * | 0.501648373320333</span></span>
+<span id="cb311-20"><a href="coaccessibility-with-archr.html#cb311-20"></a><span class="co">#   [30313]     chrX 153637500-153659500      * | 0.534554389595235</span></span>
+<span id="cb311-21"><a href="coaccessibility-with-archr.html#cb311-21"></a><span class="co">#   [30314]     chrX 153959500-153960500      * | 0.504941172383233</span></span>
+<span id="cb311-22"><a href="coaccessibility-with-archr.html#cb311-22"></a><span class="co">#   [30315]     chrX 153980500-153990500      * | 0.506143160385986</span></span>
+<span id="cb311-23"><a href="coaccessibility-with-archr.html#cb311-23"></a><span class="co">#   -------</span></span>
+<span id="cb311-24"><a href="coaccessibility-with-archr.html#cb311-24"></a><span class="co">#   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
+<div class="sourceCode" id="cb312"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb312-1"><a href="coaccessibility-with-archr.html#cb312-1"></a>cA &lt;-<span class="st"> </span><span class="kw">getCoAccessibility</span>(</span>
+<span id="cb312-2"><a href="coaccessibility-with-archr.html#cb312-2"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
+<span id="cb312-3"><a href="coaccessibility-with-archr.html#cb312-3"></a>    <span class="dt">corCutOff =</span> <span class="fl">0.5</span>,</span>
+<span id="cb312-4"><a href="coaccessibility-with-archr.html#cb312-4"></a>    <span class="dt">resolution =</span> <span class="dv">10000</span>,</span>
+<span id="cb312-5"><a href="coaccessibility-with-archr.html#cb312-5"></a>    <span class="dt">returnLoops =</span> <span class="ot">TRUE</span></span>
+<span id="cb312-6"><a href="coaccessibility-with-archr.html#cb312-6"></a>)</span>
+<span id="cb312-7"><a href="coaccessibility-with-archr.html#cb312-7"></a></span>
+<span id="cb312-8"><a href="coaccessibility-with-archr.html#cb312-8"></a>cA[[<span class="dv">1</span>]]</span>
+<span id="cb312-9"><a href="coaccessibility-with-archr.html#cb312-9"></a><span class="co"># GRanges object with 15990 ranges and 1 metadata column:</span></span>
+<span id="cb312-10"><a href="coaccessibility-with-archr.html#cb312-10"></a><span class="co">#           seqnames              ranges strand |             value</span></span>
+<span id="cb312-11"><a href="coaccessibility-with-archr.html#cb312-11"></a><span class="co">#              &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |         &lt;numeric&gt;</span></span>
+<span id="cb312-12"><a href="coaccessibility-with-archr.html#cb312-12"></a><span class="co">#       [1]     chr1       845000-855000      * |  0.69736362363962</span></span>
+<span id="cb312-13"><a href="coaccessibility-with-archr.html#cb312-13"></a><span class="co">#       [2]     chr1      965000-1005000      * | 0.502479053390956</span></span>
+<span id="cb312-14"><a href="coaccessibility-with-archr.html#cb312-14"></a><span class="co">#       [3]     chr1     1075000-1085000      * | 0.542909007799088</span></span>
+<span id="cb312-15"><a href="coaccessibility-with-archr.html#cb312-15"></a><span class="co">#       [4]     chr1     1075000-1105000      * | 0.522706329518404</span></span>
+<span id="cb312-16"><a href="coaccessibility-with-archr.html#cb312-16"></a><span class="co">#       [5]     chr1     1105000-1115000      * | 0.607428937524039</span></span>
+<span id="cb312-17"><a href="coaccessibility-with-archr.html#cb312-17"></a><span class="co">#       ...      ...                 ...    ... .               ...</span></span>
+<span id="cb312-18"><a href="coaccessibility-with-archr.html#cb312-18"></a><span class="co">#   [15986]     chrX 153305000-153345000      * |  0.63313940661629</span></span>
+<span id="cb312-19"><a href="coaccessibility-with-archr.html#cb312-19"></a><span class="co">#   [15987]     chrX 153595000-153635000      * | 0.501648373320333</span></span>
+<span id="cb312-20"><a href="coaccessibility-with-archr.html#cb312-20"></a><span class="co">#   [15988]     chrX 153635000-153655000      * | 0.534554389595235</span></span>
+<span id="cb312-21"><a href="coaccessibility-with-archr.html#cb312-21"></a><span class="co">#   [15989]     chrX 153955000-153965000      * | 0.504941172383233</span></span>
+<span id="cb312-22"><a href="coaccessibility-with-archr.html#cb312-22"></a><span class="co">#   [15990]     chrX 153985000-153995000      * | 0.506143160385986</span></span>
+<span id="cb312-23"><a href="coaccessibility-with-archr.html#cb312-23"></a><span class="co">#   -------</span></span>
+<span id="cb312-24"><a href="coaccessibility-with-archr.html#cb312-24"></a><span class="co">#   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
 <p>Plotting browser tracks with CoAccessibility</p>
-<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="coaccessibility-with-archr.html#cb212-1"></a>markerGenes  &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
-<span id="cb212-2"><a href="coaccessibility-with-archr.html#cb212-2"></a>    <span class="st">&quot;CD34&quot;</span>, <span class="co">#Early Progenitor</span></span>
-<span id="cb212-3"><a href="coaccessibility-with-archr.html#cb212-3"></a>    <span class="st">&quot;GATA1&quot;</span>, <span class="co">#Erythroid</span></span>
-<span id="cb212-4"><a href="coaccessibility-with-archr.html#cb212-4"></a>    <span class="st">&quot;PAX5&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="co">#B-Cell Trajectory</span></span>
-<span id="cb212-5"><a href="coaccessibility-with-archr.html#cb212-5"></a>    <span class="st">&quot;CD14&quot;</span>, <span class="co">#Monocytes</span></span>
-<span id="cb212-6"><a href="coaccessibility-with-archr.html#cb212-6"></a>    <span class="st">&quot;CD3D&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;IL7R&quot;</span> <span class="co">#TCells</span></span>
-<span id="cb212-7"><a href="coaccessibility-with-archr.html#cb212-7"></a>  )</span>
-<span id="cb212-8"><a href="coaccessibility-with-archr.html#cb212-8"></a></span>
-<span id="cb212-9"><a href="coaccessibility-with-archr.html#cb212-9"></a>p &lt;-<span class="st"> </span><span class="kw">ArchRBrowserTrack</span>(</span>
-<span id="cb212-10"><a href="coaccessibility-with-archr.html#cb212-10"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
-<span id="cb212-11"><a href="coaccessibility-with-archr.html#cb212-11"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>, </span>
-<span id="cb212-12"><a href="coaccessibility-with-archr.html#cb212-12"></a>    <span class="dt">geneSymbol =</span> markerGenes, </span>
-<span id="cb212-13"><a href="coaccessibility-with-archr.html#cb212-13"></a>    <span class="dt">upstream =</span> <span class="dv">50000</span>,</span>
-<span id="cb212-14"><a href="coaccessibility-with-archr.html#cb212-14"></a>    <span class="dt">downstream =</span> <span class="dv">50000</span>,</span>
-<span id="cb212-15"><a href="coaccessibility-with-archr.html#cb212-15"></a>    <span class="dt">loops =</span> <span class="kw">getCoAccessibility</span>(projHeme5)</span>
-<span id="cb212-16"><a href="coaccessibility-with-archr.html#cb212-16"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb313"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb313-1"><a href="coaccessibility-with-archr.html#cb313-1"></a>markerGenes  &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb313-2"><a href="coaccessibility-with-archr.html#cb313-2"></a>    <span class="st">&quot;CD34&quot;</span>, <span class="co">#Early Progenitor</span></span>
+<span id="cb313-3"><a href="coaccessibility-with-archr.html#cb313-3"></a>    <span class="st">&quot;GATA1&quot;</span>, <span class="co">#Erythroid</span></span>
+<span id="cb313-4"><a href="coaccessibility-with-archr.html#cb313-4"></a>    <span class="st">&quot;PAX5&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="co">#B-Cell Trajectory</span></span>
+<span id="cb313-5"><a href="coaccessibility-with-archr.html#cb313-5"></a>    <span class="st">&quot;CD14&quot;</span>, <span class="co">#Monocytes</span></span>
+<span id="cb313-6"><a href="coaccessibility-with-archr.html#cb313-6"></a>    <span class="st">&quot;CD3D&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;IL7R&quot;</span> <span class="co">#TCells</span></span>
+<span id="cb313-7"><a href="coaccessibility-with-archr.html#cb313-7"></a>  )</span>
+<span id="cb313-8"><a href="coaccessibility-with-archr.html#cb313-8"></a></span>
+<span id="cb313-9"><a href="coaccessibility-with-archr.html#cb313-9"></a>p &lt;-<span class="st"> </span><span class="kw">ArchRBrowserTrack</span>(</span>
+<span id="cb313-10"><a href="coaccessibility-with-archr.html#cb313-10"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb313-11"><a href="coaccessibility-with-archr.html#cb313-11"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>, </span>
+<span id="cb313-12"><a href="coaccessibility-with-archr.html#cb313-12"></a>    <span class="dt">geneSymbol =</span> markerGenes, </span>
+<span id="cb313-13"><a href="coaccessibility-with-archr.html#cb313-13"></a>    <span class="dt">upstream =</span> <span class="dv">50000</span>,</span>
+<span id="cb313-14"><a href="coaccessibility-with-archr.html#cb313-14"></a>    <span class="dt">downstream =</span> <span class="dv">50000</span>,</span>
+<span id="cb313-15"><a href="coaccessibility-with-archr.html#cb313-15"></a>    <span class="dt">loops =</span> <span class="kw">getCoAccessibility</span>(projHeme5)</span>
+<span id="cb313-16"><a href="coaccessibility-with-archr.html#cb313-16"></a>)</span></code></pre></div>
 <p>To plot a track we can simply print one from the list</p>
-<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="coaccessibility-with-archr.html#cb213-1"></a>grid<span class="op">::</span><span class="kw">grid.newpage</span>()</span>
-<span id="cb213-2"><a href="coaccessibility-with-archr.html#cb213-2"></a>grid<span class="op">::</span><span class="kw">grid.draw</span>(p<span class="op">$</span>CD14)</span></code></pre></div>
+<div class="sourceCode" id="cb314"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb314-1"><a href="coaccessibility-with-archr.html#cb314-1"></a>grid<span class="op">::</span><span class="kw">grid.newpage</span>()</span>
+<span id="cb314-2"><a href="coaccessibility-with-archr.html#cb314-2"></a>grid<span class="op">::</span><span class="kw">grid.draw</span>(p<span class="op">$</span>CD14)</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-Tracks-Marker-Genes-with-CoAccessibility_5.png" width="500" height="500" /></p>
-<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="coaccessibility-with-archr.html#cb214-1"></a><span class="kw">plotPDF</span>(<span class="dt">plotList =</span> p, </span>
-<span id="cb214-2"><a href="coaccessibility-with-archr.html#cb214-2"></a>    <span class="dt">name =</span> <span class="st">&quot;Plot-Tracks-Marker-Genes-with-CoAccessibility.pdf&quot;</span>, </span>
-<span id="cb214-3"><a href="coaccessibility-with-archr.html#cb214-3"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
-<span id="cb214-4"><a href="coaccessibility-with-archr.html#cb214-4"></a>    <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb315"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb315-1"><a href="coaccessibility-with-archr.html#cb315-1"></a><span class="kw">plotPDF</span>(<span class="dt">plotList =</span> p, </span>
+<span id="cb315-2"><a href="coaccessibility-with-archr.html#cb315-2"></a>    <span class="dt">name =</span> <span class="st">&quot;Plot-Tracks-Marker-Genes-with-CoAccessibility.pdf&quot;</span>, </span>
+<span id="cb315-3"><a href="coaccessibility-with-archr.html#cb315-3"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb315-4"><a href="coaccessibility-with-archr.html#cb315-4"></a>    <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>)</span></code></pre></div>
 <p><a href="images/HemeWalkthrough/PDF/Plot-Tracks-Marker-Genes-with-CoAccessibility.pdf">Download PDF : Plot-Tracks-Marker-Genes.pdf</a></p>
 </div>
             </section>
