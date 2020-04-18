@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>14.1 Co-accessibility with ArchR | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
+  <meta name="description" content="A guide to ArchR" />
+  <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="14.1 Co-accessibility with ArchR | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="A guide to ArchR" />
+  <meta name="github-repo" content="GreenleafLab/ArchR" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="14.1 Co-accessibility with ArchR | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
+  
+  <meta name="twitter:description" content="A guide to ArchR" />
+  
+
+<meta name="author" content="Jeffrey Granja and Ryan Corces" />
+
+
+<meta name="date" content="2020-04-18" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+<link rel="prev" href="integrative-analysis-with-archr.html"/>
+<link rel="next" href="peak2genelinkage-with-archr.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="../index.html">Back to ArchR Home</a></li>
+
+<li class="divider"></li>
+<li><a href="index.html#section"><img src="images/ArchR_Logo_Integrated.png" alt="" width="200"></a></li>
+<li class="chapter" data-level="1" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>1</b> Getting Started with ArchR</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="a-brief-primer-on-atac-seq-terminology.html"><a href="a-brief-primer-on-atac-seq-terminology.html"><i class="fa fa-check"></i><b>1.1</b> A Brief Primer on ATAC-seq Terminology</a></li>
+<li class="chapter" data-level="1.2" data-path="why-use-archr.html"><a href="why-use-archr.html"><i class="fa fa-check"></i><b>1.2</b> Why use ArchR?</a></li>
+<li class="chapter" data-level="1.3" data-path="what-is-an-arrow-file-archrproject.html"><a href="what-is-an-arrow-file-archrproject.html"><i class="fa fa-check"></i><b>1.3</b> What is an <code>Arrow file</code> / <code>ArchRProject</code>?</a></li>
+<li class="chapter" data-level="1.4" data-path="input-file-types-in-archr.html"><a href="input-file-types-in-archr.html"><i class="fa fa-check"></i><b>1.4</b> Input File Types in ArchR</a></li>
+<li class="chapter" data-level="1.5" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>1.5</b> Getting Set Up</a></li>
+<li class="chapter" data-level="1.6" data-path="setting-a-genome-and-geneannotation.html"><a href="setting-a-genome-and-geneannotation.html"><i class="fa fa-check"></i><b>1.6</b> Setting a Genome and GeneAnnotation</a></li>
+<li class="chapter" data-level="1.7" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>1.7</b> Creating Arrow Files</a></li>
+<li class="chapter" data-level="1.8" data-path="session-information.html"><a href="session-information.html"><i class="fa fa-check"></i><b>1.8</b> Session Information</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="doublet-inference-with-archr.html"><a href="doublet-inference-with-archr.html"><i class="fa fa-check"></i><b>2</b> Doublet Inference with ArchR</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="inferring-scatac-seq-doublets-with-archr.html"><a href="inferring-scatac-seq-doublets-with-archr.html"><i class="fa fa-check"></i><b>2.1</b> Inferring scATAC-seq Doublets with ArchR</a></li>
+<li class="chapter" data-level="2.2" data-path="session-information-1.html"><a href="session-information-1.html"><i class="fa fa-check"></i><b>2.2</b> Session Information</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="creating-an-archrproject.html"><a href="creating-an-archrproject.html"><i class="fa fa-check"></i><b>3</b> Creating an ArchRProject</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="creating-an-archrproject-1.html"><a href="creating-an-archrproject-1.html"><i class="fa fa-check"></i><b>3.1</b> Creating An ArchRProject</a></li>
+<li class="chapter" data-level="3.2" data-path="manipulating-an-archrproject.html"><a href="manipulating-an-archrproject.html"><i class="fa fa-check"></i><b>3.2</b> Manipulating An ArchRProject</a></li>
+<li class="chapter" data-level="3.3" data-path="plotting-sample-statistics-from-an-archrproject.html"><a href="plotting-sample-statistics-from-an-archrproject.html"><i class="fa fa-check"></i><b>3.3</b> Plotting Sample Statistics from an ArchRProject</a></li>
+<li class="chapter" data-level="3.4" data-path="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles-.html"><a href="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles-.html"><i class="fa fa-check"></i><b>3.4</b> Plotting Sample Fragment Size Distribution and TSS Enrichment Profiles.</a></li>
+<li class="chapter" data-level="3.5" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>3.5</b> Filtering Doublets from an ArchRProject</a></li>
+<li class="chapter" data-level="3.6" data-path="session-information-2.html"><a href="session-information-2.html"><i class="fa fa-check"></i><b>3.6</b> Session Information</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="dimensionality-reduction-with-archr.html"><a href="dimensionality-reduction-with-archr.html"><i class="fa fa-check"></i><b>4</b> Dimensionality Reduction with ArchR</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>4.1</b> ArchR’s LSI Implementation</a></li>
+<li class="chapter" data-level="4.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>4.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
+<li class="chapter" data-level="4.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>4.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="4.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.4</b> Batch Effect Correction wtih Harmony</a></li>
+<li class="chapter" data-level="4.5" data-path="session-information-3.html"><a href="session-information-3.html"><i class="fa fa-check"></i><b>4.5</b> Session Information</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>5</b> Clustering with ArchR</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="5.2" data-path="session-information-4.html"><a href="session-information-4.html"><i class="fa fa-check"></i><b>5.2</b> Session Information</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="umap.html"><a href="umap.html"><i class="fa fa-check"></i><b>6.1</b> UMAP</a></li>
+<li class="chapter" data-level="6.2" data-path="tsne.html"><a href="tsne.html"><i class="fa fa-check"></i><b>6.2</b> tSNE</a></li>
+<li class="chapter" data-level="6.3" data-path="umap-of-previous-reduced-dimensions.html"><a href="umap-of-previous-reduced-dimensions.html"><i class="fa fa-check"></i><b>6.3</b> UMAP of previous Reduced Dimensions</a></li>
+<li class="chapter" data-level="6.4" data-path="tsne-of-previous-reduced-dimensions.html"><a href="tsne-of-previous-reduced-dimensions.html"><i class="fa fa-check"></i><b>6.4</b> tSNE of previous Reduced Dimensions</a></li>
+<li class="chapter" data-level="6.5" data-path="session-information-5.html"><a href="session-information-5.html"><i class="fa fa-check"></i><b>6.5</b> Session Information</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="marker-genes-with-archr.html"><a href="marker-genes-with-archr.html"><i class="fa fa-check"></i><b>7</b> Marker Genes with ArchR</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="identification-of-marker-genes.html"><a href="identification-of-marker-genes.html"><i class="fa fa-check"></i><b>7.1</b> Identification of Marker Genes</a></li>
+<li class="chapter" data-level="7.2" data-path="marker-genes.html"><a href="marker-genes.html"><i class="fa fa-check"></i><b>7.2</b> Marker Genes</a></li>
+<li class="chapter" data-level="7.3" data-path="marker-genes-imputation-with-magic.html"><a href="marker-genes-imputation-with-magic.html"><i class="fa fa-check"></i><b>7.3</b> Marker Genes Imputation with Magic</a></li>
+<li class="chapter" data-level="7.4" data-path="track-plotting-with-archrbrowser.html"><a href="track-plotting-with-archrbrowser.html"><i class="fa fa-check"></i><b>7.4</b> Track Plotting with ArchRBrowser</a></li>
+<li class="chapter" data-level="7.5" data-path="launching-the-archrbrowser.html"><a href="launching-the-archrbrowser.html"><i class="fa fa-check"></i><b>7.5</b> Launching the ArchRBrowser</a></li>
+<li class="chapter" data-level="7.6" data-path="session-information-6.html"><a href="session-information-6.html"><i class="fa fa-check"></i><b>7.6</b> Session Information</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="labeling-clusters-with-scrna.html"><a href="labeling-clusters-with-scrna.html"><i class="fa fa-check"></i><b>8</b> Labeling Clusters with scRNA</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="labeling-scatac-cells-with-scrna-clusters.html"><a href="labeling-scatac-cells-with-scrna-clusters.html"><i class="fa fa-check"></i><b>8.1</b> Labeling scATAC cells with scRNA clusters</a></li>
+<li class="chapter" data-level="8.2" data-path="adding-pseudo-scrna-profiles-for-each-scatac-cell.html"><a href="adding-pseudo-scrna-profiles-for-each-scatac-cell.html"><i class="fa fa-check"></i><b>8.2</b> Adding Pseudo-scRNA profiles for each scATAC cell</a></li>
+<li class="chapter" data-level="8.3" data-path="labeling-scatac-clusters-with-scrna.html"><a href="labeling-scatac-clusters-with-scrna.html"><i class="fa fa-check"></i><b>8.3</b> Labeling scATAC clusters with scRNA</a></li>
+<li class="chapter" data-level="8.4" data-path="session-information-7.html"><a href="session-information-7.html"><i class="fa fa-check"></i><b>8.4</b> Session Information</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="calling-peaks-with-archr.html"><a href="calling-peaks-with-archr.html"><i class="fa fa-check"></i><b>9</b> Calling Peaks with ArchR</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="calling-peaks-w-macs2.html"><a href="calling-peaks-w-macs2.html"><i class="fa fa-check"></i><b>9.1</b> Calling Peaks w/ Macs2</a></li>
+<li class="chapter" data-level="9.2" data-path="calling-peaks-w-tilematrix.html"><a href="calling-peaks-w-tilematrix.html"><i class="fa fa-check"></i><b>9.2</b> Calling Peaks w/ TileMatrix</a></li>
+<li class="chapter" data-level="9.3" data-path="add-peak-matrix.html"><a href="add-peak-matrix.html"><i class="fa fa-check"></i><b>9.3</b> Add Peak Matrix</a></li>
+<li class="chapter" data-level="9.4" data-path="session-information-8.html"><a href="session-information-8.html"><i class="fa fa-check"></i><b>9.4</b> Session Information</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="identifying-marker-peaks-with-archr.html"><a href="identifying-marker-peaks-with-archr.html"><i class="fa fa-check"></i><b>10</b> Identifying Marker Peaks with ArchR</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="identifying-marker-peaks-with-archr-1.html"><a href="identifying-marker-peaks-with-archr-1.html"><i class="fa fa-check"></i><b>10.1</b> Identifying Marker Peaks with ArchR</a></li>
+<li class="chapter" data-level="10.2" data-path="pairwise-testing-groups.html"><a href="pairwise-testing-groups.html"><i class="fa fa-check"></i><b>10.2</b> Pairwise Testing Groups</a></li>
+<li class="chapter" data-level="10.3" data-path="session-information-9.html"><a href="session-information-9.html"><i class="fa fa-check"></i><b>10.3</b> Session Information</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="peak-annotation-enrichment-with-archr.html"><a href="peak-annotation-enrichment-with-archr.html"><i class="fa fa-check"></i><b>11</b> Peak Annotation Enrichment with ArchR</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="motif-enrichment.html"><a href="motif-enrichment.html"><i class="fa fa-check"></i><b>11.1</b> Motif Enrichment</a></li>
+<li class="chapter" data-level="11.2" data-path="archr-enrichment.html"><a href="archr-enrichment.html"><i class="fa fa-check"></i><b>11.2</b> ArchR Enrichment</a></li>
+<li class="chapter" data-level="11.3" data-path="custom-enrichment.html"><a href="custom-enrichment.html"><i class="fa fa-check"></i><b>11.3</b> Custom Enrichment</a></li>
+<li class="chapter" data-level="11.4" data-path="session-information-10.html"><a href="session-information-10.html"><i class="fa fa-check"></i><b>11.4</b> Session Information</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="chromvar-deviatons-enrichment-with-archr.html"><a href="chromvar-deviatons-enrichment-with-archr.html"><i class="fa fa-check"></i><b>12</b> ChromVAR Deviatons Enrichment with ArchR</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="motif-deviations.html"><a href="motif-deviations.html"><i class="fa fa-check"></i><b>12.1</b> Motif Deviations</a></li>
+<li class="chapter" data-level="12.2" data-path="archr-deviations.html"><a href="archr-deviations.html"><i class="fa fa-check"></i><b>12.2</b> ArchR Deviations</a></li>
+<li class="chapter" data-level="12.3" data-path="custom-deviations.html"><a href="custom-deviations.html"><i class="fa fa-check"></i><b>12.3</b> Custom Deviations</a></li>
+<li class="chapter" data-level="12.4" data-path="session-information-11.html"><a href="session-information-11.html"><i class="fa fa-check"></i><b>12.4</b> Session Information</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="footprinting-with-archr.html"><a href="footprinting-with-archr.html"><i class="fa fa-check"></i><b>13</b> Footprinting with ArchR</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="motif-footprinting.html"><a href="motif-footprinting.html"><i class="fa fa-check"></i><b>13.1</b> Motif Footprinting</a></li>
+<li class="chapter" data-level="13.2" data-path="feature-footprinting.html"><a href="feature-footprinting.html"><i class="fa fa-check"></i><b>13.2</b> Feature Footprinting</a></li>
+<li class="chapter" data-level="13.3" data-path="session-information-12.html"><a href="session-information-12.html"><i class="fa fa-check"></i><b>13.3</b> Session Information</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>14</b> Integrative Analysis with ArchR</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>14.1</b> Co-accessibility with ArchR</a></li>
+<li class="chapter" data-level="14.2" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>14.2</b> Peak2GeneLinkage with ArchR</a></li>
+<li class="chapter" data-level="14.3" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>14.3</b> Identification of Positive TF-Regulators</a></li>
+<li class="chapter" data-level="14.4" data-path="session-information-13.html"><a href="session-information-13.html"><i class="fa fa-check"></i><b>14.4</b> Session Information</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>15</b> Trajectory Analysis with ArchR</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="myeloid-trajectory.html"><a href="myeloid-trajectory.html"><i class="fa fa-check"></i><b>15.1</b> Myeloid Trajectory</a></li>
+<li class="chapter" data-level="15.2" data-path="lymphoid-trajectory.html"><a href="lymphoid-trajectory.html"><i class="fa fa-check"></i><b>15.2</b> Lymphoid Trajectory</a></li>
+<li class="chapter" data-level="15.3" data-path="session-information-14.html"><a href="session-information-14.html"><i class="fa fa-check"></i><b>15.3</b> Session Information</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="_blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="co-accessibility-with-archr" class="section level2" number="14.1">
+<h2><span class="header-section-number">14.1</span> Co-accessibility with ArchR</h2>
+<div class="sourceCode" id="cb311"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb311-1"><a href="co-accessibility-with-archr.html#cb311-1"></a>projHeme5 &lt;-<span class="st"> </span><span class="kw">addCoAccessibility</span>(</span>
+<span id="cb311-2"><a href="co-accessibility-with-archr.html#cb311-2"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
+<span id="cb311-3"><a href="co-accessibility-with-archr.html#cb311-3"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span></span>
+<span id="cb311-4"><a href="co-accessibility-with-archr.html#cb311-4"></a>)</span></code></pre></div>
+<blockquote>
+<p>## ArchR logging to : ArchRLogs/ArchR-addCoAccessibility-11a706a1e44aa-Date-2020-04-15_Time-11-54-46.log<br />
+## If there is an issue, please report to github with logFile!<br />
+## 2020-04-15 11:54:46 : Computing KNN, 0.009 mins elapsed.<br />
+## 2020-04-15 11:54:48 : Identifying Non-Overlapping KNN pairs, 0.032 mins elapsed.<br />
+## 2020-04-15 11:54:51 : Identified 491 Groupings!, 0.084 mins elapsed.<br />
+## 2020-04-15 11:54:54 : Computing Co-Accessibility chr1 (1 of 23), 0.134 mins elapsed.<br />
+## 2020-04-15 11:55:00 : Computing Co-Accessibility chr2 (2 of 23), 0.245 mins elapsed.<br />
+## 2020-04-15 11:55:05 : Computing Co-Accessibility chr3 (3 of 23), 0.325 mins elapsed.<br />
+## 2020-04-15 11:55:09 : Computing Co-Accessibility chr4 (4 of 23), 0.386 mins elapsed.<br />
+## 2020-04-15 11:55:12 : Computing Co-Accessibility chr5 (5 of 23), 0.438 mins elapsed.<br />
+## 2020-04-15 11:55:15 : Computing Co-Accessibility chr6 (6 of 23), 0.493 mins elapsed.<br />
+## 2020-04-15 11:55:20 : Computing Co-Accessibility chr7 (7 of 23), 0.564 mins elapsed.<br />
+## 2020-04-15 11:55:24 : Computing Co-Accessibility chr8 (8 of 23), 0.634 mins elapsed.<br />
+## 2020-04-15 11:55:27 : Computing Co-Accessibility chr9 (9 of 23), 0.685 mins elapsed.<br />
+## 2020-04-15 11:55:30 : Computing Co-Accessibility chr10 (10 of 23), 0.737 mins elapsed.<br />
+## 2020-04-15 11:55:34 : Computing Co-Accessibility chr11 (11 of 23), 0.805 mins elapsed.<br />
+## 2020-04-15 11:55:38 : Computing Co-Accessibility chr12 (12 of 23), 0.874 mins elapsed.<br />
+## 2020-04-15 11:55:42 : Computing Co-Accessibility chr13 (13 of 23), 0.937 mins elapsed.<br />
+## 2020-04-15 11:55:44 : Computing Co-Accessibility chr14 (14 of 23), 0.979 mins elapsed.<br />
+## 2020-04-15 11:55:47 : Computing Co-Accessibility chr15 (15 of 23), 1.028 mins elapsed.<br />
+## 2020-04-15 11:55:51 : Computing Co-Accessibility chr16 (16 of 23), 1.085 mins elapsed.<br />
+## 2020-04-15 11:55:55 : Computing Co-Accessibility chr17 (17 of 23), 1.146 mins elapsed.<br />
+## 2020-04-15 11:55:58 : Computing Co-Accessibility chr18 (18 of 23), 1.206 mins elapsed.<br />
+## 2020-04-15 11:56:01 : Computing Co-Accessibility chr19 (19 of 23), 1.251 mins elapsed.<br />
+## 2020-04-15 11:56:05 : Computing Co-Accessibility chr20 (20 of 23), 1.327 mins elapsed.<br />
+## 2020-04-15 11:56:09 : Computing Co-Accessibility chr21 (21 of 23), 1.384 mins elapsed.<br />
+## 2020-04-15 11:56:11 : Computing Co-Accessibility chr22 (22 of 23), 1.424 mins elapsed.<br />
+## 2020-04-15 11:56:14 : Computing Co-Accessibility chrX (23 of 23), 1.468 mins elapsed.<br />
+## ArchR logging successful to : ArchRLogs/ArchR-addCoAccessibility-11a706a1e44aa-Date-2020-04-15_Time-11-54-46.log</p>
+</blockquote>
+<div class="sourceCode" id="cb312"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb312-1"><a href="co-accessibility-with-archr.html#cb312-1"></a>cA &lt;-<span class="st"> </span><span class="kw">getCoAccessibility</span>(</span>
+<span id="cb312-2"><a href="co-accessibility-with-archr.html#cb312-2"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
+<span id="cb312-3"><a href="co-accessibility-with-archr.html#cb312-3"></a>    <span class="dt">corCutOff =</span> <span class="fl">0.5</span>,</span>
+<span id="cb312-4"><a href="co-accessibility-with-archr.html#cb312-4"></a>    <span class="dt">resolution =</span> <span class="dv">1</span>,</span>
+<span id="cb312-5"><a href="co-accessibility-with-archr.html#cb312-5"></a>    <span class="dt">returnLoops =</span> <span class="ot">FALSE</span></span>
+<span id="cb312-6"><a href="co-accessibility-with-archr.html#cb312-6"></a>)</span>
+<span id="cb312-7"><a href="co-accessibility-with-archr.html#cb312-7"></a></span>
+<span id="cb312-8"><a href="co-accessibility-with-archr.html#cb312-8"></a>cA</span></code></pre></div>
+<blockquote>
+<p>## DataFrame with 64824 rows and 4 columns<br />
+## queryHits subjectHits seqnames correlation<br />
+## <integer> <integer> <Rle> <numeric><br />
+## 1 5 10 chr1 0.63855416236086<br />
+## 2 10 5 chr1 0.63855416236086<br />
+## 3 21 22 chr1 0.551520040138677<br />
+## 4 22 21 chr1 0.551520040138677<br />
+## 5 25 37 chr1 0.535392737290744<br />
+## … … … … …<br />
+## 64820 143907 143906 chrX 0.510896735395573<br />
+## 64821 143932 143936 chrX 0.501021498357938<br />
+## 64822 143936 143932 chrX 0.501021498357938<br />
+## 64823 143977 143978 chrX 0.550319862774772<br />
+## 64824 143978 143977 chrX 0.550319862774772</p>
+</blockquote>
+<div class="sourceCode" id="cb313"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb313-1"><a href="co-accessibility-with-archr.html#cb313-1"></a><span class="kw">metadata</span>(cA)[[<span class="dv">1</span>]]</span></code></pre></div>
+<blockquote>
+<p>## GRanges object with 144009 ranges and 0 metadata columns:<br />
+## seqnames ranges strand<br />
+## <Rle> <IRanges> <Rle><br />
+## Mono chr1 752499-752999 *<br />
+## NK chr1 762651-763151 *<br />
+## B chr1 801006-801506 *<br />
+## B chr1 805039-805539 *<br />
+## CLP chr1 845325-845825 *<br />
+## … … … …<br />
+## Erythroid chrX 154664540-154665040 *<br />
+## NK chrX 154807324-154807824 *<br />
+## PreB chrX 154840785-154841285 *<br />
+## PreB chrX 154842404-154842904 *<br />
+## NK chrX 154862017-154862517 *<br />
+## ——-<br />
+## seqinfo: 23 sequences from an unspecified genome; no seqlengths</p>
+</blockquote>
+<div class="sourceCode" id="cb314"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb314-1"><a href="co-accessibility-with-archr.html#cb314-1"></a>cA &lt;-<span class="st"> </span><span class="kw">getCoAccessibility</span>(</span>
+<span id="cb314-2"><a href="co-accessibility-with-archr.html#cb314-2"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
+<span id="cb314-3"><a href="co-accessibility-with-archr.html#cb314-3"></a>    <span class="dt">corCutOff =</span> <span class="fl">0.5</span>,</span>
+<span id="cb314-4"><a href="co-accessibility-with-archr.html#cb314-4"></a>    <span class="dt">resolution =</span> <span class="dv">1</span>,</span>
+<span id="cb314-5"><a href="co-accessibility-with-archr.html#cb314-5"></a>    <span class="dt">returnLoops =</span> <span class="ot">TRUE</span></span>
+<span id="cb314-6"><a href="co-accessibility-with-archr.html#cb314-6"></a>)</span>
+<span id="cb314-7"><a href="co-accessibility-with-archr.html#cb314-7"></a></span>
+<span id="cb314-8"><a href="co-accessibility-with-archr.html#cb314-8"></a>cA[[<span class="dv">1</span>]]</span></code></pre></div>
+<blockquote>
+<p>## GRanges object with 32412 ranges and 1 metadata column:<br />
+## seqnames ranges strand | value<br />
+## <Rle> <IRanges> <Rle> | <numeric><br />
+## [1] chr1 845575-856640 * | 0.63855416236086<br />
+## [2] chr1 894704-895233 * | 0.551520040138677<br />
+## [3] chr1 901499-940519 * | 0.535392737290744<br />
+## [4] chr1 968584-1004206 * | 0.541750176412625<br />
+## [5] chr1 974287-975116 * | 0.614286275264492<br />
+## … … … … . …<br />
+## [32408] chrX 153306085-153342739 * | 0.54575277183448<br />
+## [32409] chrX 153523581-153529374 * | 0.539921104229481<br />
+## [32410] chrX 153582820-153583471 * | 0.510896735395573<br />
+## [32411] chrX 153637615-153656023 * | 0.501021498357938<br />
+## [32412] chrX 153980218-153990364 * | 0.550319862774772<br />
+## ——-<br />
+## seqinfo: 23 sequences from an unspecified genome; no seqlengths</p>
+</blockquote>
+<div class="sourceCode" id="cb315"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb315-1"><a href="co-accessibility-with-archr.html#cb315-1"></a>cA &lt;-<span class="st"> </span><span class="kw">getCoAccessibility</span>(</span>
+<span id="cb315-2"><a href="co-accessibility-with-archr.html#cb315-2"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
+<span id="cb315-3"><a href="co-accessibility-with-archr.html#cb315-3"></a>    <span class="dt">corCutOff =</span> <span class="fl">0.5</span>,</span>
+<span id="cb315-4"><a href="co-accessibility-with-archr.html#cb315-4"></a>    <span class="dt">resolution =</span> <span class="dv">1000</span>,</span>
+<span id="cb315-5"><a href="co-accessibility-with-archr.html#cb315-5"></a>    <span class="dt">returnLoops =</span> <span class="ot">TRUE</span></span>
+<span id="cb315-6"><a href="co-accessibility-with-archr.html#cb315-6"></a>)</span>
+<span id="cb315-7"><a href="co-accessibility-with-archr.html#cb315-7"></a></span>
+<span id="cb315-8"><a href="co-accessibility-with-archr.html#cb315-8"></a>cA[[<span class="dv">1</span>]]</span></code></pre></div>
+<blockquote>
+<p>## GRanges object with 30997 ranges and 1 metadata column:<br />
+## seqnames ranges strand | value<br />
+## <Rle> <IRanges> <Rle> | <numeric><br />
+## [1] chr1 845500-856500 * | 0.63855416236086<br />
+## [2] chr1 894500-895500 * | 0.551520040138677<br />
+## [3] chr1 901500-940500 * | 0.535392737290744<br />
+## [4] chr1 968500-1004500 * | 0.541750176412625<br />
+## [5] chr1 974500-975500 * | 0.614286275264492<br />
+## … … … … . …<br />
+## [30993] chrX 153306500-153342500 * | 0.54575277183448<br />
+## [30994] chrX 153523500-153529500 * | 0.539921104229481<br />
+## [30995] chrX 153582500-153583500 * | 0.510896735395573<br />
+## [30996] chrX 153637500-153656500 * | 0.501021498357938<br />
+## [30997] chrX 153980500-153990500 * | 0.550319862774772<br />
+## ——-<br />
+## seqinfo: 23 sequences from an unspecified genome; no seqlengths</p>
+</blockquote>
+<div class="sourceCode" id="cb316"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb316-1"><a href="co-accessibility-with-archr.html#cb316-1"></a>cA &lt;-<span class="st"> </span><span class="kw">getCoAccessibility</span>(</span>
+<span id="cb316-2"><a href="co-accessibility-with-archr.html#cb316-2"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
+<span id="cb316-3"><a href="co-accessibility-with-archr.html#cb316-3"></a>    <span class="dt">corCutOff =</span> <span class="fl">0.5</span>,</span>
+<span id="cb316-4"><a href="co-accessibility-with-archr.html#cb316-4"></a>    <span class="dt">resolution =</span> <span class="dv">10000</span>,</span>
+<span id="cb316-5"><a href="co-accessibility-with-archr.html#cb316-5"></a>    <span class="dt">returnLoops =</span> <span class="ot">TRUE</span></span>
+<span id="cb316-6"><a href="co-accessibility-with-archr.html#cb316-6"></a>)</span>
+<span id="cb316-7"><a href="co-accessibility-with-archr.html#cb316-7"></a></span>
+<span id="cb316-8"><a href="co-accessibility-with-archr.html#cb316-8"></a>cA[[<span class="dv">1</span>]]</span></code></pre></div>
+<blockquote>
+<p>## GRanges object with 21142 ranges and 1 metadata column:<br />
+## seqnames ranges strand | value<br />
+## <Rle> <IRanges> <Rle> | <numeric><br />
+## [1] chr1 845000-855000 * | 0.63855416236086<br />
+## [2] chr1 895000 * | 0.551520040138677<br />
+## [3] chr1 905000-945000 * | 0.535392737290744<br />
+## [4] chr1 965000-1005000 * | 0.541750176412625<br />
+## [5] chr1 975000 * | 0.614286275264492<br />
+## … … … … . …<br />
+## [21138] chrX 153305000-153345000 * | 0.54575277183448<br />
+## [21139] chrX 153525000 * | 0.539921104229481<br />
+## [21140] chrX 153585000 * | 0.510896735395573<br />
+## [21141] chrX 153635000-153655000 * | 0.501021498357938<br />
+## [21142] chrX 153985000-153995000 * | 0.550319862774772<br />
+## ——-<br />
+## seqinfo: 23 sequences from an unspecified genome; no seqlengths</p>
+</blockquote>
+<p>Plotting browser tracks with CoAccessibility</p>
+<div class="sourceCode" id="cb317"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb317-1"><a href="co-accessibility-with-archr.html#cb317-1"></a>markerGenes  &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb317-2"><a href="co-accessibility-with-archr.html#cb317-2"></a>    <span class="st">&quot;CD34&quot;</span>, <span class="co">#Early Progenitor</span></span>
+<span id="cb317-3"><a href="co-accessibility-with-archr.html#cb317-3"></a>    <span class="st">&quot;GATA1&quot;</span>, <span class="co">#Erythroid</span></span>
+<span id="cb317-4"><a href="co-accessibility-with-archr.html#cb317-4"></a>    <span class="st">&quot;PAX5&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="co">#B-Cell Trajectory</span></span>
+<span id="cb317-5"><a href="co-accessibility-with-archr.html#cb317-5"></a>    <span class="st">&quot;CD14&quot;</span>, <span class="co">#Monocytes</span></span>
+<span id="cb317-6"><a href="co-accessibility-with-archr.html#cb317-6"></a>    <span class="st">&quot;CD3D&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;IL7R&quot;</span> <span class="co">#TCells</span></span>
+<span id="cb317-7"><a href="co-accessibility-with-archr.html#cb317-7"></a>  )</span>
+<span id="cb317-8"><a href="co-accessibility-with-archr.html#cb317-8"></a></span>
+<span id="cb317-9"><a href="co-accessibility-with-archr.html#cb317-9"></a>p &lt;-<span class="st"> </span><span class="kw">ArchRBrowserTrack</span>(</span>
+<span id="cb317-10"><a href="co-accessibility-with-archr.html#cb317-10"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb317-11"><a href="co-accessibility-with-archr.html#cb317-11"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>, </span>
+<span id="cb317-12"><a href="co-accessibility-with-archr.html#cb317-12"></a>    <span class="dt">geneSymbol =</span> markerGenes, </span>
+<span id="cb317-13"><a href="co-accessibility-with-archr.html#cb317-13"></a>    <span class="dt">upstream =</span> <span class="dv">50000</span>,</span>
+<span id="cb317-14"><a href="co-accessibility-with-archr.html#cb317-14"></a>    <span class="dt">downstream =</span> <span class="dv">50000</span>,</span>
+<span id="cb317-15"><a href="co-accessibility-with-archr.html#cb317-15"></a>    <span class="dt">loops =</span> <span class="kw">getCoAccessibility</span>(projHeme5)</span>
+<span id="cb317-16"><a href="co-accessibility-with-archr.html#cb317-16"></a>)</span></code></pre></div>
+<blockquote>
+<p>## ArchR logging to : ArchRLogs/ArchR-ArchRBrowserTrack-11a703dda2936-Date-2020-04-15_Time-11-56-18.log<br />
+## If there is an issue, please report to github with logFile!<br />
+## 2020-04-15 11:56:18 : Validating Region, 0.007 mins elapsed.<br />
+## GRanges object with 9 ranges and 2 metadata columns:<br />
+## seqnames ranges strand | gene_id symbol<br />
+## <Rle> <IRanges> <Rle> | <character> <character><br />
+## [1] chr1 208059883-208084683 - | 947 CD34<br />
+## [2] chrX 48644982-48652717 + | 2623 GATA1<br />
+## [3] chr9 36838531-37034476 - | 5079 PAX5<br />
+## [4] chr11 60223282-60238225 + | 931 MS4A1<br />
+## [5] chr5 140011313-140013286 - | 929 CD14<br />
+## [6] chr11 118209789-118213459 - | 915 CD3D<br />
+## [7] chr2 87011728-87035519 - | 925 CD8A<br />
+## [8] chr17 45810610-45823485 + | 30009 TBX21<br />
+## [9] chr5 35856977-35879705 + | 3575 IL7R<br />
+## ——-<br />
+## seqinfo: 24 sequences from hg19 genome
+## 2020-04-15 11:56:18 : Adding Bulk Tracks (1 of 9), 0.01 mins elapsed.<br />
+## 2020-04-15 11:56:21 : Adding Feature Tracks (1 of 9), 0.053 mins elapsed.<br />
+## 2020-04-15 11:56:21 : Adding Loop Tracks (1 of 9), 0.056 mins elapsed.<br />
+## 2020-04-15 11:56:21 : Adding Gene Tracks (1 of 9), 0.059 mins elapsed.<br />
+## 2020-04-15 11:56:21 : Plotting, 0.065 mins elapsed.<br />
+## 2020-04-15 11:56:24 : Adding Bulk Tracks (2 of 9), 0.1 mins elapsed.<br />
+## 2020-04-15 11:56:26 : Adding Feature Tracks (2 of 9), 0.137 mins elapsed.<br />
+## 2020-04-15 11:56:26 : Adding Loop Tracks (2 of 9), 0.139 mins elapsed.<br />
+## 2020-04-15 11:56:26 : Adding Gene Tracks (2 of 9), 0.144 mins elapsed.<br />
+## 2020-04-15 11:56:27 : Plotting, 0.151 mins elapsed.<br />
+## 2020-04-15 11:56:28 : Adding Bulk Tracks (3 of 9), 0.181 mins elapsed.<br />
+## 2020-04-15 11:56:30 : Adding Feature Tracks (3 of 9), 0.202 mins elapsed.<br />
+## 2020-04-15 11:56:30 : Adding Loop Tracks (3 of 9), 0.205 mins elapsed.<br />
+## 2020-04-15 11:56:31 : Adding Gene Tracks (3 of 9), 0.217 mins elapsed.<br />
+## 2020-04-15 11:56:31 : Plotting, 0.223 mins elapsed.<br />
+## 2020-04-15 11:56:33 : Adding Bulk Tracks (4 of 9), 0.257 mins elapsed.<br />
+## 2020-04-15 11:56:34 : Adding Feature Tracks (4 of 9), 0.272 mins elapsed.<br />
+## 2020-04-15 11:56:34 : Adding Loop Tracks (4 of 9), 0.275 mins elapsed.<br />
+## 2020-04-15 11:56:34 : Adding Gene Tracks (4 of 9), 0.281 mins elapsed.<br />
+## 2020-04-15 11:56:35 : Plotting, 0.287 mins elapsed.<br />
+## 2020-04-15 11:56:36 : Adding Bulk Tracks (5 of 9), 0.31 mins elapsed.<br />
+## 2020-04-15 11:56:37 : Adding Feature Tracks (5 of 9), 0.327 mins elapsed.<br />
+## 2020-04-15 11:56:37 : Adding Loop Tracks (5 of 9), 0.329 mins elapsed.<br />
+## 2020-04-15 11:56:38 : Adding Gene Tracks (5 of 9), 0.335 mins elapsed.<br />
+## 2020-04-15 11:56:38 : Plotting, 0.339 mins elapsed.<br />
+## 2020-04-15 11:56:40 : Adding Bulk Tracks (6 of 9), 0.367 mins elapsed.<br />
+## 2020-04-15 11:56:41 : Adding Feature Tracks (6 of 9), 0.384 mins elapsed.<br />
+## 2020-04-15 11:56:41 : Adding Loop Tracks (6 of 9), 0.385 mins elapsed.<br />
+## 2020-04-15 11:56:41 : Adding Gene Tracks (6 of 9), 0.391 mins elapsed.<br />
+## 2020-04-15 11:56:41 : Plotting, 0.395 mins elapsed.<br />
+## 2020-04-15 11:56:43 : Adding Bulk Tracks (7 of 9), 0.422 mins elapsed.<br />
+## 2020-04-15 11:56:44 : Adding Feature Tracks (7 of 9), 0.443 mins elapsed.<br />
+## 2020-04-15 11:56:44 : Adding Loop Tracks (7 of 9), 0.447 mins elapsed.<br />
+## 2020-04-15 11:56:45 : Adding Gene Tracks (7 of 9), 0.455 mins elapsed.<br />
+## 2020-04-15 11:56:45 : Plotting, 0.459 mins elapsed.<br />
+## 2020-04-15 11:56:47 : Adding Bulk Tracks (8 of 9), 0.489 mins elapsed.<br />
+## 2020-04-15 11:56:48 : Adding Feature Tracks (8 of 9), 0.506 mins elapsed.<br />
+## 2020-04-15 11:56:48 : Adding Loop Tracks (8 of 9), 0.51 mins elapsed.<br />
+## 2020-04-15 11:56:49 : Adding Gene Tracks (8 of 9), 0.522 mins elapsed.<br />
+## 2020-04-15 11:56:49 : Plotting, 0.526 mins elapsed.<br />
+## 2020-04-15 11:56:51 : Adding Bulk Tracks (9 of 9), 0.562 mins elapsed.<br />
+## 2020-04-15 11:56:52 : Adding Feature Tracks (9 of 9), 0.578 mins elapsed.<br />
+## 2020-04-15 11:56:52 : Adding Loop Tracks (9 of 9), 0.58 mins elapsed.<br />
+## 2020-04-15 11:56:53 : Adding Gene Tracks (9 of 9), 0.589 mins elapsed.<br />
+## 2020-04-15 11:56:53 : Plotting, 0.594 mins elapsed.<br />
+## ArchR logging successful to : ArchRLogs/ArchR-ArchRBrowserTrack-11a703dda2936-Date-2020-04-15_Time-11-56-18.log</p>
+</blockquote>
+<p>To plot a track we can simply print one from the list</p>
+<div class="sourceCode" id="cb318"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb318-1"><a href="co-accessibility-with-archr.html#cb318-1"></a>grid<span class="op">::</span><span class="kw">grid.newpage</span>()</span>
+<span id="cb318-2"><a href="co-accessibility-with-archr.html#cb318-2"></a>grid<span class="op">::</span><span class="kw">grid.draw</span>(p<span class="op">$</span>CD14)</span></code></pre></div>
+<p><img src="images/HemeWalkthrough/PNG/Plot-Tracks-Marker-Genes-with-CoAccessibility_5.png" width="500" height="500" /></p>
+<div class="sourceCode" id="cb319"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb319-1"><a href="co-accessibility-with-archr.html#cb319-1"></a><span class="kw">plotPDF</span>(<span class="dt">plotList =</span> p, </span>
+<span id="cb319-2"><a href="co-accessibility-with-archr.html#cb319-2"></a>    <span class="dt">name =</span> <span class="st">&quot;Plot-Tracks-Marker-Genes-with-CoAccessibility.pdf&quot;</span>, </span>
+<span id="cb319-3"><a href="co-accessibility-with-archr.html#cb319-3"></a>    <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb319-4"><a href="co-accessibility-with-archr.html#cb319-4"></a>    <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>)</span></code></pre></div>
+<blockquote>
+<p>## NULL<br />
+## NULL<br />
+## NULL<br />
+## NULL<br />
+## NULL<br />
+## NULL<br />
+## NULL<br />
+## NULL<br />
+## NULL<br />
+## [1] 0</p>
+</blockquote>
+<p><a href="images/HemeWalkthrough/PDF/Plot-Tracks-Marker-Genes-with-CoAccessibility.pdf">Download PDF : Plot-Tracks-Marker-Genes.pdf</a></p>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="integrative-analysis-with-archr.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="peak2genelinkage-with-archr.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": null
+},
+"fontsettings": null,
+"edit": null,
+"history": {
+"link": "https://github.com/GreenleafLab/ArchR_Website/commits/dev/14_IntegrativeAnalysis.Rmd",
+"text": "Chapter edit history"
+},
+"view": {
+"link": "https://github.com/GreenleafLab/ArchR_Website/view/dev/14_IntegrativeAnalysis.Rmd",
+"text": "View source on GitHub"
+},
+"download": ["ArchR.pdf"],
+"toc": {
+"collapse": "none"
+},
+"search": true,
+"info": false
+});
+});
+</script>
+
+</body>
+
+</html>
