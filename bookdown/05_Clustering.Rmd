@@ -63,34 +63,35 @@ projHeme2 <- addClusters(
     resolution = 0.8
 )
 ```
->\>\> ArchR logging to : ArchRLogs/ArchR-addClusters-ee735fb26d4a-Date-2020-04-15_Time-09-46-59.log  
->\>\> If there is an issue, please report to github with logFile!  
->\>\> 2020-04-15 09:47:08 : Running Seurats FindClusters (Stuart et al. Cell 2019), 0.142 mins elapsed.  
->\>\> Computing nearest neighbor graph  
->\>\> Computing SNN  
->\>\> Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck  
->\>\>   
->\>\> Number of nodes: 10251  
->\>\> Number of edges: 496637  
->\>\>   
->\>\> Running Louvain algorithm...  
->\>\> Maximum modularity in 10 random starts: 0.8554  
->\>\> Number of communities: 12  
->\>\> Elapsed time: 1 seconds  
->\>\> 2020-04-15 09:47:29 : Testing Outlier Clusters, 0.483 mins elapsed.  
->\>\> 2020-04-15 09:47:29 : Assigning Cluster Names to 12 Clusters, 0.483 mins elapsed.  
+> \## ArchR logging to : ArchRLogs/ArchR-addClusters-ee735fb26d4a-Date-2020-04-15_Time-09-46-59.log  
+## If there is an issue, please report to github with logFile!  
+## 2020-04-15 09:47:08 : Running Seurats FindClusters (Stuart et al. Cell 2019), 0.142 mins elapsed.  
+## Computing nearest neighbor graph  
+## Computing SNN  
+## Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck  
+##   
+## Number of nodes: 10251  
+## Number of edges: 496637  
+##   
+## Running Louvain algorithm...  
+## Maximum modularity in 10 random starts: 0.8554  
+## Number of communities: 12  
+## Elapsed time: 1 seconds  
+## 2020-04-15 09:47:29 : Testing Outlier Clusters, 0.483 mins elapsed.  
+## 2020-04-15 09:47:29 : Assigning Cluster Names to 12 Clusters, 0.483 mins elapsed.  
 
 To access these clusters we can use the `$` accessor
 
 ```{r eval=FALSE}
 head(projHeme2$Clusters)
 ```
->\>\> [1] "C3"  "C8"  "C4"  "C3"  "C11" "C3"  
+> \## [1] "C3"  "C8"  "C4"  "C3"  "C11" "C3"  
+
 ```{r eval=FALSE}
 table(projHeme2$Clusters)
 ```
->\>\>   C1  C10  C11  C12   C2   C3   C4   C5   C6   C7   C8   C9  
->\>\> 1547  879  793 1650 1085  439  351  320  387  851 1271  678  
+> \##   C1  C10  C11  C12   C2   C3   C4   C5   C6   C7   C8   C9  
+## 1547  879  793 1650 1085  439  351  320  387  851 1271  678  
 
 To better understand which samples reside in which clusters, we can create a cluster confusion matrix across each sample. JJJ
 
@@ -98,20 +99,20 @@ To better understand which samples reside in which clusters, we can create a clu
 cM <- confusionMatrix(paste0(projHeme2$Clusters), paste0(projHeme2$Sample))
 cM
 ```
->\>\> 12 x 3 sparse Matrix of class "dgCMatrix"  
->\>\>     scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1  
->\>\> C3             251                   6            182  
->\>\> C8            1219                   .             52  
->\>\> C4             351                   .              .  
->\>\> C11            251                 541              1  
->\>\> C1            1508                   9             30  
->\>\> C12            172                1478              .  
->\>\> C10            194                 677              8  
->\>\> C9             117                   1            560  
->\>\> C7             301                   .            550  
->\>\> C5             161                 150              9  
->\>\> C2              82                   1           1002  
->\>\> C6              82                 305              .  
+> \## 12 x 3 sparse Matrix of class "dgCMatrix"  
+##     scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1  
+## C3             251                   6            182  
+## C8            1219                   .             52  
+## C4             351                   .              .  
+## C11            251                 541              1  
+## C1            1508                   9             30  
+## C12            172                1478              .  
+## C10            194                 677              8  
+## C9             117                   1            560  
+## C7             301                   .            550  
+## C5             161                 150              9  
+## C2              82                   1           1002  
+## C6              82                 305              .  
 
 An example of plotting this confusion matrix as a heatmap
 
@@ -153,23 +154,12 @@ projHeme2 <- addClusters(
     k = 15
 )
 ```
->\>\> ArchR logging to : ArchRLogs/ArchR-addClusters-ee735ec9887a-Date-2020-04-15_Time-09-47-32.log  
->\>\> If there is an issue, please report to github with logFile!  
->\>\> 2020-04-15 09:47:39 : Running Scran SNN Graph (Lun et al. F1000Res. 2016), 0.103 mins elapsed.  
->\>\> 2020-04-15 09:47:49 : Identifying Clusters (Lun et al. F1000Res. 2016), 0.27 mins elapsed.  
->\>\> 2020-04-15 09:50:31 : Testing Outlier Clusters, 2.98 mins elapsed.  
->\>\> 2020-04-15 09:50:31 : Assigning Cluster Names to 9 Clusters, 2.98 mins elapsed.  
-
-## Session Information  
-
-```{r eval=FALSE}
-Sys.Date()
-```
->\>\> [1] "2020-04-15"
-
-```{r eval=FALSE}
-sessionInfo()
-```
+> \## ArchR logging to : ArchRLogs/ArchR-addClusters-ee735ec9887a-Date-2020-04-15_Time-09-47-32.log  
+## If there is an issue, please report to github with logFile!  
+## 2020-04-15 09:47:39 : Running Scran SNN Graph (Lun et al. F1000Res. 2016), 0.103 mins elapsed.  
+## 2020-04-15 09:47:49 : Identifying Clusters (Lun et al. F1000Res. 2016), 0.27 mins elapsed.  
+## 2020-04-15 09:50:31 : Testing Outlier Clusters, 2.98 mins elapsed.  
+## 2020-04-15 09:50:31 : Assigning Cluster Names to 9 Clusters, 2.98 mins elapsed.  
 
 ```{r, include=FALSE, eval=FALSE}
 save.image(params$out, compress = FALSE)
