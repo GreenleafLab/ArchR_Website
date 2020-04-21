@@ -119,14 +119,14 @@
 <a href="#section" class="anchor"></a><img src="reference/figures/ArchR_Logo_Integrated.png" alt="" width="200">
 </h1></div>
 
-<p>ArchR is a full-featured R package for processing and analyzing single-cell ATAC-seq data. Its strength is speed and resource usage, making it possible to analyze 1 million cells in <strong>QQQ</strong> hours on a macbook pro laptop. It provides facile tools to do just about anything you would want to do with single-cell ATAC-seq data.</p>
-<p>To get started, we recommend running through <a href="articles/Articles/tutorial.html">the brief ArchR tutorial</a>. For a more detailed description of all of the features of ArchR, please see the searchable <a href="bookdown/index.html">full manual</a>. If you havent already done so, we also recommend reading <a href="https://greenleaf.stanford.edu/assets/pdf/">the publication</a> to get a better idea of what ArchR can do.</p>
+<p>ArchR is a full-featured R package for processing and analyzing single-cell ATAC-seq data. ArchR provides the most extensive suite of scATAC-seq analysis tools of any software available. Additionally, ArchR excels in both speed and resource usage, making it possible to analyze 1 million cells in 8 hours on a MacBook Pro laptop.</p>
+<p>To get started, we recommend running through <a href="articles/Articles/tutorial.html">the brief ArchR tutorial</a>. For a detailed description of all of the features of ArchR applied to a test dataset of hematopoietic cells, please see the searchable <a href="bookdown/index.html">full manual</a>. If you havent already done so, we also recommend reading <a href="https://greenleaf.stanford.edu/assets/pdf/">the publication</a> to get a better idea of what ArchR can do.</p>
 <hr>
 </div>
 <div id="installation-of-archr" class="section level1">
 <h1 class="hasAnchor">
 <a href="#installation-of-archr" class="anchor"></a>Installation of ArchR</h1>
-<p>ArchR installation currently requires devtools. The following commands will use the Bioconductor BiocManager to install the required dependences:</p>
+<p>ArchR installation currently requires devtools. The following commands will use the Bioconductor <code>BiocManager</code> to install the required dependences:</p>
 <pre class="{r}"><code>if (!requireNamespace("devtools", quietly = TRUE)) install.packages("devtools")
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 
@@ -139,15 +139,15 @@ devtools::install_github("GreenleafLab/ArchR",
 <a href="#additional-packages-that-are-used-from-github" class="anchor"></a>Additional packages that are used from github</h3>
 <p>To complete installation, you also must maually install the following packages using these devtools commands:</p>
 <pre class="{r}"><code># ggrastr is a package for plotting ggplots with rastr'd points which is super helpful for large UMAPs etc
-# # You need to have Cairo installed for ggrastr to work
-# # On Mac OSx you need to have XQuartz (https://www.xquartz.org/)
-devtools::install_github('VPetukhov/ggrastr')
+## You need to have Cairo installed for ggrastr to work
+## On Mac OSx you need to have XQuartz (https://www.xquartz.org/)
+devtools::install_github("VPetukhov/ggrastr", repos = BiocManager::repositories())
 
 # harmony is a package that can correct batch effects
-devtools::install_github("immunogenomics/harmony")
+devtools::install_github("immunogenomics/harmony", repos = BiocManager::repositories())
 
 # presto is a package that has efficient tools for wilcoxon tests on sparseMatrices
-devtools::install_github('immunogenomics/presto')</code></pre>
+devtools::install_github("immunogenomics/presto", repos = BiocManager::repositories())</code></pre>
 </div>
 <div id="additional-things-to-install-on-macos" class="section level3">
 <h3 class="hasAnchor">
@@ -159,13 +159,13 @@ devtools::install_github('immunogenomics/presto')</code></pre>
 <div id="the-archr-workflow" class="section level1">
 <h1 class="hasAnchor">
 <a href="#the-archr-workflow" class="anchor"></a>The ArchR Workflow</h1>
-<p><img src="reference/figures/ArchR_Workflow.png" alt="" width="450"></p>
+<p><img src="reference/figures/ArchR_Workflow_Horizontal.png" alt="" width="700"></p>
 <hr>
 </div>
 <div id="issues-using-archr" class="section level1">
 <h1 class="hasAnchor">
 <a href="#issues-using-archr" class="anchor"></a>Issues using ArchR?</h1>
-<p>If you find a bug, please report it as an issue on <a href="https://github.com/GreenleafLab/ArchR/issues">Github</a>. If you think the documentation on this website or in the function annotations is unclear, please submit this as an issue on <a href="https://github.com/GreenleafLab/ArchR/issues">Github</a> with the <em>documentation</em> tag. If you have questions about ArchR usage, please refer to the <a href="articles/Articles/tutorial.html">the tutorial</a>, <a href="bookdown/index.html">the full manual</a>, <a href="articles/faq.html">the FAQ section</a>, and the <a href="https://greenleaf.stanford.edu/assets/pdf/">publication</a>. If none of these options help, <a href="mailto:archr.devs@gmail.com">send us an email</a>. We will do our best to respond to questions that are not otherwise answered in the documentation.</p>
+<p>If you find a bug, please report it as an issue on <a href="https://github.com/GreenleafLab/ArchR/issues">Github</a>. If you think the documentation on this website or in the function annotations is unclear, please submit this as an issue on <a href="https://github.com/GreenleafLab/ArchR/issues">Github</a> with the <strong>documentation</strong> tag. If you have questions about ArchR usage, please refer to the <a href="articles/Articles/tutorial.html">the tutorial</a>, <a href="bookdown/index.html">the full manual</a>, <a href="articles/faq.html">the FAQ section</a>, and the <a href="https://greenleaf.stanford.edu/assets/pdf/">publication</a>. If none of these options help, <a href="mailto:archr.devs@gmail.com">send us an email</a>. We will do our best to respond to questions that are not otherwise answered in the documentation.</p>
 </div>
 
   </div>
