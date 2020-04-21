@@ -1,12 +1,56 @@
 ---
-title: "Pseudo-bulk Replicate Generation"
+output:
+  html_document:
+    theme: yeti  # many options for theme, this one is my favorite.
+params:
+  threads: 20
+  rdata: ""
+  token: ""
+  ref: ""
+  out: ""
 ---
 
-```{r image, include=FALSE}
-knitr::include_graphics(c("../../images/pseudobulkReplicate_DecisionTree.png"))
+```{r, include=FALSE, eval=FALSE}
+params2 <- params
+unlockBinding("params", env = .GlobalEnv)
+#load("Chapter-13-Footprints.Rdata")
+load(params$rdata)
+params <- params2
+rm(params2)
+devtools::install_github("GreenleafLab/ArchR", 
+  auth_token = params$token, 
+  ref = params$ref,
+  repos = BiocManager::repositories(),
+  dependencies = FALSE
+)
+library(ArchR)
+fn <- unclass(lsf.str(envir = asNamespace("ArchR"), all = TRUE))
+fn <- fn[!grepl("\\.", fn)]
+fn <- fn[fn!="ArchRProj"]
+for (i in seq_along(fn)){
+    tryCatch({
+        eval(parse(text = paste0(fn[i], "<-ArchR::", fn[i])))
+    }, error = function(x) {
+    })
+}
+addArchRThreads(threads = params$threads)
+addArchRGenome("hg19")
+# fn <- unclass(lsf.str(envir = asNamespace("ArchR"), all = TRUE))
+# fn <- fn[fn!="ArchRProj"]
+# for (i in seq_along(fn)) {
+#     tryCatch({
+#         eval(parse(text = paste0(fn[i], "<-ArchR:::", fn[i])))
+#     }, error = function(x) {
+#     })
+# }
+set.seed(1)
 ```
 
-Many of the analyses we would like to perform require replicates to obtain measurements of statistical significance. In single-cell data, this is done by forming _pseudo-bulk replicates_. The term _pseudo-bulk_ refers to a grouping of single cells where the data from each single cell is combined into a single pseudo-sample that resembles a bulk ATAC-seq experiment. ArchR makes multiple such pseudo-bulk sapmles for each cell grouping, hence the term _pseudo-bulk replicates_.
+# Pseudo-bulk Replicates in ArchR
+
+Many of the analyses we would like to perform require replicates to obtain measurements of statistical significance. In single-cell data, this is done by forming _pseudo-bulk replicates_. The term _pseudo-bulk_ refers to a grouping of single cells where the data from each single cell is combined into a single pseudo-sample that resembles a bulk ATAC-seq experiment. ArchR makes multiple such pseudo-bulk samples for each cell grouping, hence the term _pseudo-bulk replicates_.
+
+## How does ArchR make Pseudo-bulk Replicates?
 
 To create these pseudo-bulk replicates, ArchR employs a tiered priority approach. The user specifies (i) the minimum and maximum number of replicates desired, (ii) the minimum and maximum number of cells per replicate, and (iii) the sampling ratio to use if a particular grouping lacks sufficient cells to make the desired replicates. For example, a sampling ratio of 0.8 means that cells can be sampled without replacement up to 80% of the total number of cells for each replicate (this will result in sampling with replacement across replicates). In this case, multiple replicates may contain some of the same cells but this is a necessary sacrifice if you would like to generate pseudo-bulk replicates from a cell group that lacks sufficient cells.
 
@@ -21,13 +65,13 @@ We describe the pseudo-bulk replicate generation process in a decision tree belo
 To illustrate this process, we will use the following example data set:
 
 ```
-Sample 	Cluster1	Cluster2	Cluster3	Cluster4	Cluster5
-A 		800			600			900			100			75
-B 		1000		50			400			150			25
-C 		600			900			100			200			50
-D 		1200		500			50			50			25
-E 		900			100			50			150			50
-F 		700			200			100			100			25
+Sample  Cluster1  Cluster2  Cluster3  Cluster4  Cluster5
+A     800     600     900     100     75
+B     1000    50      400     150     25
+C     600     900     100     200     50
+D     1200    500     50      50      25
+E     900     100     50      150     50
+F     700     200     100     100     25
 ```
 
 And we will set `minRep = 3`, `maxRep = 5`, `minCells = 300`, `maxCells = 1000`, and `sampleRatio = 0.8`.
@@ -85,3 +129,5 @@ Rep3 = 300 cells [250 unique cells + 25 cells overlapping Rep1 + 25 cells overla
 #### Pseudo-bulk Replicate Decision Tree
 
 ![](../../images/pseudobulkReplicate_DecisionTree.png){width=1000px}
+
+## Example

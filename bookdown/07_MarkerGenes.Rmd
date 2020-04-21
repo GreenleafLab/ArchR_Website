@@ -46,9 +46,46 @@ addArchRGenome("hg19")
 set.seed(1)
 ```
 
-# Marker Genes with ArchR
+# Gene Scores and Marker Genes with ArchR
+
+While ArchR is able to robustly call clusters, it is not possible to know _a priori_ which cell type is represented by each cluster. This task is often left to manual annotation because every application is different.
+
+To do this cell type annotation, we use prior knowledge of cell type-specific marker genes and we estimate _gene activity scores_ for these genes. A gene activity score is essentially a prediction of how highly expressed a gene will be based on the accessibility of regulatory elements in the vicinity of the gene promoter.
+
+Specifically, the 200-kb region centered on the given TSS is tiled into 1000-bp bins and the insertions per bin are counted. Each of these bins is then weighted proportional to the distance from the TSS because regulatory elements closer to the promoter are more likely to affect the promoter.
+
+![](/images/GeneActivityScore_Schematic.png){width=500px}
+
+These gene activity scores are calculated for each `ArrowFile` at the time of creation if the parameter `addGeneScoreMat` is set to `TRUE` (the default) or at any time by using the `addGeneScoreMatrix()` function. Once caluclated, individual cells of a UMAP projection can be colored by their gene activity scores to help with the identification of various cell types. For example, in the plot below from the tutorial, __QQQ__ cells are highlighted based on their gene activity scores for __QQQ__.
+
+[INSERT UMAP GENE SCORE PLOT FROM PBMCs]
+
+It is important to note that not all genes behave well with gene activity scores. In particular, genes that reside in very gene-dense areas can be problematic because the promoter accessibility of nearby genes contribute to their score and it is also not necessarily true that nearby regulatory elements will affect their expression. Thus, it is always best to sanity check all gene activity score analyses.
 
 ## Identification of Marker Genes
+
+An alternative less-supervised method for elucidation of cluster-specifc biology is the identification of features that are highly specific to the given cell group (or a small number of cell groups). Here, a feature could be a single regulatory element or it could be a gene. ArchR does this using the `markerFeatures()` function which can take as input any matrix via the `useMatrix` parameter and it identifies features unique to the groups indicated by the `groupBy` parameter (default is "Clusters"). If the `useMatrix` parameter is set to "GeneScoreMatrix", then the function will identify the genes that appear to be uniquely active in each cell type. This provides an unbiased way of seeing which genes are predicted to be active in each cluster and can aid in cluster annotation.
+
+As mentioned above, the same `markerFeatures()` function can be used with any matrix stored in the ArrowFiles to identify features that are specific to certain cell groups. This is accomplished via the `useMatrix` parameter. For example, `useMatrix = "TileMatrix"` would identify genomic regions that are highly specific to a certain cell group and `useMatrix = "PeakMatrix"` would identify peaks that are highly specific to a certain cell group.
+
+### How does this happen?
+
+This process of marker feature identification hinges on the selection of a group of bias-matched background cells for each cell group. Across all features, each cell group is compared to its own background group of cells to determine if the given cell group has significantly higher accessibility. Then, ArchR looks for features that are uniquely significantly accessible in a single cell group (or a small number of cell groups).
+
+![](../../images/markerFeature_schematic.png){width=500px}
+
+The selection of these background cell groups is critical to the success of this process and is performed across the multidimensional space provided by the user via the `bias` argument to `markerFeatures()`. For each cell in the cell group, ArchR finds the nearest neighbor cell across the provided multidimensional space that is not a member of the given cell group and adds it to the background group of cells. In this way, ArchR creates a group of bias-matched cells that is as similar as possible to the given cell group, thus enabling a more robust determination of significance even if the group of cells is small.
+
+The way ArchR does this is by taking all of the dimensions provided via the `bias` parameter and quantile normalizing their values to distribute the variance of each dimension across the same relative scale. Taking a toy example, if the parameters `TSS` and `log10(Num Fragments)` were provided to `bias`, the pre-quantile normalized values might look like this:
+
+![](../../images/background_preNorm.png){width=500px}
+
+Here, the relative variance across the y-axis is very small compared to the variance across the x-axis. If we normalize these axes so that their values range from 0 to 1 instead, we make the relative variance much more equal. Importantly, we also change the nearest neighbors dramatically.
+
+![](../../images/background_postNorm.png){width=500px}
+
+ArchR normalizes all of the dimensions and uses euclidean distance in this normalized multidimensional space to find the nearest neighbors. Using real data from __QQQ__, this process can identify __QQQ__.
+
 
 Identify Marker Gene through Pairwise Test vs Bias-Matched Background
 
