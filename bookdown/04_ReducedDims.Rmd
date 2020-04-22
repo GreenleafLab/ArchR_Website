@@ -70,6 +70,7 @@ In scRNA-seq identifying variable genes is a common way to compute dimensionalit
 
 To perform iterative LSI in ArchR, we use the `addIterativeLSI()` function. The default parameters should cover most cases but we encourage you to explore the available parameters and how they each affect your particular data set. See `?addIterativeLSI` for more details on inputs. The most common parameters to tweak are `iterations`, `varFeatures`, and `resolution`. It is important to note that LSI is not deterministic. This means that even if you run LSI in exactly the same way with exactly the same parameters, you will not get __exactly__ the same results. Of course, they will be highly similar, but not identical. So make sure to save your `ArchRProject` or the relevant LSI information once you've settled on an ideal dimensionality reduction.
 
+For the purposes of this tutorial, we will create a `reducedDims` object called "IterativeLSI".
 ```{r eval=FALSE}
 projHeme2 <- addIterativeLSI(
 	ArchRProj = projHeme2,
@@ -113,7 +114,7 @@ If you see downstream that you have subtle batch effects, another option is to a
 ```{r include=FALSE, eval=FALSE, echo=FALSE}
 #JJJ would be nice to see an example of what these batch effects look like and how this corrects them
 ```
-
+We will name this `reducedDims` object "IterativeLSI2" for illustrative purposes but we won't use is downstream.
 ```{r eval=FALSE}
 projHeme2 <- addIterativeLSI(
 	ArchRProj = projHeme2,
@@ -174,45 +175,12 @@ projHeme2 <- addIterativeLSI(
 ## 2020-04-15 09:43:33 : Computing LSI, 4.462 mins elapsed.  
 ## 2020-04-15 09:43:55 : Finished Running IterativeLSI, 4.829 mins elapsed.  
 
-For the purposes of this tutorial, we will compute the iterative LSI for the `ArchRProject` that still contains doublets (`projHeme1`).
-
-```{r eval=FALSE}
-projHeme1 <- addIterativeLSI(
-    ArchRProj = projHeme1,
-    useMatrix = "TileMatrix", 
-    name = "IterativeLSI", 
-    iterations = 2, 
-    clusterParams = list( #See Seurat::FindClusters
-        resolution = c(0.2), 
-        sampleCells = 10000, 
-        n.start = 10
-    ), 
-    varFeatures = 25000, 
-    dimsToUse = 1:30
-)
+You can list the available `reducedDims` objects in an `ArchRProject` using the slot extraction opperator `@`:
+```{r include=FALSE, eval=FALSE, becho=FALSE}
+#JJJ add an example of accessing with @
+#projHeme2@reducedDims
 ```
-> \## Checking Inputs...  
-## ArchR logging to : ArchRLogs/ArchR-addIterativeLSI-ea2d717d926a-Date-2020-04-15_Time-09-43-55.log  
-## If there is an issue, please report to github with logFile!  
-## 2020-04-15 09:43:57 : Computing Total Accessibility Across All Features, 0.005 mins elapsed.  
-## 2020-04-15 09:44:00 : Computing Top Features, 0.071 mins elapsed.  
-## ###########  
-## 2020-04-15 09:44:01 : Running LSI (1 of 2) on Top Features, 0.079 mins elapsed.  
-## ###########  
-## 2020-04-15 09:44:01 : Sampling Cells (N = 10001) for Estimated LSI, 0.081 mins elapsed.  
-## 2020-04-15 09:44:01 : Creating Sampled Partial Matrix, 0.081 mins elapsed.  
-## 2020-04-15 09:44:10 : Computing Estimated LSI (projectAll = FALSE), 0.237 mins elapsed.  
-## 2020-04-15 09:44:50 : Identifying Clusters, 0.899 mins elapsed.  
-## 2020-04-15 09:45:11 : Identified 5 Clusters, 1.253 mins elapsed.  
-## 2020-04-15 09:45:11 : Saving LSI Iteration, 1.253 mins elapsed.  
-## 2020-04-15 09:45:30 : Creating Cluster Matrix on the total Group Features, 1.568 mins elapsed.  
-## 2020-04-15 09:45:44 : Computing Variable Features, 1.804 mins elapsed.  
-## ###########  
-## 2020-04-15 09:45:45 : Running LSI (2 of 2) on Variable Features, 1.808 mins elapsed.  
-## ###########  
-## 2020-04-15 09:45:45 : Creating Partial Matrix, 1.808 mins elapsed.  
-## 2020-04-15 09:45:54 : Computing LSI, 1.96 mins elapsed.  
-## 2020-04-15 09:46:28 : Finished Running IterativeLSI, 2.523 mins elapsed.  
+
 
 ## Estimated LSI
 For extremely large scATAC-seq datasets, ArchR can estimate the LSI dimensionality reduction with LSI projection. This procedure is similar to the iterative LSI workflow, however the LSI procedure differs. First, a subset of randomly selected “landmark” cells is used for LSI dimensionality reduction. Second, the remaining cells are TF-IDF normalized using the inverse document frequency determined from the landmark cells. Third, these normalized cells are projected into the SVD subspace defined by the landmark cells. This leads to an LSI transformation based on a small set of cells used as landmarks for the projection of the remaining cells. This estimated LSI procedure is efficient with ArchR because, when projecting the new cells into the landmark cells LSI, ArchR iteratively reads in the cells from each sample and LSI projects them without storing them all in memory. This optimization leads to minimal memory usage and further increases the scalability for extremely large datasets. Importantly, the required landmark set size is dependent on the proportion of different cells within the dataset.
@@ -244,6 +212,8 @@ projHeme2 <- addHarmony(
 ## Harmony 2/10  
 ## Harmony 3/10  
 ## Harmony converged after 3 iterations  
+
+This process creates a new `reducedDims` object called "Harmony" in our `projHeme2` object.
 
 ```{r include=FALSE, eval=FALSE,echo=FALSE}
 #JJJ Would like to see a before and after batch correction plot here

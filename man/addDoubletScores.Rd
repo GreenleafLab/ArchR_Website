@@ -13,17 +13,16 @@ addDoubletScores(
   LSIMethod = 1,
   scaleDims = FALSE,
   corCutOff = 0.75,
-  sampleCells = NULL,
   knnMethod = "UMAP",
   UMAPParams = list(n_neighbors = 40, min_dist = 0.4, metric = "euclidean", verbose =
     FALSE),
-  LSIParams = list(),
-  outDir = if (inherits(input, "ArchRProject")) getOutputDirectory(input) else
-    "QualityControl",
+  LSIParams = list(outlierQuantiles = NULL, filterBias = FALSE),
+  outDir = getOutputDirectory(input),
   threads = getArchRThreads(),
+  force = FALSE,
   parallelParam = NULL,
-  verboseHeader = TRUE,
-  verboseAll = FALSE
+  verbose = TRUE,
+  logFile = createLogFile("addDoubletScores")
 )
 }
 \arguments{
@@ -40,9 +39,12 @@ addDoubletScores(
 \item{LSIMethod}{A number or string indicating the order of operations in the TF-IDF normalization.
 Possible values are: 1 or "tf-logidf", 2 or "log(tf-idf)", and 3 or "logtf-logidf".}
 
-\item{scaleDims}{A boolean describing whether to rescale the total variance for each principal component. This is useful for minimizing the contribution of strong biases (dominating early PCs) and lowly abundant populations. However, this may lead to stronger sample-specific biases since it is over-weighting latent PCs.}
+\item{scaleDims}{A boolean that indicates whether to z-score the reduced dimensions for each cell during the LSI
+method performed for doublet determination. This is useful for minimizing the contribution of strong biases (dominating early PCs)
+and lowly abundant populations. However, this may lead to stronger sample-specific biases since it is over-weighting latent PCs.}
 
-\item{corCutOff}{A numeric cutoff for the correlation of each dimension to the sequencing depth. If the dimension has a correlation to sequencing depth that is greater than the \code{corCutOff}, it will be excluded from analysis.}
+\item{corCutOff}{A numeric cutoff for the correlation of each dimension to the sequencing depth. If the dimension has a correlation
+to sequencing depth that is greater than the \code{corCutOff}, it will be excluded from analysis.}
 
 \item{knnMethod}{The name of the dimensionality reduction method to be used for k-nearest neighbors calculation. Possible values are "UMAP" or "LSI".}
 
@@ -54,11 +56,15 @@ Possible values are: 1 or "tf-logidf", 2 or "log(tf-idf)", and 3 or "logtf-logid
 
 \item{threads}{The number of threads to be used for parallel computing.}
 
+\item{force}{If the UMAP projection is not accurate (when R < 0.8 for the reprojection of the training data - this occurs when you
+have a very homogenous population of cells), setting \code{force=FALSE} will return -1 for all doubletScores and doubletEnrichments. If you would like to
+override this (not recommended!), you can bypass this warning by setting \code{force=TRUE}.}
+
 \item{parallelParam}{A list of parameters to be passed for biocparallel/batchtools parallel computing.}
 
-\item{verboseHeader}{A boolean value that determines whether standard output includes verbose sections.}
+\item{verbose}{A boolean value that determines whether standard output is printed.}
 
-\item{verboseAll}{A boolean value that determines whether standard output includes verbose subsections.}
+\item{logFile}{The path to a file to be used for logging ArchR output.}
 }
 \description{
 For each sample in the ArrowFiles or ArchRProject provided, this function will independently assign inferred doublet information

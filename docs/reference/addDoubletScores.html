@@ -45,6 +45,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Add Doublet Scores to a collection of ArrowFiles or an ArchRProject — addDoubletScores" />
 
 <meta property="og:description" content="For each sample in the ArrowFiles or ArchRProject provided, this function will independently assign inferred doublet information
@@ -93,7 +95,7 @@ contained two cells, causing the ATAC-seq data to be a mixture of the signal fro
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -184,17 +186,16 @@ contained two cells, causing the ATAC-seq data to be a mixture of the signal fro
   <span class='kw'>LSIMethod</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>scaleDims</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>corCutOff</span> <span class='kw'>=</span> <span class='fl'>0.75</span>,
-  <span class='kw'>sampleCells</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>knnMethod</span> <span class='kw'>=</span> <span class='st'>"UMAP"</span>,
   <span class='kw'>UMAPParams</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>n_neighbors</span> <span class='kw'>=</span> <span class='fl'>40</span>, <span class='kw'>min_dist</span> <span class='kw'>=</span> <span class='fl'>0.4</span>, <span class='kw'>metric</span> <span class='kw'>=</span> <span class='st'>"euclidean"</span>, <span class='kw'>verbose</span> <span class='kw'>=</span>
     <span class='fl'>FALSE</span>),
-  <span class='kw'>LSIParams</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
-  <span class='kw'>outDir</span> <span class='kw'>=</span> <span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/class.html'>inherits</a></span>(<span class='no'>input</span>, <span class='st'>"ArchRProject"</span>)) <span class='fu'><a href='getOutputDirectory.html'>getOutputDirectory</a></span>(<span class='no'>input</span>) <span class='kw'>else</span>
-    <span class='st'>"QualityControl"</span>,
+  <span class='kw'>LSIParams</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>outlierQuantiles</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>filterBias</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>),
+  <span class='kw'>outDir</span> <span class='kw'>=</span> <span class='fu'><a href='getOutputDirectory.html'>getOutputDirectory</a></span>(<span class='no'>input</span>),
   <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fu'><a href='getArchRThreads.html'>getArchRThreads</a></span>(),
+  <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>parallelParam</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>verboseHeader</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>verboseAll</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>logFile</span> <span class='kw'>=</span> <span class='fu'>createLogFile</span>(<span class='st'>"addDoubletScores"</span>)
 )</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -227,11 +228,14 @@ Possible values are: 1 or "tf-logidf", 2 or "log(tf-idf)", and 3 or "logtf-logid
     </tr>
     <tr>
       <th>scaleDims</th>
-      <td><p>A boolean describing whether to rescale the total variance for each principal component. This is useful for minimizing the contribution of strong biases (dominating early PCs) and lowly abundant populations. However, this may lead to stronger sample-specific biases since it is over-weighting latent PCs.</p></td>
+      <td><p>A boolean that indicates whether to z-score the reduced dimensions for each cell during the LSI
+method performed for doublet determination. This is useful for minimizing the contribution of strong biases (dominating early PCs)
+and lowly abundant populations. However, this may lead to stronger sample-specific biases since it is over-weighting latent PCs.</p></td>
     </tr>
     <tr>
       <th>corCutOff</th>
-      <td><p>A numeric cutoff for the correlation of each dimension to the sequencing depth. If the dimension has a correlation to sequencing depth that is greater than the <code>corCutOff</code>, it will be excluded from analysis.</p></td>
+      <td><p>A numeric cutoff for the correlation of each dimension to the sequencing depth. If the dimension has a correlation
+to sequencing depth that is greater than the <code>corCutOff</code>, it will be excluded from analysis.</p></td>
     </tr>
     <tr>
       <th>knnMethod</th>
@@ -254,16 +258,22 @@ Possible values are: 1 or "tf-logidf", 2 or "log(tf-idf)", and 3 or "logtf-logid
       <td><p>The number of threads to be used for parallel computing.</p></td>
     </tr>
     <tr>
+      <th>force</th>
+      <td><p>If the UMAP projection is not accurate (when R &lt; 0.8 for the reprojection of the training data - this occurs when you
+have a very homogenous population of cells), setting <code>force=FALSE</code> will return -1 for all doubletScores and doubletEnrichments. If you would like to
+override this (not recommended!), you can bypass this warning by setting <code>force=TRUE</code>.</p></td>
+    </tr>
+    <tr>
       <th>parallelParam</th>
       <td><p>A list of parameters to be passed for biocparallel/batchtools parallel computing.</p></td>
     </tr>
     <tr>
-      <th>verboseHeader</th>
-      <td><p>A boolean value that determines whether standard output includes verbose sections.</p></td>
+      <th>verbose</th>
+      <td><p>A boolean value that determines whether standard output is printed.</p></td>
     </tr>
     <tr>
-      <th>verboseAll</th>
-      <td><p>A boolean value that determines whether standard output includes verbose subsections.</p></td>
+      <th>logFile</th>
+      <td><p>The path to a file to be used for logging ArchR output.</p></td>
     </tr>
     </table>
     

@@ -45,9 +45,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Get Relevant Data For ArchR Tutorials — getTutorialData" />
 
-<meta property="og:description" content="This function will download data for a given tutorial and return the input files required for ArchR" />
+<meta property="og:description" content="This function will download data for a given tutorial and return the input files required for ArchR." />
 
 <meta property="og:image" content="https://greenleaflab.github.io/ArchR_Website/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -91,7 +93,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -167,18 +169,24 @@
 
     <div class="ref-description">
     
-    <p>This function will download data for a given tutorial and return the input files required for ArchR</p>
+    <p>This function will download data for a given tutorial and return the input files required for ArchR.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>getTutorialData</span>(<span class='kw'>tutorial</span> <span class='kw'>=</span> <span class='st'>"hematopoiesis"</span>)</pre>
+    <pre class="usage"><span class='fu'>getTutorialData</span>(<span class='kw'>tutorial</span> <span class='kw'>=</span> <span class='st'>"hematopoiesis"</span>, <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fu'><a href='getArchRThreads.html'>getArchRThreads</a></span>())</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>tutorial</th>
-      <td><p>The name of the available tutorial for which to retreive the tutorial data. Options are "Hematopoiesis", "PBMC", "FreshFrozen". "Hematopoiesis" refers to hematopoieitic scATAC hierarchy. "PBMC" refers to a small standard PBMC scATAC dataset. "FreshFrozen" refers to a PBMC fresh and frozen scATAC dataset.</p></td>
+      <td><p>The name of the available tutorial for which to retreive the tutorial data. Currently, the only available option is "Hematopoiesis".
+"Hematopoiesis" is a small scATAC-seq dataset that spans the hematopoieitic hierarchy from stem cells to differentiated cells.
+This dataset is made up of cells from peripheral blood, bone marrow, and CD34+ sorted bone marrow.</p></td>
+    </tr>
+    <tr>
+      <th>threads</th>
+      <td><p>The number of threads to be used for parallel computing.</p></td>
     </tr>
     </table>
     

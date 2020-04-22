@@ -45,6 +45,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Create Arrow Files — createArrowFiles" />
 
 <meta property="og:description" content="This function will create ArrowFiles from input files. These ArrowFiles are the main constituent for downstream analysis in ArchR." />
@@ -91,7 +93,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -182,8 +184,10 @@
   <span class='kw'>filterTSS</span> <span class='kw'>=</span> <span class='fl'>4</span>,
   <span class='kw'>removeFilteredCells</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>minFrags</span> <span class='kw'>=</span> <span class='fl'>500</span>,
-  <span class='kw'>outDir</span> <span class='kw'>=</span> <span class='st'>"QualityControl"</span>,
+  <span class='kw'>maxFrags</span> <span class='kw'>=</span> <span class='fl'>1e+05</span>,
+  <span class='kw'>QCDir</span> <span class='kw'>=</span> <span class='st'>"QualityControl"</span>,
   <span class='kw'>nucLength</span> <span class='kw'>=</span> <span class='fl'>147</span>,
+  <span class='kw'>promoterRegion</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2000</span>, <span class='fl'>100</span>),
   <span class='kw'>TSSParams</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
   <span class='kw'>excludeChr</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"chrM"</span>, <span class='st'>"chrY"</span>),
   <span class='kw'>nChunk</span> <span class='kw'>=</span> <span class='fl'>5</span>,
@@ -200,8 +204,9 @@
   <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fu'><a href='getArchRThreads.html'>getArchRThreads</a></span>(),
   <span class='kw'>parallelParam</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>subThreading</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>verboseHeader</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>verboseAll</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>cleanTmp</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>logFile</span> <span class='kw'>=</span> <span class='fu'>createLogFile</span>(<span class='st'>"createArrows"</span>)
 )</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -209,67 +214,93 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>inputFiles</th>
-      <td><p>A character vector containing the paths to the input files to use to generate the ArrowFiles. These files can be in one of the following formats: (i) scATAC tabix files, (ii) fragment files, or (iii) bam files.</p></td>
+      <td><p>A character vector containing the paths to the input files to use to generate the ArrowFiles.
+These files can be in one of the following formats: (i) scATAC tabix files, (ii) fragment files, or (iii) bam files.</p></td>
     </tr>
     <tr>
       <th>sampleNames</th>
-      <td><p>A character vector containing the names to assign to the samples that correspond to the <code>inputFiles</code>. Each input file should receive a unique sample name. This list should be in the same order as <code>inputFiles</code>.</p></td>
+      <td><p>A character vector containing the names to assign to the samples that correspond to the <code>inputFiles</code>.
+Each input file should receive a unique sample name. This list should be in the same order as <code>inputFiles</code>.</p></td>
     </tr>
     <tr>
       <th>outputNames</th>
-      <td><p>The prefix to use for output files. Each input file should receive a unique output file name. This list should be in the same order as "inputFiles". For example, if the predix is "PBMC" the output file will be named "PBMC.arrow"</p></td>
+      <td><p>The prefix to use for output files. Each input file should receive a unique output file name.
+This list should be in the same order as "inputFiles". For example, if the predix is "PBMC" the output file will be named "PBMC.arrow"</p></td>
     </tr>
     <tr>
       <th>validBarcodes</th>
-      <td><p>A list of valid barcode strings to be used for filtering cells read from each input file (see <code><a href='getValidBarcodes.html'>getValidBarcodes()</a></code> for 10x fragment files).</p></td>
+      <td><p>A list of valid barcode strings to be used for filtering cells read from each input file
+(see <code><a href='getValidBarcodes.html'>getValidBarcodes()</a></code> for 10x fragment files).</p></td>
     </tr>
     <tr>
       <th>geneAnnotation</th>
-      <td><p>The geneAnnotation (see <code>createGeneAnnotation()</code>) to associate with the ArrowFiles. This is used downstream to calculate TSS Enrichment Scores etc.</p></td>
+      <td><p>The geneAnnotation (see <code>createGeneAnnotation()</code>) to associate with the ArrowFiles. This is used downstream
+to calculate TSS Enrichment Scores etc.</p></td>
     </tr>
     <tr>
       <th>genomeAnnotation</th>
-      <td><p>The genomeAnnotation (see <code><a href='createGenomeAnnotation.html'>createGenomeAnnotation()</a></code>) to associate with the ArrowFiles. This is used downstream to collect chromosome sizes and nucleotide information etc.</p></td>
+      <td><p>The genomeAnnotation (see <code><a href='createGenomeAnnotation.html'>createGenomeAnnotation()</a></code>) to associate with the ArrowFiles. This is used
+downstream to collect chromosome sizes and nucleotide information etc.</p></td>
     </tr>
     <tr>
       <th>filterFrags</th>
-      <td><p>The minimum number of mapped ATAC-seq fragments required per cell to pass filtering for use in downstream analyses. Cells containing greater than or equal to <code>filterFrags</code> total fragments wll be retained.</p></td>
+      <td><p>The minimum number of mapped ATAC-seq fragments required per cell to pass filtering for use in downstream analyses.
+Cells containing greater than or equal to <code>filterFrags</code> total fragments wll be retained.</p></td>
     </tr>
     <tr>
       <th>filterTSS</th>
-      <td><p>The minimum numeric transcription start site (TSS) enrichment score required for a cell to pass filtering for use in downstream analyses. Cells with a TSS enrichment score greater than or equal to <code>filterTSS</code> will be retained. TSS enrichment score is a measurement of signal-to-background in ATAC-seq.</p></td>
+      <td><p>The minimum numeric transcription start site (TSS) enrichment score required for a cell to pass filtering for use
+in downstream analyses. Cells with a TSS enrichment score greater than or equal to <code>filterTSS</code> will be retained. TSS enrichment score
+is a measurement of signal-to-background in ATAC-seq.</p></td>
     </tr>
     <tr>
       <th>removeFilteredCells</th>
-      <td><p>A boolean value that determines whether cells that do not pass <code>filterFrags</code> and <code>filterTSS</code> should be excluded entirely from the ArrowFiles. If <code>FALSE</code> cells that do not pass QC filters will be included in the ArrowFile but will be marked as not passing QC and excluded from downstream analyses.</p></td>
+      <td><p>A boolean value that determines whether cells that do not pass <code>filterFrags</code> and <code>filterTSS</code> should be
+excluded entirely from the ArrowFiles. If <code>FALSE</code> cells that do not pass QC filters will be included in the ArrowFile but will be
+marked as not passing QC and excluded from downstream analyses.</p></td>
     </tr>
     <tr>
       <th>minFrags</th>
-      <td><p>The minimum fragments per cell to be filtered immediately before any QC calculations (such as TSS Enrichment Score). This is useful for limiting the number of barcodes analyzed.</p></td>
+      <td><p>The minimum fragments per cell to be filtered immediately before any QC calculations (such as TSS Enrichment Score).
+This is useful for limiting the number of barcodes analyzed.</p></td>
     </tr>
     <tr>
-      <th>outDir</th>
+      <th>maxFrags</th>
+      <td><p>The maximum fragments per cell to be filtered immediately before any QC calculations (such as TSS Enrichment Score).
+This is useful for limiting the number of barcodes analyzed.</p></td>
+    </tr>
+    <tr>
+      <th>QCDir</th>
       <td><p>The relative path to the output directory for QC-level information and plots for each sample/ArrowFile.</p></td>
     </tr>
     <tr>
       <th>nucLength</th>
-      <td><p>The length in basepairs that wraps around a nucleosome. This number is used for identifying fragments as sub-nucleosome-spanning, mono-nucleosome-spanning, or multi-nucleosome-spanning.</p></td>
+      <td><p>The length in basepairs that wraps around a nucleosome. This number is used for identifying fragments as
+sub-nucleosome-spanning, mono-nucleosome-spanning, or multi-nucleosome-spanning.</p></td>
+    </tr>
+    <tr>
+      <th>promoterRegion</th>
+      <td><p>A integer vector describing the number of basepairs upstream and downstream c(upstream, downstream) of the TSS to include
+as the promoter region for downstream calculation of things like the fraction of reads in promoters (FIP).</p></td>
     </tr>
     <tr>
       <th>TSSParams</th>
-      <td><p>A list of parameters for computing TSS Enrichment scores.
-This includes the <code>window</code> which is the size in basepairs of the window centered at each TSS (default 101),
-the <code>flank</code> which is the size in basepairs of the flanking window (default 2000),
+      <td><p>A list of parameters for computing TSS Enrichment scores. This includes the <code>window</code> which is the size in basepairs
+of the window centered at each TSS (default 101), the <code>flank</code> which is the size in basepairs of the flanking window (default 2000),
 and the <code>norm</code> which describes the size in basepairs of the flank window to be used for normalization of the TSS enrichment score (default 100).
-For example, given <code>window = 101, flank = 2000, norm = 100</code>, the accessibility within the 101-bp surrounding the TSS will be normalized to the accessibility in the 100-bp bins from -2000 bp to -1901 bp and 1901:2000.</p></td>
+For example, given <code>window = 101, flank = 2000, norm = 100</code>, the accessibility within the 101-bp surrounding the TSS will be normalized
+to the accessibility in the 100-bp bins from -2000 bp to -1901 bp and 1901:2000.</p></td>
     </tr>
     <tr>
       <th>excludeChr</th>
-      <td><p>A character vector containing the names of chromosomes to be excluded from downstream analyses. In most human/mouse analyses, this includes the mitochondrial DNA (chrM) and the male sex chromosome (chrY). This does, however, not exclude the corresponding fragments from being stored in the ArrowFile.</p></td>
+      <td><p>A character vector containing the names of chromosomes to be excluded from downstream analyses. In most human/mouse
+analyses, this includes the mitochondrial DNA (chrM) and the male sex chromosome (chrY). This does, however, not exclude the
+corresponding fragments from being stored in the ArrowFile.</p></td>
     </tr>
     <tr>
       <th>nChunk</th>
-      <td><p>The number of chunks to divide each chromosome into to allow for low-memory parallelized reading of the <code>inputFiles</code>. Higher numbers reduce memory usage but increase compute time.</p></td>
+      <td><p>The number of chunks to divide each chromosome into to allow for low-memory parallelized reading of the <code>inputFiles</code>.
+Higher numbers reduce memory usage but increase compute time.</p></td>
     </tr>
     <tr>
       <th>bcTag</th>
@@ -277,23 +308,29 @@ For example, given <code>window = 101, flank = 2000, norm = 100</code>, the acce
     </tr>
     <tr>
       <th>gsubExpression</th>
-      <td><p>A regular expression used to clean up the barcode tag string read in from a bam file. For example, if the barcode is appended to the readname or qname field like for the mouse atlas data from Cusanovic* and Hill* et al. (2018), the gsubExpression would be ":.*". This would retrieve the string after the colon as the barcode.</p></td>
+      <td><p>A regular expression used to clean up the barcode tag string read in from a bam file. For example, if the
+barcode is appended to the readname or qname field like for the mouse atlas data from Cusanovic* and Hill* et al. (2018), the
+gsubExpression would be ":.*". This would retrieve the string after the colon as the barcode.</p></td>
     </tr>
     <tr>
       <th>bamFlag</th>
-      <td><p>A vector of bam flags to be used for reading in fragments from input bam files. Should be in the format of a <code>scanBamFlag</code> passed to <code>ScanBam</code> in Rsamtools.</p></td>
+      <td><p>A vector of bam flags to be used for reading in fragments from input bam files. Should be in the format of a
+<code>scanBamFlag</code> passed to <code>ScanBam</code> in Rsamtools.</p></td>
     </tr>
     <tr>
       <th>offsetPlus</th>
-      <td><p>The numeric offset to apply to a "+" stranded Tn5 insertion to account for the precise Tn5 binding site. See Buenrostro et al. Nature Methods 2013.</p></td>
+      <td><p>The numeric offset to apply to a "+" stranded Tn5 insertion to account for the precise Tn5 binding site.
+See Buenrostro et al. Nature Methods 2013.</p></td>
     </tr>
     <tr>
       <th>offsetMinus</th>
-      <td><p>The numeric offset to apply to a "-" stranded Tn5 insertion to account for the precise Tn5 binding site. See Buenrostro et al. Nature Methods 2013.</p></td>
+      <td><p>The numeric offset to apply to a "-" stranded Tn5 insertion to account for the precise Tn5 binding site.
+See Buenrostro et al. Nature Methods 2013.</p></td>
     </tr>
     <tr>
       <th>addTileMat</th>
-      <td><p>A boolean value indicating whether to add a "Tile Matrix" to each ArrowFile. A Tile Matrix is a counts matrix that, instead of using peaks, uses a fixed-width sliding window of bins across the whole genome. This matrix can be used in many downstream ArchR operations.</p></td>
+      <td><p>A boolean value indicating whether to add a "Tile Matrix" to each ArrowFile. A Tile Matrix is a counts matrix that,
+instead of using peaks, uses a fixed-width sliding window of bins across the whole genome. This matrix can be used in many downstream ArchR operations.</p></td>
     </tr>
     <tr>
       <th>TileMatParams</th>
@@ -301,7 +338,8 @@ For example, given <code>window = 101, flank = 2000, norm = 100</code>, the acce
     </tr>
     <tr>
       <th>addGeneScoreMat</th>
-      <td><p>A boolean value indicating whether to add a Gene-Score Matrix to each ArrowFile. A Gene-Score Matrix uses ATAC-seq signal proximal to the TSS to estimate gene activity.</p></td>
+      <td><p>A boolean value indicating whether to add a Gene-Score Matrix to each ArrowFile. A Gene-Score Matrix uses
+ATAC-seq signal proximal to the TSS to estimate gene activity.</p></td>
     </tr>
     <tr>
       <th>GeneScoreMatParams</th>
@@ -309,7 +347,7 @@ For example, given <code>window = 101, flank = 2000, norm = 100</code>, the acce
     </tr>
     <tr>
       <th>force</th>
-      <td><p>A boolean value indicating whether to force ArrowFiles to be overwritten if they already exist in <code>outDir</code>.</p></td>
+      <td><p>A boolean value indicating whether to force ArrowFiles to be overwritten if they already exist.</p></td>
     </tr>
     <tr>
       <th>threads</th>
@@ -324,12 +362,16 @@ For example, given <code>window = 101, flank = 2000, norm = 100</code>, the acce
       <td><p>A boolean determining whether possible use threads within each multi-threaded subprocess if greater than the number of input samples.</p></td>
     </tr>
     <tr>
-      <th>verboseHeader</th>
-      <td><p>A boolean value that determines whether standard output should include verbose sections.</p></td>
+      <th>verbose</th>
+      <td><p>A boolean value that determines whether standard output should be printed.</p></td>
     </tr>
     <tr>
-      <th>verboseAll</th>
-      <td><p>A boolean value that determines whether standard output should include verbose subsections.</p></td>
+      <th>logFile</th>
+      <td><p>The path to a file to be used for logging ArchR output.</p></td>
+    </tr>
+    <tr>
+      <th>cleamTmp</th>
+      <td><p>A boolean value that determines whether to clean temp folder of all intermediate ".arrow" files.</p></td>
     </tr>
     </table>
     

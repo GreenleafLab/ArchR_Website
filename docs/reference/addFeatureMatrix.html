@@ -45,6 +45,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Add a feature matrix to an ArchRProject or a set of ArrowFiles — addFeatureMatrix" />
 
 <meta property="og:description" content="This function for each sample will independently compute counts for each feature per cell in the provided ArchRProject or set of ArrowFiles." />
@@ -91,7 +93,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -177,9 +179,11 @@
   <span class='kw'>matrixName</span> <span class='kw'>=</span> <span class='st'>"FeatureMatrix"</span>,
   <span class='kw'>ceiling</span> <span class='kw'>=</span> <span class='fl'>10</span>^<span class='fl'>9</span>,
   <span class='kw'>binarize</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fu'><a href='getArchRThreads.html'>getArchRThreads</a></span>(),
   <span class='kw'>parallelParam</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+  <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>logFile</span> <span class='kw'>=</span> <span class='fu'>createLogFile</span>(<span class='st'>"addFeatureMatrix"</span>)
 )</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -203,7 +207,12 @@
     </tr>
     <tr>
       <th>binarize</th>
-      <td><p>A boolean value indicating whether the feature matrix should be binarized prior to storage. This can be useful for downstream analyses when working with insertion counts.</p></td>
+      <td><p>A boolean value indicating whether the feature matrix should be binarized prior to storage. This can be useful for
+downstream analyses when working with insertion counts.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>A boolean value that determines whether standard output includes verbose sections.</p></td>
     </tr>
     <tr>
       <th>threads</th>
@@ -216,6 +225,10 @@
     <tr>
       <th>force</th>
       <td><p>A boolean value indicating whether to force the matrix indicated by <code>matrixName</code> to be overwritten if it already exists in the <code>input</code>.</p></td>
+    </tr>
+    <tr>
+      <th>logFile</th>
+      <td><p>The path to a file to be used for logging ArchR output.</p></td>
     </tr>
     </table>
     

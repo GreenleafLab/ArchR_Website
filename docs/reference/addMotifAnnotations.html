@@ -45,9 +45,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Add motif annotations to an ArchRProject — addMotifAnnotations" />
 
-<meta property="og:description" content="This function adds information about which peaks contain motifs to a given ArchRProject. For each peak, a binary value is stored indicating whether each motif is observed within the peak region." />
+<meta property="og:description" content="This function adds information about which peaks contain motifs to a given ArchRProject. For each peak, a binary value
+is stored indicating whether each motif is observed within the peak region." />
 
 <meta property="og:image" content="https://greenleaflab.github.io/ArchR_Website/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -91,7 +94,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -167,7 +170,8 @@
 
     <div class="ref-description">
     
-    <p>This function adds information about which peaks contain motifs to a given ArchRProject. For each peak, a binary value is stored indicating whether each motif is observed within the peak region.</p>
+    <p>This function adds information about which peaks contain motifs to a given ArchRProject. For each peak, a binary value
+is stored indicating whether each motif is observed within the peak region.</p>
     
     </div>
 
@@ -179,7 +183,9 @@
   <span class='kw'>collection</span> <span class='kw'>=</span> <span class='st'>"CORE"</span>,
   <span class='kw'>cutOff</span> <span class='kw'>=</span> <span class='fl'>5e-05</span>,
   <span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>7</span>,
+  <span class='kw'>version</span> <span class='kw'>=</span> <span class='fl'>2</span>,
   <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>logFile</span> <span class='kw'>=</span> <span class='fu'>createLogFile</span>(<span class='st'>"addMotifAnnotations"</span>),
   <span class='no'>...</span>
 )</pre>
     
@@ -192,7 +198,9 @@
     </tr>
     <tr>
       <th>motifSet</th>
-      <td><p>The motif set to be used for annotation. Options include: (i) "JASPAR2016", "JASPAR2018", "JASPAR2020" which gives the 2016, 2018 or 2020 version of JASPAR motifs or (ii) one of "cisbp", "encode", or "homer" which gives the corresponding motif sets from the <code>chromVAR</code> package.</p></td>
+      <td><p>The motif set to be used for annotation. Options include: (i) "JASPAR2016", "JASPAR2018", "JASPAR2020"
+which gives the 2016, 2018 or 2020 version of JASPAR motifs or (ii) one of "cisbp", "encode", or "homer" which gives the
+corresponding motif sets from the <code>chromVAR</code> package.</p></td>
     </tr>
     <tr>
       <th>name</th>
@@ -200,23 +208,35 @@
     </tr>
     <tr>
       <th>species</th>
-      <td><p>The name of the species relevant to the supplied <code>ArchRProject</code>. This is used for identifying which motif to be used from CisBP/JASPAR. By default, this function will attempt to guess the species based on the value from <code><a href='getGenome.html'>getGenome()</a></code>.</p></td>
+      <td><p>The name of the species relevant to the supplied <code>ArchRProject</code>. This is used for identifying which motif to be
+used from CisBP/JASPAR. By default, this function will attempt to guess the species based on the value from <code><a href='getGenome.html'>getGenome()</a></code>.</p></td>
     </tr>
     <tr>
       <th>collection</th>
-      <td><p>If one of the JASPAR motif sets is used via <code>motifSet</code>, this parameter allows you to indicate the JASPAR collection to be used. See <code>getMatrixSet()</code> from <code>TFBSTools</code> for all options to supply for collection.</p></td>
+      <td><p>If one of the JASPAR motif sets is used via <code>motifSet</code>, this parameter allows you to indicate the JASPAR
+collection to be used. See <code>getMatrixSet()</code> from <code>TFBSTools</code> for all options to supply for collection.</p></td>
     </tr>
     <tr>
       <th>cutOff</th>
-      <td><p>The p-value cutoff to be used for motif search. The p-value is determined vs a background set of sequences (see <code>MOODS</code> for more details on this determination).</p></td>
+      <td><p>The p-value cutoff to be used for motif search. The p-value is determined vs a background set of sequences
+(see <code>MOODS</code> for more details on this determination).</p></td>
     </tr>
     <tr>
       <th>width</th>
       <td><p>The width in basepairs to consider for motif matches. See the <code>motimatchr</code> package for more information.</p></td>
     </tr>
     <tr>
+      <th>version</th>
+      <td><p>An integer specifying version 1 or version 2 of chromVARmotifs see github for more info GreenleafLab/chromVARmotifs.</p></td>
+    </tr>
+    <tr>
       <th>force</th>
-      <td><p>A boolean value indicating whether to force the <code>peakAnnotation</code> object indicated by <code>name</code> to be overwritten if it already exist in the given <code>ArchRProject</code>.</p></td>
+      <td><p>A boolean value indicating whether to force the <code>peakAnnotation</code> object indicated by <code>name</code> to be overwritten if
+it already exists in the given <code>ArchRProject</code>.</p></td>
+    </tr>
+    <tr>
+      <th>logFile</th>
+      <td><p>The path to a file to be used for logging ArchR output.</p></td>
     </tr>
     <tr>
       <th>...</th>

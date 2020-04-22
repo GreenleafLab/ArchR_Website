@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add a globally defined genome to all ArchR functions. JJJ — addArchRGenome • ArchR</title>
+<title>Add a globally defined genome to all ArchR functions. — addArchRGenome • ArchR</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -45,7 +45,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
-<meta property="og:title" content="Add a globally defined genome to all ArchR functions. JJJ — addArchRGenome" />
+  <link href="../extra.css" rel="stylesheet">
+  
+<meta property="og:title" content="Add a globally defined genome to all ArchR functions. — addArchRGenome" />
 
 <meta property="og:description" content="This function will set the genome across all ArchR functions." />
 
@@ -91,7 +93,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -160,7 +162,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add a globally defined genome to all ArchR functions. JJJ</h1>
+    <h1>Add a globally defined genome to all ArchR functions.</h1>
     
     <div class="hidden name"><code>addArchRGenome.Rd</code></div>
     </div>
@@ -178,7 +180,16 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>genome</th>
-      <td><p>The default genome to be used for all ArchR functions. This value is stored as a global environment variable, not part of the <code>ArchRProject</code>. This can be overwritten on a per-function basis using the given function's <code>geneAnnotation</code> and  <code>genomeAnnotation</code> parameter.</p></td>
+      <td><p>A string indicating the default genome to be used for all ArchR functions.
+Currently supported values include "hg19","hg38","mm9", and "mm10".
+This value is stored as a global environment variable, not part of the <code>ArchRProject</code>.
+This can be overwritten on a per-function basis using the given function's <code>geneAnnotation</code>and <code>genomeAnnotation</code> parameter.
+For something other than one of the currently supported, see <code><a href='createGeneAnnnotation.html'>createGeneAnnnotation()</a></code> and <code>createGenomeAnnnotation()</code>.</p></td>
+    </tr>
+    <tr>
+      <th>install</th>
+      <td><p>A boolean value indicating whether the <code>BSgenome</code> object associated with the provided <code>genome</code> should be
+automatically installed if it is not currently installed. This is useful for helping reduce user download requirements.</p></td>
     </tr>
     </table>
     

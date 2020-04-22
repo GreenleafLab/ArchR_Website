@@ -44,10 +44,11 @@ reference:
     desc: Functions that help create / set up an ArrowFile
     contents:
     - createArrowFiles
-    - filterCells
+    - createGeneAnnnotation
+    - createGenomeAnnotation
     - filterDoublets
-    - filterPlot
     - nCells
+    - reformatFragmentFiles
   - title: Add-ers
     desc: Functions that add information to ArrowFiles or an ArchRProject
     contents:
@@ -56,37 +57,47 @@ reference:
     desc: Functions that get information from ArrowFiles or an ArchRProject
     contents:
     - starts_with("get")
+  - title: Manipulating an ArchRProject
+    desc: Functions for manipulating an ArchR
+    contents:
+    - ArchRProject
+    - loadArchRProject
+    - recoverArchRProject
+    - saveArchRProject
+    - subsetArchRProject
+    - subsetCells
   - title: Plotting / aesthetic functions
     desc: Functions for plotting in ArchR
     contents:
+    - ArchRBrowser
     - ArchRPalettes
-    - ArchRRegionTrack
     - starts_with("gg")
     - starts_with("palette")
     - starts_with("plot")
+    - projectBulkATAC
     - starts_with("theme")
   - title: Helper functions
-    desc: Generic helper functions
+    desc: Functions that make things easier
     contents:
     - '%ni%'
     - '%bcin%'
     - '%bcni%'
+    - createLogFile
     - findMacs2
+    - installExtraPackages
+    - validBSgenome
   - title: GRanges manipulation
     desc: Functions to manipulate GRanges objects
     contents:
-    - columnOverlaps
-    - constructGRanges
-    - extendGRanges
-    - keepFilteredChromosomes
-    - mergeGRanges
-    - nonOverlappingGRanges
-    - overlappingBP
-    - overlapsMany
-    - shuffleGRanges
-    - subsetSeqnames
-  - title: Marker feature / trajectory identification
-    desc: Functions to identify and visualize marker features and cellular trajectories
+    - extendGR
+    - filterChrGR
+    - nonOverlappingGR
+  - title: Other ArchR Functions
+    desc: Functions that didnt fit into one of the above categories
     contents:
-    - starts_with("marker")
-    - trajectoryHeatmap
+    - confusionMatrix
+    - correlateMatrices
+    - correlateTrajectories
+    - imputeMatrix
+    - mapLabels
+    - peakAnnoEnrichment

@@ -45,6 +45,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Save ArchRProject for Later Usage — saveArchRProject" />
 
 <meta property="og:description" content="This function will organize arrows and project output into a directory and save the ArchRProject for later usage." />
@@ -91,7 +93,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -171,7 +173,12 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>saveArchRProject</span>(<span class='kw'>ArchRProj</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>copyArrows</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>saveArchRProject</span>(
+  <span class='kw'>ArchRProj</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>outputDirectory</span> <span class='kw'>=</span> <span class='fu'><a href='getOutputDirectory.html'>getOutputDirectory</a></span>(<span class='no'>ArchRProj</span>),
+  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>load</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -181,8 +188,16 @@
       <td><p>An <code>ArchRProject</code> object.</p></td>
     </tr>
     <tr>
-      <th>copyArrows</th>
-      <td><p>A boolean indicating whether to copy (<code>TRUE</code>) or copy + remove (<code>FALSE</code>) original ArrowFiles prior to saving the <code>ArchRProject</code>.</p></td>
+      <th>outputDirectory</th>
+      <td><p>A directory path to save all ArchR output and <code>ArchRProject</code> to. Default is outputDirectory of the <code>ArchRProject</code>.</p></td>
+    </tr>
+    <tr>
+      <th>overwrite</th>
+      <td><p>When writing to outputDirectory, overwrite existing files with new files.</p></td>
+    </tr>
+    <tr>
+      <th>load</th>
+      <td><p>Load the <code>ArchRProject</code> after saving and writing to outputDirectory.</p></td>
     </tr>
     </table>
     

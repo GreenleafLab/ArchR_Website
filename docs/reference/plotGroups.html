@@ -45,6 +45,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Visualize Groups from ArchR Project — plotGroups" />
 
 <meta property="og:description" content="This function will group, summarize and then plot data from an ArchRProject for visual comparison." />
@@ -91,7 +93,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -176,13 +178,21 @@
   <span class='kw'>groupBy</span> <span class='kw'>=</span> <span class='st'>"Sample"</span>,
   <span class='kw'>colorBy</span> <span class='kw'>=</span> <span class='st'>"colData"</span>,
   <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"TSSEnrichment"</span>,
-  <span class='kw'>imputeWeights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>imputeWeights</span> <span class='kw'>=</span> <span class='kw'>if</span> (!<span class='fu'><a href='https://rdrr.io/r/base/grep.html'>grepl</a></span>(<span class='st'>"coldata"</span>, <span class='fu'><a href='https://rdrr.io/r/base/chartr.html'>tolower</a></span>(<span class='no'>colorBy</span>[<span class='fl'>1</span>])))
+    <span class='fu'><a href='getImputeWeights.html'>getImputeWeights</a></span>(<span class='no'>ArchRProj</span>),
+  <span class='kw'>maxCells</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
+  <span class='kw'>quantCut</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.002</span>, <span class='fl'>0.998</span>),
   <span class='kw'>log2Norm</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>pal</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>discreteSet</span> <span class='kw'>=</span> <span class='st'>"stallion"</span>,
   <span class='kw'>ylim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
   <span class='kw'>baseSize</span> <span class='kw'>=</span> <span class='fl'>6</span>,
-  <span class='kw'>ratioYX</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
+  <span class='kw'>ratioYX</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>ridgeScale</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  <span class='kw'>plotAs</span> <span class='kw'>=</span> <span class='st'>"ridges"</span>,
+  <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fu'><a href='getArchRThreads.html'>getArchRThreads</a></span>(),
+  <span class='no'>...</span>
 )</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -198,16 +208,41 @@
     </tr>
     <tr>
       <th>colorBy</th>
-      <td><p>A string indicating whether the numeric values to be used in the violin plot should be from a column in <code>cellColData</code> ("cellColData") or by a data matrix in the ArrowFiles (i.e. "GeneScoreMatrix", "MotifMatrix", "PeakMatrix").</p></td>
+      <td><p>A string indicating whether the numeric values to be used in the violin plot should be from a column in
+<code>cellColData</code> ("cellColData") or from a data matrix in the ArrowFiles (i.e. "GeneScoreMatrix", "MotifMatrix", "PeakMatrix").</p></td>
     </tr>
     <tr>
       <th>name</th>
       <td><p>The name of the column in <code>cellColData</code> or the featureName/rowname of the data matrix to be used for plotting.
-For example if colorBy is <code>cellColData</code> then name refers to a column name in the cellcoldata (see <code>getCellcoldata()</code>), if colorBy is "GeneScoreMatrix" then name refers to a gene name which can be listed by <code><a href='getFeatures.html'>getFeatures(ArchRProj, useMatrix = "GeneScoreMatrix")</a></code>.</p></td>
+For example if <code>colorBy</code> is "cellColData" then <code>name</code> refers to a column name in the cellcoldata (see <code>getCellcoldata()</code>). If <code>colorBy</code>
+is "GeneScoreMatrix" then <code>name</code> refers to a gene name which can be listed by <code><a href='getFeatures.html'>getFeatures(ArchRProj, useMatrix = "GeneScoreMatrix")</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>imputeWeights</th>
+      <td><p>The weights to be used for imputing numerical values for each cell as a linear combination of other cells values. See <code>addImputationWeights()</code> and <code>getImutationWeights()</code> for more information.</p></td>
+    </tr>
+    <tr>
+      <th>maxCells</th>
+      <td><p>The maximum cells to consider when making the plot.</p></td>
+    </tr>
+    <tr>
+      <th>quantCut</th>
+      <td><p>If this is not null, a quantile cut is performed to threshold the top and bottom of the distribution of values.
+This prevents skewed color scales caused by strong outliers. The format of this should be c(a,b) where <code>a</code> is the upper threshold and
+<code>b</code> is the lower threshold. For example, quantCut = c(0.025,0.975) will take the top and bottom 2.5 percent of values and set them
+to the value of the 97.5th and 2.5th percentile values respectively.</p></td>
+    </tr>
+    <tr>
+      <th>log2Norm</th>
+      <td><p>A boolean value indicating whether a log2 transformation should be performed on the values (if continuous) in plotting.</p></td>
     </tr>
     <tr>
       <th>pal</th>
       <td><p>A custom palette (see <code>paletteDiscrete</code> or <code>ArchRPalettes</code>) used to override discreteSet/continuousSet for coloring vector.</p></td>
+    </tr>
+    <tr>
+      <th>discreteSet</th>
+      <td><p>The name of a discrete palette from <code>ArchRPalettes</code> for visualizing <code>colorBy</code> if a discrete color set is desired.</p></td>
     </tr>
     <tr>
       <th>ylim</th>
@@ -224,6 +259,22 @@ For example if colorBy is <code>cellColData</code> then name refers to a column 
     <tr>
       <th>ratioYX</th>
       <td><p>The aspect ratio of the x and y axes on the plot.</p></td>
+    </tr>
+    <tr>
+      <th>ridgeScale</th>
+      <td><p>The scale factor for the relative heights of each ridge when making a ridgeplot with <code>ggridges</code>.</p></td>
+    </tr>
+    <tr>
+      <th>plotAs</th>
+      <td><p>A string that indicates whether a rigdge plot ("ridges") should be plotted or a violin plot ("violin") should be plotted.</p></td>
+    </tr>
+    <tr>
+      <th>threads</th>
+      <td><p>The number of threads to be used for parallel computing.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Additional parameters to pass to <code><a href='ggGroup.html'>ggGroup()</a></code>.</p></td>
     </tr>
     </table>
     

@@ -45,6 +45,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Add a matrix of deviations for a given peakAnnotation to Arrow Files in ArchRProject — addDeviationsMatrix" />
 
 <meta property="og:description" content="This function will compute peakAnnotation deviations for each ArrowFiles independently while controlling for global biases (low-memory requirement)." />
@@ -91,7 +93,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -180,8 +182,10 @@
   <span class='kw'>out</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"z"</span>, <span class='st'>"deviations"</span>),
   <span class='kw'>binarize</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fu'><a href='getArchRThreads.html'>getArchRThreads</a></span>(),
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>parallelParam</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>logFile</span> <span class='kw'>=</span> <span class='fu'>createLogFile</span>(<span class='st'>"addDeviationsMatrix"</span>)
 )</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -196,20 +200,36 @@
       <td><p>The name of the <code>peakAnnotation</code> stored in the <code>ArchRProject</code>.</p></td>
     </tr>
     <tr>
+      <th>matches</th>
+      <td><p>A custom <code>peakAnnotation</code> matches object used as input for the hypergeometric test. See
+<code>motifmatchr::matchmotifs()</code> for additional information.</p></td>
+    </tr>
+    <tr>
+      <th>bgdPeaks</th>
+      <td><p>A <code>SummarizedExperiment</code> that contains for each peak a set of background peaks matched by biases such as total accessibility
+and GC nucleotide content. This can be computed using <code>addBgdPeaks</code> and accessed by <code>getBgdPeaks</code>.</p></td>
+    </tr>
+    <tr>
       <th>matrixName</th>
       <td><p>The name to be used for storage of the deviations matrix in the provided <code>ArchRProject</code>.</p></td>
     </tr>
     <tr>
       <th>out</th>
-      <td><p>A string or character vector that indicates whether to save the ouptut matrices as deviations ("deviations") z-scores ("z"), or both (c("deviations","z")).</p></td>
+      <td><p>A string or character vector that indicates whether to save the ouptut matrices as deviations ("deviations")
+z-scores ("z"), or both (c("deviations","z")).</p></td>
     </tr>
     <tr>
       <th>binarize</th>
-      <td><p>A boolean value indicating whether the input matrix should be binarized before calculating deviations. This is often desired when working with insertion counts.</p></td>
+      <td><p>A boolean value indicating whether the input matrix should be binarized before calculating deviations.
+This is often desired when working with insertion counts.</p></td>
     </tr>
     <tr>
       <th>threads</th>
       <td><p>The number of threads to be used for parallel computing.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>A boolean value that determines whether standard output includes verbose sections.</p></td>
     </tr>
     <tr>
       <th>parallelParam</th>
@@ -217,7 +237,12 @@
     </tr>
     <tr>
       <th>force</th>
-      <td><p>A boolean value indicating whether to force the matrix indicated by <code>matrixName</code> to be overwritten if it already exists in the ArrowFiles associated with the given <code>ArchRProject</code>.</p></td>
+      <td><p>A boolean value indicating whether to force the matrix indicated by <code>matrixName</code> to be overwritten if it
+already exists in the ArrowFiles associated with the given <code>ArchRProject</code>.</p></td>
+    </tr>
+    <tr>
+      <th>logFile</th>
+      <td><p>The path to a file to be used for logging ArchR output.</p></td>
     </tr>
     </table>
     

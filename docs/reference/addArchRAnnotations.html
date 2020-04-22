@@ -45,9 +45,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Add ArchR annotations to an ArchRProject — addArchRAnnotations" />
 
-<meta property="og:description" content="This function adds information about which peaks in the ArchR database contain input regions to a given ArchRProject. For each peak, a binary value is stored indicating whether each region is observed within the peak region." />
+<meta property="og:description" content="This function adds information about which peaks in the ArchR database contain input regions to a given ArchRProject.
+For each peak, a binary value is stored indicating whether each region is observed within the peak region." />
 
 <meta property="og:image" content="https://greenleaflab.github.io/ArchR_Website/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -91,7 +94,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -167,7 +170,8 @@
 
     <div class="ref-description">
     
-    <p>This function adds information about which peaks in the ArchR database contain input regions to a given ArchRProject. For each peak, a binary value is stored indicating whether each region is observed within the peak region.</p>
+    <p>This function adds information about which peaks in the ArchR database contain input regions to a given ArchRProject.
+For each peak, a binary value is stored indicating whether each region is observed within the peak region.</p>
     
     </div>
 
@@ -176,7 +180,8 @@
   <span class='kw'>db</span> <span class='kw'>=</span> <span class='st'>"ArchR"</span>,
   <span class='kw'>collection</span> <span class='kw'>=</span> <span class='st'>"EncodeTFBS"</span>,
   <span class='kw'>name</span> <span class='kw'>=</span> <span class='no'>collection</span>,
-  <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>logFile</span> <span class='kw'>=</span> <span class='fu'>createLogFile</span>(<span class='st'>"addArchRAnnotations"</span>)
 )</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -188,22 +193,28 @@
     </tr>
     <tr>
       <th>db</th>
-      <td><p>A character indicating which database or a path to a database to use for peak annotation. Options include ArchR, LOLA, and a valid path to a file of class <code>ArchRAnno</code>.</p></td>
+      <td><p>A string indicating the database or a path to a database to use for peak annotation. Options include ArchR,
+LOLA, and a valid path to a file of class <code>ArchRAnno</code>.</p></td>
     </tr>
     <tr>
       <th>collection</th>
-      <td><p>A character indicating which collection within the database to collect for annotation.
-For ArchR, options "ATAC", "EncodeTFBS", "CistromeTFBS", or "Codex".
+      <td><p>A string indicating which collection within the database to collect for annotation.
+For ArchR, options are "ATAC", "EncodeTFBS", "CistromeTFBS", or "Codex".
 For LOLA, options include "EncodeTFBS" "CistromeTFBS", "CistromeEpigenome", "Codex", or "SheffieldDnase".
-If supplying a custom ArchRAnno please use a valid collection.</p></td>
+If supplying a custom <code>ArchRAnno</code> file please select a valid collection from within that database.</p></td>
     </tr>
     <tr>
       <th>name</th>
-      <td><p>The name of <code>peakAnnotation</code> object to be stored as in <code>ArchRProject</code>.</p></td>
+      <td><p>The name of the <code>peakAnnotation</code> object to be stored in the <code>ArchRProject</code>.</p></td>
     </tr>
     <tr>
       <th>force</th>
-      <td><p>A boolean value indicating whether to force the <code>peakAnnotation</code> object indicated by <code>name</code> to be overwritten if it already exist in the given <code>ArchRProject</code>.</p></td>
+      <td><p>A boolean value indicating whether to force the <code>peakAnnotation</code> object indicated by <code>name</code> to be
+overwritten if it already exists in the given <code>ArchRProject</code>.</p></td>
+    </tr>
+    <tr>
+      <th>logFile</th>
+      <td><p>The path to a file to be used for logging ArchR output.</p></td>
     </tr>
     </table>
     

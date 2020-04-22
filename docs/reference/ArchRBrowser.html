@@ -45,9 +45,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Launch ArchR Genome Browser — ArchRBrowser" />
 
-<meta property="og:description" content="This function will open an interactive shiny session in style of a browser track. It allows for normalization of the signal which enables direct comparison across samples." />
+<meta property="og:description" content="This function will open an interactive shiny session in style of a browser track. It allows for normalization of the signal which
+enables direct comparison across samples." />
 
 <meta property="og:image" content="https://greenleaflab.github.io/ArchR_Website/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -91,7 +94,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -167,7 +170,8 @@
 
     <div class="ref-description">
     
-    <p>This function will open an interactive shiny session in style of a browser track. It allows for normalization of the signal which enables direct comparison across samples.</p>
+    <p>This function will open an interactive shiny session in style of a browser track. It allows for normalization of the signal which
+enables direct comparison across samples.</p>
     
     </div>
 
@@ -176,13 +180,15 @@
   <span class='kw'>features</span> <span class='kw'>=</span> <span class='fu'><a href='getPeakSet.html'>getPeakSet</a></span>(<span class='no'>ArchRProj</span>),
   <span class='kw'>loops</span> <span class='kw'>=</span> <span class='fu'><a href='getCoAccessibility.html'>getCoAccessibility</a></span>(<span class='no'>ArchRProj</span>),
   <span class='kw'>minCells</span> <span class='kw'>=</span> <span class='fl'>25</span>,
-  <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fu'><a href='getArchRThreads.html'>getArchRThreads</a></span>(),
   <span class='kw'>baseSize</span> <span class='kw'>=</span> <span class='fl'>10</span>,
   <span class='kw'>borderWidth</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
   <span class='kw'>tickWidth</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
   <span class='kw'>facetbaseSize</span> <span class='kw'>=</span> <span class='fl'>12</span>,
   <span class='kw'>geneAnnotation</span> <span class='kw'>=</span> <span class='fu'><a href='getGeneAnnotation.html'>getGeneAnnotation</a></span>(<span class='no'>ArchRProj</span>),
-  <span class='kw'>browserTheme</span> <span class='kw'>=</span> <span class='st'>"cosmo"</span>
+  <span class='kw'>browserTheme</span> <span class='kw'>=</span> <span class='st'>"cosmo"</span>,
+  <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fu'><a href='getArchRThreads.html'>getArchRThreads</a></span>(),
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>logFile</span> <span class='kw'>=</span> <span class='fu'>createLogFile</span>(<span class='st'>"ArchRBrowser"</span>)
 )</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -194,15 +200,20 @@
     </tr>
     <tr>
       <th>features</th>
-      <td><p>A <code>GRanges</code> object containing the "features" to be plotted via the "featureTrack". This should be thought of as a bed track. i.e. the set of peaks obtained using <code>getPeakSet(ArchRProj))</code>.</p></td>
+      <td><p>A <code>GRanges</code> object containing the "features" to be plotted via the "featureTrack". This should be thought of as a
+bed track. i.e. the set of peaks obtained using <code>getPeakSet(ArchRProj))</code>.</p></td>
+    </tr>
+    <tr>
+      <th>loops</th>
+      <td><p>A <code>GRanges</code> object containing the "loops" to be plotted via the "loopTrack".
+This <code>GRanges</code> object start represents the center position of one loop anchor and the end represents the center position of another loop anchor.
+A "loopTrack" draws an arc between two genomic regions that show some type of interaction. This type of track can be used
+to display chromosome conformation capture data or co-accessibility links obtained using <code><a href='getCoAccessibility.html'>getCoAccessibility()</a></code>.</p></td>
     </tr>
     <tr>
       <th>minCells</th>
-      <td><p>The minimum number of cells contained within a cell group to allow for this cell group to be plotted. This argument can be used to exclude pseudo-bulk replicates generated from low numbers of cells.</p></td>
-    </tr>
-    <tr>
-      <th>threads</th>
-      <td><p>The number of threads to use for parallel execution.</p></td>
+      <td><p>The minimum number of cells contained within a cell group to allow for this cell group to be plotted. This argument
+can be used to exclude pseudo-bulk replicates generated from low numbers of cells.</p></td>
     </tr>
     <tr>
       <th>baseSize</th>
@@ -226,7 +237,20 @@
     </tr>
     <tr>
       <th>browserTheme</th>
-      <td><p>A <code>shinytheme</code> from shinythemes for viewing the ArchR Browser. If not installed this will be NULL. To install try devtools::install_github("rstudio/shinythemes").</p></td>
+      <td><p>A <code>shinytheme</code> from shinythemes for viewing the ArchR Browser. If not installed this will be NULL.
+To install try devtools::install_github("rstudio/shinythemes").</p></td>
+    </tr>
+    <tr>
+      <th>threads</th>
+      <td><p>The number of threads to use for parallel execution.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>A boolean value that determines whether standard output should be printed.</p></td>
+    </tr>
+    <tr>
+      <th>logFile</th>
+      <td><p>The path to a file to be used for logging ArchR output.</p></td>
     </tr>
     </table>
     

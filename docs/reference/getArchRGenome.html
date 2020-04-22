@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get a globally defined genome to all ArchR functions. JJJ — getArchRGenome • ArchR</title>
+<title>Get the globally defined genome, the geneAnnotation, or genomeAnnotation objects associated with the globally defined genome. — getArchRGenome • ArchR</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -45,9 +45,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
-<meta property="og:title" content="Get a globally defined genome to all ArchR functions. JJJ — getArchRGenome" />
+  <link href="../extra.css" rel="stylesheet">
+  
+<meta property="og:title" content="Get the globally defined genome, the geneAnnotation, or genomeAnnotation objects associated with the globally defined genome. — getArchRGenome" />
 
-<meta property="og:description" content="This function will get the genome across all ArchR functions. Additionally can return geneAnnotation and genomeAnnotation associated with ArchRGenome if desired." />
+<meta property="og:description" content="This function will retrieve the genome that is currently in use by ArchR. Alternatively, this function can return either the geneAnnotation
+or the genomeAnnotation associated with the globally defined genome if desired." />
 
 <meta property="og:image" content="https://greenleaflab.github.io/ArchR_Website/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -91,7 +94,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -160,14 +163,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get a globally defined genome to all ArchR functions. JJJ</h1>
+    <h1>Get the globally defined genome, the geneAnnotation, or genomeAnnotation objects associated with the globally defined genome.</h1>
     
     <div class="hidden name"><code>getArchRGenome.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function will get the genome across all ArchR functions. Additionally can return geneAnnotation and genomeAnnotation associated with ArchRGenome if desired.</p>
+    <p>This function will retrieve the genome that is currently in use by ArchR. Alternatively, this function can return either the <code>geneAnnotation</code>
+or the <code>genomeAnnotation</code> associated with the globally defined genome if desired.</p>
     
     </div>
 
@@ -178,11 +182,15 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>geneAnnotation</th>
-      <td><p>Export geneAnnotation set with addArchRGenome. The geneAnnotation (see <code>createGeneAnnotation()</code>) to associate with the ArrowFiles. This is used downstream to calculate TSS Enrichment Scores etc.</p></td>
+      <td><p>A boolean value indicating whether the <code>geneAnnotation</code> associated with the ArchRGenome should be returned
+instead of the globally defined genome. The <code>geneAnnotation</code> is used downstream to calculate things like TSS Enrichment Scores.
+This function is not meant to be run with both <code>geneAnnotation</code> and <code>genomeAnnotation</code> set to <code>TRUE</code> (it is an either/or return value).</p></td>
     </tr>
     <tr>
       <th>genomeAnnotation</th>
-      <td><p>Export genomeAnnotation set with addArchRGenome. The genomeAnnotation (see <code><a href='createGenomeAnnotation.html'>createGenomeAnnotation()</a></code>) to associate with the ArrowFiles. This is used downstream to collect chromosome sizes and nucleotide information etc.</p></td>
+      <td><p>A boolean value indicating whether the <code>genomeAnnotation</code> associated with the ArchRGenome should be returned
+instead of the globally defined genome. The <code>genomeAnnotation</code> is used downstream to determine things like chromosome sizes and nucleotide content.
+This function is not meant to be run with both <code>geneAnnotation</code> and <code>genomeAnnotation</code> set to <code>TRUE</code> (it is an either/or return value).</p></td>
     </tr>
     </table>
     

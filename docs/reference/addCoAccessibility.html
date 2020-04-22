@@ -45,6 +45,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Add Peak Co-Accessibility to an ArchRProject — addCoAccessibility" />
 
 <meta property="og:description" content="This function will add co-accessibility scores to peaks in a given ArchRProject" />
@@ -91,7 +93,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -177,15 +179,16 @@
   <span class='kw'>dimsToUse</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>30</span>,
   <span class='kw'>scaleDims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>corCutOff</span> <span class='kw'>=</span> <span class='fl'>0.75</span>,
-  <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>200</span>,
+  <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>100</span>,
   <span class='kw'>knnIteration</span> <span class='kw'>=</span> <span class='fl'>500</span>,
   <span class='kw'>overlapCutoff</span> <span class='kw'>=</span> <span class='fl'>0.8</span>,
   <span class='kw'>maxDist</span> <span class='kw'>=</span> <span class='fl'>1e+05</span>,
   <span class='kw'>scaleTo</span> <span class='kw'>=</span> <span class='fl'>10</span>^<span class='fl'>4</span>,
   <span class='kw'>log2Norm</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>knnMethod</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fu'><a href='getArchRThreads.html'>getArchRThreads</a></span>()
+  <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fu'><a href='getArchRThreads.html'>getArchRThreads</a></span>(),
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>logFile</span> <span class='kw'>=</span> <span class='fu'>createLogFile</span>(<span class='st'>"addCoAccessibility"</span>)
 )</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -205,11 +208,15 @@
     </tr>
     <tr>
       <th>scaleDims</th>
-      <td><p>A boolean describing whether to rescale the total variance for each principal component. This is useful for minimizing the contribution of strong biases (dominating early PCs) and lowly abundant populations. However, this may lead to stronger sample-specific biases since it is over-weighting latent PCs. If <code>NULL</code> this will scale the dimensions depending on if this were set true when the <code>reducedDims</code> were created by <code>addIterativeLSI</code>.</p></td>
+      <td><p>A boolean value that indicates whether to z-score the reduced dimensions for each cell. This is useful for minimizing
+the contribution of strong biases (dominating early PCs) and lowly abundant populations. However, this may lead to stronger sample-specific
+biases since it is over-weighting latent PCs. If set to <code>NULL</code> this will scale the dimensions based on the value of <code>scaleDims</code> when the
+<code>reducedDims</code> were originally created during dimensionality reduction. This idea was introduced by Timothy Stuart.</p></td>
     </tr>
     <tr>
       <th>corCutOff</th>
-      <td><p>A numeric cutoff for the correlation of each dimension to the sequencing depth. If the dimension has a correlation to sequencing depth that is greater than the <code>corCutOff</code>, it will be excluded from analysis.</p></td>
+      <td><p>A numeric cutoff for the correlation of each dimension to the sequencing depth. If the dimension has a correlation to
+sequencing depth that is greater than the <code>corCutOff</code>, it will be excluded from analysis.</p></td>
     </tr>
     <tr>
       <th>k</th>
@@ -221,7 +228,8 @@
     </tr>
     <tr>
       <th>overlapCutoff</th>
-      <td><p>The maximum allowable overlap between the current group and all previous groups to permit the current group be added to the group list during k-nearest neighbor calculations.</p></td>
+      <td><p>The maximum allowable overlap between the current group and all previous groups to permit the current group be
+added to the group list during k-nearest neighbor calculations.</p></td>
     </tr>
     <tr>
       <th>maxDist</th>
@@ -229,7 +237,8 @@
     </tr>
     <tr>
       <th>scaleTo</th>
-      <td><p>The total insertion counts from the designated group of single cells is summed across all relevant peak regions from the <code>peakSet</code> of the <code>ArchRProject</code> and normalized to the total depth provided by <code>scaleTo</code>.</p></td>
+      <td><p>The total insertion counts from the designated group of single cells is summed across all relevant peak regions from
+the <code>peakSet</code> of the <code>ArchRProject</code> and normalized to the total depth provided by <code>scaleTo</code>.</p></td>
     </tr>
     <tr>
       <th>log2Norm</th>
@@ -237,15 +246,20 @@
     </tr>
     <tr>
       <th>seed</th>
-      <td><p>A number to be used as the seed for random number generation required in cluster determination. It is recommended to keep track of the seed used so that you can reproduce results downstream.</p></td>
-    </tr>
-    <tr>
-      <th>knnMethod</th>
-      <td><p>The method to be used for k-nearest neighbor computations. Options are "nabor", "RANN", and "FNN" and the corresponding package is required.</p></td>
+      <td><p>A number to be used as the seed for random number generation required in knn determination. It is recommended to keep track
+of the seed used so that you can reproduce results downstream.</p></td>
     </tr>
     <tr>
       <th>threads</th>
       <td><p>The number of threads to be used for parallel computing.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>A boolean value that determines whether standard output should be printed.</p></td>
+    </tr>
+    <tr>
+      <th>logFile</th>
+      <td><p>The path to a file to be used for logging ArchR output.</p></td>
     </tr>
     </table>
     

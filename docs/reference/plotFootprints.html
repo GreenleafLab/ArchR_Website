@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot footprints for an ArchRProject — plotFootprints • ArchR</title>
+<title>Plot Footprints — plotFootprints • ArchR</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -45,9 +45,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
-<meta property="og:title" content="Plot footprints for an ArchRProject — plotFootprints" />
+  <link href="../extra.css" rel="stylesheet">
+  
+<meta property="og:title" content="Plot Footprints — plotFootprints" />
 
-<meta property="og:description" content="This function will plot footprints for all samples in a given ArchRProject or a properly-formatted Summarized Experiment" />
+<meta property="og:description" content="This function will get footprints for all samples in a given ArchRProject or a properly-formatted Summarized Experiment" />
 
 <meta property="og:image" content="https://greenleaflab.github.io/ArchR_Website/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -91,7 +93,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -160,62 +162,46 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot footprints for an ArchRProject</h1>
+    <h1>Plot Footprints</h1>
     
     <div class="hidden name"><code>plotFootprints.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function will plot footprints for all samples in a given ArchRProject or a properly-formatted Summarized Experiment</p>
+    <p>This function will get footprints for all samples in a given ArchRProject or a properly-formatted Summarized Experiment</p>
     
     </div>
 
     <pre class="usage"><span class='fu'>plotFootprints</span>(
-  <span class='kw'>ArchRProj</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>positions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>plotName</span> <span class='kw'>=</span> <span class='st'>"Plot-Footprints"</span>,
-  <span class='kw'>groupBy</span> <span class='kw'>=</span> <span class='st'>"Clusters"</span>,
-  <span class='kw'>useGroups</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>seFoot</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>names</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>pal</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>flank</span> <span class='kw'>=</span> <span class='fl'>250</span>,
   <span class='kw'>flankNorm</span> <span class='kw'>=</span> <span class='fl'>50</span>,
-  <span class='kw'>smoothWindow</span> <span class='kw'>=</span> <span class='fl'>10</span>,
-  <span class='kw'>minCells</span> <span class='kw'>=</span> <span class='fl'>25</span>,
-  <span class='kw'>nTop</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>normMethod</span> <span class='kw'>=</span> <span class='st'>"none"</span>,
-  <span class='kw'>inputSE</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>normMethod</span> <span class='kw'>=</span> <span class='st'>"Subtract"</span>,
+  <span class='kw'>smoothWindow</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>baseSize</span> <span class='kw'>=</span> <span class='fl'>6</span>,
+  <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>ArchRProj</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>plotName</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"Plot-Footprints-"</span>, <span class='no'>normMethod</span>),
   <span class='kw'>height</span> <span class='kw'>=</span> <span class='fl'>6</span>,
   <span class='kw'>width</span> <span class='kw'>=</span> <span class='fl'>4</span>,
   <span class='kw'>addDOC</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>useSink</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fu'><a href='getArchRThreads.html'>getArchRThreads</a></span>(),
-  <span class='kw'>verboseHeader</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>verboseAll</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>logFile</span> <span class='kw'>=</span> <span class='fu'>createLogFile</span>(<span class='st'>"plotFootprints"</span>)
 )</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>ArchRProj</th>
-      <td><p>An <code>ArchRProject</code> object.</p></td>
+      <th>seFoot</th>
+      <td><p>A summarized experiment object containing information on footprints returned by the <code>getFootprints()</code> function.</p></td>
     </tr>
     <tr>
-      <th>positions</th>
-      <td><p>A <code>list</code> or <code>GenomicRangesList</code> of <code>GRanges</code> containing the positions to incorporate into the footprint. Each position should be stranded.</p></td>
-    </tr>
-    <tr>
-      <th>plotName</th>
-      <td><p>The prefix to add to the file name for the output PDF file containing the footprint plots.</p></td>
-    </tr>
-    <tr>
-      <th>groupBy</th>
-      <td><p>The name of the column in <code>cellColData</code> used in the <code><a href='addGroupCoverages.html'>addGroupCoverages()</a></code> function for grouping multiple cells together.</p></td>
-    </tr>
-    <tr>
-      <th>useGroups</th>
-      <td><p>A character vector that is used to select a subset of groups by name from the designated <code>groupBy</code> column in <code>cellColData</code>. This limits the groups used to perform footprinting.</p></td>
+      <th>names</th>
+      <td><p>A character vector containing the names of the transcription factors to be plotted. These should match colnames of <code>seFoot</code>.</p></td>
     </tr>
     <tr>
       <th>pal</th>
@@ -230,28 +216,33 @@
       <td><p>The number of basepairs to consider at the edge of the flank region (+/-) to be used for footprint normalization.</p></td>
     </tr>
     <tr>
+      <th>normMethod</th>
+      <td><p>The name of the normalization method to use to normalize the footprint relative to the Tn5 insertion bias. Options
+include "none", "subtract", "divide". "Subtract" means subtracting the normalized Tn5 Bias. "Divide" means dividing the normalized Tn5 Bias.</p></td>
+    </tr>
+    <tr>
       <th>smoothWindow</th>
       <td><p>The size in basepairs of the sliding window to be used for smoothing of the footprint signal.</p></td>
     </tr>
     <tr>
-      <th>minCells</th>
-      <td><p>The minimum number of cells required in a given cell group to permit footprint generation.</p></td>
+      <th>baseSize</th>
+      <td><p>A numeric specifying the baseSize of font in the plots.</p></td>
     </tr>
     <tr>
-      <th>nTop</th>
-      <td><p>The number of genomic regions to consider. Only the top <code>nTop</code> genomic regions based on the "score" column in the <code>GRanges</code> object will be considered for the footprint.</p></td>
+      <th>plot</th>
+      <td><p>A boolean value indicating whether or not the footprints should be plotted (<code>TRUE</code>) or returned as grob objects (<code>FALSE</code>).</p></td>
     </tr>
     <tr>
-      <th>normMethod</th>
-      <td><p>The name of the normalization method to use to normalize the footprint relative to the Tn5 insertion bias. Options include "none", "subtract", "divide". "Subtract" means subtracting the normalized Tn5 Bias. "Divide" means dividing the normalized Tn5 Bias.</p></td>
+      <th>ArchRProj</th>
+      <td><p>An <code>ArchRProject</code> object to be used for plotting directory in <code>getOutputDirectory</code>.</p></td>
     </tr>
     <tr>
-      <th>inputSE</th>
-      <td><p>Input a previous footprint Summarized Experiment (returned after running <code>plotFootprints</code>) to be plotted instead of regenerating the footprinting information.</p></td>
+      <th>plotName</th>
+      <td><p>A string indicating the name/prefix of the file to be used for output plots.</p></td>
     </tr>
     <tr>
       <th>height</th>
-      <td><p>The height in inches to be used for the output PDF.</p></td>
+      <td><p>The height in inches to be used for the output PDF file.</p></td>
     </tr>
     <tr>
       <th>width</th>
@@ -259,23 +250,17 @@
     </tr>
     <tr>
       <th>addDOC</th>
-      <td><p>A boolean variable that determines whether to add the date of creation to end of the PDF file name. This is useful for preventing overwritting of old plots.</p></td>
+      <td><p>A boolean variable that determines whether to add the date of creation to end of the PDF file name. This is useful for
+preventing overwritting of old plots.</p></td>
     </tr>
     <tr>
-      <th>useSink</th>
-      <td><p>A boolean value that indicates whether the <code>sink</code> function from base R should be used to hide messages during plotting.</p></td>
+      <th>force</th>
+      <td><p>If many footprints are requested when plot = FALSE, please set force = TRUE.
+This prevents large amount of footprint plots stored as an object.</p></td>
     </tr>
     <tr>
-      <th>threads</th>
-      <td><p>The number of threads to be used for parallel computing.</p></td>
-    </tr>
-    <tr>
-      <th>verboseHeader</th>
-      <td><p>A boolean value that determines whether standard output includes verbose sections.</p></td>
-    </tr>
-    <tr>
-      <th>verboseAll</th>
-      <td><p>A boolean value that determines whether standard output includes verbose subsections.</p></td>
+      <th>logFile</th>
+      <td><p>The path to a file to be used for logging ArchR output.</p></td>
     </tr>
     </table>
     

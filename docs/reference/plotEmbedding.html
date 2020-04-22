@@ -45,6 +45,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Visualize an Embedding from ArchR Project — plotEmbedding" />
 
 <meta property="og:description" content="This function will plot an embedding stored in an ArchRProject" />
@@ -91,7 +93,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -177,9 +179,11 @@
   <span class='kw'>colorBy</span> <span class='kw'>=</span> <span class='st'>"cellColData"</span>,
   <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"Sample"</span>,
   <span class='kw'>log2Norm</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>imputeWeights</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>imputeWeights</span> <span class='kw'>=</span> <span class='kw'>if</span> (!<span class='fu'><a href='https://rdrr.io/r/base/grep.html'>grepl</a></span>(<span class='st'>"coldata"</span>, <span class='fu'><a href='https://rdrr.io/r/base/chartr.html'>tolower</a></span>(<span class='no'>colorBy</span>[<span class='fl'>1</span>])))
+    <span class='fu'><a href='getImputeWeights.html'>getImputeWeights</a></span>(<span class='no'>ArchRProj</span>),
   <span class='kw'>pal</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
+  <span class='kw'>sampleCells</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>rastr</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>quantCut</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.01</span>, <span class='fl'>0.99</span>),
   <span class='kw'>discreteSet</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -188,7 +192,9 @@
   <span class='kw'>keepAxis</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>baseSize</span> <span class='kw'>=</span> <span class='fl'>10</span>,
   <span class='kw'>plotAs</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>plotParams</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>()
+  <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fu'><a href='getArchRThreads.html'>getArchRThreads</a></span>(),
+  <span class='kw'>logFile</span> <span class='kw'>=</span> <span class='fu'>createLogFile</span>(<span class='st'>"plotEmbedding"</span>),
+  <span class='no'>...</span>
 )</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -204,12 +210,14 @@
     </tr>
     <tr>
       <th>colorBy</th>
-      <td><p>A string indicating whether points in the plot should be colored by a column in <code>cellColData</code> ("cellColData") or by a data matrix in the corresponding ArrowFiles (i.e. "GeneScoreMatrix", "MotifMatrix", "PeakMatrix").</p></td>
+      <td><p>A string indicating whether points in the plot should be colored by a column in <code>cellColData</code> ("cellColData") or by
+a data matrix in the corresponding ArrowFiles (i.e. "GeneScoreMatrix", "MotifMatrix", "PeakMatrix").</p></td>
     </tr>
     <tr>
       <th>name</th>
       <td><p>The name of the column in <code>cellColData</code> or the featureName/rowname of the data matrix to be used for plotting.
-For example if colorBy is <code>cellColData</code> then name refers to a column name in the cellcoldata (see <code>getCellcoldata()</code>), if colorBy is <code>GeneScoreMatrix</code> then name refers to a gene name which can be listed by <code><a href='getFeatures.html'>getFeatures(ArchRProj, useMatrix = "GeneScoreMatrix")</a></code>.</p></td>
+For example if colorBy is "cellColData" then <code>name</code> refers to a column name in the <code>cellcoldata</code> (see <code>getCellcoldata()</code>). If <code>colorBy</code>
+is "GeneScoreMatrix" then <code>name</code> refers to a gene name which can be listed by <code><a href='getFeatures.html'>getFeatures(ArchRProj, useMatrix = "GeneScoreMatrix")</a></code>.</p></td>
     </tr>
     <tr>
       <th>log2Norm</th>
@@ -217,7 +225,8 @@ For example if colorBy is <code>cellColData</code> then name refers to a column 
     </tr>
     <tr>
       <th>imputeWeights</th>
-      <td><p>The weights to be used for imputing numerical values for each cell as a linear combination of other cells values. See <code>addImputationWeights()</code> and <code>getImutationWeights()</code> for more information.</p></td>
+      <td><p>The weights to be used for imputing numerical values for each cell as a linear combination of other cells values.
+See <code>addImputationWeights()</code> and <code>getImutationWeights()</code> for more information.</p></td>
     </tr>
     <tr>
       <th>pal</th>
@@ -228,15 +237,20 @@ For example if colorBy is <code>cellColData</code> then name refers to a column 
       <td><p>A number indicating the size of the points to plot if <code>plotAs</code> is set to "points".</p></td>
     </tr>
     <tr>
+      <th>sampleCells</th>
+      <td><p>A numeric describing number of cells to use for plot. If using impute weights, this will occur after imputation.</p></td>
+    </tr>
+    <tr>
       <th>rastr</th>
-      <td><p>A boolean value that indicates whether the plot should be rasterized. This does not rasterize lines and labels, just the internal portions of the plot.</p></td>
+      <td><p>A boolean value that indicates whether the plot should be rasterized. This does not rasterize lines and labels, just the
+internal portions of the plot.</p></td>
     </tr>
     <tr>
       <th>quantCut</th>
       <td><p>If this is not <code>NULL</code>, a quantile cut is performed to threshold the top and bottom of the distribution of numerical values.
 This prevents skewed color scales caused by strong outliers. The format of this should be c(x,y) where x is the lower threshold and y is
-the upper threshold. For example, quantileCut = c(0.025,0.975) will take the 2.5th percentile and 97.5 percentile of values and set values below/above to the value of
-the 2.5th and 97.5th percentile values respectively.</p></td>
+the upper threshold. For example, quantileCut = c(0.025,0.975) will take the 2.5th percentile and 97.5 percentile of values and set
+values below/above to the value of the 2.5th and 97.5th percentile values respectively.</p></td>
     </tr>
     <tr>
       <th>discreteSet</th>
@@ -248,11 +262,12 @@ the 2.5th and 97.5th percentile values respectively.</p></td>
     </tr>
     <tr>
       <th>randomize</th>
-      <td><p>A boolean value that indicates whether to randomize points prior to plotting to prevent cells from one cluster being present at the front of the plot.</p></td>
+      <td><p>A boolean value that indicates whether to randomize points prior to plotting to prevent cells from one cluster being
+uniformly present at the front of the plot.</p></td>
     </tr>
     <tr>
       <th>keepAxis</th>
-      <td><p>A boolean value that indicates whether the x and y axis ticks and labels should be plotted.</p></td>
+      <td><p>A boolean value that indicates whether the x- and y-axis ticks and labels should be plotted.</p></td>
     </tr>
     <tr>
       <th>baseSize</th>
@@ -260,10 +275,19 @@ the 2.5th and 97.5th percentile values respectively.</p></td>
     </tr>
     <tr>
       <th>plotAs</th>
-      <td><p>A string that indicates whether points ("points") should be plotted or a hexplot ("hex") should be plotted. By default if <code>colorBy</code> is numeric this is "hex".</p></td>
+      <td><p>A string that indicates whether points ("points") should be plotted or a hexplot ("hex") should be plotted. By default
+if <code>colorBy</code> is numeric, then <code>plotAs</code> is set to "hex".</p></td>
     </tr>
     <tr>
-      <th>plotParams</th>
+      <th>threads</th>
+      <td><p>The number of threads to be used for parallel computing.</p></td>
+    </tr>
+    <tr>
+      <th>logFile</th>
+      <td><p>The path to a file to be used for logging ArchR output.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
       <td><p>Additional parameters to pass to <code><a href='ggPoint.html'>ggPoint()</a></code> or <code><a href='ggHex.html'>ggHex()</a></code>.</p></td>
     </tr>
     </table>
