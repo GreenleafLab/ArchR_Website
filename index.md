@@ -22,10 +22,7 @@ if (!requireNamespace("devtools", quietly = TRUE)) install.packages("devtools")
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
 
 #Then, install ArchR:
-devtools::install_github("GreenleafLab/ArchR",
-	auth_token = token, #Need a token to download (see personalized access tokens)
-	repos = BiocManager::repositories()
-)
+devtools::install_github("GreenleafLab/ArchR@v0.9.1-beta", repos = BiocManager::repositories())
 
 #Lastly, install all of the ArchR dependencies that arent installed by default:
 library(ArchR)
