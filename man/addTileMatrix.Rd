@@ -13,15 +13,18 @@ addTileMatrix(
   excludeChr = c("chrM", "chrY"),
   threads = getArchRThreads(),
   parallelParam = NULL,
-  force = FALSE
+  force = FALSE,
+  logFile = createLogFile("addTileMatrix")
 )
 }
 \arguments{
 \item{input}{An \code{ArchRProject} object or character vector of ArrowFiles.}
 
-\item{chromSizes}{A named numeric vector containing the chromsome names and lengths. The default behavior is to retrieve this from the \code{ArchRProject} using \code{getChromSizes()}.}
+\item{chromSizes}{A named numeric vector containing the chromsome names and lengths. The default behavior is to retrieve
+this from the \code{ArchRProject} using \code{getChromSizes()}.}
 
-\item{blacklist}{A \code{GRanges} object containing genomic regions to blacklist counting in these tiles. The default behavior is to retrieve this from the \code{ArchRProject} using \code{getBlacklist()}.}
+\item{blacklist}{A \code{GRanges} object containing genomic regions to blacklist counting in these tiles. The default behavior
+is to retrieve this from the \code{ArchRProject} using \code{getBlacklist()}.}
 
 \item{tileSize}{The size of the tiles used for binning counts in the "TileMatrix".}
 
@@ -34,6 +37,8 @@ addTileMatrix(
 \item{parallelParam}{A list of parameters to be passed for biocparallel/batchtools parallel computing.}
 
 \item{force}{A boolean value indicating whether to force the "TileMatrix' to be overwritten if it already exist in the given \code{input}.}
+
+\item{logFile}{The path to a file to be used for logging ArchR output.}
 }
 \description{
 This function, for each sample, will independently compute counts for each tile

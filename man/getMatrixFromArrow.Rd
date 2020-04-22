@@ -11,7 +11,8 @@ getMatrixFromArrow(
   cellNames = NULL,
   ArchRProj = NULL,
   verbose = TRUE,
-  binarize = FALSE
+  binarize = FALSE,
+  logFile = createLogFile("getMatrixFromArrow")
 )
 }
 \arguments{
@@ -21,13 +22,19 @@ getMatrixFromArrow(
 
 \item{useSeqnames}{A character vector of chromosome names to be used to subset the data matrix being obtained.}
 
-\item{cellNames}{A character vector indicating the cell names of a subset of cells from which fragments whould be extracted. This allows for extraction of fragments from only a subset of selected cells. By default, this function will extract all cells from the provided ArrowFile using \code{getCellNames()}.}
+\item{cellNames}{A character vector indicating the cell names of a subset of cells from which fragments whould be extracted.
+This allows for extraction of fragments from only a subset of selected cells. By default, this function will extract all cells from
+the provided ArrowFile using \code{getCellNames()}.}
 
-\item{ArchRProj}{JJJ An \code{ArchRProject} object to be used for getting additional information for cells in \code{cellColData}. This is useful when you want to keep information created when analyzing an ArchRProject that is not present in the ArrowFile.}
+\item{ArchRProj}{An \code{ArchRProject} object to be used for getting additional information for cells in \code{cellColData}.
+In some cases, data exists within the \code{ArchRProject} object that does not exist within the ArrowFiles. To access this data, you can
+provide the \code{ArchRProject} object here.}
 
 \item{verbose}{A boolean value indicating whether to use verbose output during execution of  this function. Can be set to FALSE for a cleaner output.}
 
 \item{binarize}{A boolean value indicating whether the matrix should be binarized before return. This is often desired when working with insertion counts.}
+
+\item{logFile}{The path to a file to be used for logging ArchR output.}
 }
 \description{
 This function gets a given data matrix from an individual ArrowFile.

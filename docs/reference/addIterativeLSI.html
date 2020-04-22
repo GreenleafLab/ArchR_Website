@@ -45,6 +45,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Add an Iterative LSI-based dimensionality reduction to an ArchRProject — addIterativeLSI" />
 
 <meta property="og:description" content="This function will compute an iterative LSI dimensionality reduction on an ArchRProject." />
@@ -91,7 +93,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -176,27 +178,33 @@
   <span class='kw'>useMatrix</span> <span class='kw'>=</span> <span class='st'>"TileMatrix"</span>,
   <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"IterativeLSI"</span>,
   <span class='kw'>iterations</span> <span class='kw'>=</span> <span class='fl'>2</span>,
-  <span class='kw'>clusterParams</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>resolution</span> <span class='kw'>=</span> <span class='fl'>0.3</span>, <span class='kw'>sampleCells</span> <span class='kw'>=</span> <span class='fl'>10000</span>, <span class='kw'>n.start</span> <span class='kw'>=</span> <span class='fl'>25</span>),
+  <span class='kw'>clusterParams</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>resolution</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.2</span>), <span class='kw'>sampleCells</span> <span class='kw'>=</span> <span class='fl'>10000</span>, <span class='kw'>n.start</span> <span class='kw'>=</span> <span class='fl'>10</span>),
+  <span class='kw'>varFeatures</span> <span class='kw'>=</span> <span class='fl'>25000</span>,
   <span class='kw'>dimsToUse</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>30</span>,
   <span class='kw'>LSIMethod</span> <span class='kw'>=</span> <span class='fl'>2</span>,
   <span class='kw'>scaleDims</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>corCutOff</span> <span class='kw'>=</span> <span class='fl'>0.75</span>,
   <span class='kw'>binarize</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>sampleCells</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>varFeatures</span> <span class='kw'>=</span> <span class='fl'>50000</span>,
+  <span class='kw'>outlierQuantiles</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.02</span>, <span class='fl'>0.98</span>),
+  <span class='kw'>filterBias</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>sampleCellsPre</span> <span class='kw'>=</span> <span class='fl'>10000</span>,
+  <span class='kw'>projectCellsPre</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>sampleCellsFinal</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>selectionMethod</span> <span class='kw'>=</span> <span class='st'>"var"</span>,
   <span class='kw'>scaleTo</span> <span class='kw'>=</span> <span class='fl'>10000</span>,
   <span class='kw'>totalFeatures</span> <span class='kw'>=</span> <span class='fl'>5e+05</span>,
   <span class='kw'>filterQuantile</span> <span class='kw'>=</span> <span class='fl'>0.995</span>,
+  <span class='kw'>excludeChr</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(),
   <span class='kw'>saveIterations</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>UMAPParams</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>n_neighbors</span> <span class='kw'>=</span> <span class='fl'>40</span>, <span class='kw'>min_dist</span> <span class='kw'>=</span> <span class='fl'>0.4</span>, <span class='kw'>metric</span> <span class='kw'>=</span> <span class='st'>"cosine"</span>, <span class='kw'>verbose</span> <span class='kw'>=</span>
+    <span class='fl'>FALSE</span>, <span class='kw'>fast_sgd</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),
+  <span class='kw'>nPlot</span> <span class='kw'>=</span> <span class='fl'>10000</span>,
   <span class='kw'>outDir</span> <span class='kw'>=</span> <span class='fu'><a href='getOutputDirectory.html'>getOutputDirectory</a></span>(<span class='no'>ArchRProj</span>),
-  <span class='kw'>runHarmony</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>harmonyParams</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
   <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fu'><a href='getArchRThreads.html'>getArchRThreads</a></span>(),
   <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>verboseHeader</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>verboseAll</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>logFile</span> <span class='kw'>=</span> <span class='fu'>createLogFile</span>(<span class='st'>"addIterativeLSI"</span>)
 )</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -208,7 +216,8 @@
     </tr>
     <tr>
       <th>useMatrix</th>
-      <td><p>The name of the data matrix to retrieve from the ArrowFiles associated with the <code>ArchRProject</code>. Valid options are "TileMatrix" or "PeakMatrix".</p></td>
+      <td><p>The name of the data matrix to retrieve from the ArrowFiles associated with the <code>ArchRProject</code>. Valid options are
+"TileMatrix" or "PeakMatrix".</p></td>
     </tr>
     <tr>
       <th>name</th>
@@ -220,7 +229,13 @@
     </tr>
     <tr>
       <th>clusterParams</th>
-      <td><p>Additional parameters to be passed to <code><a href='addClusters.html'>addClusters()</a></code> for clustering within each iteration. These must be either length 1 or the total number of <code>iterations</code> - 1.</p></td>
+      <td><p>A list of Additional parameters to be passed to <code><a href='addClusters.html'>addClusters()</a></code> for clustering within each iteration.
+These params can be constant across each iteration, or specified for each iteration individually. Thus each param must be of
+length == 1 or the total number of <code>iterations</code> - 1.</p></td>
+    </tr>
+    <tr>
+      <th>varFeatures</th>
+      <td><p>The number of N variable features to use for LSI. The top N features will be used based on the <code>selectionMethod</code>.</p></td>
     </tr>
     <tr>
       <th>dimsToUse</th>
@@ -233,55 +248,87 @@ Possible values are: 1 or "tf-logidf", 2 or "log(tf-idf)", and 3 or "logtf-logid
     </tr>
     <tr>
       <th>scaleDims</th>
-      <td><p>A boolean describing whether to rescale the total variance for each principal component. This is useful for minimizing the contribution of strong biases (dominating early PCs) and lowly abundant populations. However, this may lead to stronger sample-specific biases since it is over-weighting latent PCs.</p></td>
+      <td><p>A boolean that indicates whether to z-score the reduced dimensions for each cell. This is useful forminimizing the contribution
+of strong biases (dominating early PCs) and lowly abundant populations. However, this may lead to stronger sample-specific biases since
+it is over-weighting latent PCs. If set to <code>NULL</code> this will scale the dimensions based on the value of <code>scaleDims</code> when the <code>reducedDims</code> were
+originally created during dimensionality reduction. This idea was introduced by Timothy Stuart.</p></td>
     </tr>
     <tr>
       <th>corCutOff</th>
-      <td><p>A numeric cutoff for the correlation of each dimension to the sequencing depth. If the dimension has a correlation to sequencing depth that is greater than the <code>corCutOff</code>, it will be excluded from analysis.</p></td>
+      <td><p>A numeric cutoff for the correlation of each dimension to the sequencing depth. If the dimension has a correlation to
+sequencing depth that is greater than the <code>corCutOff</code>, it will be excluded from analysis.</p></td>
     </tr>
     <tr>
       <th>binarize</th>
       <td><p>A boolean value indicating whether the matrix should be binarized before running LSI. This is often desired when working with insertion counts.</p></td>
     </tr>
     <tr>
-      <th>sampleCells</th>
-      <td><p>An integer specifying the number of cells to sample in order to perform a sub-sampled LSI and sub-sampled clustering.</p></td>
+      <th>outlierQuantiles</th>
+      <td><p>Two numerical values (between 0 and 1) that describe the lower and upper quantiles of bias (number of acessible regions per cell, determined
+by <code>nFrags</code> or <code>colSums</code>) to filter cells prior to LSI. For example a value of c(0.02, 0.98) results in the cells in the bottom 2 percent and upper 98 percent to be
+filtered prior to LSI. These cells are then projected back in the LSI subspace. This prevents spurious 'islands' that are identified based on being extremely biased.
+These quantiles are also used for sub-sampled LSI when determining which cells are used.</p></td>
     </tr>
     <tr>
-      <th>varFeatures</th>
-      <td><p>The number of N variable features to use for LSI. The top N features will be used based on the <code>selectionMethod</code>.</p></td>
+      <th>filterBias</th>
+      <td><p>A boolean indicating whether to drop bias clusters when computing clusters during iterativeLSI.</p></td>
+    </tr>
+    <tr>
+      <th>sampleCellsPre</th>
+      <td><p>An integer specifying the number of cells to sample in iterations prior to the last in order to perform a sub-sampled LSI and
+sub-sampled clustering. This greatly reduced memory usage and increases speed for early iterations.</p></td>
+    </tr>
+    <tr>
+      <th>projectCellsPre</th>
+      <td><p>A boolean indicating whether to reproject all cells into the sub-sampled LSI (see <code>sampleCellsPre</code>). Setting this to <code>FALSE</code>
+allows for using the sub-sampled LSI for clustering and variance identification. If <code>TRUE</code> the cells are all projected into the sub-sampled LSI
+and used for cluster and variance identification.</p></td>
+    </tr>
+    <tr>
+      <th>sampleCellsFinal</th>
+      <td><p>An integer specifying the number of cells to sample in order to perform a sub-sampled LSI in final iteration.</p></td>
     </tr>
     <tr>
       <th>selectionMethod</th>
-      <td><p>The selection method to be used for identifying the top variable features. Valid options are "var" for log-variability or "vmr" for variance-to-mean ratio.</p></td>
+      <td><p>The selection method to be used for identifying the top variable features. Valid options are "var" for
+log-variability or "vmr" for variance-to-mean ratio.</p></td>
     </tr>
     <tr>
       <th>scaleTo</th>
-      <td><p>Each column in the matrix designated by <code>useMatrix</code> will be normalized to a column sum designated by <code>scaleTo</code> prior to variance calculation and TF-IDF normalization.</p></td>
+      <td><p>Each column in the matrix designated by <code>useMatrix</code> will be normalized to a column sum designated by <code>scaleTo</code> prior to
+variance calculation and TF-IDF normalization.</p></td>
     </tr>
     <tr>
       <th>totalFeatures</th>
-      <td><p>The number of features to consider for use in LSI after ranking the features by the total number of insertions. These features are the only ones used throught the variance identification and LSI. These are an equivalent when using a <code>TileMatrix</code> to a defined peakSet.</p></td>
+      <td><p>The number of features to consider for use in LSI after ranking the features by the total number of insertions.
+These features are the only ones used throught the variance identification and LSI. These are an equivalent when using a <code>TileMatrix</code> to a defined peakSet.</p></td>
     </tr>
     <tr>
       <th>filterQuantile</th>
-      <td><p>A number 0,1 that indicates the quantile above which features should be removed based on insertion counts prior to the first iteration of the iterative LSI paradigm. For example, if <code>filterQuantile = 0.99</code>, any features above the 99th percentile in insertion counts will be ignored for the first LSI iteration.</p></td>
+      <td><p>A number 0,1 that indicates the quantile above which features should be removed based on insertion counts prior</p></td>
+    </tr>
+    <tr>
+      <th>excludeChr</th>
+      <td><p>A string of chromosomes to exclude for iterativeLSI procedure.
+to the first iteration of the iterative LSI paradigm. For example, if <code>filterQuantile = 0.99</code>, any features above the 99th percentile in
+insertion counts will be ignored for the first LSI iteration.</p></td>
     </tr>
     <tr>
       <th>saveIterations</th>
-      <td><p>A boolean value indicating whether the results of each LSI iterations should be saved as compressed <code>.rds</code> files in the designated <code>outDir</code>.</p></td>
+      <td><p>A boolean value indicating whether the results of each LSI iterations should be saved as compressed <code>.rds</code> files in
+the designated <code>outDir</code>.</p></td>
+    </tr>
+    <tr>
+      <th>UMAPParams</th>
+      <td><p>The list of parameters to pass to the UMAP function if "UMAP" if <code>saveIterations=TRUE</code>. See the function <code><a href='https://rdrr.io/pkg/uwot/man/umap.html'>uwot::umap()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>nPlot</th>
+      <td><p>If <code>saveIterations=TRUE</code>, how many cells to sample make a UMAP and plot for each iteration.</p></td>
     </tr>
     <tr>
       <th>outDir</th>
       <td><p>The output directory for saving LSI iterations if desired. Default is in the <code>outputDirectory</code> of the <code>ArchRProject</code>.</p></td>
-    </tr>
-    <tr>
-      <th>runHarmony</th>
-      <td><p>A boolean value indicating whether harmony-based batch correction should be run during the LSI iterations.</p></td>
-    </tr>
-    <tr>
-      <th>harmonyParams</th>
-      <td><p>Additional parameters to be passed to <code>harmony::HarmonyMatrix()</code>.</p></td>
     </tr>
     <tr>
       <th>threads</th>
@@ -289,19 +336,20 @@ Possible values are: 1 or "tf-logidf", 2 or "log(tf-idf)", and 3 or "logtf-logid
     </tr>
     <tr>
       <th>seed</th>
-      <td><p>A number to be used as the seed for random number generation. It is recommended to keep track of the seed used so that you can reproduce results downstream.</p></td>
+      <td><p>A number to be used as the seed for random number generation. It is recommended to keep track of the seed used so that you can
+reproduce results downstream.</p></td>
     </tr>
     <tr>
-      <th>verboseHeader</th>
+      <th>verbose</th>
       <td><p>A boolean value that determines whether standard output includes verbose sections.</p></td>
-    </tr>
-    <tr>
-      <th>verboseAll</th>
-      <td><p>A boolean value that determines whether standard output includes verbose subsections.</p></td>
     </tr>
     <tr>
       <th>force</th>
       <td><p>A boolean value that indicates whether or not to overwrite relevant data in the <code>ArchRProject</code> object.</p></td>
+    </tr>
+    <tr>
+      <th>logFile</th>
+      <td><p>The path to a file to be used for logging ArchR output.</p></td>
     </tr>
     </table>
     

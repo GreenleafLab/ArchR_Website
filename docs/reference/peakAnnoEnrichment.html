@@ -45,6 +45,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Peak Annotation Hypergeometric Enrichment in Marker Peaks. — peakAnnoEnrichment" />
 
 <meta property="og:description" content="This function will perform hypergeometric enrichment of a given peak annotation within the defined marker peaks." />
@@ -91,7 +93,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -177,7 +179,8 @@
   <span class='kw'>peakAnnotation</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>matches</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>cutOff</span> <span class='kw'>=</span> <span class='st'>"FDR &lt;= 0.1 &amp; Log2FC &gt;= 0.5"</span>,
-  <span class='kw'>background</span> <span class='kw'>=</span> <span class='st'>"all"</span>
+  <span class='kw'>background</span> <span class='kw'>=</span> <span class='st'>"all"</span>,
+  <span class='kw'>logFile</span> <span class='kw'>=</span> <span class='fu'>createLogFile</span>(<span class='st'>"peakAnnoEnrichment"</span>)
 )</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -197,15 +200,21 @@
     </tr>
     <tr>
       <th>matches</th>
-      <td><p>A custom <code>peakAnnotation</code> matches object used as input for the hypergeometric test. See <code>motifmatchr::matchmotifs()</code> for additional information.</p></td>
+      <td><p>A custom <code>peakAnnotation</code> matches object used as input for the hypergeometric test. See
+<code>motifmatchr::matchmotifs()</code> for additional information.</p></td>
     </tr>
     <tr>
       <th>cutOff</th>
-      <td><p>A valid-syntax logical statement that defines which marker features from <code>seMarker</code> to use. <code>cutoff</code> can contain any of the <code>assayNames</code> from <code>seMarker</code>.</p></td>
+      <td><p>A valid-syntax logical statement that defines which marker features from <code>seMarker</code> to use.
+<code>cutoff</code> can contain any of the <code>assayNames</code> from <code>seMarker</code>.</p></td>
     </tr>
     <tr>
       <th>background</th>
       <td><p>A string that indicates whether to use a background set of matched peaks to compare against ("bgdPeaks") or all peaks ("all").</p></td>
+    </tr>
+    <tr>
+      <th>logFile</th>
+      <td><p>The path to a file to be used for logging ArchR output.</p></td>
     </tr>
     </table>
     

@@ -45,6 +45,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Add a globally-applied number of threads to use for parallel computing. — addArchRThreads" />
 
 <meta property="og:description" content="This function will set the number of threads to be used for parallel computing across all ArchR functions." />
@@ -91,7 +93,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -178,7 +180,14 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>threads</th>
-      <td><p>The default number of threads to be used for parallel execution across all ArchR functions. This value is stored as a global environment variable, not part of the <code>ArchRProject</code>. This can be overwritten on a per-function basis using the given function's <code>threads</code> parameter.</p></td>
+      <td><p>The default number of threads to be used for parallel execution across all ArchR functions.
+This value is stored as a global environment variable, not part of the <code>ArchRProject</code>.
+This can be overwritten on a per-function basis using the given function's <code>threads</code> parameter.</p></td>
+    </tr>
+    <tr>
+      <th>force</th>
+      <td><p>If you request more than the total number of CPUs minus 2, ArchR will set <code>threads</code> to <code>(nCPU - 2)</code>.
+To bypass this, setting <code>force = TRUE</code> will use the number provided to <code>threads</code>.</p></td>
     </tr>
     </table>
     

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>A ggplot-based dot plot wrapper function JJJ — ggPoint • ArchR</title>
+<title>A ggplot-based dot plot wrapper function — ggPoint • ArchR</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -45,7 +45,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
-<meta property="og:title" content="A ggplot-based dot plot wrapper function JJJ — ggPoint" />
+  <link href="../extra.css" rel="stylesheet">
+  
+<meta property="og:title" content="A ggplot-based dot plot wrapper function — ggPoint" />
 
 <meta property="og:description" content="This function is a wrapper around ggplot geom_point to allow for a more intuitive plotting of ArchR data." />
 
@@ -91,7 +93,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -160,7 +162,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>A ggplot-based dot plot wrapper function JJJ</h1>
+    <h1>A ggplot-based dot plot wrapper function</h1>
     
     <div class="hidden name"><code>ggPoint.Rd</code></div>
     </div>
@@ -205,7 +207,8 @@
   <span class='kw'>labelSize</span> <span class='kw'>=</span> <span class='fl'>3</span>,
   <span class='kw'>addFit</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>rastr</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>dpi</span> <span class='kw'>=</span> <span class='fl'>300</span>
+  <span class='kw'>dpi</span> <span class='kw'>=</span> <span class='fl'>300</span>,
+  <span class='no'>...</span>
 )</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -221,7 +224,7 @@
     </tr>
     <tr>
       <th>color</th>
-      <td><p>A numeric/categorical vector containing coloring information for each point.</p></td>
+      <td><p>A numeric/categorical vector used to determine the coloration for each point.</p></td>
     </tr>
     <tr>
       <th>discrete</th>
@@ -229,11 +232,13 @@
     </tr>
     <tr>
       <th>discreteSet</th>
-      <td><p>The name of a custom palette from <code>ArchRPalettes</code> to use for categorical/discrete color.</p></td>
+      <td><p>The name of a custom palette from <code>ArchRPalettes</code> to use for categorical/discrete color.
+This argument is only used if <code>discrete</code> is set to <code>TRUE</code>.</p></td>
     </tr>
     <tr>
       <th>continuousSet</th>
-      <td><p>The name of a custom palette from <code>ArchRPalettes</code> to use for numeric color.</p></td>
+      <td><p>The name of a custom palette from <code>ArchRPalettes</code> to use for numeric color.
+This argument is only used if <code>discrete</code> is set to <code>FALSE</code>.</p></td>
     </tr>
     <tr>
       <th>labelMeans</th>
@@ -249,7 +254,8 @@
     </tr>
     <tr>
       <th>colorDensity</th>
-      <td><p>A boolean value indicating whether the density of points on the plot should be indicated colorimetrically. If <code>TRUE</code>, continuousSet is used as the color palette.</p></td>
+      <td><p>A boolean value indicating whether the density of points on the plot should be indicated by color.
+If <code>TRUE</code>, continuousSet is used as the color palette.</p></td>
     </tr>
     <tr>
       <th>size</th>
@@ -265,7 +271,8 @@
     </tr>
     <tr>
       <th>extend</th>
-      <td><p>A numeric value indicating the fraction to extend the x-axis and y-axis beyond the maximum and minimum values if <code>xlim</code> and <code>ylim</code> are not provided. For example, 0.05 will extend the x-axis and y-axis by 5 percent on each end.</p></td>
+      <td><p>A numeric value indicating the fraction to extend the x-axis and y-axis beyond the maximum and minimum
+values if <code>xlim</code> and <code>ylim</code> are not provided. For example, 0.05 will extend the x-axis and y-axis by 5 percent on each end.</p></td>
     </tr>
     <tr>
       <th>xlabel</th>
@@ -293,11 +300,14 @@
     </tr>
     <tr>
       <th>colorOrder</th>
-      <td><p>If you want to control the order of <code>color</code> supplied as a factor to <code>ggplot2</code>. For example if you have <code>color</code> as c("a","b","c") and want to have the first color selected from the palette be for "c" then "b" and then "a", you would supply the <code>colorOrder</code> as c("c", "b", "a").</p></td>
+      <td><p>A vector that allows you to control the order of palette colors associated with the values in <code>color</code>.
+For example if you have <code>color</code> as <code><a href='https://rdrr.io/r/base/c.html'>c("a","b","c")</a></code> and want to have the first color selected from the palette be used for
+"c", the second color for "b", and the third color for "a", you would supply the <code>colorOrder</code> as <code><a href='https://rdrr.io/r/base/c.html'>c("c", "b", "a")</a></code>.</p></td>
     </tr>
     <tr>
       <th>colorLimits</th>
-      <td><p>A numeric vector of two values indicating the lower and upper bounds of colors if numeric.</p></td>
+      <td><p>A numeric vector of two values indicating the lower and upper bounds of colors if numeric. Values
+beyond these limits are thresholded.</p></td>
     </tr>
     <tr>
       <th>alpha</th>
@@ -308,8 +318,16 @@
       <td><p>The base font size (in points) to use in the plot.</p></td>
     </tr>
     <tr>
+      <th>legendSize</th>
+      <td><p>The size in inches to use for plotting the color legend.</p></td>
+    </tr>
+    <tr>
       <th>ratioYX</th>
       <td><p>The aspect ratio of the x and y axes on the plot.</p></td>
+    </tr>
+    <tr>
+      <th>labelAsFactors</th>
+      <td><p>A boolean indicating whether to label the <code>color</code> input as a numeric factor (<code>TRUE</code>) or with a character string (<code>FALSE</code>).</p></td>
     </tr>
     <tr>
       <th>fgColor</th>
@@ -320,16 +338,22 @@
       <td><p>The background color of the plot.</p></td>
     </tr>
     <tr>
+      <th>bgWidth</th>
+      <td><p>The background relative width size of the halos in the labeling.</p></td>
+    </tr>
+    <tr>
       <th>labelSize</th>
       <td><p>The numeric font size of labels.</p></td>
     </tr>
     <tr>
       <th>addFit</th>
-      <td><p>A string indicating if a fit/regression line (see <code><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>ggplot2::geom_smooth()</a></code> methods) should be included in the plot and what method to use for this fit.</p></td>
+      <td><p>A string indicating the method to use for adding a fit/regression line to the plot (see <code><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>ggplot2::geom_smooth()</a></code> methods).
+If set to <code>NULL</code>, no fit/regression line is added.</p></td>
     </tr>
     <tr>
       <th>rastr</th>
-      <td><p>A boolean value that indicates whether the plot should be rasterized using <code>ggrastr</code>. This does not rasterize lines and labels, just the internal portions of the plot.</p></td>
+      <td><p>A boolean value that indicates whether the plot should be rasterized using <code>ggrastr</code>. This does not rasterize
+lines and labels, just the internal portions of the plot.</p></td>
     </tr>
     <tr>
       <th>dpi</th>

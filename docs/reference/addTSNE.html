@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add a TSNE embedding of a reduced dimensions object to an ArchRProject JJJ — addTSNE • ArchR</title>
+<title>Add a TSNE embedding of a reduced dimensions object to an ArchRProject — addTSNE • ArchR</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -45,7 +45,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
-<meta property="og:title" content="Add a TSNE embedding of a reduced dimensions object to an ArchRProject JJJ — addTSNE" />
+  <link href="../extra.css" rel="stylesheet">
+  
+<meta property="og:title" content="Add a TSNE embedding of a reduced dimensions object to an ArchRProject — addTSNE" />
 
 <meta property="og:description" content="This function will compute a TSNE embedding and add it to an ArchRProject." />
 
@@ -91,7 +93,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -160,7 +162,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add a TSNE embedding of a reduced dimensions object to an ArchRProject JJJ</h1>
+    <h1>Add a TSNE embedding of a reduced dimensions object to an ArchRProject</h1>
     
     <div class="hidden name"><code>addTSNE.Rd</code></div>
     </div>
@@ -178,7 +180,7 @@
   <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"TSNE"</span>,
   <span class='kw'>perplexity</span> <span class='kw'>=</span> <span class='fl'>50</span>,
   <span class='kw'>maxIterations</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
-  <span class='kw'>learningRate</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
+  <span class='kw'>learningRate</span> <span class='kw'>=</span> <span class='fl'>200</span>,
   <span class='kw'>dimsToUse</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>scaleDims</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>corCutOff</span> <span class='kw'>=</span> <span class='fl'>0.75</span>,
@@ -186,7 +188,7 @@
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fu'><a href='getArchRThreads.html'>getArchRThreads</a></span>(),
+  <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Round.html'>floor</a></span>(<span class='fu'><a href='getArchRThreads.html'>getArchRThreads</a></span>()/<span class='fl'>2</span>), <span class='fl'>1</span>),
   <span class='no'>...</span>
 )</pre>
     
@@ -203,11 +205,24 @@
     </tr>
     <tr>
       <th>method</th>
-      <td><p>The method for computing TSNE embedding to add to <code>ArchRProject</code> object. Possible options are "RTSNE", and "FFRTSNE".</p></td>
+      <td><p>The method for computing a TSNE embedding to add to the <code>ArchRProject</code> object. Possible options
+are "RTSNE", which uses <code><a href='https://rdrr.io/pkg/Rtsne/man/Rtsne.html'>Rtsne::Rtsne()</a></code>, and "FFRTSNE", which uses <code><a href='https://rdrr.io/pkg/Seurat/man/RunTSNE.html'>Seurat::RunTSNE()</a></code>.</p></td>
     </tr>
     <tr>
       <th>name</th>
-      <td><p>The name for the TSNE embedding to be stored as in the given <code>ArchRProject</code> object.</p></td>
+      <td><p>The name for the TSNE embedding to store in the given <code>ArchRProject</code> object.</p></td>
+    </tr>
+    <tr>
+      <th>perplexity</th>
+      <td><p>An integer describing the number of nearest neighbors to compute an <code>Rtsne</code>. This argument is passed to <code>perplexity</code> in <code><a href='https://rdrr.io/pkg/Rtsne/man/Rtsne.html'>Rtsne::Rtsne()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>maxIterations</th>
+      <td><p>An integer describing the maximum number of iterations when computing a TSNE. This argument is passed to <code>max_iter</code> in <code><a href='https://rdrr.io/pkg/Rtsne/man/Rtsne.html'>Rtsne::Rtsne()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>learningRate</th>
+      <td><p>An integer controlling how much the weights are adjusted at each iteration. This argument is passed to <code>eta</code> in <code><a href='https://rdrr.io/pkg/Rtsne/man/Rtsne.html'>Rtsne::Rtsne()</a></code>.</p></td>
     </tr>
     <tr>
       <th>dimsToUse</th>
@@ -215,19 +230,29 @@
     </tr>
     <tr>
       <th>scaleDims</th>
-      <td><p>A boolean describing whether to rescale the total variance for each principal component. This is useful for minimizing the contribution of strong biases (dominating early PCs) and lowly abundant populations. However, this may lead to stronger sample-specific biases since it is over-weighting latent PCs. If <code>NULL</code> this will scale the dimensions depending on if this were set true when the <code>reducedDims</code> were created by <code>addIterativeLSI</code>.</p></td>
+      <td><p>A boolean value that indicates whether to z-score the reduced dimensions for each cell. This is useful for minimizing
+the contribution of strong biases (dominating early PCs) and lowly abundant populations. However, this may lead to stronger sample-specific
+biases since it is over-weighting latent PCs. If set to <code>NULL</code> this will scale the dimensions based on the value of <code>scaleDims</code> when the
+<code>reducedDims</code> were originally created during dimensionality reduction. This idea was introduced by Timothy Stuart.</p></td>
     </tr>
     <tr>
       <th>corCutOff</th>
-      <td><p>A numeric cutoff for the correlation of each dimension to the sequencing depth. If the dimension has a correlation to sequencing depth that is greater than the <code>corCutOff</code>, it will be excluded from analysis.</p></td>
+      <td><p>A numeric cutoff for the correlation of each dimension to the sequencing depth. If the dimension has a correlation to sequencing
+depth that is greater than the <code>corCutOff</code>, it will be excluded from analysis.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>A boolean value that indicates whether printing TSNE output.</p></td>
     </tr>
     <tr>
       <th>seed</th>
-      <td><p>A number to be used as the seed for random number generation. It is recommended to keep track of the seed used so that you can reproduce results downstream.</p></td>
+      <td><p>A number to be used as the seed for random number generation. It is recommended to keep track of the seed used so that you can
+reproduce results downstream.</p></td>
     </tr>
     <tr>
       <th>force</th>
-      <td><p>A boolean value that indicates whether to overwrite the relevant data in the <code>ArchRProject</code> object if the embedding named by <code>name</code> already exists.</p></td>
+      <td><p>A boolean value that indicates whether to overwrite the relevant data in the <code>ArchRProject</code> object if the embedding indicated by
+<code>name</code> already exists.</p></td>
     </tr>
     <tr>
       <th>threads</th>
@@ -235,7 +260,7 @@
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Additional Params to add to for metohd = RTSNE (<code><a href='https://rdrr.io/pkg/Rtsne/man/Rtsne.html'>Rtsne::Rtsne</a></code>) or method = FFRTSNE (<code><a href='https://rdrr.io/pkg/Seurat/man/RunTSNE.html'>Seurat::RunTSNE</a></code>) for computing the TSNE embedding.</p></td>
+      <td><p>Additional parameters for computing the TSNE embedding to pass to <code><a href='https://rdrr.io/pkg/Rtsne/man/Rtsne.html'>Rtsne::Rtsne()</a></code> (when <code>method = "RTSNE"</code>) or to <code><a href='https://rdrr.io/pkg/Seurat/man/RunTSNE.html'>Seurat::RunTSNE()</a></code> (when method = "FFRTSNE").</p></td>
     </tr>
     </table>
     

@@ -45,9 +45,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Add Group Coverages to an ArchRProject object — addGroupCoverages" />
 
-<meta property="og:description" content="This function will merge cells within each designated cell group for the generation of pseudo-bulk replicates and then merge these replicates into a single insertion coverage file." />
+<meta property="og:description" content="This function will merge cells within each designated cell group for the generation of pseudo-bulk replicates and then
+merge these replicates into a single insertion coverage file." />
 
 <meta property="og:image" content="https://greenleaflab.github.io/ArchR_Website/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -91,7 +94,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -167,7 +170,8 @@
 
     <div class="ref-description">
     
-    <p>This function will merge cells within each designated cell group for the generation of pseudo-bulk replicates and then merge these replicates into a single insertion coverage file.</p>
+    <p>This function will merge cells within each designated cell group for the generation of pseudo-bulk replicates and then
+merge these replicates into a single insertion coverage file.</p>
     
     </div>
 
@@ -186,8 +190,8 @@
   <span class='kw'>returnGroups</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>parallelParam</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>verboseHeader</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>verboseAll</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>logFile</span> <span class='kw'>=</span> <span class='fu'>createLogFile</span>(<span class='st'>"addGroupCoverages"</span>)
 )</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -215,7 +219,8 @@
     </tr>
     <tr>
       <th>maxFragments</th>
-      <td><p>The maximum number of fragments per cell group to use in insertion coverage file generation. This prevents the generation of excessively large files which would negatively impact memory requirements.</p></td>
+      <td><p>The maximum number of fragments per cell group to use in insertion coverage file generation. This prevents the generation
+of excessively large files which would negatively impact memory requirements.</p></td>
     </tr>
     <tr>
       <th>minReplicates</th>
@@ -239,7 +244,9 @@
     </tr>
     <tr>
       <th>returnGroups</th>
-      <td><p>A boolean whether to just return sample-guided cell-groupings without creating coverages. This is used mainly in addReproduciblePeakSet when calling peaks with TileMatrix.</p></td>
+      <td><p>A boolean value that indicates whether to return sample-guided cell-groupings without creating coverages.
+This is used mainly in <code><a href='addReproduciblePeakSet.html'>addReproduciblePeakSet()</a></code> when MACS2 is not being used to call peaks but rather peaks are called from a
+TileMatrix (<code>peakMethod = "Tiles"</code>).</p></td>
     </tr>
     <tr>
       <th>parallelParam</th>
@@ -247,15 +254,16 @@
     </tr>
     <tr>
       <th>force</th>
-      <td><p>A boolean value that indicates whether or not to overwrite the relevant data in the <code>ArchRProject</code> object if insertion coverage / pseudo-bulk replicate information already exists.</p></td>
+      <td><p>A boolean value that indicates whether or not to overwrite the relevant data in the <code>ArchRProject</code> object if
+insertion coverage / pseudo-bulk replicate information already exists.</p></td>
     </tr>
     <tr>
-      <th>verboseHeader</th>
+      <th>verbose</th>
       <td><p>A boolean value that determines whether standard output includes verbose sections.</p></td>
     </tr>
     <tr>
-      <th>verboseAll</th>
-      <td><p>A boolean value that determines whether standard output includes verbose subsections.</p></td>
+      <th>logFile</th>
+      <td><p>The path to a file to be used for logging ArchR output.</p></td>
     </tr>
     </table>
     

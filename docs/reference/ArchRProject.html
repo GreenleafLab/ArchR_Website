@@ -45,6 +45,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Create ArchRProject from ArrowFiles — ArchRProject" />
 
 <meta property="og:description" content="This function will create an ArchRProject from the provided ArrowFiles." />
@@ -91,7 +93,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -173,11 +175,12 @@
 
     <pre class="usage"><span class='fu'>ArchRProject</span>(
   <span class='kw'>ArrowFiles</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>outputDirectory</span> <span class='kw'>=</span> <span class='st'>"ArchR_Output"</span>,
+  <span class='kw'>outputDirectory</span> <span class='kw'>=</span> <span class='st'>"ArchROutput"</span>,
   <span class='kw'>copyArrows</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>geneAnnotation</span> <span class='kw'>=</span> <span class='fu'><a href='getGeneAnnotation.html'>getGeneAnnotation</a></span>(),
   <span class='kw'>genomeAnnotation</span> <span class='kw'>=</span> <span class='fu'><a href='getGenomeAnnotation.html'>getGenomeAnnotation</a></span>(),
-  <span class='kw'>showLogo</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+  <span class='kw'>showLogo</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fu'><a href='getArchRThreads.html'>getArchRThreads</a></span>()
 )</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -197,15 +200,21 @@
     </tr>
     <tr>
       <th>geneAnnotation</th>
-      <td><p>The <code>geneAnnotation</code> object (see <code>createGeneAnnotation()</code>) to be used for downstream analyses such as calculating TSS Enrichment Scores, Gene Scores, etc.</p></td>
+      <td><p>The <code>geneAnnotation</code> object (see <code>createGeneAnnotation()</code>) to be used for downstream analyses such as calculating
+TSS Enrichment Scores, Gene Scores, etc.</p></td>
     </tr>
     <tr>
       <th>genomeAnnotation</th>
-      <td><p>The <code>genomeAnnotation</code> object (see <code><a href='createGenomeAnnotation.html'>createGenomeAnnotation()</a></code>) to be used for downstream analyses requiring genome information such as nucleotide information or chromosome sizes.</p></td>
+      <td><p>The <code>genomeAnnotation</code> object (see <code><a href='createGenomeAnnotation.html'>createGenomeAnnotation()</a></code>) to be used for downstream analyses requiring
+genome information such as nucleotide information or chromosome sizes.</p></td>
     </tr>
     <tr>
       <th>showLogo</th>
       <td><p>A boolean value indicating whether to show the ascii ArchR logo after successful creation of an <code>ArchRProject</code>.</p></td>
+    </tr>
+    <tr>
+      <th>threads</th>
+      <td><p>The number of threads to use for parallel execution.</p></td>
     </tr>
     </table>
     

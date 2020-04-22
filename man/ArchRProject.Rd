@@ -6,11 +6,12 @@
 \usage{
 ArchRProject(
   ArrowFiles = NULL,
-  outputDirectory = "ArchR_Output",
+  outputDirectory = "ArchROutput",
   copyArrows = TRUE,
   geneAnnotation = getGeneAnnotation(),
   genomeAnnotation = getGenomeAnnotation(),
-  showLogo = TRUE
+  showLogo = TRUE,
+  threads = getArchRThreads()
 )
 }
 \arguments{
@@ -20,11 +21,15 @@ ArchRProject(
 
 \item{copyArrows}{A boolean value indicating whether ArrowFiles should be copied into \code{outputDirectory}.}
 
-\item{geneAnnotation}{The \code{geneAnnotation} object (see \code{createGeneAnnotation()}) to be used for downstream analyses such as calculating TSS Enrichment Scores, Gene Scores, etc.}
+\item{geneAnnotation}{The \code{geneAnnotation} object (see \code{createGeneAnnotation()}) to be used for downstream analyses such as calculating
+TSS Enrichment Scores, Gene Scores, etc.}
 
-\item{genomeAnnotation}{The \code{genomeAnnotation} object (see \code{createGenomeAnnotation()}) to be used for downstream analyses requiring genome information such as nucleotide information or chromosome sizes.}
+\item{genomeAnnotation}{The \code{genomeAnnotation} object (see \code{createGenomeAnnotation()}) to be used for downstream analyses requiring
+genome information such as nucleotide information or chromosome sizes.}
 
 \item{showLogo}{A boolean value indicating whether to show the ascii ArchR logo after successful creation of an \code{ArchRProject}.}
+
+\item{threads}{The number of threads to use for parallel execution.}
 }
 \description{
 This function will create an ArchRProject from the provided ArrowFiles.

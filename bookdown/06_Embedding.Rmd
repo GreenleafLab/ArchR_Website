@@ -48,16 +48,19 @@ set.seed(1)
 
 # Single Cell Embeddings
 
-In ArchR, _embeddings_, such as Uniform Manifold Approximation and Projection (UMAP) or t-distributed stochastic neighbor embedding (t-SNE), are used to visualize single cells in reduced dimension space. These embeddings each have distinct advantages and disadvantages. We call these "embeddings" because they are strictly used to visualize the clusters and are not used to identify clusters which is done using LSI as mentioned in previous chapters. The primary difference between UMAP and t-SNE is the interpretatino of the distance between cells or clusters. t-SNE is designed to preserve the _local_ structure in the data while UMAP is designed to preserve _both the local and most of the global_ structure in the data. In theory, this means that the distance between two clusters is not informative in t-SNE but is informative in UMAP. For example, t-SNE does not allow you to say that Cluster A is more similar to Cluster B than it is to Cluster C based on  the observation that Cluster A is located closer to Cluster B than Cluster C on the t-SNE. UMAP, on the other hand, is designed to permit this type of comparison, though it is worth noting that UMAP is a new enough method that this is still being flushed out in the literature.
+In ArchR, _embeddings_, such as Uniform Manifold Approximation and Projection (UMAP) or t-distributed stochastic neighbor embedding (t-SNE), are used to visualize single cells in reduced dimension space. These embeddings each have distinct advantages and disadvantages. We call these "embeddings" because they are strictly used to visualize the clusters and are not used to identify clusters which is done in an LSI sub-space as mentioned in previous chapters. The primary difference between UMAP and t-SNE is the interpretatino of the distance between cells or clusters. t-SNE is designed to preserve the _local_ structure in the data while UMAP is designed to preserve _both the local and most of the global_ structure in the data. In theory, this means that the distance between two clusters is not informative in t-SNE but is informative in UMAP. For example, t-SNE does not allow you to say that Cluster A is more similar to Cluster B than it is to Cluster C based on  the observation that Cluster A is located closer to Cluster B than Cluster C on the t-SNE. UMAP, on the other hand, is designed to permit this type of comparison, though it is worth noting that UMAP is a new enough method that this is still being flushed out in the literature.
 
-It is important to note that neither t-SNE nor UMAP are _deterministic_. Moreover, tweaking the input parameters will lead to different results. In the context of t-SNE and UMAP, you can effectively make the algorithm deterministic by using the same random `seed`. However, the remaining input parameters still have drastic effects on the resulting embedding. Because of this, it is important to understand the various input parameters and to tweak these to best meet the needs of your own data. ArchR implements a default set of input parameters that work for most applications but there is really no single set of parameters that will produce the desired results for datasets that vary greatly in cell number, complexity, and quality.
+It is important to note that neither t-SNE nor UMAP are naturally _deterministic_ (same input always gives exactly the same output). However, t-SNE shows much more randomness across multiple replicates of the same input than does UMAP. Moreover, UMAP as implemented in the `uwot` package is effectively deterministic when using the same random `seed`. The choice of whether to use UMAP or t-SNE is nuanced but in our hands, UMAP works very well for a diverse set of applications and this is our standard choice for scATAC-seq data. UMAP also performs faster than t-SNE. Perhaps most importantly, with UMAP you can create an embedding and project new samples into that embedding and this is not possible with t-SNE because the fitting and prediction of data happens simultaneously.
+
+Regardless of which method you choose, the input parameters can have drastic effects on the resulting embedding. Because of this, it is important to understand the various input parameters and to tweak these to best meet the needs of your own data. ArchR implements a default set of input parameters that work for most applications but there is really no single set of parameters that will produce the desired results for datasets that vary greatly in cell number, complexity, and quality.
 
 ```{r include=FALSE, eval=FALSE,echo=FALSE}
 #RRR JJJ would be nice to show the mouse atlas UMAP vs t-SNE to illustrate when t-SNE may be better than UMAP here
 ```
 
-## UMAP
+## Uniform Manifold Approximation and Projection (UMAP)
 
+To run UMAP in ArchR we use the `addUMAP()` function:
 ```{r eval=FALSE}
 projHeme2 <- addUMAP(
     ArchRProj = projHeme2, 
@@ -83,6 +86,13 @@ projHeme2 <- addUMAP(
 ## 09:51:03 Commencing optimization for 200 epochs, with 467652 positive edges  
 ## 09:51:14 Optimization finished  
 
+You can list the available `embeddings` objects in an `ArchRProject` using the slot extraction opperator `@`:
+```{r include=FALSE, eval=FALSE, becho=FALSE}
+#JJJ add an example of accessing with @
+#projHeme2@embeddings
+```
+
+To plot the UMAP results, we use the `plotEmbedding()` function and pass the name of the UMAP embedding we just generated ("UMAP"). We can tell ArchR how to color the cells by using a combination of `colorBy` which tells ArchR which matrix to use to find the specified metadata column provided to `name`.
 ```{r eval=FALSE}
 p1 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "Sample", embedding = "UMAP")
 ```
@@ -94,6 +104,7 @@ p1 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "Samp
 ## 1   
 ## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-efee4e054106-Date-2020-04-15_Time-09-51-17.log  
 
+Instead of coloring by "Sample" as above, we can color by "Clusters" which were identified in a previous chapter.
 ```{r eval=FALSE}
 p2 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "Clusters", embedding = "UMAP")
 ```
@@ -105,6 +116,7 @@ p2 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "Clus
 ## 1   
 ## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-efee3f232286-Date-2020-04-15_Time-09-51-18.log  
 
+We can visualize these two plots side by side using the `ggAlignPlots()` function, specifying a horizontal orientation using `type = "h"`.
 ```{r eval=FALSE}
 ggAlignPlots(p1, p2, type = "h")
 ```
@@ -125,8 +137,7 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ![](images/HemeWalkthrough/PNG/Plot-UMAP-Sample-Clusters-Combined_1.png){width=800 height=400}
 
-To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
-nice looking.
+To save an editable vectorized version of this plot, we use `plotPDF()`.
 
 ```{r eval=FALSE}
 plotPDF(p1,p2, name = "Plot-UMAP-Sample-Clusters.pdf", ArchRProj = projHeme2, addDOC = FALSE, width = 5, height = 5)
@@ -137,7 +148,7 @@ plotPDF(p1,p2, name = "Plot-UMAP-Sample-Clusters.pdf", ArchRProj = projHeme2, ad
 
 [Download PDF : Plot-UMAP-Sample-Clusters.pdf](images/HemeWalkthrough/PDF/Plot-UMAP-Sample-Clusters.pdf)
 
-We can also see the results from scran clustering
+We can also use `plotEmbedding()` to visualize the results from clustering using `scran`:
 
 ```{r eval=FALSE}
 p1 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "Sample", embedding = "UMAP")
@@ -181,8 +192,7 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ![](images/HemeWalkthrough/PNG/Plot-UMAP-Sample-ScranClusters-Combined_1.png){width=800 height=400}
 
-To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
-nice looking.
+To save an editable vectorized version of this plot, we use `plotPDF()`.
 
 ```{r eval=FALSE}
 plotPDF(p1,p2, name = "Plot-UMAP-Sample-ScranClusters.pdf", ArchRProj = projHeme2, addDOC = FALSE, width = 5, height = 5)
@@ -194,8 +204,9 @@ plotPDF(p1,p2, name = "Plot-UMAP-Sample-ScranClusters.pdf", ArchRProj = projHeme
 [Download PDF : Plot-UMAP-Sample-ScranClusters.pdf](images/HemeWalkthrough/PDF/Plot-UMAP-Sample-ScranClusters.pdf)
 
 
-## tSNE
+## t-Stocastic Neighbor Embedding (t-SNE)
 
+To run t-SNE in ArchR we use the `addTSNE()` function:
 ```{r eval=FALSE}
 projHeme2 <- addTSNE(
     ArchRProj = projHeme2, 
@@ -235,6 +246,7 @@ projHeme2 <- addTSNE(
 ## Iteration 1000: error is 2.511794 (50 iterations in 5.47 seconds)  
 ## Fitting performed in 118.39 seconds.  
 
+Similar to UMAP, we can plot the t-SNE embedding using `plotEmbedding()`. The same parameters apply to `colorBy` and `name` regardless of which type of embedding is being used.
 ```{r eval=FALSE}
 p1 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "Sample", embedding = "TSNE")
 ```
@@ -276,8 +288,7 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 ![](images/HemeWalkthrough/PNG/Plot-TSNE-Sample-Clusters-Combined_1.png){width=800 height=400}
 
 
-To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
-nice looking.
+To save an editable vectorized version of this plot, we use `plotPDF()`.
 
 ```{r eval=FALSE}
 plotPDF(p1,p2, name = "Plot-TSNE-Sample-Clusters.pdf", ArchRProj = projHeme2, addDOC = FALSE, width = 5, height = 5)
@@ -288,7 +299,7 @@ plotPDF(p1,p2, name = "Plot-TSNE-Sample-Clusters.pdf", ArchRProj = projHeme2, ad
 
 [Download PDF : Plot-TSNE-Sample-Clusters.pdf](images/HemeWalkthrough/PDF/Plot-TSNE-Sample-Clusters.pdf)
 
-We can also see the results from scran clustering
+As we did with UMAP, we can compare the clustering results from `Seurat::FindClusters()` with the results of clusering with `scran`:
 
 ```{r eval=FALSE}
 p1 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "Sample", embedding = "TSNE")
@@ -332,8 +343,7 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ![](images/HemeWalkthrough/PNG/Plot-tSNE-Sample-ScranClusters-Combined_1.png){width=800 height=400}
 
-To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
-nice looking.
+To save an editable vectorized version of this plot, we use `plotPDF()`.
 
 ```{r eval=FALSE}
 plotPDF(p1,p2, name = "Plot-tSNE-Sample-ScranClusters.pdf", ArchRProj = projHeme2, addDOC = FALSE, width = 5, height = 5)
@@ -344,80 +354,11 @@ plotPDF(p1,p2, name = "Plot-tSNE-Sample-ScranClusters.pdf", ArchRProj = projHeme
 
 [Download PDF : Plot-tSNE-Sample-ScranClusters.pdf](images/HemeWalkthrough/PDF/Plot-tSNE-Sample-ScranClusters.pdf)
 
-## UMAP of previous Reduced Dimensions
-```{r include=FALSE, eval=FALSE,echo=FALSE}
-#JJJ There is no sense of why you are running this again for IterativeLSI2. It just looks like the same thing one more time. Need to provide context.
-#JJJ Also, calling this "previous reduced dimensions" doesnt really make sense because all of the reduced dimensions were calculated previously.
-```
+## Dimensionality Reduction After Harmony
 
-```{r eval=FALSE}
-projHeme2 <- addUMAP(
-    ArchRProj = projHeme2, 
-    reducedDims = "IterativeLSI2", 
-    name = "UMAP2", 
-    nNeighbors = 30, 
-    minDist = 0.5, 
-    metric = "cosine"
-)
-```
-> \## 09:53:07 UMAP embedding parameters a = 0.583 b = 1.334  
-## 09:53:07 Read 10251 rows and found 30 numeric columns  
-## 09:53:07 Using Annoy for neighbor search, n_neighbors = 30  
-## 09:53:07 Building Annoy index with metric = cosine, n_trees = 50  
-## 0%   10   20   30   40   50   60   70   80   90   100%  
-## [----|----|----|----|----|----|----|----|----|----|  
-## **************************************************|  
-## 09:53:10 Writing NN index file to temp file /tmp/RtmpXb8qQa/fileefee233dd970  
-## 09:53:10 Searching Annoy index using 10 threads, search_k = 3000  
-## 09:53:11 Annoy recall = 100%  
-## 09:53:12 Commencing smooth kNN distance calibration using 10 threads  
-## 09:53:13 Initializing from normalized Laplacian + noise  
-## 09:53:14 Commencing optimization for 200 epochs, with 478078 positive edges  
-## 09:53:27 Optimization finished  
+In a previous chapter, we performed batch correction using Harmony via the `addHarmony()` function, creating a `reducedDims` object named "Harmony". We can assess the effects of Harmony by visualizing the embedding using UMAP or t-SNE and comparing this to the embeddings visualized in the previous sections for iterative LSI.
 
-```{r eval=FALSE}
-p1 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "Sample", embedding = "UMAP2")
-```
-> \## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-efee1a41702a-Date-2020-04-15_Time-09-53-28.log  
-## If there is an issue, please report to github with logFile!  
-## Getting UMAP Embedding  
-## ColorBy = cellColData  
-## Plotting Embedding  
-## 1   
-## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-efee1a41702a-Date-2020-04-15_Time-09-53-28.log  
-
-```{r eval=FALSE}
-p2 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "Clusters", embedding = "UMAP2")
-```
-> \## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-efee328899a4-Date-2020-04-15_Time-09-53-29.log  
-## If there is an issue, please report to github with logFile!  
-## Getting UMAP Embedding  
-## ColorBy = cellColData  
-## Plotting Embedding  
-## 1   
-## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-efee328899a4-Date-2020-04-15_Time-09-53-29.log  
-
-```{r eval=FALSE}
-ggAlignPlots(p1, p2, type = "h")
-```
-
-```{r, include=FALSE, eval=FALSE}
-plotPDF(
-    ggAlignPlots(p1, p2, type = "h", draw=FALSE), 
-    name = "Plot-UMAP2-Sample-Clusters-Combined.pdf", 
-    ArchRProj = projHeme2,
-    addDOC = FALSE,
-    width = 10, 
-    height = 5
-)
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Plot-UMAP2-Sample-Clusters-Combined_1.png){width=800 height=400}
-
-
+Repeating the UMAP embedding with the same parameters but for the "Harmony" `reducedDims` object:
 ```{r eval=FALSE}
 projHeme2 <- addUMAP(
     ArchRProj = projHeme2, 
@@ -486,8 +427,7 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 ![](images/HemeWalkthrough/PNG/Plot-UMAPHarmony-Sample-Clusters-Combined_1.png){width=800 height=400}
 
 
-To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
-nice looking.
+To save an editable vectorized version of this plot, we use `plotPDF()`.
 
 ```{r eval=FALSE}
 plotPDF(p1,p2,p3,p4, name = "Plot-UMAP2Harmony-Sample-Clusters.pdf", ArchRProj = projHeme2, addDOC = FALSE, width = 5, height = 5)
@@ -500,89 +440,7 @@ plotPDF(p1,p2,p3,p4, name = "Plot-UMAP2Harmony-Sample-Clusters.pdf", ArchRProj =
 
 [Download PDF : Plot-UMAP2Harmony-Sample-Clusters.pdf](images/HemeWalkthrough/PDF/Plot-UMAP2Harmony-Sample-Clusters.pdf)
 
-## tSNE of previous Reduced Dimensions
-
-```{r eval=FALSE}
-projHeme2 <- addTSNE(
-    ArchRProj = projHeme2, 
-    reducedDims = "IterativeLSI2", 
-    name = "TSNE2", 
-    perplexity = 30
-)
-```
-> \## Read the 10251 x 30 data matrix successfully!  
-## OpenMP is working. 9 threads.  
-## Using no_dims = 2, perplexity = 30.000000, and theta = 0.500000  
-## Computing input similarities...  
-## Building tree...  
-##  - point 10000 of 10251  
-## Done in 9.63 seconds (sparsity = 0.013618)!  
-## Learning embedding...  
-## Iteration 50: error is 95.772700 (50 iterations in 6.87 seconds)  
-## Iteration 100: error is 83.923080 (50 iterations in 7.81 seconds)  
-## Iteration 150: error is 81.348909 (50 iterations in 6.31 seconds)  
-## Iteration 200: error is 80.912996 (50 iterations in 6.82 seconds)  
-## Iteration 250: error is 80.714465 (50 iterations in 7.05 seconds)  
-## Iteration 300: error is 3.324795 (50 iterations in 6.23 seconds)  
-## Iteration 350: error is 3.087512 (50 iterations in 5.69 seconds)  
-## Iteration 400: error is 2.960654 (50 iterations in 5.52 seconds)  
-## Iteration 450: error is 2.882221 (50 iterations in 5.44 seconds)  
-## Iteration 500: error is 2.826578 (50 iterations in 5.41 seconds)  
-## Iteration 550: error is 2.785697 (50 iterations in 5.34 seconds)  
-## Iteration 600: error is 2.752606 (50 iterations in 5.40 seconds)  
-## Iteration 650: error is 2.725781 (50 iterations in 5.44 seconds)  
-## Iteration 700: error is 2.705748 (50 iterations in 5.46 seconds)  
-## Iteration 750: error is 2.689941 (50 iterations in 5.48 seconds)  
-## Iteration 800: error is 2.678175 (50 iterations in 5.48 seconds)  
-## Iteration 850: error is 2.669356 (50 iterations in 5.54 seconds)  
-## Iteration 900: error is 2.662153 (50 iterations in 5.68 seconds)  
-## Iteration 950: error is 2.654785 (50 iterations in 5.67 seconds)  
-## Iteration 1000: error is 2.647983 (50 iterations in 5.61 seconds)  
-## Fitting performed in 118.25 seconds.  
-
-```{r eval=FALSE}
-p1 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "Sample", embedding = "TSNE2")
-```
-> \## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-efee7100bd0c-Date-2020-04-15_Time-09-54-51.log  
-## If there is an issue, please report to github with logFile!  
-## Getting UMAP Embedding  
-## ColorBy = cellColData  
-## Plotting Embedding  
-## 1  
-## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-efee7100bd0c-Date-2020-04-15_Time-09-54-51.log  
-
-```{r eval=FALSE}
-p2 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "Clusters", embedding = "TSNE2")
-```
-> \## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-efee65156ac0-Date-2020-04-15_Time-09-54-52.log  
-## If there is an issue, please report to github with logFile!  
-## Getting UMAP Embedding  
-## ColorBy = cellColData  
-## Plotting Embedding  
-## 1   
-## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-efee65156ac0-Date-2020-04-15_Time-09-54-52.log  
-
-```{r eval=FALSE}
-ggAlignPlots(p1, p2, type = "h")
-```
-
-```{r, include=FALSE, eval=FALSE}
-plotPDF(
-    ggAlignPlots(p1, p2, type = "h", draw=FALSE), 
-    name = "Plot-TSNE2-Sample-Clusters-Combined.pdf", 
-    ArchRProj = projHeme2,
-    addDOC = FALSE,
-    width = 10, 
-    height = 5
-)
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Plot-TSNE2-Sample-Clusters-Combined_1.png){width=800 height=400}
-
-
+And the same for t-SNE:
 ```{r eval=FALSE}
 projHeme2 <- addTSNE(
     ArchRProj = projHeme2, 
@@ -663,8 +521,7 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ![](images/HemeWalkthrough/PNG/Plot-TSNEHarmony-Sample-Clusters-Combined_1.png){width=800 height=400}
 
-To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
-nice looking.
+To save an editable vectorized version of this plot, we use `plotPDF()`.
 
 ```{r eval=FALSE}
 plotPDF(p1,p2,p3,p4, name = "Plot-TSNE2Harmony-Sample-Clusters.pdf", ArchRProj = projHeme2, addDOC = FALSE, width = 5, height = 5)

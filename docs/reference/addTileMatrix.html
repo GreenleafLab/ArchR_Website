@@ -45,6 +45,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Add TileMatrix to ArrowFiles or an ArchRProject — addTileMatrix" />
 
 <meta property="og:description" content="This function, for each sample, will independently compute counts for each tile
@@ -92,7 +94,7 @@ per cell in the ArrowFile" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -182,7 +184,8 @@ per cell in the ArrowFile</p>
   <span class='kw'>excludeChr</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"chrM"</span>, <span class='st'>"chrY"</span>),
   <span class='kw'>threads</span> <span class='kw'>=</span> <span class='fu'><a href='getArchRThreads.html'>getArchRThreads</a></span>(),
   <span class='kw'>parallelParam</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>logFile</span> <span class='kw'>=</span> <span class='fu'>createLogFile</span>(<span class='st'>"addTileMatrix"</span>)
 )</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -194,11 +197,13 @@ per cell in the ArrowFile</p>
     </tr>
     <tr>
       <th>chromSizes</th>
-      <td><p>A named numeric vector containing the chromsome names and lengths. The default behavior is to retrieve this from the <code>ArchRProject</code> using <code><a href='getChromSizes.html'>getChromSizes()</a></code>.</p></td>
+      <td><p>A named numeric vector containing the chromsome names and lengths. The default behavior is to retrieve
+this from the <code>ArchRProject</code> using <code><a href='getChromSizes.html'>getChromSizes()</a></code>.</p></td>
     </tr>
     <tr>
       <th>blacklist</th>
-      <td><p>A <code>GRanges</code> object containing genomic regions to blacklist counting in these tiles. The default behavior is to retrieve this from the <code>ArchRProject</code> using <code><a href='getBlacklist.html'>getBlacklist()</a></code>.</p></td>
+      <td><p>A <code>GRanges</code> object containing genomic regions to blacklist counting in these tiles. The default behavior
+is to retrieve this from the <code>ArchRProject</code> using <code><a href='getBlacklist.html'>getBlacklist()</a></code>.</p></td>
     </tr>
     <tr>
       <th>tileSize</th>
@@ -223,6 +228,10 @@ per cell in the ArrowFile</p>
     <tr>
       <th>force</th>
       <td><p>A boolean value indicating whether to force the "TileMatrix' to be overwritten if it already exist in the given <code>input</code>.</p></td>
+    </tr>
+    <tr>
+      <th>logFile</th>
+      <td><p>The path to a file to be used for logging ArchR output.</p></td>
     </tr>
     </table>
     

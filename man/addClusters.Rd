@@ -15,41 +15,95 @@ addClusters(
   scaleDims = NULL,
   corCutOff = 0.75,
   knnAssign = 10,
-  nOutlier = 20,
+  nOutlier = 5,
+  testBias = TRUE,
+  filterBias = FALSE,
+  biasClusters = 0.01,
+  biasCol = "nFrags",
+  biasVals = NULL,
+  biasQuantiles = c(0.05, 0.95),
+  biasEnrich = 10,
+  biasProportion = 0.5,
+  biasPval = 0.05,
+  nPerm = 500,
+  prefix = "C",
+  ArchRProj = NULL,
   verbose = TRUE,
   tstart = NULL,
   force = FALSE,
+  logFile = createLogFile("addClusters"),
   ...
 )
 }
 \arguments{
-\item{input}{Either (i) an \code{ArchRProject} object containing the dimensionality reduction matrix passed by \code{reducedDims} or (ii) a dimensionality reduction matrix. This object will be used for cluster identification.}
+\item{input}{Either (i) an \code{ArchRProject} object containing the dimensionality reduction matrix passed by \code{reducedDims}
+or (ii) a dimensionality reduction matrix. This object will be used for cluster identification.}
 
-\item{reducedDims}{The name of the \code{reducedDims} object (i.e. "IterativeLSI") to retrieve from the designated \code{ArchRProject}. Not required if input is a matrix.}
+\item{reducedDims}{The name of the \code{reducedDims} object (i.e. "IterativeLSI") to retrieve from the designated \code{ArchRProject}.
+Not required if input is a matrix.}
 
 \item{name}{The column name of the cluster label column to be added to \code{cellColData} if \code{input} is an \code{ArchRProject} object.}
 
-\item{sampleCells}{An integer specifying the number of cells to subsample and perform clustering on. The remaining cells that were not subsampled will be assigned to the cluster of the nearest subsampled cell. This enables a decrease in run time but can sacrifice granularity of clusters.}
+\item{sampleCells}{An integer specifying the number of cells to subsample and perform clustering on. The remaining cells
+that were not subsampled will be assigned to the cluster of the nearest subsampled cell. This enables a decrease in run time
+but can sacrifice granularity of clusters.}
 
-\item{seed}{A number to be used as the seed for random number generation required in cluster determination. It is recommended to keep track of the seed used so that you can reproduce results downstream.}
+\item{seed}{A number to be used as the seed for random number generation required in cluster determination. It is recommended
+to keep track of the seed used so that you can reproduce results downstream.}
 
 \item{method}{A string indicating the clustering method to be used. Supported methods are "Seurat" and "Scran".}
 
 \item{dimsToUse}{A vector containing the dimensions from the \code{reducedDims} object to use in clustering.}
 
-\item{scaleDims}{A boolean describing whether to rescale the total variance for each principal component. This is useful for minimizing the contribution of strong biases (dominating early PCs) and lowly abundant populations. However, this may lead to stronger sample-specific biases since it is over-weighting latent PCs. If \code{NULL} this will scale the dimensions depending on if this were set true when the \code{reducedDims} were created by \code{addIterativeLSI}.}
+\item{scaleDims}{A boolean value that indicates whether to z-score the reduced dimensions for each cell. This is useful for minimizing the contribution
+of strong biases (dominating early PCs) and lowly abundant populations. However, this may lead to stronger sample-specific biases since
+it is over-weighting latent PCs. If set to \code{NULL} this will scale the dimensions based on the value of \code{scaleDims} when the \code{reducedDims} were
+originally created during dimensionality reduction. This idea was introduced by Timothy Stuart.}
 
-\item{corCutOff}{A numeric cutoff for the correlation of each dimension to the sequencing depth. If the dimension has a correlation to sequencing depth that is greater than the \code{corCutOff}, it will be excluded from analysis.}
+\item{corCutOff}{A numeric cutoff for the correlation of each dimension to the sequencing depth. If the dimension has a correlation to
+sequencing depth that is greater than the \code{corCutOff}, it will be excluded from analysis.}
 
 \item{knnAssign}{The number of nearest neighbors to be used during clustering for assignment of outliers (clusters with less than nOutlier cells).}
 
-\item{nOutlier}{The minimum number of cells required for a group of cells to be called as a cluster. If a group of cells does not reach this threshold, then the cells will be considered outliers and assigned to nearby clusters.}
+\item{nOutlier}{The minimum number of cells required for a group of cells to be called as a cluster. If a group of cells does not reach
+this threshold, then the cells will be considered outliers and assigned to nearby clusters.}
+
+\item{testBias}{A boolean value that indicates whether or not to test clusters for bias.}
+
+\item{filterBias}{A boolean value indicates whether or not to filter clusters that are identified as biased.}
+
+\item{biasClusters}{A numeric value between 0 and 1 indicating that clusters that are smaller than the specified proportion of total cells are
+to be checked for bias. This should be set close to 0. We recommend a default of 0.01 which specifies clusters below 1 percent of the total cells.}
+
+\item{biasCol}{The name of a column in \code{cellColData} that contains the numeric values used for testing bias enrichment.}
+
+\item{biasVals}{A set of numeric values used for testing bias enrichment if \code{input} is not an \code{ArchRProject}.}
+
+\item{biasQuantiles}{A vector of two numeric values, each between 0 and 1, that describes the lower and upper quantiles of the bias values to use
+for computing bias enrichment statistics.}
+
+\item{biasEnrich}{A numeric value that specifies the minimum enrichment of biased cells over the median of the permuted background sets.}
+
+\item{biasProportion}{A numeric value between 0 and 1 that specifies the minimum proportion of biased cells in a cluster required to determine that the
+cluster is biased during testing for bias-enriched clusters.}
+
+\item{biasPval}{A numeric value between 0 and 1 that specifies the p-value to use when testing for bias-enriched clusters.}
+
+\item{nPerm}{An integer specifying the number of permutations to perform for testing bias-enriched clusters.}
+
+\item{prefix}{A character string to be added before each cluster identity. For example, if "Cluster" then cluster results will be "Cluster1", "Cluster2" etc.}
+
+\item{ArchRProj}{An \code{ArchRProject} object containing the dimensionality reduction matrix passed by \code{reducedDims}. This argument can also be supplied as \code{input}.}
 
 \item{verbose}{A boolean value indicating whether to use verbose output during execution of this function. Can be set to FALSE for a cleaner output.}
 
-\item{tstart}{JJJ A timestamp to measure how long the clustering analysis has been running relative to a start time. Useful for keeping track of how long clustering relative to a start time, for example this is used in "IterativeLSI".}
+\item{tstart}{A timestamp that is typically passed internally from another function (for ex. "IterativeLSI") to measure how long the clustering analysis
+has been running relative to the start time when this process was initiated in another function. This argument is rarely manually specified.}
 
-\item{force}{A boolean value that indicates whether or not to overwrite data in a given column when the value passed to \code{name} already exists as a column name in \code{cellColData}.}
+\item{force}{A boolean value that indicates whether or not to overwrite data in a given column when the value passed to \code{name} already
+exists as a column name in \code{cellColData}.}
+
+\item{logFile}{The path to a file to be used for logging ArchR output.}
 
 \item{...}{Additional arguments to be provided to Seurat::FindClusters or scran::buildSNNGraph (for example, knn = 50, jaccard = TRUE)}
 }

@@ -52,7 +52,7 @@ Most single-cell clustering methods focus on computing nearest neighbor graphs i
 
 ## Clustering using Seurat's `FindClusters()` function
 
-We have had the most success using the graph clustering approach implemented by [Seurat](https://github.com/satijalab/seurat). In ArchR, clustering is performed using the `addClusters()` function which permits additional clustering parameters to be passed to the `Seurat::FindClusters()` function.
+We have had the most success using the graph clustering approach implemented by [Seurat](https://github.com/satijalab/seurat). In ArchR, clustering is performed using the `addClusters()` function which permits additional clustering parameters to be passed to the `Seurat::FindClusters()` function via `...`. In our hands, clustering using `Seurat::FindClusters()` is deterministic, meaning that the exact same input will always result in the exact same output.
 
 ```{r eval=FALSE}
 projHeme2 <- addClusters(
@@ -80,20 +80,21 @@ projHeme2 <- addClusters(
 ## 2020-04-15 09:47:29 : Testing Outlier Clusters, 0.483 mins elapsed.  
 ## 2020-04-15 09:47:29 : Assigning Cluster Names to 12 Clusters, 0.483 mins elapsed.  
 
-To access these clusters we can use the `$` accessor
+To access these clusters we can use the `$` accessor which shows the cluster ID for each single cell.
 
 ```{r eval=FALSE}
 head(projHeme2$Clusters)
 ```
 > \## [1] "C3"  "C8"  "C4"  "C3"  "C11" "C3"  
 
+We can tabulate the number of cells present in each cluster:
 ```{r eval=FALSE}
 table(projHeme2$Clusters)
 ```
 > \##   C1  C10  C11  C12   C2   C3   C4   C5   C6   C7   C8   C9  
 ## 1547  879  793 1650 1085  439  351  320  387  851 1271  678  
 
-To better understand which samples reside in which clusters, we can create a cluster confusion matrix across each sample. JJJ
+To better understand which samples reside in which clusters, we can create a cluster confusion matrix across each sample using the `confusionMatrix()` function.
 
 ```{r eval=FALSE}
 cM <- confusionMatrix(paste0(projHeme2$Clusters), paste0(projHeme2$Sample))
@@ -114,7 +115,7 @@ cM
 ## C2              82                   1           1002  
 ## C6              82                 305              .  
 
-An example of plotting this confusion matrix as a heatmap
+To plot this confusion matrix as a heatmap, we use the `pheatmap` package:
 
 ```{r eval=FALSE}
 library(pheatmap)
@@ -139,7 +140,7 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 ```{r include=FALSE, eval=FALSE,echo=FALSE}
 #JJJ This is confusing. Expand on this - 
 ```
-Determining the appropriate cluster parameters is useful once you have computed a 2-dimensional embedding. This is because you should be adjusting both the clustering and embedding parameters to where they both agree. 
+There are times where the relative location of cells within the 2-dimensional embedding does not agree perfectly with the identified clusters. More explicitly, cells from a single cluster may appear in multiple different areas of the embedding. In these contexts, it is appropriate to adjust the clustering parameters or embedding parameters until there is agreement between the two. 
 
 ### Clustering using `scran`
 

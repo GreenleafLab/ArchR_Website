@@ -45,6 +45,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Get dimensionality reduction information stored in an ArchRProject — getReducedDims" />
 
 <meta property="og:description" content="This function gets a dimensionality reduction object (i.e. UMAP, tSNE, etc) from a given ArchRProject." />
@@ -91,7 +93,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -193,7 +195,8 @@
     </tr>
     <tr>
       <th>returnMatrix</th>
-      <td><p>If set to "mat" or "matrix", the function will return the <code>reducedDims</code> object as a matrix with entries for each individual cell. Otherwise, it will return the full <code>reducedDims</code> object.</p></td>
+      <td><p>If set to "mat" or "matrix", the function will return the <code>reducedDims</code> object as a matrix with entries for
+each individual cell. Otherwise, it will return the full <code>reducedDims</code> object.</p></td>
     </tr>
     <tr>
       <th>dimsToUse</th>
@@ -201,11 +204,15 @@
     </tr>
     <tr>
       <th>scaleDims</th>
-      <td><p>A boolean describing whether to rescale the total variance for each principal component. This is useful for minimizing the contribution of strong biases (dominating early PCs) and lowly abundant populations. However, this may lead to stronger sample-specific biases since it is over-weighting latent PCs. If <code>NULL</code> this will scale the dimensions depending on if this were set true when the <code>reducedDims</code> were created by <code>addIterativeLSI</code>.</p></td>
+      <td><p>A boolean describing whether to z-score the reduced dimensions for each cell. This is useful for minimizing the
+contribution of strong biases (dominating early PCs) and lowly abundant populations. However, this may lead to stronger sample-specific
+biases since it is over-weighting latent PCs. If <code>NULL</code> this will scale the dimensions depending on if this were set true when the
+<code>reducedDims</code> were created by the dimensionality reduction method. This idea was introduced by Timothy Stuart.</p></td>
     </tr>
     <tr>
       <th>corCutOff</th>
-      <td><p>A numeric cutoff for the correlation of each dimension to the sequencing depth. If the dimension has a correlation to sequencing depth that is greater than the <code>corCutOff</code>, it will be excluded.</p></td>
+      <td><p>A numeric cutoff for the correlation of each dimension to the sequencing depth. If the dimension has a correlation
+to sequencing depth that is greater than the <code>corCutOff</code>, it will be excluded.</p></td>
     </tr>
     </table>
     

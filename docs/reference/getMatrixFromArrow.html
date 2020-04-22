@@ -45,6 +45,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+  <link href="../extra.css" rel="stylesheet">
+  
 <meta property="og:title" content="Get a data matrix stored in an ArrowFile — getMatrixFromArrow" />
 
 <meta property="og:description" content="This function gets a given data matrix from an individual ArrowFile." />
@@ -91,7 +93,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -178,7 +180,8 @@
   <span class='kw'>cellNames</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>ArchRProj</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>binarize</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  <span class='kw'>binarize</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>logFile</span> <span class='kw'>=</span> <span class='fu'>createLogFile</span>(<span class='st'>"getMatrixFromArrow"</span>)
 )</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -198,11 +201,15 @@
     </tr>
     <tr>
       <th>cellNames</th>
-      <td><p>A character vector indicating the cell names of a subset of cells from which fragments whould be extracted. This allows for extraction of fragments from only a subset of selected cells. By default, this function will extract all cells from the provided ArrowFile using <code><a href='getCellNames.html'>getCellNames()</a></code>.</p></td>
+      <td><p>A character vector indicating the cell names of a subset of cells from which fragments whould be extracted.
+This allows for extraction of fragments from only a subset of selected cells. By default, this function will extract all cells from
+the provided ArrowFile using <code><a href='getCellNames.html'>getCellNames()</a></code>.</p></td>
     </tr>
     <tr>
       <th>ArchRProj</th>
-      <td><p>JJJ An <code>ArchRProject</code> object to be used for getting additional information for cells in <code>cellColData</code>. This is useful when you want to keep information created when analyzing an ArchRProject that is not present in the ArrowFile.</p></td>
+      <td><p>An <code>ArchRProject</code> object to be used for getting additional information for cells in <code>cellColData</code>.
+In some cases, data exists within the <code>ArchRProject</code> object that does not exist within the ArrowFiles. To access this data, you can
+provide the <code>ArchRProject</code> object here.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -211,6 +218,10 @@
     <tr>
       <th>binarize</th>
       <td><p>A boolean value indicating whether the matrix should be binarized before return. This is often desired when working with insertion counts.</p></td>
+    </tr>
+    <tr>
+      <th>logFile</th>
+      <td><p>The path to a file to be used for logging ArchR output.</p></td>
     </tr>
     </table>
     

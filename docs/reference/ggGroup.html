@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>A ggplot-based violin plot wrapper function JJJ — ggGroup • ArchR</title>
+<title>A ggplot-based ridge/violin plot wrapper function — ggGroup • ArchR</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -45,9 +45,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
-<meta property="og:title" content="A ggplot-based violin plot wrapper function JJJ — ggGroup" />
+  <link href="../extra.css" rel="stylesheet">
+  
+<meta property="og:title" content="A ggplot-based ridge/violin plot wrapper function — ggGroup" />
 
-<meta property="og:description" content="This function is a wrapper around ggplot geom_violin to allow for plotting violin plots in ArchR." />
+<meta property="og:description" content="This function is a wrapper around ggplot geom_density_ridges or geom_violin to allow for plotting group distribution plots in ArchR." />
 
 <meta property="og:image" content="https://greenleaflab.github.io/ArchR_Website/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -91,7 +93,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -160,14 +162,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>A ggplot-based violin plot wrapper function JJJ</h1>
+    <h1>A ggplot-based ridge/violin plot wrapper function</h1>
     
     <div class="hidden name"><code>ggGroup.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function is a wrapper around ggplot geom_violin to allow for plotting violin plots in ArchR.</p>
+    <p>This function is a wrapper around ggplot geom_density_ridges or geom_violin to allow for plotting group distribution plots in ArchR.</p>
     
     </div>
 
@@ -185,8 +187,9 @@
   <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>""</span>,
   <span class='kw'>pal</span> <span class='kw'>=</span> <span class='fu'><a href='paletteDiscrete.html'>paletteDiscrete</a></span>(<span class='kw'>values</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>set</span> <span class='kw'>=</span> <span class='st'>"stallion"</span>),
-  <span class='kw'>addBoxPlot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>plotAs</span> <span class='kw'>=</span> <span class='st'>"ridges"</span>
+  <span class='kw'>addBoxPlot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>plotAs</span> <span class='kw'>=</span> <span class='st'>"ridges"</span>,
+  <span class='no'>...</span>
 )</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -210,7 +213,12 @@
     </tr>
     <tr>
       <th>groupOrder</th>
-      <td><p>A character vector indicating a custom order for plotting x-axis categorical values. Should contain all possible values of <code>x</code> in the desired order.</p></td>
+      <td><p>A character vector indicating a custom order for plotting x-axis categorical values. Should contain all possible
+values of <code>x</code> in the desired order.</p></td>
+    </tr>
+    <tr>
+      <th>groupSort</th>
+      <td><p>A boolean indicating whether to sort groups based on the average value of the group.</p></td>
     </tr>
     <tr>
       <th>size</th>
@@ -218,11 +226,19 @@
     </tr>
     <tr>
       <th>baseSize</th>
-      <td><p>The base font (in points) size to use in the plot.</p></td>
+      <td><p>The base font size (in points) to use in the plot.</p></td>
+    </tr>
+    <tr>
+      <th>ridgeScale</th>
+      <td><p>A numeric indicating the relative size for each ridge in the ridgeplot.</p></td>
     </tr>
     <tr>
       <th>ratioYX</th>
       <td><p>The aspect ratio of the x and y axes on the plot.</p></td>
+    </tr>
+    <tr>
+      <th>alpha</th>
+      <td><p>A number indicating the transparency to use for each point. See <code>ggplot2</code> for more details.</p></td>
     </tr>
     <tr>
       <th>title</th>
@@ -233,8 +249,16 @@
       <td><p>A named custom palette (see <code><a href='paletteDiscrete.html'>paletteDiscrete()</a></code> and <code>ArchRPalettes</code>) for discrete coloring.</p></td>
     </tr>
     <tr>
-      <th>sampleRatio</th>
-      <td><p>The fraction of the total number of points to be displayed over violins. A value of 0.1 would plot 10 percent of the total data points over the violin.</p></td>
+      <th>addBoxPlot</th>
+      <td><p>A boolean indicating whether to add a boxplot to the plot if <code>plotAs="violin"</code>.</p></td>
+    </tr>
+    <tr>
+      <th>plotAs</th>
+      <td><p>A string indicating how the groups should be plotted. Acceptable values are "ridges" (for a <code>ggrides</code>-style plot) or "violin" (for a violin plot).</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Additional parameters to pass to <code>ggplot2</code> for plotting.</p></td>
     </tr>
     </table>
     
