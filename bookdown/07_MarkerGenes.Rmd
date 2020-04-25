@@ -72,11 +72,11 @@ Gene scores are calculated for each Arrow file at the time of creation if the pa
 
 It is important to note that not all genes behave well with gene scores. In particular, genes that reside in very gene-dense areas can be problematic. Thus, it is always best to sanity check all gene score analyses by looking at sequencing tracks which is described in a later chapter.
 
-## Identification of Marker Genes
+## Identification of Marker Features
 
 In addition to using prior knowledge of relevant marker genes for annotation of clusters, ArchR enables unbiased identification of marker features for any given cell groupings (for example, clusters). These features can be anything - peaks, genes (based on gene scores), or transcription factor motifs (based on chromVAR deviations). ArchR does this using the `getMarkerFeatures()` function which can take as input any matrix via the `useMatrix` parameter and it identifies features unique to the groups indicated by the `groupBy` parameter. If the `useMatrix` parameter is set to "GeneScoreMatrix", then the function will identify the genes that appear to be uniquely active in each cell type. This provides an unbiased way of seeing which genes are predicted to be active in each cluster and can aid in cluster annotation.
 
-As mentioned above, the same `getMarkerFeatures()` function can be used with any matrix stored in the Arrow files to identify features that are specific to certain cell groups. This is accomplished via the `useMatrix` parameter. For example, `useMatrix = "TileMatrix"` would identify genomic regions that are highly specific to a certain cell group and `useMatrix = "PeakMatrix"` would identify peaks that are highly specific to a certain cell group.
+As mentioned above, the same `getMarkerFeatures()` function can be used with any matrix stored in the Arrow files to identify features that are specific to certain cell groups. This is accomplished via the `useMatrix` parameter. For example, `useMatrix = "TileMatrix"` would identify genomic regions that are highly specific to a certain cell group and `useMatrix = "PeakMatrix"` would identify peaks that are highly specific to a certain cell group. Examples of how to use the `getMarkerFeatures()` function on other feature types are provided in later chapters.
 
 ### How does marker feature identification happen?
 
@@ -537,7 +537,6 @@ plotPDF(plotList = p,
 [Download PDF : Plot-Tracks-Marker-Genes.pdf](images/HemeWalkthrough/PDF/Plot-Tracks-Marker-Genes.pdf)
 
 ## Launching the ArchRBrowser
-
 
 One challenge inherent to scATAC-seq data analysis is genome-track level visualizations of chromatin accessibility observed within groups of. Traditionally, track visualization requires grouping the scATAC-seq fragments, creating a genome coverage bigwig, and normalizing this track for quantitative visualization. Typically, end-users use a genome browser such as the [WashU Epigenome Browser](https://epigenomegateway.wustl.edu/), the [UCSC Genome Browser](http://genome.ucsc.edu/), or the [IGV browser](http://software.broadinstitute.org/software/igv/) to visualize these sequencing tracks. This process involves using multiple software and any change to the cellular groups or addition of more samples requires re-generation of bigwig files etc., which can become time consuming.
 
