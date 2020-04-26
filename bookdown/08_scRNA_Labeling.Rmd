@@ -601,11 +601,11 @@ plotPDF(plotList = p1,
 Now that we are confident in the alignment of our scATAC-seq and scRNA-seq, we can label our scATAC-seq clusters with the cell types from our scRNA-seq data.
 
 ```{r include=FALSE, eval=FALSE,echo=FALSE}
-#JJJ This entire section has include = FALSE. This seems like an error to me
+#JJJ This entire section had include = FALSE. I've changed it to include=TRUE but we will need to re-visit to make sure the proper plots and outputs are present
 ```
 
 First, we will create a confusion matrix between our scATAC-seq clusters and the `predictedGroup` obtained from our integration analysis.
-```{r, include=FALSE, eval=FALSE}
+```{r eval=FALSE}
 cM <- confusionMatrix(projHeme3$Clusters, projHeme3$predictedGroup)
 labelOld <- rownames(cM)
 labelOld
@@ -615,13 +615,13 @@ labelOld
 ```
 
 Then, for each of our scATAC-seq clusters, we identify the cell type from `predictedGroup` which best defines that cluster.
-```{r, include=FALSE, eval=FALSE}
+```{r eval=FALSE}
 labelNew <- colnames(cM)[apply(cM, 1, which.max)]
 labelNew
 ```
 
 Next we need to reclassify these new cluster labels to make a simpler categorization system. For each scRNA-seq cluster, we will re-define its label to something easier to interpret.
-```{r, include=FALSE, eval=FALSE}
+```{r eval=FALSE}
 remapClust <- c(
     "01_HSC" = "Progenitor",
     "02_Early.Eryth" = "Erythroid",
@@ -652,7 +652,7 @@ remapClust <- remapClust[names(remapClust) %in% labelNew]
 ```
 
 Then, using the `mapLabels()` function, we will convert our labels to this new simpler system.
-```{r, include=FALSE, eval=FALSE}
+```{r eval=FALSE}
 labelNew2 <- mapLabels(labelNew, oldLabels = names(remapClust), newLabels = remapClust)
 labelNew2
 #  [1] "GMP"        "B"          "PreB"       "CD4.N"      "Mono"      
@@ -661,12 +661,12 @@ labelNew2
 ```
 
 Combining `labelsOld` and `labelsNew2`, we now can use the `mapLabels()` function again to create new cluster labels in `cellColData`. 
-```{r, include=FALSE, eval=FALSE}
+```{r eval=FALSE}
 projHeme3$Clusters2 <- mapLabels(projHeme3$Clusters, newLabels = labelNew2, oldLabels = labelOld)
 ```
 
 With these new labels in hand, we can plot a UMAP with the new cluster identities overlayed.
-```{r, include=FALSE, eval=FALSE}
+```{r eval=FALSE}
 p1 <- plotEmbedding(projHeme3, colorBy = "cellColData", name = "Clusters2")
 p1
 ```
@@ -689,6 +689,30 @@ To save an editable vectorized version of this plot, we use the `plotPDF()` func
 ```{r eval=FALSE}
 plotPDF(p1, name = "Plot-UMAP-Remap-Clusters.pdf", ArchRProj = projHeme2, addDOC = FALSE, width = 5, height = 5)
 ```
+
+```{r include=FALSE, eval=FALSE,echo=FALSE}
+#JJJ This was moved here from the MACS2 chapter
+```
+
+We can now save our original projHeme3 using `saveArchRProject` from ArchR.
+
+```{r eval=FALSE}
+saveArchRProject(ArchRProj = projHeme3, outputDirectory = "Save-ProjHeme3", load = FALSE)
+```
+> \## Copying ArchRProject to new outputDirectory : /oak/stanford/groups/howchang/users/jgranja/ArchRTutorial/ArchRBook/BookOutput4/Save-ProjHeme3  
+## Copying Arrow Files...  
+## Copying Arrow Files (1 of 3)  
+## Copying Arrow Files (2 of 3)  
+## Copying Arrow Files (3 of 3)  
+## Getting ImputeWeights  
+## Dropping ImputeWeights...  
+## Copying Other Files...  
+## Copying Other Files (1 of 4): Embeddings  
+## Copying Other Files (2 of 4): IterativeLSI  
+## Copying Other Files (3 of 4): IterativeLSI2  
+## Copying Other Files (4 of 4): Plots  
+## Saving ArchRProject...  
+
 
 ```{r, include=FALSE, eval=FALSE}
 save.image(params$out, compress = FALSE)
