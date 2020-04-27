@@ -301,10 +301,10 @@ plotPDF(pma, pv, name = "Erythroid-Markers-MA-Volcano", width = 5, height = 5, A
 
 ### Marker Peaks in Browser Tracks
 
-Additionally we can see these peak regions overlayed on our browser tracks by passing the relevant peak regions to the `features` parameter. This will add an additional BED-style track of marker peak regions to the bottom of our ArchR track plot. Here we specify plotting the GATA1 gene via the `geneSymbol` parameter.
+Additionally we can see these peak regions overlayed on our browser tracks by passing the relevant peak regions to the `features` parameterin the `plotBrowserTrack()` function. This will add an additional BED-style track of marker peak regions to the bottom of our ArchR track plot. Here we specify plotting the GATA1 gene via the `geneSymbol` parameter.
 
 ```{r eval=FALSE}
-p <- ArchRBrowserTrack(
+p <- plotBrowserTrack(
     ArchRProj = projHeme5, 
     groupBy = "Clusters2", 
     geneSymbol = c("GATA1"),
@@ -313,7 +313,7 @@ p <- ArchRBrowserTrack(
     downstream = 50000
 )
 ```
-> \## ArchR logging to : ArchRLogs/ArchR-ArchRBrowserTrack-ff9f580fdbcb-Date-2020-04-15_Time-10-35-20.log  
+> \## ArchR logging to : ArchRLogs/ArchR-plotBrowserTrack-ff9f580fdbcb-Date-2020-04-15_Time-10-35-20.log  
 ## If there is an issue, please report to github with logFile!  
 ## Warning: 'GenomicRangesList' is deprecated.  
 ## Use 'GRangesList(..., compress=FALSE)' instead.  
@@ -329,7 +329,7 @@ p <- ArchRBrowserTrack(
 ## 2020-04-15 10:35:26 : Adding Feature Tracks (1 of 1), 0.095 mins elapsed.  
 ## 2020-04-15 10:35:26 : Adding Gene Tracks (1 of 1), 0.1 mins elapsed.  
 ## 2020-04-15 10:35:27 : Plotting, 0.109 mins elapsed.  
-## ArchR logging successful to : ArchRLogs/ArchR-ArchRBrowserTrack-ff9f580fdbcb-Date-2020-04-15_Time-10-35-20.log  
+## ArchR logging successful to : ArchRLogs/ArchR-plotBrowserTrack-ff9f580fdbcb-Date-2020-04-15_Time-10-35-20.log  
 
 We can plot this using `grid::grid.draw()`.
 ```{r eval=FALSE}
