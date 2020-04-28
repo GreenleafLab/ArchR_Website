@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-27" />
+<meta name="date" content="2020-04-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -170,7 +170,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
+<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single-cell Embeddings</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>6.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
 <li class="chapter" data-level="6.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>6.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
@@ -266,13 +266,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">10.3</span> Calling Peaks w/ TileMatrix</h2>
 <p>As mentioned previously, ArchR also implements its own native peak caller. While we have benchmarked this peak caller against MACS2 and note very similar performances, we do not recommend using this native peak caller unless absolutely necessary.</p>
 <p>The ArchR native peak caller calls peaks on the 500-bp <code>TileMatrix</code> and we indicate to <code>addReproduciblePeakSet()</code> that we want to use this peak caller via the <code>peakMethod</code> parameter. Note that we are not storing the output into the <code>projHeme4</code> object because we do not intend to keep this peak set and this analysis is only for illustrative purposes. Storage into the <code>ArchRProject</code> object would overwrite the previous reproducible peak set already stored in <code>projHeme4</code>.</p>
-<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="calling-peaks-w-tilematrix.html#cb161-1"></a><span class="co">#Call Reproducible Peaks w/ TileMatrix (~2 minutes)</span></span>
-<span id="cb161-2"><a href="calling-peaks-w-tilematrix.html#cb161-2"></a>projHemeTmp &lt;-<span class="st"> </span><span class="kw">addReproduciblePeakSet</span>(</span>
-<span id="cb161-3"><a href="calling-peaks-w-tilematrix.html#cb161-3"></a>    <span class="dt">ArchRProj =</span> projHeme4, </span>
-<span id="cb161-4"><a href="calling-peaks-w-tilematrix.html#cb161-4"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
-<span id="cb161-5"><a href="calling-peaks-w-tilematrix.html#cb161-5"></a>    <span class="dt">peakMethod =</span> <span class="st">&quot;Tiles&quot;</span>,</span>
-<span id="cb161-6"><a href="calling-peaks-w-tilematrix.html#cb161-6"></a>    <span class="dt">method =</span> <span class="st">&quot;p&quot;</span></span>
-<span id="cb161-7"><a href="calling-peaks-w-tilematrix.html#cb161-7"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="calling-peaks-w-tilematrix.html#cb161-1"></a>projHemeTmp &lt;-<span class="st"> </span><span class="kw">addReproduciblePeakSet</span>(</span>
+<span id="cb161-2"><a href="calling-peaks-w-tilematrix.html#cb161-2"></a>    <span class="dt">ArchRProj =</span> projHeme4, </span>
+<span id="cb161-3"><a href="calling-peaks-w-tilematrix.html#cb161-3"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
+<span id="cb161-4"><a href="calling-peaks-w-tilematrix.html#cb161-4"></a>    <span class="dt">peakMethod =</span> <span class="st">&quot;Tiles&quot;</span>,</span>
+<span id="cb161-5"><a href="calling-peaks-w-tilematrix.html#cb161-5"></a>    <span class="dt">method =</span> <span class="st">&quot;p&quot;</span></span>
+<span id="cb161-6"><a href="calling-peaks-w-tilematrix.html#cb161-6"></a>)</span></code></pre></div>
 <blockquote>
 <p>## ArchR logging to : ArchRLogs/ArchR-addReproduciblePeakSet-faba49485623-Date-2020-04-15_Time-10-27-15.log<br />
 ## If there is an issue, please report to github with logFile!<br />
@@ -356,8 +355,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">10.3.1</span> Comparing the two peak calling methods</h3>
 <p>To compare the merged peak set generated using MACS2 vs the merged peak set generated using the ArchR native <code>TileMatrix</code> peak caller, we can check the perfecent of overlapping peaks etc.</p>
 <p>First, we check the percent of MACS2-called peaks that are overlapped by the <code>TileMatrix</code>-called peaks</p>
-<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="calling-peaks-w-tilematrix.html#cb163-1"></a><span class="co">#Peak Overlap</span></span>
-<span id="cb163-2"><a href="calling-peaks-w-tilematrix.html#cb163-2"></a><span class="kw">length</span>(<span class="kw">subsetByOverlaps</span>(<span class="kw">getPeakSet</span>(projHeme4), <span class="kw">getPeakSet</span>(projHemeTmp))) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(<span class="kw">getPeakSet</span>(projHeme4))</span></code></pre></div>
+<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="calling-peaks-w-tilematrix.html#cb163-1"></a><span class="kw">length</span>(<span class="kw">subsetByOverlaps</span>(<span class="kw">getPeakSet</span>(projHeme4), <span class="kw">getPeakSet</span>(projHemeTmp))) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(<span class="kw">getPeakSet</span>(projHeme4))</span></code></pre></div>
 <blockquote>
 <p>## [1] 0.9627246</p>
 </blockquote>

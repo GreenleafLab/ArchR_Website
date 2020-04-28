@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-27" />
+<meta name="date" content="2020-04-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -170,7 +170,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
+<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single-cell Embeddings</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>6.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
 <li class="chapter" data-level="6.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>6.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
@@ -265,8 +265,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="motif-enrichment-in-differential-peaks" class="section level2" number="12.1">
 <h2><span class="header-section-number">12.1</span> Motif Enrichment in Differential Peaks</h2>
 <p>Continuing our analysis of differential peaks from the previous chapter, we can look for motifs that are enriched in peaks that are up or down in various cell types. To do this, we must first add these motif annotations to our <code>ArchRProject</code>. This effectively creates a binary matrix where the presence of a motif in each peak is indicated numerically. We do this using the <code>addMotifAnnotations()</code> function which determines motif presence in the peak set stored in the <code>ArchRProject</code>.</p>
-<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="motif-enrichment-in-differential-peaks.html#cb190-1"></a><span class="co">#Add Motif Peak Annotations if not already added!</span></span>
-<span id="cb190-2"><a href="motif-enrichment-in-differential-peaks.html#cb190-2"></a>projHeme5 &lt;-<span class="st"> </span><span class="kw">addMotifAnnotations</span>(<span class="dt">ArchRProj =</span> projHeme5, <span class="dt">motifSet =</span> <span class="st">&quot;cisbp&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;Motif&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="motif-enrichment-in-differential-peaks.html#cb190-1"></a>projHeme5 &lt;-<span class="st"> </span><span class="kw">addMotifAnnotations</span>(<span class="dt">ArchRProj =</span> projHeme5, <span class="dt">motifSet =</span> <span class="st">&quot;cisbp&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;Motif&quot;</span>)</span></code></pre></div>
 <blockquote>
 <p>## No methods found in package ‘IRanges’ for request: ‘score’ when loading ‘TFBSTools’<br />
 ## 2020-04-15 10:38:11 : Gettting Motif Set, Species : Homo sapiens, 0 mins elapsed.<br />
@@ -313,29 +312,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 387 GATA6_387 216.7223 6</p>
 </blockquote>
 <p>Using <code>ggplot</code> we can plot the rank-sorted TF motifs and color them by the significance of their enrichment. Here we use <code>ggrepel</code> to label each TF motif.</p>
-<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="motif-enrichment-in-differential-peaks.html#cb195-1"></a><span class="co">#Ggplot</span></span>
-<span id="cb195-2"><a href="motif-enrichment-in-differential-peaks.html#cb195-2"></a>ggUp &lt;-<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(rank, mlog10Padj, <span class="dt">color =</span> mlog10Padj)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb195-3"><a href="motif-enrichment-in-differential-peaks.html#cb195-3"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
-<span id="cb195-4"><a href="motif-enrichment-in-differential-peaks.html#cb195-4"></a><span class="st">  </span>ggrepel<span class="op">::</span><span class="kw">geom_label_repel</span>(</span>
-<span id="cb195-5"><a href="motif-enrichment-in-differential-peaks.html#cb195-5"></a>        <span class="dt">data =</span> df[<span class="kw">rev</span>(<span class="kw">seq_len</span>(<span class="dv">30</span>)), ], <span class="kw">aes</span>(<span class="dt">x =</span> rank, <span class="dt">y =</span> mlog10Padj, <span class="dt">label =</span> TF), </span>
-<span id="cb195-6"><a href="motif-enrichment-in-differential-peaks.html#cb195-6"></a>        <span class="dt">size =</span> <span class="fl">1.5</span>,</span>
-<span id="cb195-7"><a href="motif-enrichment-in-differential-peaks.html#cb195-7"></a>        <span class="dt">nudge_x =</span> <span class="dv">2</span>,</span>
-<span id="cb195-8"><a href="motif-enrichment-in-differential-peaks.html#cb195-8"></a>        <span class="dt">color =</span> <span class="st">&quot;black&quot;</span></span>
-<span id="cb195-9"><a href="motif-enrichment-in-differential-peaks.html#cb195-9"></a>  ) <span class="op">+</span><span class="st"> </span><span class="kw">theme_ArchR</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb195-10"><a href="motif-enrichment-in-differential-peaks.html#cb195-10"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;-log10(P-adj) Motif Enrichment&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb195-11"><a href="motif-enrichment-in-differential-peaks.html#cb195-11"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Rank Sorted TFs Enriched&quot;</span>) <span class="op">+</span></span>
-<span id="cb195-12"><a href="motif-enrichment-in-differential-peaks.html#cb195-12"></a><span class="st">  </span><span class="kw">scale_color_gradientn</span>(<span class="dt">colors =</span> <span class="kw">paletteContinuous</span>(<span class="dt">set =</span> <span class="st">&quot;comet&quot;</span>))</span>
-<span id="cb195-13"><a href="motif-enrichment-in-differential-peaks.html#cb195-13"></a></span>
-<span id="cb195-14"><a href="motif-enrichment-in-differential-peaks.html#cb195-14"></a>ggUp</span></code></pre></div>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="motif-enrichment-in-differential-peaks.html#cb195-1"></a>ggUp &lt;-<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(rank, mlog10Padj, <span class="dt">color =</span> mlog10Padj)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb195-2"><a href="motif-enrichment-in-differential-peaks.html#cb195-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb195-3"><a href="motif-enrichment-in-differential-peaks.html#cb195-3"></a><span class="st">  </span>ggrepel<span class="op">::</span><span class="kw">geom_label_repel</span>(</span>
+<span id="cb195-4"><a href="motif-enrichment-in-differential-peaks.html#cb195-4"></a>        <span class="dt">data =</span> df[<span class="kw">rev</span>(<span class="kw">seq_len</span>(<span class="dv">30</span>)), ], <span class="kw">aes</span>(<span class="dt">x =</span> rank, <span class="dt">y =</span> mlog10Padj, <span class="dt">label =</span> TF), </span>
+<span id="cb195-5"><a href="motif-enrichment-in-differential-peaks.html#cb195-5"></a>        <span class="dt">size =</span> <span class="fl">1.5</span>,</span>
+<span id="cb195-6"><a href="motif-enrichment-in-differential-peaks.html#cb195-6"></a>        <span class="dt">nudge_x =</span> <span class="dv">2</span>,</span>
+<span id="cb195-7"><a href="motif-enrichment-in-differential-peaks.html#cb195-7"></a>        <span class="dt">color =</span> <span class="st">&quot;black&quot;</span></span>
+<span id="cb195-8"><a href="motif-enrichment-in-differential-peaks.html#cb195-8"></a>  ) <span class="op">+</span><span class="st"> </span><span class="kw">theme_ArchR</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb195-9"><a href="motif-enrichment-in-differential-peaks.html#cb195-9"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;-log10(P-adj) Motif Enrichment&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb195-10"><a href="motif-enrichment-in-differential-peaks.html#cb195-10"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Rank Sorted TFs Enriched&quot;</span>) <span class="op">+</span></span>
+<span id="cb195-11"><a href="motif-enrichment-in-differential-peaks.html#cb195-11"></a><span class="st">  </span><span class="kw">scale_color_gradientn</span>(<span class="dt">colors =</span> <span class="kw">paletteContinuous</span>(<span class="dt">set =</span> <span class="st">&quot;comet&quot;</span>))</span>
+<span id="cb195-12"><a href="motif-enrichment-in-differential-peaks.html#cb195-12"></a></span>
+<span id="cb195-13"><a href="motif-enrichment-in-differential-peaks.html#cb195-13"></a>ggUp</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Erythroid-vs-Progenitor-Markers-Motifs-Enriched_1.png" width="600" height="600" /></p>
 <p>We can perform the same analyses for the peaks that are more accessible in the “Progenitor” cells by using peaks with <code>Log2FC &lt;= -0.5</code>.</p>
-<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="motif-enrichment-in-differential-peaks.html#cb196-1"></a><span class="co">#Identify Motif Enrichments</span></span>
-<span id="cb196-2"><a href="motif-enrichment-in-differential-peaks.html#cb196-2"></a>motifsDo &lt;-<span class="st"> </span><span class="kw">peakAnnoEnrichment</span>(</span>
-<span id="cb196-3"><a href="motif-enrichment-in-differential-peaks.html#cb196-3"></a>    <span class="dt">seMarker =</span> markerTest,</span>
-<span id="cb196-4"><a href="motif-enrichment-in-differential-peaks.html#cb196-4"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
-<span id="cb196-5"><a href="motif-enrichment-in-differential-peaks.html#cb196-5"></a>    <span class="dt">peakAnnotation =</span> <span class="st">&quot;Motif&quot;</span>,</span>
-<span id="cb196-6"><a href="motif-enrichment-in-differential-peaks.html#cb196-6"></a>    <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &lt;= -0.5&quot;</span></span>
-<span id="cb196-7"><a href="motif-enrichment-in-differential-peaks.html#cb196-7"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="motif-enrichment-in-differential-peaks.html#cb196-1"></a>motifsDo &lt;-<span class="st"> </span><span class="kw">peakAnnoEnrichment</span>(</span>
+<span id="cb196-2"><a href="motif-enrichment-in-differential-peaks.html#cb196-2"></a>    <span class="dt">seMarker =</span> markerTest,</span>
+<span id="cb196-3"><a href="motif-enrichment-in-differential-peaks.html#cb196-3"></a>    <span class="dt">ArchRProj =</span> projHeme5,</span>
+<span id="cb196-4"><a href="motif-enrichment-in-differential-peaks.html#cb196-4"></a>    <span class="dt">peakAnnotation =</span> <span class="st">&quot;Motif&quot;</span>,</span>
+<span id="cb196-5"><a href="motif-enrichment-in-differential-peaks.html#cb196-5"></a>    <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &lt;= -0.5&quot;</span></span>
+<span id="cb196-6"><a href="motif-enrichment-in-differential-peaks.html#cb196-6"></a>  )</span></code></pre></div>
 <blockquote>
 <p>## 2020-04-15 10:42:01 : Computing Enrichments 1 of 1, 0.053 mins elapsed.</p>
 </blockquote>
@@ -350,10 +347,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## colnames(1): Erythroid<br />
 ## colData names(0):</p>
 </blockquote>
-<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="motif-enrichment-in-differential-peaks.html#cb198-1"></a><span class="co">#Create data.frame</span></span>
-<span id="cb198-2"><a href="motif-enrichment-in-differential-peaks.html#cb198-2"></a>df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">TF =</span> <span class="kw">rownames</span>(motifsDo), <span class="dt">mlog10Padj =</span> <span class="kw">assay</span>(motifsDo)[,<span class="dv">1</span>])</span>
-<span id="cb198-3"><a href="motif-enrichment-in-differential-peaks.html#cb198-3"></a>df &lt;-<span class="st"> </span>df[<span class="kw">order</span>(df<span class="op">$</span>mlog10Padj, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>),]</span>
-<span id="cb198-4"><a href="motif-enrichment-in-differential-peaks.html#cb198-4"></a>df<span class="op">$</span>rank &lt;-<span class="st"> </span><span class="kw">seq_len</span>(<span class="kw">nrow</span>(df))</span></code></pre></div>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="motif-enrichment-in-differential-peaks.html#cb198-1"></a>df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">TF =</span> <span class="kw">rownames</span>(motifsDo), <span class="dt">mlog10Padj =</span> <span class="kw">assay</span>(motifsDo)[,<span class="dv">1</span>])</span>
+<span id="cb198-2"><a href="motif-enrichment-in-differential-peaks.html#cb198-2"></a>df &lt;-<span class="st"> </span>df[<span class="kw">order</span>(df<span class="op">$</span>mlog10Padj, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>),]</span>
+<span id="cb198-3"><a href="motif-enrichment-in-differential-peaks.html#cb198-3"></a>df<span class="op">$</span>rank &lt;-<span class="st"> </span><span class="kw">seq_len</span>(<span class="kw">nrow</span>(df))</span></code></pre></div>
 <p>In this case, the most enriched motifs in the peaks that are more accessible in “Progenitor” cells correspond to RUNX, ELF, and CBFB motifs.</p>
 <div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="motif-enrichment-in-differential-peaks.html#cb199-1"></a><span class="kw">head</span>(df)</span></code></pre></div>
 <blockquote>
@@ -365,20 +361,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 734 ENSG00000250096_734 53.14766 5<br />
 ## 336 SPIB_336 52.79666 6</p>
 </blockquote>
-<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="motif-enrichment-in-differential-peaks.html#cb200-1"></a><span class="co">#Ggplot</span></span>
-<span id="cb200-2"><a href="motif-enrichment-in-differential-peaks.html#cb200-2"></a>ggDo &lt;-<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(rank, mlog10Padj, <span class="dt">color =</span> mlog10Padj)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb200-3"><a href="motif-enrichment-in-differential-peaks.html#cb200-3"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
-<span id="cb200-4"><a href="motif-enrichment-in-differential-peaks.html#cb200-4"></a><span class="st">  </span>ggrepel<span class="op">::</span><span class="kw">geom_label_repel</span>(</span>
-<span id="cb200-5"><a href="motif-enrichment-in-differential-peaks.html#cb200-5"></a>        <span class="dt">data =</span> df[<span class="kw">rev</span>(<span class="kw">seq_len</span>(<span class="dv">30</span>)), ], <span class="kw">aes</span>(<span class="dt">x =</span> rank, <span class="dt">y =</span> mlog10Padj, <span class="dt">label =</span> TF), </span>
-<span id="cb200-6"><a href="motif-enrichment-in-differential-peaks.html#cb200-6"></a>        <span class="dt">size =</span> <span class="fl">1.5</span>,</span>
-<span id="cb200-7"><a href="motif-enrichment-in-differential-peaks.html#cb200-7"></a>        <span class="dt">nudge_x =</span> <span class="dv">2</span>,</span>
-<span id="cb200-8"><a href="motif-enrichment-in-differential-peaks.html#cb200-8"></a>        <span class="dt">color =</span> <span class="st">&quot;black&quot;</span></span>
-<span id="cb200-9"><a href="motif-enrichment-in-differential-peaks.html#cb200-9"></a>  ) <span class="op">+</span><span class="st"> </span><span class="kw">theme_ArchR</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb200-10"><a href="motif-enrichment-in-differential-peaks.html#cb200-10"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;-log10(FDR) Motif Enrichment&quot;</span>) <span class="op">+</span></span>
-<span id="cb200-11"><a href="motif-enrichment-in-differential-peaks.html#cb200-11"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Rank Sorted TFs Enriched&quot;</span>) <span class="op">+</span></span>
-<span id="cb200-12"><a href="motif-enrichment-in-differential-peaks.html#cb200-12"></a><span class="st">  </span><span class="kw">scale_color_gradientn</span>(<span class="dt">colors =</span> <span class="kw">paletteContinuous</span>(<span class="dt">set =</span> <span class="st">&quot;comet&quot;</span>))</span>
-<span id="cb200-13"><a href="motif-enrichment-in-differential-peaks.html#cb200-13"></a></span>
-<span id="cb200-14"><a href="motif-enrichment-in-differential-peaks.html#cb200-14"></a>ggDo</span></code></pre></div>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="motif-enrichment-in-differential-peaks.html#cb200-1"></a>ggDo &lt;-<span class="st"> </span><span class="kw">ggplot</span>(df, <span class="kw">aes</span>(rank, mlog10Padj, <span class="dt">color =</span> mlog10Padj)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb200-2"><a href="motif-enrichment-in-differential-peaks.html#cb200-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb200-3"><a href="motif-enrichment-in-differential-peaks.html#cb200-3"></a><span class="st">  </span>ggrepel<span class="op">::</span><span class="kw">geom_label_repel</span>(</span>
+<span id="cb200-4"><a href="motif-enrichment-in-differential-peaks.html#cb200-4"></a>        <span class="dt">data =</span> df[<span class="kw">rev</span>(<span class="kw">seq_len</span>(<span class="dv">30</span>)), ], <span class="kw">aes</span>(<span class="dt">x =</span> rank, <span class="dt">y =</span> mlog10Padj, <span class="dt">label =</span> TF), </span>
+<span id="cb200-5"><a href="motif-enrichment-in-differential-peaks.html#cb200-5"></a>        <span class="dt">size =</span> <span class="fl">1.5</span>,</span>
+<span id="cb200-6"><a href="motif-enrichment-in-differential-peaks.html#cb200-6"></a>        <span class="dt">nudge_x =</span> <span class="dv">2</span>,</span>
+<span id="cb200-7"><a href="motif-enrichment-in-differential-peaks.html#cb200-7"></a>        <span class="dt">color =</span> <span class="st">&quot;black&quot;</span></span>
+<span id="cb200-8"><a href="motif-enrichment-in-differential-peaks.html#cb200-8"></a>  ) <span class="op">+</span><span class="st"> </span><span class="kw">theme_ArchR</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb200-9"><a href="motif-enrichment-in-differential-peaks.html#cb200-9"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;-log10(FDR) Motif Enrichment&quot;</span>) <span class="op">+</span></span>
+<span id="cb200-10"><a href="motif-enrichment-in-differential-peaks.html#cb200-10"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Rank Sorted TFs Enriched&quot;</span>) <span class="op">+</span></span>
+<span id="cb200-11"><a href="motif-enrichment-in-differential-peaks.html#cb200-11"></a><span class="st">  </span><span class="kw">scale_color_gradientn</span>(<span class="dt">colors =</span> <span class="kw">paletteContinuous</span>(<span class="dt">set =</span> <span class="st">&quot;comet&quot;</span>))</span>
+<span id="cb200-12"><a href="motif-enrichment-in-differential-peaks.html#cb200-12"></a></span>
+<span id="cb200-13"><a href="motif-enrichment-in-differential-peaks.html#cb200-13"></a>ggDo</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Erythroid-vs-Progenitor-Markers-Motifs-Enriched_2.png" width="600" height="600" /></p>
 <p>To save an editable vectorized version of these plots, we use the <code>plotPDF()</code> function.</p>
 <div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="motif-enrichment-in-differential-peaks.html#cb201-1"></a><span class="kw">plotPDF</span>(ggUp, ggDo, <span class="dt">name =</span> <span class="st">&quot;Erythroid-vs-Progenitor-Markers-Motifs-Enriched&quot;</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>, <span class="dt">ArchRProj =</span> projHeme5, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>

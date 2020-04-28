@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-27" />
+<meta name="date" content="2020-04-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -170,7 +170,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
+<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single-cell Embeddings</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>6.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
 <li class="chapter" data-level="6.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>6.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
@@ -301,8 +301,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>## [1] “GATA1_383” “CEBPA_155” “EBF1_67” “IRF4_632” “TBX21_780” “PAX5_709”</p>
 </blockquote>
 <p>To accurately profile TF footprints, a large number of reads are required. Therefore, cells are grouped to create pseudo-bulk ATAC-seq profiles that can be then used for TF footprinting. These pseudo-bulk profiles are stored as group coverage files which we originally created in a previous chapter to perform peak calling. If you haven’t already added group coverages to your <code>ArchRProject</code>, lets do that now.</p>
-<div class="sourceCode" id="cb280"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb280-1"><a href="motif-footprinting.html#cb280-1"></a><span class="co">#Create Group Coverage Files if you have not done so already</span></span>
-<span id="cb280-2"><a href="motif-footprinting.html#cb280-2"></a>projHeme5 &lt;-<span class="st"> </span><span class="kw">addGroupCoverages</span>(<span class="dt">ArchRProj =</span> projHeme5, <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb280"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb280-1"><a href="motif-footprinting.html#cb280-1"></a>projHeme5 &lt;-<span class="st"> </span><span class="kw">addGroupCoverages</span>(<span class="dt">ArchRProj =</span> projHeme5, <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>)</span></code></pre></div>
 <p>With group coverages calculated, we can now compute footprints for the subset of marker motifs that we previously selected using the <code>getFootprints()</code> function. Even though ArchR implements a highly optimized footprinting workflow, it is recommended to perform footprinting on a subset of motifs rather than all motifs. As such, we provide the subset of motifs to footprint via the <code>positions</code> parameter.</p>
 <div class="sourceCode" id="cb281"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb281-1"><a href="motif-footprinting.html#cb281-1"></a>seFoot &lt;-<span class="st"> </span><span class="kw">getFootprints</span>(</span>
 <span id="cb281-2"><a href="motif-footprinting.html#cb281-2"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>

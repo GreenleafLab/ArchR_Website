@@ -55,7 +55,6 @@ After identification of a robust peak set, we often want to predict what transcr
 Continuing our analysis of differential peaks from the previous chapter, we can look for motifs that are enriched in peaks that are up or down in various cell types. To do this, we must first add these motif annotations to our `ArchRProject`. This effectively creates a binary matrix where the presence of a motif in each peak is indicated numerically. We do this using the `addMotifAnnotations()` function which determines motif presence in the peak set stored in the `ArchRProject`.
 
 ```{r eval=FALSE}
-#Add Motif Peak Annotations if not already added!
 projHeme5 <- addMotifAnnotations(ArchRProj = projHeme5, motifSet = "cisbp", name = "Motif")
 ```
 > \## No methods found in package 'IRanges' for request: 'score' when loading 'TFBSTools'  
@@ -114,7 +113,6 @@ head(df)
 
 Using `ggplot` we can plot the rank-sorted TF motifs and color them by the significance of their enrichment. Here we use `ggrepel` to label each TF motif.
 ```{r eval=FALSE}
-#Ggplot
 ggUp <- ggplot(df, aes(rank, mlog10Padj, color = mlog10Padj)) + 
   geom_point(size = 1) +
   ggrepel::geom_label_repel(
@@ -141,7 +139,6 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 We can perform the same analyses for the peaks that are more accessible in the "Progenitor" cells by using peaks with `Log2FC <= -0.5`.
 ```{r eval=FALSE}
-#Identify Motif Enrichments
 motifsDo <- peakAnnoEnrichment(
     seMarker = markerTest,
     ArchRProj = projHeme5,
@@ -164,7 +161,6 @@ motifsDo
 ## colData names(0):  
 
 ```{r eval=FALSE}
-#Create data.frame
 df <- data.frame(TF = rownames(motifsDo), mlog10Padj = assay(motifsDo)[,1])
 df <- df[order(df$mlog10Padj, decreasing = TRUE),]
 df$rank <- seq_len(nrow(df))
@@ -183,7 +179,6 @@ head(df)
 ## 336            SPIB_336   52.79666    6  
 
 ```{r eval=FALSE}
-#Ggplot
 ggDo <- ggplot(df, aes(rank, mlog10Padj, color = mlog10Padj)) + 
   geom_point(size = 1) +
   ggrepel::geom_label_repel(

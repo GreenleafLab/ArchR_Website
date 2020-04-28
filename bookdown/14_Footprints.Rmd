@@ -50,7 +50,9 @@ set.seed(1)
 
 Transcription factor (TF) footprinting allows for the prediction of the precise binding location of a TF at a particular locus. This is because the DNA bases that are directly bound by the TF are actually protected from transposition while the DNA bases immediately adjacent to TF binding are accessible.
 
+<center>
 ![](images/footprintingSchematic.png){width=250px}
+</center>
 
 Ideally, TF footprinting is performed at a single site to determine the precise binding location of the TF. However, in practice, this requires very high sequencing depth, often much higher depth than what most users would obtain from either bulk or single-cell ATAC-seq. To get around this problem, we can combine Tn5 insertion locations across many instances of predicted TF binding. For example, we can take all peaks that harbor a CTCF motif and make an aggregate TF footprint for CTCF across the whole genome.
 
@@ -58,7 +60,9 @@ The accuracy of this footprint relies on generating a reliable curated list of p
 
 Perhaps most importantly, the footprinting analyses in ArchR account for known Tn5 insertion sequence bias. To do this, ArchR uses a matrix of hexamer position frequencies and a matrix of k-mer frequencies at Tn5 insertion sites:
 
-![](/images/footprintingMethods.png){width=1000px}
+<center>
+![](images/footprintingMethods.png){width=700px}
+</center>
 
 All put together, this workflow generates footprint plots that take into account Tn5 insertion bias.
 
@@ -112,7 +116,6 @@ markerMotifs
 
 To accurately profile TF footprints, a large number of reads are required. Therefore, cells are grouped to create pseudo-bulk ATAC-seq profiles that can be then used for TF footprinting. These pseudo-bulk profiles are stored as group coverage files which we originally created in a previous chapter to perform peak calling. If you haven't already added group coverages to your `ArchRProject`, lets do that now.
 ```{r eval=FALSE}
-#Create Group Coverage Files if you have not done so already
 projHeme5 <- addGroupCoverages(ArchRProj = projHeme5, groupBy = "Clusters2")
 ```
 
@@ -254,8 +257,6 @@ An example of motif footprints from bias-divided analyses are shown below.
 While we highly recommend normalizing footprints for Tn5 sequence insertion bias, it is possible to perform footprinting without normalization by setting `normMethod = "None"` in the `plotFootprints()` function.
 
 ```{r eval=FALSE}
-#Plot Motif Footprints from positions list
-#Recommend doing a few motifs not entire motif set
 plotFootprints(
   seFoot = seFoot,
   ArchRProj = projHeme5, 
@@ -312,7 +313,6 @@ In addition to footprinting motifs, ArchR enables footprinting of any user-defin
 As discussed in the previous section, footprinting is performed using group coverage files which are derived from pseudo-bulk replicates. We originally created these in a previous chapter to perform peak calling. If you haven't already added group coverages to your `ArchRProject`, lets do that now.
 
 ```{r eval=FALSE}
-#Create Group Coverage Files if you have not done so already
 projHeme5 <- addGroupCoverages(ArchRProj = projHeme5, groupBy = "Clusters2")
 ```
 

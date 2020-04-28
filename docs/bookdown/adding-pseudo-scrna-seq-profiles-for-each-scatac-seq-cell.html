@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-27" />
+<meta name="date" content="2020-04-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -170,7 +170,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
+<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single-cell Embeddings</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>6.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
 <li class="chapter" data-level="6.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>6.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
@@ -364,33 +364,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-f6632d4259ce-Date-2020-04-15_Time-10-21-15.log</p>
 </blockquote>
 <p>To plot all marker genes we can use cowplot</p>
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-1"></a><span class="co">#Rearrange for grid plotting</span></span>
-<span id="cb140-2"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-2"></a>p1c &lt;-<span class="st"> </span><span class="kw">lapply</span>(p1, <span class="cf">function</span>(x){</span>
-<span id="cb140-3"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-3"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb140-4"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
-<span id="cb140-5"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
-<span id="cb140-6"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
-<span id="cb140-7"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-7"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb140-8"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-8"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb140-9"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-9"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb140-10"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-10"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
-<span id="cb140-11"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-11"></a>    )</span>
-<span id="cb140-12"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-12"></a>})</span>
-<span id="cb140-13"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-13"></a></span>
-<span id="cb140-14"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-14"></a><span class="co">#Rearrange for grid plotting</span></span>
-<span id="cb140-15"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-15"></a>p2c &lt;-<span class="st"> </span><span class="kw">lapply</span>(p2, <span class="cf">function</span>(x){</span>
-<span id="cb140-16"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-16"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb140-17"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-17"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
-<span id="cb140-18"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-18"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
-<span id="cb140-19"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-19"></a><span class="st">    </span><span class="kw">theme</span>(</span>
-<span id="cb140-20"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-20"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb140-21"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-21"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb140-22"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-22"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb140-23"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-23"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
-<span id="cb140-24"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-24"></a>    )</span>
-<span id="cb140-25"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-25"></a>})</span>
-<span id="cb140-26"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-26"></a></span>
-<span id="cb140-27"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-27"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>), p1c))</span></code></pre></div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-1"></a>p1c &lt;-<span class="st"> </span><span class="kw">lapply</span>(p1, <span class="cf">function</span>(x){</span>
+<span id="cb140-2"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-2"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb140-3"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-3"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
+<span id="cb140-4"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-4"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
+<span id="cb140-5"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-5"></a><span class="st">    </span><span class="kw">theme</span>(</span>
+<span id="cb140-6"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-6"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb140-7"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-7"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb140-8"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-8"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb140-9"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-9"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
+<span id="cb140-10"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-10"></a>    )</span>
+<span id="cb140-11"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-11"></a>})</span>
+<span id="cb140-12"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-12"></a></span>
+<span id="cb140-13"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-13"></a>p2c &lt;-<span class="st"> </span><span class="kw">lapply</span>(p2, <span class="cf">function</span>(x){</span>
+<span id="cb140-14"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-14"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb140-15"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-15"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
+<span id="cb140-16"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-16"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
+<span id="cb140-17"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-17"></a><span class="st">    </span><span class="kw">theme</span>(</span>
+<span id="cb140-18"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-18"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb140-19"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-19"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb140-20"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-20"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb140-21"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-21"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
+<span id="cb140-22"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-22"></a>    )</span>
+<span id="cb140-23"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-23"></a>})</span>
+<span id="cb140-24"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-24"></a></span>
+<span id="cb140-25"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-25"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>), p1c))</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-Markers-RNA-W-Imputation_1.png" width="800" height="800" /></p>
 <div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb141-1"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>), p2c))</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-Markers-RNA-W-Imputation_2.png" width="800" height="800" /></p>

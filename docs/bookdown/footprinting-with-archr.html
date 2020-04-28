@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-27" />
+<meta name="date" content="2020-04-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -170,7 +170,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
+<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single-cell Embeddings</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>6.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
 <li class="chapter" data-level="6.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>6.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
@@ -265,11 +265,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="footprinting-with-archr" class="section level1" number="14">
 <h1><span class="header-section-number">Chapter 14</span> Footprinting with ArchR</h1>
 <p>Transcription factor (TF) footprinting allows for the prediction of the precise binding location of a TF at a particular locus. This is because the DNA bases that are directly bound by the TF are actually protected from transposition while the DNA bases immediately adjacent to TF binding are accessible.</p>
-<p><img src="images/footprintingSchematic.png" width="250" /></p>
+<center>
+<img src="images/footprintingSchematic.png" width="250" />
+</center>
 <p>Ideally, TF footprinting is performed at a single site to determine the precise binding location of the TF. However, in practice, this requires very high sequencing depth, often much higher depth than what most users would obtain from either bulk or single-cell ATAC-seq. To get around this problem, we can combine Tn5 insertion locations across many instances of predicted TF binding. For example, we can take all peaks that harbor a CTCF motif and make an aggregate TF footprint for CTCF across the whole genome.</p>
 <p>The accuracy of this footprint relies on generating a reliable curated list of predicted binding sites for the TF of interest. ArchR does this in a naive way via the <code>addMotifAnnotations()</code> functions by searching the peak regions for any DNA sequence matching a motif. Depending on the degeneracy of the motif of interest, this may or may not be sufficient. These motif annotations get added to the <code>ArchRProject</code> as a binary representation on a per peak basis (0 = no motif, 1 = motif present). Once you have these motif annotations, ArchR performs footprinting using the <code>getFootprints()</code> function which takes as input an <code>ArchRProject</code> object and a <code>GenomicRanges</code> object that contains the positions of the motifs. These positions can be accessed from the <code>ArchRProject</code> via the <code>getPositions()</code> function. These footprints can then be plotted using the <code>plotFootprints()</code> function.</p>
 <p>Perhaps most importantly, the footprinting analyses in ArchR account for known Tn5 insertion sequence bias. To do this, ArchR uses a matrix of hexamer position frequencies and a matrix of k-mer frequencies at Tn5 insertion sites:</p>
-<p><img src="/images/footprintingMethods.png" width="1000" /></p>
+<center>
+<img src="images/footprintingMethods.png" width="700" />
+</center>
 <p>All put together, this workflow generates footprint plots that take into account Tn5 insertion bias.</p>
 <p>ArchR supports motif footprinting and custom footprinting of user-supplied features, both of which are discussed in this chapter.</p> 
 </div>

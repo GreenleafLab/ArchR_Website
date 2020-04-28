@@ -117,7 +117,6 @@ There are two types of integration approaches that we can perform. __Unconstrain
 To integrate scATAC-seq with scRNA-seq, we use the `addGeneIntegrationMatrix()` function. The first round of integration we perform will be a preliminary __unconstrained__ integration and we will not store this in the Arrow files (`addToArrow = FALSE`). We provide a name for the integration matrix that will be stored in the `ArchRProject` via the `matrixName` parameter. The other key parameters for this function provide column names in `cellColData` where certain information will be stored: `nameCell` will store the cell ID from the matched scRNA-seq cell, `nameGroup` will store the group ID from the scRNA-seq cell, and `nameScore` will store the cross-platform integration score.
 
 ```{r eval=FALSE}
-#~5 minutes
 projHeme2 <- addGeneIntegrationMatrix(
     ArchRProj = projHeme2, 
     useMatrix = "GeneScoreMatrix",
@@ -523,7 +522,6 @@ p2 <- plotEmbedding(
 To plot all marker genes we can use cowplot
 
 ```{r, eval=FALSE}
-#Rearrange for grid plotting
 p1c <- lapply(p1, function(x){
     x + guides(color = FALSE, fill = FALSE) + 
     theme_ArchR(baseSize = 6.5) +
@@ -536,7 +534,6 @@ p1c <- lapply(p1, function(x){
     )
 })
 
-#Rearrange for grid plotting
 p2c <- lapply(p2, function(x){
     x + guides(color = FALSE, fill = FALSE) + 
     theme_ArchR(baseSize = 6.5) +

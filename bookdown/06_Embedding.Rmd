@@ -46,7 +46,7 @@ addArchRGenome("hg19")
 set.seed(1)
 ```
 
-# Single Cell Embeddings
+# Single-cell Embeddings
 
 In ArchR, _embeddings_, such as Uniform Manifold Approximation and Projection (UMAP) or t-distributed stochastic neighbor embedding (t-SNE), are used to visualize single cells in reduced dimension space. These embeddings each have distinct advantages and disadvantages. We call these "embeddings" because they are strictly used to visualize the clusters and are not used to identify clusters which is done in an LSI sub-space as mentioned in previous chapters. The primary difference between UMAP and t-SNE is the interpretatino of the distance between cells or clusters. t-SNE is designed to preserve the _local_ structure in the data while UMAP is designed to preserve _both the local and most of the global_ structure in the data. In theory, this means that the distance between two clusters is not informative in t-SNE but is informative in UMAP. For example, t-SNE does not allow you to say that Cluster A is more similar to Cluster B than it is to Cluster C based on  the observation that Cluster A is located closer to Cluster B than Cluster C on the t-SNE. UMAP, on the other hand, is designed to permit this type of comparison, though it is worth noting that UMAP is a new enough method that this is still being flushed out in the literature.
 

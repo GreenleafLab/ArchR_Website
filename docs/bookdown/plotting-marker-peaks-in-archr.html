@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-27" />
+<meta name="date" content="2020-04-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -170,7 +170,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
+<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single-cell Embeddings</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>6.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
 <li class="chapter" data-level="6.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>6.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
@@ -268,12 +268,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="marker-peak-heatmaps" class="section level3" number="11.2.1">
 <h3><span class="header-section-number">11.2.1</span> Marker Peak Heatmaps</h3>
 <p>We can visualize these marker peaks (or any features output by <code>getMarkerFeatures()</code>) as a heatmap using the <code>markerHeatmap()</code> function.</p>
-<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="plotting-marker-peaks-in-archr.html#cb177-1"></a><span class="co">#Visualize Markers as a heatmap</span></span>
-<span id="cb177-2"><a href="plotting-marker-peaks-in-archr.html#cb177-2"></a>heatmapPeaks &lt;-<span class="st"> </span><span class="kw">markerHeatmap</span>(</span>
-<span id="cb177-3"><a href="plotting-marker-peaks-in-archr.html#cb177-3"></a>  <span class="dt">seMarker =</span> markersPeaks, </span>
-<span id="cb177-4"><a href="plotting-marker-peaks-in-archr.html#cb177-4"></a>  <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 0.5&quot;</span>,</span>
-<span id="cb177-5"><a href="plotting-marker-peaks-in-archr.html#cb177-5"></a>  <span class="dt">transpose =</span> <span class="ot">TRUE</span></span>
-<span id="cb177-6"><a href="plotting-marker-peaks-in-archr.html#cb177-6"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="plotting-marker-peaks-in-archr.html#cb177-1"></a>heatmapPeaks &lt;-<span class="st"> </span><span class="kw">markerHeatmap</span>(</span>
+<span id="cb177-2"><a href="plotting-marker-peaks-in-archr.html#cb177-2"></a>  <span class="dt">seMarker =</span> markersPeaks, </span>
+<span id="cb177-3"><a href="plotting-marker-peaks-in-archr.html#cb177-3"></a>  <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 0.5&quot;</span>,</span>
+<span id="cb177-4"><a href="plotting-marker-peaks-in-archr.html#cb177-4"></a>  <span class="dt">transpose =</span> <span class="ot">TRUE</span></span>
+<span id="cb177-5"><a href="plotting-marker-peaks-in-archr.html#cb177-5"></a>)</span></code></pre></div>
 <blockquote>
 <p>## Identified 40034 markers!<br />
 ## Preparing Main Heatmap..</p>
@@ -289,10 +288,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="marker-peak-ma-and-volcano-plots" class="section level3" number="11.2.2">
 <h3><span class="header-section-number">11.2.2</span> Marker Peak MA and Volcano Plots</h3>
-<p>Instead of plotting a heatmap, we can also plot an MA or Volcano plot for any individual cell group. To do this, we use the <code>markerPlot()</code> function. For an MA plot we specify <code>plotAs = "MA"</code>.</p>
-<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="plotting-marker-peaks-in-archr.html#cb180-1"></a><span class="co">#Marker Peaks for Erythroid</span></span>
-<span id="cb180-2"><a href="plotting-marker-peaks-in-archr.html#cb180-2"></a>pma &lt;-<span class="st"> </span><span class="kw">markerPlot</span>(<span class="dt">seMarker =</span> markersPeaks, <span class="dt">name =</span> <span class="st">&quot;Erythroid&quot;</span>, <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 1&quot;</span>, <span class="dt">plotAs =</span> <span class="st">&quot;MA&quot;</span>)</span>
-<span id="cb180-3"><a href="plotting-marker-peaks-in-archr.html#cb180-3"></a>pma</span></code></pre></div>
+<p>Instead of plotting a heatmap, we can also plot an MA or Volcano plot for any individual cell group. To do this, we use the <code>markerPlot()</code> function. For an MA plot we specify <code>plotAs = "MA"</code>. Here we specify the “Erythroid” cell group via the <code>name</code> parameter.</p>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="plotting-marker-peaks-in-archr.html#cb180-1"></a>pma &lt;-<span class="st"> </span><span class="kw">markerPlot</span>(<span class="dt">seMarker =</span> markersPeaks, <span class="dt">name =</span> <span class="st">&quot;Erythroid&quot;</span>, <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 1&quot;</span>, <span class="dt">plotAs =</span> <span class="st">&quot;MA&quot;</span>)</span>
+<span id="cb180-2"><a href="plotting-marker-peaks-in-archr.html#cb180-2"></a>pma</span></code></pre></div>
 <blockquote>
 <p>## Warning: Removed 55 rows containing missing values (geom_point_rast).</p>
 </blockquote>

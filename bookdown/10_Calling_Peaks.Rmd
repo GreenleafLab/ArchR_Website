@@ -81,7 +81,7 @@ Iterative overlap removal avoids the issues mentioned above. Peaks are first ran
 
 Comparing the peak calls resulting from all of these methods directly shows clear differences in the final peak sets. It is our opinion that the iterative overlap peak merging process yields the best peak set with the fewest caveats.
 
-![](../../images/peakCalling_Comparison.png){width=350px}
+![](images/peakCalling_Comparison.png){width=350px}
 
 ### So how does this all work in ArchR?
 
@@ -209,7 +209,6 @@ As mentioned previously, ArchR also implements its own native peak caller. While
 The ArchR native peak caller calls peaks on the 500-bp `TileMatrix` and we indicate to `addReproduciblePeakSet()` that we want to use this peak caller via the `peakMethod` parameter. Note that we are not storing the output into the `projHeme4` object because we do not intend to keep this peak set and this analysis is only for illustrative purposes. Storage into the `ArchRProject` object would overwrite the previous reproducible peak set already stored in `projHeme4`.
 
 ```{r eval=FALSE}
-#Call Reproducible Peaks w/ TileMatrix (~2 minutes)
 projHemeTmp <- addReproduciblePeakSet(
 	ArchRProj = projHeme4, 
 	groupBy = "Clusters2",
@@ -307,7 +306,6 @@ To compare the merged peak set generated using MACS2 vs the merged peak set gene
 
 First, we check the percent of MACS2-called peaks that are overlapped by the `TileMatrix`-called peaks
 ```{r eval=FALSE}
-#Peak Overlap
 length(subsetByOverlaps(getPeakSet(projHeme4), getPeakSet(projHemeTmp))) / length(getPeakSet(projHeme4))
 ```
 > \## [1] 0.9627246

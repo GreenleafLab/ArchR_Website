@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-27" />
+<meta name="date" content="2020-04-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -170,7 +170,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
+<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single-cell Embeddings</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>6.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
 <li class="chapter" data-level="6.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>6.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
@@ -316,19 +316,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="unconstrained-integration" class="section level3" number="8.1.1">
 <h3><span class="header-section-number">8.1.1</span> Unconstrained Integration</h3>
 <p>To integrate scATAC-seq with scRNA-seq, we use the <code>addGeneIntegrationMatrix()</code> function. The first round of integration we perform will be a preliminary <strong>unconstrained</strong> integration and we will not store this in the Arrow files (<code>addToArrow = FALSE</code>). We provide a name for the integration matrix that will be stored in the <code>ArchRProject</code> via the <code>matrixName</code> parameter. The other key parameters for this function provide column names in <code>cellColData</code> where certain information will be stored: <code>nameCell</code> will store the cell ID from the matched scRNA-seq cell, <code>nameGroup</code> will store the group ID from the scRNA-seq cell, and <code>nameScore</code> will store the cross-platform integration score.</p>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-1"></a><span class="co">#~5 minutes</span></span>
-<span id="cb117-2"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-2"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addGeneIntegrationMatrix</span>(</span>
-<span id="cb117-3"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-3"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
-<span id="cb117-4"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-4"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>,</span>
-<span id="cb117-5"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-5"></a>    <span class="dt">matrixName =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>,</span>
-<span id="cb117-6"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-6"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
-<span id="cb117-7"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-7"></a>    <span class="dt">seRNA =</span> seRNA,</span>
-<span id="cb117-8"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-8"></a>    <span class="dt">addToArrow =</span> <span class="ot">FALSE</span>,</span>
-<span id="cb117-9"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-9"></a>    <span class="dt">groupRNA =</span> <span class="st">&quot;BioClassification&quot;</span>,</span>
-<span id="cb117-10"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-10"></a>    <span class="dt">nameCell =</span> <span class="st">&quot;predictedCell_Un&quot;</span>,</span>
-<span id="cb117-11"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-11"></a>    <span class="dt">nameGroup =</span> <span class="st">&quot;predictedGroup_Un&quot;</span>,</span>
-<span id="cb117-12"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-12"></a>    <span class="dt">nameScore =</span> <span class="st">&quot;predictedScore_Un&quot;</span></span>
-<span id="cb117-13"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-13"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-1"></a>projHeme2 &lt;-<span class="st"> </span><span class="kw">addGeneIntegrationMatrix</span>(</span>
+<span id="cb117-2"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-2"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
+<span id="cb117-3"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-3"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>,</span>
+<span id="cb117-4"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-4"></a>    <span class="dt">matrixName =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>,</span>
+<span id="cb117-5"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-5"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
+<span id="cb117-6"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-6"></a>    <span class="dt">seRNA =</span> seRNA,</span>
+<span id="cb117-7"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-7"></a>    <span class="dt">addToArrow =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb117-8"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-8"></a>    <span class="dt">groupRNA =</span> <span class="st">&quot;BioClassification&quot;</span>,</span>
+<span id="cb117-9"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-9"></a>    <span class="dt">nameCell =</span> <span class="st">&quot;predictedCell_Un&quot;</span>,</span>
+<span id="cb117-10"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-10"></a>    <span class="dt">nameGroup =</span> <span class="st">&quot;predictedGroup_Un&quot;</span>,</span>
+<span id="cb117-11"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-11"></a>    <span class="dt">nameScore =</span> <span class="st">&quot;predictedScore_Un&quot;</span></span>
+<span id="cb117-12"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html#cb117-12"></a>)</span></code></pre></div>
 <blockquote>
 <p>## ArchR logging to : ArchRLogs/ArchR-addGeneIntegrationMatrix-f6635e453cfd-Date-2020-04-15_Time-10-08-55.log<br />
 ## If there is an issue, please report to github with logFile!<br />
