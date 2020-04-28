@@ -216,10 +216,12 @@ head(bioNames)
 > \##     [1] "BMMC"      "BMMC"      "BMMC"      "BMMC"      "BMMC"      "BMMC"     
 ##     [7] "BMMC"      "BMMC"      "BMMC"      "BMMC"      "BMMC"      "BMMC"    
 
-We can also add a column to `cellColData` that only contains information for a subset of cells.
+One way to add a column called to `cellColData` is by directly using the `$` accessor.
 ```{r eval=FALSE}
 projHeme1$bioNames <- bioNames
-
+```
+Alternatively, we can add a column to `cellColData` using the `addCellColData()` function. ArchR allows for the addition of columns that only contain information for a subset of cells.
+```{r eval=FALSE}
 bioNames <- bioNames[1:10]
 cellNames <- projHeme1$cellNames[1:10]
 projHeme1 <- addCellColData(ArchRProj = projHeme1, data = paste0(bioNames),

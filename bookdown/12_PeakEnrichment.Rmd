@@ -46,17 +46,185 @@ addArchRGenome("hg19")
 set.seed(1)
 ```
 
-# Peak Annotation Enrichment with ArchR
+# Motif and Feature Enrichment with ArchR
 
-## Motif Enrichment
+After identification of a robust peak set, we often want to predict what transcription factors may be mediating the binding events that create those accessible chromatin sites. This can be helpful in assessing marker peaks or differential peaks to understand if these groups of peaks are enriched for binding sites of specific transcription factors. For example, we often find enrichment of key lineage-defining TFs in cell type-specific accessible chromatin regions. In a similar fashion, we might want to test various groups of peaks for enrichment of other known features. For example, we might want to know if cell type-specific ATAC-seq peaks for cell type A are enriched for another set of genomic regions such as ChIP-seq peaks. This chapter details how these enrichments are performed in ArchR.
+
+## Motif Enrichment in Differential Peaks
+
+Continuing our analysis of differential peaks from the previous chapter, we can look for motifs that are enriched in peaks that are up or down in various cell types. To do this, we must first add these motif annotations to our `ArchRProject`. This effectively creates a binary matrix where the presence of a motif in each peak is indicated numerically. We do this using the `addMotifAnnotations()` function which determines motif presence in the peak set stored in the `ArchRProject`.
 
 ```{r eval=FALSE}
-#Motif Search in Peak Set and add to Peak Annotations
-if("Motif" %ni% names(projHeme5@peakAnnotation)){
-  projHeme5 <- addMotifAnnotations(ArchRProj = projHeme5, motifSet = "cisbp", name = "Motif")
-}
+#Add Motif Peak Annotations if not already added!
+projHeme5 <- addMotifAnnotations(ArchRProj = projHeme5, motifSet = "cisbp", name = "Motif")
+```
+> \## No methods found in package 'IRanges' for request: 'score' when loading 'TFBSTools'  
+## 2020-04-15 10:38:11 : Gettting Motif Set, Species : Homo sapiens, 0 mins elapsed.  
+## Using version 2 motifs!  
+## 2020-04-15 10:38:13 : Finding Motif Positions with motifmatchr!, 0.027 mins elapsed.  
+## 2020-04-15 10:41:40 : Creating Motif Overlap Matrix, 3.48 mins elapsed.  
+## 2020-04-15 10:41:43 : Finished Getting Motif Info!, 3.523 mins elapsed.  
 
+We can then use the differential testing `SummarizedExperiment` object `markerTest` which was generated in the previous chapter to define the set of significantly differential peaks that we are interested in testing for motif enrichment. In this case, we are looking for peaks that have an `FDR <= 0.1` and a `Log2FC >= 0.5`. In the context of the differential comparison made in `markerTest`, these represnt peaks that are more accessible in "Erythroid" cells than "Progenitor" cells. We can test these differentially accessible peaks for enrichment of various motifs using the `peakAnnoEnrichment()` function. This function is a generalizable function that can be used for many different enrichment tests as we will demonstrate throughout this chapter.
+```{r eval=FALSE}
+motifsUp <- peakAnnoEnrichment(
+    seMarker = markerTest,
+    ArchRProj = projHeme5,
+    peakAnnotation = "Motif",
+    cutOff = "FDR <= 0.1 & Log2FC >= 0.5"
+  )
+```
+> \## 2020-04-15 10:41:49 : Computing Enrichments 1 of 1, 0.066 mins elapsed.
+
+The output of `peakAnnoEnrichment()` is a `SummarizedExperiment` object containing multiple `assays` that store the results of enrichment testing with the hypergeometric test.
+```{r eval=FALSE}
+motifsUp
+```
+> \## class: SummarizedExperiment   
+## dim: 870 1   
+## metadata(0):  
+## assays(10): mlog10Padj mlog10p ... CompareFrequency feature  
+## rownames(870): TFAP2B_1 TFAP2D_2 ... TBX18_869 TBX22_870  
+## rowData names(0):  
+## colnames(1): Erythroid  
+## colData names(0):  
+
+To prepare this data for plotting with `ggplot` we can create a simplified `data.frame` object containing the motif names, the corrected p-values, and the significance rank.
+```{r eval=FALSE}
+df <- data.frame(TF = rownames(motifsUp), mlog10Padj = assay(motifsUp)[,1])
+df <- df[order(df$mlog10Padj, decreasing = TRUE),]
+df$rank <- seq_len(nrow(df))
+```
+
+As expected, the most enriched motifs in the peaks that are more accessible in "Erythroid" cells correspond to GATA transcription factors, consistent with the well-studied role of GATA1 in erythroid differentiation.
+```{r eval=FALSE}
+head(df)
+```
+> \##            TF mlog10Padj rank  
+## 388 GATA2_388   535.7098    1  
+## 383 GATA1_383   523.8809    2   
+## 384 GATA3_384   421.6064    3  
+## 385 GATA5_385   407.2538    4  
+## 386 GATA4_386   309.7756    5  
+## 387 GATA6_387   216.7223    6  
+
+```{r include=FALSE, eval=FALSE,echo=FALSE}
+# JJJ Would have been nice in these next two plots to limit the points labeled by ggrepel. currently you cant see many of the points because they are obscured by the labels
+```
+
+Using `ggplot` we can plot the rank-sorted TF motifs and color them by the significance of their enrichment. Here we use `ggrepel` to label each TF motif.
+```{r eval=FALSE}
+#Ggplot
+ggUp <- ggplot(df, aes(rank, mlog10Padj, color = mlog10Padj)) + 
+  geom_point(size = 1) +
+  ggrepel::geom_label_repel(
+        data = df[rev(seq_len(30)), ], aes(x = rank, y = mlog10Padj, label = TF), 
+        size = 1.5,
+        nudge_x = 2,
+        color = "black"
+  ) + theme_ArchR() + 
+  ylab("-log10(P-adj) Motif Enrichment") + 
+  xlab("Rank Sorted TFs Enriched") +
+  scale_color_gradientn(colors = paletteContinuous(set = "comet"))
+
+ggUp
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(ggUp, name = "Erythroid-vs-Progenitor-Markers-Motifs-Enriched", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
+ArchR:::.convertToPNG(ArchRProj = projHeme5)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/Erythroid-vs-Progenitor-Markers-Motifs-Enriched_1.png){width=600 height=600}
+
+We can perform the same analyses for the peaks that are more accessible in the "Progenitor" cells by using peaks with `Log2FC <= -0.5`.
+```{r eval=FALSE}
 #Identify Motif Enrichments
+motifsDo <- peakAnnoEnrichment(
+    seMarker = markerTest,
+    ArchRProj = projHeme5,
+    peakAnnotation = "Motif",
+    cutOff = "FDR <= 0.1 & Log2FC <= -0.5"
+  )
+```
+> \## 2020-04-15 10:42:01 : Computing Enrichments 1 of 1, 0.053 mins elapsed.
+
+```{r eval=FALSE}
+motifsDo
+```
+> \## class: SummarizedExperiment  
+## dim: 870 1   
+## metadata(0):  
+## assays(10): mlog10Padj mlog10p ... CompareFrequency feature  
+## rownames(870): TFAP2B_1 TFAP2D_2 ... TBX18_869 TBX22_870  
+## rowData names(0):  
+## colnames(1): Erythroid  
+## colData names(0):  
+
+```{r eval=FALSE}
+#Create data.frame
+df <- data.frame(TF = rownames(motifsDo), mlog10Padj = assay(motifsDo)[,1])
+df <- df[order(df$mlog10Padj, decreasing = TRUE),]
+df$rank <- seq_len(nrow(df))
+```
+
+In this case, the most enriched motifs in the peaks that are more accessible in "Progenitor" cells correspond to RUNX, ELF, and CBFB motifs.
+```{r eval=FALSE}
+head(df)
+```
+> \##                      TF mlog10Padj rank  
+## 326            ELF2_326   88.68056    1  
+## 733           RUNX1_733   64.00586    2  
+## 801            CBFB_801   53.55426    3  
+## 732           RUNX2_732   53.14766    4  
+## 734 ENSG00000250096_734   53.14766    5  
+## 336            SPIB_336   52.79666    6  
+
+```{r eval=FALSE}
+#Ggplot
+ggDo <- ggplot(df, aes(rank, mlog10Padj, color = mlog10Padj)) + 
+  geom_point(size = 1) +
+  ggrepel::geom_label_repel(
+        data = df[rev(seq_len(30)), ], aes(x = rank, y = mlog10Padj, label = TF), 
+        size = 1.5,
+        nudge_x = 2,
+        color = "black"
+  ) + theme_ArchR() + 
+  ylab("-log10(FDR) Motif Enrichment") +
+  xlab("Rank Sorted TFs Enriched") +
+  scale_color_gradientn(colors = paletteContinuous(set = "comet"))
+
+ggDo
+```
+
+```{r, include=FALSE, eval=FALSE}
+plotPDF(ggUp, ggDo, name = "Erythroid-vs-Progenitor-Markers-Motifs-Enriched", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
+ArchR:::.convertToPNG(ArchRProj = projHeme5)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/Erythroid-vs-Progenitor-Markers-Motifs-Enriched_2.png){width=600 height=600}
+
+To save an editable vectorized version of these plots, we use the `plotPDF()` function.
+
+```{r eval=FALSE}
+plotPDF(ggUp, ggDo, name = "Erythroid-vs-Progenitor-Markers-Motifs-Enriched", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
+```
+> \## [1] "plotting ggplot!"  
+## [1] "plotting ggplot!"  
+## [1] 0  
+
+
+
+## Motif Enrichment in Marker Peaks
+
+Similar to the motif enrichment analyses performed on the differential peaks in the previous section, we can also perform motif enrichment on our marker peaks identified using `getMarkerFeatures()`.
+
+To do this, we pass our marker peak `SummarizedExperiment` (`markersPeaks`) to the `peakAnnotationEnrichment()` function.
+```{r eval=FALSE}
 enrichMotifs <- peakAnnoEnrichment(
     seMarker = markersPeaks,
     ArchRProj = projHeme5,
@@ -76,6 +244,7 @@ enrichMotifs <- peakAnnoEnrichment(
 ## 2020-04-15 10:43:07 : Computing Enrichments 10 of 11, 0.148 mins elapsed.  
 ## 2020-04-15 10:43:08 : Computing Enrichments 11 of 11, 0.17 mins elapsed.  
 
+The output of `peakAnnoEnrichment()` is a `SummarizedExperiment` object containing multiple `assays` that store the results of enrichment testing with the hypergeometric test.
 ```{r eval=FALSE}
 enrichMotifs
 ```
@@ -88,15 +257,16 @@ enrichMotifs
 ## colnames(11): B CD4.M ... PreB Progenitor  
 ## colData names(0):  
 
+We can directly plot these motif enrichments across all cell groups using the `plotEnrichHeatmap()` function. In this function, we limit the total number of motifs shown per cell group using the `n` parameter.
 ```{r eval=FALSE}
-#Heatmap
-heatmapEM <- enrichHeatmap(enrichMotifs, n = 7, transpose = TRUE)
+heatmapEM <- plotEnrichHeatmap(enrichMotifs, n = 7, transpose = TRUE)
 ```
 > \## Adding Annotations..  
 ## Preparing Main Heatmap..  
 
+We can diplay this plot using `ComplexHeatmap::draw()`.
 ```{r eval=FALSE}
-draw(heatmapEM, heatmap_legend_side = "bot", annotation_legend_side = "bot")
+ComplexHeatmap::draw(heatmapEM, heatmap_legend_side = "bot", annotation_legend_side = "bot")
 ```
 
 ```{r, include=FALSE, eval=FALSE}
@@ -108,7 +278,7 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ![](images/HemeWalkthrough/PNG/Motifs-Enriched-Marker-Heatmap_1.png){width=800 height=600}
 
-We can then plot this 
+To save an editable vectorized version of this plot, we use the `plotPDF()` function.
 
 ```{r eval=FALSE}
 plotPDF(heatmapEM, name = "Motifs-Enriched-Marker-Heatmap", width = 8, height = 6, ArchRProj = projHeme5, addDOC = FALSE)
@@ -117,7 +287,10 @@ plotPDF(heatmapEM, name = "Motifs-Enriched-Marker-Heatmap", width = 8, height = 
 
 ## ArchR Enrichment
 
-### Encode TFBS
+In addition to testing peaks for enrichment of motifs, ArchR also enables the determination of more customizable enrichments. To facilitate this level of data exploration, we have curated a few different feature sets that can be easily tested for enrichment in your peak regions of interest. We describe each of those curated feature sets below. This type of analysis was originally inspired by [LOLA](http://code.databio.org/LOLA/).
+
+### Encode TF Binding Sites
+The ENCODE consortium has mapped TF binding sites (TFBSs) across a wide array of cell types and factors. We can use these TFBS collections to better understand our clusters. For example, in the context of truly unknown cell types, these enrichments could help to elucidate cell identity. To enable analyses with these ENCODE TFBS feature sets, we simply call the `addArchRAnnotations()` function with `collection = "EncodeTFBS"`. Similar to what happens when using `addPeakAnnotations()`, this creates a binarized representation of the overlap between all marker peaks and all ENCODE TFBS.
 
 ```{r eval=FALSE}
 projHeme5 <- addArchRAnnotations(ArchRProj = projHeme5, collection = "EncodeTFBS")
@@ -125,8 +298,8 @@ projHeme5 <- addArchRAnnotations(ArchRProj = projHeme5, collection = "EncodeTFBS
 > \## Annotation ArchR-Hg19-v1.Anno does not exist! Downloading..  
 ## Annotating Chr:  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X  
 
+We can then test for enrichment of these ENCODE TFBSs with our peak set using the `peakAnnoEnrichment()` function.
 ```{r eval=FALSE}
-#Identify EncodeTFBS Enrichments
 enrichEncode <- peakAnnoEnrichment(
     seMarker = markersPeaks,
     ArchRProj = projHeme5,
@@ -146,6 +319,7 @@ enrichEncode <- peakAnnoEnrichment(
 ## 2020-04-15 10:43:37 : Computing Enrichments 10 of 11, 0.083 mins elapsed.  
 ## 2020-04-15 10:43:37 : Computing Enrichments 11 of 11, 0.087 mins elapsed.  
 
+As previously, this function returns a `SummarizedExperiment` object.
 ```{r eval=FALSE}
 enrichEncode
 ```
@@ -159,15 +333,16 @@ enrichEncode
 ## colnames(11): B CD4.M ... PreB Progenitor  
 ## colData names(0):  
 
+We can create a heatmap from these enrichment results using the `plotEnrichHeatmap()` function.
 ```{r eval=FALSE}
-#Heatmap
-heatmapEncode <- enrichHeatmap(enrichEncode, n = 7, transpose = TRUE)
+heatmapEncode <- plotEnrichHeatmap(enrichEncode, n = 7, transpose = TRUE)
 ```
 > \## Adding Annotations..  
 ## Preparing Main Heatmap..  
 
+And then plot this heatmap using `ComplexHeatmap::draw()`.
 ```{r eval=FALSE}
-draw(heatmapEncode, heatmap_legend_side = "bot", annotation_legend_side = "bot")
+ComplexHeatmap::draw(heatmapEncode, heatmap_legend_side = "bot", annotation_legend_side = "bot")
 ```
 
 ```{r, include=FALSE, eval=FALSE}
@@ -179,7 +354,7 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ![](images/HemeWalkthrough/PNG/EncodeTFBS-Enriched-Marker-Heatmap_1.png){width=800 height=600}
 
-We can then plot this 
+To save an editable vectorized version of this plot, we use the `plotPDF()` function.
 
 ```{r eval=FALSE}
 plotPDF(heatmapEncode, name = "EncodeTFBS-Enriched-Marker-Heatmap", width = 8, height = 6, ArchRProj = projHeme5, addDOC = FALSE)
@@ -188,13 +363,15 @@ plotPDF(heatmapEncode, name = "EncodeTFBS-Enriched-Marker-Heatmap", width = 8, h
 
 ### Bulk ATAC-seq
 
+Similar to the curated set of ENCODE TF binding sites, we have also curated peak calls from bulk ATAC-seq experiments that can be used for overlap enrichment testing. We access these bulk ATAC-seq peak sets by setting `collection = "ATAC"`.
+
 ```{r eval=FALSE}
 projHeme5 <- addArchRAnnotations(ArchRProj = projHeme5, collection = "ATAC")
 ```
 > \## Annotating Chr:  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X
 
+We then test our marker peaks for enrichment of these bulk ATAC-seq peaks by setting `peakAnnotation = "ATAC"`.
 ```{r eval=FALSE}
-#Identify ATAC Enrichments
 enrichATAC <- peakAnnoEnrichment(
     seMarker = markersPeaks,
     ArchRProj = projHeme5,
@@ -214,6 +391,7 @@ enrichATAC <- peakAnnoEnrichment(
 ## 2020-04-15 10:43:55 : Computing Enrichments 10 of 11, 0.047 mins elapsed.  
 ## 2020-04-15 10:43:55 : Computing Enrichments 11 of 11, 0.049 mins elapsed.  
 
+As before, the output of this is a `SummarizedExperiment` object with information on the enrichment results.
 ```{r eval=FALSE}
 enrichATAC
 ```
@@ -227,15 +405,16 @@ enrichATAC
 ## colnames(11): B CD4.M ... PreB Progenitor  
 ## colData names(0):  
 
+We can create an enrichment heatmap from this `SummarizedExperiment` using `plotEnrichHeatmap()`.
 ```{r eval=FALSE}
-#Heatmap
-heatmapATAC <- enrichHeatmap(enrichATAC, n = 7, transpose = TRUE)
+heatmapATAC <- plotEnrichHeatmap(enrichATAC, n = 7, transpose = TRUE)
 ```
 > \## Adding Annotations..  
 ## Preparing Main Heatmap..  
 
+And plot this heatmap using `ComplexHeatmap::draw()`
 ```{r eval=FALSE}
-draw(heatmapATAC, heatmap_legend_side = "bot", annotation_legend_side = "bot")
+ComplexHeatmap::draw(heatmapATAC, heatmap_legend_side = "bot", annotation_legend_side = "bot")
 ```
 
 ```{r, include=FALSE, eval=FALSE}
@@ -247,7 +426,7 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ![](images/HemeWalkthrough/PNG/ATAC-Enriched-Marker-Heatmap_1.png){width=800 height=600}
 
-We can then plot this 
+To save an editable vectorized version of this plot, we use the `plotPDF()` function.
 
 ```{r eval=FALSE}
 plotPDF(heatmapATAC, name = "ATAC-Enriched-Marker-Heatmap", width = 8, height = 6, ArchRProj = projHeme5, addDOC = FALSE)
@@ -256,13 +435,14 @@ plotPDF(heatmapATAC, name = "ATAC-Enriched-Marker-Heatmap", width = 8, height = 
 
 ### Codex TFBS
 
+The same type of analyses can be performed for [CODEX](http://codex.stemcells.cam.ac.uk/) TFBSs by setting `collection = "Codex"`.
+
 ```{r eval=FALSE}
 projHeme5 <- addArchRAnnotations(ArchRProj = projHeme5, collection = "Codex")
 ```
 > \## Annotating Chr:  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 X
 
 ```{r eval=FALSE}
-#Identify Codex Enrichments
 enrichCodex <- peakAnnoEnrichment(
     seMarker = markersPeaks,
     ArchRProj = projHeme5,
@@ -296,14 +476,13 @@ enrichCodex
 ## colData names(0):  
 
 ```{r eval=FALSE}
-#Heatmap
-heatmapCodex <- enrichHeatmap(enrichCodex, n = 7, transpose = TRUE)
+heatmapCodex <- plotEnrichHeatmap(enrichCodex, n = 7, transpose = TRUE)
 ```
 > \## Adding Annotations..  
 ## Preparing Main Heatmap..  
 
 ```{r eval=FALSE}
-draw(heatmapCodex, heatmap_legend_side = "bot", annotation_legend_side = "bot")
+ComplexHeatmap::draw(heatmapCodex, heatmap_legend_side = "bot", annotation_legend_side = "bot")
 ```
 
 ```{r, include=FALSE, eval=FALSE}
@@ -324,20 +503,26 @@ plotPDF(heatmapCodex, name = "Codex-Enriched-Marker-Heatmap", width = 8, height 
 
 ## Custom Enrichment
 
+In addition to all of these curated annotation sets, ArchR is also capable of accepting user-defined annotations to perform custom enrichments. In the below example, we illustrate how to create a custom annotation based on select ENCODE ChIP-seq experiments.
+
+First, we will define the datasets that will be used and provide links for their download. Local files could be used in the same way.
 ```{r eval=FALSE}
-#Custom Peak Annotations
 EncodePeaks <- c(
   Encode_K562_GATA1 = "https://www.encodeproject.org/files/ENCFF632NQI/@@download/ENCFF632NQI.bed.gz",
   Encode_GM12878_CEBPB = "https://www.encodeproject.org/files/ENCFF761MGJ/@@download/ENCFF761MGJ.bed.gz",
   Encode_K562_Ebf1 = "https://www.encodeproject.org/files/ENCFF868VSY/@@download/ENCFF868VSY.bed.gz",
   Encode_K562_Pax5 = "https://www.encodeproject.org/files/ENCFF339KUO/@@download/ENCFF339KUO.bed.gz"
 )
+```
+
+We then add a custom annotation to our `ArchRProject` using the `addPeakAnnotation()` function. Here, we call our custom annotation "ChIP".
+```{r eval=FALSE}
 projHeme5 <- addPeakAnnotations(ArchRProj = projHeme5, regions = EncodePeaks, name = "ChIP")
 ```
 > \## 2020-04-15 10:44:23 : Creating Peak Overlap Matrix, 0.036 mins elapsed.
 
+As before, we use this custom annotation to perform the peak annotation enrichment using `peakAnnoEnrichment()` and follow the same steps to create our annotation heatmap.
 ```{r eval=FALSE}
-#Identify ChIP Enrichments
 enrichRegions <- peakAnnoEnrichment(
     seMarker = markersPeaks,
     ArchRProj = projHeme5,
@@ -371,14 +556,13 @@ enrichRegions
 ## colData names(0):
 
 ```{r eval=FALSE}
-#Heatmap
-heatmapRegions <- enrichHeatmap(enrichRegions, n = 7, transpose = TRUE)
+heatmapRegions <- plotEnrichHeatmap(enrichRegions, n = 7, transpose = TRUE)
 ```
 > \## Adding Annotations..  
 ## Preparing Main Heatmap..  
 
 ```{r eval=FALSE}
-draw(heatmapRegions, heatmap_legend_side = "bot", annotation_legend_side = "bot")
+ComplexHeatmap::draw(heatmapRegions, heatmap_legend_side = "bot", annotation_legend_side = "bot")
 ```
 
 ```{r, include=FALSE, eval=FALSE}
@@ -390,7 +574,7 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ![](images/HemeWalkthrough/PNG/Regions-Enriched-Marker-Heatmap_1.png){width=800 height=600}
 
-We can then plot this 
+To save an editable vectorized version of this plot, we use the `plotPDF()` function.
 
 ```{r eval=FALSE}
 plotPDF(heatmapRegions, name = "Regions-Enriched-Marker-Heatmap", width = 8, height = 6, ArchRProj = projHeme5, addDOC = FALSE)
