@@ -48,7 +48,14 @@ set.seed(1)
 
 # Trajectory Analysis with ArchR
 
-## Myeloid Trajectory
+To order cells in pseudo-time, ArchR creates cellular trajectories that order cells across a lower N-dimensional subspace within an ArchRProject. Previously, we have performed this ordering in the 2-dimensional UMAP subspace but ArchR has improved upon this methodology to enable alignment within an N-dimensional subspace (i.e. LSI). First, ArchR requires a user-defined trajectory backbone that provides a rough ordering of cell groups/clusters. For example, given user-determined cluster identities, one might provide the cluster IDs for a stem cell cluster, then a progenitor cell cluster, and then a differentiated cell cluster that correspond to a known or presumed biologically relevant cellular trajectory (i.e. providing the cluster IDs for HSC, to GMP, to Monocyte). Next, for each cluster, ArchR calculates the mean coordinates for each cell group/cluster in N-dimensions and retains cells whose Euclidean distance to those mean coordinates is in the top 5% of all cells. Next, ArchR computes the distance for each cell from cluster i to the mean coordinates of cluster i+1 along the trajectory and computes a pseudo-time vector based on these distances for each iteration of i. This allows ArchR to determine an N-dimensional coordinate and a pseudo-time value for each of the cells retained as part of the trajectory based on the Euclidean distance to the cell group/cluster mean coordinates. Next, ArchR fits a continuous trajectory to each N-dimensional coordinate based on the pseudo-time value using the `smooth.spline` function. Then, ArchR aligns all cells to the trajectory based on their Euclidean distance to the nearest point along the manifold. ArchR then scales this alignment to 100 and stores this pseudo-time in the ArchRProject for downstream analyses.
+
+ArchR can create matrices that convey pseudo-time trends across features stored within the Arrow files. For example, ArchR can analyze changes in TF deviations, gene scores, or integrated gene expression across pseudo-time to identify regulators or regulatory elements that are dynamic throughout the cellular trajectory. First, ArchR groups cells in small user-defined quantile increments (default = 1/100) across the cellular trajectory. ArchR then smooths this matrix per feature using a user-defined smoothing window (default = 9/100) using the `data.table::frollmean` function. ArchR then returns this smoothed pseudo-time x feature matrix as a `SummarizedExperiment` for downstream analyses. ArchR additionally can correlate two of these smoothed pseudo-time x feature matrices using name matching (i.e. positive regulators with chromVAR TF deviations and gene score/integration profiles) or by genomic position overlap methods (i.e. peak-to-gene linkages) using low-overlapping cellular aggregates as described in previous sections. Thus, ArchR facilitates integrative analyses across cellular trajectories, revealing correlated regulatory dynamics across multi-modal data.
+
+
+## Myeloid Trajectory - Monocyte Differentiation
+
+In this section, we will create a cellular trajectory that approximates the differentiation of HSCs into fully differentiated monocytes. To start, lets review the clusters and cell types that we defined previously, stored in `cellColData` in columns named "Clusters" and "Clusters2". Overlaying these cell groupings on our UMAP embedding shows the different cell types that we are interested in.
 
 ```{r eval=FALSE}
 p1 <- plotEmbedding(ArchRProj = projHeme5, colorBy = "cellColData", name = "Clusters", embedding = "UMAP")
@@ -92,15 +99,17 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ![](images/HemeWalkthrough/PNG/Plot-UMAP-Clusters12-Combined_1.png){width=800 height=400}
 
+### Pseudo-time UMAPs and individual feature plots
+
+We will use the cell type definitions that are stored in "Clusters2". As mentioned above, we are creating a trajectory from stem cells ("Progenitor"), through the commited myeloid progenitor ("GMP"), to monocytes ("Mono"). The first step in creating a trajectory is to create a trajectory backbone in the form of an ordered vector of cell group labels.
 ```{r eval=FALSE}
-#Trajectory to add
 trajectory <- c("Progenitor", "GMP", "Mono")
 trajectory
 ```
 > \## [1] "Progenitor" "GMP"        "Mono"
 
+We use the `addTrajectory()` function to create a trajectory and we add this to our `ArchRProject`. We will call this trajectory "MyeloidU". What this does is it creates a new column in `cellColData` called "MyeloidU" that stores the pseudo-time value for each cell in the trajectory. Cells that are not part of the trajectory are labeled with `NA`.
 ```{r eval=FALSE}
-#First we need to create a Trajectory and add it to ArchRProj cellColData
 projHeme5 <- addTrajectory(
     ArchRProj = projHeme5, 
     name = "MyeloidU", 
@@ -119,13 +128,15 @@ projHeme5 <- addTrajectory(
 ## Aligning cells not in trajectory  
 ## ArchR logging successful to : ArchRLogs/ArchR-addTrajectory-15e132f14b12b-Date-2020-04-15_Time-15-00-01.log  
 
+We can look at this information and see that each cell has a unique pseudotime value between 0 and 100. We exclude cells with `NA` values because these are not part of the trajectory.
 ```{r eval=FALSE}
-head(projHeme5$MyeloidU[!is.na(projHeme5$MyeloidU)]) #NA means not in trajectory
+head(projHeme5$MyeloidU[!is.na(projHeme5$MyeloidU)])
 ```
 > \## [1] 46.07479 53.75027 44.82834 43.18828 47.49617 43.21015
 
+To plot this trajectory, we use the `plotTrajectory()` function which overlays the pseudo-time values on our UMAP embedding and displays an arrow approximating the trajectory path from the spline-fit. Cells that are not part of the trajectory are colored gray. In this example, we use `colorBy = "cellColData"`  to tell ArchR to look within `cellColData` for the column specified by `name` - in this case, the "MyeloidU" pseudo-time trajectory. While it may seem conterintuitive to list "MyeloidU" for both `trajectory` and `name`, this is done because `trajectory` tells ArchR which subset of cells we are interested in and `name` tells ArchR how to color that subset of cells.
 ```{r eval=FALSE}
-p <- plotTrajectory(projHeme5, trajectory = "MyeloidU", colorBy = "colData", name = "MyeloidU")
+p <- plotTrajectory(projHeme5, trajectory = "MyeloidU", colorBy = "cellColData", name = "MyeloidU")
 ```
 > \## ArchR logging to : ArchRLogs/ArchR-plotTrajectory-15e136ad2f619-Date-2020-04-15_Time-15-00-03.log  
 ## If there is an issue, please report to github with logFile!  
@@ -149,8 +160,7 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ![](images/HemeWalkthrough/PNG/Plot-MyeloidU-Traj-UMAP_1.png){width=500 height=500}
 
-To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
-nice looking.
+To save an editable vectorized version of this plot, we use `plotPDF()`.
 
 ```{r eval=FALSE}
 plotPDF(p, name = "Plot-MyeloidU-Traj-UMAP.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 5, height = 5)
@@ -163,14 +173,16 @@ plotPDF(p, name = "Plot-MyeloidU-Traj-UMAP.pdf", ArchRProj = projHeme5, addDOC =
 ## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'  
 ## [1] 0  
 
-We can overlay other features on the UMAP
+We can also overlay other features on the trajectory within our UMAP embedding. This allows us to display specific features only within the cells that are relevant to our trajectory.
 
+If you have not already added impute weights to your `projHeme5` project, lets do that now.
 ```{r eval=FALSE}
 projHeme5 <- addImputeWeights(projHeme5)
 ```
 > \## 2020-04-15 15:00:28 : Computing Impute Weights Using Magic (Cell 2018), 0 mins elapsed.  
 ## 2020-04-15 15:00:40 : Completed Getting Magic Weights!, 0.206 mins elapsed.
 
+Then, we can plot the "MyeloidU" trajectory but color the cells by the gene score value of the CEBPB gene, a known regulator of monocyte function that becomes active during the differentiation process. We indicate the matrix to use via the `colorBy` parameter and the feature to use via the `name` parameter. 
 ```{r eval=FALSE}
 p1 <- plotTrajectory(projHeme5, trajectory = "MyeloidU", colorBy = "GeneScoreMatrix", name = "CEBPB", continuousSet = "horizonExtra")
 ```
@@ -189,6 +201,7 @@ p1 <- plotTrajectory(projHeme5, trajectory = "MyeloidU", colorBy = "GeneScoreMat
 ## Adding Inferred Arrow Trajectory to Plot  
 ## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectory-15e13179524ae-Date-2020-04-15_Time-15-00-40.log  
 
+We can repeat this process but color the cells by their linked gene expression via the `GeneIntegrationMatrix`.
 ```{r eval=FALSE}
 p2 <- plotTrajectory(projHeme5, trajectory = "MyeloidU", colorBy = "GeneIntegrationMatrix", name = "CEBPB", continuousSet = "blueYellow")
 ```
@@ -207,6 +220,9 @@ p2 <- plotTrajectory(projHeme5, trajectory = "MyeloidU", colorBy = "GeneIntegrat
 ## Adding Inferred Arrow Trajectory to Plot  
 ## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectory-15e133644196a-Date-2020-04-15_Time-15-00-47.log  
 
+The `plotTrajectory()` function actually returns a list of relevant plots. The first plot in the list is a UMAP embedding, colorized as specified in the function call.
+
+Comparing these UMAP plots side-by-side for the gene score and gene expression, we see that the activity of the CEBPB gene is highly specific to monocyte cells in the later part of the pseudo-time trajectory.
 ```{r eval=FALSE}
 ggAlignPlots(p1[[1]], p2[[1]], type = "h")
 ```
@@ -238,6 +254,7 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ![](images/HemeWalkthrough/PNG/Plot-UMAP-CEBPB-Combined_1.png){width=800 height=400}
 
+The second plot that is returned by `plotTrajectory()` is a dot plot of pseudo-time versus the value of the relevant feature, in this case, the gene score or gene expression of CEBPB. In this case, the cells are colored by their pseudo-time.
 ```{r eval=FALSE}
 ggAlignPlots(p1[[2]], p2[[2]], type = "h")
 ```
@@ -246,8 +263,9 @@ ggAlignPlots(p1[[2]], p2[[2]], type = "h")
 
 ![](images/HemeWalkthrough/PNG/Plot-UMAP-CEBPB-Combined2_1.png){width=800 height=400}
 
+### Pseudo-time heatmaps
 
-We can then make a heatmap for
+We can visualize changes in many features across pseudo-time using heatmaps. To do this, we first retrieve the trajectory of interest from the `ArchRProject` using the `getTrajectory()` function which returns the trajectory as a `SummarizedExperiment` object. We will create these pseudo-time heatmaps for motifs, gene scores, gene expression, and peak accessibility by passing the corresponding matrix to the `useMatrix` parameter. 
 
 ```{r eval=FALSE}
 trajMM  <- getTrajectory(ArchRProj = projHeme5, name = "MyeloidU", useMatrix = "MotifMatrix", log2Norm = FALSE)
@@ -257,10 +275,11 @@ trajMM  <- getTrajectory(ArchRProj = projHeme5, name = "MyeloidU", useMatrix = "
 ## Continuing without depth normalization!  
 ## Smoothing...
 
+We then pass this `SummarizedExperiment` to the `plotTrajectoryHeatmap()` function.
 ```{r eval=FALSE}
-p1 <- trajectoryHeatmap(trajMM, pal = paletteContinuous(set = "solarExtra"))
+p1 <- plotTrajectoryHeatmap(trajMM, pal = paletteContinuous(set = "solarExtra"))
 ```
-> \## ArchR logging to : ArchRLogs/ArchR-trajectoryHeatmap-15e131c8ea2de-Date-2020-04-15_Time-15-01-31.log  
+> \## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e131c8ea2de-Date-2020-04-15_Time-15-01-31.log  
 ## If there is an issue, please report to github with logFile!  
 ## useSeqnames is NULL or greater than 1 with a Sparse.Assays.Matrix trajectory input.  
 ## 2020-04-15 15:01:31 :  
@@ -269,7 +288,7 @@ p1 <- trajectoryHeatmap(trajMM, pal = paletteContinuous(set = "solarExtra"))
 ## Removing rows with NA values...  
 ## 2020-04-15 15:01:31 :  
 ## Preparing Main Heatmap..  
-## ArchR logging successful to : ArchRLogs/ArchR-trajectoryHeatmap-15e131c8ea2de-Date-2020-04-15_Time-15-01-31.log  
+## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e131c8ea2de-Date-2020-04-15_Time-15-01-31.log  
 
 ```{r, include=FALSE, eval=FALSE}
 plotPDF(p1, name = "Plot-MyeloidU-Traj-Heatmaps.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 6, height = 8)
@@ -280,6 +299,7 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ![](images/HemeWalkthrough/PNG/Plot-MyeloidU-Traj-Heatmaps_1.png){width=600 height=800}
 
+We can perform the same steps to obtain a pseudo-time heatmap of gene scores by setting `useMatrix = "GeneScoreMatrix"`.
 ```{r eval=FALSE}
 trajGSM <- getTrajectory(ArchRProj = projHeme5, name = "MyeloidU", useMatrix = "GeneScoreMatrix", log2Norm = TRUE)
 ```
@@ -303,7 +323,7 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ![](images/HemeWalkthrough/PNG/Plot-MyeloidU-Traj-Heatmaps_2.png){width=600 height=800}
 
-
+Similarly, we can obtain a pseudo-time heatmap of gene expression by setting `useMatrix = "GeneIntegrationMatrix"`.
 ```{r eval=FALSE}
 trajGIM <- getTrajectory(ArchRProj = projHeme5, name = "MyeloidU", useMatrix = "GeneIntegrationMatrix", log2Norm = FALSE)
 ```
@@ -311,12 +331,12 @@ trajGIM <- getTrajectory(ArchRProj = projHeme5, name = "MyeloidU", useMatrix = "
 ## Smoothing...
 
 ```{r eval=FALSE}
-p3 <- trajectoryHeatmap(trajGIM,  pal = paletteContinuous(set = "blueYellow"))
+p3 <- plotTrajectoryHeatmap(trajGIM,  pal = paletteContinuous(set = "blueYellow"))
 ```
-> \## ArchR logging to : ArchRLogs/ArchR-trajectoryHeatmap-15e1333158a4-Date-2020-04-15_Time-15-02-18.log  
+> \## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e1333158a4-Date-2020-04-15_Time-15-02-18.log  
 ## If there is an issue, please report to github with logFile!  
 ## Preparing Main Heatmap..  
-## ArchR logging successful to : ArchRLogs/ArchR-trajectoryHeatmap-15e1333158a4-Date-2020-04-15_Time-15-02-18.log  
+## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e1333158a4-Date-2020-04-15_Time-15-02-18.log  
 
 ```{r, include=FALSE, eval=FALSE}
 plotPDF(p1, p2, p3, name = "Plot-MyeloidU-Traj-Heatmaps.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 6, height = 8)
@@ -327,6 +347,7 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ![](images/HemeWalkthrough/PNG/Plot-MyeloidU-Traj-Heatmaps_3.png){width=600 height=800}
 
+Lastly, we can obtain a pseudo-time heatmap of peak accessibility by setting `useMatrix = "PeakMatrix"`.
 ```{r eval=FALSE}
 trajPM  <- getTrajectory(ArchRProj = projHeme5, name = "MyeloidU", useMatrix = "PeakMatrix", log2Norm = TRUE)
 ```
@@ -334,12 +355,12 @@ trajPM  <- getTrajectory(ArchRProj = projHeme5, name = "MyeloidU", useMatrix = "
 ## Smoothing...
 
 ```{r eval=FALSE}
-p4 <- trajectoryHeatmap(trajPM, pal = paletteContinuous(set = "solarExtra"))
+p4 <- plotTrajectoryHeatmap(trajPM, pal = paletteContinuous(set = "solarExtra"))
 ```
-> \## ArchR logging to : ArchRLogs/ArchR-trajectoryHeatmap-15e131ecfb872-Date-2020-04-15_Time-15-03-01.log  
+> \## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e131ecfb872-Date-2020-04-15_Time-15-03-01.log  
 ## If there is an issue, please report to github with logFile!  
 ## Preparing Main Heatmap..  
-## ArchR logging successful to : ArchRLogs/ArchR-trajectoryHeatmap-15e131ecfb872-Date-2020-04-15_Time-15-03-01.log  
+## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e131ecfb872-Date-2020-04-15_Time-15-03-01.log  
 
 ```{r, include=FALSE, eval=FALSE}
 plotPDF(p1, p2, p3, p4, name = "Plot-MyeloidU-Traj-Heatmaps.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 6, height = 8)
@@ -350,18 +371,19 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ![](images/HemeWalkthrough/PNG/Plot-MyeloidU-Traj-Heatmaps_4.png){width=600 height=800}
 
-To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
-nice looking.
+To save an editable vectorized version of this plot, we use `plotPDF()`.
 
 ```{r eval=FALSE}
 plotPDF(p1, p2, p3, p4, name = "Plot-MyeloidU-Traj-Heatmaps.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 6, height = 8)
 ```
 > \## [1] 0
 
-We can also perform integrative analyses such as identifying positive regulators with RNA
+### Integrative pseudo-time analyses
 
+We can also perform integrative analyses, such as identification of positive TF regulators by integration of gene scores / gene expression with motif accessibility across pseudo-time. This can be very powerful, for example in identifying drivers of differentiation. To do this, we use the `correlateTrajectories()` function which takes two `SummarizedExperiment` objects retrived from the `getTrajectories()` function.
+
+First, lets find motifs whose accessibility across pseudo-time is correlated with the gene score of the TF gene.
 ```{r eval=FALSE}
-#Gene Scores
 corGSM_MM <- correlateTrajectories(trajGSM, trajMM)
 ```
 > \## ArchR logging to : ArchRLogs/ArchR-correlateTrajectories-15e13b9ca02a-Date-2020-04-15_Time-15-03-37.log  
@@ -369,14 +391,7 @@ corGSM_MM <- correlateTrajectories(trajGSM, trajMM)
 ## Found 36 Correlated Pairings!  
 ## 2020-04-15 15:03:56 :  
 
-```{r eval=FALSE}
-corGSM_MM[[1]]$matchname1
-```
-> \##  [1] "PRDM16" "TAL1"   "JUN"    "ATF3"   "GATA3"  "GATA3"  "ZEB1"   "NFKB2"   
-##  [9] "IRF7"   "KLF12"  "FOS"    "MEF2A"  "IRF8"   "NR1D1"  "HOXB1"  "JUNB"    
-## [17] "NFIX"   "LYL1"   "KLF2"   "FOSB"   "NR1H2"  "KLF11"  "GLI2"   "NR4A2"   
-## [25] "TCF15"  "CEBPB"  "ETS2"   "XBP1"   "GATA2"  "MECOM"  "IRF1"   "CEBPD"   
-## [33] "SNAI2"  "NFIL3"  "KLF4"   "RXRA"  
+The primary output of `correlateTrajectories()` is a list object containing a `DataFrame` object as the first entry in the list. This `DataFrame` has columns named `idx1`, `matchname1`, `name1`, and `VarAssay1` which correspond to the index, match name, unaltered name, and the variance quantile of the features from the first trajectory (gene scores) passed to the `correlateTrajectories()` function. A "variance quantile" is a normalized measure of the given feature which allows us to derive a correlation across disparate assays. This `DataFrame` contains all of the features that met the cutoffs specified in the `correlateTrajectories()` function.
 
 ```{r eval=FALSE}
 corGSM_MM[[1]]
@@ -422,46 +437,57 @@ corGSM_MM[[1]]
 ## 35   8.9984663184347e-26 2.45358181615986e-23  
 ## 36  6.60626612679289e-11 1.25672690505037e-09  
 
+We can then subset our corresponding trajectory `SummarizedExperiment` objects to only contain the elements that passed significance above.
 ```{r eval=FALSE}
-#We can plot these identified regulators
 trajGSM2 <- trajGSM[corGSM_MM[[1]]$name1, ]
 trajMM2 <- trajMM[corGSM_MM[[1]]$name2, ]
-
-#To Order We Can Create a Trajectory of these assays Multiplied
+```
+To best order these features, we can create a new trajectory where the values of these two trajectories are multiplied. This will allow us to create side-by-side heatmaps that are identically ordered by row.
+```{r eval=FALSE}
 trajCombined <- trajGSM2
 assay(trajCombined) <- t(apply(assay(trajGSM2), 1, scale)) + t(apply(assay(trajMM2), 1, scale))
-
-#We can get the row order from the heatmap function
-combinedMat <- trajectoryHeatmap(trajCombined, returnMat = TRUE, varCutOff = 0)
 ```
-> \## ArchR logging to : ArchRLogs/ArchR-trajectoryHeatmap-15e136ff55add-Date-2020-04-15_Time-15-03-56.log  
+
+```{r include=FALSE, eval=FALSE,echo=FALSE}
+#JJJ This whole row order thing went a bit over my head. Could use some extra clarification on how this works.
+```
+
+We can extract the optimal row order from the return of the `plotTrajectoryHeatmap()` function.
+```{r eval=FALSE}
+combinedMat <- plotTrajectoryHeatmap(trajCombined, returnMat = TRUE, varCutOff = 0)
+```
+> \## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e136ff55add-Date-2020-04-15_Time-15-03-56.log  
 ## If there is an issue, please report to github with logFile!  
 ## Preparing Main Heatmap..  
-## ArchR logging successful to : ArchRLogs/ArchR-trajectoryHeatmap-15e136ff55add-Date-2020-04-15_Time-15-03-56.log  
+## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e136ff55add-Date-2020-04-15_Time-15-03-56.log  
 
 ```{r eval=FALSE}
 rowOrder <- match(rownames(combinedMat), rownames(trajGSM2))
-
-#Now we can plot the heatmaps
-ht1 <- trajectoryHeatmap(trajGSM2,  pal = paletteContinuous(set = "horizonExtra"),  varCutOff = 0, rowOrder = rowOrder)
 ```
-> \## ArchR logging to : ArchRLogs/ArchR-trajectoryHeatmap-15e13aac5f3b-Date-2020-04-15_Time-15-03-57.log  
+
+With this, we are now ready to create our paired heatmaps. First, we will create the heatmap for the gene score trajectory. We specify the desired row order via the `rowOrder` parameter.
+```{r eval=FALSE}
+ht1 <- plotTrajectoryHeatmap(trajGSM2,  pal = paletteContinuous(set = "horizonExtra"),  varCutOff = 0, rowOrder = rowOrder)
+```
+> \## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e13aac5f3b-Date-2020-04-15_Time-15-03-57.log  
 ## If there is an issue, please report to github with logFile!  
 ## Preparing Main Heatmap..  
-## ArchR logging successful to : ArchRLogs/ArchR-trajectoryHeatmap-15e13aac5f3b-Date-2020-04-15_Time-15-03-57.log  
+## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e13aac5f3b-Date-2020-04-15_Time-15-03-57.log  
 
+Then, we will create the heatmap for the motif trajectory, again specifying the row order via the `rowOrder` parameter
 ```{r eval=FALSE}
-ht2 <- trajectoryHeatmap(trajMM2, pal = paletteContinuous(set = "solarExtra"), varCutOff = 0, rowOrder = rowOrder)
+ht2 <- plotTrajectoryHeatmap(trajMM2, pal = paletteContinuous(set = "solarExtra"), varCutOff = 0, rowOrder = rowOrder)
 ```
-> \## ArchR logging to : ArchRLogs/ArchR-trajectoryHeatmap-15e1323caf784-Date-2020-04-15_Time-15-03-57.log  
+> \## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e1323caf784-Date-2020-04-15_Time-15-03-57.log  
 ## If there is an issue, please report to github with logFile!  
 ## useSeqnames is NULL or greater than 1 with a Sparse.Assays.Matrix trajectory input.  
 ## 2020-04-15 15:03:58 :  
 ## force=FALSE thus continuing with subsetting useSeqnames = z  
 ## 2020-04-15 15:03:58 :  
 ## Preparing Main Heatmap..  
-## ArchR logging successful to : ArchRLogs/ArchR-trajectoryHeatmap-15e1323caf784-Date-2020-04-15_Time-15-03-57.log  
+## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e1323caf784-Date-2020-04-15_Time-15-03-57.log  
 
+Plotting these two heatmaps side-by-side, we see that the rows are matched across the two heatmaps. You may notice that the analysis captures both GATA3 and GATA3-AS1 (an anti-sense transcript of GATA3). This is due to how feature matching is performed and the anti-sense transcript entry could be removed manually in post-processing or programatically if desired.
 ```{r eval=FALSE}
 ht1 + ht2
 ```
@@ -475,26 +501,14 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ![](images/HemeWalkthrough/PNG/Plot-MyeloidU-GS-TF_1.png){width=800 height=600}
 
+We can repeat this same exact process but use gene expression from the `GeneIntegrationMatrix` instead of gene scores. Because this is the same analytical workflow, we do not repeat our explanations for each step.
 ```{r eval=FALSE}
-#Gene Expression
 corGIM_MM <- correlateTrajectories(trajGIM, trajMM)
 ```
 > \## ArchR logging to : ArchRLogs/ArchR-correlateTrajectories-15e13f7dfd04-Date-2020-04-15_Time-15-04-14.log  
 ## If there is an issue, please report to github with logFile!  
 ## Found 54 Correlated Pairings!  
 ## 2020-04-15 15:04:30 :  
-
-```{r eval=FALSE}
-corGIM_MM[[1]]$matchname1
-```
-> \##  [1] "RUNX3"   "NFIA"    "MEF2D"   "USF1"    "ATF3"    "ZEB1"    "NFKB2"    
-##  [8] "IRF7"    "SPI1"    "ESRRA"   "STAT2"   "FOS"     "JDP2"    "KLF13"   
-## [15] "CTCF"    "IRF8"    "RARA"    "MLX"     "MBD2"    "TCF4"    "HMG20B"   
-## [22] "JUNB"    "LYL1"    "KLF2"    "JUND"    "CEBPA"   "USF2"    "FOSB"   
-## [29] "FOSL2"   "REL"     "NR4A2"   "SP3"     "NFE2L2"  "STAT1"   "KLF7"   
-## [36] "TGIF2"   "CEBPB"   "BACH1"   "RUNX1"   "BHLHE40" "GATA2"   "HLTF"   
-## [43] "REST"    "MEF2C"   "RREB1"   "TFEB"    "PLAGL1"  "CREB5"   "CEBPD"   
-## [50] "KLF10"   "NFIL3"   "KLF4"    "RXRA"    "TFE3"  
 
 ```{r eval=FALSE}
 corGIM_MM[[1]]
@@ -541,44 +555,41 @@ corGIM_MM[[1]]
 ## 54   7.4030081939147e-27 8.88360983269764e-26  
 
 ```{r eval=FALSE}
-#We can plot these identified regulators
 trajGIM2 <- trajGIM[corGIM_MM[[1]]$name1, ]
 trajMM2 <- trajMM[corGIM_MM[[1]]$name2, ]
 
-#To Order We Can Create a Trajectory of these assays Multiplied
 trajCombined <- trajGIM2
 assay(trajCombined) <- t(apply(assay(trajGIM2), 1, scale)) + t(apply(assay(trajMM2), 1, scale))
 
-#We can get the row order from the heatmap function
-combinedMat <- trajectoryHeatmap(trajCombined, returnMat = TRUE, varCutOff = 0)
+combinedMat <- plotTrajectoryHeatmap(trajCombined, returnMat = TRUE, varCutOff = 0)
 ```
-> \## ArchR logging to : ArchRLogs/ArchR-trajectoryHeatmap-15e137bbcc972-Date-2020-04-15_Time-15-04-30.log  
+> \## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e137bbcc972-Date-2020-04-15_Time-15-04-30.log  
 ## If there is an issue, please report to github with logFile!  
 ## Preparing Main Heatmap..  
-## ArchR logging successful to : ArchRLogs/ArchR-trajectoryHeatmap-15e137bbcc972-Date-2020-04-15_Time-15-04-30.log  
+## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e137bbcc972-Date-2020-04-15_Time-15-04-30.log  
 
 ```{r eval=FALSE}
 rowOrder <- match(rownames(combinedMat), rownames(trajGIM2))
-
-#Now we can plot the heatmaps
-ht1 <- trajectoryHeatmap(trajGIM2,  pal = paletteContinuous(set = "blueYellow"),  varCutOff = 0, rowOrder = rowOrder)
 ```
-> \## ArchR logging to : ArchRLogs/ArchR-trajectoryHeatmap-15e1331e06f29-Date-2020-04-15_Time-15-04-31.log  
+```{r eval=FALSE}
+ht1 <- plotTrajectoryHeatmap(trajGIM2,  pal = paletteContinuous(set = "blueYellow"),  varCutOff = 0, rowOrder = rowOrder)
+```
+> \## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e1331e06f29-Date-2020-04-15_Time-15-04-31.log  
 ## If there is an issue, please report to github with logFile!  
 ## Preparing Main Heatmap..  
-## ArchR logging successful to : ArchRLogs/ArchR-trajectoryHeatmap-15e1331e06f29-Date-2020-04-15_Time-15-04-31.log  
+## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e1331e06f29-Date-2020-04-15_Time-15-04-31.log  
 
 ```{r eval=FALSE}
-ht2 <- trajectoryHeatmap(trajMM2, pal = paletteContinuous(set = "solarExtra"), varCutOff = 0, rowOrder = rowOrder)
+ht2 <- plotTrajectoryHeatmap(trajMM2, pal = paletteContinuous(set = "solarExtra"), varCutOff = 0, rowOrder = rowOrder)
 ```
-> \## ArchR logging to : ArchRLogs/ArchR-trajectoryHeatmap-15e1345e2da25-Date-2020-04-15_Time-15-04-32.log  
+> \## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e1345e2da25-Date-2020-04-15_Time-15-04-32.log  
 ## If there is an issue, please report to github with logFile!   
 ## useSeqnames is NULL or greater than 1 with a Sparse.Assays.Matrix trajectory input.  
 ## 2020-04-15 15:04:32 :  
 ## force=FALSE thus continuing with subsetting useSeqnames = z  
 ## 2020-04-15 15:04:32 :    
 ## Preparing Main Heatmap..  
-## ArchR logging successful to : ArchRLogs/ArchR-trajectoryHeatmap-15e1345e2da25-Date-2020-04-15_Time-15-04-32.log  
+## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e1345e2da25-Date-2020-04-15_Time-15-04-32.log  
 
 ```{r eval=FALSE}
 ht1 + ht2
@@ -594,7 +605,9 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 ![](images/HemeWalkthrough/PNG/Plot-MyeloidU-GEx-TF_1.png){width=800 height=600}
 
 
-## Lymphoid Trajectory
+## Lymphoid Trajectory - B Cell Cifferentiation
+
+As a second example of a trajectory, we will create a B cell trajectory from progenitor cells, through the common lymphoid progenitor and pre-B cell all the way to fully differentiated B cells. Because this analysis is essentially repeated from the monocyte trajectory in the previous section, we do not provide explanations for the code snippets. If you are trying to learn how to perform trajectory analysis, check out the monocyte trajectory section in this chapter instead.
 
 ```{r eval=FALSE}
 p1 <- plotEmbedding(ArchRProj = projHeme5, colorBy = "cellColData", name = "Clusters", embedding = "UMAP")
@@ -638,15 +651,15 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ![](images/HemeWalkthrough/PNG/Plot-UMAP-Clusters12-Combined_1.png){width=800 height=400}
 
+### Pseudo-time UMAPs and individual feature plots
+
 ```{r eval=FALSE}
-#Trajectory to add
 trajectory <- c("Progenitor", "CLP", "PreB", "B")
 trajectory
 ```
 > \## [1] "Progenitor" "CLP"        "PreB"       "B"
 
 ```{r eval=FALSE}
-#First we need to create a Trajectory and add it to ArchRProj cellColData
 projHeme5 <- addTrajectory(
     ArchRProj = projHeme5, 
     name = "LymphoidU", 
@@ -671,7 +684,7 @@ head(projHeme5$LymphoidU[!is.na(projHeme5$LymphoidU)]) #NA means not in trajecto
 > \## [1] 87.630792 81.913303 84.342302 81.763827 83.632287  4.073244
 
 ```{r eval=FALSE}
-p <- plotTrajectory(projHeme5, trajectory = "LymphoidU", colorBy = "colData", name = "LymphoidU")
+p <- plotTrajectory(projHeme5, trajectory = "LymphoidU", colorBy = "cellColData", name = "LymphoidU")
 ```
 > \## ArchR logging to : ArchRLogs/ArchR-plotTrajectory-15e1377b52455-Date-2020-04-15_Time-15-04-56.log  
 ## If there is an issue, please report to github with logFile!  
@@ -695,8 +708,7 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ![](images/HemeWalkthrough/PNG/Plot-LymphoidU-Traj-UMAP_1.png){width=500 height=500}
 
-To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
-nice looking.
+To save an editable vectorized version of this plot, we use `plotPDF()`.
 
 ```{r eval=FALSE}
 plotPDF(p, name = "Plot-LymphoidU-Traj-UMAP.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 5, height = 5)
@@ -708,8 +720,6 @@ plotPDF(p, name = "Plot-LymphoidU-Traj-UMAP.pdf", ArchRProj = projHeme5, addDOC 
 ## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'  
 ## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'  
 ## [1] 0  
-
-We can overlay other features on the UMAP
 
 ```{r eval=FALSE}
 p1 <- plotTrajectory(projHeme5, trajectory = "LymphoidU", colorBy = "GeneScoreMatrix", name = "PAX5", continuousSet = "horizonExtra")
@@ -786,7 +796,7 @@ ggAlignPlots(p1[[2]], p2[[2]], type = "h")
 
 ![](images/HemeWalkthrough/PNG/Plot-UMAP-PAX5-Combined2_1.png){width=800 height=400}
 
-We can then make a heatmap for
+### Pseudo-time heatmaps
 
 ```{r eval=FALSE}
 trajMM  <- getTrajectory(ArchRProj = projHeme5, name = "LymphoidU", useMatrix = "MotifMatrix", log2Norm = FALSE)
@@ -797,9 +807,9 @@ trajMM  <- getTrajectory(ArchRProj = projHeme5, name = "LymphoidU", useMatrix = 
 ## Smoothing...  
 
 ```{r eval=FALSE}
-p1 <- trajectoryHeatmap(trajMM, pal = paletteContinuous(set = "solarExtra"))
+p1 <- plotTrajectoryHeatmap(trajMM, pal = paletteContinuous(set = "solarExtra"))
 ```
-> \## ArchR logging to : ArchRLogs/ArchR-trajectoryHeatmap-15e133830d097-Date-2020-04-15_Time-15-06-14.log  
+> \## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e133830d097-Date-2020-04-15_Time-15-06-14.log  
 ## If there is an issue, please report to github with logFile!  
 ## useSeqnames is NULL or greater than 1 with a Sparse.Assays.Matrix trajectory input.  
 ## 2020-04-15 15:06:15 :  
@@ -808,7 +818,7 @@ p1 <- trajectoryHeatmap(trajMM, pal = paletteContinuous(set = "solarExtra"))
 ## Removing rows with NA values...  
 ## 2020-04-15 15:06:15 :  
 ## Preparing Main Heatmap..  
-## ArchR logging successful to : ArchRLogs/ArchR-trajectoryHeatmap-15e133830d097-Date-2020-04-15_Time-15-06-14.log  
+## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e133830d097-Date-2020-04-15_Time-15-06-14.log  
 
 ```{r, include=FALSE, eval=FALSE}
 plotPDF(p1, name = "Plot-LymphoidU-Traj-Heatmaps.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 6, height = 8)
@@ -826,12 +836,12 @@ trajGSM <- getTrajectory(ArchRProj = projHeme5, name = "LymphoidU", useMatrix = 
 ## Smoothing...
 
 ```{r eval=FALSE}
-p2 <- trajectoryHeatmap(trajGSM,  pal = paletteContinuous(set = "horizonExtra"))
+p2 <- plotTrajectoryHeatmap(trajGSM,  pal = paletteContinuous(set = "horizonExtra"))
 ```
-> \## ArchR logging to : ArchRLogs/ArchR-trajectoryHeatmap-15e13357a3282-Date-2020-04-15_Time-15-06-36.log  
+> \## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e13357a3282-Date-2020-04-15_Time-15-06-36.log  
 ## If there is an issue, please report to github with logFile!  
 ## Preparing Main Heatmap..  
-## ArchR logging successful to : ArchRLogs/ArchR-trajectoryHeatmap-15e13357a3282-Date-2020-04-15_Time-15-06-36.log  
+## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e13357a3282-Date-2020-04-15_Time-15-06-36.log  
 
 ```{r, include=FALSE, eval=FALSE}
 plotPDF(p1, p2, name = "Plot-LymphoidU-Traj-Heatmaps.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 6, height = 8)
@@ -850,12 +860,12 @@ trajGIM <- getTrajectory(ArchRProj = projHeme5, name = "LymphoidU", useMatrix = 
 ## Smoothing...
 
 ```{r eval=FALSE}
-p3 <- trajectoryHeatmap(trajGIM,  pal = paletteContinuous(set = "blueYellow"))
+p3 <- plotTrajectoryHeatmap(trajGIM,  pal = paletteContinuous(set = "blueYellow"))
 ```
-> \## ArchR logging to : ArchRLogs/ArchR-trajectoryHeatmap-15e131325dad9-Date-2020-04-15_Time-15-07-06.log  
+> \## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e131325dad9-Date-2020-04-15_Time-15-07-06.log  
 ## If there is an issue, please report to github with logFile!  
 ## Preparing Main Heatmap..  
-## ArchR logging successful to : ArchRLogs/ArchR-trajectoryHeatmap-15e131325dad9-Date-2020-04-15_Time-15-07-06.log  
+## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e131325dad9-Date-2020-04-15_Time-15-07-06.log  
 
 ```{r, include=FALSE, eval=FALSE}
 plotPDF(p1, p2, p3, name = "Plot-LymphoidU-Traj-Heatmaps.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 6, height = 8)
@@ -873,12 +883,12 @@ trajPM  <- getTrajectory(ArchRProj = projHeme5, name = "LymphoidU", useMatrix = 
 ## Smoothing...
 
 ```{r eval=FALSE}
-p4 <- trajectoryHeatmap(trajPM, pal = paletteContinuous(set = "solarExtra"))
+p4 <- plotTrajectoryHeatmap(trajPM, pal = paletteContinuous(set = "solarExtra"))
 ```
-> \## ArchR logging to : ArchRLogs/ArchR-trajectoryHeatmap-15e1351d7cd4d-Date-2020-04-15_Time-15-07-48.log  
+> \## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e1351d7cd4d-Date-2020-04-15_Time-15-07-48.log  
 ## If there is an issue, please report to github with logFile!  
 ## Preparing Main Heatmap..  
-## ArchR logging successful to : ArchRLogs/ArchR-trajectoryHeatmap-15e1351d7cd4d-Date-2020-04-15_Time-15-07-48.log  
+## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e1351d7cd4d-Date-2020-04-15_Time-15-07-48.log  
 
 ```{r, include=FALSE, eval=FALSE}
 plotPDF(p1, p2, p3, p4, name = "Plot-LymphoidU-Traj-Heatmaps.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 6, height = 8)
@@ -889,18 +899,16 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ![](images/HemeWalkthrough/PNG/Plot-LymphoidU-Traj-Heatmaps_4.png){width=600 height=800}
 
-To save a nice looking pdf we use plotPDF which removes white pages and tries to make the plots
-nice looking.
+To save an editable vectorized version of this plot, we use `plotPDF()`.
 
 ```{r eval=FALSE}
 plotPDF(p1, p2, p3, p4, name = "Plot-LymphoidU-Traj-Heatmaps.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 6, height = 8)
 ```
 > \## [1] 0
 
-We can also perform integrative analyses such as identifying positive regulators with RNA
+### Integrative pseudo-time analyses
 
 ```{r eval=FALSE}
-#Gene Scores
 corGSM_MM <- correlateTrajectories(trajGSM, trajMM)
 ```
 > \## ArchR logging to : ArchRLogs/ArchR-correlateTrajectories-15e133e72f66-Date-2020-04-15_Time-15-08-26.log  
@@ -959,43 +967,40 @@ corGSM_MM[[1]]
 ## 16  9.15917087670499e-24 3.74152130313399e-21  
 
 ```{r eval=FALSE}
-#We can plot these identified regulators
 trajGSM2 <- trajGSM[corGSM_MM[[1]]$name1, ]
 trajMM2 <- trajMM[corGSM_MM[[1]]$name2, ]
 
-#To Order We Can Create a Trajectory of these assays Multiplied
 trajCombined <- trajGSM2
 assay(trajCombined) <- t(apply(assay(trajGSM2), 1, scale)) + t(apply(assay(trajMM2), 1, scale))
 
-#We can get the row order from the heatmap function
-combinedMat <- trajectoryHeatmap(trajCombined, returnMat = TRUE, varCutOff = 0)
+combinedMat <- plotTrajectoryHeatmap(trajCombined, returnMat = TRUE, varCutOff = 0)
 ```
-> \## ArchR logging to : ArchRLogs/ArchR-trajectoryHeatmap-15e136c64f4ee-Date-2020-04-15_Time-15-08-47.log  
+> \## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e136c64f4ee-Date-2020-04-15_Time-15-08-47.log  
 ## If there is an issue, please report to github with logFile!  
 ## Preparing Main Heatmap..  
-## ArchR logging successful to : ArchRLogs/ArchR-trajectoryHeatmap-15e136c64f4ee-Date-2020-04-15_Time-15-08-47.log  
+## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e136c64f4ee-Date-2020-04-15_Time-15-08-47.log  
 
 ```{r eval=FALSE}
 rowOrder <- match(rownames(combinedMat), rownames(trajGSM2))
 
-ht1 <- trajectoryHeatmap(trajGSM2,  pal = paletteContinuous(set = "horizonExtra"),  varCutOff = 0, rowOrder = rowOrder)
+ht1 <- plotTrajectoryHeatmap(trajGSM2,  pal = paletteContinuous(set = "horizonExtra"),  varCutOff = 0, rowOrder = rowOrder)
 ```
-> \## ArchR logging to : ArchRLogs/ArchR-trajectoryHeatmap-15e1344a2d751-Date-2020-04-15_Time-15-08-47.log  
+> \## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e1344a2d751-Date-2020-04-15_Time-15-08-47.log  
 ## If there is an issue, please report to github with logFile!  
 ## Preparing Main Heatmap..  
-## ArchR logging successful to : ArchRLogs/ArchR-trajectoryHeatmap-15e1344a2d751-Date-2020-04-15_Time-15-08-47.log  
+## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e1344a2d751-Date-2020-04-15_Time-15-08-47.log  
 
 ```{r eval=FALSE}
-ht2 <- trajectoryHeatmap(trajMM2,  pal = paletteContinuous(set = "solarExtra"), varCutOff = 0, rowOrder = rowOrder)
+ht2 <- plotTrajectoryHeatmap(trajMM2,  pal = paletteContinuous(set = "solarExtra"), varCutOff = 0, rowOrder = rowOrder)
 ```
-> \## ArchR logging to : ArchRLogs/ArchR-trajectoryHeatmap-15e1365304b53-Date-2020-04-15_Time-15-08-48.log  
+> \## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e1365304b53-Date-2020-04-15_Time-15-08-48.log  
 ## If there is an issue, please report to github with logFile!  
 ## useSeqnames is NULL or greater than 1 with a Sparse.Assays.Matrix trajectory input.  
 ## 2020-04-15 15:08:49 :  
 ## force=FALSE thus continuing with subsetting useSeqnames = z  
 ## 2020-04-15 15:08:49 :  
 ## Preparing Main Heatmap..  
-## ArchR logging successful to : ArchRLogs/ArchR-trajectoryHeatmap-15e1365304b53-Date-2020-04-15_Time-15-08-48.log  
+## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e1365304b53-Date-2020-04-15_Time-15-08-48.log  
 
 ```{r eval=FALSE}
 ht1 + ht2
@@ -1011,7 +1016,6 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 ![](images/HemeWalkthrough/PNG/Plot-LymphoidU-GS-TF_1.png){width=800 height=600}
 
 ```{r eval=FALSE}
-#Gene Expression
 corGIM_MM <- correlateTrajectories(trajGIM, trajMM)
 ```
 > \## ArchR logging to : ArchRLogs/ArchR-correlateTrajectories-15e134c10b516-Date-2020-04-15_Time-15-09-05.log  
@@ -1074,44 +1078,40 @@ corGIM_MM[[1]]
 ## 37  3.05084830514743e-27 8.43469825540759e-26  
 
 ```{r eval=FALSE}
-#We can plot these identified regulators
 trajGIM2 <- trajGIM[corGIM_MM[[1]]$name1, ]
 trajMM2 <- trajMM[corGIM_MM[[1]]$name2, ]
 
-#To Order We Can Create a Trajectory of these assays Multiplied
 trajCombined <- trajGIM2
 assay(trajCombined) <- t(apply(assay(trajGIM2), 1, scale)) + t(apply(assay(trajMM2), 1, scale))
 
-#We can get the row order from the heatmap function
-combinedMat <- trajectoryHeatmap(trajCombined, returnMat = TRUE, varCutOff = 0)
+combinedMat <- plotTrajectoryHeatmap(trajCombined, returnMat = TRUE, varCutOff = 0)
 ```
-> \## ArchR logging to : ArchRLogs/ArchR-trajectoryHeatmap-15e131cd6b30f-Date-2020-04-15_Time-15-09-21.log  
+> \## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e131cd6b30f-Date-2020-04-15_Time-15-09-21.log  
 ## If there is an issue, please report to github with logFile!  
 ## Preparing Main Heatmap..  
-## ArchR logging successful to : ArchRLogs/ArchR-trajectoryHeatmap-15e131cd6b30f-Date-2020-04-15_Time-15-09-21.log  
+## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e131cd6b30f-Date-2020-04-15_Time-15-09-21.log  
 
 ```{r eval=FALSE}
 rowOrder <- match(rownames(combinedMat), rownames(trajGIM2))
 
-#Now we can plot the heatmaps
-ht1 <- trajectoryHeatmap(trajGIM2,  pal = paletteContinuous(set = "blueYellow"),  varCutOff = 0, rowOrder = rowOrder)
+ht1 <- plotTrajectoryHeatmap(trajGIM2,  pal = paletteContinuous(set = "blueYellow"),  varCutOff = 0, rowOrder = rowOrder)
 ```
-> \## ArchR logging to : ArchRLogs/ArchR-trajectoryHeatmap-15e137c439868-Date-2020-04-15_Time-15-09-21.log  
+> \## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e137c439868-Date-2020-04-15_Time-15-09-21.log  
 ## If there is an issue, please report to github with logFile!  
 ## Preparing Main Heatmap..  
-## ArchR logging successful to : ArchRLogs/ArchR-trajectoryHeatmap-15e137c439868-Date-2020-04-15_Time-15-09-21.log  
+## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e137c439868-Date-2020-04-15_Time-15-09-21.log  
 
 ```{r eval=FALSE}
-ht2 <- trajectoryHeatmap(trajMM2, pal = paletteContinuous(set = "solarExtra"), varCutOff = 0, rowOrder = rowOrder)
+ht2 <- plotTrajectoryHeatmap(trajMM2, pal = paletteContinuous(set = "solarExtra"), varCutOff = 0, rowOrder = rowOrder)
 ```
-> \## ArchR logging to : ArchRLogs/ArchR-trajectoryHeatmap-15e13755647e8-Date-2020-04-15_Time-15-09-22.log  
+> \## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e13755647e8-Date-2020-04-15_Time-15-09-22.log  
 ## If there is an issue, please report to github with logFile!  
 ## useSeqnames is NULL or greater than 1 with a Sparse.Assays.Matrix trajectory input.  
 ## 2020-04-15 15:09:23 :  
 ## force=FALSE thus continuing with subsetting useSeqnames = z  
 ## 2020-04-15 15:09:23 :  
 ## Preparing Main Heatmap..  
-## ArchR logging successful to : ArchRLogs/ArchR-trajectoryHeatmap-15e13755647e8-Date-2020-04-15_Time-15-09-22.log  
+## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-15e13755647e8-Date-2020-04-15_Time-15-09-22.log  
 
 ```{r eval=FALSE}
 ht1 + ht2
