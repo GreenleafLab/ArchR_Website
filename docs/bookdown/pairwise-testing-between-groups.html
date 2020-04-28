@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-27" />
+<meta name="date" content="2020-04-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -170,7 +170,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
+<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single-cell Embeddings</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>6.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
 <li class="chapter" data-level="6.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>6.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
@@ -265,16 +265,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="pairwise-testing-between-groups" class="section level2" number="11.3">
 <h2><span class="header-section-number">11.3</span> Pairwise Testing Between Groups</h2>
 <p>Marker feature identification is a very specific type of differential test. However, ArchR also enables standard differential testing using the same <code>getMarkerFeatures()</code> function. The trick is to set <code>useGroups</code> to one of the two cell groups and <code>bgdGroups</code> to the other cell group. This performs a differential test between the two provided groups. In all of these differential tests, the peaks that are higher in the group passed to <code>useGroups</code> will have positive fold change values while the peaks that are higher in the group passed to <code>bgdGroups</code> will have negative fold change values.</p>
-<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="pairwise-testing-between-groups.html#cb186-1"></a><span class="co">#Pairwise Test between Erythroid Cells (Cluster5) and Early Progenitors (HSC)</span></span>
-<span id="cb186-2"><a href="pairwise-testing-between-groups.html#cb186-2"></a>markerTest &lt;-<span class="st"> </span><span class="kw">getMarkerFeatures</span>(</span>
-<span id="cb186-3"><a href="pairwise-testing-between-groups.html#cb186-3"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>
-<span id="cb186-4"><a href="pairwise-testing-between-groups.html#cb186-4"></a>  <span class="dt">useMatrix =</span> <span class="st">&quot;PeakMatrix&quot;</span>,</span>
-<span id="cb186-5"><a href="pairwise-testing-between-groups.html#cb186-5"></a>  <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
-<span id="cb186-6"><a href="pairwise-testing-between-groups.html#cb186-6"></a>  <span class="dt">testMethod =</span> <span class="st">&quot;wilcoxon&quot;</span>,</span>
-<span id="cb186-7"><a href="pairwise-testing-between-groups.html#cb186-7"></a>  <span class="dt">bias =</span> <span class="kw">c</span>(<span class="st">&quot;TSSEnrichment&quot;</span>, <span class="st">&quot;log10(nFrags)&quot;</span>),</span>
-<span id="cb186-8"><a href="pairwise-testing-between-groups.html#cb186-8"></a>  <span class="dt">useGroups =</span> <span class="st">&quot;Erythroid&quot;</span>,</span>
-<span id="cb186-9"><a href="pairwise-testing-between-groups.html#cb186-9"></a>  <span class="dt">bgdGroups =</span> <span class="st">&quot;Progenitor&quot;</span></span>
-<span id="cb186-10"><a href="pairwise-testing-between-groups.html#cb186-10"></a>)</span></code></pre></div>
+<p>Here we perform a pairwise test between the “Erythroid” cell group and the “Progenitor” cell group.</p>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="pairwise-testing-between-groups.html#cb186-1"></a>markerTest &lt;-<span class="st"> </span><span class="kw">getMarkerFeatures</span>(</span>
+<span id="cb186-2"><a href="pairwise-testing-between-groups.html#cb186-2"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb186-3"><a href="pairwise-testing-between-groups.html#cb186-3"></a>  <span class="dt">useMatrix =</span> <span class="st">&quot;PeakMatrix&quot;</span>,</span>
+<span id="cb186-4"><a href="pairwise-testing-between-groups.html#cb186-4"></a>  <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
+<span id="cb186-5"><a href="pairwise-testing-between-groups.html#cb186-5"></a>  <span class="dt">testMethod =</span> <span class="st">&quot;wilcoxon&quot;</span>,</span>
+<span id="cb186-6"><a href="pairwise-testing-between-groups.html#cb186-6"></a>  <span class="dt">bias =</span> <span class="kw">c</span>(<span class="st">&quot;TSSEnrichment&quot;</span>, <span class="st">&quot;log10(nFrags)&quot;</span>),</span>
+<span id="cb186-7"><a href="pairwise-testing-between-groups.html#cb186-7"></a>  <span class="dt">useGroups =</span> <span class="st">&quot;Erythroid&quot;</span>,</span>
+<span id="cb186-8"><a href="pairwise-testing-between-groups.html#cb186-8"></a>  <span class="dt">bgdGroups =</span> <span class="st">&quot;Progenitor&quot;</span></span>
+<span id="cb186-9"><a href="pairwise-testing-between-groups.html#cb186-9"></a>)</span></code></pre></div>
 <blockquote>
 <p>## ArchR logging to : ArchRLogs/ArchR-getMarkerFeatures-ff9f77b592d7-Date-2020-04-15_Time-10-35-37.log<br />
 ## If there is an issue, please report to github with logFile!<br />
@@ -288,9 +288,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## ArchR logging successful to : ArchRLogs/ArchR-getMarkerFeatures-ff9f77b592d7-Date-2020-04-15_Time-10-35-37.log</p>
 </blockquote>
 <p>We can then plot an MA or Volcano plot using the <code>markerPlot()</code> function. We indicate an MA plot using <code>plotAs = "MA"</code>.</p>
-<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="pairwise-testing-between-groups.html#cb187-1"></a><span class="co">#Marker Peaks for Erythroid</span></span>
-<span id="cb187-2"><a href="pairwise-testing-between-groups.html#cb187-2"></a>pma &lt;-<span class="st"> </span><span class="kw">markerPlot</span>(<span class="dt">seMarker =</span> markerTest, <span class="dt">name =</span> <span class="st">&quot;Erythroid&quot;</span>, <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; abs(Log2FC) &gt;= 1&quot;</span>, <span class="dt">plotAs =</span> <span class="st">&quot;MA&quot;</span>)</span>
-<span id="cb187-3"><a href="pairwise-testing-between-groups.html#cb187-3"></a>pma</span></code></pre></div>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="pairwise-testing-between-groups.html#cb187-1"></a>pma &lt;-<span class="st"> </span><span class="kw">markerPlot</span>(<span class="dt">seMarker =</span> markerTest, <span class="dt">name =</span> <span class="st">&quot;Erythroid&quot;</span>, <span class="dt">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; abs(Log2FC) &gt;= 1&quot;</span>, <span class="dt">plotAs =</span> <span class="st">&quot;MA&quot;</span>)</span>
+<span id="cb187-2"><a href="pairwise-testing-between-groups.html#cb187-2"></a>pma</span></code></pre></div>
 <blockquote>
 <p>## Warning: Removed 57 rows containing missing values (geom_point_rast).</p>
 </blockquote>

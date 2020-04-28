@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-27" />
+<meta name="date" content="2020-04-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -170,7 +170,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
+<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single-cell Embeddings</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>6.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
 <li class="chapter" data-level="6.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>6.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
@@ -365,28 +365,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 1 2 3 4 5 6</p>
 </blockquote>
 <p>We can use <code>cowplot</code> to plot the distributions of all of these motifs in a single plot.</p>
-<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="motif-deviations.html#cb241-1"></a><span class="co">#Rearrange for grid plotting</span></span>
-<span id="cb241-2"><a href="motif-deviations.html#cb241-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">seq_along</span>(p), <span class="cf">function</span>(x){</span>
-<span id="cb241-3"><a href="motif-deviations.html#cb241-3"></a>  <span class="cf">if</span>(x <span class="op">!=</span><span class="st"> </span><span class="dv">1</span>){</span>
-<span id="cb241-4"><a href="motif-deviations.html#cb241-4"></a>    p[[x]] <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb241-5"><a href="motif-deviations.html#cb241-5"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="dv">6</span>) <span class="op">+</span></span>
-<span id="cb241-6"><a href="motif-deviations.html#cb241-6"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
-<span id="cb241-7"><a href="motif-deviations.html#cb241-7"></a><span class="st">    </span><span class="kw">theme</span>(</span>
-<span id="cb241-8"><a href="motif-deviations.html#cb241-8"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb241-9"><a href="motif-deviations.html#cb241-9"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>(),</span>
-<span id="cb241-10"><a href="motif-deviations.html#cb241-10"></a>        <span class="dt">axis.title.y=</span><span class="kw">element_blank</span>()</span>
-<span id="cb241-11"><a href="motif-deviations.html#cb241-11"></a>    ) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;&quot;</span>)</span>
-<span id="cb241-12"><a href="motif-deviations.html#cb241-12"></a>  }<span class="cf">else</span>{</span>
-<span id="cb241-13"><a href="motif-deviations.html#cb241-13"></a>    p[[x]] <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb241-14"><a href="motif-deviations.html#cb241-14"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="dv">6</span>) <span class="op">+</span></span>
-<span id="cb241-15"><a href="motif-deviations.html#cb241-15"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
-<span id="cb241-16"><a href="motif-deviations.html#cb241-16"></a><span class="st">    </span><span class="kw">theme</span>(</span>
-<span id="cb241-17"><a href="motif-deviations.html#cb241-17"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>(),</span>
-<span id="cb241-18"><a href="motif-deviations.html#cb241-18"></a>        <span class="dt">axis.title.y=</span><span class="kw">element_blank</span>()</span>
-<span id="cb241-19"><a href="motif-deviations.html#cb241-19"></a>    ) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;&quot;</span>)</span>
-<span id="cb241-20"><a href="motif-deviations.html#cb241-20"></a>  }</span>
-<span id="cb241-21"><a href="motif-deviations.html#cb241-21"></a>})</span>
-<span id="cb241-22"><a href="motif-deviations.html#cb241-22"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">nrow =</span> <span class="dv">1</span>, <span class="dt">rel_widths =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">length</span>(p2) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))),p2))</span></code></pre></div>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="motif-deviations.html#cb241-1"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">seq_along</span>(p), <span class="cf">function</span>(x){</span>
+<span id="cb241-2"><a href="motif-deviations.html#cb241-2"></a>  <span class="cf">if</span>(x <span class="op">!=</span><span class="st"> </span><span class="dv">1</span>){</span>
+<span id="cb241-3"><a href="motif-deviations.html#cb241-3"></a>    p[[x]] <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb241-4"><a href="motif-deviations.html#cb241-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="dv">6</span>) <span class="op">+</span></span>
+<span id="cb241-5"><a href="motif-deviations.html#cb241-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
+<span id="cb241-6"><a href="motif-deviations.html#cb241-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
+<span id="cb241-7"><a href="motif-deviations.html#cb241-7"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb241-8"><a href="motif-deviations.html#cb241-8"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>(),</span>
+<span id="cb241-9"><a href="motif-deviations.html#cb241-9"></a>        <span class="dt">axis.title.y=</span><span class="kw">element_blank</span>()</span>
+<span id="cb241-10"><a href="motif-deviations.html#cb241-10"></a>    ) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;&quot;</span>)</span>
+<span id="cb241-11"><a href="motif-deviations.html#cb241-11"></a>  }<span class="cf">else</span>{</span>
+<span id="cb241-12"><a href="motif-deviations.html#cb241-12"></a>    p[[x]] <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb241-13"><a href="motif-deviations.html#cb241-13"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="dv">6</span>) <span class="op">+</span></span>
+<span id="cb241-14"><a href="motif-deviations.html#cb241-14"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
+<span id="cb241-15"><a href="motif-deviations.html#cb241-15"></a><span class="st">    </span><span class="kw">theme</span>(</span>
+<span id="cb241-16"><a href="motif-deviations.html#cb241-16"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>(),</span>
+<span id="cb241-17"><a href="motif-deviations.html#cb241-17"></a>        <span class="dt">axis.title.y=</span><span class="kw">element_blank</span>()</span>
+<span id="cb241-18"><a href="motif-deviations.html#cb241-18"></a>    ) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;&quot;</span>)</span>
+<span id="cb241-19"><a href="motif-deviations.html#cb241-19"></a>  }</span>
+<span id="cb241-20"><a href="motif-deviations.html#cb241-20"></a>})</span>
+<span id="cb241-21"><a href="motif-deviations.html#cb241-21"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">nrow =</span> <span class="dv">1</span>, <span class="dt">rel_widths =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">length</span>(p2) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))),p2))</span></code></pre></div>
 <blockquote>
 <p>## Picking joint bandwidth of 0.0181<br />
 ## Picking joint bandwidth of 0.02<br />
@@ -444,19 +443,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-10374bec190f-Date-2020-04-15_Time-10-58-03.log</p>
 </blockquote>
 <p>We can plot all of these motif UMAPs using <code>cowplot</code>.</p>
-<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="motif-deviations.html#cb244-1"></a><span class="co">#Rearrange for grid plotting</span></span>
-<span id="cb244-2"><a href="motif-deviations.html#cb244-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
-<span id="cb244-3"><a href="motif-deviations.html#cb244-3"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb244-4"><a href="motif-deviations.html#cb244-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
-<span id="cb244-5"><a href="motif-deviations.html#cb244-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
-<span id="cb244-6"><a href="motif-deviations.html#cb244-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
-<span id="cb244-7"><a href="motif-deviations.html#cb244-7"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb244-8"><a href="motif-deviations.html#cb244-8"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb244-9"><a href="motif-deviations.html#cb244-9"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb244-10"><a href="motif-deviations.html#cb244-10"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
-<span id="cb244-11"><a href="motif-deviations.html#cb244-11"></a>    )</span>
-<span id="cb244-12"><a href="motif-deviations.html#cb244-12"></a>})</span>
-<span id="cb244-13"><a href="motif-deviations.html#cb244-13"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>),p2))</span></code></pre></div>
+<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="motif-deviations.html#cb244-1"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
+<span id="cb244-2"><a href="motif-deviations.html#cb244-2"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb244-3"><a href="motif-deviations.html#cb244-3"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
+<span id="cb244-4"><a href="motif-deviations.html#cb244-4"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
+<span id="cb244-5"><a href="motif-deviations.html#cb244-5"></a><span class="st">    </span><span class="kw">theme</span>(</span>
+<span id="cb244-6"><a href="motif-deviations.html#cb244-6"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb244-7"><a href="motif-deviations.html#cb244-7"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb244-8"><a href="motif-deviations.html#cb244-8"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb244-9"><a href="motif-deviations.html#cb244-9"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
+<span id="cb244-10"><a href="motif-deviations.html#cb244-10"></a>    )</span>
+<span id="cb244-11"><a href="motif-deviations.html#cb244-11"></a>})</span>
+<span id="cb244-12"><a href="motif-deviations.html#cb244-12"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>),p2))</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-MarkerMotifs-W-Imputation_1.png" width="800" height="800" /></p>
 <p>To see how these TF deviation z-scores compare to the inferred gene expression via gene scores of the corresponding TF genes, we can overlay the gene scores for each of these TFs on the UMAP embedding.</p>
 <div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="motif-deviations.html#cb245-1"></a>markerRNA &lt;-<span class="st"> </span><span class="kw">getFeatures</span>(projHeme5, <span class="dt">select =</span> <span class="kw">paste</span>(motifs, <span class="dt">collapse=</span><span class="st">&quot;|&quot;</span>), <span class="dt">useMatrix =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>)</span>
@@ -488,19 +486,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 1 2 3 4 5 6<br />
 ## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-1037475e6dc52-Date-2020-04-15_Time-10-58-30.log</p>
 </blockquote>
-<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="motif-deviations.html#cb247-1"></a><span class="co">#Rearrange for grid plotting</span></span>
-<span id="cb247-2"><a href="motif-deviations.html#cb247-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
-<span id="cb247-3"><a href="motif-deviations.html#cb247-3"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb247-4"><a href="motif-deviations.html#cb247-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
-<span id="cb247-5"><a href="motif-deviations.html#cb247-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
-<span id="cb247-6"><a href="motif-deviations.html#cb247-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
-<span id="cb247-7"><a href="motif-deviations.html#cb247-7"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb247-8"><a href="motif-deviations.html#cb247-8"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb247-9"><a href="motif-deviations.html#cb247-9"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb247-10"><a href="motif-deviations.html#cb247-10"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
-<span id="cb247-11"><a href="motif-deviations.html#cb247-11"></a>    )</span>
-<span id="cb247-12"><a href="motif-deviations.html#cb247-12"></a>})</span>
-<span id="cb247-13"><a href="motif-deviations.html#cb247-13"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>),p2))</span></code></pre></div>
+<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="motif-deviations.html#cb247-1"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
+<span id="cb247-2"><a href="motif-deviations.html#cb247-2"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb247-3"><a href="motif-deviations.html#cb247-3"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
+<span id="cb247-4"><a href="motif-deviations.html#cb247-4"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
+<span id="cb247-5"><a href="motif-deviations.html#cb247-5"></a><span class="st">    </span><span class="kw">theme</span>(</span>
+<span id="cb247-6"><a href="motif-deviations.html#cb247-6"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb247-7"><a href="motif-deviations.html#cb247-7"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb247-8"><a href="motif-deviations.html#cb247-8"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb247-9"><a href="motif-deviations.html#cb247-9"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
+<span id="cb247-10"><a href="motif-deviations.html#cb247-10"></a>    )</span>
+<span id="cb247-11"><a href="motif-deviations.html#cb247-11"></a>})</span>
+<span id="cb247-12"><a href="motif-deviations.html#cb247-12"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>),p2))</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-MarkerMotifsGS-W-Imputation_1.png" width="800" height="800" /></p>
 <p>Similarly, because we previously linked our scATAC-seq data with corresponding scRNA-seq data, we can plot the linked gene expression for each of these TFs on the UMAP embedding.</p>
 <div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb248-1"><a href="motif-deviations.html#cb248-1"></a>markerRNA &lt;-<span class="st"> </span><span class="kw">getFeatures</span>(projHeme5, <span class="dt">select =</span> <span class="kw">paste</span>(motifs, <span class="dt">collapse=</span><span class="st">&quot;|&quot;</span>), <span class="dt">useMatrix =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>)</span>
@@ -533,19 +530,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 1 2 3 4 5 6<br />
 ## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-10374438d3144-Date-2020-04-15_Time-10-58-56.log</p>
 </blockquote>
-<div class="sourceCode" id="cb250"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb250-1"><a href="motif-deviations.html#cb250-1"></a><span class="co">#Rearrange for grid plotting</span></span>
-<span id="cb250-2"><a href="motif-deviations.html#cb250-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
-<span id="cb250-3"><a href="motif-deviations.html#cb250-3"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb250-4"><a href="motif-deviations.html#cb250-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
-<span id="cb250-5"><a href="motif-deviations.html#cb250-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
-<span id="cb250-6"><a href="motif-deviations.html#cb250-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
-<span id="cb250-7"><a href="motif-deviations.html#cb250-7"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb250-8"><a href="motif-deviations.html#cb250-8"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb250-9"><a href="motif-deviations.html#cb250-9"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb250-10"><a href="motif-deviations.html#cb250-10"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
-<span id="cb250-11"><a href="motif-deviations.html#cb250-11"></a>    )</span>
-<span id="cb250-12"><a href="motif-deviations.html#cb250-12"></a>})</span>
-<span id="cb250-13"><a href="motif-deviations.html#cb250-13"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>),p2))</span></code></pre></div>
+<div class="sourceCode" id="cb250"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb250-1"><a href="motif-deviations.html#cb250-1"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
+<span id="cb250-2"><a href="motif-deviations.html#cb250-2"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb250-3"><a href="motif-deviations.html#cb250-3"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
+<span id="cb250-4"><a href="motif-deviations.html#cb250-4"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
+<span id="cb250-5"><a href="motif-deviations.html#cb250-5"></a><span class="st">    </span><span class="kw">theme</span>(</span>
+<span id="cb250-6"><a href="motif-deviations.html#cb250-6"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb250-7"><a href="motif-deviations.html#cb250-7"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb250-8"><a href="motif-deviations.html#cb250-8"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb250-9"><a href="motif-deviations.html#cb250-9"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
+<span id="cb250-10"><a href="motif-deviations.html#cb250-10"></a>    )</span>
+<span id="cb250-11"><a href="motif-deviations.html#cb250-11"></a>})</span>
+<span id="cb250-12"><a href="motif-deviations.html#cb250-12"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>),p2))</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-MarkerMotifsRNA-W-Imputation_1.png" width="800" height="800" /></p>
 </div>
             </section>

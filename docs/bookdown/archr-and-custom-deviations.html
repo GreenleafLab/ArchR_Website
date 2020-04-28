@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-27" />
+<meta name="date" content="2020-04-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -170,7 +170,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
+<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single-cell Embeddings</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>6.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
 <li class="chapter" data-level="6.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>6.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
@@ -381,19 +381,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 1 2 3 4 5 6 7<br />
 ## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-103747b681a1c-Date-2020-04-15_Time-11-08-26.log</p>
 </blockquote>
-<div class="sourceCode" id="cb259"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb259-1"><a href="archr-and-custom-deviations.html#cb259-1"></a><span class="co">#Rearrange for grid plotting</span></span>
-<span id="cb259-2"><a href="archr-and-custom-deviations.html#cb259-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
-<span id="cb259-3"><a href="archr-and-custom-deviations.html#cb259-3"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb259-4"><a href="archr-and-custom-deviations.html#cb259-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
-<span id="cb259-5"><a href="archr-and-custom-deviations.html#cb259-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
-<span id="cb259-6"><a href="archr-and-custom-deviations.html#cb259-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
-<span id="cb259-7"><a href="archr-and-custom-deviations.html#cb259-7"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb259-8"><a href="archr-and-custom-deviations.html#cb259-8"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb259-9"><a href="archr-and-custom-deviations.html#cb259-9"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb259-10"><a href="archr-and-custom-deviations.html#cb259-10"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
-<span id="cb259-11"><a href="archr-and-custom-deviations.html#cb259-11"></a>    )</span>
-<span id="cb259-12"><a href="archr-and-custom-deviations.html#cb259-12"></a>})</span>
-<span id="cb259-13"><a href="archr-and-custom-deviations.html#cb259-13"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>),p2))</span></code></pre></div>
+<div class="sourceCode" id="cb259"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb259-1"><a href="archr-and-custom-deviations.html#cb259-1"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
+<span id="cb259-2"><a href="archr-and-custom-deviations.html#cb259-2"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb259-3"><a href="archr-and-custom-deviations.html#cb259-3"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
+<span id="cb259-4"><a href="archr-and-custom-deviations.html#cb259-4"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
+<span id="cb259-5"><a href="archr-and-custom-deviations.html#cb259-5"></a><span class="st">    </span><span class="kw">theme</span>(</span>
+<span id="cb259-6"><a href="archr-and-custom-deviations.html#cb259-6"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb259-7"><a href="archr-and-custom-deviations.html#cb259-7"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb259-8"><a href="archr-and-custom-deviations.html#cb259-8"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb259-9"><a href="archr-and-custom-deviations.html#cb259-9"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
+<span id="cb259-10"><a href="archr-and-custom-deviations.html#cb259-10"></a>    )</span>
+<span id="cb259-11"><a href="archr-and-custom-deviations.html#cb259-11"></a>})</span>
+<span id="cb259-12"><a href="archr-and-custom-deviations.html#cb259-12"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>),p2))</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-EncodeTFBS-W-Imputation_1.png" width="800" height="800" /></p>
 </div>
 <div id="bulk-atac-seq-1" class="section level3" number="13.2.2">
@@ -495,35 +494,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 1 2 3 4 5 6 7 8 9<br />
 ## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-1037416f3cb56-Date-2020-04-15_Time-11-13-23.log</p>
 </blockquote>
-<div class="sourceCode" id="cb268"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb268-1"><a href="archr-and-custom-deviations.html#cb268-1"></a><span class="co">#Rearrange for grid plotting</span></span>
-<span id="cb268-2"><a href="archr-and-custom-deviations.html#cb268-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
-<span id="cb268-3"><a href="archr-and-custom-deviations.html#cb268-3"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb268-4"><a href="archr-and-custom-deviations.html#cb268-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
-<span id="cb268-5"><a href="archr-and-custom-deviations.html#cb268-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
-<span id="cb268-6"><a href="archr-and-custom-deviations.html#cb268-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
-<span id="cb268-7"><a href="archr-and-custom-deviations.html#cb268-7"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb268-8"><a href="archr-and-custom-deviations.html#cb268-8"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb268-9"><a href="archr-and-custom-deviations.html#cb268-9"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb268-10"><a href="archr-and-custom-deviations.html#cb268-10"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
-<span id="cb268-11"><a href="archr-and-custom-deviations.html#cb268-11"></a>    )</span>
-<span id="cb268-12"><a href="archr-and-custom-deviations.html#cb268-12"></a>})</span>
-<span id="cb268-13"><a href="archr-and-custom-deviations.html#cb268-13"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>),p2))</span></code></pre></div>
+<div class="sourceCode" id="cb268"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb268-1"><a href="archr-and-custom-deviations.html#cb268-1"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
+<span id="cb268-2"><a href="archr-and-custom-deviations.html#cb268-2"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb268-3"><a href="archr-and-custom-deviations.html#cb268-3"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
+<span id="cb268-4"><a href="archr-and-custom-deviations.html#cb268-4"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
+<span id="cb268-5"><a href="archr-and-custom-deviations.html#cb268-5"></a><span class="st">    </span><span class="kw">theme</span>(</span>
+<span id="cb268-6"><a href="archr-and-custom-deviations.html#cb268-6"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb268-7"><a href="archr-and-custom-deviations.html#cb268-7"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb268-8"><a href="archr-and-custom-deviations.html#cb268-8"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb268-9"><a href="archr-and-custom-deviations.html#cb268-9"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
+<span id="cb268-10"><a href="archr-and-custom-deviations.html#cb268-10"></a>    )</span>
+<span id="cb268-11"><a href="archr-and-custom-deviations.html#cb268-11"></a>})</span>
+<span id="cb268-12"><a href="archr-and-custom-deviations.html#cb268-12"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>),p2))</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-MarkerATAC-W-Imputation_1.png" width="800" height="800" /></p>
 </div>
 <div id="custom-deviations" class="section level3" number="13.2.3">
 <h3><span class="header-section-number">13.2.3</span> Custom Deviations</h3>
 <p>Instead of using the ArchR-curated region sets described above, we can provide our own custom region sets as a peak annotation. These custom annotations can be used in exactly the same way as the ArchR-curated annotations.</p>
 <p>First, in case you haven’t already created this “EncodePeaks” annotation in a previous chapter, lets create it by downloading some ENCODE peak sets and calling <code>addPeakAnnotations()</code>.</p>
-<div class="sourceCode" id="cb269"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb269-1"><a href="archr-and-custom-deviations.html#cb269-1"></a><span class="co">#Custom Peak Annotations</span></span>
-<span id="cb269-2"><a href="archr-and-custom-deviations.html#cb269-2"></a>EncodePeaks &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
-<span id="cb269-3"><a href="archr-and-custom-deviations.html#cb269-3"></a>  <span class="dt">Encode_K562_GATA1 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF632NQI/@@download/ENCFF632NQI.bed.gz&quot;</span>,</span>
-<span id="cb269-4"><a href="archr-and-custom-deviations.html#cb269-4"></a>  <span class="dt">Encode_GM12878_CEBPB =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF761MGJ/@@download/ENCFF761MGJ.bed.gz&quot;</span>,</span>
-<span id="cb269-5"><a href="archr-and-custom-deviations.html#cb269-5"></a>  <span class="dt">Encode_K562_Ebf1 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF868VSY/@@download/ENCFF868VSY.bed.gz&quot;</span>,</span>
-<span id="cb269-6"><a href="archr-and-custom-deviations.html#cb269-6"></a>  <span class="dt">Encode_K562_Pax5 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF339KUO/@@download/ENCFF339KUO.bed.gz&quot;</span></span>
-<span id="cb269-7"><a href="archr-and-custom-deviations.html#cb269-7"></a>)</span>
-<span id="cb269-8"><a href="archr-and-custom-deviations.html#cb269-8"></a><span class="cf">if</span>(<span class="st">&quot;ChIP&quot;</span> <span class="op">%ni%</span><span class="st"> </span><span class="kw">names</span>(projHeme5<span class="op">@</span>peakAnnotation)){</span>
-<span id="cb269-9"><a href="archr-and-custom-deviations.html#cb269-9"></a>    projHeme5 &lt;-<span class="st"> </span><span class="kw">addPeakAnnotations</span>(<span class="dt">ArchRProj =</span> projHeme5, <span class="dt">regions =</span> EncodePeaks, <span class="dt">name =</span> <span class="st">&quot;ChIP&quot;</span>)</span>
-<span id="cb269-10"><a href="archr-and-custom-deviations.html#cb269-10"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb269"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb269-1"><a href="archr-and-custom-deviations.html#cb269-1"></a>EncodePeaks &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb269-2"><a href="archr-and-custom-deviations.html#cb269-2"></a>  <span class="dt">Encode_K562_GATA1 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF632NQI/@@download/ENCFF632NQI.bed.gz&quot;</span>,</span>
+<span id="cb269-3"><a href="archr-and-custom-deviations.html#cb269-3"></a>  <span class="dt">Encode_GM12878_CEBPB =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF761MGJ/@@download/ENCFF761MGJ.bed.gz&quot;</span>,</span>
+<span id="cb269-4"><a href="archr-and-custom-deviations.html#cb269-4"></a>  <span class="dt">Encode_K562_Ebf1 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF868VSY/@@download/ENCFF868VSY.bed.gz&quot;</span>,</span>
+<span id="cb269-5"><a href="archr-and-custom-deviations.html#cb269-5"></a>  <span class="dt">Encode_K562_Pax5 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF339KUO/@@download/ENCFF339KUO.bed.gz&quot;</span></span>
+<span id="cb269-6"><a href="archr-and-custom-deviations.html#cb269-6"></a>)</span>
+<span id="cb269-7"><a href="archr-and-custom-deviations.html#cb269-7"></a><span class="cf">if</span>(<span class="st">&quot;ChIP&quot;</span> <span class="op">%ni%</span><span class="st"> </span><span class="kw">names</span>(projHeme5<span class="op">@</span>peakAnnotation)){</span>
+<span id="cb269-8"><a href="archr-and-custom-deviations.html#cb269-8"></a>    projHeme5 &lt;-<span class="st"> </span><span class="kw">addPeakAnnotations</span>(<span class="dt">ArchRProj =</span> projHeme5, <span class="dt">regions =</span> EncodePeaks, <span class="dt">name =</span> <span class="st">&quot;ChIP&quot;</span>)</span>
+<span id="cb269-9"><a href="archr-and-custom-deviations.html#cb269-9"></a>}</span></code></pre></div>
 <p>Then, we make a deviations matrix from this peak annotation.</p>
 <div class="sourceCode" id="cb270"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb270-1"><a href="archr-and-custom-deviations.html#cb270-1"></a>projHeme5 &lt;-<span class="st"> </span><span class="kw">addDeviationsMatrix</span>(</span>
 <span id="cb270-2"><a href="archr-and-custom-deviations.html#cb270-2"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>
@@ -602,19 +599,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 1 2 3 4<br />
 ## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-10374635d5970-Date-2020-04-15_Time-11-14-35.log</p>
 </blockquote>
-<div class="sourceCode" id="cb276"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb276-1"><a href="archr-and-custom-deviations.html#cb276-1"></a><span class="co">#Rearrange for grid plotting</span></span>
-<span id="cb276-2"><a href="archr-and-custom-deviations.html#cb276-2"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
-<span id="cb276-3"><a href="archr-and-custom-deviations.html#cb276-3"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb276-4"><a href="archr-and-custom-deviations.html#cb276-4"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
-<span id="cb276-5"><a href="archr-and-custom-deviations.html#cb276-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
-<span id="cb276-6"><a href="archr-and-custom-deviations.html#cb276-6"></a><span class="st">    </span><span class="kw">theme</span>(</span>
-<span id="cb276-7"><a href="archr-and-custom-deviations.html#cb276-7"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb276-8"><a href="archr-and-custom-deviations.html#cb276-8"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb276-9"><a href="archr-and-custom-deviations.html#cb276-9"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb276-10"><a href="archr-and-custom-deviations.html#cb276-10"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
-<span id="cb276-11"><a href="archr-and-custom-deviations.html#cb276-11"></a>    )</span>
-<span id="cb276-12"><a href="archr-and-custom-deviations.html#cb276-12"></a>})</span>
-<span id="cb276-13"><a href="archr-and-custom-deviations.html#cb276-13"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">2</span>),p2))</span></code></pre></div>
+<div class="sourceCode" id="cb276"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb276-1"><a href="archr-and-custom-deviations.html#cb276-1"></a>p2 &lt;-<span class="st"> </span><span class="kw">lapply</span>(p, <span class="cf">function</span>(x){</span>
+<span id="cb276-2"><a href="archr-and-custom-deviations.html#cb276-2"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb276-3"><a href="archr-and-custom-deviations.html#cb276-3"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
+<span id="cb276-4"><a href="archr-and-custom-deviations.html#cb276-4"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
+<span id="cb276-5"><a href="archr-and-custom-deviations.html#cb276-5"></a><span class="st">    </span><span class="kw">theme</span>(</span>
+<span id="cb276-6"><a href="archr-and-custom-deviations.html#cb276-6"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb276-7"><a href="archr-and-custom-deviations.html#cb276-7"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb276-8"><a href="archr-and-custom-deviations.html#cb276-8"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
+<span id="cb276-9"><a href="archr-and-custom-deviations.html#cb276-9"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
+<span id="cb276-10"><a href="archr-and-custom-deviations.html#cb276-10"></a>    )</span>
+<span id="cb276-11"><a href="archr-and-custom-deviations.html#cb276-11"></a>})</span>
+<span id="cb276-12"><a href="archr-and-custom-deviations.html#cb276-12"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">2</span>),p2))</span></code></pre></div>
 <p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-MarkerChIP-W-Imputation_1.png" width="800" height="800" /></p>
 
 </div>

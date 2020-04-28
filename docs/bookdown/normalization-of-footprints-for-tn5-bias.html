@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-27" />
+<meta name="date" content="2020-04-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -170,7 +170,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single Cell Embeddings</a>
+<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single-cell Embeddings</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>6.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
 <li class="chapter" data-level="6.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>6.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
@@ -359,16 +359,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="footprinting-without-normalization-for-tn5-bias" class="section level3" number="14.2.3">
 <h3><span class="header-section-number">14.2.3</span> Footprinting Without Normalization for Tn5 Bias</h3>
 <p>While we highly recommend normalizing footprints for Tn5 sequence insertion bias, it is possible to perform footprinting without normalization by setting <code>normMethod = "None"</code> in the <code>plotFootprints()</code> function.</p>
-<div class="sourceCode" id="cb284"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb284-1"><a href="normalization-of-footprints-for-tn5-bias.html#cb284-1"></a><span class="co">#Plot Motif Footprints from positions list</span></span>
-<span id="cb284-2"><a href="normalization-of-footprints-for-tn5-bias.html#cb284-2"></a><span class="co">#Recommend doing a few motifs not entire motif set</span></span>
-<span id="cb284-3"><a href="normalization-of-footprints-for-tn5-bias.html#cb284-3"></a><span class="kw">plotFootprints</span>(</span>
-<span id="cb284-4"><a href="normalization-of-footprints-for-tn5-bias.html#cb284-4"></a>  <span class="dt">seFoot =</span> seFoot,</span>
-<span id="cb284-5"><a href="normalization-of-footprints-for-tn5-bias.html#cb284-5"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>
-<span id="cb284-6"><a href="normalization-of-footprints-for-tn5-bias.html#cb284-6"></a>  <span class="dt">normMethod =</span> <span class="st">&quot;None&quot;</span>,</span>
-<span id="cb284-7"><a href="normalization-of-footprints-for-tn5-bias.html#cb284-7"></a>  <span class="dt">plotName =</span> <span class="st">&quot;Footprints-No-Normalization&quot;</span>,</span>
-<span id="cb284-8"><a href="normalization-of-footprints-for-tn5-bias.html#cb284-8"></a>  <span class="dt">addDOC =</span> <span class="ot">FALSE</span>,</span>
-<span id="cb284-9"><a href="normalization-of-footprints-for-tn5-bias.html#cb284-9"></a>  <span class="dt">smoothWindow =</span> <span class="dv">5</span></span>
-<span id="cb284-10"><a href="normalization-of-footprints-for-tn5-bias.html#cb284-10"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb284"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb284-1"><a href="normalization-of-footprints-for-tn5-bias.html#cb284-1"></a><span class="kw">plotFootprints</span>(</span>
+<span id="cb284-2"><a href="normalization-of-footprints-for-tn5-bias.html#cb284-2"></a>  <span class="dt">seFoot =</span> seFoot,</span>
+<span id="cb284-3"><a href="normalization-of-footprints-for-tn5-bias.html#cb284-3"></a>  <span class="dt">ArchRProj =</span> projHeme5, </span>
+<span id="cb284-4"><a href="normalization-of-footprints-for-tn5-bias.html#cb284-4"></a>  <span class="dt">normMethod =</span> <span class="st">&quot;None&quot;</span>,</span>
+<span id="cb284-5"><a href="normalization-of-footprints-for-tn5-bias.html#cb284-5"></a>  <span class="dt">plotName =</span> <span class="st">&quot;Footprints-No-Normalization&quot;</span>,</span>
+<span id="cb284-6"><a href="normalization-of-footprints-for-tn5-bias.html#cb284-6"></a>  <span class="dt">addDOC =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb284-7"><a href="normalization-of-footprints-for-tn5-bias.html#cb284-7"></a>  <span class="dt">smoothWindow =</span> <span class="dv">5</span></span>
+<span id="cb284-8"><a href="normalization-of-footprints-for-tn5-bias.html#cb284-8"></a>)</span></code></pre></div>
 <blockquote>
 <p>## ArchR logging to : ArchRLogs/ArchR-plotFootprints-10b7a22669572-Date-2020-04-15_Time-11-16-30.log<br />
 ## If there is an issue, please report to github with logFile!<br />
