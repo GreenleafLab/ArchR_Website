@@ -62,7 +62,7 @@ One of the primary limitations of chromVAR is that it was designed during the ea
 To circumvent these limitations, ArchR implements the same chromVAR analysis workflow by analyzing sample sub-matrices independently.
 
 <center>
-![](images/ArchR_chromVAR_Parallelization){width=500px}
+![](images/ArchR_chromVAR_Parallelization.png){width=500px}
 </center>
 
 ```{r include=FALSE, eval=FALSE,echo=FALSE}
@@ -212,7 +212,6 @@ p <- plotGroups(ArchRProj = projHeme5,
 We can use `cowplot` to plot the distributions of all of these motifs in a single plot.
 
 ```{r, eval=FALSE}
-#Rearrange for grid plotting
 p2 <- lapply(seq_along(p), function(x){
   if(x != 1){
     p[[x]] + guides(color = FALSE, fill = FALSE) + 
@@ -311,7 +310,6 @@ p <- plotEmbedding(
 We can plot all of these motif UMAPs using `cowplot`.
 
 ```{r, eval=FALSE}
-#Rearrange for grid plotting
 p2 <- lapply(p, function(x){
     x + guides(color = FALSE, fill = FALSE) + 
     theme_ArchR(baseSize = 6.5) +
@@ -381,7 +379,6 @@ p <- plotEmbedding(
 ## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-1037475e6dc52-Date-2020-04-15_Time-10-58-30.log  
 
 ```{r eval=FALSE}
-#Rearrange for grid plotting
 p2 <- lapply(p, function(x){
     x + guides(color = FALSE, fill = FALSE) + 
     theme_ArchR(baseSize = 6.5) +
@@ -450,7 +447,6 @@ p <- plotEmbedding(
 ## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-10374438d3144-Date-2020-04-15_Time-10-58-56.log  
 
 ```{r eval=FALSE}
-#Rearrange for grid plotting
 p2 <- lapply(p, function(x){
     x + guides(color = FALSE, fill = FALSE) + 
     theme_ArchR(baseSize = 6.5) +
@@ -625,7 +621,6 @@ p <- plotEmbedding(
 ## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-103747b681a1c-Date-2020-04-15_Time-11-08-26.log  
 
 ```{r, eval=FALSE}
-#Rearrange for grid plotting
 p2 <- lapply(p, function(x){
     x + guides(color = FALSE, fill = FALSE) + 
     theme_ArchR(baseSize = 6.5) +
@@ -781,7 +776,6 @@ p <- plotEmbedding(
 ## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-1037416f3cb56-Date-2020-04-15_Time-11-13-23.log  
 
 ```{r, eval=FALSE}
-#Rearrange for grid plotting
 p2 <- lapply(p, function(x){
     x + guides(color = FALSE, fill = FALSE) + 
     theme_ArchR(baseSize = 6.5) +
@@ -818,7 +812,6 @@ Instead of using the ArchR-curated region sets described above, we can provide o
 
 First, in case you haven't already created this "EncodePeaks" annotation in a previous chapter, lets create it by downloading some ENCODE peak sets and calling `addPeakAnnotations()`.
 ```{r eval=FALSE}
-#Custom Peak Annotations
 EncodePeaks <- c(
   Encode_K562_GATA1 = "https://www.encodeproject.org/files/ENCFF632NQI/@@download/ENCFF632NQI.bed.gz",
   Encode_GM12878_CEBPB = "https://www.encodeproject.org/files/ENCFF761MGJ/@@download/ENCFF761MGJ.bed.gz",
@@ -925,7 +918,6 @@ p <- plotEmbedding(
 ## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-10374635d5970-Date-2020-04-15_Time-11-14-35.log  
 
 ```{r, eval=FALSE}
-#Rearrange for grid plotting
 p2 <- lapply(p, function(x){
     x + guides(color = FALSE, fill = FALSE) + 
     theme_ArchR(baseSize = 6.5) +
