@@ -33,7 +33,7 @@ If any of these steps fails, you should identify the offending package and troub
 It is also highly recommended that you [install MACS2](https://github.com/taoliu/MACS/blob/master/INSTALL.md), which requires python, and have the `macs2` executable in your `PATH` variable. This will allow ArchR to call peaks using MACS2.
 
 ### Known trouble spots for installation
-__If you are installing on macOS__, you will need a current version of GNU Fortran (gfortran). You can download and install the `.dmg` file from [the gfortran github page](https://github.com/fxcoudert/gfortran-for-macOS/releases).
+__If you are installing on macOS__, you will need a current version of GNU Fortran (gfortran) and XQuartz. For gfortran, you can download and install the `.dmg` file from [the gfortran github page](https://github.com/fxcoudert/gfortran-for-macOS/releases). For XQuartz, you can download and install the `.dmg` file from [the XQuartz project page](https://www.xquartz.org/).
 
 __If you have installed R through Conda__, we have had reports of compile errors when installing ArchR that can be fixed by running `Sys.setenv(CONDA_BUILD_SYSROOT="/")` prior to executing the `devtools::install_github()` command as outlined in [this post](https://stackoverflow.com/questions/53637414/conda-build-r-package-fails-at-c-compiler-issue-on-macos-mojave).
 
