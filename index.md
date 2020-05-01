@@ -14,20 +14,27 @@ __ArchR is designed to be run on Unix-based operating systems such as macOS and 
 
 ArchR installation currently requires `devtools` and `BiocManager` for installation of GitHub and Bioconductor packages. Run the following commands to install the various dependencies used by ArchR:
 
-```{r}
-#First, install devtools (for installing GitHub packages) if it isn't already installed:
+First, install devtools (for installing GitHub packages) if it isn't already installed:
+```
 if (!requireNamespace("devtools", quietly = TRUE)) install.packages("devtools")
+```
 
-#Then, install BiocManager (for installing bioconductor packages) if it isn't already installed:
+Then, install BiocManager (for installing bioconductor packages) if it isn't already installed:
+```
 if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+```
 
-#Then, install ArchR:
+Then, install ArchR:
+```
 devtools::install_github("GreenleafLab/ArchR", ref="master", repos = BiocManager::repositories())
+```
 
-#Lastly, install all of the ArchR dependencies that arent installed by default:
+Lastly, install all of the ArchR dependencies that arent installed by default:
+```
 library(ArchR)
 ArchR::installExtraPackages()
 ```
+
 If any of these steps fails, you should identify the offending package and troubleshoot that individual installation before proceeding. The one exception is `Cairo` (see below) which is installed by the `ArchR::installExtraPackages()` function. `Cairo` is not required but is highly recommended.
 
 It is also highly recommended that you [install MACS2](https://github.com/taoliu/MACS/blob/master/INSTALL.md), which requires python, and have the `macs2` executable in your `PATH` variable. This will allow ArchR to call peaks using MACS2.

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get the peak co-accessibility from an ArchRProject — getCoAccessibility • ArchR</title>
+<title>Create a gene annotation object for ArchR — createGeneAnnotation • ArchR</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -47,9 +47,9 @@
 
   <link href="../extra.css" rel="stylesheet">
   
-<meta property="og:title" content="Get the peak co-accessibility from an ArchRProject — getCoAccessibility" />
+<meta property="og:title" content="Create a gene annotation object for ArchR — createGeneAnnotation" />
 
-<meta property="og:description" content="This function obtains co-accessibility data from an ArchRProject." />
+<meta property="og:description" content="This function will create a gene annotation object that can be used for creating ArrowFiles or an ArchRProject, etc." />
 
 <meta property="og:image" content="https://greenleaflab.github.io/ArchR_Website/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -162,43 +162,55 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get the peak co-accessibility from an ArchRProject</h1>
+    <h1>Create a gene annotation object for ArchR</h1>
     
-    <div class="hidden name"><code>getCoAccessibility.Rd</code></div>
+    <div class="hidden name"><code>createGeneAnnotation.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>This function obtains co-accessibility data from an ArchRProject.</p>
+    <p>This function will create a gene annotation object that can be used for creating ArrowFiles or an ArchRProject, etc.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>getCoAccessibility</span>(
-  <span class='kw'>ArchRProj</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>corCutOff</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-  <span class='kw'>resolution</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>returnLoops</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+    <pre class="usage"><span class='fu'>createGeneAnnotation</span>(
+  <span class='kw'>genome</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>TxDb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>OrgDb</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>genes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>exons</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>TSS</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
 )</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>ArchRProj</th>
-      <td><p>An <code>ArchRProject</code> object.</p></td>
+      <th>genome</th>
+      <td><p>A string that specifies the genome (ie "hg38", "hg19", "mm10", "mm9"). If <code>genome</code> is not supplied,
+<code>TxDb</code> and <code>OrgDb</code> are required. If genome is supplied, <code>TxDb</code> and <code>OrgDb</code> will be ignored.</p></td>
     </tr>
     <tr>
-      <th>corCutOff</th>
-      <td><p>A numeric describing the minimum numeric peak-to-peak correlation to return.</p></td>
+      <th>TxDb</th>
+      <td><p>A <code>TxDb</code> object (transcript database) from Bioconductor which contains information for gene/transcript coordinates.
+For example, from <code>txdb &lt;- TxDb.Hsapiens.UCSC.hg38.knownGene</code>.</p></td>
     </tr>
     <tr>
-      <th>resolution</th>
-      <td><p>A numeric describing the bp resolution to return loops as. This helps with overplotting of correlated regions.</p></td>
+      <th>OrgDb</th>
+      <td><p>An <code>OrgDb</code> object (organism database) from Bioconductor which contains information for gene/transcript symbols from ids.
+For example, from <code>orgdb &lt;- org.Hs.eg.db</code>.</p></td>
     </tr>
     <tr>
-      <th>returnLoops</th>
-      <td><p>A boolean indicating to return the co-accessibility signal as a <code>GRanges</code> "loops" object designed for use with
-the <code><a href='ArchRBrowser.html'>ArchRBrowser()</a></code> or as an <code>ArchRBrowserTrack()</code>.</p></td>
+      <th>genes</th>
+      <td><p>A <code>GRanges</code> object containing gene coordinates (start to end). Must have a symbols column matching the symbols column of <code>exons</code>.</p></td>
+    </tr>
+    <tr>
+      <th>exons</th>
+      <td><p>A <code>GRanges</code> object containing gene exon coordinates. Must have a symbols column matching the symbols column of <code>genes</code>.</p></td>
+    </tr>
+    <tr>
+      <th>TSS</th>
+      <td><p>A <code>GRanges</code> object containing standed transcription start site coordinates for computing TSS enrichment scores downstream.</p></td>
     </tr>
     </table>
     

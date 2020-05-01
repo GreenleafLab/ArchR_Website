@@ -99,13 +99,13 @@ First, we load the ArchR library. If this fails, you have not properly installed
 ```{r eval=FALSE}
 library(ArchR)
 ```
-Next, we set the default number of threads for ArchR functions. We recommend setting `threads` to 1/2 to 3/4 of the total available cores. The memory usage in ArchR will often scale with the number of threads used so allowing ArchR to use more threads will also lead to higher memory usage.
+Next, we set the default number of threads for ArchR functions. This is something you will have to do during each new R session. We recommend setting `threads` to 1/2 to 3/4 of the total available cores. The memory usage in ArchR will often scale with the number of threads used so allowing ArchR to use more threads will also lead to higher memory usage.
 ```{r eval=FALSE}
 addArchRThreads(threads = 16) 
 ```
 > \## Setting default number of Parallel threads to 16.
 
-Then, we set the genome to be used for gene and genome annotations. Of course, this genome version must match the genome version that was used for alignment. For the data used in this tutorial, we will use the hg19 reference genome but ArchR natively supports additional genome annotations and custome genome annotations as outlined in the next section.
+Then, we set the genome to be used for gene and genome annotations. As above, this is something you will have to do during each new R session. Of course, this genome version must match the genome version that was used for alignment. For the data used in this tutorial, we will use the hg19 reference genome but ArchR natively supports additional genome annotations and custome genome annotations as outlined in the next section.
 ```{r eval=FALSE}
 addArchRGenome("hg19")
 ```
@@ -220,7 +220,7 @@ library(org.Dm.eg.db)
 ```
 Then we create the gene annotation object.
 ```{r eval=FALSE}
-geneAnnotation <- createGeneAnnnotation(TxDb = TxDb.Dmelanogaster.UCSC.dm6.ensGene, OrgDb = org.Dm.eg.db)
+geneAnnotation <- createGeneAnnotation(TxDb = TxDb.Dmelanogaster.UCSC.dm6.ensGene, OrgDb = org.Dm.eg.db)
 ```
 > \## Getting Genes..  
 ## Determined Annotation Style = ENSEMBL  
@@ -245,12 +245,16 @@ Alternatively, if you dont have a `TxDb` and `OrgDb` object, you can create a `g
 ```
 
 ```{r eval=FALSE}
-geneAnnotation <- createGeneAnnnotation(
+geneAnnotation <- createGeneAnnotation(
   TSS = geneAnnotation$TSS, 
   exons = geneAnnotation$exons, 
   genes = geneAnnotation$genes
 )
 ```
+
+### Using Non-standard Genomes in ArchR
+
+ArchR implements some checks to prevent you from doing things that we consider "out of the norm". One of these checks forces the `seqnames` of your genome annotation to start with "chr". This is true in most applications but there are some genomes (for example Maize) which do not use "chr" as a prefix for the different chromosomes. To perform any ArchR analyses on such a genome, you have to tell ArchR to ignore the chromosome prefixes. To do this, you must run `addArchRChrPrefix(chrPrefix = FALSE)` prior to creating your Arrow files. This will turn off the requirement for "chr" prefixes on seqnames globally in the current R session. Please keep in mind ArchR converts chromosome/seqnames to character by default. Thus, if your `seqnames` are just integers, you will need to supply them as characters i.e. `useSeqnames = c("1", "2", "3")` instead of `useSeqnames = c(1, 2, 3)`. You can always check if chromosome prefixes are required in the current R session using `getArchRChrPrefix()`.
 
 ## Creating Arrow Files
 
