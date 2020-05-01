@@ -24,7 +24,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-04-28" />
+<meta name="date" content="2020-05-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -287,6 +287,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## scATAC_PBMC_R1 (3 of 3) : UMAP Projection R^2 = 0.97507<br />
 ## ArchR logging successful to : ArchRLogs/ArchR-addDoubletScores-e60f2395c3f7-Date-2020-04-15_Time-09-28-44.log</p>
 </blockquote>
+<p>In the above output, ArchR reports the R<sup>2</sup> value for the UMAP projection for each Arrow file. If these R<sup>2</sup> values are much lower (i.e. less than 0.9), this often indicates that the cells within the Arrow file have very little heterogeneity. This makes the accuracy of doublet calling worse because the majority of doublets would be “homotypic” - or a single droplet with two very similar cells. In these cases, we recommend skipping doublet prediction. Alternatively, you can try setting <code>knnMethod = "LSI"</code> and <code>force = TRUE</code> to perform projection in the LSI subspace; however, you should manually assess the results and make sure this is performing as you would expect.</p>
 <p>Adding doublet scores will create plots in the “QualityControl” directory. There are 3 plots associated with each of your samples in this folder:</p>
 <ol style="list-style-type: decimal">
 <li><strong>Doublet Enrichments</strong> - These represent the enrichment of simulated doublets nearby each single cell compared to the expected if we assume a uniform distribution.</li>

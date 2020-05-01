@@ -60,7 +60,7 @@ Effectively, for each cell in the scATAC-seq data, this integration process find
 
 In order to integrate our tutorial scATAC-seq data with matched scRNA-seq data, we will use scRNA-seq data derived from the same hematopoietic cell types from Granja* et al (2019).
 
-We have stored this scRNA-seq data as a 111 MB `RangedSummarizedExperiment` object. Downloading and examining this object, we see that it has a gene expression counts matrix and associated metadata.
+We have stored this scRNA-seq data as a 111 MB `RangedSummarizedExperiment` object. However, ArchR also accepts unmodified `Seurat` objects as input to the integration workflow. Downloading and examining this object, we see that it has a gene expression counts matrix and associated metadata.
 ```{r eval=FALSE}
 if(!file.exists("scRNA-Hematopoiesis-Granja-2019.rds")){
     download.file(
@@ -114,7 +114,7 @@ There are two types of integration approaches that we can perform. __Unconstrain
 
 ### Unconstrained Integration
 
-To integrate scATAC-seq with scRNA-seq, we use the `addGeneIntegrationMatrix()` function. The first round of integration we perform will be a preliminary __unconstrained__ integration and we will not store this in the Arrow files (`addToArrow = FALSE`). We provide a name for the integration matrix that will be stored in the `ArchRProject` via the `matrixName` parameter. The other key parameters for this function provide column names in `cellColData` where certain information will be stored: `nameCell` will store the cell ID from the matched scRNA-seq cell, `nameGroup` will store the group ID from the scRNA-seq cell, and `nameScore` will store the cross-platform integration score.
+To integrate scATAC-seq with scRNA-seq, we use the `addGeneIntegrationMatrix()` function. As mentioned above, this function accepts either a `Seurat` object or a `RangedSummarizedExperiment` object via the `seRNA` parameter. The first round of integration we perform will be a preliminary __unconstrained__ integration and we will not store this in the Arrow files (`addToArrow = FALSE`). We provide a name for the integration matrix that will be stored in the `ArchRProject` via the `matrixName` parameter. The other key parameters for this function provide column names in `cellColData` where certain information will be stored: `nameCell` will store the cell ID from the matched scRNA-seq cell, `nameGroup` will store the group ID from the scRNA-seq cell, and `nameScore` will store the cross-platform integration score.
 
 ```{r eval=FALSE}
 projHeme2 <- addGeneIntegrationMatrix(

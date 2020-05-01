@@ -4,7 +4,7 @@
 
 ArchR is a full-featured R package for processing and analyzing single-cell ATAC-seq data. ArchR provides the most extensive suite of scATAC-seq analysis tools of any software available. Additionally, ArchR excels in both speed and resource usage, making it possible to analyze 1 million cells in 8 hours on a MacBook Pro laptop.
 
-To get started, we recommend running through [the brief ArchR tutorial](articles/Articles/tutorial.html). For a detailed description of all of the features of ArchR applied to a test dataset of hematopoietic cells, please see the searchable [full manual](bookdown/index.html). If you havent already done so, we also recommend reading [the publication]() to get a better idea of what ArchR can do.
+To get started, we recommend running through [the brief ArchR tutorial](articles/Articles/tutorial.html). For a detailed description of all of the features of ArchR applied to a test dataset of hematopoietic cells, please see the searchable [full manual](bookdown/index.html). If you havent already done so, we also recommend reading [the publication](https://www.biorxiv.org/content/10.1101/2020.04.28.066498v1) to get a better idea of what ArchR can do.
 
 <hr>
 
@@ -28,12 +28,24 @@ devtools::install_github("GreenleafLab/ArchR", ref="master", repos = BiocManager
 library(ArchR)
 ArchR::installExtraPackages()
 ```
-If any of these steps fails, you should identify the offending package and troubleshoot that individual installation before proceeding. Additionally, check below for some common trouble spots.
+If any of these steps fails, you should identify the offending package and troubleshoot that individual installation before proceeding. The one exception is `Cairo` (see below) which is installed by the `ArchR::installExtraPackages()` function. `Cairo` is not required but is highly recommended.
 
 It is also highly recommended that you [install MACS2](https://github.com/taoliu/MACS/blob/master/INSTALL.md), which requires python, and have the `macs2` executable in your `PATH` variable. This will allow ArchR to call peaks using MACS2.
 
+__If you are installing on macOS__
+<br>
+1. You will need a current version of GNU Fortran (gfortran). You can download and install the `.dmg` file from [the gfortran github page](https://github.com/fxcoudert/gfortran-for-macOS/releases).
+2. You will need a current version of XQuartz. You can download and install the `.dmg` file from [the XQuartz project page](https://www.xquartz.org/).
+
+
 ### Known trouble spots for installation
-__If you are installing on macOS__, you will need a current version of GNU Fortran (gfortran) and XQuartz. For gfortran, you can download and install the `.dmg` file from [the gfortran github page](https://github.com/fxcoudert/gfortran-for-macOS/releases). For XQuartz, you can download and install the `.dmg` file from [the XQuartz project page](https://www.xquartz.org/).
+__Cairo graphics library__
+<br>
+ArchR uses `Cairo` to [rasterize](https://en.wikipedia.org/wiki/Rasterisation) plots. `Cairo` can be tricky to install depending on your system and we have had multiple reports of installation issues related to `Cairo`. We have removed the dependency on `Cairo` and ArchR will run fine without it but output plots will be vectorized and difficult to edit due to the presence of thousands of individual dots for the cells.
+
+__General problems encountered__
+<br>
+1. Some of the dependencies in ArchR require the [GNU Scientific Library (GSL)](https://www.gnu.org/software/gsl/), for example the `DirichletMultinomial` package. Instructions for installing GSL are shown [in this issue](https://github.com/GreenleafLab/ArchR/issues/86). 
 
 __If you have installed R through Conda__, we have had reports of compile errors when installing ArchR that can be fixed by running `Sys.setenv(CONDA_BUILD_SYSROOT="/")` prior to executing the `devtools::install_github()` command as outlined in [this post](https://stackoverflow.com/questions/53637414/conda-build-r-package-fails-at-c-compiler-issue-on-macos-mojave).
 
@@ -48,7 +60,7 @@ __If you have installed R through Conda__, we have had reports of compile errors
 # How to cite ArchR?
 
 Granja JM et al., An integrative and scalable software package for single-cell chromatin accessibility analysis. bioRxiv (2020)
-[Download an RIS-format citation file here]().
+[Download an RIS-format citation file here](extras/ArchR_Citation.ris).
 
 Looking for scripts related to the publication? Check out the [GitHub page for the publication](https://github.com/GreenleafLab/ArchR_2020).
 
@@ -58,8 +70,8 @@ ArchR is currently in __beta__. We expect there to be bumps in the road. If you 
 ```{r}
 devtools::install_github("GreenleafLab/ArchR", ref="master", repos = BiocManager::repositories())
 ```
-If this does not fix your problem, please report it as an issue on [Github](https://github.com/GreenleafLab/ArchR/issues).
+If this does not fix your problem, please [report an issue on Github](https://github.com/GreenleafLab/ArchR/issues) with the __Bug Report__ form.
 
-If you think the documentation on this website or in the function annotations is unclear, please submit this as an issue on [Github](https://github.com/GreenleafLab/ArchR/issues) with the __documentation__ tag. If you have questions about ArchR usage, please refer to the [the searchable full user's manual](bookdown/index.html), [the FAQ section](articles/faq.html), and the [publication](https://greenleaf.stanford.edu/assets/pdf/). If none of these options help, [send us an email](mailto:archr.devs@gmail.com). We will do our best to respond to questions that are not otherwise answered in the documentation.
+If you have questions about ArchR usage, please refer to the [the searchable full user's manual](bookdown/index.html), [the FAQ section](articles/faq.html), and the [publication](https://greenleaf.stanford.edu/assets/pdf/). If you think the documentation on this website or in the function annotations is unclear, please [submit an issue on Github](https://github.com/GreenleafLab/ArchR/issues) with the __Documentation Request__ form. If there is a feature that you think is missing from ArchR _and you have already searched the user's manual_, [submit an issue on Github](https://github.com/GreenleafLab/ArchR/issues) with the __Feature Request__ form. If none of these options help, [send us an email](mailto:archr.devs@gmail.com). We will do our best to respond to questions that are not otherwise answered in the documentation.
 
 
