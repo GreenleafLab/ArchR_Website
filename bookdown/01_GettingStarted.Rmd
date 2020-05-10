@@ -91,6 +91,19 @@ Certain actions can be taken directly on Arrow files while other actions are tak
 
 ArchR can utilize multiple input formats of scATAC-seq data which is most frequently in the format of fragment files and BAM files. Fragment files are tabix-sorted text files containing each scATAC-seq fragment and the corresponding cell ID, one fragment per line. BAM files are binarized tabix-sorted files that contain each scATAC-seq fragment, raw sequence, cellular barcode id and other information. The input format used will depend on the pre-processing pipeline used. For example, the 10x Genomics Cell Ranger software returns fragment files while sci-ATAC-seq applications would use BAM files. ArchR uses “scanTabix” to read fragment files and “scanBam” to read BAM files. During this input process, inputs are chunked and each input chunk is converted into a compressed table-based representation of fragments containing each fragment chromosome, offset-adjusted chromosome start position, offset-adjusted chromosome end position, and cellular barcode ID. These chunk-wise fragments are then stored in a temporary HDF5-formatted file to preserve memory usage while maintaining rapid access to each chunk. Finally, all chunks associated with each chromosome are read, organized, and re-written to an Arrow file within a single HDF5 group called “fragments”. This pre-chunking procedure enables ArchR to process extremely large input files efficiently and with low memory usage, enabling full utilization of parallel processing.
 
+## Debugging in ArchR
+
+__ArchR is in active development__. We expect there to be issues along the way and we will do our best to address them in a timely fashion. To help us out, please follow these steps to debug your problem prior to submitting an issue report on GitHub:
+
+1. _Reinstall the latest version of ArchR_. You may be running an out-of-date version of ArchR and we may already have addressed your issue in a previous release. Please reinstall ArchR using `devtools::install_github("GreenleafLab/ArchR", ref="master", repos = BiocManager::repositories())` and see if this fixes your problem.
+2. _Disable parallelization_. ArchR uses parallelized operations to decrease run times. However, parallelization can cause some platform-specific issues. Disable parallelization via `addArchRThreads(threads = 1)` and see if this fixes your problem.
+3. _Run the offending command via terminal rather than RStudio_. We have noticed many issues related to RStudio. Try launching R from the terminal rather than using RStudio and see if this fixes your problem.
+4. _Search previous issue reports_. Many times, you aren't encountering a bug, you are just doing something unexpected or out of order. Identify the error you are running into and [search previous GitHub issue reports](https://github.com/GreenleafLab/ArchR/issues) for key words to see if someone else has encountered the same error.
+5. _Search the user manual_. Make sure you are providing the correct input and using the function correctly. Use the magnifying glass in the navbar at the top of this page to open the search box in the upper left.
+
+If all of this fails, [submit an issue report](https://github.com/GreenleafLab/ArchR/issues). Please use the template that shows up when you initiate your issue report. This ensures that you provide us with the information that we need to help you. 
+
+
 ## Getting Set Up
 
 The first thing we do is change to our desired our working directory, set the number of threads we would like to use, and load our gene and genome annotations. Depending on the configuration of your local environment, you may need to modify the number of `threads` used below in `addArchRThreads()`. By default ArchR uses half of the total number of `threads` available but you can adjust this manually as you see fit. If you are using Windows, the usable `threads` will automatically be set to 1 because the parallel processing in ArchR is built for Unix-based operating systems.
@@ -254,17 +267,43 @@ geneAnnotation <- createGeneAnnotation(
 
 ### Using Non-standard Genomes in ArchR
 
-ArchR implements some checks to prevent you from doing things that we consider "out of the norm". One of these checks forces the `seqnames` of your genome annotation to start with "chr". This is true in most applications but there are some genomes (for example Maize) which do not use "chr" as a prefix for the different chromosomes. To perform any ArchR analyses on such a genome, you have to tell ArchR to ignore the chromosome prefixes. To do this, you must run `addArchRChrPrefix(chrPrefix = FALSE)` prior to creating your Arrow files. This will turn off the requirement for "chr" prefixes on seqnames globally in the current R session. Please keep in mind ArchR converts chromosome/seqnames to character by default. Thus, if your `seqnames` are just integers, you will need to supply them as characters i.e. `useSeqnames = c("1", "2", "3")` instead of `useSeqnames = c(1, 2, 3)`. You can always check if chromosome prefixes are required in the current R session using `getArchRChrPrefix()`.
+ArchR implements some checks to prevent you from doing things that we consider "out of the norm". One of these checks forces the `seqnames` of your genome annotation to start with "chr". This is true in most applications but there are some genomes (for example Maize) which do not use "chr" as a prefix for the different chromosomes. To perform any ArchR analyses on such a genome, you have to tell ArchR to ignore the chromosome prefixes. To do this, you must run `addArchRChrPrefix(chrPrefix = FALSE)` prior to creating your Arrow files. This will turn off the requirement for "chr" prefixes on seqnames globally in the current R session and will need to be re-run in each new R session. __This is not meant to be used for analysis of human or mouse fragment files that were aligned to a reference genome lacking "chr" prefixes__. See the "Creating Arrow Files" section for more information on that.
+
+Please keep in mind ArchR converts chromosome/seqnames to character by default. Thus, if your `seqnames` are just integers, you will need to supply them as characters i.e. `useSeqnames = c("1", "2", "3")` instead of `useSeqnames = c(1, 2, 3)`. We have not tested non-standard genomes and do not plan to so you may run into unforseen issues. You can always check if chromosome prefixes are required in the current R session using `getArchRChrPrefix()`.
 
 ## Creating Arrow Files
 
+### Input file types for ArchR
+
+The preferred input format for ArchR are fragment files, which contain the start and end genomic coordinates of all aligned sequenced fragments, the unique cellular barcode, and the number of PCR duplicate read pairs corresponding to the given fragment. Fragment files are one of the base output file types of the 10x Genomics CellRanger analytical platform (and other platforms). See the [10x Genomics website](https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/output/fragments) for information on making your own fragment files for input to ArchR.
+
+ArchR also accepts BAM files as the input file type.
+
+__Very important__ - ArchR expects the chromosome names in your fragment files (or BAM files) to have a "chr" prefix if you are using a standard genome such as human or mouse (i.e "chr1", "chr2" rather than "1","2"). This is because the standard `BSgenome` objects mentioned in the previous section have "chr" prefixes. Some users align their scATAC-seq data to a reference genome that does not have "chr" prefixes. Fragment files derived from such an alignment will therefore not have "chr" prefixes and will look like this:
+
+>1 10073 10558 CCCACATAGCAACGGT-1 1
+1 10079 10322 TCAAGGTGTCTCTGGG-1 1
+1 10079 10487 GCGAGAAGTGAATCGG-1 1
+
+We do not have any intention of supporting this use case. In the absence of "chr" prefixes, chromosome names can be interpreted as integers and we do not think that any benefits derived from supporting this outweigh the potential headaches. When ArchR tries to read fragment files without "chr" prefixes, it will use the chromosome names from the `BSgenome` object (with "chr" prefixes) and determine that your fragment files have no valid fragments because the chromsome names do not match ("1" != "chr1"). To fix this problem and enable Arrow file creation, you will need to prepend "chr" to all of the chromosome entries in your fragment file. This can be done using the `reformatFragmentFiles()` function:
+
+QQQ JJJ RRR example of reformating frag files
+
+This will result in a properly formatted fragment file with "chr" prefixes:
+
+>chr1 10073 10558 CCCACATAGCAACGGT-1 1
+chr1 10079 10322 TCAAGGTGTCTCTGGG-1 1
+chr1 10079 10487 GCGAGAAGTGAATCGG-1 1
+
+As mentioned above, even if you are using BAM files as input to ArchR, the same "chr" prefix standards will apply.
+
+### Arrow file creation from fragment files
+
 For the remainder of this tutorial, we will use data from a downsampled dataset of hematopoietic cells from [Granja* et al. Nature Biotechnology 2019](https://www.ncbi.nlm.nih.gov/pubmed/31792411). This includes data from bone marrow mononuclear cells (BMMC), peripheral blood mononuclear cells (PBMC), and CD34+ hematopoietic stem and progenitor cells from bone marrow (CD34 BMMC).
 
-This data is downloaded as fragment files which contain the start and end genomic coordinates of all aligned sequenced fragments. Fragment files are one of the base file types of the 10x Genomics analytical platform (and other platforms) and can be easily created from any BAM file. See the [10x Genomics website](https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/output/fragments) for information on making your own fragment files for input to ArchR.
+Once we have our input files (fragments or BAMs), we provide their paths as a character vector to `createArrowFiles()`. During creation, some basic metadata and matrices are added to each Arrow file including a "TileMatrix" containing insertion counts across genome-wide 500-bp bins (see `addTileMatrix()`) and a "GeneScoreMatrix" that stores predicted gene expression based on weighting insertion counts in tiles nearby a gene promoter (see `addGeneScoreMatrix()`).
 
-Once we have our fragment files, we provide their paths as a character vector to `createArrowFiles()`. During creation, some basic metadata and matrices are added to each Arrow file including a "TileMatrix" containing insertion counts across genome-wide 500-bp bins (see `addTileMatrix()`) and a "GeneScoreMatrix" that stores predicted gene expression based on weighting insertion counts in tiles nearby a gene promoter (see `addGeneScoreMatrix()`).
-
-The tutorial data can be downloaded using the `getTutorialData()` function. The tutorial data is approximately 0.5 GB in size. If you have already downloaded the tutorial in the current working directory, ArchR will bypass downloading.
+The tutorial data can be downloaded as fragment files using the `getTutorialData()` function. The tutorial data is approximately 0.5 GB in size. If you have already downloaded the tutorial in the current working directory, ArchR will bypass downloading.
 ```{r eval=FALSE}
 library(ArchR)
 
