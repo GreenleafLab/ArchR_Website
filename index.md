@@ -10,7 +10,7 @@ To get started, we recommend running through [the brief ArchR tutorial](articles
 
 # Installation of ArchR
 
-__ArchR is designed to be run on Unix-based operating systems such as macOS and linux. If you are running Windows, the same installation instructions apply but you may run into unexpected issues.__
+__ArchR is designed to be run on Unix-based operating systems such as macOS and linux. ArchR is NOT supported on Windows or other operating systems.__
 
 ArchR installation currently requires `devtools` and `BiocManager` for installation of GitHub and Bioconductor packages. Run the following commands to install the various dependencies used by ArchR:
 
