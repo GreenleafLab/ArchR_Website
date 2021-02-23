@@ -17,11 +17,18 @@ addGeneIntegrationMatrix(
   sampleCellsRNA = 10000,
   embeddingATAC = NULL,
   embeddingRNA = NULL,
+  dimsToUse = 1:30,
+  scaleDims = NULL,
+  corCutOff = 0.75,
+  plotUMAP = TRUE,
+  UMAPParams = list(n_neighbors = 40, min_dist = 0.4, metric = "cosine", verbose =
+    FALSE),
   nGenes = 2000,
   useImputation = TRUE,
   reduction = "cca",
   addToArrow = TRUE,
   scaleTo = 10000,
+  genesUse = NULL,
   nameCell = "predictedCell",
   nameGroup = "predictedGroup",
   nameScore = "predictedScore",
@@ -68,6 +75,20 @@ should have a row for each single cell described in \code{row.names} and 2 colum
 \item{embeddingRNA}{A \code{data.frame} of cell embeddings such as a UMAP for scRNA-seq cells to be used for density sampling. The \code{data.frame} object
 should have a row for each single cell described in \code{row.names} and 2 columns, one for each dimension of the embedding.}
 
+\item{dimsToUse}{A vector containing the dimensions from the \code{reducedDims} object to use in clustering.}
+
+\item{scaleDims}{A boolean value that indicates whether to z-score the reduced dimensions for each cell. This is useful for minimizing
+the contribution of strong biases (dominating early PCs) and lowly abundant populations. However, this may lead to stronger sample-specific
+biases since it is over-weighting latent PCs. If set to \code{NULL} this will scale the dimensions based on the value of \code{scaleDims} when the
+\code{reducedDims} were originally created during dimensionality reduction. This idea was introduced by Timothy Stuart.}
+
+\item{corCutOff}{A numeric cutoff for the correlation of each dimension to the sequencing depth. If the dimension has a
+correlation to sequencing depth that is greater than the \code{corCutOff}, it will be excluded from analysis.}
+
+\item{plotUMAP}{A boolean determining whether to plot a UMAP for each integration block.}
+
+\item{UMAPParams}{The list of parameters to pass to the UMAP function if "plotUMAP = TRUE". See the function \code{umap} in the uwot package.}
+
 \item{nGenes}{The number of variable genes determined by \code{Seurat::FindVariableGenes()} to use for integration.}
 
 \item{useImputation}{A boolean value indicating whether to use imputation for creating the Gene Score Matrix prior to integration.}
@@ -77,6 +98,8 @@ should have a row for each single cell described in \code{row.names} and 2 colum
 \item{addToArrow}{A boolean value indicating whether to add the log2-normalized transcript counts from the integrated matched RNA to the Arrow files.}
 
 \item{scaleTo}{Each column in the integrated RNA matrix will be normalized to a column sum designated by \code{scaleTo} prior to adding to Arrow files.}
+
+\item{genesUse}{If desired a character vector of gene names to use for integration instead of determined ones from Seurat::variableGenes.}
 
 \item{nameCell}{A column name to add to \code{cellColData} for the predicted scRNA-seq cell in the specified \code{ArchRProject}. This is useful for identifying which cell was closest to the scATAC-seq cell.}
 
