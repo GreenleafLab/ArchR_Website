@@ -127,7 +127,7 @@
 <div id="installation-of-archr" class="section level1">
 <h1 class="hasAnchor">
 <a href="#installation-of-archr" class="anchor"></a>Installation of ArchR</h1>
-<p><strong>ArchR is designed to be run on Unix-based operating systems such as macOS and linux. If you are running Windows, the same installation instructions apply but you may run into unexpected issues.</strong></p>
+<p><strong>ArchR is designed to be run on Unix-based operating systems such as macOS and linux. ArchR is NOT supported on Windows or other operating systems.</strong></p>
 <p>ArchR installation currently requires <code>devtools</code> and <code>BiocManager</code> for installation of GitHub and Bioconductor packages. Run the following commands to install the various dependencies used by ArchR:</p>
 <p>First, install devtools (for installing GitHub packages) if it isn’t already installed:</p>
 <pre><code>if (!requireNamespace("devtools", quietly = TRUE)) install.packages("devtools")</code></pre>
@@ -136,8 +136,8 @@
 <p>Then, install ArchR:</p>
 <pre><code><a href="https://devtools.r-lib.org//reference/remote-reexports.html">devtools::install_github("GreenleafLab/ArchR", ref="master", repos = BiocManager::repositories())</a></code></pre>
 <p>Lastly, install all of the ArchR dependencies that arent installed by default:</p>
-<pre><code>library(ArchR)
-ArchR::installExtraPackages()</code></pre>
+<pre><code><a href="https://www.ArchRProject.com">library(ArchR)
+ArchR::installExtraPackages()</a></code></pre>
 <p>If any of these steps fails, you should identify the offending package and troubleshoot that individual installation before proceeding. The one exception is <code>Cairo</code> (see below) which is installed by the <code><a href="reference/installExtraPackages.html">ArchR::installExtraPackages()</a></code> function. <code>Cairo</code> is not required but is highly recommended.</p>
 <p>It is also highly recommended that you <a href="https://github.com/taoliu/MACS/blob/master/INSTALL.md">install MACS2</a>, which requires python, and have the <code>macs2</code> executable in your <code>PATH</code> variable. This will allow ArchR to call peaks using MACS2.</p>
 <p><strong>If you are installing on macOS</strong> <br></p>
