@@ -353,7 +353,7 @@ plotPDF(p, name = "Plot-Tracks-With-Features", width = 5, height = 5, ArchRProj 
 
 ## Pairwise Testing Between Groups
 
-Marker feature identification is a very specific type of differential test. However, ArchR also enables standard differential testing using the same `getMarkerFeatures()` function. The trick is to set `useGroups` to one of the two cell groups and `bgdGroups` to the other cell group. This performs a differential test between the two provided groups. In all of these differential tests, the peaks that are higher in the group passed to `useGroups` will have positive fold change values while the peaks that are higher in the group passed to `bgdGroups` will have negative fold change values.
+Marker feature identification is a very specific type of differential test. However, ArchR also enables standard differential testing using the same `getMarkerFeatures()` function. The trick is to set `useGroups` to one of the two cell groups and `bgdGroups` to the other cell group. This performs a differential test between the two provided groups. To be explicitly clear, the cell groups here are user-defined. They can be anything that fits your application. All you need to do is add a new column to `cellColData` that defines the groups that you would like to compare. In all differential tests, the peaks that are higher in the group passed to `useGroups` will have positive fold change values while the peaks that are higher in the group passed to `bgdGroups` will have negative fold change values. 
 
 Here we perform a pairwise test between the "Erythroid" cell group and the "Progenitor" cell group.
 
