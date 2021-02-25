@@ -67,7 +67,8 @@ __If you have installed R through Conda__, we have had reports of compile errors
 # How to cite ArchR?
 
 ArchR is published in Nature Genetics! You can find the publication [here](https://www.nature.com/articles/s41588-021-00790-6).
-Granja JM et al., ArchR is a scalable software package for integrative single-cell chromatin accessibility analysis. Nature Genetics (2021)
+
+Granja JM*, Corces MR* et al., ArchR is a scalable software package for integrative single-cell chromatin accessibility analysis. Nature Genetics (2021)
 
 [Download an RIS-format citation file here](extras/ArchR_Citation.ris).
 
