@@ -4,7 +4,7 @@
 
 ArchR is a full-featured R package for processing and analyzing single-cell ATAC-seq data. ArchR provides the most extensive suite of scATAC-seq analysis tools of any software available. Additionally, ArchR excels in both speed and resource usage, making it possible to analyze 1 million cells in 8 hours on a MacBook Pro laptop.
 
-To get started, we recommend running through [the brief ArchR tutorial](articles/Articles/tutorial.html). For a detailed description of all of the features of ArchR applied to a test dataset of hematopoietic cells, please see the searchable [full manual](bookdown/index.html). If you havent already done so, we also recommend reading [the publication](https://www.biorxiv.org/content/10.1101/2020.04.28.066498v1) to get a better idea of what ArchR can do.
+To get started, we recommend running through [the brief ArchR tutorial](articles/Articles/tutorial.html). For a detailed description of all of the features of ArchR applied to a test dataset of hematopoietic cells, please see the searchable [full manual](bookdown/index.html). If you havent already done so, we also recommend reading [the publication](https://www.nature.com/articles/s41588-021-00790-6) to get a better idea of what ArchR can do.
 
 <hr>
 
@@ -66,14 +66,15 @@ __If you have installed R through Conda__, we have had reports of compile errors
 
 # How to cite ArchR?
 
-Granja JM et al., An integrative and scalable software package for single-cell chromatin accessibility analysis. bioRxiv (2020)
+ArchR is published in Nature Genetics! You can find the publication [here](https://www.nature.com/articles/s41588-021-00790-6).
+Granja JM et al., ArchR is a scalable software package for integrative single-cell chromatin accessibility analysis. Nature Genetics (2021)
 [Download an RIS-format citation file here](extras/ArchR_Citation.ris).
 
 Looking for scripts related to the publication? Check out the [GitHub page for the publication](https://github.com/GreenleafLab/ArchR_2020).
 
 # Issues using ArchR?
 
-ArchR is currently in __beta__. We expect there to be bumps in the road. If you think you have found a bug, please first install the latest version of ArchR via
+ArchR is still in active development. We expect there to be bumps in the road. If you think you have found a bug, please first install the latest version of ArchR via
 ```{r}
 devtools::install_github("GreenleafLab/ArchR", ref="master", repos = BiocManager::repositories())
 ```
