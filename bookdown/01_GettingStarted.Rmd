@@ -142,7 +142,7 @@ library(BSgenome.Dmelanogaster.UCSC.dm6)
 
 Then we create a genome annotation from this `BSgenome` object.
 
-```{r}
+```{r, collapse=TRUE}
 genomeAnnotation <- createGenomeAnnotation(genome = BSgenome.Dmelanogaster.UCSC.dm6)
 ```
 
@@ -159,7 +159,7 @@ To create a __custom gene annotation__, we use `createGeneAnnotation()`. To do t
 2. An `OrgDb` object (organism database) from Bioconductor which provides a unified framework to map between gene names and various gene identifiers.
 
 Continuing with out example from Drosophila melanogaster, we first install and load the relevant `TxDb` and `OrgDb` objects.
-```{r}
+```{r downloadDrosophilaPackages}
 if (!requireNamespace("TxDb.Dmelanogaster.UCSC.dm6.ensGene", quietly = TRUE)){
   BiocManager::install("TxDb.Dmelanogaster.UCSC.dm6.ensGene")
 }
@@ -172,7 +172,7 @@ library(org.Dm.eg.db)
 
 Then we create the gene annotation object.
 
-```{r}
+```{r, collapse=TRUE}
 geneAnnotation <- createGeneAnnotation(TxDb = TxDb.Dmelanogaster.UCSC.dm6.ensGene, OrgDb = org.Dm.eg.db)
 ```
 
@@ -192,7 +192,7 @@ Alternatively, if you dont have a `TxDb` and `OrgDb` object, you can create a `g
 #JJJ Is the TSS object used for anything other than TSS scores? If so, shouldnt it have a symbols column as well? Either way, we should add that info to point #3
 ```
 
-```{r}
+```{r createDrosophilaGenome}
 geneAnnotation <- createGeneAnnotation(
   TSS = geneAnnotation$TSS, 
   exons = geneAnnotation$exons, 
@@ -214,7 +214,7 @@ Once we have our fragment files, we provide their paths as a character vector to
 
 The tutorial data can be downloaded using the `getTutorialData()` function. The tutorial data is approximately 0.5 GB in size. If you have already downloaded the tutorial in the current working directory, ArchR will bypass downloading.
 
-```{r GetTutorialData}
+```{r GetTutorialData, cache = TRUE}
 library(ArchR)
 
 inputFiles <- getTutorialData("Hematopoiesis")
@@ -224,7 +224,7 @@ inputFiles
 
 As always, before starting a project we must set the `ArchRGenome` and default `threads` for parallelization.
 
-```{r}
+```{r loadGenomeAndThreads}
 addArchRGenome("hg19")
 addArchRThreads(threads = 16) 
 ```
@@ -238,7 +238,7 @@ Now we will create our Arrow Files which will take 10-15 minutes. For each sampl
 4. Create a genome-wide TileMatrix using 500-bp bins.
 5. Create a GeneScoreMatrix using the custom `geneAnnotation` that was defined when we called `addArchRGenome()`.
 
-```{r ArrowFileCreation, cache = FALSE}
+```{r ArrowFileCreation, cache = TRUE, collapse=TRUE}
 
 ArrowFiles <- createArrowFiles(
   inputFiles = inputFiles,
@@ -279,7 +279,7 @@ By default in ArchR, pass-filter cells are identified as those cells having a TS
 
 Creation of Arrow files will create a folder in the current working directory called "QualityControl" which will contain 2 plots associated with each of your samples. The first plot shows the `log10(unique nuclear fragments)` vs TSS enrichment score and indicates the thresholds used with dotted lines. The second shows the fragment size distribution.
 
-```{r, include=FALSE}
+```{r copyFigures, include=FALSE}
 ArchR:::.convertToPNG(command = "cp")
 system("cp Figures/*.png images/HemeWalkthrough/PNG/")
 system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
