@@ -61,20 +61,20 @@ The first thing we do is change to our desired our working directory, set the nu
 
 First, we load the ArchR library. If this fails, you have not properly installed ArchR and should [revisit the installation instructions](https://www.archrproject.com/index.html). We will also set our seed for randomized opperations to 1 for consistency.
 
-```{r}
+```{r, collapse=TRUE}
 library(ArchR)
 set.seed(1)
 ```
 
 Next, we set the default number of threads for ArchR functions. This is something you will have to do during each new R session. We recommend setting `threads` to 1/2 to 3/4 of the total available cores. The memory usage in ArchR will often scale with the number of threads used so allowing ArchR to use more threads will also lead to higher memory usage.
 
-```{r}
+```{r, collapse=TRUE}
 addArchRThreads(threads = 16) 
 ```
 
 Then, we set the genome to be used for gene and genome annotations. As above, this is something you will have to do during each new R session. Of course, this genome version must match the genome version that was used for alignment. For the data used in this tutorial, we will use the hg19 reference genome but ArchR natively supports additional genome annotations and custome genome annotations as outlined in the next section.
 
-```{r}
+```{r, collapse=TRUE}
 addArchRGenome("hg19")
 ```
 
@@ -133,7 +133,7 @@ To create a __custom genome annotation__, we use `createGenomeAnnotation()`. To 
 
 For example, if we wanted to create a custom genome annotation from Drosophila melanogaster, we would first identify and install and load the relevant `BSgenome` object.
 
-```{r}
+```{r, collapse=TRUE}
 if (!requireNamespace("BSgenome.Dmelanogaster.UCSC.dm6", quietly = TRUE)){
   BiocManager::install("BSgenome.Dmelanogaster.UCSC.dm6")
 }
@@ -148,7 +148,7 @@ genomeAnnotation <- createGenomeAnnotation(genome = BSgenome.Dmelanogaster.UCSC.
 
 Examining this object shows the constituent parts of an ArchR genome annotation.
 
-```{r}
+```{r, collapse=TRUE}
 genomeAnnotation
 ```
 
@@ -159,7 +159,7 @@ To create a __custom gene annotation__, we use `createGeneAnnotation()`. To do t
 2. An `OrgDb` object (organism database) from Bioconductor which provides a unified framework to map between gene names and various gene identifiers.
 
 Continuing with out example from Drosophila melanogaster, we first install and load the relevant `TxDb` and `OrgDb` objects.
-```{r downloadDrosophilaPackages}
+```{r downloadDrosophilaPackages, collapse=TRUE}
 if (!requireNamespace("TxDb.Dmelanogaster.UCSC.dm6.ensGene", quietly = TRUE)){
   BiocManager::install("TxDb.Dmelanogaster.UCSC.dm6.ensGene")
 }
@@ -178,7 +178,7 @@ geneAnnotation <- createGeneAnnotation(TxDb = TxDb.Dmelanogaster.UCSC.dm6.ensGen
 
 
 Examining this object shows the constituent parts of an ArchR gene annotation.
-```{r}
+```{r, collapse=TRUE}
 geneAnnotation
 ```
 
@@ -192,7 +192,7 @@ Alternatively, if you dont have a `TxDb` and `OrgDb` object, you can create a `g
 #JJJ Is the TSS object used for anything other than TSS scores? If so, shouldnt it have a symbols column as well? Either way, we should add that info to point #3
 ```
 
-```{r createDrosophilaGenome}
+```{r createDrosophilaGenome, collapse=TRUE}
 geneAnnotation <- createGeneAnnotation(
   TSS = geneAnnotation$TSS, 
   exons = geneAnnotation$exons, 
@@ -214,7 +214,7 @@ Once we have our fragment files, we provide their paths as a character vector to
 
 The tutorial data can be downloaded using the `getTutorialData()` function. The tutorial data is approximately 0.5 GB in size. If you have already downloaded the tutorial in the current working directory, ArchR will bypass downloading.
 
-```{r GetTutorialData, cache = TRUE}
+```{r GetTutorialData, cache = TRUE, collapse=TRUE}
 library(ArchR)
 
 inputFiles <- getTutorialData("Hematopoiesis")
@@ -224,7 +224,7 @@ inputFiles
 
 As always, before starting a project we must set the `ArchRGenome` and default `threads` for parallelization.
 
-```{r loadGenomeAndThreads}
+```{r loadGenomeAndThreads, collapse=TRUE}
 addArchRGenome("hg19")
 addArchRThreads(threads = 16) 
 ```
@@ -252,7 +252,7 @@ ArrowFiles <- createArrowFiles(
 
 We can inspect the `ArrowFiles` object to see that it is actually just a character vector of Arrow file paths.
 
-```{r}
+```{r, collapse=TRUE}
 ArrowFiles
 ```
 
