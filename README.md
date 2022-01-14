@@ -25,7 +25,7 @@ pdftools
 	library(ArchR)
 	library(bookdown)
 	```
-5. Run `bookdown::render_book(input = "index.Rmd", output_dir = "../docs/bookdown")`
+5. Run `bookdown::render_book(input = "index.Rmd", output_dir = "../docs/bookdown")` from the `/bookdown/` directory where `index.Rmd` is located.
 
 Once you've built the book, copy all of the HTML files and required figures etc. into the `/docs/bookdown/` folder
 
@@ -41,3 +41,5 @@ devtools::install_version("tinytex", version = "0.35", repos = "http://cran.us.r
 3. I am having trouble with conflicts between the renv packages and my locally installed packages?
 
 4. library(parallel) causing problems in ArchR v1.0.1
+
+5. Had to install a few packages - svglite
