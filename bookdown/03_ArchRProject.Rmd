@@ -9,6 +9,9 @@ params:
   ref: ""
   out: ""
 ---
+```{r, include=FALSE}
+load("ch2.RData")
+```
 
 # Creating an ArchRProject
 
@@ -22,7 +25,7 @@ First, we must create our `ArchRProject` by providing a list of Arrow files and 
 projHeme1 <- ArchRProject(
   ArrowFiles = ArrowFiles, 
   outputDirectory = "HemeTutorial",
-  copyArrows = TRUE #This is recommened so that if you modify the Arrow files you have an original copy for later usage.
+  copyArrows = TRUE #This is recommended so that if you modify the Arrow files you have an original copy for later usage.
 )
 ```
 
@@ -328,7 +331,7 @@ Because of how the data is stored and accessed, ArchR can compute fragment size 
 
 To plot the fragment size distributions of all samples, we use the `plotFragmentSizes()` function. Fragment size distributions in ATAC-seq can be quite variable across samples, cell types, and batches. Slight differences like those shown below are common and do not necessarily correlate with differences in data quality.
 
-```{r, collapse=TRUE}
+```{r plotTSSEnrichment, collapse=TRUE, eval=FALSE}
 p1 <- plotFragmentSizes(ArchRProj = projHeme1)
 p1
 ```
@@ -345,7 +348,7 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 To plot TSS enrichment profiles, we use the `plotTSSEnrichment()` function. TSS enrichment profiles should show a clear peak in the center and a smaller shoulder peak right-of-center which is caused by the well-positioned +1 nucleosome.
 
-```{r, collapse=TRUE}
+```{r, eval=FALSE, collapse=TRUE}
 p2 <- plotTSSEnrichment(ArchRProj = projHeme1)
 p2
 ```
@@ -417,4 +420,8 @@ projHemeTmp <- filterDoublets(projHeme1, filterRatio = 1.5)
 Since `projHemeTmp` was only created for illustrative purposes, we remove it from our R session.
 ```{r, collapse=TRUE}
 rm(projHemeTmp)
+```
+
+```{r, include=FALSE}
+save.image("ch3.RData")
 ```

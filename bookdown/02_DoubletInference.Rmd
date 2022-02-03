@@ -9,7 +9,9 @@ params:
   ref: ""
   out: ""
 ---
-
+```{r, include=FALSE}
+load("ch1.RData")
+```
 # Doublet Inference with ArchR
 
 One major source of trouble in single-cell data is the contribution of "doublets" to the analysis. A doublet refers to a single droplet that received a single barcoded bead and more than one nucleus. This causes the reads from more than one cell to appear as a single cell that is effectively the average of the two cells. We remove these computationally and describe this doublet removal process in depth in this chapter.
@@ -97,3 +99,6 @@ For **PBMC** : </br>
 ![](images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Doublet-Summary_3.png){width=250 height=250}
 
 </br>
+```{r, include=FALSE}
+save.image(file = "ch2.RData")
+```

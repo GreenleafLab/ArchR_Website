@@ -1,0 +1,166 @@
+---
+output:
+  html_document:
+    theme: yeti  # many options for theme, this one is my favorite.
+params:
+  threads: 20
+  rdata: ""
+  token: ""
+  ref: ""
+  out: ""
+---
+```{r, include=FALSE}
+load("ch9.RData")
+library("parallel")
+library("ArchR")
+pathToMacs2 <- findMacs2()
+```
+
+# Calling Peaks with ArchR
+
+Calling peaks is one of the most fundamental processes in ATAC-seq data analysis. Because per-cell scATAC-seq data is essentially binary (accessible or not accessible), we cannot call peaks on an individual cell basis. For this reason, we defined groups of cells, typically clusters, in a previous chapter. Moreover, we created pseudo-bulk replicates to allow us to assess the reproducibility of our peak calls.
+
+## The Iterative Overlap Peak Merging Procedure
+
+We first introduced [a strategy for iterative overlap peak merging in 2018](https://science.sciencemag.org/content/362/6413/eaav1898). Other peak merging strategies suffer from a few key issues that we outline below.
+
+### Fixed-width vs Variable-width Peaks
+We use 501-bp fixed-width peaks because they make downstream computation easier as peak length does not need to be normalized. Moreover, the vast majority of peaks in ATAC-seq are less than 501-bp wide. Using variable-width peaks also makes it difficult to merge peak calls from multiple samples. In general, we do not feel that the potential benefit derived from using variable-width peaks outweighs the costs. More broadly, most analyses are stable with respect to the peak set or peak style used.
+
+Below, we use the same toy example of a few cell types with a few different peaks to illustrate the differences between these often used peak merging methods.
+
+### Raw Peak Overlap Using _bedtools merge_
+
+Raw peak overlap involves taking any peaks that overlap each other and merging these into a single larger peak. In this scheme, daisy-chaining becomes a large problem because peaks that dont directly overlap each other get included in the same larger peak because they are bridged by a shared internal peak. Another problem with this type of approach is that, if you want to keep track of peak summits, you are forced to either pick a single new summit for each new merged peak or keep track of all of the summits that apply to each new merged peak. Typically, this type of peak merging approach is implemented using the `bedtools merge` command.
+
+![](images/peakCalling_RawOverlap.png){width=350px}
+
+### Clustered Overlap Using _bedtools cluster_
+
+Clustered overlap takes peaks that cluster together and picks a single winner. This is often done by using the `bedtools cluster` command and then keeping the most significant peak in each cluster. In our experience, this ends up under-calling peaks and misses smaller peaks located nearby.
+
+![](images/peakCalling_ClusteredOverlap.png){width=350px}
+
+### Iterative Overlap In ArchR
+
+Iterative overlap removal avoids the issues mentioned above. Peaks are first ranked by their significance. The most significant peak is retained and any peak that directly overlaps with the most significant peak is removed from further analysis. Then, of the remaining peaks, this process is repeated until no more peaks exist. This avoids daisy-chaining and still allows for use of fixed-width peaks.
+
+![](images/peakCalling_IterativeOverlap.png){width=350px}
+
+### Comparison of Peak Calling Methods
+
+Comparing the peak calls resulting from all of these methods directly shows clear differences in the final peak sets. It is our opinion that the iterative overlap peak merging process yields the best peak set with the fewest caveats.
+
+![](images/peakCalling_Comparison.png){width=350px}
+
+### So how does this all work in ArchR?
+
+The iterative overlap peak merging procedure is performed in a tiered fashion to optimally preserve cell type-specific peaks.
+
+Imagine a situation where you had 3 cell types, A, B, and C, and each cell type had 3 pseudo-bulk replicates. ArchR uses a function called `addReproduciblePeakSet()` to perform this iterative overlap peak merging procedure. First, ArchR would call peaks for each pseudo-bulk replicate individually. Then, ArchR would analyze all of the pseudo-bulk replicates from a single cell type together, performing the first iteration of iterative overlap removal. It is important to note that ArchR uses a normalized metric of significance for peaks to compare the significance of peaks called across different samples. This is because the reported MACS2 significance is proportional to the sequencing depth so peak significance is not immediately comparable across samples. After the first iteration of iterative overlap removal, ArchR checks to see the reproducibility of each peak across pseudo-bulk replicates and only keeps peaks that pass a threshold indicated by the `reproducibility` parameter. At the end of this process, we would have a single merged peak set for each of the 3 cell types, A, B, and C. 
+
+Then, we would repeat this procedure to merge the A, B, and C peak sets. To do this, we re-normalize the peak significance across the different cell types, and perform the iterative overlap removal. The final result of this is a single merged peak set of fixed-width peaks.
+
+### What if I don't like this iterative overlap peak merging process?
+
+The iterative overlap peak merging process is implemented by ArchR via `addReproduciblePeakSet()` but you can always use your own peak set via `ArchRProj <- addPeakSet()`.
+
+
+## Calling Peaks w/ Macs2
+
+As mentioned above, we generate a reproducible peak set in ArchR using the `addReproduciblePeakSet()` function. By default ArchR attempts to call peaks using MACS2; however, ArchR also implements its own native peak caller which could be used when MACS2 cannot be installed (for example, we have not successfully installed MACS2 on Windows) - this alternative peak calling method is described in the next section.
+
+To call peaks using MACS2, ArchR must be able to find the MACS2 executable. First, ArchR looks in your `PATH` environment variable. If this is unsuccessful, ArchR attempts to determine if you have installed MACS2 with either `pip` or `pip3`. If neither of these is successful, ArchR gives up and provides an error message. If you have MACS2 installed and ArchR cannot find it, you should provide the path to the `addReproduciblePeakSet()` function via the `pathToMacs2` parameter.
+
+```{r, eval=FALSE}
+pathToMacs2 <- findMacs2()
+```
+
+With the path to MACS2 identified, we can then create a reproducible merged peak set w/ MACS2 (~5-10 minutes). To avoid bias from pseudo-bulk replicates that have very few cells, we can provide a cutoff for the upper limit of the number of peaks called per cell via the `peaksPerCell` parameter. This prevents clusters with very few cells from contributing lots of low quality peaks to the merged peak set. There are many other parameters that can be tweaked in `addReproduciblePeakSet()` - try `?addReproduciblePeakSet` for more information.
+
+Each `ArchRProject` object can only contain a single peak set. As such, we assign the output of `addReproduciblePeakSet()` to our desired `ArchRProject`. If you would like to experiment with different peak sets, you must save a copy of your `ArchRProject` and thus also copy the Arrow files. While this does use more on-disk storage space, this is unavoidable given the structure of Arrow files and the storage of peak matrix information in the Arrow files.
+```{r}
+projHeme4 <- addReproduciblePeakSet(
+	ArchRProj = projHeme4, 
+	groupBy = "Clusters2", 
+	pathToMacs2 = pathToMacs2
+)
+```
+
+To retrieve this peak set as a `GRanges` object, we use the `getPeakSet()` function. This peak set contains an annotation for the group from which each peak originated. However, these annotations do not inherently mean that the given peak was only called in that group, rather that the annotated group had the highest normalized significance for that peak call.
+```{r}
+getPeakSet(projHeme4)
+```
+
+## Calling Peaks w/ TileMatrix
+
+As mentioned previously, ArchR also implements its own native peak caller. While we have benchmarked this peak caller against MACS2 and note very similar performances, we do not recommend using this native peak caller unless absolutely necessary.
+
+The ArchR native peak caller calls peaks on the 500-bp `TileMatrix` and we indicate to `addReproduciblePeakSet()` that we want to use this peak caller via the `peakMethod` parameter. Note that we are not storing the output into the `projHeme4` object because we do not intend to keep this peak set and this analysis is only for illustrative purposes. Storage into the `ArchRProject` object would overwrite the previous reproducible peak set already stored in `projHeme4`.
+
+```{r}
+projHemeTmp <- addReproduciblePeakSet(
+	ArchRProj = projHeme4, 
+	groupBy = "Clusters2",
+	peakMethod = "Tiles",
+	method = "p"
+)
+```
+
+```{r include=FALSE, eval=FALSE,echo=FALSE}
+# JJJ the structure of the GRanges objects from the two peak calling methods is different. the TileMatrix GRange has something called "Group" whereas the MACS2 GRange does not.
+```
+
+We can similarly examine this merged peak set.
+```{r}
+getPeakSet(projHemeTmp)
+```
+
+### Comparing the two peak calling methods
+
+To compare the merged peak set generated using MACS2 vs the merged peak set generated using the ArchR native `TileMatrix` peak caller, we can check the perfecent of overlapping peaks etc.
+
+First, we check the percent of MACS2-called peaks that are overlapped by the `TileMatrix`-called peaks
+```{r}
+length(subsetByOverlaps(getPeakSet(projHeme4), getPeakSet(projHemeTmp))) / length(getPeakSet(projHeme4))
+```
+
+Then, we check the converse - the percent of `TileMatrix`-called peaks that are overlapped by MACS2-called peaks. You can see that this overlap is not as strong.
+```{r}
+length(subsetByOverlaps(getPeakSet(projHemeTmp), getPeakSet(projHeme4))) / length(getPeakSet(projHemeTmp))
+```
+
+If we increase the margins of the peaks to be wider (1000-bp peaks instead of 500-bp peaks), the percent of MACS2-called peaks that are overlapped does not change much.
+```{r}
+length(subsetByOverlaps(resize(getPeakSet(projHeme4), 1000, "center"), getPeakSet(projHemeTmp))) / length(getPeakSet(projHeme4))
+```
+
+But the percent of `TileMatrix`-called peaks overlapped by MACS2 does increase.
+```{r}
+length(subsetByOverlaps(getPeakSet(projHemeTmp), resize(getPeakSet(projHeme4), 1000, "center"))) / length(getPeakSet(projHemeTmp))
+```
+
+## Add Peak Matrix
+
+We can now save our original `projHeme4` using the `saveArchRProject()` function. This `ArchRProject` contains the MACS2-derived merged peak set.
+
+```{r}
+saveArchRProject(ArchRProj = projHeme4, outputDirectory = "Save-ProjHeme4", load = FALSE)
+```
+
+To prepare for downstream analyses, we can create a new `ArchRProject` called `projHeme5` and add a new matrix to it containing insertion counts within our new merged peak set. 
+```{r}
+projHeme5 <- addPeakMatrix(projHeme4)
+```
+
+We can now see that a new matrix has been added to `projHeme5` called "PeakMatrix". This is another reserved-name matrix similar to `GeneScoreMatrix` and `TileMatrix`. As mentioned previously, each `ArchRProject` object can only have one peak set and one `PeakMatrix`. You can, of course, create an unlimited number of custom feature matrices of different names but `PeakMatrix` is reserved for the matrix of insertion counts derived from the peak set stored in the `ArchRProject`.
+```{r}
+getAvailableMatrices(projHeme5)
+```
+
+```{r, include=FALSE, eval=FALSE}
+save.image(params$out, compress = FALSE)
+```
+```{r, include=FALSE}
+save.image("ch10.RData")
+```
