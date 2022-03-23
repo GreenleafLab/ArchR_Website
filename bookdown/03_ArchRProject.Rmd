@@ -19,7 +19,7 @@ An `ArchRProject` allows us to group multiple Arrow files together into a single
 
 ## Creating An ArchRProject
 
-First, we must create our `ArchRProject` by providing a list of Arrow files and a few other parameters. The `outputDirectory` here describes where all downstream analyses and plots will be saved. ArchR will automatically associate the previously provided `geneAnnotation` and `genomeAnnotation` with the new `ArchRProject`. These were stored when we ran `addArchRGenome("hg19")` in a previous chapter.
+First, we must create our `ArchRProject` by providing a list of Arrow files and a few other parameters. The `outputDirectory` here describes where all downstream analyses and plots will be saved. ArchR will automatically associate the previously provided `geneAnnotation` and `genomeAnnotation` with the new `ArchRProject`. These were stored when we ran `addArchRGenome("hg19")` in a previous chapter. Importantly, multiple `ArchRProject` objects **cannot** be combined later so any samples that you want to analyze must be included as Arrow files at this project creation step.
 
 ```{r createArchRProj, collapse=TRUE}
 projHeme1 <- ArchRProject(
@@ -58,6 +58,29 @@ We can also ask which data matrices are available within the `ArchRProject` whic
 getAvailableMatrices(projHeme1)
 ```
 
+Taking a closer look at `cellColData`, we can see all of the metadata that is stored here. As the name suggests, this is metadata that applies to each individual cell.
+
+```{r, collapse=TRUE}
+head(projHeme1@cellColData)
+```
+
+You'll notice that many of these columns correspond to per-cell quality control information that was calculated during Arrow file creation. These columns are:
+
+1. TSSEnrichment - the per-cell TSS enrichment score
+2. ReadsInTSS - the number of reads that fall within TSS regions (default is 100 bp around TSS)
+3. ReadsInPromoter - the number of reads that fall in promoter regions (default is -2000 to +100 from the TSS)
+4. PromoterRatio - the ratio of reads in promoters to reads outside of promoters
+5. ReadsInBlacklist - the number of reads that fall in blacklist regions
+6. BlacklistRatio - the ratio of reads in blacklist regions to reads outside of blacklist regions
+7. NucleosomeRatio - similar to above but for reads mapping to nucleosome-sized reads, defined as: `(nDiFrags + nMultiFrags) / nMonoFrags)`
+8. nFrags - the number of fragments recovered per cell
+9. nMonoFrags - the number of fragments that have length less than `2 * nucLength` (nucLength is the length of DNA that wraps around a nucleosome (147 bp by default))
+10. nDiFrags - the number of fragments that have length less than `3 * nucLength` but greater than `2 * nucLength`
+11. nMultiFrags - the number of fragments that have length >= `3*nucLength`
+12. PassQC - equal to `1` if the cell passed QC filters or `0` if not
+
+Throughout the tutorial, other data will get added to `cellColData`, for example the number of ReadsInPeaks or FRiP when we add a peak set to the project.
+
 ## Manipulating An ArchRProject
 Now that we have created an `ArchRProject`, there are many things that we can do to easily access or manipulate the associated data.
 
@@ -80,19 +103,35 @@ quantile(projHeme1$TSSEnrichment)
 
 <span style="font-size:20px;font-weight:bold">Example 2. Subsetting an `ArchRProject` by cells</span>
 
-```{r, eval=FALSE, include=FALSE}
-#JJJ Need to update this section with new project subsetting
+There are many ways that we can subset an `ArchRProject` to obtain only a select set of cells. However, the different ways to subset an `ArchRProject` have very different effects and should not be considered equivalent.
+
+The most robust way to subset an `ArchRProject` is to use the `subsetArchRProject()` function. This function takes a list of `cells` and an `outputDirectory` and creates a new full copy of the `ArchRProject` and corresponding Arrow files in the designated directory. This is the ideal way to subset an `ArchRProject` because it ensures that only one `ArchRProject` object is referring to the specified Arrow files (more details on this below). Additionally, by using the `dropCells` argument, you can remove unnecessary cells from downstream analyses.
+
+For example, we could use `subsetArchRProject()` to keep only the cells from a specific sample (shown below) or cluster to perform a subsetted downstream analysis. All you need to do is pass the `cellNames` of the cells that you would like to retain to the `cells` parameter.
+
+```{r, collapse=TRUE}
+idxSample <- BiocGenerics::which(projHeme1$Sample %in% "scATAC_BMMC_R1")
+projSubset <- subsetArchRProject(
+  ArchRProj = projHeme1,
+  cells = projHeme1$cellNames[idxSample],
+  outputDirectory = "ArchRSubset",
+  dropCells = TRUE
+  )
 ```
 
-There are many ways that we can subset an `ArchRProject` to obtain only a select set of cells.
+It is important to note that some operations will need to be re-run after project subsetting. Much of this is dictated by common sense. For example, if you want to look at only the subsetted cells on a new UMAP embedding, you need to create that new embedding first. Similarly, if you want to perform sub-clustering, you should almost certainly re-run dimensionality reduction (LSI) first.
 
-We can subset the project numerically, for example taking the first 100 cells in the project:
+The primary disadvantage of `subsetArchRProject()` is that it makes copies of the Arrow files which can be quite large for bigger data sets. Nevertheless, this is the absolute most stable way to subset a project and is the only way that we recommend.
+
+If your data set size is so massive that copying the Arrow files is not reasonable, you can try subsetting the project manually as illustrated below. However, it is important to note if you do this, you can run into the situation where you have multiple ArchRProject objects pointing to the same Arrow files. You may alter those Arrow files in one project, causing something to unexpectedly break in the other project.
+
+For example, we can subset the project numerically, for example taking the first 100 cells in the project:
 
 ```{r, collapse=TRUE}
 projHeme1[1:100, ]
 ```
 
-We can subset the project based on certain cell names:
+And we can subset the project based on certain cell names:
 
 ```{r, collapse=TRUE}
 projHeme1[projHeme1$cellNames[1:100], ]

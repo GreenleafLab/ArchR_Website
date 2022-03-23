@@ -21,13 +21,15 @@ The most fundamental component of any ATAC-seq experiment is a "__fragment__". I
 
 ## Why use ArchR?
 
-There are multiple tools for single-cell ATAC-seq analysis out there so why should you use ArchR? Most importantly, ArchR provides features and enables analyses that other tools do not:
+There are multiple tools for single-cell ATAC-seq analysis out there so why should you use ArchR? At the time of publication, ArchR provided features and enables analyses that other tools did not:
 
 <center>
 ![](images/ArchR_featureComparison.png){width=700px}
 </center>
 
-Additionally, ArchR is faster and uses less memory than other available tools due to heavy optimization of the data structures and parallelization methods that form the basis of the ArchR software. When analyzing more than 70,000 cells, some tools require high-performance computing environments, exceeding 128 GB of available memory (OoM = out of memory).
+Since publication, other tools have released similar functionalities and we do not maintain the above figure to be accurate throughout time. Suffice it to say, we believe ArchR to be the most full-featured and user-friendly analysis pacakge for scATAC-seq and multi-omic data and we aim to continue to develop ArchR to maintain that.
+
+In addition to offering a comprehensive set of analytical tools, ArchR is also faster and uses less memory than other available tools due to heavy optimization of the data structures and parallelization methods that form the basis of the ArchR software. When analyzing more than 70,000 cells, some tools require high-performance computing environments, exceeding 128 GB of available memory (OoM = out of memory).
 
 <center>
 ![](images/ArchR_benchmarking.png){width=700px}
@@ -52,15 +54,21 @@ Certain actions can be taken directly on Arrow files while other actions are tak
 ![](images/ArchR_FunctionSchematic.png){width=400px}
 </center>
 
+Many of ArchR's analytical steps can be performed using parallel processing to minimize run-time. This is made possible by the unique data storage employed in Arrow files. Specifically, ATAC-seq fragments are stored per-chromosome and accessed in a chunk-wise fashion.
+
+<center>
+![](images/ArchR_ParallelizationSchematics.png){width=750px}
+</center>
+
 ## Input File Types in ArchR
 
-ArchR can utilize multiple input formats of scATAC-seq data which is most frequently in the format of fragment files and BAM files. Fragment files are tabix-sorted text files containing each scATAC-seq fragment and the corresponding cell ID, one fragment per line. BAM files are binarized tabix-sorted files that contain each scATAC-seq fragment, raw sequence, cellular barcode id and other information. The input format used will depend on the pre-processing pipeline used. For example, the 10x Genomics Cell Ranger software returns fragment files while sci-ATAC-seq applications would use BAM files. ArchR uses “scanTabix” to read fragment files and “scanBam” to read BAM files. During this input process, inputs are chunked and each input chunk is converted into a compressed table-based representation of fragments containing each fragment chromosome, offset-adjusted chromosome start position, offset-adjusted chromosome end position, and cellular barcode ID. These chunk-wise fragments are then stored in a temporary HDF5-formatted file to preserve memory usage while maintaining rapid access to each chunk. Finally, all chunks associated with each chromosome are read, organized, and re-written to an Arrow file within a single HDF5 group called “fragments”. This pre-chunking procedure enables ArchR to process extremely large input files efficiently and with low memory usage, enabling full utilization of parallel processing.
+ArchR can utilize multiple input formats of scATAC-seq data which is most frequently in the format of fragment files and BAM files. Fragment files are tabix-sorted text files containing each scATAC-seq fragment and the corresponding cell ID, one fragment per line. BAM files are binarized tabix-sorted files that contain each scATAC-seq fragment, raw sequence, cellular barcode id and other information. The input format used will depend on the pre-processing pipeline used. For example, the 10x Genomics Cell Ranger software returns fragment files while sci-ATAC-seq applications would use BAM files. ArchR uses `scanTabix` to read fragment files and `scanBam` to read BAM files. During this input process, inputs are chunked and each input chunk is converted into a compressed table-based representation of fragments containing each fragment chromosome, offset-adjusted chromosome start position, offset-adjusted chromosome end position, and cellular barcode ID. These chunk-wise fragments are then stored in a temporary HDF5-formatted file to preserve memory usage while maintaining rapid access to each chunk. Finally, all chunks associated with each chromosome are read, organized, and re-written to an Arrow file within a single HDF5 group called "fragments". This pre-chunking procedure enables ArchR to process extremely large input files efficiently and with low memory usage, enabling full utilization of parallel processing.
 
 ## Getting Set Up
 
 The first thing we do is change to our desired our working directory, set the number of threads we would like to use, and load our gene and genome annotations. Depending on the configuration of your local environment, you may need to modify the number of `threads` used below in `addArchRThreads()`. By default ArchR uses half of the total number of `threads` available but you can adjust this manually as you see fit. If you are using Windows, the usable `threads` will automatically be set to 1 because the parallel processing in ArchR is built for Unix-based operating systems.
 
-First, we load the ArchR library. If this fails, you have not properly installed ArchR and should [revisit the installation instructions](https://www.archrproject.com/index.html). We will also set our seed for randomized opperations to 1 for consistency.
+First, we load the ArchR library. If this fails, you have not properly installed ArchR and should [revisit the installation instructions](https://www.archrproject.com/index.html). We will also set our seed for randomized opperations for consistency. You can set your seed to whatever you would like (here we use `1`), but we encourage you to be consistent and always set the same seed.
 
 ```{r, collapse=TRUE}
 library(ArchR)
@@ -80,10 +88,6 @@ addArchRGenome("hg19")
 ```
 
 ArchR requires gene and genome annotations to do things such as calculate TSS enrichment scores, nucleotide content, and gene activity scores. Because our tutorial dataset uses scATAC-seq data that has already been aligned to the hg19 reference genome, we have set "hg19" as the default genome in the previous section. However, ArchR supports "hg19", "hg38", "mm9", and "mm10" natively and you can create your own genome and gene annotations using the `createGeneAnnotation()` and `createGenomeAnnotation()` functions.
-
-```{r include=FALSE, eval=FALSE}
-#JJJ All of these sections lacked an explanation of where the gene annotations are from. I added this information but please check.
-```
 
 Providing this information to ArchR is streamlined through the `addArchRGenome()` function. This function tells ArchR that, for all analyses in the current session, it should use the `genomeAnnotation` and `geneAnnotation` associated with the defined `ArchRGenome`. Each of the natively supported genomes are composed of a `BSgenome` object that defines the genomic coordinates and sequence of each chromosome, a `GRanges` object containing a set of blacklisted regions, a `TxDb` object that defines the positions and structures of all genes, and an `OrgDb` object that provides a central gene identifier and contains mappings between this identifier and other kinds of identifiers.
 
@@ -125,7 +129,7 @@ addArchRGenome("mm10")
 
 ### Creating a Custom `ArchRGenome`
 
-As described above, an `ArchRGenome` consists of a genome annotation and a gene annotation.
+As described above, an `ArchRGenome` consists of a genome annotation and a gene annotation. If you create your own genome and gene annotations, then you would pass these directly to `createArrowFiles()` using the `genomeAnnotation` and `geneAnnotation` parameters, rather than calling `addArchRGenome()`.
 
 To create a __custom genome annotation__, we use `createGenomeAnnotation()`. To do this, you will need the following information:
 
@@ -183,6 +187,8 @@ Examining this object shows the constituent parts of an ArchR gene annotation.
 geneAnnotation
 ```
 
+In some cases, information contained within the `OrgDb` object and the `TxDb` object might not match as expected. ArchR will attempt to default to an annotation style / keytype of "ENTREZID" or "ENSEMBL" to map between gene names within the `TxDb` object and various gene identifiers within the `OrgDb` object. For some organisms, (for ex. [arabidopsis](https://github.com/GreenleafLab/ArchR/issues/318#issuecomment-717786201)), you may need to specify a particular annotation style to the `annoStyle` parameter of `createGeneAnnotation()` to tell ArchR what the keytype is of the gene names contained within your `TxDb` object.
+
 Alternatively, if you dont have a `TxDb` and `OrgDb` object, you can create a `geneAnnotation` object from the following information :
 
 1. A "genes" object - a `GRanges` object containing gene coordinates (start to end). This object must have a symbols column matching the symbols column of the "exons" object described below.
@@ -201,6 +207,8 @@ geneAnnotation <- createGeneAnnotation(
 )
 ```
 
+In general, we cannot provide much support for non-standard genomes. However, if you are looking for information on how to forge your own custom gene annotation, you should read through [previous issue posts](https://github.com/GreenleafLab/ArchR/issues/112) for inspiration. For species with lots of small scaffolds, please make sure to remove genes within 2 kb of scaffold ends from the gene annotation and to remove unassembled scaffolds from the genome annotation.
+
 ### Using Non-standard Genomes in ArchR
 
 ArchR implements some checks to prevent you from doing things that we consider "out of the norm". One of these checks forces the `seqnames` of your genome annotation to start with "chr". This is true in most applications but there are some genomes (for example Maize) which do not use "chr" as a prefix for the different chromosomes. To perform any ArchR analyses on such a genome, you have to tell ArchR to ignore the chromosome prefixes. To do this, you must run `addArchRChrPrefix(chrPrefix = FALSE)` prior to creating your Arrow files. This will turn off the requirement for "chr" prefixes on seqnames globally in the current R session. Please keep in mind ArchR converts chromosome/seqnames to character by default. Thus, if your `seqnames` are just integers, you will need to supply them as characters i.e. `useSeqnames = c("1", "2", "3")` instead of `useSeqnames = c(1, 2, 3)`. You can always check if chromosome prefixes are required in the current R session using `getArchRChrPrefix()`.
@@ -210,6 +218,8 @@ ArchR implements some checks to prevent you from doing things that we consider "
 For the remainder of this tutorial, we will use data from a downsampled dataset of hematopoietic cells from [Granja* et al. Nature Biotechnology 2019](https://www.ncbi.nlm.nih.gov/pubmed/31792411). This includes data from bone marrow mononuclear cells (BMMC), peripheral blood mononuclear cells (PBMC), and CD34+ hematopoietic stem and progenitor cells from bone marrow (CD34 BMMC).
 
 This data is downloaded as fragment files which contain the start and end genomic coordinates of all aligned sequenced fragments. Fragment files are one of the base file types of the 10x Genomics analytical platform (and other platforms) and can be easily created from any BAM file. See the [10x Genomics website](https://support.10xgenomics.com/single-cell-atac/software/pipelines/latest/output/fragments) for information on making your own fragment files for input to ArchR.
+
+While ArchR can handle BAM files as input, fragment files are the most optimal. If using cellranger, you should not use the output of `aggr` in ArchR because this groups samples together, thus eliminating the ability of ArchR to parallelize across samples. If you are using non-10x Genomics data, you should be extra careful to make sure that your input files match what ArchR expects. For example, bio-rad data is often aligned using multi-species references and fragment files for ArchR can only have one species. Similarly, if your data is from single-end sequencing, you would need to create pseudo-fragments the span a single base-pair, though this is not something that we have tested or support.
 
 Once we have our fragment files, we provide their paths as a character vector to `createArrowFiles()`. During creation, some basic metadata and matrices are added to each Arrow file including a "TileMatrix" containing insertion counts across genome-wide 500-bp bins (see `addTileMatrix()`) and a "GeneScoreMatrix" that stores predicted gene expression based on weighting insertion counts in tiles nearby a gene promoter (see `addGeneScoreMatrix()`).
 
@@ -222,16 +232,22 @@ inputFiles <- getTutorialData("Hematopoiesis")
 inputFiles
 ```
 
+If we inspect `inputFiles`, you'll notice that it is simply a named vector of fragment files. This vector is automatically created for convenience by the `getTutorialData()` function but you will need to create it yourself for your own data like so:
 
-As always, before starting a project we must set the `ArchRGenome` and default `threads` for parallelization.
+```{r collapse=TRUE}
+inputFiles_example <- c("/path/to/fragFile1.tsv.gz", "/path/to/fragFile2.tsv.gz")
+names(inputFiles_example) <- c("Sample1","Sample2")
+```
+
+As always, before starting a project we must set the `ArchRGenome` and default `threads` for parallelization. The tutorial data was aligned to the `hg19` reference genome so we will use that. The number of threads used will depend on your system so you should adjust that accordingly.
 
 ```{r loadGenomeAndThreads, collapse=TRUE}
 addArchRGenome("hg19")
-addArchRThreads(threads = 1) 
+addArchRThreads(threads = 16) 
 ```
 
 
-Now we will create our Arrow Files which will take 10-15 minutes. For each sample, this step will:
+Now we will create our Arrow Files which will take 10-15 minutes for the tutorial data. For each sample, this step will:
 
 1. Read accessible fragments from the provided input files.
 2. Calculate quality control information for each cell (i.e. TSS enrichment scores and nucleosome info).
@@ -251,12 +267,19 @@ ArrowFiles <- createArrowFiles(
 )
 ```
 
+One important parameter in `createArrowFiles()` is the `subThreading` parameter. This dictates whether or not file locking is used for the HDF5-format Arrow files. Many cluster environments use shared file systems (e.g. Lustre) which are configured to disable file locking for performance reasons. However, if you don't tell ArchR to avoid this, it will try anyways. If you are using one of these types of systems or you encounter HDF5 file accessibility errors when using ArchR, you should set `subThreading = FALSE` or consider setting the `HDF5_USE_FILE_LOCKING` and `RHDF5_USE_FILE_LOCKING` environment variables to false in your `.bash_profile`.
+
 We can inspect the `ArrowFiles` object to see that it is actually just a character vector of Arrow file paths.
 
 ```{r, collapse=TRUE}
 ArrowFiles
 ```
 
+As mentioned above, BAM files can also be used as input for ArchR. However, when doing so, please pay special attention to the parameter definitions. Also, you may need to pre-process your BAM file by:
+
+1. Removing any fragments less than 20 bp in length
+2. Marking/removing PCR duplicates
+3. Removing barcode reads that are `NA`
 
 ## Per-cell Quality Control
 
@@ -270,11 +293,19 @@ The first metric, __unique nuclear fragments__, is straightforward - cells with 
 
 The second metric, __signal-to-background ratio__, is calculated as the TSS enrichment score. Traditional bulk ATAC-seq analysis has used this TSS enrichment score as part of a standard workflow for determination of signal-to-background (for example, [the ENCODE project](https://www.encodeproject.org/atac-seq/)). We and others have found the TSS enrichment to be representative across the majority of cell types tested in both bulk ATAC-seq and scATAC-seq. The idea behind the TSS enrichment score metric is that ATAC-seq data is universally enriched at gene TSS regions compared to other genomic regions, due to large protein complexes that bind to promoters. By looking at per-basepair accessibility centered at these TSS regions, we see a local enrichment relative to flanking regions (1900-2000 bp distal in both directions). The ratio between the peak of this enrichment (centered at the TSS) relative to these flanking regions represents the TSS enrichment score.
 
-Traditionally, the per-base-pair accessibility is computed for each bulk ATAC-seq sample and then this profile is used to determine the TSS enrichment score. Performing this operation on a per-cell basis in scATAC-seq is relatively slow and computationally expensive. To accurately approximate the TSS enrichment score per single cell, we count the average accessibility within a 50-bp region centered at each single-base TSS position and divide this by the average accessibility of the TSS flanking positions (+/- 1900 – 2000 bp). This approximation was highly correlated (R > 0.99) with the original method and values were extremely close in magnitude.
+Traditionally, the per-base-pair accessibility is computed for each bulk ATAC-seq sample and then this profile is used to determine the TSS enrichment score. Performing this operation on a per-cell basis in scATAC-seq is relatively slow and computationally expensive. To accurately approximate the TSS enrichment score per single cell, we count the average accessibility within a 50-bp region centered at each single-base TSS position and divide this by the average accessibility of the TSS flanking positions (+/- 1900 - 2000 bp). This approximation was highly correlated (R > 0.99) with the original method and values were extremely close in magnitude.
 
 The third metric, __fragment size distribution__, is generally less important but always good to manually inspect. Because of the patterned way that DNA wraps around nucleosomes, we expect to see a nucleosomal periodicity in the distribution of fragment sizes in our data. These hills and valleys appear because fragments must span 0, 1, 2, etc. nucleosomes (Tn5 cannot cut DNA that is tightly wrapped around a nucleosome.
 
 By default in ArchR, pass-filter cells are identified as those cells having a TSS enrichment score greater than 4 and more than 1000 unique nuclear fragments. __It is important to note that the actual numeric value of the TSS enrichment score depends on the set of TSSs used__. The default values in ArchR were designed for human data and it may be important to change the default thresholds when running `createArrowFiles()`.
+
+Other quality metrics have been used for ATAC-seq data previously. In particular, the Fraction of Reads in Peaks (aka FRiP) was adopted from ChIP-seq analysis to serve as a signal-to-background measurement. The problem with using FRiP is that you must first define a peak set to use for calculating the fraction of reads within that peak set. This becomes problematic in quality control of single-cell ATAC-seq data because this means that you must define your peak set before clustering because you should filter out low quality cells before clustering. For this reason, FRiP is typically calculated per-cell based on a peak set identified from the merged set of all cells. This obscures cell type-specific peaks from lowly abundant cell types (less than 20%) and thus biases more abundant cell types to having better quality scores. This is certainly not desirable and also underlies the problems associated with using the cells x peaks matrix provided (for ex.) by cellranger which uses peaks called on the merged set of all cells.
+
+To get around this without having to calculate TSS enrichment scores, other tools (SnapATAC v1) have used the Fraction of reads in Promoters (aka FIP) which does not require a pre-defined peak set. However, this metric does not provide as clear a stratification of high-quality cells from low-quality cells.
+
+<center>
+![](images/TSS_vs_FIP.png){width=450px}
+</center>
 
 <hr>
 
@@ -287,6 +318,11 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 ```
 
 For our tutorial data, we have three samples as shown below:
+
+```{r include=FALSE, eval=FALSE}
+#PPP
+#Paulina - these plots dont look right (no labels)
+```
 
 For **BMMC**:</br>
 ![](images/HemeWalkthrough/PNG/scATAC_BMMC_R1-TSS_by_Unique_Frags_1.png){width=330 height=330}
