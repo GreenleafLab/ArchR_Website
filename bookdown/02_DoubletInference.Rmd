@@ -58,7 +58,7 @@ doubScores <- addDoubletScores(
 	LSIMethod = 1
 )
 ```
-In the above output, ArchR reports the R<sup>2</sup> value for the UMAP projection for each Arrow file. If these R<sup>2</sup> values are much lower (i.e. less than 0.9), this often indicates that the cells within the Arrow file have very little heterogeneity. This makes the accuracy of doublet calling worse because the majority of doublets would be "homotypic" - or a single droplet with two very similar cells. In these cases, we recommend skipping doublet prediction. Alternatively, you can try setting `knnMethod = "LSI"` and `force = TRUE` to perform projection in the LSI subspace; however, you should manually assess the results and make sure this is performing as you would expect.
+In the above output, ArchR reports the R<sup>2</sup> value for the UMAP projection for each Arrow file. If these R<sup>2</sup> values are much lower (i.e. less than 0.9), this often indicates that the cells within the Arrow file have very little heterogeneity. This makes the accuracy of doublet calling worse because the majority of doublets would be "homotypic" - or a single droplet with two very similar cells. In these cases, ArchR will skip doublet prediction because it is not accurate. Alternatively, you can try setting `knnMethod = "LSI"` and `force = TRUE` to perform projection in the LSI subspace; however, you should manually assess the results and make sure this is performing as you would expect.
 
 ```{r, include=FALSE}
 ArchR:::.convertToPNG()

@@ -28,13 +28,13 @@ Because of the way that Arrow files are designed, ArchR is able to perform LSI v
 
 ## Iterative Latent Semantic Indexing (LSI)
 
-In scRNA-seq identifying variable genes is a common way to compute dimensionality reduction (such as PCA). This is done because these highly variable genes are more likely to be biologically important and this reduces experimental noise. In scATAC-seq the data is binary and thus you cannot identify variable peaks for dimensionality reduction. Rather than identifying the most variable peaks, we have tried using the most accessible features as input to LSI; however, the results when running multiple samples have shown high degrees of noise and low reproducibility. To remedy this we introduced the "iterative LSI" approach ([Satpathy\*, Granja\* et al. Nature Biotechnology 2019](https://www.ncbi.nlm.nih.gov/pubmed/31375813) and [Granja\*, Klemm\* and McGinnis\* et al. Nature Biotechnology 2019](https://www.ncbi.nlm.nih.gov/pubmed/31792411)). This approach computes an inital LSI transformation on the most accessible tiles and identifies lower resolution clusters that are not batch confounded. For example, when performed on peripheral blood mononuclear cells, this will identify clusters corresponding to the major cell types (T cells, B cells, and monocytes). Then ArchR computes the average accessibility for each of these clusters across all features. ArchR then identifies the most variable peaks across these clusters and uses these features for LSI again. In this second iteration, the most variable peaks are more similar to the variable genes used in scRNA-seq LSI implementations. The user can set how many iterations of LSI should be performed. We have found this approach to minimize observed batch effects and allow dimensionality reduction operations on a more reasonably sized feature matrix.
+In scRNA-seq identifying variable genes is a common way to compute dimensionality reduction (such as PCA). This is done because these highly variable genes are more likely to be biologically important and this reduces experimental noise. In scATAC-seq, the data is binary and thus you cannot identify variable peaks for dimensionality reduction. Rather than identifying the most variable peaks, we have tried using the most accessible features as input to LSI; however, the results when running multiple samples have shown high degrees of noise and low reproducibility. To remedy this we introduced the "iterative LSI" approach ([Satpathy\*, Granja\* et al. Nature Biotechnology 2019](https://www.ncbi.nlm.nih.gov/pubmed/31375813) and [Granja\*, Klemm\* and McGinnis\* et al. Nature Biotechnology 2019](https://www.ncbi.nlm.nih.gov/pubmed/31792411)). This approach computes an inital LSI transformation on the most accessible tiles and identifies lower resolution clusters that are not batch confounded. For example, when performed on peripheral blood mononuclear cells, this will identify clusters corresponding to the major cell types (T cells, B cells, and monocytes). Then ArchR computes the average accessibility for each of these clusters across all features. ArchR then identifies the most variable peaks across these clusters and uses these features for LSI again. In this second iteration, the most variable peaks are more similar to the variable genes used in scRNA-seq LSI implementations. The user can set how many iterations of LSI should be performed. We have found this approach to minimize observed batch effects and allow dimensionality reduction operations on a more reasonably sized feature matrix.
 
 <center>
 ![](images/IterativeLSI_Flowchart.png)
 </center>
 
-To perform iterative LSI in ArchR, we use the `addIterativeLSI()` function. The default parameters should cover most cases but we encourage you to explore the available parameters and how they each affect your particular data set. See `?addIterativeLSI` for more details on inputs. The most common parameters to tweak are `iterations`, `varFeatures`, and `resolution`. It is important to note that LSI is not deterministic. This means that even if you run LSI in exactly the same way with exactly the same parameters, you will not get __exactly__ the same results. Of course, they will be highly similar, but not identical. So make sure to save your `ArchRProject` or the relevant LSI information once you've settled on an ideal dimensionality reduction.
+To perform iterative LSI in ArchR, we use the `addIterativeLSI()` function. The default parameters should cover most cases but we encourage you to explore the available parameters and how they each affect your particular data set. See `?addIterativeLSI` for more details on inputs. The most common parameters to tweak are `iterations`, `varFeatures`, and `resolution`.
 
 For the purposes of this tutorial, we will create a `reducedDims` object called "IterativeLSI".
 ```{r, collapse=TRUE}
@@ -52,6 +52,9 @@ projHeme2 <- addIterativeLSI(
     dimsToUse = 1:30
 )
 ```
+
+ArchR automatically checks each dimension to determine whether it is highly correlated to the sequencing depth. The `corCutOff` parameter sets the threshold for this correlation before exclusion of a particular dimension. In some cases, the 1st dimension may be correlated to other technical noise not depth related. In general, ArchR defaults are reasonable and dont need to be changed. However, if you think that your results make more sense if you manually exclude the first dimension, that is a reasonable thing to do. Biological intuition is important to adequately evaluate the results of dimensionality reduction and if removing a specific dimensions steers you closer to your expectation than that is fine. In most cases, the exclusion of a specific dimension doesnt have a strong effect because of the way that the iterative LSI method works compared to non-iterative implementations (e.g. in Signac). To manually exclude a specific dimension, you would alter the `dimsToUse` parameter.
+
 
 If you see downstream that you have subtle batch effects, another option is to add more LSI iterations and to start from a lower intial clustering resolution as shown below. Additionally the number of variable features can be lowered to increase focus on the more variable features.
 
@@ -75,12 +78,10 @@ projHeme2 <- addIterativeLSI(
 )
 ```
 
-```{r include=FALSE, eval=FALSE, becho=FALSE}
-#You can list the available `reducedDims` objects in an `ArchRProject` using the slot extraction opperator `@`:
-#JJJ add an example of accessing with @
-#projHeme2@reducedDims
+You can list the available `reducedDims` objects in an `ArchRProject` using the slot extraction opperator `@`:
+```{r , collapse=TRUE}
+projHeme2@reducedDims
 ```
-
 
 ## Estimated LSI
 For extremely large scATAC-seq datasets, ArchR can estimate the LSI dimensionality reduction with LSI projection. This procedure is similar to the iterative LSI workflow, however the LSI procedure differs. First, a subset of randomly selected “landmark” cells is used for LSI dimensionality reduction. Second, the remaining cells are TF-IDF normalized using the inverse document frequency determined from the landmark cells. Third, these normalized cells are projected into the SVD subspace defined by the landmark cells. This leads to an LSI transformation based on a small set of cells used as landmarks for the projection of the remaining cells. This estimated LSI procedure is efficient with ArchR because, when projecting the new cells into the landmark cells LSI, ArchR iteratively reads in the cells from each sample and LSI projects them without storing them all in memory. This optimization leads to minimal memory usage and further increases the scalability for extremely large datasets. Importantly, the required landmark set size is dependent on the proportion of different cells within the dataset.

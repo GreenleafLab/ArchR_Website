@@ -68,18 +68,19 @@ The iterative overlap peak merging process is implemented by ArchR via `addRepro
 
 ## Calling Peaks w/ Macs2
 
-As mentioned above, we generate a reproducible peak set in ArchR using the `addReproduciblePeakSet()` function. By default ArchR attempts to call peaks using MACS2; however, ArchR also implements its own native peak caller which could be used when MACS2 cannot be installed (for example, we have not successfully installed MACS2 on Windows) - this alternative peak calling method is described in the next section.
+Prior to calling peaks in ArchR, you must run the `addGroupCoverages()` function! ArchR relies on these group coverage objects to perform peak calling.
 
-To call peaks using MACS2, ArchR must be able to find the MACS2 executable. First, ArchR looks in your `PATH` environment variable. If this is unsuccessful, ArchR attempts to determine if you have installed MACS2 with either `pip` or `pip3`. If neither of these is successful, ArchR gives up and provides an error message. If you have MACS2 installed and ArchR cannot find it, you should provide the path to the `addReproduciblePeakSet()` function via the `pathToMacs2` parameter.
+As mentioned above, we generate a reproducible peak set in ArchR using the `addReproduciblePeakSet()` function. By default ArchR attempts to call peaks using MACS2 and this is absolutely the recommended peak caller. ArchR also implements its own native peak caller but we do not recommend using it - this alternative peak calling method is described in the next section.
 
-```{r, eval=FALSE}
+To call peaks using MACS2, ArchR must be able to find the MACS2 executable. First, ArchR looks in your `PATH` environment variable. If this is unsuccessful, ArchR attempts to determine if you have installed MACS2 with either `pip` or `pip3`. If neither of these is successful, ArchR gives up and provides an error message. If you have MACS2 installed and ArchR cannot find it, you should provide the path to the `addReproduciblePeakSet()` function via the `pathToMacs2` parameter. It is important to make sure that the MACS2 executable that ArchR is using is what you expect it to use. Some users have multiple instances of MACS2 installed and ArchR may not always select the one that you expect.
+
+```{r, collapse=TRUE}
 pathToMacs2 <- findMacs2()
 ```
 
-With the path to MACS2 identified, we can then create a reproducible merged peak set w/ MACS2 (~5-10 minutes). To avoid bias from pseudo-bulk replicates that have very few cells, we can provide a cutoff for the upper limit of the number of peaks called per cell via the `peaksPerCell` parameter. This prevents clusters with very few cells from contributing lots of low quality peaks to the merged peak set. There are many other parameters that can be tweaked in `addReproduciblePeakSet()` - try `?addReproduciblePeakSet` for more information.
+With the path to MACS2 identified, we can then create a reproducible merged peak set w/ MACS2 (~5-10 minutes). To avoid bias from pseudo-bulk replicates that have very few cells, we can provide a cutoff for the upper limit of the number of peaks called per cell via the `peaksPerCell` parameter. This prevents clusters with very few cells from contributing lots of low quality peaks to the merged peak set. There are many other parameters that can be tweaked in `addReproduciblePeakSet()` - try `?addReproduciblePeakSet` for more information. Of particular note, the `reproducibility` parameter defines what is meant by a "reproducible peak". For example, `reproducibility = "2"` means at least 2 pseudobulk replicates must have a peak call at this locus and `reproducibility = "(n+1)/2"` means that the majority of pseudobulk replicates must have a peak call at this locus.
 
-Each `ArchRProject` object can only contain a single peak set. As such, we assign the output of `addReproduciblePeakSet()` to our desired `ArchRProject`. If you would like to experiment with different peak sets, you must save a copy of your `ArchRProject` and thus also copy the Arrow files. While this does use more on-disk storage space, this is unavoidable given the structure of Arrow files and the storage of peak matrix information in the Arrow files.
-```{r}
+```{r, collapse=TRUE}
 projHeme4 <- addReproduciblePeakSet(
 	ArchRProj = projHeme4, 
 	groupBy = "Clusters2", 
@@ -87,18 +88,33 @@ projHeme4 <- addReproduciblePeakSet(
 )
 ```
 
-To retrieve this peak set as a `GRanges` object, we use the `getPeakSet()` function. This peak set contains an annotation for the group from which each peak originated. However, these annotations do not inherently mean that the given peak was only called in that group, rather that the annotated group had the highest normalized significance for that peak call.
-```{r}
+The iterative overlap procedure that ArchR uses to create this reproducible peak set occurs in two stages. During the first step of `addReproduciblePeakSet()`, a reproducible peak set is created for each group indicated by `groupBy`. Using the psuedobulk replicates generated by `addGroupCoverages()`, ArchR identifies peaks that are reproducible across the replicates for each group indicated by the `groupBy` argument. The score of those peak calls is stored in the `score` column and the quantile rank of that score for the individual pseudobulk replicate that it was identified in is stored in `replicateScoreQuantile`. For each of these groups, ArchR saves the group-specific peak set as a `GRanges` object in the `PeakCalls` subdirectory of the `ArchRProject`. Additionally, ArchR saves a a `GRanges` object that contains the summit calls for each pseudobulk replicate within the `./PeakCalls/ReplicateCalls` directory.
+
+```{r, collapse=TRUE}
+list.files(path=paste0(getOutputDirectory(ArchRProj = projHeme4),"/PeakCalls"))
+```
+
+During the second step of `addReproduciblePeakSet()`, ArchR merges these group-specific peak sets into a single union peak set. The quantile rank of the peak `score` across the group is stored in `groupScoreQuantile` and the group it comes from is stored in `GroupReplicate`. `GroupReplicate` is an annotation for the group from which each peak originated during the process of iterative overlap peak merging. It is important to note that these annotations do not inherently mean that the given peak was only called in that cell group, rather that the annotated group had the highest normalized significance for that peak call.
+
+Each `ArchRProject` object can only contain a single peak set at a time. As such, we assign the output of `addReproduciblePeakSet()` to our desired `ArchRProject`. If you would like to experiment with different peak sets, you have two options. Option #1 - you can save multiple copies of your `ArchRProject` using `saveArchRProject()`. Option #2 - you can create multiple peak sets, store them as `GenomicRanges` objects, and change your peak set using the `addPeakSet()` function.
+
+The `addPeakSet()` function can be used to set any arbitrary peak set as the peak set for your `ArchRProject`.
+
+To retrieve the peak set stored in your `ArchRProject` as a `GRanges` object, we use the `getPeakSet()` function. 
+
+```{r, collapse=TRUE}
 getPeakSet(projHeme4)
 ```
 
+The peak sets from `addReproduciblePeakSet()` are annotated with lots of metadata about each peak region. The `score` represents the normalized `-log10(pval)` returned by MACS2. There are other annotations such as `distToGeneStart` and `distToTSS` which are determined based on the contents of `getGeneAnnotation(ArchRProj)$genes` and `getGeneAnnotation(ArchRProj)$TSS` respectively. While it may seem like these should be identical, a single gene can have multiple TSSs and ArchR needs to deal with this multi-mapping issue, which we have done by including both annotations. For example, in ArchR's default hg38 `geneAnnotation`, there are 23,274 genes and 49,052 TSSs.
+
 ## Calling Peaks w/ TileMatrix
 
-As mentioned previously, ArchR also implements its own native peak caller. While we have benchmarked this peak caller against MACS2 and note very similar performances, we do not recommend using this native peak caller unless absolutely necessary.
+As mentioned previously, ArchR also implements its own native peak caller but we do not recommend using it. While we have benchmarked this peak caller against MACS2 and note very similar performances, we do not recommend using this native peak caller unless absolutely necessary.
 
 The ArchR native peak caller calls peaks on the 500-bp `TileMatrix` and we indicate to `addReproduciblePeakSet()` that we want to use this peak caller via the `peakMethod` parameter. Note that we are not storing the output into the `projHeme4` object because we do not intend to keep this peak set and this analysis is only for illustrative purposes. Storage into the `ArchRProject` object would overwrite the previous reproducible peak set already stored in `projHeme4`.
 
-```{r}
+```{r, collapse=TRUE}
 projHemeTmp <- addReproduciblePeakSet(
 	ArchRProj = projHeme4, 
 	groupBy = "Clusters2",
@@ -107,7 +123,7 @@ projHemeTmp <- addReproduciblePeakSet(
 )
 ```
 
-```{r include=FALSE, eval=FALSE,echo=FALSE}
+```{r include=FALSE, eval=FALSE}
 # JJJ the structure of the GRanges objects from the two peak calling methods is different. the TileMatrix GRange has something called "Group" whereas the MACS2 GRange does not.
 ```
 
@@ -120,17 +136,20 @@ getPeakSet(projHemeTmp)
 
 To compare the merged peak set generated using MACS2 vs the merged peak set generated using the ArchR native `TileMatrix` peak caller, we can check the perfecent of overlapping peaks etc.
 
-First, we check the percent of MACS2-called peaks that are overlapped by the `TileMatrix`-called peaks
+First, we check the percent of MACS2-called peaks that are overlapped by the `TileMatrix`-called peaks.
+
 ```{r}
 length(subsetByOverlaps(getPeakSet(projHeme4), getPeakSet(projHemeTmp))) / length(getPeakSet(projHeme4))
 ```
 
 Then, we check the converse - the percent of `TileMatrix`-called peaks that are overlapped by MACS2-called peaks. You can see that this overlap is not as strong.
+
 ```{r}
 length(subsetByOverlaps(getPeakSet(projHemeTmp), getPeakSet(projHeme4))) / length(getPeakSet(projHemeTmp))
 ```
 
 If we increase the margins of the peaks to be wider (1000-bp peaks instead of 500-bp peaks), the percent of MACS2-called peaks that are overlapped does not change much.
+
 ```{r}
 length(subsetByOverlaps(resize(getPeakSet(projHeme4), 1000, "center"), getPeakSet(projHemeTmp))) / length(getPeakSet(projHeme4))
 ```
@@ -148,12 +167,14 @@ We can now save our original `projHeme4` using the `saveArchRProject()` function
 saveArchRProject(ArchRProj = projHeme4, outputDirectory = "Save-ProjHeme4", load = FALSE)
 ```
 
-To prepare for downstream analyses, we can create a new `ArchRProject` called `projHeme5` and add a new matrix to it containing insertion counts within our new merged peak set. 
+To prepare for downstream analyses, we can create a new `ArchRProject` called `projHeme5` and add a new matrix to it containing insertion counts within our new merged peak set.
+
 ```{r}
 projHeme5 <- addPeakMatrix(projHeme4)
 ```
 
 We can now see that a new matrix has been added to `projHeme5` called "PeakMatrix". This is another reserved-name matrix similar to `GeneScoreMatrix` and `TileMatrix`. As mentioned previously, each `ArchRProject` object can only have one peak set and one `PeakMatrix`. You can, of course, create an unlimited number of custom feature matrices of different names but `PeakMatrix` is reserved for the matrix of insertion counts derived from the peak set stored in the `ArchRProject`.
+
 ```{r}
 getAvailableMatrices(projHeme5)
 ```

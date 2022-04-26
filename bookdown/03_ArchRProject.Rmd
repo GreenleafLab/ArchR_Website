@@ -415,38 +415,58 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 [Download PDF : QC-Sample-FragSizes-TSSProfile.pdf](images/HemeWalkthrough/PDF/QC-Sample-FragSizes-TSSProfile.pdf)
 
 
-
 ## Saving and Loading an `ArchRProject`
 
 ArchR provides a facile way to save an `ArchRProject` object to either re-load at a later time or share with other users. Fundamentally, an `ArchRProject` points to a set of Arrow files. Because of this, the process of saving an `ArchRProject` using the `saveArchRProject()` function will:
 
-1. Copy the current Arrow files to the designated `outputDirectory` so that they are exclusively associated with the new `ArchRProject` object.
+1. Copy the current Arrow files and other associated project files to the designated `outputDirectory` so that they are exclusively associated with the new `ArchRProject` object.
 2. Save a copy of the designated `ArchRProject` in the `outputDirectory`.
 
 For example, we can save our `projHeme1` using `saveArchRProject()` which will allow us to use this project in future chapters.
 
 ```{r, collapse=TRUE}
-saveArchRProject(ArchRProj = projHeme1, outputDirectory = "Save-ProjHeme1", load = FALSE)
+projHeme1 <- saveArchRProject(ArchRProj = projHeme1, outputDirectory = "Save-ProjHeme1", load = TRUE)
 ```
 
-This will copy the Arrow files and save a .RDS file of the `projHeme1` `ArchRProject` object in the specified `outputDirectory`. __Very important!__ This process does NOT automatically update the `ArchRProject` object that is active in your current R session. Specifically, the object named `projHeme1` in the current R session will still point to the original location of the Arrow files, not the copied Arrow files that reside in the specified `outputDirectory`. If we wanted to do this, we would specify `load = TRUE` which causes the `saveArchRProject()` function to return the saved `ArchRProject` object which you can assign to overwrite the original `ArchRProject` object using `<-`. This effectively saves and loads the `ArchRProject` from its new location.
+This will copy the Arrow files and save a `.RDS` file of the `projHeme1` `ArchRProject` object in the specified `outputDirectory`. The `saveArchRProject()` function also has the `dropCells` parameter. If `dropCells = TRUE` then cells that exist within the ArrowFiles but have been otherwise removed from the `ArchRProject` will be trimmed from the ArrowFiles before they are copied to the `outputDirectory`.
+
+__Very important!__ The `load` parameter determines whether or not the `saveArchRProject()` function will return the saved `ArchRProject` object which you would assign to overwrite the original `ArchRProject` object or provide a new `ArchRProject` name using `<-`. This effectively saves and loads the `ArchRProject` from its new location. If `load = FALSE`, then this process does NOT update the `ArchRProject` object that is active in your current R session. Specifically, the object named `projHeme1` in the current R session will still point to the original location of the Arrow files, not the copied Arrow files that reside in the specified `outputDirectory`. You might use this behavior if you were saving your `ArchRProject` and shutting down your R session so that the project can be reloaded at a later time.
+
+__Also important!__ The term `ArchRProject` can be confusing to some users because we use this both to refer to the object that is actively loaded within the R environment and to the file that has been saved on disk as part of the `saveArchRProject()` process. However, it is extremely important to understand that these are not equivalent. Manipulations that you perform on an `ArchRProject` that is actively loaded within the R environment do not automatically propagate to the on-disk file. You must run the `saveArchRProject()` function to store those changes.
+
+To load an `ArchRProject` that has been previously saved using `saveArchRProject()` we would use the `loadArchRProject()` function. To do this, we must provide the path to the directory containing the `ArchRProject` object which is stored in a file named `Save-ArchR-Project.rds`.
+
+For example, the above call to `saveArchRProject()` would have created a directory named `Save-ProjHeme1` with the following contents:
+
+```{r, collapse=TRUE}
+list.files(path = "./Save-ProjHeme1")
+```
+
+To load this project we would therefore run:
+
+```{r, collapse=TRUE}
+projHeme1 <- loadArchRProject(path = "./Save-ProjHeme1")
+```
 
 ## Filtering Doublets from an ArchRProject
 
 After we have added information on the predicted doublets using `addDoubletScores()`, we can remove these predicted doublets using `filterDoublets()`. One of the key elements of this filtering step is the `filterRatio` which is the maximum ratio of predicted doublets to filter based on the number of pass-filter cells. For example, if there are 5000 cells, the maximum number of filtered predicted doublets would be `filterRatio * 5000^2 / (100000)` (which simplifies to `filterRatio * 5000 * 0.05`). This `filterRatio` allows you to apply a consistent filter across multiple different samples that may have different percentages of doublets because they were run with different cell loading concentrations. The higher the `filterRatio`, the greater the number of cells potentially removed as doublets.
 
-First, we filter the doublets. We save this as a new `ArchRProject` for the purposes of this stepwise tutorial but you can always overwrite your original `ArchRProject` object.
+The other parameters that can be tweaked for doublet filtration are `cutEnrich` and `cutScore`. The `cutEnrich` is equivalent to the number of simulated doublets identified as a nearest neighbor to the cell divided by the expected number given a random uniform distribution. The `cutScore` refers to the `-log10(pval)` of the enrichment and we have found this to be a worse predictor of doublets than `cutEnrich`. Params for doublet filtering should be sensible and thats why the filter ratio is set to ensure that you do not over filter. If you were to plot the distribution of `DoubletEnrichment` or `DoubletScore` (which are stored in `cellColData`), you should see a small population with high score or enrichment and these represent putative doublets. The goal here is to filter as many doublets as possible while not removing true singlets.
+
+To filter doublets, we use the `filterDoublets()` function. We save the output of this function call as a new `ArchRProject` for the purposes of this stepwise tutorial but you can always overwrite your original `ArchRProject` object.
 
 ```{r, collapse=TRUE}
 projHeme2 <- filterDoublets(projHeme1)
 ```
-
-Previously, we saw that `projHeme1` had 10,661 cells. Now, we see that `projHeme2` has 10,251 cells, indicating that 410 cells (3.85%) were removed by doublet filtration as indicated above.
+We can compare the number of cells in `projHeme1` (pre-doublet-removal) and in `projHeme2` (post-doublet-removal) and see that some cells have been removed during the doublet filtration process.
 
 ```{r, collapse=TRUE}
-projHeme2
+length(getCellNames(ArchRProj = projHeme1))
+length(getCellNames(ArchRProj = projHeme2))
 ```
-If you wanted to filter more cells from the ArchR Project, you would use a higher `filterRatio`. To see additional arguments that can be tweaked, try `?filterDoublets`.
+
+If you wanted to filter more cells from the ArchR Project, you would use a higher `filterRatio` or alternatively tweak `cutEnrich` or `cutScore` as described above.
 
 ```{r, collapse=TRUE}
 projHemeTmp <- filterDoublets(projHeme1, filterRatio = 1.5)

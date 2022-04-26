@@ -284,6 +284,43 @@ plotPDF(plotList = p,
 
 [Download PDF : Plot-UMAP-Marker-Genes-W-Imputation.pdf](images/HemeWalkthrough/PDF/Plot-UMAP-Marker-Genes-W-Imputation.pdf)
 
+## Module Scores
+
+The reliability of gene scores derived from chromatin accessibility is highly dependent on the particular gene being queried. For example, genes that exist in highly gene-dense regions of the genome can be harder to accurately represent with gene scores because the surrounding peaks may not be acting to regulate its gene expression. For this reason, its often best to use gene scores from multiple different genes to (for example) assign cluster identities. To facilitate this, ArchR enables the use of "modules" which are user-defined groups of features where the signal from each individual feature is combined using equal weights into a single module score. The per-cell values for each user-defined module are stored as a new column in the `cellColData` of the given `ArchRProject`.
+
+Module scores are added using the `addModuleScore()` function. The key parameters for this function are `features` and `name`. `features` is a named list of character vectors containing gene names while `name` is the broad title that will be given to each column added to `cellColData`
+
+```{r, collapse=TRUE}
+features <- list(
+  BScore = c("MS4A1", "CD79A", "CD74"),
+  TScore = c("CD3D", "CD8A", "GZMB", "CCR7", "LEF1")
+)
+projHeme2 <- addModuleScore(projHeme2,
+    useMatrix = "GeneScoreMatrix",
+    name = "Module",
+    features = features)
+```
+
+In this example, two columns will be added to `cellColData` named "Module.BScore" and "Module.TScore". This is because the column name is derived as `name.featureName`. If your feature list is unnamed, then the columns in `cellColData` will be numbered instead (i.e. "Module1" and "Module2" if `name="Module" as above). The "BScore" module contains 3 gene markers of B cells (MS4A1, CD79A, and CD74) while the "TScore" module contains 5 gene markers for T cells (CD3D, CD8A, GZMB, CCR7, and LEF1).
+
+We can then plot these modules on an embedding.
+
+```{r, collapse=TRUE}
+p1 <- plotEmbedding(projHeme2,
+    embedding = "UMAP",
+    colorBy = "cellColData",
+    name="Module.BScore",
+    imputeWeights = getImputeWeights(projHeme2))
+
+p2 <- plotEmbedding(projHeme2,
+    embedding = "UMAP",
+    colorBy = "cellColData",
+    name="Module.TScore",
+    imputeWeights = getImputeWeights(projHeme2))
+
+plotPDF(ggAlignPlots(p1,p2,draw=F,type="h"))
+```
+
 ## Track Plotting with ArchRBrowser
 
 In addition to plotting gene scores per cell as a UMAP overlay, we can browse the local chromatin accessibility at these marker genes on a per cluster basis with genome browser tracks. To do this, we use the `plotBrowserTrack()` function which will create a list of plots, one for each of the genes specified by `markerGenes`. This function will plot a single track for each group in the `groupBy` parameter.
