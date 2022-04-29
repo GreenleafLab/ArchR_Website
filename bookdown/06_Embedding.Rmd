@@ -41,9 +41,8 @@ projHeme2 <- addUMAP(
 ```
 
 You can list the available `embeddings` objects in an `ArchRProject` using the slot extraction opperator `@`:
-```{r include=FALSE, eval=FALSE, becho=FALSE}
-#JJJ add an example of accessing with @
-#projHeme2@embeddings
+```{r, collapse=TRUE}
+projHeme2@embeddings
 ```
 
 To plot the UMAP results, we use the `plotEmbedding()` function and pass the name of the UMAP embedding we just generated ("UMAP"). We can tell ArchR how to color the cells by using a combination of `colorBy` which tells ArchR which matrix to use to find the specified metadata column provided to `name`.
@@ -308,9 +307,59 @@ plotPDF(p1,p2,p3,p4, name = "Plot-TSNE2Harmony-Sample-Clusters.pdf", ArchRProj =
 
 [Download PDF : Plot-TSNE2Harmony-Sample-Clusters.pdf](images/HemeWalkthrough/PDF/Plot-TSNE2Harmony-Sample-Clusters.pdf)
 
+
+## Highlighting specific cells on an embedding
+
+ArchR also allows you to highlight specific cells on the embedding using the `highlightCells` parameter by passing the cell names of the desired cells to be highlighted. For example, we could highlight just the cells corresponding to cluster `C1` by passing the cell names corresponding to those cells.
+
+```{r, collapse=TRUE}
+plotEmbedding(
+  ArchRProj = projHeme2,
+  embedding = "UMAP",
+  colorBy = "cellColData",
+  name = "Clusters",
+  size = 1,
+  sampleCells = NULL,
+  highlightCells = getCellNames(ArchRProj = projHeme2)[which(projHeme2@cellColData$Clusters == "C1")],
+  baseSize = 10,
+  plotAs = "points")
+```
+
+By default, ArchR colors these highlighted cells red. However, you can change the highlighted cell color using the `pal` paramter. To do this, you must pass a named vector that includes the name of the highlighted cells ("C1"), and another color designated by "Non.Highlighted".
+
+```{r, collapse=TRUE}
+plotEmbedding(
+  ArchRProj = projHeme2,
+  embedding = "UMAP",
+  colorBy = "cellColData",
+  name = "Clusters",
+  size = 1,
+  pal=c("C1" = "#50ADF9", "Non.Highlighted" = "lightgrey"),
+  sampleCells = NULL,
+  highlightCells = getCellNames(ArchRProj = projHeme2)[which(projHeme2@cellColData$Clusters == "C1")],
+  baseSize = 10,
+  plotAs = "points")
+```
+
+You can use this `highlightCells` parameter in conjuction with other data stored in your `ArchRProject`, for example `colorBy = "GeneScoreMatrix"`.
+
+```{r, collapse=TRUE}
+plotEmbedding(
+  ArchRProj = projHeme2,
+  embedding = "UMAP",
+  colorBy = "GeneScoreMatrix",
+  name = "CD14",
+  size = 1,
+  sampleCells = NULL,
+  highlightCells = getCellNames(ArchRProj = projHeme2)[which(projHeme2@cellColData$Clusters %in% c("C1","C2","C7","C8","C9"))],
+  baseSize = 10,
+  plotAs = "points")
+```
+
 ```{r, include=FALSE, eval=FALSE}
 save.image(params$out, compress = FALSE)
 ```
+
 ```{r, include=FALSE}
 save.image("ch6.RData")
 ```
