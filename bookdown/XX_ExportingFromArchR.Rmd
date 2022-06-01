@@ -1,0 +1,67 @@
+---
+output:
+  pdf_document: default
+  html_document:
+    theme: yeti
+params:
+  threads: 20
+  rdata: ''
+  token: ''
+  ref: ''
+  out: ''
+---
+
+# Handling ArchR Output
+
+This chapter will introduce you to how to extract data out of ArchR for your own use or for analysis with other available packages. In general, our goal is for ArchR to be your go-to software of choice for single-cell ATAC-seq and multi-omic analyses so if there are features that you feel should be added, please feel free to post in our [discussions](https://github.com/GreenleafLab/ArchR/discussions) forum on GitHub under the "Feature Requests" label. Before doing so, make sure to search old issues and discussions to make sure that this hasnt already been addressed.
+
+
+## Exporting fragment-level data
+
+To enable optimal flexibility, ArchR allows you to export fragments from your `ArchRProject` or ArrowFiles at any time using the `getFragmentsFromArrow()` and `getFragmentsFromProject()` functions. For both functions, you must provide the `cellNames` for the cells you wish to extract. For example, you might extract the fragments from a particular cluster from your entire project like this:
+
+```{r, collapse=TRUE}
+frags <- getFragmentsFromProject(
+  ArchRProj = projHeme5,
+  cellNames = getCellNames(ArchRProj = projHeme5)[which(projHeme5@cellColData$Clusters2 == "Mono")]
+  )
+```
+
+Inspecting the `frags` object here, shows it to be a list and each of the elements of `frags` is a `GRanges` object:
+
+```{r, collapse=TRUE}
+frags
+```
+
+We can just unlist this object to get a `GRanges` object where each entry represents an individual fragment:
+
+```{r, collapse=TRUE}
+unlist(frags)
+```
+
+## Exporting matrix-level data
+
+To start off, ArchR makes heavy use of `SummarizedExperiment` objects when exporting data. If you are not familiar with the `SummarizedExperiment` package, you should invest the time to familiarize yourself with it as it serves as the basis for the majority of genomics-related data types in R. You can read more about `SummarizedExperiment` [here](https://bioconductor.org/packages/release/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html). There are also multiple YouTube videos that walk through the basics. If you aren't familiar with `SummarizedExperiment` objects and opperations, then the remainder of this section may not be very helpful
+
+ArchR provides the `getMatrixFromProject()` function which allows you to export any matrix from your project as a `SummarizedExperiment`. The information returned is on a per-cell basis. In most cases, that matrix will be stored as a sparse matrix of class `dgCMatrix`. Some matrices, especially for larger projects, may take up excessive memory and lead to crashes when trying to export and there is really no way around this. This is, in fact, why ArchR leverages the on-disk storage of these data in `HDF5` format.
+
+For example, we can export the `GeneScoreMatrix` from our project like so:
+
+```{r, collapse=TRUE}
+GSM_se <- getMatrixFromProject(
+	ArchRProj = projHeme5,
+	useMatrix <- "GeneScoreMatrix"
+)
+```
+
+When we inspect this object, we can see the various attributes stored in the `SummarizedExperiment`:
+
+```{r, collapse=TRUE}
+GSM_se
+```
+
+## Exporting pseudo-bulked data
+
+Often times, we  want to analyze our single-cell data as if it were bulk data to get around issues of sparsity. For example, you might want to use pseudo-bulk replicates when trying to understand "how does cluster X or cell type Y differ across cases and controls". To enable this type of analysis, ArchR provides the `getGroupSE()` function. This function will group your cells based on the values found in a column of `cellColData`. As you will remember from earlier chapters, you can add whatever information you want as new columns to `cellColData` and this can be helpful to create the grouping divisions that you want to extract with `getGroupSE()`.
+
+
