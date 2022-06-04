@@ -38,7 +38,11 @@ projHeme5 <- addCoAccessibility(
 	reducedDims = "IterativeLSI"
 )
 ```
+
+If you aim to only perform co-accessibility analyses on a subset of cells in your project, you can specify which cells should be analyzed using the `cellsToUse` parameter. There are other important parameters to keep in mind depending on the precise composition of your own data. For example, the `k` parameter designates how many cells should be included in the low-overlapping cell groups for correlation analysis. If your dataset is very small, you may need to adjust this parameter accordingly (and other parameters like `overlapCutoff`) to ensure that you do not have high duplication rates with the same cells participating in many of the cell groupings. These same considerations apply to the `getPeak2GeneLinks()` function described below.
+
 We can retrieve this co-accessibility information from the `ArchRProject` via the `getCoAccessibility()` function which returns a `DataFrame` object if `returnLoops = FALSE`.
+
 ```{r}
 cA <- getCoAccessibility(
 	ArchRProj = projHeme5,
@@ -74,11 +78,21 @@ We can compare this `GRanges` object to the `DataFrame` object generated above.
 cA[[1]]
 ```
 
+This object contains a lot of information that can be helpful in further filtering the returned loops. In addition to filtering based on the correlation between peaks (via the `corCutOff` parameter), we have found it helpful to limit these analyses to stronger peaks (based on `FDR`) or loops that show more variability (i.e. higher values for `VarQuantile1` and `VarQuantile2`). For example:
+
+
+```{r, collapse=TRUE}
+cALoops <- cA[[1]]
+cALoops <- cALoops[cALoops$FDR < 10^-10]
+cALoops <- cALoops[rowMins(cbind(cALoops$VarQuantile1,cALoops$VarQuantile2)) > 0.35]
+cALoops
+```
+
 ```{r include=FALSE, eval=FALSE,echo=FALSE}
 #JJJ Can you better describe what decreasing the resolution does here? How does this work? would it group two peaks that are nearby each other?
 ```
 
-If, instead, we decrease the resolution of our loops to `resolution = 1000`, this can help with over-plotting of co-accessibility interactions. Below, we see that there are fewer total entries in our `GRanges` object than above.
+To help with over-plotting of co-accessibility interactions we can decrease the resolution of our loops to `resolution = 1000`. Below, we see that there are fewer total entries in our `GRanges` object than above.
 ```{r}
 cA <- getCoAccessibility(
 	ArchRProj = projHeme5,
@@ -179,20 +193,31 @@ p2g <- getPeak2GeneLinks(
 )
 ```
 
-When `returnLoops` is set to false, this function returns a `DataFrame` object anaolgous to the `DataFrame` object returned by `getCoAccessibility()`. The primary difference is that the indexes for the scATAC-seq peaks are stored in the `idxATAC` column and the indexes for the scRNA-seq gene are stored in the `idxRNA` column. 
+When `returnLoops` is set to false, this function returns a `DataFrame` object anaolgous to the `DataFrame` object returned by `getCoAccessibility()`. The primary difference is that the indexes for the scATAC-seq peaks are stored in a column called `idxATAC` and the indexes for the scRNA-seq gene are stored in a column called `idxRNA`. 
 ```{r }
 p2g
 ```
 
-```{r include=FALSE, eval=FALSE,echo=FALSE}
-#JJJ Where are the genes stored? How do we map the idxRNA above to a specific gene?
+Here, `idxATAC` and `idxRNA` refer to the __row indices__ of the peak or gene in the corresponding `geneSet` or `peakSet` which can be accessed via the metadata component of the `p2g` object. 
+```{r, collapse=TRUE}
+metadata(p2g)
 ```
 
-This peak-to-gene linkage `DataFrame` also has a metadata component containing a `GRanges` object of the relevant peaks. The indexes of `idxATAC` mentioned above apply to this `GRanges` object. 
-```{r }
-metadata(p2g)[[1]]
+It is important not to confuse `idxRNA` with the value in the `idx` column of the `geneSet`. Within the `geneSet`, `idx` corresponds to the chronological position of the given gene across each chromosome. As such, `idx` is only unique across an individual chromosome and is not relevant for mapping `idxRNA` to a gene name.
+
+So, if we wanted to add the gene name and peak coordinates to our `p2g` `DataFrame` object, we would do the following:
+```{r, collapse=TRUE}
+p2g$geneName <- mcols(metadata(p2g)$geneSet)$name[p2g$idxRNA]
+p2g$peakName <- (metadata(p2g)$peakSet %>% {paste0(seqnames(.), "_", start(.), "_", end(.))})[p2g$idxATAC]
+p2g
 ```
 
+You may also notice that there is other information stored within the `metadata()` of `p2g` including pointers to files called `seATAC` and `seRNA` which represent `SummarizedExperiment` objects for the ATAC-seq and RNA-seq data used to identify peak-to-gene linkages and these each include both the raw and normalized data matrices used in the analysis.
+
+```{r, collapse=TRUE}
+metadata(p2g)$seATAC
+metadata(p2g)$seRNA
+```
 
 If we set `returnLoops = TRUE`, then `getPeak2GeneLinks()` will return a loop track `GRanges` object that connects the peak and gene. As for co-accessibility, the start and end of the `IRanges` object represent the position of the peak and gene being linked. When `resolution = 1`, this links the center of the peak to the single-base TSS of the gene.
 ```{r }

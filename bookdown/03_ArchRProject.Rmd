@@ -105,7 +105,7 @@ quantile(projHeme1$TSSEnrichment)
 
 There are many ways that we can subset an `ArchRProject` to obtain only a select set of cells. However, the different ways to subset an `ArchRProject` have very different effects and should not be considered equivalent.
 
-The most robust way to subset an `ArchRProject` is to use the `subsetArchRProject()` function. This function takes a list of `cells` and an `outputDirectory` and creates a new full copy of the `ArchRProject` and corresponding Arrow files in the designated directory. This is the ideal way to subset an `ArchRProject` because it ensures that only one `ArchRProject` object is referring to the specified Arrow files (more details on this below). Additionally, by using the `dropCells` argument, you can remove unnecessary cells from downstream analyses.
+The most robust way to subset an `ArchRProject` is to use the `subsetArchRProject()` function. This function takes a list of `cells` and an `outputDirectory` and creates a new full copy of the `ArchRProject` and corresponding Arrow files in the designated directory. This is the ideal way to subset an `ArchRProject` because it ensures that only one `ArchRProject` object is referring to the specified Arrow files (more details on this below). Additionally, by using the `dropCells` argument, you can remove unnecessary cells from downstream analyses. Setting `dropCells = TRUE` is almost always the correct choice and setting `dropCells = FALSE` can lead to some unexpected downstream issues depending on your workflow.
 
 For example, we could use `subsetArchRProject()` to keep only the cells from a specific sample (shown below) or cluster to perform a subsetted downstream analysis. All you need to do is pass the `cellNames` of the cells that you would like to retain to the `cells` parameter.
 
@@ -119,11 +119,12 @@ projSubset <- subsetArchRProject(
   )
 ```
 
+
 It is important to note that some operations will need to be re-run after project subsetting. Much of this is dictated by common sense. For example, if you want to look at only the subsetted cells on a new UMAP embedding, you need to create that new embedding first. Similarly, if you want to perform sub-clustering, you should almost certainly re-run dimensionality reduction (LSI) first.
 
 The primary disadvantage of `subsetArchRProject()` is that it makes copies of the Arrow files which can be quite large for bigger data sets. Nevertheless, this is the absolute most stable way to subset a project and is the only way that we recommend.
 
-If your data set size is so massive that copying the Arrow files is not reasonable, you can try subsetting the project manually as illustrated below. However, it is important to note if you do this, you can run into the situation where you have multiple ArchRProject objects pointing to the same Arrow files. You may alter those Arrow files in one project, causing something to unexpectedly break in the other project.
+If your data set size is so massive that copying the Arrow files is not reasonable, you can try subsetting the project manually as illustrated below. However, it is important to note if you do this, you can run into the situation where you have multiple ArchRProject objects pointing to the same Arrow files. You may alter those Arrow files in one project, causing something to unexpectedly break in the other project. We do not consider this type of project subsetting to be stable and strongly recommend against using this strategy.
 
 For example, we can subset the project numerically, for example taking the first 100 cells in the project:
 
