@@ -340,6 +340,43 @@ For **PBMC**:</br>
 
 We are now ready to tidy up these Arrow files and then create an `ArchRProject`.
 
+## Using BAM files for Arrow File creation
+
+Though fragment files are strongly preferred because of their very standardized format, BAM files can also be used as input for Arrow File creation in ArchR. The key to getting this to work is understanding your BAM file structure, in particular which field of the BAM file contains the cell-specific barcode information. In this example, we will download some data from 10x Genomics to illustrate how to use BAM files as input to `createArrowFiles()`. Using `samtools view` 
+
+```{r, collapse=TRUE}
+dir.create(path = "./PBMC_BAM")
+download.file(url = "https://cf.10xgenomics.com/samples/cell-atac/2.0.0/atac_pbmc_500_nextgem/atac_pbmc_500_nextgem_possorted_bam.bam",
+              destfile = "./PBMC_BAM/atac_pbmc_500.bam")
+download.file(url = "https://cf.10xgenomics.com/samples/cell-atac/2.0.0/atac_pbmc_500_nextgem/atac_pbmc_500_nextgem_possorted_bam.bam.bai",
+              destfile = "./PBMC_BAM/atac_pbmc_500.bam.bai")
+stopifnot(tools::md5sum("./PBMC_BAM/atac_pbmc_500.bam") == "8140a2218ecdfd276aca5c4bb999c989")
+stopifnot(tools::md5sum("./PBMC_BAM/atac_pbmc_500.bam.bai") == "d3c5f5a00fec76378f2a947749ff2cf5")
+```
+
+If we were to use `samtools view` from the command line to look at this BAM file, the first line would look like this:
+```
+A00519:269:H7FM2DRXX:2:1201:1985:18834  83      chr1    9997    0       50M     =       10022   -25     CAGATAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAAC  ,,,:FF,,F,FF,FFFFFFF:FFFFFFFFFFFFFFF:FF:FFF,:FFFFF      NM:i:1  MD:Z:1C48       AS:i:48 XS:i:47 CR:Z:GCGGGTTAGAACGTCG       CY:Z:FFFFFFFF:FFFFFFF   CB:Z:GCGGGTTAGAACGTCG-1 BC:Z:ATCGTACT   QT:Z:FFFFFFFF   RG:Z:atac_pbmc_500_nextgem:MissingLibrary:1:H7FM2DRXX:2
+```
+
+Here, the `CB` tag is used to store the cell-specific barcode, in this case `CB:Z:GCGGGTTAGAACGTCG-1`. This means that we will pass `bcTag = "CB"` to `createArrowFiles()` to tell it to look for the `CB` tag. If, for example, your BAM files come from a scATAC-seq technology other than 10x Genomics, the relevant tag will likely be different. On top of that, the format of the cell-specific barcode may also be different. In these cases, it may be necessary to use the `gsubExpression` parameter to clean up the cell-specific barcode string. The other important input parameter is `bamFlag` which will determine which reads or fragments are viewed as valid. The value passed to `bamFlag` should be in the format of a `scanBamFlag` used by `ScanBam` in `Rsamtools`.
+
+```{r, collapse=TRUE}
+addArchRGenome("hg38")
+
+ArrowBam <- createArrowFiles(
+  inputFiles = "./PBMC_BAM/atac_pbmc_500.bam",
+  sampleNames = "bam10x",
+  minTSS = 4, #Dont set this too high because you can always increase later
+  minFrags = 1000, 
+  addTileMat = FALSE,
+  addGeneScoreMat = FALSE,
+  bcTag = "CB",
+  bamFlag = list(isMinusStrand = FALSE, isProperPair = TRUE, isDuplicate = FALSE),
+  force = TRUE
+)
+```
+
 ```{r, include=FALSE}
 save.image(file = "ch1.RData")
 ```

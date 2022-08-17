@@ -17,13 +17,45 @@ load("ch11.RData")
 
 After identification of a robust peak set, we often want to predict what transcription factors may be mediating the binding events that create those accessible chromatin sites. This can be helpful in assessing marker peaks or differential peaks to understand if these groups of peaks are enriched for binding sites of specific transcription factors. For example, we often find enrichment of key lineage-defining TFs in cell type-specific accessible chromatin regions. In a similar fashion, we might want to test various groups of peaks for enrichment of other known features. For example, we might want to know if cell type-specific ATAC-seq peaks for cell type A are enriched for another set of genomic regions such as ChIP-seq peaks. This chapter details how these enrichments are performed in ArchR.
 
-## Motif Enrichment in Differential Peaks
+## Motif Enrichment
 
-Continuing our analysis of differential peaks from the previous chapter, we can look for motifs that are enriched in peaks that are up or down in various cell types. To do this, we must first add these motif annotations to our `ArchRProject`. This effectively creates a binary matrix where the presence of a motif in each peak is indicated numerically. We do this using the `addMotifAnnotations()` function which determines motif presence in the peak set stored in the `ArchRProject`.
+Continuing our analysis of differential peaks from the previous chapter, we can look for motifs that are enriched in peaks that are up or down in various cell types. To do this, we must first add these motif annotations to our `ArchRProject`, which we do using the `motifmatchr` package. This effectively creates a binary matrix where the presence of a motif in each peak is indicated numerically. We do this using the `addMotifAnnotations()` function which determines motif presence in the peak set stored in the `ArchRProject`.
 
 ```{r}
 projHeme5 <- addMotifAnnotations(ArchRProj = projHeme5, motifSet = "cisbp", name = "Motif")
 ```
+
+### Which motifs are found in a given peak?
+
+Before diving into how to perform various motif enrichment analyses, we'll take a slight detour to discuss how to figure out which motifs are present in a given peak. Lets say we are interested in understanding which TF motifs are present within the promoter peak of the CEBPA gene, located at `chr19:33792929-33794030`. First, we extract the peak set from our `ArchRProject` and create names for each peak based on the chromosome, start, and end positions.
+
+```{r, collapse=TRUE}
+pSet <- getPeakSet(ArchRProj = projHeme5)
+pSet$name <- paste(seqnames(pSet), start(pSet), end(pSet), sep = "_")
+```
+
+Then, we extract a `RangedSummarizedExperiment` object containing the per-peak motif matches, create analogous names for that object, and then sort the matches object to ensure that the peaks are listed in the same order as the peaks from the peak set.
+
+```{r, collapse=TRUE}
+matches <- getMatches(ArchRProj = projHeme5, name = "Motif")
+rownames(matches) <- paste(seqnames(matches), start(matches), end(matches), sep = "_")
+matches <- matches[pSet$name]
+```
+
+Now, we just need to find the index of the CEBPA promoter peak of interest and find which motifs are present in that peak. Note that the below code only works when a single peak is being analyzed.
+
+```{r, collapse=TRUE}
+#first, we make a GRanges object corresponding to the CEBPA promoter
+gr <- GRanges(seqnames = c("chr19"), ranges = IRanges(start = c(33792929), end = c(33794030)))
+#then we find peaks from our peak set that overlap this region
+queryHits <- queryHits(findOverlaps(query = pSet, subject = gr, type = "within"))
+#then we get the TFs that have motif matches in that peak
+colnames(matches)[which(assay(matches[queryHits,]))]
+```
+
+The same type of workflow could be used in conjunction with peak-to-gene links or co-accessibility, which will come up in later chapters, to identify TF motifs present in other sets of peaks. The key is matching peaks based on the chromosome, start and end positions as shown above.
+
+### Motif Enrichment in Differential Peaks
 
 We can then use the differential testing `SummarizedExperiment` object `markerTest` which was generated in the previous chapter to define the set of significantly differential peaks that we are interested in testing for motif enrichment. In this case, we are looking for peaks that have an `FDR <= 0.1` and a `Log2FC >= 0.5`. In the context of the differential comparison made in `markerTest`, these represnt peaks that are more accessible in "Erythroid" cells than "Progenitor" cells. We can test these differentially accessible peaks for enrichment of various motifs using the `peakAnnoEnrichment()` function. This function is a generalizable function that can be used for many different enrichment tests as we will demonstrate throughout this chapter.
 ```{r}
@@ -138,7 +170,7 @@ To save an editable vectorized version of these plots, we use the `plotPDF()` fu
 plotPDF(ggUp, ggDo, name = "Erythroid-vs-Progenitor-Markers-Motifs-Enriched", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
 ```
 
-## Motif Enrichment in Marker Peaks
+### Motif Enrichment in Marker Peaks
 
 Similar to the motif enrichment analyses performed on the differential peaks in the previous section, we can also perform motif enrichment on our marker peaks identified using `getMarkerFeatures()`.
 
@@ -178,6 +210,7 @@ To save an editable vectorized version of this plot, we use the `plotPDF()` func
 ```{r}
 plotPDF(heatmapEM, name = "Motifs-Enriched-Marker-Heatmap", width = 8, height = 6, ArchRProj = projHeme5, addDOC = FALSE)
 ```
+
 ## ArchR Enrichment
 
 In addition to testing peaks for enrichment of motifs, ArchR also enables the determination of more customizable enrichments. To facilitate this level of data exploration, we have curated a few different feature sets that can be easily tested for enrichment in your peak regions of interest. We describe each of those curated feature sets below. This type of analysis was originally inspired by [LOLA](http://code.databio.org/LOLA/).
