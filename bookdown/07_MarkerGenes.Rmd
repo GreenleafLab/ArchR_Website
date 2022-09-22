@@ -115,6 +115,15 @@ To plot this heatmap, we can use the `ComplexHeatmap::draw()` function because t
 ComplexHeatmap::draw(heatmapGS, heatmap_legend_side = "bot", annotation_legend_side = "bot")
 ```
 
+Many heatmaps in ArchR utilize the `ComplexHeatmap` package which provides a very versatile and flexible framework for plotting heatmaps. If you need to change something about how the heatmap looks when plotted, you should consult the documentation for `ComplexHeatmap`. For example, if you want to change the order in which the heatmap rows are plotted, you can edit the `row_order` slot of the heatmap object and re-plot it:
+
+```{r, collapse = TRUE}
+heatmapGS@row_order <- c(10,11,12,3,4,5,1,2,6,8,7,9)
+ComplexHeatmap::draw(heatmapGS, heatmap_legend_side = "bot", annotation_legend_side = "bot")
+
+```
+
+
 ```{r, include=FALSE, eval=FALSE}
 plotPDF(heatmapGS, name = "GeneScores-Marker-Heatmap", width = 8, height = 6, ArchRProj = projHeme2, addDOC = FALSE)
 ArchR:::.convertToPNG(ArchRProj = projHeme2)
