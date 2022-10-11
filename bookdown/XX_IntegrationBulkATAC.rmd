@@ -1,0 +1,115 @@
+---
+output:
+  pdf_document: default
+  html_document:
+    theme: yeti
+params:
+  threads: 20
+  rdata: ''
+  token: ''
+  ref: ''
+  out: ''
+---
+
+# Integration with bulk ATAC-seq
+
+Many bulk ATAC-seq datasets exist and it can often be useful to leverage these bulk datasets during our single-cell workflows. This chapter will review the ways in which ArchR enables integration of single-cell and bulk ATAC-seq data. However, ArchR is not currently designed for the analysis of bulk ATAC-seq data alone. This is on the feature development roadmap but not currently possible.
+
+## Projecting bulk ATAC-seq data
+
+Projection of bulk ATAC-seq data into a single-cell dimensionality reduction is handled by the `projectBulkATAC()` function. This function accepts a `SummarizedExperiment` object containing the relevant bulk ATAC-seq data, subsets this object based on overlap of the peak regions in the bulk ATAC-seq `SummarizedExperiment` and single-cell `ArchRProject`, simulates sub-sampled "pseudocells", and projects these pseudocells into the specified dimensionality reduction and embedding. A "pseudocell" is a downsampled representation of a bulk ATAC-seq library
+
+To get the `projectBulkATAC()` function to work, the `SummarizedExperiment` object must be properly formatted. In particular, there needs to be an `assay` named "counts" containing the raw counts for each peak (row) for each sample (column). The `rowRanges` can be any peak set and the `projectBulkATAC()` function will match those rows to the `peakSet` of your `ArchRProject` based on overlaps. This means that it is not required to have a counts matrix based on the exact same set of peaks as used in your `ArchRProject`, enabling projection of bulk ATAC-seq data analyzed previously, for example from publicly available sources.
+
+Below, we demonstrate the core functionality of `projectBulkATAC()` using a data set of bulk ATAC-seq data from FACS-enriched hematopoietic cell types (Corces et al. _Nature Genetics_ 2015). First, lets download the counts matrix from GEO and fix the column names to be more human readable.
+
+```{r, collapse=TRUE}
+#Download bulk ATAC-seq data and organize raw counts matrix
+download.file(url = "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE74nnn/GSE74912/suppl/GSE74912_ATACseq_All_Counts.txt.gz", destfile = "Corces_HemeAML_BulkATAC.txt.gz")
+download.file(url = "https://jeffgranja.s3.amazonaws.com/ArchR/TestData/Corces_HemeAML_ReHeader.txt", destfile = "Corces_HemeAML_ReHeader.txt")
+
+df <- read.table(file = "Corces_HemeAML_BulkATAC.txt.gz", header = TRUE, sep = '\t', stringsAsFactors = FALSE)
+header <- read.table(file = "Corces_HemeAML_ReHeader.txt", header = TRUE, sep = '\t', stringsAsFactors = FALSE)
+colnames(df) <- header$NewHeader
+df[1:6,1:6]
+```
+
+Inspecting the first few rows and columns of this `data.frame` shows that the first three columns are actually the peak coordinates and the remaining columns represent the individual samples. Because of this, we need to strip out the peak information and create a separate `GenomicRanges` object to represent the peak regions.
+
+```{r, collapse=TRUE}
+bulk_gr <- GRanges(seqnames = df$chr, ranges = IRanges(start = df$start+1, end = df$end))
+df <- df[,which(colnames(df) %ni% c("chr","start","end"))]
+rownames(df) <- paste(bulk_gr)
+```
+
+We don't need all of the data in this counts matrix so for simplicity we will subset the counts matrix to only include a few cell types (columns) with data that is well-represented in our tutorial dataset.
+
+```{r, collapse=TRUE}
+colsToKeep <- c("Donor4983_10A_CD8Tcell",
+                "Donor4983_9A_CD4Tcell",
+                "Donor5483_13A_Bcell",
+                "Donor5483_11B_NKcell",
+                "Donor7256_7B_Mono")
+df <- df[,colsToKeep]
+```
+
+Now we are ready to create our `SummarizedExperiment` object using the raw counts and peak regions.
+
+```{r, collapse=TRUE}
+seBulk <- SummarizedExperiment(assays = SimpleList(counts = as.matrix(df)), rowRanges = bulk_gr)
+seBulk
+```
+
+To project these bulk samples using `projectBulkATAC()`, we specify the `reducedDims` and `embedding` we want to use as well as the number of "pseudocells" we want to project.
+
+```{r, collapse=TRUE}
+bulkPro <- projectBulkATAC(ArchRProj = projHeme5,
+                           seATAC = seBulk,
+                           reducedDims = "IterativeLSI",
+                           embedding = "UMAP",
+                           n = 250)
+bulkPro
+```
+
+The output of `projectBulkATAC()` is a list object containing 3 entries discussed below.
+
+`simulatedBulkUMAP` is a `DataFrame` containing the embedding coordinates for the simulated "pseduocells".
+
+```{r, collapse=TRUE}
+head(bulkPro$simulatedBulkUMAP)
+```
+
+`singleCellUMAP` is a `DataFrame` containing the embedding coordinates for all of the original single-cells in your `ArchRProject`.
+
+```{r, collapse=TRUE}
+head(bulkPro$singleCellUMAP)
+```
+
+`simulatedReducedDims` is a `DataFrame` containing the coordinates in the given reduced dimensions (i.e. "IterativeLSI") for each of the simulated "pseudocells".
+
+```{r, collapse=TRUE}
+head(bulkPro$simulatedReducedDims[,1:5])
+```
+
+Once we have the output of `projectBulkATAC()`, we often just want to plot this data to see where in our embedding the simulated "pseudocells" fall. There are many ways to do this but the easiest is to just concatenate the data from `projectBulkATAC()`, create a color palette, and use `ggPoint()` to plot.
+
+```{r, collapse=TRUE}
+#concatenate single-cell and pseudocell embedding positions
+pro_df <- rbind(bulkPro$singleCellUMAP, bulkPro$simulatedBulkUMAP)
+
+#create a color palette and force the scATAC cells to be grey to enable visualization of the project bulk ATAC data
+pal <- paletteDiscrete(values = unique(as.character(pro_df$Type)), set = "stallion")
+pal["scATAC"] <- "#BABABA"
+
+#plot using ggPoint
+ggPoint(x = pro_df$UMAP1,
+        y = pro_df$UMAP2,
+        discrete = TRUE,
+        color = as.character(pro_df$Type),
+        pal = pal,
+        xlabel = "UMAP Dimension 1",
+        ylabel = "UMAP Dimension 2",
+        title = "Heme Bulk ATAC-seq Projection")
+```
+
+In the resulting projection UMAP plot, you can see that the bulk ATAC-seq pseudocells pile up in the regions occupied by the corrseponding single-cells.

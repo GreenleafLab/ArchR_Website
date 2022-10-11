@@ -21,12 +21,12 @@ As shown in previous chapters, TF motif enrichments can help us predict which re
 # JJJ I would prefer to have more clear descriptions about deviations vs z scores for chromVAR. I've always found this very nuanced and it was never clear which metric should be used in which scenarios.
 ```
 
-1. "deviations" - A deviation is a bias-corrected measurement of how far the per-cell accessibility of a given feature (i.e motif) deviates from the expected accessibility based on the average of all cells or samples.
-2. "z-score" - The z-score, also known as a "deviation score" is the z-score for each bias-corrected deviation across all cells. The absolute value of the deviation score is correlated with the per-cell read depth. This is because, with more reads, you have higher confidence that the difference in per-cell accessibility of the given feature (i.e. motif) from the expectation is greater than would occur by chance.
+1. "deviations" - A deviation is a bias-corrected measurement of how far the per-cell accessibility of a given feature (i.e motif) deviates from the expected accessibility based on the average of all cells or samples. Deviations are computed per-cell and independent of the sample.
+2. "z-score" - The z-score, also confusingly known as a "deviation score" is the z-score for each bias-corrected deviation across all cells. The absolute value of the deviation score is correlated with the per-cell read depth. This is because, with more reads, you have higher confidence that the difference in per-cell accessibility of the given feature (i.e. motif) from the expectation is greater than would occur by chance.
 
 One of the primary limitations of chromVAR is that it was designed during the early era of scATAC-seq data generation when an experiment consisted of a few hundred of cells. At this experimental scale, chromVAR could easily read the entire cell-by-peak matrix into memory to quickly compute TF deviations. However, current experimental approaches use tens to hundreds of thousands of cells, generating cell-by-peak matrices that are much more difficult to read into memory. This leads to dramatic increases in run time and memory usage for even moderately sized datasets of 50,000 cells.
 
-To circumvent these limitations, ArchR implements the same chromVAR analysis workflow by analyzing sample sub-matrices independently.
+To circumvent these limitations, ArchR implements the same chromVAR analysis workflow by analyzing sample sub-matrices independently. Additionally, as of `release_1.0.3` ArchR also includes a re-implementation of some of the core chromVAR functionality in C++ using `Rcpp`. Together, this enables application of chromVAR to very large datasets. 
 
 <center>
 ![](images/ArchR_chromVAR_Parallelization.png){width=500px}
@@ -320,6 +320,8 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 ```
 
 ![](images/HemeWalkthrough/PNG/Plot-UMAP-MarkerMotifsRNA-W-Imputation_1.png){width=800 height=800}
+
+In addition to the analyses shown above, you may want to plot heatmaps of motif deviations, for example using the `plotMarkerHeatmap()` function based on the output of `getMarkerFeatures()`. It is important to remember not to filter for marker features (via `cutoff`) using the the log2(fold change) of deviations on these heatmaps because this is not relevant for deviations which are not a counts-based measure. Instead, marker features can be identified using `MeanDiff` (for ex. `MeanDiff >= 0.1`). Similarly, `plotLog2FC` should be `FALSE`.
 
 ## ArchR and Custom Deviations
 

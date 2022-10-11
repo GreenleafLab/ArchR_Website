@@ -301,7 +301,7 @@ projHeme2 <- addModuleScore(projHeme2,
     features = features)
 ```
 
-In this example, two columns will be added to `cellColData` named "Module.BScore" and "Module.TScore". This is because the column name is derived as `name.featureName`. If your feature list is unnamed, then the columns in `cellColData` will be numbered instead (i.e. "Module1" and "Module2" if `name="Module" as above). The "BScore" module contains 3 gene markers of B cells (MS4A1, CD79A, and CD74) while the "TScore" module contains 5 gene markers for T cells (CD3D, CD8A, GZMB, CCR7, and LEF1).
+In this example, two columns will be added to `cellColData` named "Module.BScore" and "Module.TScore". This is because the column name is derived as `name.featureName`. If your feature list is unnamed, then the columns in `cellColData` will be numbered instead (i.e. "Module1" and "Module2" if `name="Module"` as above). The "BScore" module contains 3 gene markers of B cells (MS4A1, CD79A, and CD74) while the "TScore" module contains 5 gene markers for T cells (CD3D, CD8A, GZMB, CCR7, and LEF1).
 
 We can then plot these modules on an embedding.
 
@@ -321,11 +321,18 @@ p2 <- plotEmbedding(projHeme2,
 plotPDF(ggAlignPlots(p1,p2,draw=F,type="h"))
 ```
 
+Module scores can be calculated from any matrix present within your `ArchRProject`.
+
 ## Track Plotting with ArchRBrowser
 
 In addition to plotting gene scores per cell as a UMAP overlay, we can browse the local chromatin accessibility at these marker genes on a per cluster basis with genome browser tracks. To do this, we use the `plotBrowserTrack()` function which will create a list of plots, one for each of the genes specified by `markerGenes`. This function will plot a single track for each group in the `groupBy` parameter.
 
+It is worth noting that the `plotBrowserTrack()` function plots "pseudobulk" level data from the single-cell ATAC-seq data by grouping many individual cells together. The cells selected are random and the number of cells selected and the cell groupings that can be displayed are based on the `maxCells` and `minCells` parameters respectively. As such, to ensure reproducibility of the functionality of the `plotBrowserTrack()` function, you should make sure to set a consistent seed for random number generation prior to plotting.
+
+
 ```{r, collapse=TRUE}
+set.seed(1)
+
 markerGenes  <- c(
     "CD34", #Early Progenitor
     "GATA1", #Erythroid
@@ -343,7 +350,7 @@ p <- plotBrowserTrack(
 )
 ```
 
-To plot a track of a specific gene, we can select one from the list.
+Here, the output of `plotBrowserTrack()` is a list of plots. To plot a track of a specific gene, we can select one from the list.
 
 ```{r}
 grid::grid.newpage()
@@ -374,6 +381,20 @@ plotPDF(plotList = p,
     addDOC = FALSE, width = 5, height = 5)
 ```
 [Download PDF : Plot-Tracks-Marker-Genes.pdf](images/HemeWalkthrough/PDF/Plot-Tracks-Marker-Genes.pdf)
+
+The `plotBrowserTrack()` function is highly versatile and therefore has a lot of different parameter options so you should explore all of those capabilities in the [function documentation](https://www.archrproject.com/reference/plotBrowserTrack.html). There are multiple different types of plot elements that can be plotted and these are controlled using the `plotSummary` parameter. Those options include:
+
+1. `bulkTrack` - A pseudobulk representation of the ATAC-seq signal in the given region
+2. `scTrack` - The per-cell integration signal scATAC-seq signal. Each row represents an individual cell. The number of cells plotted per cell grouping is controlled by the `scCellsMax` parameter
+3. `featureTrack` - Regions to be shown as blocks below the tracks (i.e peak regions, or SNPs, or some other feature
+4. `geneTrack` - Line diagrams of genes with introns and exons shown. We've adopted the convention of plotting "plus-stranded" genes (those that point left-to-right with the TSS on the left) in red and "minus-stranded" genes (those that point right-to-left with the TSS on the right) in blue.
+5. `loopTrack` - Arcs showing links between a peak and a gene, for example from co-accessibility or peak-to-gene linkage analysis. The actual loops plotted is controlled by the `loops` parameter.
+
+For example, instead of providing a set of genes to plot via `geneSymbol`, you could provide a set of regions to plot as a `GRanges` object to the `region` parameter.
+
+You can also change which regions are shown as "features" by manipulating the `features` paramter. The default is to show the `peakSet` of your `ArchRProject` but you can provide a `GRanges` (for a single feature track) or a __named__ `GRangesList` (for multiple feature tracks). If you provide a `GRangesList`, its best to provide a named list because the names will be used to label the individual feature tracks on the plot.
+
+By default, the pseudobulk ATAC-seq tracks will be normalized based on `ReadsInTSS` (from `cellColData`) but this can be changed via the `normMethod` parameter if desired. Lastly, you can highlight specific regions in the plots using the `hightlight` and `highlightFill` paramters. There are tons of ways to use the `plotBrowserTrack()` function, far more than can be adequately reviewed in this manual so take the time to explore.
 
 ## Launching the ArchRBrowser
 

@@ -356,6 +356,29 @@ plotEmbedding(
   plotAs = "points")
 ```
 
+## Importing an embedding from external software
+
+If you have analyzed data using another package, you can always import your embedding coordinates into ArchR. To do this, you need to create the various attributes that ArchR expects of an embedding and then add this to the `embeddings` slot of your `ArchRProject`.
+
+The key component of an embedding in ArchR is a `DataFrame` that contains the cell names and the embedding coordinates of each cell. In the below example, we will randomly generate arbitrary UMAP coordinates for all of the cells in `projHeme5` but in your own application you would need to provide UMAP coordinates ordered in the same order as returned by `getCellNames()`.
+
+```{r, collapse=TRUE}
+#simulate mock UMAP data by random sampling
+umap1 <- (sample(x = -100000:100000, size = length(getCellNames(projHeme2)), replace = FALSE))/10000
+umap2 <- (sample(x = -100000:100000, size = length(getCellNames(projHeme2)), replace = FALSE))/10000
+
+#add embedding to projHeme2
+umap_df <- DataFrame(row.names = getCellNames(projHeme2), "custom#UMAP1" = umap1, "custom#UMAP2" =  umap2, check.names = FALSE)
+projHeme2@embeddings$customUMAP <- SimpleList(df = umap_df, params = list())
+```
+
+With this, we would be able to use this embedding by name as with any other embedding in our `ArchRProject`. It is important to note that the embedding coordinate column names (i.e `"custom#UMAP1"` and `"custom#UMAP2"` in the example above) must contain the `#` in the name as this is used in string splitting operations in `plotEmbedding()` and other functions.
+
+```{r, collapse=TRUE}
+getEmbedding(ArchRProj = projHeme5, embedding = "customUMAP")
+```
+
+
 ```{r, include=FALSE, eval=FALSE}
 save.image(params$out, compress = FALSE)
 ```
