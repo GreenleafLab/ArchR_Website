@@ -116,7 +116,12 @@ In ArchR, pseudo-bulk replicates are made using the `addGroupCoverages()` functi
 ```{r}
 projHeme4 <- addGroupCoverages(ArchRProj = projHeme3, groupBy = "Clusters2")
 ```
- 
+
+Once we have run `addGroupCoverages()`, this creates an entry in the project metadata of the `ArchRProject`, including a file path to the HDF5-format coverage object that is stored on disk.
+
+```{r, collapse=TRUE}
+projHeme4@projectMetadata$GroupCoverages$Clusters2$coverageMetadata
+```
 
 With these pseudo-bulk replicates generated, we can now call peaks in our data. As mentioned previously, we do not want to call peaks on the merged set of all single cells so having these more granular cell groups defined, either through clustering or otherwise, provides the ideal starting point for peak calling.
 
