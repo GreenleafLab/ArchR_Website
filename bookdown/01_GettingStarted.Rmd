@@ -75,6 +75,12 @@ library(ArchR)
 set.seed(1)
 ```
 
+Next, we either enable or disable file locking for HDF5 files. File locking allows for processes to take advantage of subthreading but may not work on certain network-based file systems, such as lustre, that are often present on high-performance computing clusters. This has caused a lot of problems for specific users, in the past (perhaps best summarized [here](https://github.com/GreenleafLab/ArchR/issues/248#issuecomment-789453997)). Thus, it is extremely important to consistently enable or disable file locking based on your particular computational environment. Enabling file locking will allow subthreading, disabling file locking will prevent it. Regardless, whatever you chose for file locking is controlled by environment variables and only persists during the current `R` session so you should include a call to `addArchRFileLocking()` in the beginning of each new R session (just like `set.seed()` etc.).
+
+```{r, collapse=TRUE}
+addArchRLocking(locking = TRUE)
+```
+
 Next, we set the default number of threads for ArchR functions. This is something you will have to do during each new R session. We recommend setting `threads` to 1/2 to 3/4 of the total available cores. The memory usage in ArchR will often scale with the number of threads used so allowing ArchR to use more threads will also lead to higher memory usage.
 
 ```{r, collapse=TRUE}
