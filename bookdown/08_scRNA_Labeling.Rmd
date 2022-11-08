@@ -24,13 +24,13 @@ In addition to allowing cluster identity assignment with gene scores, ArchR also
 ![](images/ArchR_scRNA_Integration.png){width=500px}
 </center>
 
-Effectively, for each cell in the scATAC-seq data, this integration process finds the cell in the scRNA-seq data that looks most similar and assigns the gene expression data from that scRNA-seq cell to the scATAC-seq cell. At the end, each cell in scATAC-seq space has been assigned a gene expression signature which can be used for many downstream analyses. This chapter illustrates how to use this information for assigning clusters while later chapters show how to use the linked scRNA-seq data for more complex analyses such as identifying predicted cis-regulatory elements. We believe these integrative analyses will become increasingly relevant as multi-omic single-cell profiling becomes commercially available. In the meantime, using publicly available scRNA-seq data in matched cell types or scRNA-seq data that you have generated on your sample of interest can bolster the scATAC-seq analyses performed in ArchR.
+Effectively, for each cell in the scATAC-seq data, this integration process finds the cell in the scRNA-seq data that looks most similar and assigns the gene expression data from that scRNA-seq cell to the scATAC-seq cell. At the end, each cell in scATAC-seq space has been assigned a gene expression signature which can be used for many downstream analyses. This chapter illustrates how to use this information for assigning clusters while later chapters show how to use the linked scRNA-seq data for more complex analyses such as identifying predicted cis-regulatory interactions. We believe these integrative analyses will become increasingly relevant as multi-omic single-cell profiling becomes more common. In the meantime, using publicly available scRNA-seq data in matched cell types or scRNA-seq data that you have generated on your sample of interest can bolster the scATAC-seq analyses performed in ArchR.
 
 ## Cross-platform linkage of scATAC-seq cells with scRNA-seq cells
 
 In order to integrate our tutorial scATAC-seq data with matched scRNA-seq data, we will use scRNA-seq data derived from the same hematopoietic cell types from Granja* et al (2019).
 
-We have stored this scRNA-seq data as a 111 MB `RangedSummarizedExperiment` object. However, ArchR also accepts unmodified `Seurat` objects as input to the integration workflow. Downloading and examining this object, we see that it has a gene expression counts matrix and associated metadata.
+We have stored this scRNA-seq data as a 111 MB `RangedSummarizedExperiment` object. However, ArchR also accepts unmodified `Seurat` objects as input to the integration workflow. However, Seurat SCTransform-normalized data is not suitable for this integration workflow. Downloading and examining this object, we see that it has a gene expression counts matrix and associated metadata.
 ```{r, collapse=TRUE}
 if(!file.exists("scRNA-Hematopoiesis-Granja-2019.rds")){
     download.file(
@@ -75,6 +75,8 @@ projHeme2 <- addGeneIntegrationMatrix(
 ```
 
 This unconstrained integration can be used as shown below to perform a more refined constrained integration.
+
+You may want to assess the "quality" of the integration between your scATAC-seq and scRNA-seq data. ArchR provides two general ways to do this. The first is the option to ouput a UMAP plot of the joint CCA subspace. This is enabled through the `plotUMAP` and `UMAPParams` parameters to `addGeneIntegrationMatrix()`. If `plotUMAP = TRUE`, then a UMAP plot is saved for each block of the integration in a subfolder (based on `matrixName`) of the "RNAIntegration" folder. These plots can be difficult to interpret, especially with the intercellular heterogeneity isn't very strong. As an alternative, ArchR also stores the `NAME.score` value from `Seurat::TransferData()` in a column of `cellColData` indicated by what you pass to the `nameScore` parameter.
 
 ### Constrained Integration
 
