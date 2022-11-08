@@ -20,7 +20,7 @@ To start off, ArchR makes heavy use of `SummarizedExperiment` objects when expor
 
 ## Exporting fragment-level data
 
-To enable optimal flexibility, ArchR allows you to export fragments from your `ArchRProject` or ArrowFiles at any time using the `getFragmentsFromArrow()` and `getFragmentsFromProject()` functions. For both functions, you must provide the `cellNames` for the cells you wish to extract. For example, you might extract the fragments from a particular cluster from your entire project like this:
+To enable optimal flexibility, ArchR allows you to export fragments from your `ArchRProject` or ArrowFiles at any time using the `getFragmentsFromArrow()`, `getFragmentsFromProject()`, and `getGroupFragments()` functions. For the `getFragmentsFromArrow()` and `getFragmentsFromProject()` functions, you must provide the `cellNames` for the cells you wish to extract. For example, you might extract the fragments from a particular cluster from your entire project like this:
 
 ```{r, collapse=TRUE}
 frags <- getFragmentsFromProject(
@@ -39,6 +39,18 @@ We can just unlist this object to get a `GRanges` object where each entry repres
 
 ```{r, collapse=TRUE}
 unlist(frags)
+```
+
+Similarly, `getGroupFragments()` provides a shortcut to doing fragment export based on cell groupings defined in `cellColData`. However, this function creats fragment files on disk, rather than storing them as a `GRanges` object.
+
+```{r, collapse=TRUE}
+frags <- getGroupFragments(ArchRProj = projHeme5, groupBy = "Clusters2")
+```
+
+Inspecting the `frags` object returned as the output of `getGroupFragments()`, we get the file paths to the fragment files on disk.
+
+```{r, collapse=TRUE}
+frags
 ```
 
 ## Exporting matrix-level data
@@ -90,7 +102,7 @@ seuratObj[["iterativeLSI"]] <- CreateDimReducObject(embeddings = getReducedDims(
 
 ## Exporting pseudo-bulked data to a `SummarizedExperiment`
 
-Often times, we  want to analyze our single-cell data as if it were bulk data to get around issues of sparsity. For example, you might want to use pseudo-bulk replicates when trying to understand "how does cluster X or cell type Y differ across cases and controls". To enable this type of analysis, ArchR provides the `getGroupSE()` function. This function will group your cells based on the values found in a column of `cellColData`. As you will remember from earlier chapters, you can add whatever information you want as new columns to `cellColData` and this can be helpful to create the grouping divisions that you want to extract with `getGroupSE()`.
+Often times, we  want to analyze our single-cell data as if it were bulk data to get around issues of sparsity. For example, you might want to use pseudo-bulk replicates when trying to understand "how does cluster X or cell type Y differ across cases and controls". To enable this type of analysis, ArchR provides the `getGroupSE()` and `getPBGroupSE()` functions. These function will group your cells based on different parameters. `getGroupSE()` will group cells based on the values found in a column of `cellColData`. For example, you might want to get an SE containing information from each sample for each cluster. As you will remember from earlier chapters, you can add whatever information you want as new columns to `cellColData` and this can be helpful to create the grouping divisions that you want to extract with `getGroupSE()`. `getPBGroupSE()` is similar but it uses the exact pseudo-bulk cell groupings that were used in your `ArchRProject` to create coverage files, call peaks, etc. If the difference between these functions seems subtle, you should re-read the chapter on pseudo-bulks to understand the difference.
 
 For example, if we wanted to create pseudo-bulk replicates based on Cluster and Sample, creating a single replicate for each sample x cluster combination, we could add a new column to `cellColData` representing this information:
 
@@ -111,6 +123,7 @@ colnames(groupSE)
 
 `getGroupSE()` is capable of exporting any matrix to a `SummarizedExperiment` object.
 
+The functionality of `getPBGroupSE()` is nearly identical to `getGroupSE()`. The primary difference is that the cell groupings used will be determined by calling `addGroupCoverages()` with `returnGroups = TRUE`.
 
 ## Exporting pseudo-bulked data to a bigWig file
 
