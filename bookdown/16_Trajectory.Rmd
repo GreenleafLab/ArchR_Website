@@ -671,9 +671,50 @@ system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
 
 ## Monocle3 Trajectories
 
-ArchR can also handle trajectories derived in [Monocle3](https://cole-trapnell-lab.github.io/monocle3/). This is handled by the `getMonocleTrajectories()` and `addMonocleTrajectory()` functions. Before diving in, it is worth noting that much of the infrastructure that ArchR uses for storing and visualizing trajectories is based on the assumption that the trajectory is linear and the trajectories determined by Monocle3 are not linear. Because of this, we have to treat the resulting Monocle3 trajectory as a collection of individual trajectories coming from a single cellular group.
+ArchR can also handle trajectories derived in [Monocle3](https://cole-trapnell-lab.github.io/monocle3/). This is handled by the `getMonocleTrajectories()` and `addMonocleTrajectory()` functions. Before diving in, it is worth noting that much of the infrastructure that ArchR uses for storing and visualizing trajectories is based on the assumption that the trajectory is linear and the trajectories determined by Monocle3 are not necessarily linear. Because of this, we either have to (i) force Monocle3 to create a linear trajectory by limiting the cell groups that it uses, or (ii) to treat the resulting Monocle3 trajectory as a collection of individual trajectories coming from a single cellular group. We illustrate these two workflows below.
 
-Though this is slightly counter to the typical ArchR workflow, we first run `getMonocleTrajectories()` to retrieve the trajectory from Monocle3. Our tutorial dataset isnt very deeply branched so here we will simultaneously model the myeloid and lymphoid trajectories that we did in isolation in the previous sections. In this function call, `principalGroup` indicates the apex of the trajectory from which all branches emanate and `useGroups` tells Monocle3 all of the groups that should be mapped on the trajectory. 
+Though this is slightly counter to the typical ArchR workflow, we first run `getMonocleTrajectories()` to retrieve the trajectory from Monocle3. In this function call, `principalGroup` indicates the apex group from which the trajectory will emanate and `useGroups` tells Monocle3 all of the groups that should be mapped on the trajectory.
+
+First, we will create a linear trajectory of the lymphoid lineage. The same workflow would apply for the myeloid lineage but we are just going to create the lymphoid trajectory here to enable downstream comparison of ArchR, Monocle3, and Slingshot trajectories in a subsequent secion of this book.
+
+```{r, collapse=TRUE}
+monocle_lymphoid_solo <- getMonocleTrajectories(
+    ArchRProj = projHeme5, 
+    name = "Monocle_Lymphoid_solo",
+    useGroups = c("Progenitor","CLP","PreB","B"),
+    principalGroup = "Progenitor",
+    groupBy = "Clusters2",
+    embedding = "UMAP",
+    clusterParams = list(k = 50),
+    seed = 1
+)
+```
+
+You'll notice that during the above function call, ArchR tells you that the trajectory results were plotted to a PDF called `Monocole3/Plot-Results-Monocle_Lymphoid_solo.pdf` which you can reference to see the trajectory results.
+
+After we have retrieved this trajectory object from Monocle3 (called a "cell data set" or CDS), we need to add this information to our `ArchRProject` object. To do this, we use `addMonocleTrajectory()` and pass it the output of `getMonocleTrajectories()` to the `monocleCDS` parameter. 
+
+```{r, collapse=TRUE}
+projHeme5 <- addMonocleTrajectory(
+    ArchRProj = projHeme5,
+    name = "Monocle_Lymphoid_solo",
+    useGroups = c("Progenitor","CLP","PreB","B"),
+    groupBy = "Clusters2",
+    monocleCDS = monocle_lymphoid_solo,
+    force = TRUE
+)
+```
+
+Now, we can use `plotTrajectory()` to plot as before. You'll notice that we've set the parameter `addArrow = FALSE` because the fitted lines often look a little off for these non-ArchR trajectories.
+
+```{r, collapse=TRUE}
+p_lymphoid_solo <- plotTrajectory(projHeme5, trajectory = "Monocle_Lymphoid_solo", colorBy = "cellColData", name = "Monocle_Lymphoid_solo", addArrow = FALSE)
+p_lymphoid_solo[[1]]
+```
+
+Alternatively, we could create a single trajectory encompassing both the myeloid and lymphoid brances with a single call to `getMonocleTrajectories()`, providing all of the relevant groups to `useGroups`. For certain applications, this may be a useful implementation so it is worth thinking about the best way to do this for your particular biological question.
+
+First, we create a new `monocleCDS` object using `getMonocleTrajectories()`, but passing the cell groups corresponding to both the lymphoid and myeloid cell types to `useGroups`.
 
 ```{r, collapse=TRUE}
 monocle_progenitor <- getMonocleTrajectories(
@@ -688,9 +729,7 @@ monocle_progenitor <- getMonocleTrajectories(
 )
 ```
 
-You'll notice that during the above function call, ArchR tells you that the trajectory results were plotted to a PDF called `Monocole3/Plot-Results-Monocle_Progenitor.pdf` which you can reference to see the trajectory results.
-
-After we have retrieved this trajectory object from Monocle3 (called a "cell data set" or CDS), we need to add this information to our `ArchRProject` object. To do this, we use `addMonocleTrajectory()` and pass it the output of `getMonocleTrajectories(`. However, as mentioned above, the Monocle trajectory contains multiple branches so we need to add each branch individually as its own trajectory. First, we will add the myeloid trajectory, by specifying the myeloid cell groupings to `useGroups`.
+As mentioned above, the resulting Monocle trajectory contains multiple branches so we need to add each branch individually as its own trajectory. First, we will add the myeloid trajectory, by specifying the myeloid cell groupings to `useGroups`.
 
 ```{r, collapse=TRUE}
 projHeme5 <- addMonocleTrajectory(
@@ -703,7 +742,7 @@ projHeme5 <- addMonocleTrajectory(
 )
 ```
 
-Now, we can use `plotTrajectory()` to plot as before. You'll notice that we've set the parameter `addArrow = FALSE` because the fitted lines often look a little off for these non-ArchR trajectories.
+Plotting this trajectory is the same as above.
 
 ```{r, collapse=TRUE}
 p_myeloid <- plotTrajectory(projHeme5, trajectory = "Monocle_Myeloid", colorBy = "cellColData", name = "Monocle_Myeloid", addArrow = FALSE)
@@ -730,38 +769,7 @@ p_lymphoid <- plotTrajectory(projHeme5, trajectory = "Monocle_Lymphoid", colorBy
 p_lymphoid[[1]]
 ```
 
-Alternatively, a more straightforward approach would be to create each "branch" (myeloid / lymphoid) as a separate call to `getMonocleTrajectories()`, providing only the relevant groups to `useGroups`. For certain applications, this may be a cleaner implementation so it is worth thinking about the best way to do this for your particular biological question. To enable downstream comparison of ArchR, Monocle3, and Slingshot trajectories in a subsequent secion of this book, we will do this for the lymphoid trajectory below.
-
-```{r, collapse=TRUE}
-monocle_lymphoid_solo <- getMonocleTrajectories(
-    ArchRProj = projHeme5, 
-    name = "Monocle_Lymphoid_solo",
-    useGroups = c("Progenitor","CLP","PreB","B"),
-    principalGroup = "Progenitor",
-    groupBy = "Clusters2",
-    embedding = "UMAP",
-    clusterParams = list(k = 50),
-    seed = 1
-)
-```
-
-```{r, collapse=TRUE}
-projHeme5 <- addMonocleTrajectory(
-    ArchRProj = projHeme5,
-    name = "Monocle_Lymphoid_solo",
-    useGroups = c("Progenitor","CLP","PreB","B"),
-    groupBy = "Clusters2",
-    monocleCDS = monocle_lymphoid_solo,
-    force = TRUE
-)
-```
-
-```{r, collapse=TRUE}
-p_lymphoid_solo <- plotTrajectory(projHeme5, trajectory = "Monocle_Lymphoid_solo", colorBy = "cellColData", name = "Monocle_Lymphoid_solo", addArrow = FALSE)
-p_lymphoid_solo[[1]]
-```
-
-If you look closely, you'll notice slight differences between this lymphoid trajectory identified in isolation compared to the lymphoid branch of the larger joint monocle trajectory calculated at the beginning of this section.
+If you look closely, you'll notice slight differences between this lymphoid trajectory identified in isolation compared to the lymphoid branch of the larger joint monocle trajectory calculated at the beginning of this section. In particular, the "Progenitor" cells have a different pattern.
 
 ## Slingshot Trajectories
 
@@ -816,15 +824,13 @@ We can also plot one-to-one correlation plots to show the pairwise comparisons.
 
 ```{r, collapse=TRUE}
 dL <- dL[!is.na(rowSums(dL[,1:3])), ,drop=FALSE] #Remove NA rows for cells not in trajectory
-p1 <- ggPoint(dL[,1], dL[,2], paste0(dL[,"Groups"]), pal = paletteDiscrete(projHeme5$Clusters2), xlabel="ArchR", ylabel="Sling", labelAsFactors=F, labelMeans=F)
-p2 <- ggPoint(dL[,1], dL[,3], paste0(dL[,"Groups"]), pal = paletteDiscrete(projHeme5$Clusters2), xlabel="ArchR", ylabel="Mon",labelAsFactors=F, labelMeans=F)
-p3 <- ggPoint(dL[,2], dL[,3], paste0(dL[,"Groups"]), pal = paletteDiscrete(projHeme5$Clusters2), xlabel="Sling", ylabel="Mon",labelAsFactors=F, labelMeans=F)
+p1 <- ggPoint(dL[,1], dL[,2], paste0(dL[,"Groups"]), pal = paletteDiscrete(projHeme5$Clusters2)[lymphoid_cells], xlabel="ArchR", ylabel="Sling", labelAsFactors=F, labelMeans=F)
+p2 <- ggPoint(dL[,1], dL[,3], paste0(dL[,"Groups"]), pal = paletteDiscrete(projHeme5$Clusters2)[lymphoid_cells], xlabel="ArchR", ylabel="Mon",labelAsFactors=F, labelMeans=F)
+p3 <- ggPoint(dL[,2], dL[,3], paste0(dL[,"Groups"]), pal = paletteDiscrete(projHeme5$Clusters2)[lymphoid_cells], xlabel="Sling", ylabel="Mon",labelAsFactors=F, labelMeans=F)
 ggAlignPlots(p1,p2,p3,type="h")
 ```
 
 In most cases, ArchR and Slingshot agree more closely than either does with Monocle3, but this is not altogether surprising given the different methodologies. This, of course, does not mean that one is correct and the others are not but serves to accent that they are slightly different.
-
-
 
 ```{r, include=FALSE, eval=FALSE}
 save.image(params$out, compress = FALSE)
