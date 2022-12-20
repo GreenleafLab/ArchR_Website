@@ -8,10 +8,18 @@ params:
   token: ""
   ref: ""
   out: ""
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
+
 ```{r, include=FALSE}
-load("ch1.RData")
+#load the data from the previous chapter as needed
+current_chapter = 4
+previous_chapter = current_chapter-1
+load(file = paste0("./chapter_images/chapter",previous_chapter,".RData"))
 ```
+
 # Doublet Inference with ArchR
 
 One major source of trouble in single-cell data is the contribution of "doublets" to the analysis. A doublet refers to a single droplet that received a single barcoded bead and more than one nucleus. This causes the reads from more than one cell to appear as a single cell that is effectively the average of the two cells. We remove these computationally and describe this doublet removal process in depth in this chapter.
@@ -60,11 +68,6 @@ doubScores <- addDoubletScores(
 ```
 In the above output, ArchR reports the R<sup>2</sup> value for the UMAP projection for each Arrow file. If these R<sup>2</sup> values are much lower (i.e. less than 0.9), this often indicates that the cells within the Arrow file have very little heterogeneity. This makes the accuracy of doublet calling worse because the majority of doublets would be "homotypic" - or a single droplet with two very similar cells. In these cases, ArchR will skip doublet prediction because it is not accurate. Alternatively, you can try setting `knnMethod = "LSI"` and `force = TRUE` to perform projection in the LSI subspace; however, you should manually assess the results and make sure this is performing as you would expect.
 
-```{r, include=FALSE}
-ArchR:::.convertToPNG()
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
 
 Adding doublet scores will create plots in the "QualityControl" directory. There are 3 plots associated with each of your samples in this folder:
 
@@ -72,31 +75,34 @@ Adding doublet scores will create plots in the "QualityControl" directory. There
 2. **Doublet Scores** - These represent the significance (`-log10(binomial adjusted p-value)`) of simulated doublets nearby each single cell compared to the expected if we assume a uniform distribution. We have found this value to be less consistent than the doublet enrichments and therefore use doublet enrichments for doublet identification.
 3. **Doublet Density** - This represents the density of the simulated doublet projections. This allows you to visualize where the synthetic doublets were located after projection into your 2-dimensional embedding.
 
-```{r include=FALSE, eval=FALSE}
-#JJJ These plots are impossible to read. 
+<!-- These plots are impossible to read. -->
+
+```{r, include=FALSE}
+doubletFiles <- list.files(path = "./QualityControl", pattern = "Doublet-Summary.pdf", full.names = TRUE, recursive = TRUE)
+ArchR:::.convertToPNG(pdfFiles = doubletFiles, outDir = "./images/bookdown", command = "cp")
 ```
 
 For **BMMC** : </br>
 
-![](images/HemeWalkthrough/PNG/scATAC_BMMC_R1-Doublet-Summary_1.png){width=250 height=250}
-![](images/HemeWalkthrough/PNG/scATAC_BMMC_R1-Doublet-Summary_2.png){width=250 height=250}
-![](images/HemeWalkthrough/PNG/scATAC_BMMC_R1-Doublet-Summary_3.png){width=250 height=250}
+![](images/bookdown/scATAC_BMMC_R1-Doublet-Summary_1.png){width=250 height=250}
+![](images/bookdown/scATAC_BMMC_R1-Doublet-Summary_2.png){width=250 height=250}
+![](images/bookdown/scATAC_BMMC_R1-Doublet-Summary_3.png){width=250 height=250}
 
 </br>
 
 For **CD34 BMMC** : </br>
 
-![](images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-Doublet-Summary_1.png){width=250 height=250}
-![](images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-Doublet-Summary_2.png){width=250 height=250}
-![](images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-Doublet-Summary_3.png){width=250 height=250}
+![](images/bookdown/scATAC_CD34_BMMC_R1-Doublet-Summary_1.png){width=250 height=250}
+![](images/bookdown/scATAC_CD34_BMMC_R1-Doublet-Summary_2.png){width=250 height=250}
+![](images/bookdown/scATAC_CD34_BMMC_R1-Doublet-Summary_3.png){width=250 height=250}
 
 </br>
 
 For **PBMC** : </br>
 
-![](images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Doublet-Summary_1.png){width=250 height=250}
-![](images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Doublet-Summary_2.png){width=250 height=250}
-![](images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Doublet-Summary_3.png){width=250 height=250}
+![](images/bookdown/scATAC_PBMC_R1-Doublet-Summary_1.png){width=250 height=250}
+![](images/bookdown/scATAC_PBMC_R1-Doublet-Summary_2.png){width=250 height=250}
+![](images/bookdown/scATAC_PBMC_R1-Doublet-Summary_3.png){width=250 height=250}
 
 </br>
 
@@ -117,6 +123,9 @@ ArchRProj <- addDemuxletResults(ArchRProj = ArchRProj,
 ```
 
 
-```{r, include=FALSE}
-save.image(file = "ch2.RData")
+```{r saveImage, include=FALSE}
+filename <- paste0("./chapter_images/chapter",current_chapter,".RData")
+remove(current_chapter)
+remove(previous_chapter)
+save.image(file =  filename)
 ```

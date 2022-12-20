@@ -8,12 +8,16 @@ params:
   token: ""
   ref: ""
   out: ""
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r, include=FALSE}
-load("ch7.RData")
-library("ArchR")
-library("parallel")
+#load the data from the previous chapter as needed
+current_chapter = 10
+previous_chapter = current_chapter-1
+load(file = paste0("./chapter_images/chapter",previous_chapter,".RData"))
 ```
 
 # Defining Cluster Identity with scRNA-seq
@@ -31,7 +35,7 @@ Effectively, for each cell in the scATAC-seq data, this integration process find
 In order to integrate our tutorial scATAC-seq data with matched scRNA-seq data, we will use scRNA-seq data derived from the same hematopoietic cell types from Granja* et al (2019).
 
 We have stored this scRNA-seq data as a 111 MB `RangedSummarizedExperiment` object. However, ArchR also accepts unmodified `Seurat` objects as input to the integration workflow. However, Seurat SCTransform-normalized data is not suitable for this integration workflow. Downloading and examining this object, we see that it has a gene expression counts matrix and associated metadata.
-```{r, collapse=TRUE}
+```{r downloadRNA, collapse=TRUE}
 if(!file.exists("scRNA-Hematopoiesis-Granja-2019.rds")){
     download.file(
         url = "https://jeffgranja.s3.amazonaws.com/ArchR/TestData/scRNA-Hematopoiesis-Granja-2019.rds",
@@ -44,12 +48,12 @@ seRNA
 ```
 
 The metadata contains a column called `BioClassification` which contains the cell type classifications for each cell in the scRNA-seq dataset.
-```{r}
+```{r, collapse=TRUE}
 colnames(colData(seRNA))
 ```
 
 Using `table()` we can see how many cells are in each of the scRNA-seq cell type classifications.
-```{r}
+```{r, collapse=TRUE}
 table(colData(seRNA)$BioClassification)
 ```
 
@@ -59,7 +63,7 @@ There are two types of integration approaches that we can perform. __Unconstrain
 
 To integrate scATAC-seq with scRNA-seq, we use the `addGeneIntegrationMatrix()` function. As mentioned above, this function accepts either a `Seurat` object or a `RangedSummarizedExperiment` object via the `seRNA` parameter. The first round of integration we perform will be a preliminary __unconstrained__ integration and we will not store this in the Arrow files (`addToArrow = FALSE`). We provide a name for the integration matrix that will be stored in the `ArchRProject` via the `matrixName` parameter. The other key parameters for this function provide column names in `cellColData` where certain information will be stored: `nameCell` will store the cell ID from the matched scRNA-seq cell, `nameGroup` will store the group ID from the scRNA-seq cell, and `nameScore` will store the cross-platform integration score.
 
-```{r, collapse=TRUE}
+```{r addGIM, collapse=TRUE}
 projHeme2 <- addGeneIntegrationMatrix(
     ArchRProj = projHeme2, 
     useMatrix = "GeneScoreMatrix",
@@ -92,12 +96,12 @@ cbind(preClust, rownames(cM)) #Assignments
 The above list shows which scRNA-seq cell type is most abundant in each of the 12 scATAC-seq clusters.
 
 First, lets look at the cell type labels from our scRNA-seq data that were used in our unconstrained integration:
-```{r}
+```{r, collapse=TRUE}
 unique(unique(projHeme2$predictedGroup_Un))
 ```
 
 From the above list, we can see that the clusters in the scRNA-seq data that correspond to T cells and NK cells are Clusters 19-25. We will create a string-based representation of these clusters to use in the downstream constrained integration.
-```{r}
+```{r, collapse=TRUE}
 #From scRNA
 cTNK <- paste0(paste0(19:25), collapse="|")
 cTNK
@@ -113,7 +117,6 @@ These string-based representations are pattern matching strings that we will use
 
 For T cells and NK cells, this identifies scATAC-seq clusters C7, C8, and C9:
 ```{r, collapse=TRUE}
-#Assign scATAC to these categories
 clustTNK <- rownames(cM)[grep(cTNK, preClust)]
 clustTNK
 ```
@@ -126,8 +129,8 @@ clustNonTNK
 
 We then perform a similar opperation to identify the scRNA-seq cells that correspond to these same cell types.
 First, we identify the T cell and NK cells in the scRNA-seq data
+
 ```{r, collapse=TRUE}
-#RNA get cells in these categories
 rnaTNK <- colnames(seRNA)[grep(cTNK, colData(seRNA)$BioClassification)]
 head(rnaTNK)
 ```
@@ -139,6 +142,7 @@ head(rnaNonTNK)
 ```
 
 To prepare for this constrained integration, we create a nested list. This is a `SimpleList` of multiple `SimpleList` objects, one for each group that we would like to constrain. In this example, we have two groups: one group called `TNK` that identifies the T cells and NK cells across the two platforms, and a second group called `NonTNK` that identifies the Non-T cell Non-NK cell cells across the two platforms. Each of these `SimpleList` objects has two vectors of cell IDs, one called `ATAC` and one called `RNA` as shown below: 
+
 ```{r, collapse=TRUE}
 groupList <- SimpleList(
     TNK = SimpleList(
@@ -151,8 +155,10 @@ groupList <- SimpleList(
     )    
 )
 ```
+
 We pass this list to the `groupList` parameter of the `addGeneIntegrationMatrix()` function to constrain our integration. Note that, in this case, we are still not adding these results to the Arrow files (`addToArrow = FALSE`). We recommend checking the results of the integration thoroughly against your expectations prior to saving the results in the Arrow files. We illustrate this process in the next section of the book.
-```{r, collapse=TRUE}
+
+```{r addGIM2, collapse=TRUE}
 #~5 minutes
 projHeme2 <- addGeneIntegrationMatrix(
     ArchRProj = projHeme2, 
@@ -172,16 +178,18 @@ projHeme2 <- addGeneIntegrationMatrix(
 ### Comparing Unconstrained and Constrained Integrations
 
 To compare our unconstrained and constrained integrations, we will color the cells in our scATAC-seq data based on the scRNA-seq cell type identified through integration. To do this, we will create a color palette using the built-in ArchR function `paletteDiscrete()`.
-```{r}
+```{r, collapse=TRUE}
 pal <- paletteDiscrete(values = colData(seRNA)$BioClassification)
 ```
 
 In ArchR, a palette is essentially a named vector where the values are hex codes corresponding to the color to be associated with the names.
-```{r}
+
+```{r, collapse=TRUE}
 pal
 ```
 
 We can now visualize the integration by overlaying the scRNA-seq cell types on our scATAC-seq data based on the unconstrained integration.
+
 ```{r, collapse=TRUE}
 p1 <- plotEmbedding(
     projHeme2, 
@@ -191,21 +199,12 @@ p1 <- plotEmbedding(
 )
 ```
 
-```{r, eval=FALSE}
+```{r, collapse=TRUE}
 p1
 ```
 
-```{r, include=FALSE}
-plotPDF(p1, name = "Plot-UMAP-RNA-Integration.pdf", ArchRProj = projHeme2, addDOC = FALSE, width = 5, height = 5)
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Plot-UMAP-RNA-Integration_1.png){width=600 height=600}
-
-
 Similarly, we can visualize the integration by overlaying the scRNA-seq cell types on our scATAC-seq data based on the constrained integration.
+
 ```{r, collapse=TRUE}
 p2 <- plotEmbedding(
     projHeme2, 
@@ -215,32 +214,22 @@ p2 <- plotEmbedding(
 )
 ```
 
-```{r, eval=FALSE}
+```{r, collapse=TRUE}
 p2
 ```
 
 The differences between these the unconstrained and constrained integration is very subtle in this example, largely because the cell types of interest are already very distinct. However, you should notice differences, especially in the T cell clusters (Clusters 17-22).
 
-```{r, include=FALSE}
-plotPDF(p1,p2, name = "Plot-UMAP-RNA-Integration.pdf", ArchRProj = projHeme2, addDOC = FALSE, width = 5, height = 5)
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Plot-UMAP-RNA-Integration_2.png){width=600 height=600}
-
 To save an editable vectorized version of this plot, we use the `plotPDF()` function.
 
-```{r}
+```{r, collapse=TRUE}
 plotPDF(p1,p2, name = "Plot-UMAP-RNA-Integration.pdf", ArchRProj = projHeme2, addDOC = FALSE, width = 5, height = 5)
 ```
 
+We can now save our `projHeme2` using the `saveArchRProject()` function. Here, we set `load = TRUE` to make sure that the `projHeme2` object tracks with the project that we just saved.
 
-We can now save our `projHeme2` using the `saveArchRProject()` function.
-
-```{r}
-saveArchRProject(ArchRProj = projHeme2, outputDirectory = "Save-ProjHeme2", load = FALSE)
+```{r, collapse=TRUE}
+projHeme2 <- saveArchRProject(ArchRProj = projHeme2, outputDirectory = "Save-ProjHeme2", load = FALSE)
 ```
 
 
@@ -248,8 +237,7 @@ saveArchRProject(ArchRProj = projHeme2, outputDirectory = "Save-ProjHeme2", load
 
 Now that we are satisfied with the results of our scATAC-seq and scRNA-seq integration, we can re-run the integration with `addToArrow = TRUE` to add the linked gene expression data to each of the Arrow files. As described previously, we pass the `groupList` to constrain the integration and column names to `nameCell`, `nameGroup`, and `nameScore` for each of the metadata columns we will add to `cellColData`. Here, we create `projHeme3` which will be carried forward in the tutorial.
 
-```{r}
-#~5 minutes
+```{r addGIM3, collapse=TRUE}
 projHeme3 <- addGeneIntegrationMatrix(
     ArchRProj = projHeme2, 
     useMatrix = "GeneScoreMatrix",
@@ -268,14 +256,14 @@ projHeme3 <- addGeneIntegrationMatrix(
 
 Now, when we check which matrices are available using `getAvailableMatrices()`, we see that the `GeneIntegrationMatrix` has been added to the Arrow files.
 
-```{r}
+```{r, collapse=TRUE}
 getAvailableMatrices(projHeme3)
 ```
 
 With this new `GeneIntegrationMatrix` we can compare the linked gene expression with the inferred gene expression obtained through gene scores.
 
 First, lets make sure we have added impute weights to our project:
-```{r}
+```{r, collapse=TRUE}
 projHeme3 <- addImputeWeights(projHeme3)
 ```
 
@@ -311,9 +299,9 @@ p2 <- plotEmbedding(
 )
 ```
 
-To plot all marker genes we can use cowplot
+To plot all marker genes we can use cowplot. First, lets organize our plots.
 
-```{r}
+```{r, collapse=TRUE}
 p1c <- lapply(p1, function(x){
     x + guides(color = FALSE, fill = FALSE) + 
     theme_ArchR(baseSize = 6.5) +
@@ -337,38 +325,23 @@ p2c <- lapply(p2, function(x){
         axis.ticks.y=element_blank()
     )
 })
+```
 
+This is what the _gene expression_ looks like:
+```{r, collapse=TRUE}
 do.call(cowplot::plot_grid, c(list(ncol = 3), p1c))
 ```
 
-```{r, include=FALSE}
-plotPDF(
-    do.call(cowplot::plot_grid, c(list(ncol = 3),p1c)), 
-    do.call(cowplot::plot_grid, c(list(ncol = 3),p2c)), 
-    name = "Plot-UMAP-Markers-RNA-W-Imputation.pdf", 
-    ArchRProj = projHeme3,
-    addDOC = FALSE,
-    width = 10, 
-    height = 10
-)
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Plot-UMAP-Markers-RNA-W-Imputation_1.png){width=800 height=800}
-
-```{r, eval=FALSE}
+And this is what the _gene score_ looks like:
+```{r, collapse=TRUE}
 do.call(cowplot::plot_grid, c(list(ncol = 3), p2c))
 ```
-
-![](images/HemeWalkthrough/PNG/Plot-UMAP-Markers-RNA-W-Imputation_2.png){width=800 height=800}
 
 As expected, the results from these two methods for inferring gene expression are similar but not identical. 
 
 To save an editable vectorized version of this plot, we use the `plotPDF()` function.
 
-```{r}
+```{r, collapse=TRUE}
 plotPDF(plotList = p1, 
     name = "Plot-UMAP-Marker-Genes-RNA-W-Imputation.pdf", 
     ArchRProj = projHeme3, 
@@ -379,28 +352,22 @@ plotPDF(plotList = p1,
 
 Now that we are confident in the alignment of our scATAC-seq and scRNA-seq, we can label our scATAC-seq clusters with the cell types from our scRNA-seq data.
 
-```{r include=FALSE, eval=FALSE,echo=FALSE}
-#JJJ This entire section had include = FALSE. I've changed it to include=TRUE but we will need to re-visit to make sure the proper plots and outputs are present
-```
 
 First, we will create a confusion matrix between our scATAC-seq clusters and the `predictedGroup` obtained from our integration analysis.
-```{r}
+```{r, collapse=TRUE}
 cM <- confusionMatrix(projHeme3$Clusters, projHeme3$predictedGroup)
 labelOld <- rownames(cM)
 labelOld
-#  [1] "Cluster11" "Cluster2"  "Cluster12" "Cluster1"  "Cluster8"  "Cluster4" 
-#  [7] "Cluster9"  "Cluster5"  "Cluster7"  "Cluster14" "Cluster3"  "Cluster10"
-# [13] "Cluster6"  "Cluster13"
 ```
 
 Then, for each of our scATAC-seq clusters, we identify the cell type from `predictedGroup` which best defines that cluster.
-```{r}
+```{r, collapse=TRUE}
 labelNew <- colnames(cM)[apply(cM, 1, which.max)]
 labelNew
 ```
 
 Next we need to reclassify these new cluster labels to make a simpler categorization system. For each scRNA-seq cluster, we will re-define its label to something easier to interpret.
-```{r}
+```{r, collapse=TRUE}
 remapClust <- c(
     "01_HSC" = "Progenitor",
     "02_Early.Eryth" = "Erythroid",
@@ -431,61 +398,43 @@ remapClust <- remapClust[names(remapClust) %in% labelNew]
 ```
 
 Then, using the `mapLabels()` function, we will convert our labels to this new simpler system.
-```{r }
+```{r, collapse=TRUE}
 labelNew2 <- mapLabels(labelNew, oldLabels = names(remapClust), newLabels = remapClust)
 labelNew2
-#  [1] "GMP"        "B"          "PreB"       "CD4.N"      "Mono"      
-#  [6] "Erythroid"  "Progenitor" "CD4.M"      "pDC"        "NK"        
-# [11] "CLP"        "Mono"
 ```
 
 Combining `labelsOld` and `labelsNew2`, we now can use the `mapLabels()` function again to create new cluster labels in `cellColData`. 
-```{r }
+```{r, collapse=TRUE}
 projHeme3$Clusters2 <- mapLabels(projHeme3$Clusters, newLabels = labelNew2, oldLabels = labelOld)
 ```
 
 With these new labels in hand, we can plot a UMAP with the new cluster identities overlayed.
-```{r, eval=FALSE}
+```{r, collapse=TRUE}
 p1 <- plotEmbedding(projHeme3, colorBy = "cellColData", name = "Clusters2")
 p1
 ```
-
-```{r, include=FALSE}
-plotPDF(p1, name = "Plot-UMAP-Remap-Clusters.pdf", ArchRProj = projHeme2, addDOC = FALSE, width = 5, height = 5)
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-> \## [1] "plotting ggplot!"  
-## [1] 0  
-
-![](images/HemeWalkthrough/PNG/Plot-UMAP-Remap-Clusters_1.png){width=500 height=500}
 
 This paradigm can be extremely helpful when analyzing scATAC-seq data from a cellular system where scRNA-seq data already exists. As mentioned previously, this integration of scATAC-seq with scRNA-seq also provides a beautiful framework for more complex gene regulation analyses that will be described in later chapters.
 
 To save an editable vectorized version of this plot, we use the `plotPDF()` function.
 
-```{r, eval=FALSE}
+```{r, collapse=TRUE}
 plotPDF(p1, name = "Plot-UMAP-Remap-Clusters.pdf", ArchRProj = projHeme2, addDOC = FALSE, width = 5, height = 5)
 ```
 
-```{r include=FALSE, eval=FALSE,echo=FALSE}
-#JJJ This was moved here from the MACS2 chapter
-```
 
-We can now save our original projHeme3 using `saveArchRProject` from ArchR.
+We can now save our original projHeme3 using `saveArchRProject` from ArchR. Here, we set `load = TRUE` to make sure that the `projHeme3` object tracks with the project that we just saved.
 
-```{r}
-saveArchRProject(ArchRProj = projHeme3, outputDirectory = "Save-ProjHeme3", load = FALSE)
+```{r saveArchRProject, collapse=TRUE}
+projHeme3 <- saveArchRProject(ArchRProj = projHeme3, outputDirectory = "Save-ProjHeme3", load = TRUE)
 ```
 
 
-```{r, include=FALSE, eval=FALSE}
-save.image(params$out, compress = FALSE)
-```
-
-```{r, include=FALSE}
-save.image("ch8.RData")
+```{r saveImage, include=FALSE}
+filename <- paste0("./chapter_images/chapter",current_chapter,".RData")
+remove(current_chapter)
+remove(previous_chapter)
+save.image(file =  filename)
 ```
 
 

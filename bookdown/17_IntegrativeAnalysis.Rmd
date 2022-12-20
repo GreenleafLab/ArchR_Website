@@ -8,10 +8,18 @@ params:
   token: ""
   ref: ""
   out: ""
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
+
 ```{r, include=FALSE}
-load("ch14.RData")
+#load the data from the previous chapter as needed
+current_chapter = 17
+previous_chapter = current_chapter-1
+load(file = paste0("./chapter_images/chapter",previous_chapter,".RData"))
 ```
+
 # Integrative Analysis with ArchR
 
 One of the main strengths of ArchR is its ability to integrate multiple levels of information to provide novel insights. This can take the form of ATAC-seq-only analyses such as identifying peak co-accessibility to predict regulatory interactions, or analyses that integrate scRNA-seq data such as prediction of enhancer activity through peak-to-gene linkage analysis. In either case, ArchR makes it easy to garner deeper insights from your scATAC-seq data.
@@ -32,7 +40,7 @@ One thing to note about co-accessibility analysis is that it often identified ce
 
 To calculate co-accessibility in ArchR, we use the `addCoAccessibility()` function which stores peak co-accessibility information in the `ArchRProject`.
 
-```{r}
+```{r addCoaccessibility, collapse=TRUE}
 projHeme5 <- addCoAccessibility(
 	ArchRProj = projHeme5,
 	reducedDims = "IterativeLSI"
@@ -43,7 +51,7 @@ If you aim to only perform co-accessibility analyses on a subset of cells in you
 
 We can retrieve this co-accessibility information from the `ArchRProject` via the `getCoAccessibility()` function which returns a `DataFrame` object if `returnLoops = FALSE`.
 
-```{r}
+```{r getCoAccessibility, collapse=TRUE}
 cA <- getCoAccessibility(
 	ArchRProj = projHeme5,
 	corCutOff = 0.5,
@@ -53,18 +61,18 @@ cA <- getCoAccessibility(
 ```
 
 The `DataFrame` contains a few important pieces of information. The `queryHits` and `subjectHits` columns denote the index of the two peaks that were found to be correlated. The `correlation` column gives the numeric correlation of the accessibility between those two peaks.
-```{r}
+```{r, collapse=TRUE}
 cA
 ```
 
 
 This co-accessibility `DataFrame` also has a metadata component containing a `GRanges` object of the relevant peaks. The indexes of `queryHits` and `subjectHits` mentioned above apply to this `GRanges` object. 
-```{r}
+```{r, collapse=TRUE}
 metadata(cA)[[1]]
 ```
 
 If we set `returnLoops = TRUE`, then `getCoAccessibility()` will instead return the co-accessibility information in the form a loop track. In this `GRanges` object, the start and end of the `IRanges` map to the two different co-accessible peaks for each interaction. The `resolution` parameter sets the base-pair resolution of these loops. When `resolution = 1`, this creates loops that connect the center of each peak. 
-```{r}
+```{r, collapse=TRUE}
 cA <- getCoAccessibility(
 	ArchRProj = projHeme5,
 	corCutOff = 0.5,
@@ -74,7 +82,7 @@ cA <- getCoAccessibility(
 ```
 
 We can compare this `GRanges` object to the `DataFrame` object generated above.
-```{r}
+```{r, collapse=TRUE}
 cA[[1]]
 ```
 
@@ -88,12 +96,12 @@ cALoops <- cALoops[rowMins(cbind(cALoops$VarQuantile1,cALoops$VarQuantile2)) > 0
 cALoops
 ```
 
-```{r include=FALSE, eval=FALSE,echo=FALSE}
+<!--
 #JJJ Can you better describe what decreasing the resolution does here? How does this work? would it group two peaks that are nearby each other?
-```
+-->
 
 To help with over-plotting of co-accessibility interactions we can decrease the resolution of our loops to `resolution = 1000`. Below, we see that there are fewer total entries in our `GRanges` object than above.
-```{r}
+```{r, collapse=TRUE}
 cA <- getCoAccessibility(
 	ArchRProj = projHeme5,
 	corCutOff = 0.5,
@@ -105,7 +113,7 @@ cA[[1]]
 ```
 
 Similarly, if we decrease the resolution even further with `resolution = 10000`, we identify even fewer co-accessibility interactions.
-```{r}
+```{r, collapse=TRUE}
 cA <- getCoAccessibility(
 	ArchRProj = projHeme5,
 	corCutOff = 0.5,
@@ -119,7 +127,7 @@ cA[[1]]
 ### Plotting browser tracks of Co-accessibility
 
 Once we have added co-accessibility informtation to our `ArchRProject` we can use this as a loop track when plotting browser tracks. We do this via the `loops` parameter to the `plotBrowserTrack()` function. Here, we are using the default parameters for `getCoAccessibility()` which include `corCutOff = 0.5`, `resolution = 1000`, and `returnLoops = TRUE`.
-```{r}
+```{r, collapse=TRUE}
 markerGenes  <- c(
     "CD34", #Early Progenitor
     "GATA1", #Erythroid
@@ -141,33 +149,20 @@ p <- plotBrowserTrack(
 
 To plot our browser track we use the `grid.draw` function and select a specific marker gene by name using the `$` accessor.
 
-```{r }
+```{r, collapse=TRUE}
 grid::grid.newpage()
 grid::grid.draw(p$CD14)
 ```
 
-```{r, include=FALSE }
-plotPDF(plotList = p, 
-    name = "Plot-Tracks-Marker-Genes-with-CoAccessibility.pdf", 
-    ArchRProj = projHeme5, 
-    addDOC = FALSE, width = 5, height = 5)
-ArchR:::.convertToPNG(ArchRProj = projHeme5)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Plot-Tracks-Marker-Genes-with-CoAccessibility_5.png){width=500 height=500}
 
 To save an editable vectorized version of this plot, we use `plotPDF()`.
 
-```{r }
+```{r, collapse=TRUE}
 plotPDF(plotList = p, 
     name = "Plot-Tracks-Marker-Genes-with-CoAccessibility.pdf", 
     ArchRProj = projHeme5, 
     addDOC = FALSE, width = 5, height = 5)
 ```
-
-[Download PDF : Plot-Tracks-Marker-Genes.pdf](images/HemeWalkthrough/PDF/Plot-Tracks-Marker-Genes-with-CoAccessibility.pdf)
 
 
 ## Peak2GeneLinkage with ArchR
@@ -175,7 +170,7 @@ plotPDF(plotList = p,
 Similar to co-accessibility, ArchR can also identify so-called "peak-to-gene links". The primary differences between peak-to-gene links and co-accessibility is that co-accessibility is an ATAC-seq-only analysis that looks for correlations in accessibility between two peaks while peak-to-gene linkage leverages integrated scRNA-seq data to look for correlations between peak accessibility and gene expression. These represent orthogonal approaches to a similar problem. However, because peak-to-gene linkage correlates scATAC-seq and scRNA-seq data, we often think of these links as more relevant to gene regulatory interactions.
 
 To identify peak-to-gene links in ArchR, we use the `addPeak2GeneLinks()` function.
-```{r }
+```{r, collapse=TRUE}
 projHeme5 <- addPeak2GeneLinks(
 	ArchRProj = projHeme5,
 	reducedDims = "IterativeLSI"
@@ -184,7 +179,7 @@ projHeme5 <- addPeak2GeneLinks(
 
 
 We can then retrieve these peak-to-gene links in a similar fashion to how we retrieved co-accessibility interactions by using the `getPeak2GeneLinks()` function. As we saw previously, this function allows for a user-specified cutoff for correlation and resolution for linkages.
-```{r }
+```{r, collapse=TRUE}
 p2g <- getPeak2GeneLinks(
 	ArchRProj = projHeme5,
 	corCutOff = 0.45,
@@ -194,7 +189,7 @@ p2g <- getPeak2GeneLinks(
 ```
 
 When `returnLoops` is set to false, this function returns a `DataFrame` object anaolgous to the `DataFrame` object returned by `getCoAccessibility()`. The primary difference is that the indexes for the scATAC-seq peaks are stored in a column called `idxATAC` and the indexes for the scRNA-seq gene are stored in a column called `idxRNA`. 
-```{r }
+```{r, collapse=TRUE}
 p2g
 ```
 
@@ -220,7 +215,7 @@ metadata(p2g)$seRNA
 ```
 
 If we set `returnLoops = TRUE`, then `getPeak2GeneLinks()` will return a loop track `GRanges` object that connects the peak and gene. As for co-accessibility, the start and end of the `IRanges` object represent the position of the peak and gene being linked. When `resolution = 1`, this links the center of the peak to the single-base TSS of the gene.
-```{r }
+```{r, collapse=TRUE}
 p2g <- getPeak2GeneLinks(
 	ArchRProj = projHeme5,
 	corCutOff = 0.45,
@@ -232,11 +227,8 @@ p2g[[1]]
 ```
 
 
-```{r include=FALSE, eval=FALSE,echo=FALSE}
-#JJJ Can you better describe what decreasing the resolution does here? How does this work for peak-to-gene links? would it group two peaks that are nearby each other to a single gene? Or would it link a single peak to multiple nearby gene TSSs? 
-```
 We can alternatively decrease the resolution of these links by setting `resolution = 1000`. This is primarily useful for plotting the links as a browser tracks because there are instances where many nearby peaks all link to the same gene and this can be difficult to visualize. 
-```{r }
+```{r, collapse=TRUE}
 p2g <- getPeak2GeneLinks(
 	ArchRProj = projHeme5,
 	corCutOff = 0.45,
@@ -248,7 +240,7 @@ p2g[[1]]
 ```
 
 Decreasing the resolution even further also decreases the total number of peak-to-gene links identified.
-```{r }
+```{r, collapse=TRUE}
 p2g <- getPeak2GeneLinks(
 	ArchRProj = projHeme5,
 	corCutOff = 0.45,
@@ -259,12 +251,12 @@ p2g <- getPeak2GeneLinks(
 p2g[[1]]
 ```
 
-You may find that you would like to use a statistical approach to evaluate peak-to-gene associations. Such an approach was developed in [Regner et al. 2021](https://doi.org/10.1016/j.molcel.2021.10.013) and involves using permutation testing to empiracally derive an FDR. This approach is quite computationally expensive but has been implemented as an option in `addPeak2GeneLinks()` via the `addPermutedPval` parameter. For more information on this approach, see [this discussion post](https://github.com/GreenleafLab/ArchR/discussions/1149).
+You may find that you would like to use a statistical approach to evaluate peak-to-gene associations. Such an approach was developed in [Regner et al. 2021](https://doi.org/10.1016/j.molcel.2021.10.013) and involves using permutation testing to empirically derive an FDR. This approach is quite computationally expensive but has been implemented as an option in `addPeak2GeneLinks()` via the `addPermutedPval` parameter. For more information on this approach, see [this discussion post](https://github.com/GreenleafLab/ArchR/discussions/1149).
 
 ### Plotting browser tracks with peak-to-gene links
 
 To plot these peak-to-gene links as a browser track, we use the same workflow shown for co-accessibility in the previous section. Here we use the `plotBrowserTrack()` function
-```{r }
+```{r, collapse=TRUE}
 markerGenes  <- c(
     "CD34", #Early Progenitor
     "GATA1", #Erythroid
@@ -285,55 +277,33 @@ p <- plotBrowserTrack(
 
 To plot our browser track we use the `grid.draw` function and select a specific marker gene by name using the `$` accessor.
 
-```{r }
+```{r, collapse=TRUE}
 grid::grid.newpage()
 grid::grid.draw(p$CD14)
 ```
 
-```{r, include=FALSE}
-plotPDF(plotList = p, 
-    name = "Plot-Tracks-Marker-Genes-with-Peak2GeneLinks.pdf", 
-    ArchRProj = projHeme5, 
-    addDOC = FALSE, width = 5, height = 5)
-ArchR:::.convertToPNG(ArchRProj = projHeme5)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Plot-Tracks-Marker-Genes-with-Peak2GeneLinks_5.png){width=500 height=500}
-
 To save an editable vectorized version of this plot, we use `plotPDF()`.
 
-```{r }
+```{r, collapse=TRUE}
 plotPDF(plotList = p, 
     name = "Plot-Tracks-Marker-Genes-with-Peak2GeneLinks.pdf", 
     ArchRProj = projHeme5, 
     addDOC = FALSE, width = 5, height = 5)
 ```
 
-[Download PDF : Plot-Tracks-Marker-Genes.pdf](images/HemeWalkthrough/PDF/Plot-Tracks-Marker-Genes-with-Peak2GeneLinks.pdf)
 
 ### Plotting a heatmap of peak-to-gene links
 
 To visualize the correspondence of all of our peak-to-gene links, we can plot a peak-to-gene heatmap which contains two side-by-side heatmaps, one for our scATAC-seq data and one for our scRNA-seq data. To do this, we use the `plotPeak2GeneHeatmap()`
 
-```{r }
+```{r, collapse=TRUE}
 p <- plotPeak2GeneHeatmap(ArchRProj = projHeme5, groupBy = "Clusters2")
 ```
 
 The heatmap rows are clustered using k-means clustering based on the value passed to the parameter `k`, which defaults to 25 as shown below.
-```{r }
+```{r, collapse=TRUE}
 p
 ```
-
-```{r, include=FALSE}
-plotPDF(p, name = "Peak2GeneHeatmap", width = 6, height = 8, ArchRProj = projHeme5, addDOC = FALSE)
-ArchR:::.convertToPNG(ArchRProj = projHeme5)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Peak2GeneHeatmap_1.png){width=600 height=800}
 
 
 ## Identification of Positive TF-Regulators
@@ -348,28 +318,24 @@ This motif similarity makes it challenging to identify the specific TFs that mig
 
 ### Step 1. Identify Deviant TF Motifs
 
-```{r include=FALSE, eval=FALSE,echo=FALSE}
-#JJJ True that getGroupSE() takes the average of all cells in the cluster? If not, fix below
-```
+The first part of identifying positive TF regulators is identification of deviant TF motifs. We performed this analysis in a previous chapter, creating a `MotifMatrix` of chromVAR deviations and deviation z-scores for all motifs. We can obtain this data, aggregated by clusters, by using the `getGroupSE()` function which returns a `SummarizedExperiment`. 
 
-The first part of identifying positive TF regulators is identification of deviant TF motifs. We performed this analysis in a previous chapter, creating a `MotifMatrix` of chromVAR deviations and deviation z-scores for all motifs. We can obtain this data, averaged by clusters, by using the `getGroupSE()` function which returns a `SummarizedExperiment`. 
-
-```{r }
+```{r, collapse=TRUE}
 seGroupMotif <- getGroupSE(ArchRProj = projHeme5, useMatrix = "MotifMatrix", groupBy = "Clusters2")
 ```
 
 Because this `SummarizedExperiment` object comes from the `MotifMatrix` is has two seqnames - "deviations" and "z" - corresponding to the raw deviations and deviation z-scores from chromVAR.
-```{r }
+```{r, collapse=TRUE}
 seGroupMotif
 ```
 
 We can subset this `SummarizedExperiment` to just the deviation z-scores.
-```{r }
+```{r, collapse=TRUE}
 seZ <- seGroupMotif[rowData(seGroupMotif)$seqnames=="z",]
 ```
 
 Then we can identify the maximum delta in z-score between all clusters. This will be helpful in stratifying motifs based on the degree of variation observed across clusters.
-```{r}
+```{r, collapse=TRUE}
 rowData(seZ)$maxDelta <- lapply(seq_len(ncol(seZ)), function(x){
   rowMaxs(assay(seZ) - assay(seZ)[,x])
 }) %>% Reduce("cbind", .) %>% rowMaxs
@@ -380,7 +346,7 @@ rowData(seZ)$maxDelta <- lapply(seq_len(ncol(seZ)), function(x){
 
 To identify TFs whose motif accessibility is correlated with with their own gene activity (either by gene score or gene expression), we use the `correlateMatrices()` function and provide the two matrices that we are interested in, in this case the `GeneScoreMatrix` and the `MotifMatrix`. As mentioned previously, these correlations are determined across many low-overlapping cell aggregates determined in the lower dimension space specified in the `reducedDims` parameter.
 
-```{r}
+```{r, collapse=TRUE}
 corGSM_MM <- correlateMatrices(
 	ArchRProj = projHeme5,
 	useMatrix1 = "GeneScoreMatrix",
@@ -391,14 +357,14 @@ corGSM_MM <- correlateMatrices(
 
 
 This function returns a `DataFrame` object that that contains the elements from each matrix and the correlation across the low-overlapping cell aggregates.
-```{r}
+```{r, collapse=TRUE}
 corGSM_MM
 ```
 
 
 We can perform the same analysis using the `GeneIntegrationMatrix` instead of the `GeneScoreMatrix`.
 
-```{r }
+```{r, collapse=TRUE}
 corGIM_MM <- correlateMatrices(
 	ArchRProj = projHeme5,
 	useMatrix1 = "GeneIntegrationMatrix",
@@ -407,7 +373,7 @@ corGIM_MM <- correlateMatrices(
 )
 ```
 
-```{r }
+```{r, collapse=TRUE}
 corGIM_MM
 ```
 
@@ -416,7 +382,7 @@ Step 3. Add Maximum Delta Deviation to the Correlation Data Frame
 
 For each of these correlation analyses, we can annotate each motif with the maximum delta observed between clusters which we calculated in Step 1.
 
-```{r }
+```{r, collapse=TRUE}
 corGSM_MM$maxDelta <- rowData(seZ)[match(corGSM_MM$MotifMatrix_name, rowData(seZ)$name), "maxDelta"]
 corGIM_MM$maxDelta <- rowData(seZ)[match(corGIM_MM$MotifMatrix_name, rowData(seZ)$name), "maxDelta"]
 ```
@@ -426,7 +392,7 @@ Step 4. Identify Positive TF Regulators
 We can use all of this information to identify positive TF regulators. In the examples below, we consider positive regulators as those TFs whose correlation between motif and gene score (or gene expression) is greater than 0.5 with an adjusted p-value less than 0.01 and a maximum inter-cluster difference in deviation z-score that is in the top quartile.
 
 We apply these selection criteria and do a little text juggling to isolate the TF names.
-```{r }
+```{r, collapse=TRUE}
 corGSM_MM <- corGSM_MM[order(abs(corGSM_MM$cor), decreasing = TRUE), ]
 corGSM_MM <- corGSM_MM[which(!duplicated(gsub("\\-.*","",corGSM_MM[,"MotifMatrix_name"]))), ]
 corGSM_MM$TFRegulator <- "NO"
@@ -435,7 +401,7 @@ sort(corGSM_MM[corGSM_MM$TFRegulator=="YES",1])
 ```
 
 Having identified these positive TF regulators from gene scores and motif deviation z-scores, we can highlight them in a dot plot.
-```{r }
+```{r, collapse=TRUE}
 p <- ggplot(data.frame(corGSM_MM), aes(cor, maxDelta, color = TFRegulator)) +
   geom_point() + 
   theme_ArchR() +
@@ -452,18 +418,9 @@ p
 ```
 
 
-```{r, include=FALSE}
-plotPDF(p, name = "TF-Regulators-GeneScores", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
-ArchR:::.convertToPNG(ArchRProj = projHeme5)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/TF-Regulators-GeneScores_1.png){width=500 height=500}
-
 We can perform the same analysis for the correlations derived from our `GeneIntegrationMatrix`.
 
-```{r }
+```{r, collapse=TRUE}
 corGIM_MM <- corGIM_MM[order(abs(corGIM_MM$cor), decreasing = TRUE), ]
 corGIM_MM <- corGIM_MM[which(!duplicated(gsub("\\-.*","",corGIM_MM[,"MotifMatrix_name"]))), ]
 corGIM_MM$TFRegulator <- "NO"
@@ -472,7 +429,7 @@ sort(corGIM_MM[corGIM_MM$TFRegulator=="YES",1])
 ```
  
 
-```{r }
+```{r, collapse=TRUE}
 p <- ggplot(data.frame(corGIM_MM), aes(cor, maxDelta, color = TFRegulator)) +
   geom_point() + 
   theme_ArchR() +
@@ -489,29 +446,13 @@ p
 ```
 
 
-```{r, include=FALSE}
-plotPDF(p, name = "TF-Regulators-GeneExpression", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
-ArchR:::.convertToPNG(ArchRProj = projHeme5)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+
+```{r saveImage, include=FALSE}
+filename <- paste0("./chapter_images/chapter",current_chapter,".RData")
+remove(current_chapter)
+remove(previous_chapter)
+save.image(file =  filename)
 ```
-
-![](images/HemeWalkthrough/PNG/TF-Regulators-GeneExpression_1.png){width=500 height=500}
-
-```{r, include=FALSE, eval=FALSE}
-save.image(params$out, compress = FALSE)
-```
-
-```{r, include=FALSE, eval=FALSE}
-ArchR:::.convertToPNG(ArchRProj = projHeme5)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-```{r, include=FALSE}
-save.image("ch15.RData")
-```
-
 
 
 

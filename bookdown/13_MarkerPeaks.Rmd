@@ -8,13 +8,19 @@ params:
   token: ""
   ref: ""
   out: ""
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
+
 ```{r, include=FALSE}
-load("ch10.RData")
-library("ArchR")
+#load the data from the previous chapter as needed
+current_chapter = 13
+previous_chapter = current_chapter-1
+load(file = paste0("./chapter_images/chapter",previous_chapter,".RData"))
 ```
 
-# Identifying Marker Peaks with ArchR
+# Identifying Marker Peaks
 
 We have introduced the identification of marker features previously in the chapter discussing gene scores. The same function (`getMarkerFeatures()`) can be used to identify marker features from any matrix stored in an `ArchRProject`. Marker features are features that are unique to a specific cell grouping. These can be very useful in understanding cluster- or cell type-specific biology. In this chapter, we will discuss how to use this function to identify marker peaks.
 
@@ -23,14 +29,14 @@ We have introduced the identification of marker features previously in the chapt
 Often times, we are interested to know which peaks are unique to an individual cluster or a small group of clusters. We can do this in an unsupervised fashion in ArchR using the `addMarkerFeatures()` function in combination with `useMatrix = "PeakMatrix"`.
 
 First, lets remind ourselves of the cell types that we are working with in `projHeme5` and their relative proportions.
-```{r}
-#Our scRNA labels
+```{r, collapse=TRUE}
 table(projHeme5$Clusters2)
 ```
 
 Now, we are ready to identify marker peaks by calling the `addMarkerFeatures()` function with `useMatrix = "PeakMatrix"`. Additionally, we tell ArchR to account for differences in data quality amongst the cell groups by setting the `bias` parameter to account for TSS enrichment and the number of unique fragments per cell.
-```{r}
-markersPeaks <- getMarkerFeatures(
+
+```{r, collapse=TRUE}
+markerPeaks <- getMarkerFeatures(
 	ArchRProj = projHeme5, 
 	useMatrix = "PeakMatrix", 
 	groupBy = "Clusters2",
@@ -40,30 +46,30 @@ markersPeaks <- getMarkerFeatures(
 ```
 
 The object returned by the `getMarkerFeatures()` function is a `SummarizedExperiment` that contains a few different `assays`.
-```{r}
-markersPeaks
+```{r, collapse=TRUE}
+markerPeaks
 ```
 
 We can use the `getMarkers()` function to retrieve particular slices of this `SummarizedExperiment` that we are interested in. The default behavior of this function is to return a list of `DataFrame` objects, one for each cell group.
-```{r}
-markerList <- getMarkers(markersPeaks, cutOff = "FDR <= 0.01 & Log2FC >= 1")
+```{r, collapse=TRUE}
+markerList <- getMarkers(markerPeaks, cutOff = "FDR <= 0.01 & Log2FC >= 1")
 markerList
 ```
 
 If we are interested in the marker peaks for a specific cell group, we can access this from the list via the `$` accessor.
-```{r}
+```{r, collapse=TRUE}
 markerList$Erythroid
 ```
 
 Instead of a list of `DataFrame` objects, we can use `getMarkers()` to return a `GRangesList` object by setting `returnGR = TRUE`.
 ```{r, collapse=TRUE}
-markerList <- getMarkers(markersPeaks, cutOff = "FDR <= 0.01 & Log2FC >= 1", returnGR = TRUE)
+markerList <- getMarkers(markerPeaks, cutOff = "FDR <= 0.01 & Log2FC >= 1", returnGR = TRUE)
 markerList
 ```
 
 
 This `GRangesList` object can similarly be subset to a `GRanges` object for a particular cell group using the `$` accessor.
-```{r}
+```{r, collapse=TRUE}
 markerList$Erythroid
 ```
 
@@ -75,68 +81,41 @@ ArchR provides multiple plotting functions to interact with the `SummarizedExper
 
 We can visualize these marker peaks (or any features output by `getMarkerFeatures()`) as a heatmap using the `markerHeatmap()` function.
 
-```{r}
+```{r, collapse=TRUE}
 heatmapPeaks <- markerHeatmap(
-  seMarker = markersPeaks, 
+  seMarker = markerPeaks, 
   cutOff = "FDR <= 0.1 & Log2FC >= 0.5",
   transpose = TRUE
 )
 ```
 
 We can plot this heatmap using `draw()`.
-```{r}
+```{r, collapse=TRUE}
 draw(heatmapPeaks, heatmap_legend_side = "bot", annotation_legend_side = "bot")
 ```
 
-```{r, include=FALSE}
-plotPDF(heatmapPeaks, name = "Peak-Marker-Heatmap", width = 8, height = 6, ArchRProj = projHeme5, addDOC = FALSE)
-ArchR:::.convertToPNG(ArchRProj = projHeme5)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Peak-Marker-Heatmap_1.png){width=800 height=600}
-
 To save an editable vectorized version of this plot, we use the `plotPDF()` function.
-```{r}
+```{r, collapse=TRUE}
 plotPDF(heatmapPeaks, name = "Peak-Marker-Heatmap", width = 8, height = 6, ArchRProj = projHeme5, addDOC = FALSE)
 ```
 
 ### Marker Peak MA and Volcano Plots
 
-Instead of plotting a heatmap, we can also plot an MA or Volcano plot for any individual cell group. To do this, we use the `markerPlot()` function. For an MA plot we specify `plotAs = "MA"`. Here we specify the "Erythroid" cell group via the `name` parameter.
-```{r}
-pma <- markerPlot(seMarker = markersPeaks, name = "Erythroid", cutOff = "FDR <= 0.1 & Log2FC >= 1", plotAs = "MA")
+Instead of plotting a heatmap, we can also plot an MA or Volcano plot for any individual cell group. To do this, we use the `plotMarkers()` function. For an MA plot we specify `plotAs = "MA"`. Here we specify the "Erythroid" cell group via the `name` parameter.
+```{r, collapse=TRUE}
+pma <- plotMarkers(seMarker = markerPeaks, name = "Erythroid", cutOff = "FDR <= 0.1 & Log2FC >= 1", plotAs = "MA")
 pma
 ```
 
-```{r, include=FALSE}
-plotPDF(pma, name = "Erythroid-Markers-MA-Volcano", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
-ArchR:::.convertToPNG(ArchRProj = projHeme5)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Erythroid-Markers-MA-Volcano_1.png){width=600 height=600}
-
 Similarly, for a Volcano plot, we specify `plotAs = "Volcano"`.
-```{r}
-pv <- markerPlot(seMarker = markersPeaks, name = "Erythroid", cutOff = "FDR <= 0.1 & Log2FC >= 1", plotAs = "Volcano")
+```{r, collapse=TRUE}
+pv <- plotMarkers(seMarker = markerPeaks, name = "Erythroid", cutOff = "FDR <= 0.1 & Log2FC >= 1", plotAs = "Volcano")
 pv
 ```
 
-```{r, include=FALSE}
-plotPDF(pma, pv, name = "Erythroid-Markers-MA-Volcano", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
-ArchR:::.convertToPNG(ArchRProj = projHeme5)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Erythroid-Markers-MA-Volcano_2.png){width=600 height=600}
-
 To save an editable vectorized version of these plots, we use the `plotPDF()` function.
 
-```{r}
+```{r, collapse=TRUE}
 plotPDF(pma, pv, name = "Erythroid-Markers-MA-Volcano", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
 ```
 
@@ -144,35 +123,26 @@ plotPDF(pma, pv, name = "Erythroid-Markers-MA-Volcano", width = 5, height = 5, A
 
 Additionally we can see these peak regions overlayed on our browser tracks by passing the relevant peak regions to the `features` parameterin the `plotBrowserTrack()` function. This will add an additional BED-style track of marker peak regions to the bottom of our ArchR track plot. Here we specify plotting the GATA1 gene via the `geneSymbol` parameter.
 
-```{r}
+```{r, collapse=TRUE}
 p <- plotBrowserTrack(
     ArchRProj = projHeme5, 
     groupBy = "Clusters2", 
     geneSymbol = c("GATA1"),
-    features =  getMarkers(markersPeaks, cutOff = "FDR <= 0.1 & Log2FC >= 1", returnGR = TRUE)["Erythroid"],
+    features =  getMarkers(markerPeaks, cutOff = "FDR <= 0.1 & Log2FC >= 1", returnGR = TRUE)["Erythroid"],
     upstream = 50000,
     downstream = 50000
 )
 ```
 
 We can plot this using `grid::grid.draw()`.
-```{r}
+```{r, collapse=TRUE}
 grid::grid.newpage()
 grid::grid.draw(p$GATA1)
 ```
 
-```{r, include=FALSE}
-plotPDF(p, name = "Plot-Tracks-With-Features", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
-ArchR:::.convertToPNG(ArchRProj = projHeme5)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Plot-Tracks-With-Features_1.png){width=600 height=600}
-
 To save an editable vectorized version of this plot, we use the `plotPDF()` function.
 
-```{r}
+```{r, collapse=TRUE}
 plotPDF(p, name = "Plot-Tracks-With-Features", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
 ```
 
@@ -182,7 +152,7 @@ Marker feature identification is a very specific type of differential test. Howe
 
 Here we perform a pairwise test between the "Erythroid" cell group and the "Progenitor" cell group.
 
-```{r}
+```{r, collapse=TRUE}
 markerTest <- getMarkerFeatures(
   ArchRProj = projHeme5, 
   useMatrix = "PeakMatrix",
@@ -194,55 +164,31 @@ markerTest <- getMarkerFeatures(
 )
 ```
 
-We can then plot an MA or Volcano plot using the `markerPlot()` function. We indicate an MA plot using `plotAs = "MA"`.
+We can then plot an MA or Volcano plot using the `plotMarkers()` function. We indicate an MA plot using `plotAs = "MA"`.
 
-```{r}
-pma <- markerPlot(seMarker = markerTest, name = "Erythroid", cutOff = "FDR <= 0.1 & abs(Log2FC) >= 1", plotAs = "MA")
+```{r, collapse=TRUE}
+pma <- plotMarkers(seMarker = markerTest, name = "Erythroid", cutOff = "FDR <= 0.1 & abs(Log2FC) >= 1", plotAs = "MA")
 pma
 ```
 
-```{r, include=FALSE}
-plotPDF(pma, name = "Erythroid-vs-Progenitor-Markers-MA-Volcano", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
-ArchR:::.convertToPNG(ArchRProj = projHeme5)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Erythroid-vs-Progenitor-Markers-MA-Volcano_1.png){width=600 height=600}
-
 Similarly, we plot a volvano plot using `plotAs = "Volcano"`.
-```{r}
-pv <- markerPlot(seMarker = markerTest, name = "Erythroid", cutOff = "FDR <= 0.1 & abs(Log2FC) >= 1", plotAs = "Volcano")
+```{r, collapse=TRUE}
+pv <- plotMarkers(seMarker = markerTest, name = "Erythroid", cutOff = "FDR <= 0.1 & abs(Log2FC) >= 1", plotAs = "Volcano")
 pv
 ```
 
-```{r, include=FALSE}
-plotPDF(pma, pv, name = "Erythroid-vs-Progenitor-Markers-MA-Volcano", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
-ArchR:::.convertToPNG(ArchRProj = projHeme5)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Erythroid-vs-Progenitor-Markers-MA-Volcano_2.png){width=600 height=600}
-
 To save an editable vectorized version of these plots, we use the `plotPDF()` function.
 
-```{r}
+```{r, collapse=TRUE}
 plotPDF(pma, pv, name = "Erythroid-vs-Progenitor-Markers-MA-Volcano", width = 5, height = 5, ArchRProj = projHeme5, addDOC = FALSE)
 ```
 
 We will continue this differential analysis in the next chapter by looking for motif enrichments in our differentially accessible peaks.
 
 
-```{r, include=FALSE, eval=FALSE}
-save.image(params$out, compress = FALSE)
-```
-
-```{r, include=FALSE}
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-```{r, include=FALSE}
-save.image("ch11.RData")
+```{r saveImage, include=FALSE}
+filename <- paste0("./chapter_images/chapter",current_chapter,".RData")
+remove(current_chapter)
+remove(previous_chapter)
+save.image(file =  filename)
 ```

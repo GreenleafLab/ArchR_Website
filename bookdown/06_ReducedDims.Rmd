@@ -8,10 +8,18 @@ params:
   token: ""
   ref: ""
   out: ""
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
+
 ```{r, include=FALSE}
-load("ch3.RData")
+#load the data from the previous chapter as needed
+current_chapter = 6
+previous_chapter = current_chapter-1
+load(file = paste0("./chapter_images/chapter",previous_chapter,".RData"))
 ```
+
 # Dimensionality Reduction with ArchR
 
 Dimensionality reduction with scATAC-seq is challenging due to the _sparsity_ of the data. In scATAC-seq, a particular site can either be accessible on one allele, both alleles, or no alleles. Even in higher-quality scATAC-seq data, the majority of accessible regions are not transposed and this leads to many loci having 0 accessible alleles. Moreover, when we see (for example) three Tn5 insertions within a single peak region in a single cell, the sparsity of the data prevents us from confidently determining that this site in this cell is actually three times more accessible than another cell that only has one insertion in the same site. For this reason a lot of analytical strategies work on a binarized scATAC-seq data matrix. This binarized matrix still ends up being mostly 0s because transposition is rare. However, it is important to note that a 0 in scATAC-seq could mean "non-accessible" or "not sampled" and these two inferences are very different from a biological standpoint. Because of this, the 1s have information and the 0s do not. This low information content is what makes our scATAC-seq data _sparse_.
@@ -37,7 +45,7 @@ In scRNA-seq identifying variable genes is a common way to compute dimensionalit
 To perform iterative LSI in ArchR, we use the `addIterativeLSI()` function. The default parameters should cover most cases but we encourage you to explore the available parameters and how they each affect your particular data set. See `?addIterativeLSI` for more details on inputs. The most common parameters to tweak are `iterations`, `varFeatures`, and `resolution`.
 
 For the purposes of this tutorial, we will create a `reducedDims` object called "IterativeLSI".
-```{r, collapse=TRUE}
+```{r addLSI1, collapse=TRUE}
 projHeme2 <- addIterativeLSI(
 	ArchRProj = projHeme2,
 	useMatrix = "TileMatrix", 
@@ -55,14 +63,12 @@ projHeme2 <- addIterativeLSI(
 
 ArchR automatically checks each dimension to determine whether it is highly correlated to the sequencing depth. The `corCutOff` parameter sets the threshold for this correlation before exclusion of a particular dimension. In some cases, the 1st dimension may be correlated to other technical noise not depth related. In general, ArchR defaults are reasonable and dont need to be changed. However, if you think that your results make more sense if you manually exclude the first dimension, that is a reasonable thing to do. Biological intuition is important to adequately evaluate the results of dimensionality reduction and if removing a specific dimensions steers you closer to your expectation than that is fine. In most cases, the exclusion of a specific dimension doesnt have a strong effect because of the way that the iterative LSI method works compared to non-iterative implementations (e.g. in Signac). To manually exclude a specific dimension, you would alter the `dimsToUse` parameter.
 
-
 If you see downstream that you have subtle batch effects, another option is to add more LSI iterations and to start from a lower intial clustering resolution as shown below. Additionally the number of variable features can be lowered to increase focus on the more variable features.
 
-```{r include=FALSE, eval=FALSE, echo=FALSE}
-#JJJ would be nice to see an example of what these batch effects look like and how this corrects them
-```
+
 We will name this `reducedDims` object "IterativeLSI2" for illustrative purposes but we won't use it downstream.
-```{r, collapse=TRUE}
+
+```{r addLSI2, collapse=TRUE}
 projHeme2 <- addIterativeLSI(
 	ArchRProj = projHeme2,
 	useMatrix = "TileMatrix", 
@@ -79,6 +85,7 @@ projHeme2 <- addIterativeLSI(
 ```
 
 You can list the available `reducedDims` objects in an `ArchRProject` using the slot extraction opperator `@`:
+
 ```{r , collapse=TRUE}
 projHeme2@reducedDims
 ```
@@ -92,16 +99,12 @@ For extremely large scATAC-seq datasets, ArchR can estimate the LSI dimensionali
 
 Estimated LSI is accessed in ArchR via the `addIterativeLSI()` function by setting the `sampleCellsFinal` and `projectCellsPre` parameters. `samplesCellsFinal` designates the size of the landmark cell subset and `projectCellsPre` tells ArchR to use this landmark cell subset for projection of the remaining cells.
 
-```{r include=FALSE, eval=FALSE, echo=FALSE}
-#JJJ should add an example of estimated LSI here
-```
-
 
 ## Batch Effect Correction wtih Harmony
 
 Sometimes the iterative LSI approach isnt enough of a correction for strong batch effect differences. For this reason, ArchR implements a commonly used batch effect correction tool called [Harmony](https://github.com/immunogenomics/harmony) which was originally designed for scRNA-seq. We provide a wrapper that will pass a dimensionality reduction object from ArchR directly to the `HarmonyMatrix()` function. Additional arguments can be directly passed to `HarmonyMatrix()` in the function via the additional parameters (`...`) . See `?addHarmony()` for more details. Users should be aware of the caveats of batch correction for their particular application. 
 
-```{r, collapse=TRUE}
+```{r addHarmony, collapse=TRUE}
 projHeme2 <- addHarmony(
 	ArchRProj = projHeme2,
 	reducedDims = "IterativeLSI",
@@ -110,16 +113,12 @@ projHeme2 <- addHarmony(
 )
 ```
 
-This process creates a new `reducedDims` object called "Harmony" in our `projHeme2` object. For downstream functions where you would like to use this new `reducedDims` object, you should make sure to pass it to the `reducedDims` paramter, for example with `addImputeWeights()` or other functions that use a `reducedDims` object.
+This process creates a new `reducedDims` object called "Harmony" in our `projHeme2` object. For downstream functions where you would like to use this new `reducedDims` object, you should make sure to pass it to the `reducedDims` paramter, for example with `addImputeWeights()` or other functions that use a `reducedDims` object. In the context of this tutorial, the data does not really benefit from batch correction so we will continue to use the `IterativeLSI` reducedDims object.
 
-```{r include=FALSE, eval=FALSE,echo=FALSE}
-#JJJ Would like to see a before and after batch correction plot here
-```
 
-```{r, include=FALSE, eval=FALSE}
-save.image(params$out, compress = FALSE)
-```
-
-```{r, include=FALSE}
-save.image("ch4.RData")
+```{r saveImage, include=FALSE}
+filename <- paste0("./chapter_images/chapter",current_chapter,".RData")
+remove(current_chapter)
+remove(previous_chapter)
+save.image(file =  filename)
 ```

@@ -8,7 +8,17 @@ params:
   token: ""
   ref: ""
   out: ""
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
+
+```{r, include=FALSE}
+#load the data from the previous chapter as needed
+current_chapter = 22
+previous_chapter = current_chapter-1
+load(file = paste0("./chapter_images/chapter",previous_chapter,".RData"))
+```
 
 # Plot aesthetics in ArchR
 
@@ -101,7 +111,7 @@ The `pal` argument allows for the use of custom palettes in most plotting functi
 
 #### For discrete data
 
-```
+```{r, collapse=TRUE}
 paletteDiscrete(values = projHeme5$Clusters, set = "kelly")
 ```
 
@@ -159,11 +169,9 @@ plotEmbedding(
 
 ```
 
-
-
-
-
-
-```{r include=FALSE, eval=FALSE,echo=FALSE}
-#JJJ I would like to add a chapter on changing plot aesthetics, using palettes / creating your own palettes, etc 
+```{r saveImage, include=FALSE}
+filename <- paste0("./chapter_images/chapter",current_chapter,".RData")
+remove(current_chapter)
+remove(previous_chapter)
+save.image(file =  filename)
 ```

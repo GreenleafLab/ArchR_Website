@@ -1,15 +1,24 @@
 ---
 output:
-  pdf_document: default
   html_document:
-    theme: yeti
+    theme: yeti  # many options for theme, this one is my favorite.
 params:
   threads: 20
-  rdata: ''
-  token: ''
-  ref: ''
-  out: ''
+  rdata: ""
+  token: ""
+  ref: ""
+  out: ""
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
+
+```{r, include=FALSE}
+#load the data from the previous chapter as needed
+current_chapter = 21
+previous_chapter = current_chapter-1
+load(file = paste0("./chapter_images/chapter",previous_chapter,".RData"))
+```
 
 # Multiomic data analysis in ArchR
 
@@ -27,6 +36,7 @@ Lets start by loading ArchR and setting up our genome (`hg38` in this case), our
 library(ArchR)
 addArchRGenome("hg38")
 addArchRThreads(32)
+addArchRLocking(locking = TRUE)
 set.seed(1)
 ```
 
@@ -69,10 +79,11 @@ As in the main tutorial, the first step is to create ArrowFiles from the scATAC-
 ArrowFiles <- createArrowFiles(
   inputFiles = atacFiles,
   sampleNames = names(atacFiles),
-  filterTSS = 4,
-  filterFrags = 1000,
+  minTSS = 4,
+  minFrags = 1000,
   addTileMat = TRUE,
-  addGeneScoreMat = TRUE
+  addGeneScoreMat = TRUE,
+  force = TRUE
 )
 ```
 
@@ -91,7 +102,18 @@ seRNA <- import10xFeatureMatrix(
 )
 ```
 
-In this tutorial data, there actually aren't any examples of this transcript-level metadata mismatch. But if there were, ArchR would output warnings to tell you about the genes that were being excluded or coerced.
+In this tutorial data, there actually aren't any examples of this transcript-level metadata mismatch. But if there were, ArchR would output warnings to tell you about the genes that were being excluded or coerced. However, what you do see is a warning that some of the features (genes) did not have an "interval" (or genomic location) present in the 10x input file. This is most frequently the case for genes encoded on the mitochondrial DNA but could in theory happen for other genes in other species as well. This causes problems for ArchR because we assume that every gene has a position in the genome. To get around this problem, ArchR will default to assigning these genes a fake genomic position on "chrNA". All of these genes will then get excluded from downstream analyses. If you want to rescue these genes, then you must provide this information via the `features` parameter. This is most easily done using an Ensembl database object from BioConductor. The below code assumes that you have installed the `EnsDb.Hsapiens.v86` package from BioConductor.
+
+
+```{r, collapse=TRUE}
+seRNA <- import10xFeatureMatrix(
+  input = rnaFiles,
+  names = names(rnaFiles),
+  strictMatch = TRUE,
+  features = genes(EnsDb.Hsapiens.v86::EnsDb.Hsapiens.v86)
+)
+```
+After supplying the genes to the `features` param, you can see that all of the genes encoded on the mitochondrial genome are rescued.
 
 The next thing that we want to do is add this scRNA-seq data to our `ArchRProject` via the `addGeneExpressionMatrix()` function. However, there is some tidying up that we need to do before we are ready to do that. Inherent in how the multiomic data is generated, you will likely have cells that pass scRNA-seq quality control but not scATAC-seq quality control and vice versa. This can cause problems downstream with other ArchR functions that expect every cell to have every data type. For example, if you were to add gene expression data for only a subset of cells and then try to perform `addIterativeLSI()` on the corresponding `GeneExpressionMatrix`, ArchR would not know what to do with the cells that were missing data in the `GeneExpressionMatrix`. Because our `ArchRProject` is anchored in the scATAC-seq data, we first check to see how many cells in our project (the ones that have passed scATAC-seq quality control) are not also in our scRNA-seq data
 
@@ -224,10 +246,11 @@ p_atac_rna <- pheatmap::pheatmap(
 )
 ```
 
-Nearly all of the downstream operations that you will want to do downstream are equivalent to what is shown throughout the manual for the scATAC-seq-only analyses so we wont go into them here. As an example, to get peak-to-gene links from multiome data, we could use the following code.
+Nearly all of the operations that you will want to do downstream are equivalent to what is shown throughout the manual for the scATAC-seq-only analyses so we wont go into them here. As an example, to get peak-to-gene links from multiome data, we could use the following code.
+
 
 ```{r, collapse=TRUE}
-projMulti2 <- addGroupCoverages(ArchRProj = projMulti2, groupBy = "Clusters_Combined")
+projMulti2 <- addGroupCoverages(ArchRProj = projMulti2, groupBy = "Clusters_Combined", verbose = FALSE)
 projMulti2 <- addReproduciblePeakSet(ArchRProj = projMulti2, groupBy = "Clusters_Combined", pathToMacs2 = "/corces/home/rcorces/tools/python/p3.8.5/bin/macs2")
 projMulti2 <- addPeakMatrix(ArchRProj = projMulti2)
 projMulti2 <- addPeak2GeneLinks(ArchRProj = projMulti2, reducedDims = "LSI_Combined", useMatrix = "GeneExpressionMatrix")
@@ -252,4 +275,17 @@ heatmap_gex <- plotMarkerHeatmap(
 )
 
 draw(heatmap_gex, heatmap_legend_side = "bot", annotation_legend_side = "bot")
+```
+
+Lastly, we will save this project for future reference.
+
+```{r, collapse=TRUE}
+projMulti2 <- saveArchRProject(ArchRProj = projMulti2, outputDirectory = "Save-ProjMulti2", load = TRUE)
+```
+
+```{r saveImage, include=FALSE}
+filename <- paste0("./chapter_images/chapter",current_chapter,".RData")
+remove(current_chapter)
+remove(previous_chapter)
+save.image(file =  filename)
 ```

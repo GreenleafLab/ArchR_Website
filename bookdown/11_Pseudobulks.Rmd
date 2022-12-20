@@ -8,9 +8,16 @@ params:
   token: ""
   ref: ""
   out: ""
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
+
 ```{r, include=FALSE}
-load("ch8.RData")
+#load the data from the previous chapter as needed
+current_chapter = 11
+previous_chapter = current_chapter-1
+load(file = paste0("./chapter_images/chapter",previous_chapter,".RData"))
 ```
 
 # Pseudo-bulk Replicates in ArchR
@@ -60,9 +67,7 @@ Rep4 = 900 cells from SampleE
 Rep5 = 700 cells from SampleF
 ```
 
-```{r include=FALSE, eval=FALSE,echo=FALSE}
-#JJJ Is this true? would SampleC be left out and SampleF used because it has more cells?
-```
+<!-- #JJJ Is this true? would SampleC be left out and SampleF used because it has more cells? -->
 
 There are two things to note about these replicates: (i) SampleC was left out because we had more than enough samples to make `maxRep` sample-aware pseudo-bulk replicates and SampleC had the fewest number of cells. (ii) Only 1000 cells were used from SampleD because this is the `maxCells` value.
 
@@ -109,11 +114,7 @@ Rep3 = 300 cells [250 unique cells + 25 cells overlapping Rep1 + 25 cells overla
 
 In ArchR, pseudo-bulk replicates are made using the `addGroupCoverages()` function. The key parameter here is `groupBy` which defines the groups for which pseudo-bulk replicates should be made. Here, we are using `Clusters2` which was defined by labeling our clusters with cell types defined by scRNA-seq data in a previous chapter.
 
-```{r include=FALSE, eval=FALSE,echo=FALSE}
-#JJJ This was moved here from the MACS2 chapter
-```
-
-```{r}
+```{r, collapse=TRUE}
 projHeme4 <- addGroupCoverages(ArchRProj = projHeme3, groupBy = "Clusters2")
 ```
 
@@ -123,8 +124,24 @@ Once we have run `addGroupCoverages()`, this creates an entry in the project met
 projHeme4@projectMetadata$GroupCoverages$Clusters2$coverageMetadata
 ```
 
+We can also obtain the actual cell assignments for the pseudo-bulk replicates by calling `addGroupCoverages()` a second time using the `returnGroups = TRUE`. The returned object is a list of lists where each sub-list contains the replicates for a given cell group.
+
+```{r, collapse=TRUE}
+groups <- addGroupCoverages(ArchRProj = projHeme3, groupBy = "Clusters2", returnGroups = TRUE)
+groups
+```
+
+If we looked at one of the sub-lists, we would see the cell names for each cell that was used to make up the given pseudo-bulk replicate.
+
+```{r, collapse=TRUE}
+groups$B
+```
+
 With these pseudo-bulk replicates generated, we can now call peaks in our data. As mentioned previously, we do not want to call peaks on the merged set of all single cells so having these more granular cell groups defined, either through clustering or otherwise, provides the ideal starting point for peak calling.
 
-```{r, include=FALSE}
-save.image("ch9.RData")
+```{r saveImage, include=FALSE}
+filename <- paste0("./chapter_images/chapter",current_chapter,".RData")
+remove(current_chapter)
+remove(previous_chapter)
+save.image(file =  filename)
 ```

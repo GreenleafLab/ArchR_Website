@@ -8,10 +8,16 @@ params:
   token: ""
   ref: ""
   out: ""
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r, include=FALSE}
-load("ch5.RData")
+#load the data from the previous chapter as needed
+current_chapter = 8
+previous_chapter = current_chapter-1
+load(file = paste0("./chapter_images/chapter",previous_chapter,".RData"))
 ```
 
 # Single-cell Embeddings
@@ -22,9 +28,6 @@ It is important to note that neither t-SNE nor UMAP are naturally _deterministic
 
 Regardless of which method you choose, the input parameters can have drastic effects on the resulting embedding. Because of this, it is important to understand the various input parameters and to tweak these to best meet the needs of your own data. ArchR implements a default set of input parameters that work for most applications but there is really no single set of parameters that will produce the desired results for datasets that vary greatly in cell number, complexity, and quality.
 
-```{r include=FALSE, eval=FALSE,echo=FALSE}
-#RRR JJJ would be nice to show the mouse atlas UMAP vs t-SNE to illustrate when t-SNE may be better than UMAP here
-```
 
 ## Uniform Manifold Approximation and Projection (UMAP)
 
@@ -46,42 +49,25 @@ projHeme2@embeddings
 ```
 
 To plot the UMAP results, we use the `plotEmbedding()` function and pass the name of the UMAP embedding we just generated ("UMAP"). We can tell ArchR how to color the cells by using a combination of `colorBy` which tells ArchR which matrix to use to find the specified metadata column provided to `name`.
-```{r}
+```{r, collapse=TRUE}
 p1 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "Sample", embedding = "UMAP")
 ```
 
 Instead of coloring by "Sample" as above, we can color by "Clusters" which were identified in a previous chapter.
-```{r}
+```{r, collapse=TRUE}
 p2 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "Clusters", embedding = "UMAP")
 ```
 
 We can visualize these two plots side by side using the `ggAlignPlots()` function, specifying a horizontal orientation using `type = "h"`.
-```{r}
+```{r, collapse=TRUE}
 ggAlignPlots(p1, p2, type = "h")
 ```
-
-```{r, include=FALSE}
-plotPDF(
-    ggAlignPlots(p1, p2, type = "h", draw=FALSE), 
-    name = "Plot-UMAP-Sample-Clusters-Combined.pdf", 
-    ArchRProj = projHeme2,
-    addDOC = FALSE,
-    width = 10, 
-    height = 5
-)
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Plot-UMAP-Sample-Clusters-Combined_1.png){width=800 height=400}
 
 To save an editable vectorized version of this plot, we use `plotPDF()`.
 
 ```{r, collapse=TRUE}
 plotPDF(p1,p2, name = "Plot-UMAP-Sample-Clusters.pdf", ArchRProj = projHeme2, addDOC = FALSE, width = 5, height = 5)
 ```
-[Download PDF : Plot-UMAP-Sample-Clusters.pdf](images/HemeWalkthrough/PDF/Plot-UMAP-Sample-Clusters.pdf)
 
 We can also use `plotEmbedding()` to visualize the results from clustering using `scran`:
 
@@ -93,33 +79,16 @@ p1 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "Samp
 p2 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "ScranClusters", embedding = "UMAP")
 ```
 
-```{r}
+```{r, collapse=TRUE}
 ggAlignPlots(p1, p2, type = "h")
 ```
 
-```{r, include=FALSE}
-plotPDF(
-    ggAlignPlots(p1, p2, type = "h", draw=FALSE), 
-    name = "Plot-UMAP-Sample-ScranClusters-Combined.pdf", 
-    ArchRProj = projHeme2,
-    addDOC = FALSE,
-    width = 10, 
-    height = 5
-)
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Plot-UMAP-Sample-ScranClusters-Combined_1.png){width=800 height=400}
 
 To save an editable vectorized version of this plot, we use `plotPDF()`.
 
 ```{r, collapse=TRUE}
 plotPDF(p1,p2, name = "Plot-UMAP-Sample-ScranClusters.pdf", ArchRProj = projHeme2, addDOC = FALSE, width = 5, height = 5)
 ```
-
-[Download PDF : Plot-UMAP-Sample-ScranClusters.pdf](images/HemeWalkthrough/PDF/Plot-UMAP-Sample-ScranClusters.pdf)
 
 
 ## t-Stocastic Neighbor Embedding (t-SNE)
@@ -133,7 +102,9 @@ projHeme2 <- addTSNE(
     perplexity = 30
 )
 ```
+
 Similar to UMAP, we can plot the t-SNE embedding using `plotEmbedding()`. The same parameters apply to `colorBy` and `name` regardless of which type of embedding is being used.
+
 ```{r, collapse=TRUE}
 p1 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "Sample", embedding = "TSNE")
 ```
@@ -146,29 +117,12 @@ p2 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "Clus
 ggAlignPlots(p1, p2, type = "h")
 ```
 
-```{r, include=FALSE}
-plotPDF(
-    ggAlignPlots(p1, p2, type = "h", draw=FALSE), 
-    name = "Plot-TSNE-Sample-Clusters-Combined.pdf", 
-    ArchRProj = projHeme2,
-    addDOC = FALSE,
-    width = 10, 
-    height = 5
-)
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Plot-TSNE-Sample-Clusters-Combined_1.png){width=800 height=400}
-
 
 To save an editable vectorized version of this plot, we use `plotPDF()`.
 
 ```{r, collapse=TRUE}
 plotPDF(p1,p2, name = "Plot-TSNE-Sample-Clusters.pdf", ArchRProj = projHeme2, addDOC = FALSE, width = 5, height = 5)
 ```
-[Download PDF : Plot-TSNE-Sample-Clusters.pdf](images/HemeWalkthrough/PDF/Plot-TSNE-Sample-Clusters.pdf)
 
 As we did with UMAP, we can compare the clustering results from `Seurat::FindClusters()` with the results of clusering with `scran`:
 
@@ -176,29 +130,14 @@ As we did with UMAP, we can compare the clustering results from `Seurat::FindClu
 p1 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "Sample", embedding = "TSNE")
 ```
 
-```{r}
+```{r, collapse=TRUE}
 p2 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "ScranClusters", embedding = "TSNE")
 ```
 
-```{r}
+```{r, collapse=TRUE}
 ggAlignPlots(p1, p2, type = "h")
 ```
 
-```{r, include=FALSE}
-plotPDF(
-    ggAlignPlots(p1, p2, type = "h", draw=FALSE), 
-    name = "Plot-tSNE-Sample-ScranClusters-Combined.pdf", 
-    ArchRProj = projHeme2,
-    addDOC = FALSE,
-    width = 10, 
-    height = 5
-)
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Plot-tSNE-Sample-ScranClusters-Combined_1.png){width=800 height=400}
 
 To save an editable vectorized version of this plot, we use `plotPDF()`.
 
@@ -206,7 +145,6 @@ To save an editable vectorized version of this plot, we use `plotPDF()`.
 plotPDF(p1,p2, name = "Plot-tSNE-Sample-ScranClusters.pdf", ArchRProj = projHeme2, addDOC = FALSE, width = 5, height = 5)
 ```
 
-[Download PDF : Plot-tSNE-Sample-ScranClusters.pdf](images/HemeWalkthrough/PDF/Plot-tSNE-Sample-ScranClusters.pdf)
 
 ## Dimensionality Reduction After Harmony
 
@@ -224,34 +162,17 @@ projHeme2 <- addUMAP(
 )
 ```
  
-```{r}
+```{r, collapse=TRUE}
 p3 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "Sample", embedding = "UMAPHarmony")
 ```
 
-```{r}
+```{r, collapse=TRUE}
 p4 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "Clusters", embedding = "UMAPHarmony")
 ```
 
-```{r}
+```{r, collapse=TRUE}
 ggAlignPlots(p3, p4, type = "h")
 ```
-
-```{r, include=FALSE}
-plotPDF(
-    ggAlignPlots(p3, p4, type = "h", draw=FALSE), 
-    name = "Plot-UMAPHarmony-Sample-Clusters-Combined.pdf", 
-    ArchRProj = projHeme2,
-    addDOC = FALSE,
-    width = 10, 
-    height = 5
-)
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Plot-UMAPHarmony-Sample-Clusters-Combined_1.png){width=800 height=400}
-
 
 To save an editable vectorized version of this plot, we use `plotPDF()`.
 
@@ -259,7 +180,6 @@ To save an editable vectorized version of this plot, we use `plotPDF()`.
 plotPDF(p1,p2,p3,p4, name = "Plot-UMAP2Harmony-Sample-Clusters.pdf", ArchRProj = projHeme2, addDOC = FALSE, width = 5, height = 5)
 ```
 
-[Download PDF : Plot-UMAP2Harmony-Sample-Clusters.pdf](images/HemeWalkthrough/PDF/Plot-UMAP2Harmony-Sample-Clusters.pdf)
 
 And the same for t-SNE:
 ```{r, collapse=TRUE}
@@ -279,33 +199,15 @@ p3 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "Samp
 p4 <- plotEmbedding(ArchRProj = projHeme2, colorBy = "cellColData", name = "Clusters", embedding = "TSNEHarmony")
 ```
 
-```{r}
+```{r, collapse=TRUE}
 ggAlignPlots(p3, p4, type = "h")
 ```
-
-```{r, include=FALSE}
-plotPDF(
-    ggAlignPlots(p3, p4, type = "h", draw=FALSE), 
-    name = "Plot-TSNEHarmony-Sample-Clusters-Combined.pdf", 
-    ArchRProj = projHeme2,
-    addDOC = FALSE,
-    width = 10, 
-    height = 5
-)
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Plot-TSNEHarmony-Sample-Clusters-Combined_1.png){width=800 height=400}
 
 To save an editable vectorized version of this plot, we use `plotPDF()`.
 
 ```{r, collapse=TRUE}
 plotPDF(p1,p2,p3,p4, name = "Plot-TSNE2Harmony-Sample-Clusters.pdf", ArchRProj = projHeme2, addDOC = FALSE, width = 5, height = 5)
 ```
-
-[Download PDF : Plot-TSNE2Harmony-Sample-Clusters.pdf](images/HemeWalkthrough/PDF/Plot-TSNE2Harmony-Sample-Clusters.pdf)
 
 
 ## Highlighting specific cells on an embedding
@@ -375,14 +277,13 @@ projHeme2@embeddings$customUMAP <- SimpleList(df = umap_df, params = list())
 With this, we would be able to use this embedding by name as with any other embedding in our `ArchRProject`. It is important to note that the embedding coordinate column names (i.e `"custom#UMAP1"` and `"custom#UMAP2"` in the example above) must contain the `#` in the name as this is used in string splitting operations in `plotEmbedding()` and other functions.
 
 ```{r, collapse=TRUE}
-getEmbedding(ArchRProj = projHeme5, embedding = "customUMAP")
+getEmbedding(ArchRProj = projHeme2, embedding = "customUMAP")
 ```
 
 
-```{r, include=FALSE, eval=FALSE}
-save.image(params$out, compress = FALSE)
-```
-
-```{r, include=FALSE}
-save.image("ch6.RData")
+```{r saveImage, include=FALSE}
+filename <- paste0("./chapter_images/chapter",current_chapter,".RData")
+remove(current_chapter)
+remove(previous_chapter)
+save.image(file =  filename)
 ```

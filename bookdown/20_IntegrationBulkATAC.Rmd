@@ -1,15 +1,24 @@
 ---
 output:
-  pdf_document: default
   html_document:
-    theme: yeti
+    theme: yeti  # many options for theme, this one is my favorite.
 params:
   threads: 20
-  rdata: ''
-  token: ''
-  ref: ''
-  out: ''
+  rdata: ""
+  token: ""
+  ref: ""
+  out: ""
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
+
+```{r, include=FALSE}
+#load the data from the previous chapter as needed
+current_chapter = 20
+previous_chapter = current_chapter-1
+load(file = paste0("./chapter_images/chapter",previous_chapter,".RData"))
+```
 
 # Integration with bulk ATAC-seq
 
@@ -112,4 +121,15 @@ ggPoint(x = pro_df$UMAP1,
         title = "Heme Bulk ATAC-seq Projection")
 ```
 
-In the resulting projection UMAP plot, you can see that the bulk ATAC-seq pseudocells pile up in the regions occupied by the corrseponding single-cells.
+In the resulting projection UMAP plot, you can see that the bulk ATAC-seq pseudocells pile up in the regions occupied by the corresponding single-cells.
+
+At this point in the tutorial, we are done modifying our `ArchRProject` so lets save it one last time to make sure all of our changes are saved on disk. We will just save it on top of our previous `projHeme5` directory.
+
+projHeme5 <- saveArchRProject(ArchRProj = projHeme5, outputDirectory = "Save-ProjHeme5", load = TRUE)
+
+```{r saveImage, include=FALSE}
+filename <- paste0("./chapter_images/chapter",current_chapter,".RData")
+remove(current_chapter)
+remove(previous_chapter)
+save.image(file =  filename)
+```

@@ -8,10 +8,18 @@ params:
   token: ""
   ref: ""
   out: ""
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
+
 ```{r, include=FALSE}
-load("ch13.RData")
+#load the data from the previous chapter as needed
+current_chapter = 16
+previous_chapter = current_chapter-1
+load(file = paste0("./chapter_images/chapter",previous_chapter,".RData"))
 ```
+
 # Footprinting with ArchR
 
 Transcription factor (TF) footprinting allows for the prediction of the precise binding location of a TF at a particular locus. This is because the DNA bases that are directly bound by the TF are actually protected from transposition while the DNA bases immediately adjacent to TF binding are accessible.
@@ -20,7 +28,7 @@ Transcription factor (TF) footprinting allows for the prediction of the precise 
 ![](images/footprintingSchematic.png){width=250px}
 </center>
 
-Ideally, TF footprinting is performed at a single site to determine the precise binding location of the TF. However, in practice, this requires very high sequencing depth, often much higher depth than what most users would obtain from either bulk or single-cell ATAC-seq. To get around this problem, we can combine Tn5 insertion locations across many instances of predicted TF binding. For example, we can take all peaks that harbor a CTCF motif and make an aggregate TF footprint for CTCF across the whole genome.
+Ideally, TF footprinting is performed at a single site to determine the precise binding location of the TF. However, in practice, this requires very high sequencing depth, often much higher depth than what most users would obtain from either bulk or single-cell ATAC-seq. To get around this problem, we can combine Tn5 insertion locations across many instances of predicted TF binding. For example, we can take all peaks that harbor a CTCF motif and make an aggregate TF footprint for CTCF across the whole genome. It is important to understand the difference between single-site footprinting and "meta footprinting", which is really what ArchR is doing.
 
 The accuracy of this footprint relies on generating a reliable curated list of predicted binding sites for the TF of interest. ArchR does this in a naive way via the `addMotifAnnotations()` functions by searching the peak regions for any DNA sequence matching a motif. Depending on the degeneracy of the motif of interest, this may or may not be sufficient. These motif annotations get added to the `ArchRProject` as a binary representation on a per peak basis (0 = no motif, 1 = motif present). Once you have these motif annotations, ArchR performs footprinting using the `getFootprints()` function which takes as input an `ArchRProject` object and a `GenomicRanges` object that contains the positions of the motifs. These positions can be accessed from the `ArchRProject` via the `getPositions()` function. These footprints can then be plotted using the `plotFootprints()` function.
 
@@ -40,17 +48,17 @@ Importantly, the footprints generated from this tutorial data are not as clean a
 
 When footprinting, the first thing we need to do is obtain the positions of the relevant motifs. To do this, we call the `getPositions()` function. This function has an optional parameter called `name` which can accept the name of the `peakAnnotation` object from which we would like to obtain the positions. If `name = NULL`, then ArchR will use the first entry in the `peakAnnotation` slot. In the example shown below, we do not specify `name` and ArchR uses the first entry which is our CIS-BP motifs.
 
-```{r }
+```{r, collapse=TRUE}
 motifPositions <- getPositions(projHeme5)
 ```
 
 This creates a `GRangesList` object where each TF motif is represented by a separate `GRanges` object.
-```{r}
+```{r, collapse=TRUE}
 motifPositions
 ```
 
 We can subset this `GRangesList` to a few TF motifs that we are interested in. Because the SREBF1 TF comes up when we search for "EBF1", we explicitly remove it from the downstream analyses below using the `%ni%` helper function which provides the opposite functionality of `%in%` from base R.
-```{r}
+```{r, collapse=TRUE}
 motifs <- c("GATA1", "CEBPA", "EBF1", "IRF4", "TBX21", "PAX5")
 markerMotifs <- unlist(lapply(motifs, function(x) grep(x, names(motifPositions), value = TRUE)))
 markerMotifs <- markerMotifs[markerMotifs %ni% "SREBF1_22"]
@@ -58,13 +66,15 @@ markerMotifs
 ```
 
 To accurately profile TF footprints, a large number of reads are required. Therefore, cells are grouped to create pseudo-bulk ATAC-seq profiles that can be then used for TF footprinting. These pseudo-bulk profiles are stored as group coverage files which we originally created in a previous chapter to perform peak calling. If you haven't already added group coverages to your `ArchRProject`, lets do that now.
-```{r }
-projHeme5 <- addGroupCoverages(ArchRProj = projHeme5, groupBy = "Clusters2", force=TRUE)
+```{r, collapse=TRUE}
+if(is.null(projHeme5@projectMetadata$GroupCoverages$Clusters2)){
+  projHeme5 <- addGroupCoverages(ArchRProj = projHeme5, groupBy = "Clusters2")
+}
 ```
 
 With group coverages calculated, we can now compute footprints for the subset of marker motifs that we previously selected using the `getFootprints()` function. Even though ArchR implements a highly optimized footprinting workflow, it is recommended to perform footprinting on a subset of motifs rather than all motifs. As such, we provide the subset of motifs to footprint via the `positions` parameter.
 
-```{r}
+```{r, collapse=TRUE}
 seFoot <- getFootprints(
   ArchRProj = projHeme5, 
   positions = motifPositions[markerMotifs], 
@@ -84,7 +94,7 @@ All of this happens under the hood within the `plotFootprints()` function.
 
 One normalization method subtracts the Tn5 bias from the footprinting signal. This normalization is performed by setting `normMethod = "Subtract"` when calling `plotFootprints()`.
 
-```{r }
+```{r, collapse=TRUE}
 plotFootprints(
   seFoot = seFoot,
   ArchRProj = projHeme5, 
@@ -96,22 +106,21 @@ plotFootprints(
 ```
 
 ```{r, include=FALSE}
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+footprintFiles <- file.path(getOutputDirectory(projHeme5),"Plots","Footprints-Subtract-Bias.pdf")
+ArchR:::.convertToPNG(pdfFiles = footprintFiles, outDir = "images/bookdown", command = "cp")
 ```
 
 By default, these plots will be saved in the `outputDirectory` of the `ArchRProject`. If you requested to plot all motifs and returned this as a `ggplot` object, this `ggplot` object would be extremely large. An example of motif footprints from bias-subtracted analyses are shown below.
 
-![](images/HemeWalkthrough/PNG/Footprints-Subtract-Bias_1.png){width=250 height=400}
-![](images/HemeWalkthrough/PNG/Footprints-Subtract-Bias_2.png){width=250 height=400}
-![](images/HemeWalkthrough/PNG/Footprints-Subtract-Bias_3.png){width=250 height=400}
+![](images/bookdown/Footprints-Subtract-Bias_1.png){width=250 height=400}
+![](images/bookdown/Footprints-Subtract-Bias_2.png){width=250 height=400}
+![](images/bookdown/Footprints-Subtract-Bias_3.png){width=250 height=400}
 
 ### Dividing by the Tn5 Bias 
 
 A second strategy for normalization divides the footprinting signal by the Tn5 bias signal. This normalization is performed by setting `normMethod = "Divide"` when calling `plotFootprints()`.
 
-```{r}
+```{r, collapse=TRUE}
 plotFootprints(
   seFoot = seFoot,
   ArchRProj = projHeme5, 
@@ -123,22 +132,21 @@ plotFootprints(
 ```
 
 ```{r, include=FALSE, }
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+footprintFiles <- file.path(getOutputDirectory(projHeme5),"Plots","Footprints-Divide-Bias.pdf")
+ArchR:::.convertToPNG(pdfFiles = footprintFiles, outDir = "images/bookdown", command = "cp")
 ```
 
 An example of motif footprints from bias-divided analyses are shown below.
 
-![](images/HemeWalkthrough/PNG/Footprints-Divide-Bias_1.png){width=250 height=400}
-![](images/HemeWalkthrough/PNG/Footprints-Divide-Bias_2.png){width=250 height=400}
-![](images/HemeWalkthrough/PNG/Footprints-Divide-Bias_3.png){width=250 height=400}
+![](images/bookdown/Footprints-Divide-Bias_1.png){width=250 height=400}
+![](images/bookdown/Footprints-Divide-Bias_2.png){width=250 height=400}
+![](images/bookdown/Footprints-Divide-Bias_3.png){width=250 height=400}
 
 ### Footprinting Without Normalization for Tn5 Bias
 
 While we highly recommend normalizing footprints for Tn5 sequence insertion bias, it is possible to perform footprinting without normalization by setting `normMethod = "None"` in the `plotFootprints()` function.
 
-```{r}
+```{r, collapse=TRUE}
 plotFootprints(
   seFoot = seFoot,
   ArchRProj = projHeme5, 
@@ -150,16 +158,15 @@ plotFootprints(
 ```
 
 ```{r, include=FALSE}
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+footprintFiles <- file.path(getOutputDirectory(projHeme5),"Plots","Footprints-No-Normalization.pdf")
+ArchR:::.convertToPNG(pdfFiles = footprintFiles, outDir = "images/bookdown", command = "cp")
 ```
 
 An example of motif footprints without normalization are shown below.
 
-![](images/HemeWalkthrough/PNG/Footprints-No-Normalization_1.png){width=250 height=400}
-![](images/HemeWalkthrough/PNG/Footprints-No-Normalization_2.png){width=250 height=400}
-![](images/HemeWalkthrough/PNG/Footprints-No-Normalization_3.png){width=250 height=400}
+![](images/bookdown/Footprints-No-Normalization_1.png){width=250 height=400}
+![](images/bookdown/Footprints-No-Normalization_2.png){width=250 height=400}
+![](images/bookdown/Footprints-No-Normalization_3.png){width=250 height=400}
 
 ## Feature Footprinting
 
@@ -167,13 +174,15 @@ In addition to footprinting motifs, ArchR enables footprinting of any user-defin
 
 As discussed in the previous section, footprinting is performed using group coverage files which are derived from pseudo-bulk replicates. We originally created these in a previous chapter to perform peak calling. If you haven't already added group coverages to your `ArchRProject`, lets do that now.
 
-```{r}
-projHeme5 <- addGroupCoverages(ArchRProj = projHeme5, groupBy = "Clusters2", force=TRUE)
+```{r, collapse=TRUE}
+if(is.null(projHeme5@projectMetadata$GroupCoverages$Clusters2)){
+  projHeme5 <- addGroupCoverages(ArchRProj = projHeme5, groupBy = "Clusters2")
+}
 ```
 
 We create TSS insertion profiles without normalization for Tn5 bias. The main difference from our previous analyses is that we specify `flank = 2000` to extend these footprints 2000 bp on either side of each TSS.
 
-```{r}
+```{r, collapse=TRUE}
 seTSS <- getFootprints(
   ArchRProj = projHeme5, 
   positions = GRangesList(TSS = getTSS(projHeme5)), 
@@ -183,7 +192,7 @@ seTSS <- getFootprints(
 ```
 
 We can then plot the TSS insertion profiles for each cell group using `plotFootprints()`.
-```{r}
+```{r, collapse=TRUE}
 plotFootprints(
   seFoot = seTSS,
   ArchRProj = projHeme5, 
@@ -196,19 +205,18 @@ plotFootprints(
 ```
 
 ```{r, include=FALSE}
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+footprintFiles <- file.path(getOutputDirectory(projHeme5),"Plots","TSS-No-Normalization.pdf")
+ArchR:::.convertToPNG(pdfFiles = footprintFiles, outDir = "images/bookdown", command = "cp")
 ```
 
 <center>
-![](images/HemeWalkthrough/PNG/TSS-No-Normalization_1.png){width=250 height=400}
+![](images/bookdown/TSS-No-Normalization_1.png){width=250 height=400}
 </center>
 
-```{r, include=FALSE, eval=FALSE}
-save.image(params$out, compress = FALSE)
-```
-```{r, include=FALSE}
-save.image("ch14.RData")
+```{r saveImage, include=FALSE}
+filename <- paste0("./chapter_images/chapter",current_chapter,".RData")
+remove(current_chapter)
+remove(previous_chapter)
+save.image(file =  filename)
 ```
 

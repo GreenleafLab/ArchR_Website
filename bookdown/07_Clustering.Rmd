@@ -8,9 +8,16 @@ params:
   token: ""
   ref: ""
   out: ""
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
+
 ```{r, include=FALSE}
-load("ch4.RData")
+#load the data from the previous chapter as needed
+current_chapter = 7
+previous_chapter = current_chapter-1
+load(file = paste0("./chapter_images/chapter",previous_chapter,".RData"))
 ```
 
 # Clustering with ArchR
@@ -32,12 +39,12 @@ projHeme2 <- addClusters(
 ```
 To access these clusters we can use the `$` accessor which shows the cluster ID for each single cell.
 
-```{r}
+```{r, collapse=TRUE}
 head(projHeme2$Clusters)
 ```
 
 We can tabulate the number of cells present in each cluster:
-```{r}
+```{r, collapse=TRUE}
 table(projHeme2$Clusters)
 ```
 
@@ -50,7 +57,7 @@ cM
 
 To plot this confusion matrix as a heatmap, we use the `pheatmap` package:
 
-```{r}
+```{r, collapse=TRUE}
 library(pheatmap)
 cM <- cM / Matrix::rowSums(cM)
 p <- pheatmap::pheatmap(
@@ -61,21 +68,9 @@ p <- pheatmap::pheatmap(
 p
 ```
 
-```{r, include=FALSE}
-plotPDF(p, name = "ConfusionMatrix", ArchRProj = projHeme2, addDOC = FALSE)
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
+There are times where the relative location of cells within the 2-dimensional embedding does not agree perfectly with the identified clusters. More explicitly, cells from a single cluster may appear in multiple different areas of the embedding. In these contexts, it may be appropriate to adjust the clustering parameters or embedding parameters until there is agreement between the two. 
 
-![](images/HemeWalkthrough/PNG/ConfusionMatrix_1.png){width=500 height=500}
-
-```{r include=FALSE, eval=FALSE,echo=FALSE}
-#JJJ This is confusing. Expand on this - 
-```
-There are times where the relative location of cells within the 2-dimensional embedding does not agree perfectly with the identified clusters. More explicitly, cells from a single cluster may appear in multiple different areas of the embedding. In these contexts, it is appropriate to adjust the clustering parameters or embedding parameters until there is agreement between the two. 
-
-### Clustering using `scran`
+## Clustering using `scran`
 
 Additionally, ArchR allows for the identification of clusters with [scran](https://bioconductor.org/packages/release/bioc/html/scran.html) by changing the `method` parameter in `addClusters()`.
 
@@ -89,9 +84,9 @@ projHeme2 <- addClusters(
 )
 ```
 
-```{r, include=FALSE, eval=FALSE}
-save.image(params$out, compress = FALSE)
-```
-```{r, include=FALSE}
-save.image("ch5.RData")
+```{r saveImage, include=FALSE}
+filename <- paste0("./chapter_images/chapter",current_chapter,".RData")
+remove(current_chapter)
+remove(previous_chapter)
+save.image(file =  filename)
 ```

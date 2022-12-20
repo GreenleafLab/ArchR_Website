@@ -1,17 +1,26 @@
 ---
 output:
-  pdf_document: default
   html_document:
-    theme: yeti
+    theme: yeti  # many options for theme, this one is my favorite.
 params:
   threads: 20
-  rdata: ''
-  token: ''
-  ref: ''
-  out: ''
+  rdata: ""
+  token: ""
+  ref: ""
+  out: ""
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 # Getting Started with ArchR
+
+```{r, include=FALSE}
+#load the data from the previous chapter as needed
+current_chapter <- 3
+previous_chapter <- current_chapter - 1
+load(file = paste0("./chapter_images/chapter",previous_chapter,".RData"))
+```
 
 This chapter will introduce you to how to import data into ArchR and how to create ArrowFiles, the base unit of ArchR analysis.
 
@@ -21,18 +30,12 @@ The most fundamental component of any ATAC-seq experiment is a "__fragment__". I
 
 ## Why use ArchR?
 
-There are multiple tools for single-cell ATAC-seq analysis out there so why should you use ArchR? At the time of publication, ArchR provided features and enables analyses that other tools did not:
+There are multiple tools for single-cell ATAC-seq analysis out there so why should you use ArchR? At the time of publication, ArchR provided features and enabled analyses that other tools did not. Since publication, other tools have released similar functionalities. Nevertheless, we believe ArchR to be the most full-featured and user-friendly analysis pacakge for scATAC-seq and multi-omic data and we aim to continue to develop ArchR to maintain that.
+
+In addition to offering a comprehensive set of analytical tools, ArchR is also faster and uses less memory than other available tools due to heavy optimization of the data structures and parallelization methods that form the basis of the ArchR software. When analyzing more than 70,000 cells, some tools require high-performance computing environments, exceeding 128 GB of available memory (OoM = out of memory). The below benchmarking plots are certainly out of date and represent our comparison at the time of publication but the general message remains the same - ArchR scales very well to large numbers of cells.
 
 <center>
-![](images/ArchR_featureComparison.png){width=700px}
-</center>
-
-Since publication, other tools have released similar functionalities and we do not maintain the above figure to be accurate throughout time. Suffice it to say, we believe ArchR to be the most full-featured and user-friendly analysis pacakge for scATAC-seq and multi-omic data and we aim to continue to develop ArchR to maintain that.
-
-In addition to offering a comprehensive set of analytical tools, ArchR is also faster and uses less memory than other available tools due to heavy optimization of the data structures and parallelization methods that form the basis of the ArchR software. When analyzing more than 70,000 cells, some tools require high-performance computing environments, exceeding 128 GB of available memory (OoM = out of memory).
-
-<center>
-![](images/ArchR_benchmarking.png){width=700px}
+![](images/ArchR_benchmarking.PNG){width=700px}
 </center>
 
 ArchR is designed to be used on a Unix-based laptop. For experiments of moderate size (fewer than 100,000 cells), ArchR is fast enough to perform ad hoc analysis and visualize results in real time, making it possible to interact with the data in a more in-depth and biologically meaningful way. Of course, for higher cell numbers or for users that prefer server-based analysis, ArchR provides fascile export of plots and projects that can be downloaded and used after generation on a server.
@@ -66,7 +69,9 @@ ArchR can utilize multiple input formats of scATAC-seq data which is most freque
 
 ## Getting Set Up
 
-The first thing we do is change to our desired our working directory, set the number of threads we would like to use, and load our gene and genome annotations. Depending on the configuration of your local environment, you may need to modify the number of `threads` used below in `addArchRThreads()`. By default ArchR uses half of the total number of `threads` available but you can adjust this manually as you see fit. If you are using Windows, the usable `threads` will automatically be set to 1 because the parallel processing in ArchR is built for Unix-based operating systems.
+The first thing we do is change to our desired our working directory, set the number of threads we would like to use, and load our gene and genome annotations. Depending on the configuration of your local environment, you may need to modify the number of `threads` used below in `addArchRThreads()`. By default ArchR uses half of the total number of `threads` available but you can adjust this manually as you see fit. As a reminder, ArchR is not supported on Windows.
+
+For the purposes of this tutorial, we are assuming that you followed the instructions in the chapter on handling ArchR's dependencies using `renv` and that you have set up a working directory for running this tutorial.
 
 First, we load the ArchR library. If this fails, you have not properly installed ArchR and should [revisit the installation instructions](https://www.archrproject.com/index.html). We will also set our seed for randomized opperations for consistency. You can set your seed to whatever you would like (here we use `1`), but we encourage you to be consistent and always set the same seed.
 
@@ -75,7 +80,7 @@ library(ArchR)
 set.seed(1)
 ```
 
-Next, we either enable or disable file locking for HDF5 files. File locking allows for processes to take advantage of subthreading but may not work on certain network-based file systems, such as lustre, that are often present on high-performance computing clusters. This has caused a lot of problems for specific users, in the past (perhaps best summarized [here](https://github.com/GreenleafLab/ArchR/issues/248#issuecomment-789453997)). Thus, it is extremely important to consistently enable or disable file locking based on your particular computational environment. Enabling file locking will allow subthreading, disabling file locking will prevent it. Regardless, whatever you chose for file locking is controlled by environment variables and only persists during the current `R` session so you should include a call to `addArchRFileLocking()` in the beginning of each new R session (just like `set.seed()` etc.).
+Next, we either enable or disable file locking for HDF5 files. File locking allows for processes to take advantage of subthreading but may not work on certain network-based file systems, such as network-based lustre file systems, that are often present on high-performance computing clusters. This has caused a lot of problems for specific users, in the past (perhaps best summarized [here](https://github.com/GreenleafLab/ArchR/issues/248#issuecomment-789453997)). Thus, it is extremely important to consistently enable or disable file locking based on your particular computational environment. Enabling file locking will prevent subthreading, disabling file locking will permit it. Regardless, whatever you chose for file locking is controlled by environment variables and only persists during the current `R` session so you should include a call to `addArchRFileLocking()` in the beginning of each new R session (just like `set.seed()` or `addArchRThreads()` etc.). The filesystem used to generate this tutorial works best with `locking = TRUE` so that is what we set below but you should use whatever you think is best for your system. If you have trouble with Arrow File generation on the tutorial data or with various HDF5 file accessibility errors, try setting `locking = TRUE` at the beginning of your project (before Arrow File generation).
 
 ```{r, collapse=TRUE}
 addArchRLocking(locking = TRUE)
@@ -146,7 +151,7 @@ For example, if we wanted to create a custom genome annotation from Drosophila m
 
 ```{r, collapse=TRUE}
 if (!requireNamespace("BSgenome.Dmelanogaster.UCSC.dm6", quietly = TRUE)){
-  BiocManager::install("BSgenome.Dmelanogaster.UCSC.dm6")
+  BiocManager::install("BSgenome.Dmelanogaster.UCSC.dm6", update = FALSE)
 }
 library(BSgenome.Dmelanogaster.UCSC.dm6)
 ```
@@ -172,10 +177,10 @@ To create a __custom gene annotation__, we use `createGeneAnnotation()`. To do t
 Continuing with our example from Drosophila melanogaster, we first install and load the relevant `TxDb` and `OrgDb` objects.
 ```{r downloadDrosophilaPackages, collapse=TRUE}
 if (!requireNamespace("TxDb.Dmelanogaster.UCSC.dm6.ensGene", quietly = TRUE)){
-  BiocManager::install("TxDb.Dmelanogaster.UCSC.dm6.ensGene")
+  BiocManager::install("TxDb.Dmelanogaster.UCSC.dm6.ensGene", update = FALSE)
 }
 if (!requireNamespace("org.Dm.eg.db", quietly = TRUE)){
-  BiocManager::install("org.Dm.eg.db")
+  BiocManager::install("org.Dm.eg.db", update = FALSE)
 }
 library(TxDb.Dmelanogaster.UCSC.dm6.ensGene)
 library(org.Dm.eg.db)
@@ -201,9 +206,9 @@ Alternatively, if you dont have a `TxDb` and `OrgDb` object, you can create a `g
 2. An "exons" object - `GRanges` object containing gene exon coordinates. Must have a symbols column matching the symbols column of the "genes" object described above.
 3. A `GRanges` object containing standed transcription start site (`TSS`) coordinates.
 
-```{r include=FALSE, eval=FALSE}
-#JJJ Is the TSS object used for anything other than TSS scores? If so, shouldnt it have a symbols column as well? Either way, we should add that info to point #3
-```
+
+<!-- #JJJ Is the TSS object used for anything other than TSS scores? If so, shouldnt it have a symbols column as well? Either way, we should add that info to point #3 -->
+
 
 ```{r createDrosophilaGenome, collapse=TRUE}
 geneAnnotation <- createGeneAnnotation(
@@ -262,18 +267,17 @@ Now we will create our Arrow Files which will take 10-15 minutes for the tutoria
 5. Create a GeneScoreMatrix using the custom `geneAnnotation` that was defined when we called `addArchRGenome()`.
 
 ```{r ArrowFileCreation, collapse=TRUE}
-
 ArrowFiles <- createArrowFiles(
   inputFiles = inputFiles,
   sampleNames = names(inputFiles),
-  filterTSS = 4, #Dont set this too high because you can always increase later
-  filterFrags = 1000, 
+  minTSS = 4, #Dont set this too high because you can always increase later
+  minFrags = 1000, 
   addTileMat = TRUE,
   addGeneScoreMat = TRUE
 )
 ```
 
-One important parameter in `createArrowFiles()` is the `subThreading` parameter. This dictates whether or not file locking is used for the HDF5-format Arrow files. Many cluster environments use shared file systems (e.g. Lustre) which are configured to disable file locking for performance reasons. However, if you don't tell ArchR to avoid this, it will try anyways. If you are using one of these types of systems or you encounter HDF5 file accessibility errors when using ArchR, you should set `subThreading = FALSE` or consider setting the `HDF5_USE_FILE_LOCKING` and `RHDF5_USE_FILE_LOCKING` environment variables to false in your `.bash_profile`.
+One important parameter in `createArrowFiles()` is the `subThreading` parameter. However, the `subThreading` parameter does not trump the `ArchRLocking` established with `addArchRLocking()` mentioned above. Instead, if `ArchRLocking` is set to `FALSE`, then you may enable subthreading by setting `subThreading = TRUE`.
 
 We can inspect the `ArrowFiles` object to see that it is actually just a character vector of Arrow file paths.
 
@@ -281,11 +285,6 @@ We can inspect the `ArrowFiles` object to see that it is actually just a charact
 ArrowFiles
 ```
 
-As mentioned above, BAM files can also be used as input for ArchR. However, when doing so, please pay special attention to the parameter definitions. Also, you may need to pre-process your BAM file by:
-
-1. Removing any fragments less than 20 bp in length
-2. Marking/removing PCR duplicates
-3. Removing barcode reads that are `NA`
 
 ## Per-cell Quality Control
 
@@ -317,32 +316,29 @@ To get around this without having to calculate TSS enrichment scores, other tool
 
 Creation of Arrow files will create a folder in the current working directory called "QualityControl" which will contain 2 plots associated with each of your samples. The first plot shows the `log10(unique nuclear fragments)` vs TSS enrichment score and indicates the thresholds used with dotted lines. The second shows the fragment size distribution.
 
-```{r copyFigures, include=FALSE}
-ArchR:::.convertToPNG(command = "cp")
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+
+```{r copyQcPlots, include=FALSE}
+#copy TSS and frag distribution files to the images output directory
+TSSFiles <- list.files(path = "./Figures", pattern = "TSS_by_Unique_Frags.pdf", full.names = TRUE, recursive = FALSE)
+FragFiles <- list.files(path = "./Figures", pattern = "Fragment_Size_Distribution.pdf", full.names = TRUE, recursive = FALSE)
+ArchR:::.convertToPNG(pdfFiles = c(TSSFiles, FragFiles), outDir = "./images/bookdown", command = "cp")
 ```
 
 For our tutorial data, we have three samples as shown below:
 
-```{r include=FALSE, eval=FALSE}
-#PPP
-#Paulina - these plots dont look right (no labels)
-```
-
 For **BMMC**:</br>
-![](images/HemeWalkthrough/PNG/scATAC_BMMC_R1-TSS_by_Unique_Frags_1.png){width=330 height=330}
-![](images/HemeWalkthrough/PNG/scATAC_BMMC_R1-Fragment_Size_Distribution_1.png){width=430 height=330}
+![](images/bookdown/scATAC_BMMC_R1-TSS_by_Unique_Frags.pdf){width=330 height=330}
+![](images/bookdown/scATAC_BMMC_R1-Fragment_Size_Distribution.pdf){width=430 height=330}
 
 For **CD34 BMMC**:</br>
 
-![](images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-TSS_by_Unique_Frags_1.png){width=330 height=330}
-![](images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-Fragment_Size_Distribution_1.png){width=430 height=330}
+![](images/bookdown/scATAC_CD34_BMMC_R1-TSS_by_Unique_Frags.pdf){width=330 height=330}
+![](images/bookdown/scATAC_CD34_BMMC_R1-Fragment_Size_Distribution.pdf){width=430 height=330}
 
 For **PBMC**:</br>
 
-![](images/HemeWalkthrough/PNG/scATAC_PBMC_R1-TSS_by_Unique_Frags_1.png){width=330 height=330}
-![](images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Fragment_Size_Distribution_1.png){width=430 height=330}
+![](images/bookdown/scATAC_PBMC_R1-TSS_by_Unique_Frags.pdf){width=330 height=330}
+![](images/bookdown/scATAC_PBMC_R1-Fragment_Size_Distribution.pdf){width=430 height=330}
 
 We are now ready to tidy up these Arrow files and then create an `ArchRProject`.
 
@@ -350,14 +346,18 @@ We are now ready to tidy up these Arrow files and then create an `ArchRProject`.
 
 Though fragment files are strongly preferred because of their very standardized format, BAM files can also be used as input for Arrow File creation in ArchR. The key to getting this to work is understanding your BAM file structure, in particular which field of the BAM file contains the cell-specific barcode information. In this example, we will download some data from 10x Genomics to illustrate how to use BAM files as input to `createArrowFiles()`. Using `samtools view` 
 
-```{r, collapse=TRUE}
+```{r BAMdownload, collapse=TRUE}
+#set timeout to prevent interrupting large file download
+options(timeout=1000)
 dir.create(path = "./PBMC_BAM")
-download.file(url = "https://cf.10xgenomics.com/samples/cell-atac/2.0.0/atac_pbmc_500_nextgem/atac_pbmc_500_nextgem_possorted_bam.bam",
-              destfile = "./PBMC_BAM/atac_pbmc_500.bam")
-download.file(url = "https://cf.10xgenomics.com/samples/cell-atac/2.0.0/atac_pbmc_500_nextgem/atac_pbmc_500_nextgem_possorted_bam.bam.bai",
-              destfile = "./PBMC_BAM/atac_pbmc_500.bam.bai")
-stopifnot(tools::md5sum("./PBMC_BAM/atac_pbmc_500.bam") == "8140a2218ecdfd276aca5c4bb999c989")
-stopifnot(tools::md5sum("./PBMC_BAM/atac_pbmc_500.bam.bai") == "d3c5f5a00fec76378f2a947749ff2cf5")
+down_df <- data.frame(
+    fileUrl = c("https://cf.10xgenomics.com/samples/cell-atac/2.0.0/atac_pbmc_500_nextgem/atac_pbmc_500_nextgem_possorted_bam.bam",
+    "https://cf.10xgenomics.com/samples/cell-atac/2.0.0/atac_pbmc_500_nextgem/atac_pbmc_500_nextgem_possorted_bam.bam.bai"),
+    md5sum = c("8140a2218ecdfd276aca5c4bb999c989","d3c5f5a00fec76378f2a947749ff2cf5")
+)
+
+#we will use a hidden ArchR function to do the download. This automatically checks the md5sum.
+ArchR:::.downloadFiles(filesUrl = down_df, pathDownload = "./PBMC_BAM", threads = 1)
 ```
 
 If we were to use `samtools view` from the command line to look at this BAM file, the first line would look like this:
@@ -367,22 +367,36 @@ A00519:269:H7FM2DRXX:2:1201:1985:18834  83      chr1    9997    0       50M     
 
 Here, the `CB` tag is used to store the cell-specific barcode, in this case `CB:Z:GCGGGTTAGAACGTCG-1`. This means that we will pass `bcTag = "CB"` to `createArrowFiles()` to tell it to look for the `CB` tag. If, for example, your BAM files come from a scATAC-seq technology other than 10x Genomics, the relevant tag will likely be different. On top of that, the format of the cell-specific barcode may also be different. In these cases, it may be necessary to use the `gsubExpression` parameter to clean up the cell-specific barcode string. The other important input parameter is `bamFlag` which will determine which reads or fragments are viewed as valid. The value passed to `bamFlag` should be in the format of a `scanBamFlag` used by `ScanBam` in `Rsamtools`.
 
-```{r, collapse=TRUE}
+In addition to understanding the structure of you BAM file, you may need to pre-process your BAM file by:
+
+1. Removing any fragments less than 20 bp in length
+2. Marking/removing PCR duplicates
+3. Removing barcode reads that are `NA`
+
+In the case of our example data that we just downloaded, we can proceed to Arrow file creation.
+
+```{r BamCreateArrow, cache=TRUE, collapse=TRUE}
 addArchRGenome("hg38")
 
 ArrowBam <- createArrowFiles(
-  inputFiles = "./PBMC_BAM/atac_pbmc_500.bam",
+  inputFiles = "./PBMC_BAM/atac_pbmc_500_nextgem_possorted_bam.bam",
   sampleNames = "bam10x",
   minTSS = 4, #Dont set this too high because you can always increase later
   minFrags = 1000, 
   addTileMat = FALSE,
   addGeneScoreMat = FALSE,
   bcTag = "CB",
-  bamFlag = list(isMinusStrand = FALSE, isProperPair = TRUE, isDuplicate = FALSE),
-  force = TRUE
+  bamFlag = list(isMinusStrand = FALSE, isProperPair = TRUE, isDuplicate = FALSE)
 )
 ```
 
-```{r, include=FALSE}
-save.image(file = "ch1.RData")
+```{r, collapse=TRUE}
+ArrowBam
+```
+
+```{r saveImage, include=FALSE}
+filename <- paste0("./chapter_images/chapter",current_chapter,".RData")
+remove(current_chapter)
+remove(previous_chapter)
+save.image(file =  filename)
 ```

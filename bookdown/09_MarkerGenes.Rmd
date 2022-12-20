@@ -8,17 +8,23 @@ params:
   token: ""
   ref: ""
   out: ""
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r, include=FALSE}
-load("ch6.RData")
+#load the data from the previous chapter as needed
+current_chapter = 9
+previous_chapter = current_chapter-1
+load(file = paste0("./chapter_images/chapter",previous_chapter,".RData"))
 ```
 
 # Gene Scores and Marker Genes with ArchR
 
-While ArchR is able to robustly call clusters, it is not possible to know _a priori_ which cell type is represented by each cluster. This task is often left to manual annotation because every application is different.
+While ArchR is able to robustly call clusters, it is not possible to know _a priori_ which cell type is represented by each cluster. This task is often left to manual annotation because every application is different. There are, of course, new tools that help to do this annotation but these have largely been designed with scRNA-seq in mind.
 
-To do this cell type annotation, we use prior knowledge of cell type-specific marker genes and we estimate gene expression for these genes from our chromatin accessibility data by uing _gene scores_. A gene score is essentially a prediction of how highly expressed a gene will be based on the accessibility of regulatory elements in the vicinity of the gene. To create these gene scores, ArchR allows for the use of complex user-supplied custom distance-weighted accessibility models.
+To do this cell type annotation when we only have scATAC-seq data available, we use prior knowledge of cell type-specific marker genes and we estimate gene expression for these genes from our chromatin accessibility data by uing _gene scores_. A gene score is essentially a prediction of how highly expressed a gene will be based on the accessibility of regulatory elements in the vicinity of the gene. To create these gene scores, ArchR allows for the use of complex user-supplied custom distance-weighted accessibility models. In addition to gene scores, we can also use _module scores_ which allow you to group multiple features (e.g. genes or peaks) together to create more refined cell group definitions.
 
 ## Calculating Gene Scores in ArchR
 
@@ -73,6 +79,7 @@ ArchR normalizes all of the dimensions and uses euclidean distance in this norma
 ## Identifying Marker Genes
 
 To identify marker genes based on gene scores, we call the `getMarkerFeatures()` function with `useMatrix = "GeneScoreMatrix"`. We specify that we want to know the cluster-specific features with `groupBy = "Clusters"` which tells ArchR to use the "Clusters" column in `cellColData` to stratify cell groups.
+
 ```{r, collapse=TRUE}
 markersGS <- getMarkerFeatures(
     ArchRProj = projHeme2, 
@@ -86,6 +93,7 @@ markersGS <- getMarkerFeatures(
 This function returns a `SummarizedExperiment` object containing relevant information on the marker features identified. This type of return value is common in ArchR and is one of the key ways that ArchR enables downstream data analysis. `SummarizedExperiment` objects are similar to a matrix where rows represent features of interest (i.e. genes) and columns represent samples. A `SummarizedExperiment` object contains one or more assays, each represented by a matrix-like object of numeric data, and metadata that applies to the rows or columns of the assays matrices. It is beyond the scope of this tutorial to dive into `SummarizedExperiment` objects but check out the [bioconductor page](https://bioconductor.org/packages/release/bioc/html/SummarizedExperiment.html) if you need more information.
 
 We can get a list of `DataFrame` objects, one for each of our clusters, containing the relevant marker features using the `getMarkers()` function:
+
 ```{r, collapse=TRUE}
 markerList <- getMarkers(markersGS, cutOff = "FDR <= 0.01 & Log2FC >= 1.25")
 markerList$C6
@@ -111,7 +119,7 @@ heatmapGS <- markerHeatmap(
 ```
 
 To plot this heatmap, we can use the `ComplexHeatmap::draw()` function because the `heatmapGS` object is actually a list of heatmaps:
-```{r}
+```{r, collapse = TRUE}
 ComplexHeatmap::draw(heatmapGS, heatmap_legend_side = "bot", annotation_legend_side = "bot")
 ```
 
@@ -124,23 +132,12 @@ ComplexHeatmap::draw(heatmapGS, heatmap_legend_side = "bot", annotation_legend_s
 ```
 
 
-```{r, include=FALSE, eval=FALSE}
-plotPDF(heatmapGS, name = "GeneScores-Marker-Heatmap", width = 8, height = 6, ArchRProj = projHeme2, addDOC = FALSE)
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/GeneScores-Marker-Heatmap_1.png){width=800 height=600}
-
 To save an editable vectorized version of this plot, we use `plotPDF()`.
 
-```{r}
+```{r, collapse=TRUE}
 plotPDF(heatmapGS, name = "GeneScores-Marker-Heatmap", width = 8, height = 6, ArchRProj = projHeme2, addDOC = FALSE)
 ```
-> \## [1] 0
 
-[Download PDF : GeneScores-Marker-Heatmap.pdf](images/HemeWalkthrough/PDF/GeneScores-Marker-Heatmap.pdf)
 
 ## Visualizing Marker Genes on an Embedding
 
@@ -165,10 +162,9 @@ p <- plotEmbedding(
 ```
 
 To plot a specific gene, we can subset this plot list:
-```{r, eval=FALSE}
+```{r, collapse = TRUE}
 p$CD14
 ```
-![](images/HemeWalkthrough/PNG/Plot-UMAP-Marker-Genes-WO-Imputation_6.png){width=800 height=800}
 
 To plot all genes we can use `cowplot` to arrange the various marker genes into a single plot.
 
@@ -187,22 +183,6 @@ p2 <- lapply(p, function(x){
 do.call(cowplot::plot_grid, c(list(ncol = 3),p2))
 ```
 
-```{r, include=FALSE}
-plotPDF(
-    do.call(cowplot::plot_grid, c(list(ncol = 3),p2)), 
-    name = "Plot-UMAP-Markers-WO-Imputation.pdf", 
-    ArchRProj = projHeme2,
-    addDOC = FALSE,
-    width = 10, 
-    height = 10
-)
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Plot-UMAP-Markers-WO-Imputation_1.png){width=800 height=800}
-
 To save an editable vectorized version of this plot, we use the `plotPDF()` function.
 
 ```{r, collapse=TRUE}
@@ -212,13 +192,12 @@ plotPDF(plotList = p,
     addDOC = FALSE, width = 5, height = 5)
 ```
 
-[Download PDF : Plot-UMAP-Marker-Genes-WO-Imputation.pdf](images/HemeWalkthrough/PDF/Plot-UMAP-Marker-Genes-WO-Imputation.pdf)
 
 ## Marker Genes Imputation with MAGIC
 
-In the previous section, you may have noticed that some of the gene score plots appear quite variable. This is because of the sparsity of scATAC-seq data. We can use [MAGIC](https://github.com/KrishnaswamyLab/MAGIC) to impute gene scores by smoothing signal across nearby cells. In our hands, this greatly improves the visual interpretation of gene scores. To do this, we first add impute weights to our `ArchRProject`.
+In the previous section, you may have noticed that some of the gene score plots appear quite variable. This is because of the sparsity of scATAC-seq data. We can use [MAGIC](https://github.com/KrishnaswamyLab/MAGIC) to impute gene scores by smoothing signal across nearby cells. In our hands, this greatly improves the visual interpretation of gene scores. ArchR doesnt actually use the code in MAGIC to do this (you do not need to install the `Rmagic` package) but instead we have reimplemented the workflow within ArchR. We use the `addImputeWeights()` function to add impute weights to our `ArchRProject`.
 
-```{r}
+```{r, collapse=TRUE}
 projHeme2 <- addImputeWeights(projHeme2)
 ```
 
@@ -242,11 +221,9 @@ p <- plotEmbedding(
 ```
 
 As before, we can subset this plot list to select a specific gene.
-```{r}
+```{r, collapse=TRUE}
 p$CD14
 ```
-
-![](images/HemeWalkthrough/PNG/Plot-UMAP-Marker-Genes-W-Imputation_6.png){width=800 height=800}
 
 Or we can plot all the marker genes at once using `cowplot`.
 
@@ -266,21 +243,6 @@ p2 <- lapply(p, function(x){
 do.call(cowplot::plot_grid, c(list(ncol = 3),p2))
 ```
 
-```{r, include=FALSE, eval=FALSE}
-plotPDF(
-    do.call(cowplot::plot_grid, c(list(ncol = 3),p2)), 
-    name = "Plot-UMAP-Markers-W-Imputation.pdf", 
-    ArchRProj = projHeme2,
-    addDOC = FALSE,
-    width = 10, 
-    height = 10
-)
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Plot-UMAP-Markers-W-Imputation_1.png){width=800 height=800}
 
 To save an editable vectorized version of this plot, we use the `plotPDF()` function.
 
@@ -291,11 +253,10 @@ plotPDF(plotList = p,
     addDOC = FALSE, width = 5, height = 5)
 ```
 
-[Download PDF : Plot-UMAP-Marker-Genes-W-Imputation.pdf](images/HemeWalkthrough/PDF/Plot-UMAP-Marker-Genes-W-Imputation.pdf)
 
 ## Module Scores
 
-The reliability of gene scores derived from chromatin accessibility is highly dependent on the particular gene being queried. For example, genes that exist in highly gene-dense regions of the genome can be harder to accurately represent with gene scores because the surrounding peaks may not be acting to regulate its gene expression. For this reason, its often best to use gene scores from multiple different genes to (for example) assign cluster identities. To facilitate this, ArchR enables the use of "modules" which are user-defined groups of features where the signal from each individual feature is combined using equal weights into a single module score. The per-cell values for each user-defined module are stored as a new column in the `cellColData` of the given `ArchRProject`.
+The reliability of gene scores derived from chromatin accessibility is highly dependent on the particular gene being queried. For example, genes that exist in highly gene-dense regions of the genome can be harder to accurately represent with gene scores because the surrounding peaks may not be acting to regulate its gene expression. For this reason, it's often best to use gene scores from multiple different genes to (for example) assign cluster identities. To facilitate this, ArchR enables the use of "modules" which are user-defined groups of features where the signal from each individual feature is combined using equal weights into a single module score. The per-cell values for each user-defined module are stored as a new column in the `cellColData` of the given `ArchRProject`.
 
 Module scores are added using the `addModuleScore()` function. The key parameters for this function are `features` and `name`. `features` is a named list of character vectors containing gene names while `name` is the broad title that will be given to each column added to `cellColData`
 
@@ -361,35 +322,21 @@ p <- plotBrowserTrack(
 
 Here, the output of `plotBrowserTrack()` is a list of plots. To plot a track of a specific gene, we can select one from the list.
 
-```{r}
+```{r, collapse=TRUE}
 grid::grid.newpage()
 grid::grid.draw(p$CD14)
 ```
 
-```{r, include=FALSE}
-plotPDF(plotList = p, 
-    name = "Plot-Tracks-Marker-Genes.pdf", 
-    ArchRProj = projHeme2, 
-    addDOC = FALSE, 
-    width = 5, 
-    height = 5
-)
-ArchR:::.convertToPNG(ArchRProj = projHeme2)
-system("cp Figures/*.png images/HemeWalkthrough/PNG/")
-system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
-```
-
-![](images/HemeWalkthrough/PNG/Plot-Tracks-Marker-Genes_5.png){width=500 height=500}
 
 We can save a multi-page PDF with a single page for each gene locus in our plot list using the `plotPDF()` function.
 
-```{r}
+```{r, collapse=TRUE}
 plotPDF(plotList = p, 
     name = "Plot-Tracks-Marker-Genes.pdf", 
     ArchRProj = projHeme2, 
     addDOC = FALSE, width = 5, height = 5)
 ```
-[Download PDF : Plot-Tracks-Marker-Genes.pdf](images/HemeWalkthrough/PDF/Plot-Tracks-Marker-Genes.pdf)
+
 
 The `plotBrowserTrack()` function is highly versatile and therefore has a lot of different parameter options so you should explore all of those capabilities in the [function documentation](https://www.archrproject.com/reference/plotBrowserTrack.html). There are multiple different types of plot elements that can be plotted and these are controlled using the `plotSummary` parameter. Those options include:
 
@@ -405,53 +352,43 @@ You can also change which regions are shown as "features" by manipulating the `f
 
 By default, the pseudobulk ATAC-seq tracks will be normalized based on `ReadsInTSS` (from `cellColData`) but this can be changed via the `normMethod` parameter if desired. Lastly, you can highlight specific regions in the plots using the `hightlight` and `highlightFill` paramters. There are tons of ways to use the `plotBrowserTrack()` function, far more than can be adequately reviewed in this manual so take the time to explore.
 
-## Launching the ArchRBrowser
+## Launching the Interactive ArchRBrowser
 
-One challenge inherent to scATAC-seq data analysis is genome-track level visualizations of chromatin accessibility observed within groups of. Traditionally, track visualization requires grouping the scATAC-seq fragments, creating a genome coverage bigwig, and normalizing this track for quantitative visualization. Typically, end-users use a genome browser such as the [WashU Epigenome Browser](https://epigenomegateway.wustl.edu/), the [UCSC Genome Browser](http://genome.ucsc.edu/), or the [IGV browser](http://software.broadinstitute.org/software/igv/) to visualize these sequencing tracks. This process involves using multiple software and any change to the cellular groups or addition of more samples requires re-generation of bigwig files etc., which can become time consuming.
+One challenge inherent to scATAC-seq data analysis is genome-track level visualizations of chromatin accessibility observed within groups of cells. Traditionally, track visualization requires grouping the scATAC-seq fragments, creating a genome coverage bigwig, and normalizing this track for quantitative visualization. Typically, end-users use a genome browser such as the [WashU Epigenome Browser](https://epigenomegateway.wustl.edu/), the [UCSC Genome Browser](http://genome.ucsc.edu/), or the [IGV browser](http://software.broadinstitute.org/software/igv/) to visualize these sequencing tracks. This process involves using multiple software and any change to the cellular groups or addition of more samples requires re-generation of bigwig files etc., which can become quite cumbersome.
 
-For this reason, ArchR has a Shiny-based interactive genome browser that can be launched with a single line of code `ArchRBrowser(ArchRProj)`. The data storage strategy implemented in Arrow files allows this interactive browser to dynamically change the cell groupings, resolution, and normalization, enabling real-time track-level visualizations. The ArchR Genome Browser also creates high-quality vectorized images in PDF format for publication or distribution. Additionally, the browser accepts user-supplied input files such as a `GenomicRanges` object to display features, via the `features` parameter, or genomic interaction files that define co-accessibility, peak-to-gene linkages, or loops from chromatin conformation data via the `loops` parameter. For `loops` the expected format is a `GRanges` object whose start position represents the center position of one loop anchor and whose end position represents the center position of the other loop anchor. 
+For this reason, ArchR has a Shiny-based interactive genome browser that can be launched with a single line of code `ArchRBrowser(ArchRProj)`. The data storage strategy implemented in Arrow files allows this interactive browser to dynamically change the cell groupings, resolution, and normalization, enabling real-time track-level visualizations. The ArchR Genome Browser also allows for export of high-quality vectorized images in PDF format for publication or distribution. Additionally, the browser accepts user-supplied input files such as a `GenomicRanges` object to display features, via the `features` parameter, or genomic interaction files that define co-accessibility, peak-to-gene linkages, or loops from chromatin conformation data via the `loops` parameter. For `loops`, the expected format is a `GRanges` object whose start position represents the center position of one loop anchor and whose end position represents the center position of the other loop anchor. 
 
-To launch our local interactive genome browser, we use the `ArchRBrowser()` function.
-```{r eval=FALSE}
-#ArchRBrowser(projHeme2)
+To launch our local interactive genome browser, we use the `ArchRBrowser()` function. If you are working in RStudio, you will want to click the "Show in new window" button to get a full-screen view.
+```{r, eval=FALSE}
+ArchRBrowser(projHeme2)
 ```
+
+<!-- The plots below are manually generated and might need to be updated manually if the ArchRBrowser changes -->
+
 When we start, we see a screen that looks like this:
-![](images/HemeWalkthrough/PNG/ArchR_Browser_1.png){width=800 height=500}
+![](images/ArchR_Browser_1.png){width=800 height=500}
 
 By selecting a gene via the "Gene Symbol" box, we can begin browsing. You may need to click the "Plot Track" button to force your browser session to update.
-![](images/HemeWalkthrough/PNG/ArchR_Browser_2.png){width=800 height=500}
+![](images/ArchR_Browser_2.png){width=800 height=500}
 
 Once we have plotted a gene locus, we see a single track representing each of the clusters in our data.
-![](images/HemeWalkthrough/PNG/ArchR_Browser_3.png){width=800 height=500}
+![](images/ArchR_Browser_3.png){width=800 height=500}
 
 If we click the "Additional Parameters" tab, we can specify which clusters to display and which to hide.
-![](images/HemeWalkthrough/PNG/ArchR_Browser_4.png){width=800 height=500}
+![](images/ArchR_Browser_4.png){width=800 height=500}
 
 By unclicking the check boes next to Clusters 1, 2, and 3, we will remove them from the plot.
-![](images/HemeWalkthrough/PNG/ArchR_Browser_5.png){width=800 height=500}
+![](images/ArchR_Browser_5.png){width=800 height=500}
 
 When we return to the "Plot" tab, we should see an updated plot with Clusters 1, 2, and 3 removed. Again, you may need to click the "Plot Track" button to force your browser session to update.
-![](images/HemeWalkthrough/PNG/ArchR_Browser_6.png){width=800 height=500}
+![](images/ArchR_Browser_6.png){width=800 height=500}
 
-At any point, we can export a vectorized PDF of the current track view using the "Download the Track" button.
+At any point, we can export a vectorized PDF of the current track view using the "Download the Track" button. Don't forget to hit the "Exit Browser" button when you are done, otherwise your R terminal won't be responsive.
 
-```{r, include=FALSE, eval=FALSE}
-save.image(params$out, compress = FALSE)
+```{r saveImage, include=FALSE}
+filename <- paste0("./chapter_images/chapter",current_chapter,".RData")
+remove(current_chapter)
+remove(previous_chapter)
+save.image(file =  filename)
 ```
-```{r, include=FALSE}
-save.image("ch7.RData")
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
 
