@@ -35,6 +35,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -47,7 +49,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
       </span>
     </div>
 
@@ -74,13 +76,6 @@
   </a>
 </li>
 <li>
-  <a href="../../articles/Articles/faq.html">
-    <span class="fa fa-question-circle-o"></span>
-     
-    FAQ
-  </a>
-</li>
-<li>
   <a href="../../reference/index.html">
     <span class="fa fa-code"></span>
      
@@ -90,7 +85,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/GreenleafLab/ArchR">
+  <a href="https://github.com/GreenleafLab/ArchR" class="external-link">
     <span class="fa fa-github"></span>
      
     ArchR on GitHub
@@ -112,8 +107,7 @@
 
       
 
-      </header><script src="tutorial_files/header-attrs-2.5/header-attrs.js"></script><link href="tutorial_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="tutorial_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>A Brief Tutorial of ArchR</h1>
@@ -128,13 +122,13 @@
     
 <p>This is a <strong><em>brief</em></strong> ArchR tutorial. It does not showcase all of ArchR’s functionality nor explain each of the steps in detail. Please see <a href="bookdown/index.html">the searchable full user’s manual</a> for an in-depth tutorial using real-world data and a full description of all aspects of ArchR analysis. <strong>Importantly, this tutorial and the full user manual assume that you are running ArchR locally</strong>.</p>
 <hr>
-<div id="getting-set-up" class="section level2">
-<h2 class="hasAnchor">
-<a href="#getting-set-up" class="anchor"></a>Getting Set Up</h2>
-<p>First, we load the ArchR library. If this fails, you have not properly installed ArchR and should <a href="https://www.archrproject.com/index.html">revisit the installation instructions</a>. We also recommend setting and remembering a known seed to facilitate replication of operations requiring randomization.</p>
+<div class="section level2">
+<h2 id="getting-set-up">Getting Set Up<a class="anchor" aria-label="anchor" href="#getting-set-up"></a>
+</h2>
+<p>First, we load the ArchR library. If this fails, you have not properly installed ArchR and should <a href="https://www.archrproject.com/index.html" class="external-link">revisit the installation instructions</a>. We also recommend setting and remembering a known seed to facilitate replication of operations requiring randomization.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.ArchRProject.com">ArchR</a></span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.ArchRProject.com" class="external-link">ArchR</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></code></pre></div>
 <p>Next, we set the default number of threads for parallelized operations in ArchR functions. You should change the value passed to <code>threads</code> to match the specifications of your local machine.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/addArchRThreads.html">addArchRThreads</a></span><span class="op">(</span>threads <span class="op">=</span> <span class="fl">16</span><span class="op">)</span> </code></pre></div>
@@ -160,9 +154,9 @@
 <p>## Setting default genome to Hg19.</p>
 </blockquote>
 </div>
-<div id="creating-arrow-files" class="section level2">
-<h2 class="hasAnchor">
-<a href="#creating-arrow-files" class="anchor"></a>Creating Arrow Files</h2>
+<div class="section level2">
+<h2 id="creating-arrow-files">Creating Arrow Files<a class="anchor" aria-label="anchor" href="#creating-arrow-files"></a>
+</h2>
 <p>Now we will create our Arrow files which will take 10-15 minutes. For each sample, this step will:</p>
 <ol style="list-style-type: decimal">
 <li>Read accessible fragments from the provided input files.</li>
@@ -174,7 +168,7 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ArrowFiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/createArrowFiles.html">createArrowFiles</a></span><span class="op">(</span>
   inputFiles <span class="op">=</span> <span class="va">inputFiles</span>,
-  sampleNames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">inputFiles</span><span class="op">)</span>,
+  sampleNames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">inputFiles</span><span class="op">)</span>,
   filterTSS <span class="op">=</span> <span class="fl">4</span>, <span class="co">#Dont set this too high because you can always increase later</span>
   filterFrags <span class="op">=</span> <span class="fl">1000</span>, 
   addTileMat <span class="op">=</span> <span class="cn">TRUE</span>,
@@ -205,9 +199,9 @@
 <p>For our tutorial data, an example of these QC plots is shown below for the <strong>BMMC</strong> sample:</p>
 <p><img src="../../images/HemeShort/PNG/scATAC_BMMC_R1-TSS_by_Unique_Frags_1.png" width="330" height="330"><img src="../../images/HemeShort/PNG/scATAC_BMMC_R1-Fragment_Size_Distribution_1.png" width="430" height="330"></p>
 </div>
-<div id="inferring-doublets" class="section level2">
-<h2 class="hasAnchor">
-<a href="#inferring-doublets" class="anchor"></a>Inferring Doublets</h2>
+<div class="section level2">
+<h2 id="inferring-doublets">Inferring Doublets<a class="anchor" aria-label="anchor" href="#inferring-doublets"></a>
+</h2>
 <p>After Arrow file creation, we can infer potential doublets (a single droplet containing multiple cells) that can confound downstream results. This is done using the <code><a href="../../reference/addDoubletScores.html">addDoubletScores()</a></code> function.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">doubScores</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/addDoubletScores.html">addDoubletScores</a></span><span class="op">(</span>
@@ -232,9 +226,8 @@
 ## ArchR logging successful to : ArchRLogs/ArchR-addDoubletScores-69ef56ebfd4d-Date-2020-04-21_Time-16-24-31.log</p>
 </blockquote>
 </div>
-<div id="creating-an-archrproject" class="section level2">
-<h2 class="hasAnchor">
-<a href="#creating-an-archrproject" class="anchor"></a>Creating an <code>ArchRProject</code>
+<div class="section level2">
+<h2 id="creating-an-archrproject">Creating an <code>ArchRProject</code><a class="anchor" aria-label="anchor" href="#creating-an-archrproject"></a>
 </h2>
 <p>With our Arrow files in hand, we are now ready to create an <code>ArchRProject</code>. An <code>ArchRProject</code> is associated with a set of Arrow files and is the backbone of nearly all ArchR analyses.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -272,9 +265,9 @@
 ## scATAC_PBMC_R1 : 60 of 2454 (2.4%)</p>
 </blockquote>
 </div>
-<div id="dimensionality-reduction-and-clustering" class="section level2">
-<h2 class="hasAnchor">
-<a href="#dimensionality-reduction-and-clustering" class="anchor"></a>Dimensionality Reduction and Clustering</h2>
+<div class="section level2">
+<h2 id="dimensionality-reduction-and-clustering">Dimensionality Reduction and Clustering<a class="anchor" aria-label="anchor" href="#dimensionality-reduction-and-clustering"></a>
+</h2>
 <p>ArchR implements an iterative LSI dimensionality reduction via the <code><a href="../../reference/addIterativeLSI.html">addIterativeLSI()</a></code> function.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/addIterativeLSI.html">addIterativeLSI</a></span><span class="op">(</span>ArchRProj <span class="op">=</span> <span class="va">proj</span>, useMatrix <span class="op">=</span> <span class="st">"TileMatrix"</span>, name <span class="op">=</span> <span class="st">"IterativeLSI"</span><span class="op">)</span></code></pre></div>
@@ -302,7 +295,7 @@
 ## 2020-04-21 16:31:40 : Computing LSI, 1.911 mins elapsed.<br>
 ## 2020-04-21 16:32:18 : Finished Running IterativeLSI, 2.541 mins elapsed.</p>
 </blockquote>
-<p>To call clusters in this reduced dimension sub-space, we use the <code><a href="../../reference/addClusters.html">addClusters()</a></code> function which uses <a href="https://satijalab.org/seurat/">Seurat’s</a> graph clustering as the default clustering method.</p>
+<p>To call clusters in this reduced dimension sub-space, we use the <code><a href="../../reference/addClusters.html">addClusters()</a></code> function which uses <a href="https://satijalab.org/seurat/" class="external-link">Seurat’s</a> graph clustering as the default clustering method.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/addClusters.html">addClusters</a></span><span class="op">(</span>input <span class="op">=</span> <span class="va">proj</span>, reducedDims <span class="op">=</span> <span class="st">"IterativeLSI"</span><span class="op">)</span></code></pre></div>
 <blockquote>
@@ -325,10 +318,10 @@
 ## 2020-04-21 16:32:38 : Finished addClusters, 0.322 mins elapsed.</p>
 </blockquote>
 </div>
-<div id="visualizing-in-a-2d-umap-embedding" class="section level2">
-<h2 class="hasAnchor">
-<a href="#visualizing-in-a-2d-umap-embedding" class="anchor"></a>Visualizing in a 2D UMAP Embedding</h2>
-<p>We can visualize our scATAC-seq data using a 2-dimensional representation such as Uniform Manifold Approximation and Projection (UMAP). To do this, we add a UMAP embedding to our <code>ArchRProject</code> object with the <code><a href="../../reference/addUMAP.html">addUMAP()</a></code> function. This function uses the <a href="https://github.com/jlmelville/uwot">uwot package</a> to perform UMAP.</p>
+<div class="section level2">
+<h2 id="visualizing-in-a-2d-umap-embedding">Visualizing in a 2D UMAP Embedding<a class="anchor" aria-label="anchor" href="#visualizing-in-a-2d-umap-embedding"></a>
+</h2>
+<p>We can visualize our scATAC-seq data using a 2-dimensional representation such as Uniform Manifold Approximation and Projection (UMAP). To do this, we add a UMAP embedding to our <code>ArchRProject</code> object with the <code><a href="../../reference/addUMAP.html">addUMAP()</a></code> function. This function uses the <a href="https://github.com/jlmelville/uwot" class="external-link">uwot package</a> to perform UMAP.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/addUMAP.html">addUMAP</a></span><span class="op">(</span>ArchRProj <span class="op">=</span> <span class="va">proj</span>, reducedDims <span class="op">=</span> <span class="st">"IterativeLSI"</span><span class="op">)</span></code></pre></div>
 <blockquote>
@@ -386,10 +379,10 @@
 </blockquote>
 <p><a href="../../images/HemeShort/PDF/Plot-UMAP-Sample-Clusters.pdf">Download PDF : Plot-UMAP-Sample-Clusters.pdf</a></p>
 </div>
-<div id="assigning-clusters-with-gene-scores" class="section level2">
-<h2 class="hasAnchor">
-<a href="#assigning-clusters-with-gene-scores" class="anchor"></a>Assigning Clusters with Gene Scores</h2>
-<p>We can try to assign biological labels to these clusters using marker genes of known hematopoietic regulators. First, we add imputation weights using <a href="https://github.com/KrishnaswamyLab/MAGIC">MAGIC</a> to help smooth the dropout noise in our gene scores.</p>
+<div class="section level2">
+<h2 id="assigning-clusters-with-gene-scores">Assigning Clusters with Gene Scores<a class="anchor" aria-label="anchor" href="#assigning-clusters-with-gene-scores"></a>
+</h2>
+<p>We can try to assign biological labels to these clusters using marker genes of known hematopoietic regulators. First, we add imputation weights using <a href="https://github.com/KrishnaswamyLab/MAGIC" class="external-link">MAGIC</a> to help smooth the dropout noise in our gene scores.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/addImputeWeights.html">addImputeWeights</a></span><span class="op">(</span><span class="va">proj</span><span class="op">)</span></code></pre></div>
 <blockquote>
@@ -399,7 +392,7 @@
 </blockquote>
 <p>Now we can overlay our marker gene scores on our 2D UMAP embedding.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">markerGenes</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+<code class="sourceCode R"><span class="va">markerGenes</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">c</a></span><span class="op">(</span>
     <span class="st">"CD34"</span>,  <span class="co">#Early Progenitor</span>
     <span class="st">"GATA1"</span>, <span class="co">#Erythroid</span>
     <span class="st">"PAX5"</span>, <span class="st">"MS4A1"</span>, <span class="st">"MME"</span>, <span class="co">#B-Cell Trajectory</span>
@@ -439,18 +432,18 @@
 <p>To plot all genes we can use <code>cowplot</code> to arrange the 9 different plots together. Each of these marker genes lights up the corresponding cell clusters. For example, we infer that the cells that have the highest gene score for CD3D, a known T cell marker, are in fact T cells.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#Rearrange for grid plotting</span>
-<span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">p</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
-    <span class="va">x</span> <span class="op">+</span> <span class="fu">guides</span><span class="op">(</span>color <span class="op">=</span> <span class="cn">FALSE</span>, fill <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> 
+<span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">p</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
+    <span class="va">x</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>color <span class="op">=</span> <span class="cn">FALSE</span>, fill <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span> 
     <span class="fu"><a href="../../reference/theme_ArchR.html">theme_ArchR</a></span><span class="op">(</span>baseSize <span class="op">=</span> <span class="fl">6.5</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu">theme</span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu">unit</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="st">"cm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu">theme</span><span class="op">(</span>
-        axis.text.x<span class="op">=</span><span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>, 
-        axis.ticks.x<span class="op">=</span><span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>, 
-        axis.text.y<span class="op">=</span><span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>, 
-        axis.ticks.y<span class="op">=</span><span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="st">"cm"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>
+        axis.text.x<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>, 
+        axis.ticks.x<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>, 
+        axis.text.y<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>, 
+        axis.ticks.y<span class="op">=</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>
     <span class="op">)</span>
 <span class="op">}</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span><span class="op">(</span><span class="fu">cowplot</span><span class="fu">::</span><span class="va"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,<span class="va">p2</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="fu">cowplot</span><span class="fu">::</span><span class="va"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html" class="external-link">plot_grid</a></span>, <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,<span class="va">p2</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <center>
 <img src="../../images/HemeShort/PNG/Plot-UMAP-Markers-W-Imputation_1.png" width="900" height="900">
 </center>
@@ -474,9 +467,9 @@
 </blockquote>
 <p><a href="../../images/HemeShort/PDF/Plot-UMAP-Marker-Genes-W-Imputation.pdf">Download PDF : Plot-UMAP-Marker-Genes-W-Imputation.pdf</a></p>
 </div>
-<div id="visualizing-genome-browser-tracks" class="section level2">
-<h2 class="hasAnchor">
-<a href="#visualizing-genome-browser-tracks" class="anchor"></a>Visualizing Genome Browser Tracks</h2>
+<div class="section level2">
+<h2 id="visualizing-genome-browser-tracks">Visualizing Genome Browser Tracks<a class="anchor" aria-label="anchor" href="#visualizing-genome-browser-tracks"></a>
+</h2>
 <p>In addition to plotting gene scores per cell as a UMAP overlay, we can browse the local chromatin accessibility at these marker genes on a per cluster basis with genome browser tracks. To do this, we use the <code><a href="../../reference/plotBrowserTrack.html">plotBrowserTrack()</a></code> function which will create a list of plots, one for each of the genes specified by <code>markerGenes</code>.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/plotBrowserTrack.html">plotBrowserTrack</a></span><span class="op">(</span>
@@ -535,8 +528,8 @@
 </blockquote>
 <p>To plot a track of a specific gene, we can simply select one from the list.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/grid.newpage.html">grid.newpage</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/grid.draw.html">grid.draw</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">CD14</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/grid.newpage.html" class="external-link">grid.newpage</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/grid.draw.html" class="external-link">grid.draw</a></span><span class="op">(</span><span class="va">p</span><span class="op">$</span><span class="va">CD14</span><span class="op">)</span></code></pre></div>
 <center>
 <img src="../../images/HemeShort/PNG/Plot-Tracks-Marker-Genes_6.png" width="700">
 </center>
@@ -559,14 +552,13 @@
 ## [1] 0</p>
 </blockquote>
 <p><a href="../../images/HemeShort/PDF/Plot-Tracks-Marker-Genes.pdf">Download PDF : Plot-Tracks-Marker-Genes.pdf</a></p>
-<p>Last but certainly not least, ArchR natively supports an interactive and dynamic genome browser that can be launched locally via a <a href="https://shiny.rstudio.com/">shiny app</a>. To do this, we use the <code><a href="../../reference/ArchRBrowser.html">ArchRBrowser()</a></code> function.</p>
+<p>Last but certainly not least, ArchR natively supports an interactive and dynamic genome browser that can be launched locally via a <a href="https://shiny.rstudio.com/" class="external-link">shiny app</a>. To do this, we use the <code><a href="../../reference/ArchRBrowser.html">ArchRBrowser()</a></code> function.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/ArchRBrowser.html">ArchRBrowser</a></span><span class="op">(</span>ArchRProj <span class="op">=</span> <span class="va">proj</span><span class="op">)</span></code></pre></div>
 <p>This launches a dynamic genome browser session with a whole host of features including export of vectorized tracks for publication.</p>
 </div>
-<div id="saving-and-loading-an-archrproject" class="section level2">
-<h2 class="hasAnchor">
-<a href="#saving-and-loading-an-archrproject" class="anchor"></a>Saving and Loading an <code>ArchRProject</code>
+<div class="section level2">
+<h2 id="saving-and-loading-an-archrproject">Saving and Loading an <code>ArchRProject</code><a class="anchor" aria-label="anchor" href="#saving-and-loading-an-archrproject"></a>
 </h2>
 <p>To easily save an <code>ArchRProject</code> for later use or for sharing with collaborators, we use the <code><a href="../../reference/saveArchRProject.html">saveArchRProject()</a></code> function. This copies the current <code>ArchRProject</code> object and all of the Arrow files to a specified directory. If we don’t specify an output directory (as below), <code><a href="../../reference/saveArchRProject.html">saveArchRProject()</a></code> uses the output directory that we specified upon creation of our <code>ArchRProject</code>. In this case that is the folder “HemeTutorial”.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
@@ -583,18 +575,18 @@
 <p>## Successfully loaded ArchRProject!</p>
 </blockquote>
 </div>
-<div id="session-information" class="section level2">
-<h2 class="hasAnchor">
-<a href="#session-information" class="anchor"></a>Session Information</h2>
+<div class="section level2">
+<h2 id="session-information">Session Information<a class="anchor" aria-label="anchor" href="#session-information"></a>
+</h2>
 <p>This tutorial was run on the date specified below.</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <blockquote>
 <p>## [1] “2020-04-21”</p>
 </blockquote>
-<p>The <code><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo()</a></code> at run time was:</p>
+<p>The <code><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo()</a></code> at run time was:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <blockquote>
 <p>## R version 3.6.1 (2019-07-05)<br>
 ## Platform: x86_64-pc-linux-gnu (64-bit)<br>
@@ -651,11 +643,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="https://twitter.com/JeffreyGranja">Jeffrey Granja</a>, <a href="https://twitter.com/doctorcorces">Ryan Corces</a>.</p>
+  <p></p>
+<p>Developed by <a href="https://twitter.com/JeffreyGranja" class="external-link">Jeffrey Granja</a>, <a href="https://twitter.com/doctorcorces" class="external-link">Ryan Corces</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>

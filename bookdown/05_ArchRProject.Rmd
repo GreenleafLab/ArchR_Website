@@ -1,0 +1,487 @@
+---
+output:
+  html_document:
+    theme: yeti  # many options for theme, this one is my favorite.
+params:
+  threads: 20
+  rdata: ""
+  token: ""
+  ref: ""
+  out: ""
+---
+```{r, include=FALSE}
+load("ch2.RData")
+```
+
+# Creating an ArchRProject
+
+An `ArchRProject` allows us to group multiple Arrow files together into a single project. This `ArchRProject` is small and is stored in memory. By interacting with the `ArchRProject` we can rapidly push and pull data from the Arrow files. As such, it forms the basis of nearly all ArchR functions and analytical workflows. Moreover, `ArchRProject` objects can be saved and re-loaded at a later date, providing continuity of analyses and facilitating sharing of analytical projects across collaborators. This chapter describes how to create and interact with an `ArchRProject` object.
+
+## Creating An ArchRProject
+
+First, we must create our `ArchRProject` by providing a list of Arrow files and a few other parameters. The `outputDirectory` here describes where all downstream analyses and plots will be saved. ArchR will automatically associate the previously provided `geneAnnotation` and `genomeAnnotation` with the new `ArchRProject`. These were stored when we ran `addArchRGenome("hg19")` in a previous chapter. Importantly, multiple `ArchRProject` objects **cannot** be combined later so any samples that you want to analyze must be included as Arrow files at this project creation step.
+
+```{r createArchRProj, collapse=TRUE}
+projHeme1 <- ArchRProject(
+  ArrowFiles = ArrowFiles, 
+  outputDirectory = "HemeTutorial",
+  copyArrows = TRUE #This is recommended so that if you modify the Arrow files you have an original copy for later usage.
+)
+```
+
+We call this `ArchRProject` "projHeme1" because it is the first iteration of our hematopoiesis project. Throughout this walkthrough we will modify and update this `ArchRProject` and keep track of which version of the project we are using by iterating the project number (i.e. "projHeme2").
+
+We can examine the contents of our `ArchRProject`:
+
+```{r, collapse=TRUE}
+projHeme1
+```
+
+We can see from the above that our `ArchRProject` has been initialized with a few important attributes:
+
+1. The specified `outputDirectory`.
+2. The `sampleNames` of each sample which were obtained from the Arrow files.
+3. A matrix called `sampleColData` which contains data associated with each sample.
+4. A matrix called `cellColData` which contains data associated with each cell. Because we already computed doublet enrichment scores using `addDoubletScores()`, which added those values to each cell in the Arrow files, we can see columns corresponding to the "DoubletEnrichment" and "DoubletScore" in the `cellColData` matrix.
+5. The total number of cells in our project which represents all samples after doublet identification and removal.
+6. The median TSS enrichment score and the median number of fragments across all cells and all samples.
+
+We can check how much memory is used to store the `ArchRProject` in memory within R:
+
+```{r, collapse=TRUE}
+paste0("Memory Size = ", round(object.size(projHeme1) / 10^6, 3), " MB")
+```
+
+We can also ask which data matrices are available within the `ArchRProject` which will be useful downstream once we start adding to this project:
+
+```{r, collapse=TRUE}
+getAvailableMatrices(projHeme1)
+```
+
+Taking a closer look at `cellColData`, we can see all of the metadata that is stored here. As the name suggests, this is metadata that applies to each individual cell.
+
+```{r, collapse=TRUE}
+head(projHeme1@cellColData)
+```
+
+You'll notice that many of these columns correspond to per-cell quality control information that was calculated during Arrow file creation. These columns are:
+
+1. TSSEnrichment - the per-cell TSS enrichment score
+2. ReadsInTSS - the number of reads that fall within TSS regions (default is 100 bp around TSS)
+3. ReadsInPromoter - the number of reads that fall in promoter regions (default is -2000 to +100 from the TSS)
+4. PromoterRatio - the ratio of reads in promoters to reads outside of promoters
+5. ReadsInBlacklist - the number of reads that fall in blacklist regions
+6. BlacklistRatio - the ratio of reads in blacklist regions to reads outside of blacklist regions
+7. NucleosomeRatio - similar to above but for reads mapping to nucleosome-sized reads, defined as: `(nDiFrags + nMultiFrags) / nMonoFrags)`
+8. nFrags - the number of fragments recovered per cell
+9. nMonoFrags - the number of fragments that have length less than `2 * nucLength` (nucLength is the length of DNA that wraps around a nucleosome (147 bp by default))
+10. nDiFrags - the number of fragments that have length less than `3 * nucLength` but greater than `2 * nucLength`
+11. nMultiFrags - the number of fragments that have length >= `3*nucLength`
+12. PassQC - equal to `1` if the cell passed QC filters or `0` if not
+
+Throughout the tutorial, other data will get added to `cellColData`, for example the number of ReadsInPeaks or FRiP when we add a peak set to the project.
+
+## Manipulating An ArchRProject
+Now that we have created an `ArchRProject`, there are many things that we can do to easily access or manipulate the associated data.
+
+<span style="font-size:20px;font-weight:bold">Example 1. The `$` accessor allows direct access to `cellColData`</span>
+
+We can access the cell names associated with each cell:
+```{r, collapse=TRUE}
+head(projHeme1$cellNames)
+```
+
+We can access the sample names associated with each cell:
+```{r, collapse=TRUE}
+head(projHeme1$Sample)
+``` 
+
+We can access the TSS Enrichment Scores for each cell:
+```{r, collapse=TRUE}
+quantile(projHeme1$TSSEnrichment)
+```
+
+<span style="font-size:20px;font-weight:bold">Example 2. Subsetting an `ArchRProject` by cells</span>
+
+There are many ways that we can subset an `ArchRProject` to obtain only a select set of cells. However, the different ways to subset an `ArchRProject` have very different effects and should not be considered equivalent.
+
+The most robust way to subset an `ArchRProject` is to use the `subsetArchRProject()` function. This function takes a list of `cells` and an `outputDirectory` and creates a new full copy of the `ArchRProject` and corresponding Arrow files in the designated directory. This is the ideal way to subset an `ArchRProject` because it ensures that only one `ArchRProject` object is referring to the specified Arrow files (more details on this below). Additionally, by using the `dropCells` argument, you can remove unnecessary cells from downstream analyses. Setting `dropCells = TRUE` is almost always the correct choice and setting `dropCells = FALSE` can lead to some unexpected downstream issues depending on your workflow.
+
+For example, we could use `subsetArchRProject()` to keep only the cells from a specific sample (shown below) or cluster to perform a subsetted downstream analysis. All you need to do is pass the `cellNames` of the cells that you would like to retain to the `cells` parameter.
+
+```{r, collapse=TRUE}
+idxSample <- BiocGenerics::which(projHeme1$Sample %in% "scATAC_BMMC_R1")
+projSubset <- subsetArchRProject(
+  ArchRProj = projHeme1,
+  cells = projHeme1$cellNames[idxSample],
+  outputDirectory = "ArchRSubset",
+  dropCells = TRUE
+  )
+```
+
+
+It is important to note that some operations will need to be re-run after project subsetting. Much of this is dictated by common sense. For example, if you want to look at only the subsetted cells on a new UMAP embedding, you need to create that new embedding first. Similarly, if you want to perform sub-clustering, you should almost certainly re-run dimensionality reduction (LSI) first.
+
+The primary disadvantage of `subsetArchRProject()` is that it makes copies of the Arrow files which can be quite large for bigger data sets. Nevertheless, this is the absolute most stable way to subset a project and is the only way that we recommend.
+
+If your data set size is so massive that copying the Arrow files is not reasonable, you can try subsetting the project manually as illustrated below. However, it is important to note if you do this, you can run into the situation where you have multiple ArchRProject objects pointing to the same Arrow files. You may alter those Arrow files in one project, causing something to unexpectedly break in the other project. We do not consider this type of project subsetting to be stable and strongly recommend against using this strategy.
+
+For example, we can subset the project numerically, for example taking the first 100 cells in the project:
+
+```{r, collapse=TRUE}
+projHeme1[1:100, ]
+```
+
+And we can subset the project based on certain cell names:
+
+```{r, collapse=TRUE}
+projHeme1[projHeme1$cellNames[1:100], ]
+```
+
+We can subset the project to keep all cells corresponding to a specific sample:
+
+```{r, collapse=TRUE}
+idxSample <- BiocGenerics::which(projHeme1$Sample %in% "scATAC_BMMC_R1")
+cellsSample <- projHeme1$cellNames[idxSample]
+projHeme1[cellsSample, ]
+```
+
+We can subset the project to only keep cells that meet a specific cutoff for the TSS enrichment score:
+
+```{r, collapse=TRUE}
+idxPass <- which(projHeme1$TSSEnrichment >= 8)
+cellsPass <- projHeme1$cellNames[idxPass]
+projHeme1[cellsPass, ]
+```
+
+<span style="font-size:20px;font-weight:bold">Example 3. Adding data to an `ArchRProject`</span>
+
+We can add columns to `cellColData` to store any type of cell-specific metadata relevant to our project.
+
+For example, we can add a column to `cellColData` that contains more legible sample names by removing excess info from the original sample names:
+
+```{r, collapse=TRUE}
+bioNames <- gsub("_R2|_R1|scATAC_","",projHeme1$Sample)
+head(bioNames)
+```
+
+One way to add a column called to `cellColData` is by directly using the `$` accessor.
+```{r, collapse=TRUE}
+projHeme1$bioNames <- bioNames
+```
+
+Alternatively, we can add a column to `cellColData` using the `addCellColData()` function. ArchR allows for the addition of columns that only contain information for a subset of cells.
+
+```{r, collapse=TRUE}
+bioNames <- bioNames[1:10]
+cellNames <- projHeme1$cellNames[1:10]
+projHeme1 <- addCellColData(ArchRProj = projHeme1, data = paste0(bioNames),
+	cells = cellNames, name = "bioNames2")
+```
+
+By default, ArchR will fill in missing entries with `NA`. Because of this, when we can compare these two columns, we see `NA` filled in where data wasnt available for `bioNames2`:
+
+```{r, collapse=TRUE}
+getCellColData(projHeme1, select = c("bioNames", "bioNames2"))
+```
+
+<span style="font-size:20px;font-weight:bold">Example 4. Obtaining columns from `cellColData`</span>
+
+ArchR provides the `getCellColData()` function to enable easy retreival of metadata columns from an `ArchRProject`.
+
+For example, we can retrieve a column by name, such as the number of unique nuclear (i.e. non-mitochondrial) fragments per cell:
+
+```{r, collapse=TRUE}
+df <- getCellColData(projHeme1, select = "nFrags")
+df
+```
+
+Instead of selecting a column by name, we can actually perform operations on a given column using its column name:
+```{r, collapse=TRUE}
+df <- getCellColData(projHeme1, select = c("log10(nFrags)", "nFrags - 1"))
+df
+```
+
+<span style="font-size:20px;font-weight:bold">Example 5. Plotting QC metrics - log10(Unique Fragments) vs TSS enrichment score</span>
+
+Repeating the example shown above, we can easily obtain standard scATAC-seq metrics for quality control of individual cells. We have found that the most robust metrics for quality control are the TSS enrichment score (a measure of signal-to-background in ATAC-seq data) and the number of unique nuclear fragments (because cells with very few fragments do not have enough data to confidently analyze).
+
+```{r, collapse=TRUE}
+df <- getCellColData(projHeme1, select = c("log10(nFrags)", "TSSEnrichment"))
+df
+```
+
+Now lets plot the number of unique nuclear fragments (log10) by the TSS enrichment score. This type of plot is key for identifying high quality cells. You'll notice that the cutoffs that we previously specified when creating the Arrow files (via `filterTSS` and `filterFrags`) have already removed low quality cells. However, if we noticed that the previously applied QC filters were not adequate for this sample, we could further adjust our cutoffs based on this plot or re-generate the Arrow files if needed.
+
+```{r, collapse=TRUE}
+p <- ggPoint(
+	x = df[,1], 
+	y = df[,2], 
+	colorDensity = TRUE,
+	continuousSet = "sambaNight",
+	xlabel = "Log10 Unique Fragments",
+	ylabel = "TSS Enrichment",
+	xlim = c(log10(500), quantile(df[,1], probs = 0.99)),
+	ylim = c(0, quantile(df[,2], probs = 0.99))
+) + geom_hline(yintercept = 4, lty = "dashed") + geom_vline(xintercept = 3, lty = "dashed")
+
+p
+```
+
+```{r, include=FALSE}
+plotPDF(p, name = "TSS-vs-Frags.pdf", ArchRProj = projHeme1, addDOC = FALSE)
+ArchR:::.convertToPNG(ArchRProj = projHeme1)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/TSS-vs-Frags_1.png){width=500 height=500}
+
+To save an editable vectorized version of this plot, we use `plotPDF()`.
+
+```{r, collapse=TRUE}
+plotPDF(p, name = "TSS-vs-Frags.pdf", ArchRProj = projHeme1, addDOC = FALSE)
+```
+
+[Download PDF : TSS-vs-Frags.pdf](images/HemeWalkthrough/PDF/TSS-vs-Frags.pdf)
+
+## Plotting Sample Statistics from an ArchRProject
+
+When working with multiple distinct samples in a single integrated data set, it can be important to compare various metrics across all samples. ArchR provides two main plotting mechanisms for grouped data: ridge plots and violin plots. These are both accessed through the `plotGroups()` function. Of course, this plot type is not limited to sample-level data and can be used for plotting of downstream group-level information for groups such as clusters.
+
+<span style="font-size:20px;font-weight:bold">Example 1. Make a ridge plot for each sample for the TSS enrichment scores.</span>
+
+To make a ridge plot, we set `plotAs = "ridges"`.
+
+```{r, collapse=TRUE}
+p1 <- plotGroups(
+	ArchRProj = projHeme1, 
+	groupBy = "Sample", 
+	colorBy = "cellColData", 
+    name = "TSSEnrichment",
+    plotAs = "ridges"
+   )
+
+p1
+```
+
+```{r, include=FALSE}
+plotPDF(p1, name = "QC-Sample-Statistics.pdf", ArchRProj = projHeme1, addDOC = FALSE, width = 4, height = 4)
+ArchR:::.convertToPNG(ArchRProj = projHeme1)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/QC-Sample-Statistics_1.png){width=500 height=500}
+
+<span style="font-size:20px;font-weight:bold">Example 2. Make a violin plot for each sample for the TSS enrichment scores.</span>
+
+To make a violin plot, we set `plotAs = "violin"`. Violin plots in ArchR come with a box-and-whiskers plot in the style of Tukey as implemented by `ggplot2`. This means that the lower and upper hinges correspond to the 25th and 75th percentiles, respectively, and the middle corresponds to the median. The lower and upper whiskers extend from the hinge to the lowest or highest value or 1.5 times the interquartile range (the distance between the 25th and 75th percentiles).
+
+```{r, collapse=TRUE}
+p2 <- plotGroups(
+	ArchRProj = projHeme1, 
+	groupBy = "Sample", 
+	colorBy = "cellColData", 
+    name = "TSSEnrichment",
+    plotAs = "violin",
+    alpha = 0.4,
+    addBoxPlot = TRUE
+   )
+
+p2
+```
+
+```{r, include=FALSE}
+plotPDF(p1,p2, name = "QC-Sample-Statistics.pdf", ArchRProj = projHeme1, addDOC = FALSE, width = 4, height = 4)
+ArchR:::.convertToPNG(ArchRProj = projHeme1)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/QC-Sample-Statistics_2.png){width=500 height=500}
+
+<span style="font-size:20px;font-weight:bold">Example 3. Make a ridge plot for each sample for the log10(unique nuclear fragments).</span>
+
+```{r, collapse=TRUE}
+p3 <- plotGroups(
+	ArchRProj = projHeme1, 
+	groupBy = "Sample", 
+	colorBy = "cellColData", 
+    name = "log10(nFrags)",
+    plotAs = "ridges"
+   )
+
+p3
+```
+
+```{r, include=FALSE}
+plotPDF(p1,p2,p3, name = "QC-Sample-Statistics.pdf", ArchRProj = projHeme1, addDOC = FALSE, width = 4, height = 4)
+ArchR:::.convertToPNG(ArchRProj = projHeme1)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/QC-Sample-Statistics_3.png){width=500 height=500}
+
+<span style="font-size:20px;font-weight:bold">Example 4. Make a violin plot for each sample for the log10(unique nuclear fragments).</span>
+
+```{r, collapse=TRUE}
+p4 <- plotGroups(
+	ArchRProj = projHeme1, 
+	groupBy = "Sample", 
+	colorBy = "cellColData", 
+    name = "log10(nFrags)",
+    plotAs = "violin",
+    alpha = 0.4,
+    addBoxPlot = TRUE
+   )
+
+p4
+```
+
+```{r, include=FALSE}
+plotPDF(p1,p2,p3,p4, name = "QC-Sample-Statistics.pdf", ArchRProj = projHeme1, addDOC = FALSE, width = 4, height = 4)
+ArchR:::.convertToPNG(ArchRProj = projHeme1)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/QC-Sample-Statistics_4.png){width=500 height=500}
+
+To save editable vectorized versions of these plots, we use `plotPDF()`.
+
+```{r, collapse=TRUE}
+plotPDF(p1,p2,p3,p4, name = "QC-Sample-Statistics.pdf", ArchRProj = projHeme1, addDOC = FALSE, width = 4, height = 4)
+```
+
+```{r, include=FALSE}
+ArchR:::.convertToPNG(ArchRProj = projHeme1)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+[Download PDF : QC-Sample-Statistics.pdf](images/HemeWalkthrough/PDF/QC-Sample-Statistics.pdf)
+
+## Plotting Sample Fragment Size Distribution and TSS Enrichment Profiles.
+
+Because of how the data is stored and accessed, ArchR can compute fragment size distributions and TSS enrichment profiles from Arrow files very quickly.
+
+<span style="font-size:16px;font-weight:bold">Fragment size distributions</span>
+
+To plot the fragment size distributions of all samples, we use the `plotFragmentSizes()` function. Fragment size distributions in ATAC-seq can be quite variable across samples, cell types, and batches. Slight differences like those shown below are common and do not necessarily correlate with differences in data quality.
+
+```{r plotTSSEnrichment, collapse=TRUE, eval=FALSE}
+p1 <- plotFragmentSizes(ArchRProj = projHeme1)
+p1
+```
+
+```{r, include=FALSE}
+ArchR:::.convertToPNG(ArchRProj = projHeme1)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/QC-Sample-FragSizes-TSSProfile_1.png){width=500 height=500}
+
+<span style="font-size:16px;font-weight:bold">TSS enrichment profiles</span>
+
+To plot TSS enrichment profiles, we use the `plotTSSEnrichment()` function. TSS enrichment profiles should show a clear peak in the center and a smaller shoulder peak right-of-center which is caused by the well-positioned +1 nucleosome.
+
+```{r, eval=FALSE, collapse=TRUE}
+p2 <- plotTSSEnrichment(ArchRProj = projHeme1)
+p2
+```
+
+```{r, include=FALSE}
+ArchR:::.convertToPNG(ArchRProj = projHeme1)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/QC-Sample-FragSizes-TSSProfile_2.png){width=500 height=500}
+
+To save editable vectorized versions of these plots, we use `plotPDF()`.
+
+```{r, collapse=TRUE}
+plotPDF(p1,p2, name = "QC-Sample-FragSizes-TSSProfile.pdf", ArchRProj = projHeme1, addDOC = FALSE, width = 5, height = 5)
+```
+
+```{r, include=FALSE}
+ArchR:::.convertToPNG(ArchRProj = projHeme1)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+[Download PDF : QC-Sample-FragSizes-TSSProfile.pdf](images/HemeWalkthrough/PDF/QC-Sample-FragSizes-TSSProfile.pdf)
+
+
+## Saving and Loading an `ArchRProject`
+
+ArchR provides a facile way to save an `ArchRProject` object to either re-load at a later time or share with other users. Fundamentally, an `ArchRProject` points to a set of Arrow files. Because of this, the process of saving an `ArchRProject` using the `saveArchRProject()` function will:
+
+1. Copy the current Arrow files and other associated project files to the designated `outputDirectory` so that they are exclusively associated with the new `ArchRProject` object.
+2. Save a copy of the designated `ArchRProject` in the `outputDirectory`.
+
+For example, we can save our `projHeme1` using `saveArchRProject()` which will allow us to use this project in future chapters.
+
+```{r, collapse=TRUE}
+projHeme1 <- saveArchRProject(ArchRProj = projHeme1, outputDirectory = "Save-ProjHeme1", load = TRUE)
+```
+
+This will copy the Arrow files and save a `.RDS` file of the `projHeme1` `ArchRProject` object in the specified `outputDirectory`. The `saveArchRProject()` function also has the `dropCells` parameter. If `dropCells = TRUE` then cells that exist within the ArrowFiles but have been otherwise removed from the `ArchRProject` will be trimmed from the ArrowFiles before they are copied to the `outputDirectory`.
+
+__Very important!__ The `load` parameter determines whether or not the `saveArchRProject()` function will return the saved `ArchRProject` object which you would assign to overwrite the original `ArchRProject` object or provide a new `ArchRProject` name using `<-`. This effectively saves and loads the `ArchRProject` from its new location. If `load = FALSE`, then this process does NOT update the `ArchRProject` object that is active in your current R session. Specifically, the object named `projHeme1` in the current R session will still point to the original location of the Arrow files, not the copied Arrow files that reside in the specified `outputDirectory`. You might use this behavior if you were saving your `ArchRProject` and shutting down your R session so that the project can be reloaded at a later time.
+
+__Also important!__ The term `ArchRProject` can be confusing to some users because we use this both to refer to the object that is actively loaded within the R environment and to the file that has been saved on disk as part of the `saveArchRProject()` process. However, it is extremely important to understand that these are not equivalent. Manipulations that you perform on an `ArchRProject` that is actively loaded within the R environment do not automatically propagate to the on-disk file. You must run the `saveArchRProject()` function to store those changes.
+
+To load an `ArchRProject` that has been previously saved using `saveArchRProject()` we would use the `loadArchRProject()` function. To do this, we must provide the path to the directory containing the `ArchRProject` object which is stored in a file named `Save-ArchR-Project.rds`.
+
+For example, the above call to `saveArchRProject()` would have created a directory named `Save-ProjHeme1` with the following contents:
+
+```{r, collapse=TRUE}
+list.files(path = "./Save-ProjHeme1")
+```
+
+To load this project we would therefore run:
+
+```{r, collapse=TRUE}
+projHeme1 <- loadArchRProject(path = "./Save-ProjHeme1")
+```
+
+## Filtering Doublets from an ArchRProject
+
+After we have added information on the predicted doublets using `addDoubletScores()`, we can remove these predicted doublets using `filterDoublets()`. One of the key elements of this filtering step is the `filterRatio` which is the maximum ratio of predicted doublets to filter based on the number of pass-filter cells. For example, if there are 5000 cells, the maximum number of filtered predicted doublets would be `filterRatio * 5000^2 / (100000)` (which simplifies to `filterRatio * 5000 * 0.05`). This `filterRatio` allows you to apply a consistent filter across multiple different samples that may have different percentages of doublets because they were run with different cell loading concentrations. The higher the `filterRatio`, the greater the number of cells potentially removed as doublets.
+
+The other parameters that can be tweaked for doublet filtration are `cutEnrich` and `cutScore`. The `cutEnrich` is equivalent to the number of simulated doublets identified as a nearest neighbor to the cell divided by the expected number given a random uniform distribution. The `cutScore` refers to the `-log10(pval)` of the enrichment and we have found this to be a worse predictor of doublets than `cutEnrich`. Params for doublet filtering should be sensible and thats why the filter ratio is set to ensure that you do not over filter. If you were to plot the distribution of `DoubletEnrichment` or `DoubletScore` (which are stored in `cellColData`), you should see a small population with high score or enrichment and these represent putative doublets. The goal here is to filter as many doublets as possible while not removing true singlets.
+
+To filter doublets, we use the `filterDoublets()` function. We save the output of this function call as a new `ArchRProject` for the purposes of this stepwise tutorial but you can always overwrite your original `ArchRProject` object.
+
+```{r, collapse=TRUE}
+projHeme2 <- filterDoublets(projHeme1)
+```
+We can compare the number of cells in `projHeme1` (pre-doublet-removal) and in `projHeme2` (post-doublet-removal) and see that some cells have been removed during the doublet filtration process.
+
+```{r, collapse=TRUE}
+length(getCellNames(ArchRProj = projHeme1))
+length(getCellNames(ArchRProj = projHeme2))
+```
+
+If you wanted to filter more cells from the ArchR Project, you would use a higher `filterRatio` or alternatively tweak `cutEnrich` or `cutScore` as described above.
+
+```{r, collapse=TRUE}
+projHemeTmp <- filterDoublets(projHeme1, filterRatio = 1.5)
+```
+> \## Filtering 614 cells from ArchRProject!  
+##  scATAC_BMMC_R1 : 364 of 4932 (7.4%)  
+##  scATAC_CD34_BMMC_R1 : 160 of 3275 (4.9%)  
+##  scATAC_PBMC_R1 : 90 of 2454 (3.7%)  
+
+Since `projHemeTmp` was only created for illustrative purposes, we remove it from our R session.
+```{r, collapse=TRUE}
+rm(projHemeTmp)
+```
+
+```{r, include=FALSE}
+save.image("ch3.RData")
+```

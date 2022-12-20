@@ -1,0 +1,55 @@
+---
+output:
+  html_document:
+    theme: yeti  # many options for theme, this one is my favorite.
+params:
+  threads: 20
+  rdata: ""
+  token: ""
+  ref: ""
+  out: ""
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+# Debugging and Troubleshooting in ArchR
+
+This chapter details steps to debug or troubleshoot common problems
+
+## Package dependencies
+
+ArchR has a lot of dependencies. On top of that, ArchR's dependencies have dependencies. These dependencies are used to deliver the feature-rich end-user experience that we find so important but they also can cause problems. When one package changes something, it can have complicated downstream effects on ArchR. Because of this, we now provide a complete R package environment to use with each stable distribution of ArchR. Each package environment specifies the exact package version for each dependency and is run with a specific version of R to provide a uniform and stable end-user experience. See the chapter on [renv](PPP) for how to set up and use this provided environment. **If you do not use the provided environment, we may not provide support for addressing your issues**. Help us help you by using this standardized set of dependencies with `renv`. Not only is this helpful for us, it is also good coding practice to maximize reproducibility and stability of code.
+
+## Debugging steps
+
+First and foremost, you should read this entire manual and perform all of the different steps on the tutorial data. If you get errors with the tutorial data using the tutorial code, then there is something fundamentally wrong with your computational environment. Such environment specific issues are extremely challenging for us to address and will require substantial effort on your part. The tutorial has been run by hundreds of individuals on a wide array of computational set ups and it is very stable.
+
+Common issues that users run into are related to parallelization and HDF5 file access (for ArrowFiles). To ensure that these are not a problem for you, try running without parallelization (`threads = 1` and `subThreading = FALSE` where applicable). If you are running in RStudio, note that console output messages from parallel processes will likely not display correctly and this is expected. Similarly, some users have reported issues with parallelization in jupyter notebooks and it seems that these are related to settings on the end-user side.
+
+Make sure to carefully read all of the parameter definitions which can either be found through your R console or at the [function definition page](https://www.archrproject.com/reference/index.html) of our website. Pay special attention to situations where an ellipsis (`...`) is included as a function parameter. This indicates that additional arguments can be passed to the given function and will often be passed through to other function calls downstream. For example, in [addClusters()](https://www.archrproject.com/reference/addClusters.html), the ellipsis indicates that any additional parameters supplied to the `addClusters()` function will be passed through to `Seurat::FindClusters()` or `scran::buildSNNGraph()` depending on which is used. More information on this "three dots" / ellipsis construction [here](https://www.r-bloggers.com/2015/02/r-three-dots-ellipsis/).
+
+
+## Posting to GitHub for help
+
+ArchR is now quite mature and it is rare that true bugs are uncovered. Most remaining issues relate to the handling of outlier cases such as those present in non-standard genomes or new features that have been recently implemented and are inherently less stable. If you are getting an error, first thoroughly search the  [issues](https://github.com/GreenleafLab/ArchR/issues) and [discussions](https://github.com/GreenleafLab/ArchR/discussions) forums to make sure it has not already been answered. To keep things organized, errors and bugs should be posted to [issues](https://github.com/GreenleafLab/ArchR/issues) while usage questions and feature requests should be posted to [discussions](https://github.com/GreenleafLab/ArchR/discussions). When posting an error report or question, please keep in mind that this is free academic software maintained by scientists who have many other commitments. 
+
+For errors/bugs, __please follow the provided issue template__. This ensures that you include all of the information that we need. Always include the log file that ArchR generates, and where relevant include the output of `traceback()` to help us understand where the error is coming from. Never copy and paste screenshots of your R console to show us the error! Instead, use Markdown code block syntax (three backticks in a row) and copy and paste the actual text. This makes it so the text is searchable in the future for users who may encounter the same error.
+
+## Re-installing or upgrading ArchR
+
+Our convention is to have this package accessible in three different ways:
+1. The `master` branch which will always hold the most recently released stable version of ArchR.
+2. Stable [numerically tagged releases](https://github.com/GreenleafLab/ArchR/releases) that provide persistent snapshots of previous stable releases.
+3. A "development" version on a branch called `dev` that holds all updates since the last stable release. When bugs are found or feature requests are added, they will be committed into the `dev` branch and eventually merged into `master` to create a stable release. If you create a pull request, make sure that it uses `dev` as the base branch.
+
+To re-install or upgrade ArchR, you need to ensure that the old version of ArchR, if currently loaded, is unloaded and reattached, forcing your current R session to begin using the changed ArchR codebase. This is most effectively accomplished using the below code. In this example, the branch we are installing is called "dev" but you can install any branch or even any specific commit SHA by passing it to the `ref` parameter.
+
+```{r eval=FALSE}
+addArchRGenome("hg19")
+#install your desired branch
+devtools::install_github("GreenleafLab/ArchR", ref="dev", repos = BiocManager::repositories())
+#to unload a package and reload
+detach("package:ArchR", unload=TRUE)
+library(ArchR)
+```

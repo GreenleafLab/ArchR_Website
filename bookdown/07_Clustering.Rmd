@@ -1,0 +1,97 @@
+---
+output:
+  html_document:
+    theme: yeti  # many options for theme, this one is my favorite.
+params:
+  threads: 20
+  rdata: ""
+  token: ""
+  ref: ""
+  out: ""
+---
+```{r, include=FALSE}
+load("ch4.RData")
+```
+
+# Clustering with ArchR
+
+Most single-cell clustering methods focus on computing nearest neighbor graphs in reduced dimensions and then identifying "communities" or clusters of cells. These approaches work extremely well and are a standard practice in scRNA-seq. For this reason, ArchR uses existing state-of-the-art clustering methods from scRNA-seq packages for clustering.
+
+## Clustering using Seurat's `FindClusters()` function
+
+We have had the most success using the graph clustering approach implemented by [Seurat](https://github.com/satijalab/seurat). In ArchR, clustering is performed using the `addClusters()` function which permits additional clustering parameters to be passed to the `Seurat::FindClusters()` function via `...`. In our hands, clustering using `Seurat::FindClusters()` is deterministic, meaning that the exact same input will always result in the exact same output.
+
+```{r, collapse=TRUE}
+projHeme2 <- addClusters(
+	input = projHeme2,
+    reducedDims = "IterativeLSI",
+    method = "Seurat",
+    name = "Clusters",
+    resolution = 0.8
+)
+```
+To access these clusters we can use the `$` accessor which shows the cluster ID for each single cell.
+
+```{r}
+head(projHeme2$Clusters)
+```
+
+We can tabulate the number of cells present in each cluster:
+```{r}
+table(projHeme2$Clusters)
+```
+
+To better understand which samples reside in which clusters, we can create a cluster confusion matrix across each sample using the `confusionMatrix()` function.
+
+```{r, collapse=TRUE}
+cM <- confusionMatrix(paste0(projHeme2$Clusters), paste0(projHeme2$Sample))
+cM
+```
+
+To plot this confusion matrix as a heatmap, we use the `pheatmap` package:
+
+```{r}
+library(pheatmap)
+cM <- cM / Matrix::rowSums(cM)
+p <- pheatmap::pheatmap(
+    mat = as.matrix(cM), 
+    color = paletteContinuous("whiteBlue"), 
+    border_color = "black"
+)
+p
+```
+
+```{r, include=FALSE}
+plotPDF(p, name = "ConfusionMatrix", ArchRProj = projHeme2, addDOC = FALSE)
+ArchR:::.convertToPNG(ArchRProj = projHeme2)
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+![](images/HemeWalkthrough/PNG/ConfusionMatrix_1.png){width=500 height=500}
+
+```{r include=FALSE, eval=FALSE,echo=FALSE}
+#JJJ This is confusing. Expand on this - 
+```
+There are times where the relative location of cells within the 2-dimensional embedding does not agree perfectly with the identified clusters. More explicitly, cells from a single cluster may appear in multiple different areas of the embedding. In these contexts, it is appropriate to adjust the clustering parameters or embedding parameters until there is agreement between the two. 
+
+### Clustering using `scran`
+
+Additionally, ArchR allows for the identification of clusters with [scran](https://bioconductor.org/packages/release/bioc/html/scran.html) by changing the `method` parameter in `addClusters()`.
+
+```{r, collapse=TRUE}
+projHeme2 <- addClusters(
+    input = projHeme2,
+    reducedDims = "IterativeLSI",
+    method = "scran",
+    name = "ScranClusters",
+    k = 15
+)
+```
+
+```{r, include=FALSE, eval=FALSE}
+save.image(params$out, compress = FALSE)
+```
+```{r, include=FALSE}
+save.image("ch5.RData")
+```

@@ -1,22 +1,33 @@
 Package: ArchR
 Type: Package
-Date: 2020-11-23
+Date: 2022-07-17
 Title: Analyzing single-cell regulatory chromatin in R.
-Version: 1.0.1
+Version: 1.0.3
 Authors@R: c(
     person("Jeffrey", "Granja", email = "jgranja.stanford@gmail.com", role = c("aut","cre")),
     person("Ryan", "Corces", role = "aut"))
 Description: This package is designed to streamline scATAC analyses in R.
 Roxygen: list(markdown = TRUE)
 License: GPL (>= 2)
-LinkingTo: Rcpp
+LinkingTo: Rcpp, RcppArmadillo
 LazyData: TRUE
-RoxygenNote: 7.1.1
 URL: https://www.ArchRProject.com
+RoxygenNote: 7.2.1
 Encoding: UTF-8
 Imports:
+    devtools,
+    ggplot2,
+    SummarizedExperiment,
+    data.table,
+    Matrix,
+    rhdf5,
+    magrittr,
+    S4Vectors (>= 0.9.25),
+    BiocGenerics,
     Rcpp (>= 0.12.16),
+    RcppArmadillo,
     matrixStats,
+    sparseMatrixStats,
     plyr,
     nabor,
     motifmatchr,
@@ -30,17 +41,9 @@ Imports:
     grid,
     gridExtra,
     Biostrings,
-    ComplexHeatmap
-Depends:
-    ggplot2,
-    SummarizedExperiment,
-    data.table,
-    Matrix,
-    rhdf5,
-    magrittr,
-    S4Vectors (>= 0.9.25),
-    BiocGenerics,
+    ComplexHeatmap,
     GenomicRanges
+Depends:
 Collate: 
     'AllClasses.R'
     'AnnotationGenome.R'
@@ -84,6 +87,7 @@ Collate:
     'RNAIntegration.R'
     'RcppExports.R'
     'ReproduciblePeakSet.R'
+    'SparseUtils.R'
     'Trajectory.R'
     'ValidationUtils.R'
     'VisualizeData.R'

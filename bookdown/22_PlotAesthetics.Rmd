@@ -1,0 +1,169 @@
+---
+output:
+  html_document:
+    theme: yeti  # many options for theme, this one is my favorite.
+params:
+  threads: 20
+  rdata: ""
+  token: ""
+  ref: ""
+  out: ""
+---
+
+# Plot aesthetics in ArchR
+
+Making useful and interpretable plots is one of the key goals of ArchR. We have done our best to make sensible defaults and to make a collection of aesthetically appealing color palettes available to users. However, we also want to make it possible to change the various default settings and manipulate plot aesthetics to your liking. This chapter provides a basic guide for how to alter these various plot aesthetics.
+
+Importantly, ArchR has some base plotting functions that are recurrently used and many other plotting functions in ArchR are just wrappers around these base plotting functions. You can read about each of these individual functions in the "Plotting / aesthetic functions" section of the [function documentation page](https://www.archrproject.com/reference/index.html). For example `plotEmbedding()` is a wrapper around the `ggPoint()` function (which is a wrapper around ggplot2). Other commonly used plotting wrapper functions in ArchR include `ggGroup()`, `ggHex()`, and `ggOneToOne()`. Often times, when you are using a function such as `plotEmbedding()`, ArchR allows you to pass arguments through to `ggPoint()` or `ggHex()` to manipulate various aspects of plot aesthetics using the `...` argument.
+
+As a preface to the sections in this chapter, ArchR is not a one-stop-shop for every plot customization you could desire. What you cannot tweak programatically, you will have to tweak "in post" in a vector graphics software such as Adobe Illustrator. The plots output by ArchR often contain complex layers and clipping masks and you should familiarize yourself with those if you plan to edit ArchR output plots by hand.
+
+Lastly, ArchR attempts to default to rasterizing plots with many individual points. For example, in an embedding, you could have one point for every cell. If you have tens-of-thousands of cells, this means your plots will have tens-of-thousands of points on them which can be challenging to display and edit. To get around this, ArchR "rasterizes" or "flattens" the plot area while maintaining the rest of the plot elements (text, lines, legend, etc.) as editable vector graphics.
+
+## Using and manipulating palettes in ArchR
+
+ArchR provides a list of color palettes that we have used in the past and find aesthetically pleasing. These are stored in an object called `ArchRPalettes`. If we inspect the first few entries of this object, you can see the general structure of a palette in ArchR.
+
+
+```{r, collapse=TRUE}
+ArchRPalettes[1:3]
+```
+
+From this, you can see that a palette is a named vector where the names are numbers, starting at 1. The rationale for this is that we have tried to optimize these color palettes to optimally distinguish discrete variables. For example, if you have 5 clusters that you want to color, you would want to use the 5 most easily distinguished colors from the color palette rather than using the 5 random colors which may not be optimally distinguished. In this way, the first `N` entries in each ArchR palette represent the 5 colors that we find to be best for representing `N` groups. Note that (i) we have not necessarily optimized the color palettes in ArchR to be color blind-friendly though we do provide some options which are in this class of palettes and (ii) if you have more groups than the number of colors in the designated palette, R will be forced to interpolate colors (the largest palette that we provide is 20 colors).
+
+In the below examples, we use `plotEmbedding()` as the example function but the same principles apply to other plotting functions as well.
+
+### Using pre-defined ArchR palettes
+
+Probably the most confusing aspect of using palettes in ArchR is that some functions that ask for a color palette (for ex. `plotEmbedding()` or `plotTrajectory()`) have three parameters that can be manipulated: `discreteSet`, `continuousSet`, and `pal`. Here, `discreteSet` and `continuousSet` are used to select pre-defined palettes from `ArchRPalettes` which are discussed in this section. `pal`, on the other hand, accepts custom palettes that override the default ArchR palette for a given plot.
+
+Certain types of matrices in ArchR have been assigned a default color scheme. For example, if we do not specify a color palette for `continuousSet`, the default for `GeneScoreMatrix` will be "horizonExtra" and the default for other types of matrices will be "solarExtra":
+
+```{r, collapse=TRUE}
+plotEmbedding(
+    ArchRProj = projHeme5,
+    embedding = "UMAP",
+    colorBy = "GeneScoreMatrix",
+    name = "CD14",
+    size = 1,
+    sampleCells = NULL,
+    baseSize = 10,
+    plotAs = "points")
+```
+
+However, we can change the color palette to another pre-defined palette in `ArchRPalettes` by passing the name of that palette to `continuousSet` (e.g. "whitePurple"). Note that because this data is continuous data, we must use `continuousSet` and manipulating `discreteSet` would have no effect.
+
+```{r, collapse=TRUE}
+plotEmbedding(
+    ArchRProj = projHeme5,
+    embedding = "UMAP",
+    colorBy = "GeneScoreMatrix",
+    name = "CD14",
+    continuousSet = "whitePurple",
+    size = 1,
+    sampleCells = NULL,
+    baseSize = 10,
+    plotAs = "points")
+```
+
+If instead we are plotting discrete data, for example "Clusters", the default color scheme will be "stallion".
+
+```{r, collapse=TRUE}
+plotEmbedding(
+    ArchRProj = projHeme5,
+    embedding = "UMAP",
+    colorBy = "cellColData",
+    name = "Clusters",
+    size = 1,
+    sampleCells = NULL,
+    baseSize = 10,
+    plotAs = "points")
+```
+
+As above, we can change the color scheme used for this discrete data by passing the name of one of the pre-defined color palettes in `ArchRPalettes` to `discreteSet`:
+
+```{r, collapse=TRUE}
+plotEmbedding(
+    ArchRProj = projHeme5,
+    embedding = "UMAP",
+    colorBy = "cellColData",
+    name = "Clusters",
+    discreteSet = "kelly",
+    size = 1,
+    sampleCells = NULL,
+    baseSize = 10,
+    plotAs = "points")
+```
+
+### Using custom palettes in ArchR
+
+The `pal` argument allows for the use of custom palettes in most plotting functions. The format of a custom palette is very specific and if you fail to follow this format, it will not work. Effectively, the input to `pal` must look exactly like the output of `paletteDiscrete()` for discrete data or `paletteContinuous()` for continuous data.
+
+#### For discrete data
+
+```
+paletteDiscrete(values = projHeme5$Clusters, set = "kelly")
+```
+
+Thus for discrete data, you can see that `pal` needs to be a named vector of colors where each color is named for the corresponding group (e.g. `"C1" = "#F97070"`). We can create our own custom palette and pass it to `plotEmbedding()` to customize the coloration of our clusters:
+
+```{r, collapse=TRUE}
+disc_pal <- c(
+  "C1" = "#F97070",
+  "C2" = "#D60000",
+  "C3" = "#7F0303",
+  "C4" = "#F97E2B",
+  "C5" = "#FFE600",
+  "C6" = "#7BE561",
+  "C7" = "#19891E",
+  "C8" = "#20C4AC",
+  "C9" = "#83A4FF",
+  "C10" = "#262C6B",
+  "C11" = "#7C0EDD",
+  "C12" = "#DB65D2")
+
+plotEmbedding(
+    ArchRProj = projHeme5,
+    embedding = "UMAP",
+    colorBy = "cellColData",
+    name = "Clusters",
+    pal = disc_pal,
+    size = 1,
+    sampleCells = NULL,
+    baseSize = 10,
+    plotAs = "points")
+```
+
+
+#### For continuous data
+
+```
+paletteContinuous(set = "comet", n = 10)
+```
+
+Thus for continuous data, you can see that `pal` is just a vector of colors. You can create this vector however you wish but here is an example:
+
+```{r, collapse = TRUE}
+cont_pal <- colorRampPalette(c("blue","white","red"))
+
+plotEmbedding(
+    ArchRProj = projHeme5,
+    embedding = "UMAP",
+    colorBy = "GeneScoreMatrix",
+    name = "CD14",
+    pal = cont_pal(256),
+    size = 1,
+    sampleCells = NULL,
+    baseSize = 10,
+    plotAs = "points")
+
+```
+
+
+
+
+
+
+```{r include=FALSE, eval=FALSE,echo=FALSE}
+#JJJ I would like to add a chapter on changing plot aesthetics, using palettes / creating your own palettes, etc 
+```

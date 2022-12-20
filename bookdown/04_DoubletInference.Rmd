@@ -1,0 +1,122 @@
+---
+output:
+  html_document:
+    theme: yeti  # many options for theme, this one is my favorite.
+params:
+  threads: 20
+  rdata: ""
+  token: ""
+  ref: ""
+  out: ""
+---
+```{r, include=FALSE}
+load("ch1.RData")
+```
+# Doublet Inference with ArchR
+
+One major source of trouble in single-cell data is the contribution of "doublets" to the analysis. A doublet refers to a single droplet that received a single barcoded bead and more than one nucleus. This causes the reads from more than one cell to appear as a single cell that is effectively the average of the two cells. We remove these computationally and describe this doublet removal process in depth in this chapter.
+
+## How does doublet identification work in ArchR?
+
+Single-cell data generated on essentially any platform is susceptible to the presence of doublets. A doublet refers to a single droplet that received a single barcoded bead and more than one nucleus. This causes the reads from more than one cell to appear as a single cell. For 10x, the percentage of total "cells" that are actually doublets is proportional to the number of cells loaded into the reaction. Even at the lower levels of doublets that result from standard kit use, more than 5% of the data may come from doublets and this exerts substantial effects on clustering. This issue becomes particularly problematic in the context of developmental/trajectory data because doublets look like a mixture between two cell types and this can be confounded with intermediate cell types or cell states.
+
+To predict which "cells" are actually doublets, we synthesize in silico doublets from the data by mixing the reads from thousands of combinations of individual cells. We then project these synthetic doublets into the UMAP embedding and identify their nearest neighbor. By iterating this procedure thousands of times, we can identify "cells" in our data whose signal looks very similar to synthetic doublets.
+
+<center>
+![](images/doubletRemoval.png){width=700px}
+</center>
+
+To develop and validate ArchR's doublet identification, we generated scATAC-seq data from pooled mixtures of 10 genetically distinct cell lines. In scATAC-seq space, these 10 cell lines should form 10 distinct clusters but when we deliberately overload the 10x Genomics scATAC-seq reaction, targetting 25,000 cells per reaction, we end up with many doublets. We know these are doublets because we use [demuxlet](https://github.com/statgen/demuxlet) to identify droplets that contain genotypes from two different cell types.
+
+<center>
+![](images/ArchR_demuxlet.PNG){width=350px}
+</center>
+
+This "ground truth" overlaps very strongly with the doublet predictions shown above, showing an area under the curve of the receiver opperating characteristic >0.90.
+
+<center>
+![](images/ArchR_doubletAUC.PNG){width=350px}
+</center>
+
+After we computationally remove these doublets with ArchR, the overall structure of our data changes dramatically and matches our expectation of 10 distinct cell types.
+
+<center>
+![](images/ArchR_doubletPostRemoval.PNG){width=350px}
+</center>
+
+## Inferring scATAC-seq Doublets with ArchR
+
+By default ArchR uses the doublet parameters described in the ArchR manuscript. This is likely a good place to start but we encourage all users to inspect the pre- and post-doublet removal data to understand how doublet removal is affecting the cells. We show some of the main adjustable features below to illustrate how this can be customized to a given application.
+
+In ArchR, doublet removal is performed in a single step using `addDoubletScores()`. This adds the infered doublet scores to each Arrow file and will take approximately 2-5 minutes per sample of the tutorial data. You can always try `?addDoubletScores` to see further documentation on parameters for doublet identification (or any ArchR function for that matter).
+
+```{r addDoubletScores, collapse=TRUE}
+doubScores <- addDoubletScores(
+	input = ArrowFiles,
+	k = 10, #Refers to how many cells near a "pseudo-doublet" to count.
+	knnMethod = "UMAP", #Refers to the embedding to use for nearest neighbor search with doublet projection.
+	LSIMethod = 1
+)
+```
+In the above output, ArchR reports the R<sup>2</sup> value for the UMAP projection for each Arrow file. If these R<sup>2</sup> values are much lower (i.e. less than 0.9), this often indicates that the cells within the Arrow file have very little heterogeneity. This makes the accuracy of doublet calling worse because the majority of doublets would be "homotypic" - or a single droplet with two very similar cells. In these cases, ArchR will skip doublet prediction because it is not accurate. Alternatively, you can try setting `knnMethod = "LSI"` and `force = TRUE` to perform projection in the LSI subspace; however, you should manually assess the results and make sure this is performing as you would expect.
+
+```{r, include=FALSE}
+ArchR:::.convertToPNG()
+system("cp Figures/*.png images/HemeWalkthrough/PNG/")
+system("cp Figures/*.pdf images/HemeWalkthrough/PDF/")
+```
+
+Adding doublet scores will create plots in the "QualityControl" directory. There are 3 plots associated with each of your samples in this folder:
+
+1. **Doublet Enrichments** - These represent the enrichment of simulated doublets nearby each single cell compared to the expected if we assume a uniform distribution.
+2. **Doublet Scores** - These represent the significance (`-log10(binomial adjusted p-value)`) of simulated doublets nearby each single cell compared to the expected if we assume a uniform distribution. We have found this value to be less consistent than the doublet enrichments and therefore use doublet enrichments for doublet identification.
+3. **Doublet Density** - This represents the density of the simulated doublet projections. This allows you to visualize where the synthetic doublets were located after projection into your 2-dimensional embedding.
+
+```{r include=FALSE, eval=FALSE}
+#JJJ These plots are impossible to read. 
+```
+
+For **BMMC** : </br>
+
+![](images/HemeWalkthrough/PNG/scATAC_BMMC_R1-Doublet-Summary_1.png){width=250 height=250}
+![](images/HemeWalkthrough/PNG/scATAC_BMMC_R1-Doublet-Summary_2.png){width=250 height=250}
+![](images/HemeWalkthrough/PNG/scATAC_BMMC_R1-Doublet-Summary_3.png){width=250 height=250}
+
+</br>
+
+For **CD34 BMMC** : </br>
+
+![](images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-Doublet-Summary_1.png){width=250 height=250}
+![](images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-Doublet-Summary_2.png){width=250 height=250}
+![](images/HemeWalkthrough/PNG/scATAC_CD34_BMMC_R1-Doublet-Summary_3.png){width=250 height=250}
+
+</br>
+
+For **PBMC** : </br>
+
+![](images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Doublet-Summary_1.png){width=250 height=250}
+![](images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Doublet-Summary_2.png){width=250 height=250}
+![](images/HemeWalkthrough/PNG/scATAC_PBMC_R1-Doublet-Summary_3.png){width=250 height=250}
+
+</br>
+
+## Using _demuxlet_ with ArchR
+
+Doublets can also be identified (in human data) based on sample genotype. If you know the genotypes of your samples ahead of time (and even if you don't), you can determine which droplets have multiple cells from different genetically distinct samples because those droplets would contain single-nucleotide polymorphisms that should not co-exist in a single sample. Of course, this requires you to mix multiple samples into an individual scATAC-seq reaction, which most labs do not routinely do. However, this "cell hashing" can be a good experimental workflow to reduce batch effects and costs. More justification for this can be found [here](https://satijalab.org/costpercell/).
+
+ArchR provides easy import of the results from [_demuxlet_](https://www.nature.com/articles/nbt.4042) via the `addDemuxletResults()` function. This function takes as input your `ArchRProject` object, a vector of `.best` files output by _demuxlet_, and a vector of `sampleNames` that is ordered to allow matching of your `ArchRProject` sample names with the _demuxlet_ `.best` files provided. More explicitly, given the order of the `.best` files provided to the `bestFiles` parameter, you should create a properly ordered vector of sample names that corresponds to each `.best` file.
+
+Because we do not have this type of analysis for the tutorial data, we do not showcase this functionality here. The final output of this function is an updated `ArchRProject` object and, like other "add-ers" in ArchR, must be stored into an `ArchRProject` object. This will add two columns to `cellColData`, one labeled `DemuxletClassify` which will show whether the cell is classified as a singlet, doublet, or ambiguous, and one labeled `DemuxletBest` which contains the output of _demuxlet_ identifying the sample to which the given cell corresponds. Cells not classified by _demuxlet_ would be labeled as "NotClassified" for these columns.
+
+A hypothetical usage would look like this:
+
+```{r eval=FALSE}
+ArchRProj <- addDemuxletResults(ArchRProj = ArchRProj,
+  bestFiles = c("myBestFile1.best", "myBestFile2.best"),
+  sampleNames = c("Sample1", "Sample2"))
+```
+
+
+```{r, include=FALSE}
+save.image(file = "ch2.RData")
+```
