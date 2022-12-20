@@ -24,7 +24,7 @@ is stored indicating whether each motif is observed within the peak region."><me
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -88,56 +88,97 @@ is stored indicating whether each motif is observed within the peak region.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">addMotifAnnotations</span><span class="op">(</span>
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  motifSet <span class="op">=</span> <span class="st">"cisbp"</span>,
-  name <span class="op">=</span> <span class="st">"Motif"</span>,
-  species <span class="op">=</span> <span class="cn">NULL</span>,
-  collection <span class="op">=</span> <span class="st">"CORE"</span>,
-  motifPWMs <span class="op">=</span> <span class="cn">NULL</span>,
-  cutOff <span class="op">=</span> <span class="fl">5e-05</span>,
-  width <span class="op">=</span> <span class="fl">7</span>,
-  version <span class="op">=</span> <span class="fl">2</span>,
-  force <span class="op">=</span> <span class="cn">FALSE</span>,
-  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"addMotifAnnotations"</span><span class="op">)</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">addMotifAnnotations</span><span class="op">(</span></span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  motifSet <span class="op">=</span> <span class="st">"cisbp"</span>,</span>
+<span>  annoName <span class="op">=</span> <span class="st">"Motif"</span>,</span>
+<span>  species <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  collection <span class="op">=</span> <span class="st">"CORE"</span>,</span>
+<span>  motifPWMs <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cutOff <span class="op">=</span> <span class="fl">5e-05</span>,</span>
+<span>  width <span class="op">=</span> <span class="fl">7</span>,</span>
+<span>  version <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  force <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"addMotifAnnotations"</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object.</p></dd>
+
+
 <dt>motifSet</dt>
-<dd><p>The motif set to be used for annotation. Options include: (i) "JASPAR2016", "JASPAR2018", "JASPAR2020"
-which gives the 2016, 2018 or 2020 version of JASPAR motifs or (ii) one of "cisbp", "encode", or "homer" which gives the
-corresponding motif sets from the <code>chromVAR</code> package.</p></dd>
-<dt>name</dt>
+<dd><p>The name of a curated motif set to be used for annotation. Options include: (i) "JASPAR2016", "JASPAR2018", "JASPAR2020"
+which gives the 2016, 2018, or 2020 version of JASPAR motifs, (ii) one of "cisbp", "encode", or "homer" which gives the
+corresponding motif sets from the <code>chromVAR</code> package, or (iii) "vierstra" which gives the clustered archetype motifs
+created by Jeff Vierstra (https://github.com/jvierstra/motif-clustering).</p></dd>
+
+
+<dt>annoName</dt>
 <dd><p>The name of the <code>peakAnnotation</code> object to be stored in the provided <code>ArchRProject</code></p></dd>
+
+
 <dt>species</dt>
-<dd><p>The name of the species relevant to the supplied <code>ArchRProject</code>. This is used for identifying which motif to be
-used from CisBP/JASPAR. By default, this function will attempt to guess the species based on the value from <code><a href="getGenome.html">getGenome()</a></code>.</p></dd>
+<dd><p>The latin name of the species relevant to the supplied <code>ArchRProject</code>. This is used for identifying which motif to be
+used from CisBP/JASPAR. For JASPAR, <code>species</code> is passed to <code>TFBS::getMatrixSet</code> and some species names are not recognized. In these cases
+it is possible to use the NCBI taxonomy ID. By default, this function will attempt to guess the species based on the value from <code><a href="getGenome.html">getGenome()</a></code>.</p></dd>
+
+
 <dt>collection</dt>
 <dd><p>If one of the JASPAR motif sets is used via <code>motifSet</code>, this parameter allows you to indicate the JASPAR
-collection to be used. See <code>getMatrixSet()</code> from <code>TFBSTools</code> for all options to supply for collection.</p></dd>
+collection to be used. See <code>getMatrixSet()</code> from <code>TFBSTools</code> for all options to supply for collection. If <code>motifSet</code> is
+"vierstra", then this must either be "archetype" (for the v2.1 clustered models) or "individual" (for the original v1 individual motif models).
+NOTE: vierstra archetype motifs are currently in beta and have not been finalized by Jeff Vierstra.</p></dd>
+
+
 <dt>motifPWMs</dt>
-<dd><p>A custom set of motif PWMs as a PWMList for adding motif annotations.</p></dd>
+<dd><p>A custom set of motif PWMs as a PWMatrixList to be used instead of <code>motifSet</code> for adding motif annotations.
+If <code>motifPWMs</code> is used, <code>motifSet</code> will be ignored.</p></dd>
+
+
 <dt>cutOff</dt>
 <dd><p>The p-value cutoff to be used for motif search. The p-value is determined vs a background set of sequences
 (see <code>MOODS</code> for more details on this determination).</p></dd>
+
+
 <dt>width</dt>
 <dd><p>The width in basepairs to consider for motif matches. See the <code>motimatchr</code> package for more information.</p></dd>
+
+
 <dt>version</dt>
 <dd><p>An integer specifying version 1 or version 2 of chromVARmotifs see github for more info GreenleafLab/chromVARmotifs.</p></dd>
+
+
 <dt>force</dt>
-<dd><p>A boolean value indicating whether to force the <code>peakAnnotation</code> object indicated by <code>name</code> to be overwritten if
+<dd><p>A boolean value indicating whether to force the <code>peakAnnotation</code> object indicated by <code>annoName</code> to be overwritten if
 it already exists in the given <code>ArchRProject</code>.</p></dd>
+
+
 <dt>logFile</dt>
 <dd><p>The path to a file to be used for logging ArchR output.</p></dd>
+
+
 <dt>...</dt>
-<dd><p>Additional parameters to be passed to <code><a href="https://rdrr.io/pkg/TFBSTools/man/getMatrixSet-methods.html" class="external-link">TFBSTools::getMatrixSet</a></code> for getting a PWM object.</p></dd>
+<dd><p>Additional parameters to be passed to <code><a href="https://rdrr.io/pkg/TFBSTools/man/getMatrixSet-methods.html" class="external-link">TFBSTools::getMatrixSet</a></code> for getting a JASPAR PWM object.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Add Motif Annotations</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu">addMotifAnnotations</span><span class="op">(</span><span class="va">proj</span>, motifSet <span class="op">=</span> <span class="st">"cisbptest"</span>, annoName <span class="op">=</span> <span class="st">"test"</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in addMotifAnnotations(proj, motifSet = "cisbptest", annoName = "test"):</span> could not find function "addMotifAnnotations"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -150,7 +191,7 @@ it already exists in the given <code>ArchRProject</code>.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

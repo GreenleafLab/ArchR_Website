@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,67 +86,135 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">plotTrajectoryHeatmap</span><span class="op">(</span>
-  seTrajectory <span class="op">=</span> <span class="cn">NULL</span>,
-  varCutOff <span class="op">=</span> <span class="fl">0.9</span>,
-  maxFeatures <span class="op">=</span> <span class="fl">25000</span>,
-  scaleRows <span class="op">=</span> <span class="cn">TRUE</span>,
-  limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1.5</span>, <span class="fl">1.5</span><span class="op">)</span>,
-  grepExclude <span class="op">=</span> <span class="cn">NULL</span>,
-  pal <span class="op">=</span> <span class="cn">NULL</span>,
-  labelMarkers <span class="op">=</span> <span class="cn">NULL</span>,
-  labelTop <span class="op">=</span> <span class="fl">50</span>,
-  labelRows <span class="op">=</span> <span class="cn">FALSE</span>,
-  rowOrder <span class="op">=</span> <span class="cn">NULL</span>,
-  useSeqnames <span class="op">=</span> <span class="cn">NULL</span>,
-  returnMatrix <span class="op">=</span> <span class="cn">FALSE</span>,
-  force <span class="op">=</span> <span class="cn">FALSE</span>,
-  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"plotTrajectoryHeatmap"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plotTrajectoryHeatmap</span><span class="op">(</span></span>
+<span>  seTrajectory <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  varCutOff <span class="op">=</span> <span class="fl">0.9</span>,</span>
+<span>  maxFeatures <span class="op">=</span> <span class="fl">25000</span>,</span>
+<span>  scaleRows <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1.5</span>, <span class="fl">1.5</span><span class="op">)</span>,</span>
+<span>  grepExclude <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  pal <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  colorColumns <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  columnPal <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  labelMarkers <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  labelTop <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  labelRows <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  rowOrder <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  useSeqnames <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  returnMatrix <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  force <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"plotTrajectoryHeatmap"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>seTrajectory</dt>
 <dd><p>A <code>SummarizedExperiment</code> object that results from calling <code><a href="getTrajectory.html">getTrajectory()</a></code>.</p></dd>
+
+
 <dt>varCutOff</dt>
 <dd><p>The "Variance Quantile Cutoff" to be used for identifying the top variable features across the given trajectory.
 Only features with a variance above the provided quantile will be retained.</p></dd>
+
+
 <dt>maxFeatures</dt>
 <dd><p>The maximum number of features, ordered by variance, to consider from <code>useMatrix</code> when generating a trajectory.
 This prevents smoothing a large number number of features which can be very time consuming.</p></dd>
+
+
 <dt>scaleRows</dt>
 <dd><p>A boolean value that indicates whether row-wise z-scores should be computed on the matrix provided by <code>seTrajectory</code>.</p></dd>
+
+
 <dt>limits</dt>
 <dd><p>A numeric vector of two numbers that represent the lower and upper limits of the heatmap color scheme.</p></dd>
+
+
 <dt>grepExclude</dt>
 <dd><p>A character vector or string that indicates the <code>rownames</code> or a specific pattern that identifies
 rownames from <code>seTrajectory</code> to be excluded from the heatmap.</p></dd>
+
+
 <dt>pal</dt>
 <dd><p>A custom continuous palette (see <code><a href="paletteContinuous.html">paletteContinuous()</a></code>) used to override the default continuous palette for the heatmap.</p></dd>
+
+
+<dt>colorColumns</dt>
+<dd><p>A boolean value that indicates whether a color bar should be added to label the columns. The color for each column
+will represent the most common label observed in the corresponding trajectory quantile as the heatmap is divided into quantile bins
+and thus does not display information for each cell. <code>colorColumns</code> can only be set to <code>TRUE</code> if the <code>trajectoryLabel</code> parameter was used
+in <code><a href="getTrajectory.html">getTrajectory()</a></code>.</p></dd>
+
+
+<dt>columnPal</dt>
+<dd><p>A discrete palette (see <code><a href="paletteDiscrete.html">paletteDiscrete()</a></code>) that maps the different labels of the trajectory to a unique color. This
+parameter is ignored unless <code>colorColumns = TRUE</code>. All labels shown in <code>unique(colData(seTrajectory)$label)</code> must be represented.</p></dd>
+
+
 <dt>labelMarkers</dt>
 <dd><p>A character vector listing the <code>rownames</code> of <code>seTrajectory</code> that should be labeled on the side of the heatmap.</p></dd>
+
+
 <dt>labelTop</dt>
 <dd><p>A number indicating how many of the top N features, based on variance, in <code>seTrajectory</code> should be labeled on the side of the heatmap.</p></dd>
+
+
 <dt>labelRows</dt>
 <dd><p>A boolean value that indicates whether all rows should be labeled on the side of the heatmap.</p></dd>
+
+
 <dt>rowOrder</dt>
 <dd><p>If wanting to set the order of rows to be plotted, the indices (integer or character correpsonding
 to rownmaes) can be provided here.</p></dd>
+
+
 <dt>useSeqnames</dt>
 <dd><p>A character vector that indicates which <code>seqnames</code> should be plotted in the heatmap. Features from
 <code>seqnames</code> that are not listed will be ignored. In the context of a <code>Sparse.Assays.Matrix</code>, such as a matrix containing chromVAR
 deviations, the <code>seqnames</code> do not correspond to chromosomes, rather they correspond to the sub-portions of the matrix, for example
 raw deviations ("deviations") or deviation z-scores ("z") for a chromVAR deviations matrix.</p></dd>
+
+
 <dt>returnMatrix</dt>
 <dd><p>A boolean value that indicates whether the final heatmap matrix should be returned in lieu of plotting the actual heatmap.</p></dd>
+
+
 <dt>force</dt>
 <dd><p>If useSeqnames is longer than 1 if matrixClass is "Sparse.Assays.Matrix" to continue. This is not recommended because these matrices
 can be in different units.</p></dd>
+
+
 <dt>logFile</dt>
 <dd><p>The path to a file to be used for logging ArchR output.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Add Trajectory</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="addTrajectory.html">addTrajectory</a></span><span class="op">(</span><span class="va">proj</span>, trajectory <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"C1"</span>, <span class="st">"C2"</span>, <span class="st">"C3"</span><span class="op">)</span>, embedding <span class="op">=</span> <span class="st">"UMAP"</span>, force <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in addTrajectory(proj, trajectory = c("C1", "C2", "C3"), embedding = "UMAP",     force = TRUE):</span> could not find function "addTrajectory"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Get Trajectory</span></span></span>
+<span class="r-in"><span><span class="va">seTraj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTrajectory.html">getTrajectory</a></span><span class="op">(</span><span class="va">proj</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTrajectory(proj):</span> could not find function "getTrajectory"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Plot Trajectory Heatmap</span></span></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">plotTrajectoryHeatmap</span><span class="op">(</span><span class="va">seTraj</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plotTrajectoryHeatmap(seTraj):</span> could not find function "plotTrajectoryHeatmap"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Plot PDF</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="plotPDF.html">plotPDF</a></span><span class="op">(</span><span class="va">p</span>, name <span class="op">=</span> <span class="st">"Trajectory-Heatmap"</span>, ArchRProj <span class="op">=</span> <span class="va">proj</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plotPDF(p, name = "Trajectory-Heatmap", ArchRProj = proj):</span> could not find function "plotPDF"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -159,7 +227,7 @@ can be in different units.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,66 +86,122 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">plotPeak2GeneHeatmap</span><span class="op">(</span>
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  corCutOff <span class="op">=</span> <span class="fl">0.45</span>,
-  FDRCutOff <span class="op">=</span> <span class="fl">1e-04</span>,
-  varCutOffATAC <span class="op">=</span> <span class="fl">0.25</span>,
-  varCutOffRNA <span class="op">=</span> <span class="fl">0.25</span>,
-  k <span class="op">=</span> <span class="fl">25</span>,
-  nPlot <span class="op">=</span> <span class="fl">25000</span>,
-  limitsATAC <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>,
-  limitsRNA <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>,
-  groupBy <span class="op">=</span> <span class="st">"Clusters"</span>,
-  palGroup <span class="op">=</span> <span class="cn">NULL</span>,
-  palATAC <span class="op">=</span> <span class="fu"><a href="paletteContinuous.html">paletteContinuous</a></span><span class="op">(</span><span class="st">"solarExtra"</span><span class="op">)</span>,
-  palRNA <span class="op">=</span> <span class="fu"><a href="paletteContinuous.html">paletteContinuous</a></span><span class="op">(</span><span class="st">"blueYellow"</span><span class="op">)</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  returnMatrices <span class="op">=</span> <span class="cn">FALSE</span>,
-  seed <span class="op">=</span> <span class="fl">1</span>,
-  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"plotPeak2GeneHeatmap"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plotPeak2GeneHeatmap</span><span class="op">(</span></span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  corCutOff <span class="op">=</span> <span class="fl">0.45</span>,</span>
+<span>  FDRCutOff <span class="op">=</span> <span class="fl">1e-04</span>,</span>
+<span>  varCutOffATAC <span class="op">=</span> <span class="fl">0.25</span>,</span>
+<span>  varCutOffRNA <span class="op">=</span> <span class="fl">0.25</span>,</span>
+<span>  k <span class="op">=</span> <span class="fl">25</span>,</span>
+<span>  nPlot <span class="op">=</span> <span class="fl">25000</span>,</span>
+<span>  limitsATAC <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>  limitsRNA <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>  groupBy <span class="op">=</span> <span class="st">"Clusters"</span>,</span>
+<span>  palGroup <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  palATAC <span class="op">=</span> <span class="fu"><a href="paletteContinuous.html">paletteContinuous</a></span><span class="op">(</span><span class="st">"solarExtra"</span><span class="op">)</span>,</span>
+<span>  palRNA <span class="op">=</span> <span class="fu"><a href="paletteContinuous.html">paletteContinuous</a></span><span class="op">(</span><span class="st">"blueYellow"</span><span class="op">)</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  returnMatrices <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"plotPeak2GeneHeatmap"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object.</p></dd>
+
+
 <dt>corCutOff</dt>
 <dd><p>A numeric describing the minimum numeric peak-to-gene correlation to return.</p></dd>
+
+
 <dt>FDRCutOff</dt>
 <dd><p>A numeric describing the maximum numeric peak-to-gene false discovery rate to return.</p></dd>
+
+
 <dt>varCutOffATAC</dt>
 <dd><p>A numeric describing the minimum variance quantile of the ATAC peak accessibility when selecting links.</p></dd>
+
+
 <dt>varCutOffRNA</dt>
 <dd><p>A numeric describing the minimum variance quantile of the RNA gene expression when selecting links.</p></dd>
+
+
 <dt>k</dt>
 <dd><p>An integer describing the number of k-means clusters to group peak-to-gene links prior to plotting heatmaps.</p></dd>
+
+
 <dt>nPlot</dt>
 <dd><p>An integer describing the maximum number of peak-to-gene links to plot in heatmap.</p></dd>
+
+
 <dt>limitsATAC</dt>
 <dd><p>An integer describing the maximum number of peak-to-gene links to plot in heatmap.</p></dd>
+
+
 <dt>limitsRNA</dt>
 <dd><p>An integer describing the maximum number of peak-to-gene links to plot in heatmap.</p></dd>
+
+
 <dt>groupBy</dt>
 <dd><p>The name of the column in <code>cellColData</code> to use for labeling KNN groupings. The maximum group appeared in the KNN groupings is used.</p></dd>
+
+
 <dt>palGroup</dt>
 <dd><p>A color palette describing the colors in <code>groupBy</code>. For example, if groupBy = "Clusters" try paletteDiscrete(ArchRProj$Clusters) for a color palette.</p></dd>
+
+
 <dt>palATAC</dt>
 <dd><p>A color palette describing the colors to be used for the ATAC heatmap. For example, paletteContinuous("solarExtra").</p></dd>
+
+
 <dt>palRNA</dt>
 <dd><p>A color palette describing the colors to be used for the RNA heatmap. For example, paletteContinuous("blueYellow").</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>A boolean value that determines whether standard output should be printed.</p></dd>
+
+
 <dt>returnMatrices</dt>
 <dd><p>A boolean value that determines whether the matrices should be returned with kmeans id versus plotting.</p></dd>
+
+
 <dt>seed</dt>
 <dd><p>A number to be used as the seed for random number generation. It is recommended to keep track of the seed used so that you can
 reproduce results downstream.</p></dd>
+
+
 <dt>logFile</dt>
 <dd><p>The path to a file to be used for logging ArchR output.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Add P2G Links</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="addPeak2GeneLinks.html">addPeak2GeneLinks</a></span><span class="op">(</span><span class="va">proj</span>, k <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in addPeak2GeneLinks(proj, k = 20):</span> could not find function "addPeak2GeneLinks"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get P2G Links</span></span></span>
+<span class="r-in"><span><span class="va">p2g</span> <span class="op">&lt;-</span> <span class="fu"><a href="getPeak2GeneLinks.html">getPeak2GeneLinks</a></span><span class="op">(</span><span class="va">proj</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getPeak2GeneLinks(proj):</span> could not find function "getPeak2GeneLinks"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Plot P2G</span></span></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">plotPeak2GeneHeatmap</span><span class="op">(</span><span class="va">proj</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plotPeak2GeneHeatmap(proj):</span> could not find function "plotPeak2GeneHeatmap"</span>
+<span class="r-in"><span><span class="fu"><a href="plotPDF.html">plotPDF</a></span><span class="op">(</span><span class="va">p</span>, name <span class="op">=</span> <span class="st">"P2G-Heatmap"</span>, ArchRProj <span class="op">=</span> <span class="va">proj</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plotPDF(p, name = "P2G-Heatmap", ArchRProj = proj):</span> could not find function "plotPDF"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -158,7 +214,7 @@ reproduce results downstream.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

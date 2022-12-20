@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,37 +86,50 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">addCombinedDims</span><span class="op">(</span>
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  name <span class="op">=</span> <span class="st">"CombinedDims"</span>,
-  reducedDims <span class="op">=</span> <span class="cn">NULL</span>,
-  dimWeights <span class="op">=</span> <span class="cn">NULL</span>,
-  dimsToUse <span class="op">=</span> <span class="cn">NULL</span>,
-  scaleDims <span class="op">=</span> <span class="cn">NULL</span>,
-  corCutOff <span class="op">=</span> <span class="fl">0.75</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">addCombinedDims</span><span class="op">(</span></span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  name <span class="op">=</span> <span class="st">"CombinedDims"</span>,</span>
+<span>  reducedDims <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  dimWeights <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  dimsToUse <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  scaleDims <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  corCutOff <span class="op">=</span> <span class="fl">0.75</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object.</p></dd>
+
+
 <dt>name</dt>
 <dd><p>The name for the combinedDims to be stored as.</p></dd>
+
+
 <dt>reducedDims</dt>
 <dd><p>The name of the <code>reducedDims</code> objects (i.e. "IterativeLSI") to use from the designated <code>ArchRProject</code>.</p></dd>
+
+
 <dt>dimWeights</dt>
 <dd><p>A vector of weights to be used to weight each dimensionality reduction when combining.</p></dd>
+
+
 <dt>dimsToUse</dt>
 <dd><p>A vector containing the dimensions from the <code>reducedDims</code> objects to use.</p></dd>
+
+
 <dt>scaleDims</dt>
 <dd><p>A boolean value that indicates whether to z-score the reduced dimensions for each cell. This is useful for minimizing
 the contribution of strong biases (dominating early PCs) and lowly abundant populations. However, this may lead to stronger sample-specific
 biases since it is over-weighting latent PCs. If set to <code>NULL</code> this will scale the dimensions based on the value of <code>scaleDims</code> when the
 <code>reducedDims</code> were originally created during dimensionality reduction. This idea was introduced by Timothy Stuart.</p></dd>
+
+
 <dt>corCutOff</dt>
 <dd><p>A numeric cutoff for the correlation of each dimension to the sequencing depth. If the dimension has a correlation to
 sequencing depth that is greater than the <code>corCutOff</code>, it will be excluded from analysis.</p></dd>
+
 </dl></div>
 
   </div>
@@ -131,7 +144,7 @@ sequencing depth that is greater than the <code>corCutOff</code>, it will be exc
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

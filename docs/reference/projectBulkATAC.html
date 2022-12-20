@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,36 +86,56 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">projectBulkATAC</span><span class="op">(</span>
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  seATAC <span class="op">=</span> <span class="cn">NULL</span>,
-  reducedDims <span class="op">=</span> <span class="st">"IterativeLSI"</span>,
-  embedding <span class="op">=</span> <span class="st">"UMAP"</span>,
-  n <span class="op">=</span> <span class="fl">250</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,
-  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"projectBulkATAC"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">projectBulkATAC</span><span class="op">(</span></span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  seATAC <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  reducedDims <span class="op">=</span> <span class="st">"IterativeLSI"</span>,</span>
+<span>  embedding <span class="op">=</span> <span class="st">"UMAP"</span>,</span>
+<span>  n <span class="op">=</span> <span class="fl">250</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  force <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"projectBulkATAC"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object containing the dimensionality reduction matrix passed by <code>reducedDims</code>.</p></dd>
+
+
 <dt>seATAC</dt>
-<dd><p>Bulk ATAC Summarized Experiment.</p></dd>
+<dd><p>A <code>SummarizedExperiment</code> object containing bulk ATAC-seq data.</p></dd>
+
+
 <dt>reducedDims</dt>
-<dd><p>A string specifying the reducedDims.</p></dd>
+<dd><p>A string specifying the name of the <code>reducedDims</code> object to be used.</p></dd>
+
+
 <dt>embedding</dt>
-<dd><p>A string specifying embedding.</p></dd>
+<dd><p>A string specifying the name of the <code>embedding</code> object to be used.</p></dd>
+
+
 <dt>n</dt>
 <dd><p>An integer specifying the number of subsampled "pseudo single cells" per bulk sample.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>A boolean value indicating whether to use verbose output during execution of this function. Can be set to FALSE for a cleaner output.</p></dd>
+
+
 <dt>threads</dt>
 <dd><p>The number of threads used for parallel execution</p></dd>
+
+
+<dt>force</dt>
+<dd><p>A boolean value indicating whether to force the projection of bulk ATAC data even if fewer than 25% of the features are present in the bulk ATAC data set.</p></dd>
+
+
 <dt>logFile</dt>
 <dd><p>The path to a file to be used for logging ArchR output.</p></dd>
+
 </dl></div>
 
   </div>
@@ -130,7 +150,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

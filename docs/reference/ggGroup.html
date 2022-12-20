@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,63 +86,115 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">ggGroup</span><span class="op">(</span>
-  x <span class="op">=</span> <span class="cn">NULL</span>,
-  y <span class="op">=</span> <span class="cn">NULL</span>,
-  xlabel <span class="op">=</span> <span class="cn">NULL</span>,
-  ylabel <span class="op">=</span> <span class="cn">NULL</span>,
-  groupOrder <span class="op">=</span> <span class="cn">NULL</span>,
-  groupSort <span class="op">=</span> <span class="cn">FALSE</span>,
-  size <span class="op">=</span> <span class="fl">1</span>,
-  baseSize <span class="op">=</span> <span class="fl">10</span>,
-  ridgeScale <span class="op">=</span> <span class="fl">1</span>,
-  ratioYX <span class="op">=</span> <span class="cn">NULL</span>,
-  alpha <span class="op">=</span> <span class="fl">1</span>,
-  title <span class="op">=</span> <span class="st">""</span>,
-  pal <span class="op">=</span> <span class="fu"><a href="paletteDiscrete.html">paletteDiscrete</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">x</span>, set <span class="op">=</span> <span class="st">"stallion"</span><span class="op">)</span>,
-  addBoxPlot <span class="op">=</span> <span class="cn">TRUE</span>,
-  plotAs <span class="op">=</span> <span class="st">"ridges"</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ggGroup</span><span class="op">(</span></span>
+<span>  x <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  xlabel <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ylabel <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  groupOrder <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  groupSort <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  size <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  baseSize <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  ridgeScale <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  ratioYX <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  title <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  pal <span class="op">=</span> <span class="fu"><a href="paletteDiscrete.html">paletteDiscrete</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">x</span>, set <span class="op">=</span> <span class="st">"stallion"</span><span class="op">)</span>,</span>
+<span>  addBoxPlot <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  plotAs <span class="op">=</span> <span class="st">"ridges"</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A character vector containing the categorical x-axis values for each y-axis value.</p></dd>
+
+
 <dt>y</dt>
 <dd><p>A numeric vector containing the y-axis values for each point.</p></dd>
+
+
 <dt>xlabel</dt>
 <dd><p>The label to plot for the x-axis.</p></dd>
+
+
 <dt>ylabel</dt>
 <dd><p>The label to plot for the y-axis.</p></dd>
+
+
 <dt>groupOrder</dt>
 <dd><p>A character vector indicating a custom order for plotting x-axis categorical values. Should contain all possible
 values of <code>x</code> in the desired order.</p></dd>
+
+
 <dt>groupSort</dt>
 <dd><p>A boolean indicating whether to sort groups based on the average value of the group.</p></dd>
+
+
 <dt>size</dt>
 <dd><p>The line width for boxplot/summary lines.</p></dd>
+
+
 <dt>baseSize</dt>
 <dd><p>The base font size (in points) to use in the plot.</p></dd>
+
+
 <dt>ridgeScale</dt>
 <dd><p>A numeric indicating the relative size for each ridge in the ridgeplot.</p></dd>
+
+
 <dt>ratioYX</dt>
 <dd><p>The aspect ratio of the x and y axes on the plot.</p></dd>
+
+
 <dt>alpha</dt>
 <dd><p>A number indicating the transparency to use for each point. See <code>ggplot2</code> for more details.</p></dd>
+
+
 <dt>title</dt>
 <dd><p>The title of the plot.</p></dd>
+
+
 <dt>pal</dt>
 <dd><p>A named custom palette (see <code><a href="paletteDiscrete.html">paletteDiscrete()</a></code> and <code>ArchRPalettes</code>) for discrete coloring.</p></dd>
+
+
 <dt>addBoxPlot</dt>
 <dd><p>A boolean indicating whether to add a boxplot to the plot if <code>plotAs="violin"</code>.</p></dd>
+
+
 <dt>plotAs</dt>
 <dd><p>A string indicating how the groups should be plotted. Acceptable values are "ridges" (for a <code>ggrides</code>-style plot) or "violin" (for a violin plot).</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional parameters to pass to <code>ggplot2</code> for plotting.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Create Random Data</span></span></span>
+<span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span>,ncol<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">m</span><span class="op">$</span><span class="va">color</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/AnnotationDbi/man/Bimap-envirAPI.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span>, <span class="fl">10</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Plot</span></span></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">ggGroup</span><span class="op">(</span>x <span class="op">=</span> <span class="va">m</span><span class="op">$</span><span class="va">color</span>, y <span class="op">=</span> <span class="va">m</span><span class="op">$</span><span class="va">x</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in ggGroup(x = m$color, y = m$x):</span> could not find function "ggGroup"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># To PDF</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf</a></span><span class="op">(</span><span class="st">"test.pdf"</span>, width <span class="op">=</span> <span class="fl">4</span>, height <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">p</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'p' not found</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> agg_png </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       2 </span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -155,7 +207,7 @@ values of <code>x</code> in the desired order.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

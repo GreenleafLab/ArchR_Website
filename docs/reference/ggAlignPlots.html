@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,23 +86,53 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">ggAlignPlots</span><span class="op">(</span><span class="va">...</span>, plotList <span class="op">=</span> <span class="cn">NULL</span>, sizes <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="st">"v"</span>, draw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ggAlignPlots</span><span class="op">(</span><span class="va">...</span>, plotList <span class="op">=</span> <span class="cn">NULL</span>, sizes <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="st">"v"</span>, draw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>...</dt>
 <dd><p>All additional arguments will be interpreted as <code>ggplot2</code> plot objects and used if and only if <code>plotList</code> is <code>NULL</code></p></dd>
+
+
 <dt>plotList</dt>
 <dd><p>A list of <code>ggplot2</code> plot objects to be aligned.</p></dd>
+
+
 <dt>sizes</dt>
 <dd><p>A numeric vector or list of values indicating the relative size for each of the objects in <code>plotList</code> or supplied in <code>...</code>. If the plot is supplied in <code>...</code> the order is the same as the input in this function. If set to NULL all plots will be evenly distributed.</p></dd>
+
+
 <dt>type</dt>
 <dd><p>A string indicating wheter vertical ("v") or horizontal ("h") alignment should be used for the multi-plot layout.</p></dd>
+
+
 <dt>draw</dt>
 <dd><p>A boolean value indicating whether to draw the plot(s) (<code>TRUE</code>) or return a graphical object (<code>FALSE</code>).</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Create Random Data</span></span></span>
+<span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">2</span><span class="op">)</span>,ncol<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">m</span><span class="op">$</span><span class="va">color</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/AnnotationDbi/man/Bimap-envirAPI.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span>, <span class="fl">10</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Plot</span></span></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="ggGroup.html">ggGroup</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">m</span><span class="op">$</span><span class="va">color</span>, y <span class="op">=</span> <span class="va">m</span><span class="op">$</span><span class="va">x</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in ggGroup(x = m$color, y = m$x):</span> could not find function "ggGroup"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># To PDF</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf</a></span><span class="op">(</span><span class="st">"test.pdf"</span>, width <span class="op">=</span> <span class="fl">4</span>, height <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">ggAlignPlots</span><span class="op">(</span><span class="va">p</span>, <span class="va">p</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in ggAlignPlots(p, p):</span> could not find function "ggAlignPlots"</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> agg_png </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       2 </span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -115,7 +145,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

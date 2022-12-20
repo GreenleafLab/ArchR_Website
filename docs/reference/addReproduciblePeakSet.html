@@ -24,7 +24,7 @@ and merge peaks to get a "Union Reproducible Peak Set".'><meta property="og:imag
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -88,104 +88,172 @@ and merge peaks to get a "Union Reproducible Peak Set".</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">addReproduciblePeakSet</span><span class="op">(</span>
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  groupBy <span class="op">=</span> <span class="st">"Clusters"</span>,
-  peakMethod <span class="op">=</span> <span class="st">"Macs2"</span>,
-  reproducibility <span class="op">=</span> <span class="st">"2"</span>,
-  peaksPerCell <span class="op">=</span> <span class="fl">500</span>,
-  maxPeaks <span class="op">=</span> <span class="fl">150000</span>,
-  minCells <span class="op">=</span> <span class="fl">25</span>,
-  excludeChr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"chrM"</span>, <span class="st">"chrY"</span><span class="op">)</span>,
-  pathToMacs2 <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="va">peakMethod</span><span class="op">)</span> <span class="op">==</span> <span class="st">"macs2"</span><span class="op">)</span> <span class="fu"><a href="findMacs2.html">findMacs2</a></span><span class="op">(</span><span class="op">)</span> <span class="kw">else</span> <span class="cn">NULL</span>,
-  genomeSize <span class="op">=</span> <span class="cn">NULL</span>,
-  shift <span class="op">=</span> <span class="op">-</span><span class="fl">75</span>,
-  extsize <span class="op">=</span> <span class="fl">150</span>,
-  method <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="va">peakMethod</span><span class="op">)</span> <span class="op">==</span> <span class="st">"macs2"</span><span class="op">)</span> <span class="st">"q"</span> <span class="kw">else</span> <span class="st">"p"</span>,
-  cutOff <span class="op">=</span> <span class="fl">0.1</span>,
-  additionalParams <span class="op">=</span> <span class="st">"--nomodel --nolambda"</span>,
-  extendSummits <span class="op">=</span> <span class="fl">250</span>,
-  promoterRegion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">100</span><span class="op">)</span>,
-  genomeAnnotation <span class="op">=</span> <span class="fu"><a href="getGenomeAnnotation.html">getGenomeAnnotation</a></span><span class="op">(</span><span class="va">ArchRProj</span><span class="op">)</span>,
-  geneAnnotation <span class="op">=</span> <span class="fu"><a href="getGeneAnnotation.html">getGeneAnnotation</a></span><span class="op">(</span><span class="va">ArchRProj</span><span class="op">)</span>,
-  plot <span class="op">=</span> <span class="cn">TRUE</span>,
-  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,
-  parallelParam <span class="op">=</span> <span class="cn">NULL</span>,
-  force <span class="op">=</span> <span class="cn">FALSE</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"addReproduciblePeakSet"</span><span class="op">)</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">addReproduciblePeakSet</span><span class="op">(</span></span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  groupBy <span class="op">=</span> <span class="st">"Clusters"</span>,</span>
+<span>  peakMethod <span class="op">=</span> <span class="st">"Macs2"</span>,</span>
+<span>  reproducibility <span class="op">=</span> <span class="st">"2"</span>,</span>
+<span>  peaksPerCell <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>  maxPeaks <span class="op">=</span> <span class="fl">150000</span>,</span>
+<span>  minCells <span class="op">=</span> <span class="fl">25</span>,</span>
+<span>  excludeChr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"chrM"</span>, <span class="st">"chrY"</span><span class="op">)</span>,</span>
+<span>  pathToMacs2 <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="va">peakMethod</span><span class="op">)</span> <span class="op">==</span> <span class="st">"macs2"</span><span class="op">)</span> <span class="fu"><a href="findMacs2.html">findMacs2</a></span><span class="op">(</span><span class="op">)</span> <span class="kw">else</span> <span class="cn">NULL</span>,</span>
+<span>  genomeSize <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  shift <span class="op">=</span> <span class="op">-</span><span class="fl">75</span>,</span>
+<span>  extsize <span class="op">=</span> <span class="fl">150</span>,</span>
+<span>  method <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="va">peakMethod</span><span class="op">)</span> <span class="op">==</span> <span class="st">"macs2"</span><span class="op">)</span> <span class="st">"q"</span> <span class="kw">else</span> <span class="st">"p"</span>,</span>
+<span>  cutOff <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  additionalParams <span class="op">=</span> <span class="st">"--nomodel --nolambda"</span>,</span>
+<span>  extendSummits <span class="op">=</span> <span class="fl">250</span>,</span>
+<span>  promoterRegion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">100</span><span class="op">)</span>,</span>
+<span>  genomeAnnotation <span class="op">=</span> <span class="fu"><a href="getGenomeAnnotation.html">getGenomeAnnotation</a></span><span class="op">(</span><span class="va">ArchRProj</span><span class="op">)</span>,</span>
+<span>  geneAnnotation <span class="op">=</span> <span class="fu"><a href="getGeneAnnotation.html">getGeneAnnotation</a></span><span class="op">(</span><span class="va">ArchRProj</span><span class="op">)</span>,</span>
+<span>  plot <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  parallelParam <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  force <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"addReproduciblePeakSet"</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object.</p></dd>
+
+
 <dt>groupBy</dt>
 <dd><p>The name of the column in <code>cellColData</code> to use for grouping cells together for peak calling.</p></dd>
+
+
 <dt>peakMethod</dt>
 <dd><p>The name of peak calling method to be used. Options include "Macs2" for using macs2 callpeak or "Tiles" for using a TileMatrix.</p></dd>
+
+
 <dt>reproducibility</dt>
 <dd><p>A string that indicates how peak reproducibility should be handled. This string is dynamic and can be a
 function of <code>n</code> where <code>n</code> is the number of samples being assessed. For example, <code>reproducibility = "2"</code> means at least 2 samples
 must have a peak call at this locus and <code>reproducibility = "(n+1)/2"</code> means that the majority of samples must have a peak call at this locus.</p></dd>
+
+
 <dt>peaksPerCell</dt>
 <dd><p>The upper limit of the number of peaks that can be identified per cell-grouping in <code>groupBy</code>. This is useful
 for controlling how many peaks can be called from cell groups with low cell numbers.</p></dd>
+
+
 <dt>maxPeaks</dt>
 <dd><p>A numeric threshold for the maximum peaks to retain per group from <code>groupBy</code> in the union reproducible peak set.</p></dd>
+
+
 <dt>minCells</dt>
 <dd><p>The minimum allowable number of unique cells that was used to create the coverage files on which peaks are called.
 This is important to allow for exclusion of pseudo-bulk replicates derived from very low cell numbers.</p></dd>
+
+
 <dt>excludeChr</dt>
 <dd><p>A character vector containing the <code>seqnames</code> of the chromosomes that should be excluded from peak calling.</p></dd>
+
+
 <dt>pathToMacs2</dt>
 <dd><p>The full path to the MACS2 executable.</p></dd>
+
+
 <dt>genomeSize</dt>
-<dd><p>The genome size to be used for MACS2 peak calling (see MACS2 documentation).</p></dd>
+<dd><p>The genome size to be used for MACS2 peak calling (see MACS2 documentation). This is required if genome is not hg19, hg38, mm9, or mm10.</p></dd>
+
+
 <dt>shift</dt>
 <dd><p>The number of basepairs to shift each Tn5 insertion. When combined with <code>extsize</code> this allows you to create proper fragments,
 centered at the Tn5 insertion site, for use with MACS2 (see MACS2 documentation).</p></dd>
+
+
 <dt>extsize</dt>
 <dd><p>The number of basepairs to extend the MACS2 fragment after <code>shift</code> has been applied. When combined with <code>extsize</code> this
 allows you to create proper fragments, centered at the Tn5 insertion site, for use with MACS2 (see MACS2 documentation).</p></dd>
+
+
 <dt>method</dt>
 <dd><p>The method to use for significance testing in MACS2. Options are "p" for p-value and "q" for q-value. When combined with
 <code>cutOff</code> this gives the method and significance threshold for peak calling (see MACS2 documentation).</p></dd>
+
+
 <dt>cutOff</dt>
 <dd><p>The numeric significance cutOff for the testing method indicated by <code>method</code> (see MACS2 documentation).</p></dd>
+
+
 <dt>additionalParams</dt>
 <dd><p>A string of additional parameters to pass to MACS2 (see MACS2 documentation).</p></dd>
+
+
 <dt>extendSummits</dt>
 <dd><p>The number of basepairs to extend peak summits (in both directions) to obtain final fixed-width peaks. For example,
 <code>extendSummits = 250</code> will create 501-bp fixed-width peaks from the 1-bp summits.</p></dd>
+
+
 <dt>promoterRegion</dt>
 <dd><p>A vector of two integers specifying the distance in basepairs upstream and downstream of a TSS to be included as a promoter region.
 Peaks called within one of these regions will be annotated as a "promoter" peak. For example, <code>promoterRegion = c(2000, 100)</code> will annotate any peak within the region
 2000 bp upstream and 100 bp downstream of a TSS as a "promoter" peak.</p></dd>
+
+
 <dt>genomeAnnotation</dt>
 <dd><p>The genomeAnnotation (see <code><a href="createGenomeAnnotation.html">createGenomeAnnotation()</a></code>) to be used for generating peak metadata such as nucleotide
 information (GC content) or chromosome sizes.</p></dd>
+
+
 <dt>geneAnnotation</dt>
 <dd><p>The geneAnnotation (see <code><a href="createGeneAnnotation.html">createGeneAnnotation()</a></code>) to be used for labeling peaks as "promoter", "exonic", etc.</p></dd>
+
+
 <dt>plot</dt>
 <dd><p>A boolean describing whether to plot peak annotation results.</p></dd>
+
+
 <dt>threads</dt>
 <dd><p>The number of threads to be used for parallel computing.</p></dd>
+
+
 <dt>parallelParam</dt>
 <dd><p>A list of parameters to be passed for biocparallel/batchtools parallel computing.</p></dd>
+
+
 <dt>force</dt>
 <dd><p>A boolean value indicating whether to force the reproducible peak set to be overwritten if it already exist in the given <code>ArchRProject</code> peakSet.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>A boolean value that determines whether standard output includes verbose sections.</p></dd>
+
+
 <dt>logFile</dt>
 <dd><p>The path to a file to be used for logging ArchR output.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional parameters to be pass to <code><a href="addGroupCoverages.html">addGroupCoverages()</a></code> to get sample-guided pseudobulk cell-groupings. Only used for TileMatrix-based
 peak calling (not for MACS2). See <code><a href="addGroupCoverages.html">addGroupCoverages()</a></code> for more info.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Add Peak Matrix Tiles</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu">addReproduciblePeakSet</span><span class="op">(</span><span class="va">proj</span>, peakMethod <span class="op">=</span> <span class="st">"tiles"</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in addReproduciblePeakSet(proj, peakMethod = "tiles"):</span> could not find function "addReproduciblePeakSet"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Add Peak Matrix Macs2 (Preferred)</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu">addReproduciblePeakSet</span><span class="op">(</span><span class="va">proj</span>, peakMethod <span class="op">=</span> <span class="st">"macs2"</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in addReproduciblePeakSet(proj, peakMethod = "macs2"):</span> could not find function "addReproduciblePeakSet"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -198,7 +266,7 @@ peak calling (not for MACS2). See <code><a href="addGroupCoverages.html">addGrou
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

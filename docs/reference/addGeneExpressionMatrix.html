@@ -24,7 +24,7 @@ multi modal assay to the ArrowFiles or ArchRProject."><meta property="og:image" 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -88,44 +88,70 @@ multi modal assay to the ArrowFiles or ArchRProject.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">addGeneExpressionMatrix</span><span class="op">(</span>
-  input <span class="op">=</span> <span class="cn">NULL</span>,
-  seRNA <span class="op">=</span> <span class="cn">NULL</span>,
-  chromSizes <span class="op">=</span> <span class="fu"><a href="getChromSizes.html">getChromSizes</a></span><span class="op">(</span><span class="va">input</span><span class="op">)</span>,
-  excludeChr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"chrM"</span>, <span class="st">"chrY"</span><span class="op">)</span>,
-  scaleTo <span class="op">=</span> <span class="fl">10000</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,
-  parallelParam <span class="op">=</span> <span class="cn">NULL</span>,
-  force <span class="op">=</span> <span class="cn">TRUE</span>,
-  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"addGeneExpressionMatrix"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">addGeneExpressionMatrix</span><span class="op">(</span></span>
+<span>  input <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  seRNA <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  chromSizes <span class="op">=</span> <span class="fu"><a href="getChromSizes.html">getChromSizes</a></span><span class="op">(</span><span class="va">input</span><span class="op">)</span>,</span>
+<span>  excludeChr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"chrM"</span>, <span class="st">"chrY"</span><span class="op">)</span>,</span>
+<span>  scaleTo <span class="op">=</span> <span class="fl">10000</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  parallelParam <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  strictMatch <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  force <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"addGeneExpressionMatrix"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>input</dt>
 <dd><p>An <code>ArchRProject</code> object or character vector of ArrowFiles.</p></dd>
+
+
 <dt>seRNA</dt>
 <dd><p>A a scRNA-seq <code>SummarizedExperiment</code> (cell x gene) to be integrated with the scATAC-seq data.
 Cell names from this object much match those of the cell names in the ArrowFiles/ArchRProject. We will add support shortly
 for Seurat Objects (see <code><a href="https://satijalab.org/seurat/reference/as.SingleCellExperiment.html" class="external-link">Seurat::as.SingleCellExperiment</a></code>). The provided values <code>MUST</code> be in counts (integer), not log transformed.</p></dd>
+
+
 <dt>chromSizes</dt>
 <dd><p>A GRanges object of the chromosome lengths. See <code>getChromSizes</code> for more info.</p></dd>
+
+
 <dt>excludeChr</dt>
 <dd><p>A character vector containing the <code>seqnames</code> of the chromosomes that should be excluded from this analysis.</p></dd>
+
+
 <dt>scaleTo</dt>
 <dd><p>Each column in the calculated gene score matrix will be normalized to a column sum designated by <code>scaleTo</code>.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>A boolean describing whether to print to console messages of progress.</p></dd>
+
+
 <dt>threads</dt>
 <dd><p>The number of threads to be used for parallel computing.</p></dd>
+
+
 <dt>parallelParam</dt>
 <dd><p>A list of parameters to be passed for biocparallel/batchtools parallel computing.</p></dd>
+
+
+<dt>strictMatch</dt>
+<dd><p>A boolean value indicating whether every cell in <code>input</code> must be represented in <code>seRNA</code>. If set to <code>FALSE</code>,
+and this <code>GeneExpressionMatrix</code> is used for certain downstream analyses such as <code><a href="addIterativeLSI.html">addIterativeLSI()</a></code>, then errors may occur
+because not all cells will have relevant information.</p></dd>
+
+
 <dt>force</dt>
 <dd><p>A boolean value indicating whether to force the matrix indicated by <code>matrixName</code> to be overwritten if it already exist in the given <code>input</code>.</p></dd>
+
+
 <dt>logFile</dt>
 <dd><p>The path to a file to be used for logging ArchR output.</p></dd>
+
 </dl></div>
 
   </div>
@@ -140,7 +166,7 @@ for Seurat Objects (see <code><a href="https://satijalab.org/seurat/reference/as
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

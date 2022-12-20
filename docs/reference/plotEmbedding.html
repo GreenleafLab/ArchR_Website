@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,89 +86,152 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">plotEmbedding</span><span class="op">(</span>
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  embedding <span class="op">=</span> <span class="st">"UMAP"</span>,
-  colorBy <span class="op">=</span> <span class="st">"cellColData"</span>,
-  name <span class="op">=</span> <span class="st">"Sample"</span>,
-  log2Norm <span class="op">=</span> <span class="cn">NULL</span>,
-  imputeWeights <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"coldata"</span>, <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="va">colorBy</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-    <span class="fu"><a href="getImputeWeights.html">getImputeWeights</a></span><span class="op">(</span><span class="va">ArchRProj</span><span class="op">)</span>,
-  pal <span class="op">=</span> <span class="cn">NULL</span>,
-  size <span class="op">=</span> <span class="fl">0.1</span>,
-  sampleCells <span class="op">=</span> <span class="cn">NULL</span>,
-  highlightCells <span class="op">=</span> <span class="cn">NULL</span>,
-  rastr <span class="op">=</span> <span class="cn">TRUE</span>,
-  quantCut <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.99</span><span class="op">)</span>,
-  discreteSet <span class="op">=</span> <span class="cn">NULL</span>,
-  continuousSet <span class="op">=</span> <span class="cn">NULL</span>,
-  randomize <span class="op">=</span> <span class="cn">TRUE</span>,
-  keepAxis <span class="op">=</span> <span class="cn">FALSE</span>,
-  baseSize <span class="op">=</span> <span class="fl">10</span>,
-  plotAs <span class="op">=</span> <span class="cn">NULL</span>,
-  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,
-  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"plotEmbedding"</span><span class="op">)</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plotEmbedding</span><span class="op">(</span></span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  embedding <span class="op">=</span> <span class="st">"UMAP"</span>,</span>
+<span>  colorBy <span class="op">=</span> <span class="st">"cellColData"</span>,</span>
+<span>  name <span class="op">=</span> <span class="st">"Sample"</span>,</span>
+<span>  log2Norm <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  imputeWeights <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"coldata"</span>, <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="va">colorBy</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="getImputeWeights.html">getImputeWeights</a></span><span class="op">(</span><span class="va">ArchRProj</span><span class="op">)</span>,</span>
+<span>  pal <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  size <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  sampleCells <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  highlightCells <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  rastr <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  quantCut <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.99</span><span class="op">)</span>,</span>
+<span>  discreteSet <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  continuousSet <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  randomize <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  keepAxis <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  baseSize <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  plotAs <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"plotEmbedding"</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object.</p></dd>
+
+
 <dt>embedding</dt>
 <dd><p>The name of the embedding stored in the <code>ArchRProject</code> to be plotted. See <code>computeEmbedding()</code> for more information.</p></dd>
+
+
 <dt>colorBy</dt>
 <dd><p>A string indicating whether points in the plot should be colored by a column in <code>cellColData</code> ("cellColData") or by
 a data matrix in the corresponding ArrowFiles (i.e. "GeneScoreMatrix", "MotifMatrix", "PeakMatrix").</p></dd>
+
+
 <dt>name</dt>
 <dd><p>The name of the column in <code>cellColData</code> or the featureName/rowname of the data matrix to be used for plotting.
 For example if colorBy is "cellColData" then <code>name</code> refers to a column name in the <code>cellcoldata</code> (see <code>getCellcoldata()</code>). If <code>colorBy</code>
 is "GeneScoreMatrix" then <code>name</code> refers to a gene name which can be listed by <code>getFeatures(ArchRProj, useMatrix = "GeneScoreMatrix")</code>.</p></dd>
+
+
 <dt>log2Norm</dt>
 <dd><p>A boolean value indicating whether a log2 transformation should be performed on the values (if continuous) in plotting.</p></dd>
+
+
 <dt>imputeWeights</dt>
 <dd><p>The weights to be used for imputing numerical values for each cell as a linear combination of other cells values.
 See <code>addImputationWeights()</code> and <code>getImutationWeights()</code> for more information.</p></dd>
+
+
 <dt>pal</dt>
-<dd><p>A custom palette (see <code>paletteDiscrete</code> or <code>ArchRPalettes</code>) used to override discreteSet/continuousSet for coloring vector.</p></dd>
+<dd><p>A custom palette used to override discreteSet/continuousSet for coloring cells. Typically created using <code><a href="paletteDiscrete.html">paletteDiscrete()</a></code> or <code><a href="paletteContinuous.html">paletteContinuous()</a></code>.
+To make a custom palette, you must construct this following strict specifications. If the coloring is for discrete data (i.e. "Clusters"),
+then this palette must be a named vector of colors where each color is named for the corresponding group (e.g. <code>"C1" = "#F97070"</code>). If the coloring
+for continuous data, then it just needs to be a vector of colors. If you are using <code>pal</code> in conjuction with <code>highlightCells</code>, your palette
+must be a named vector with two entries, one named for the value of the cells in the <code>name</code> column of <code>cellColData</code> and the other named
+"Non.Highlighted". For example, <code>pal=c("Mono" = "green", "Non.Highlighted" = "lightgrey")</code> would be used to change the color of cells with the value
+"Mono" in the <code>cellColData</code> column indicated by <code>name</code>. Because of this, the cells indicated by <code>highlightCells</code> must also match this value in the <code>name</code> column.</p></dd>
+
+
 <dt>size</dt>
 <dd><p>A number indicating the size of the points to plot if <code>plotAs</code> is set to "points".</p></dd>
+
+
 <dt>sampleCells</dt>
 <dd><p>A numeric describing number of cells to use for plot. If using impute weights, this will occur after imputation.</p></dd>
+
+
 <dt>highlightCells</dt>
 <dd><p>A character vector of cellNames describing which cells to hightlight if using <code>plotAs = "points"</code> (default if discrete).
 The remainder of cells will be colored light gray.</p></dd>
+
+
 <dt>rastr</dt>
 <dd><p>A boolean value that indicates whether the plot should be rasterized. This does not rasterize lines and labels, just the
 internal portions of the plot.</p></dd>
+
+
 <dt>quantCut</dt>
 <dd><p>If this is not <code>NULL</code>, a quantile cut is performed to threshold the top and bottom of the distribution of numerical values.
 This prevents skewed color scales caused by strong outliers. The format of this should be c(x,y) where x is the lower threshold and y is
 the upper threshold. For example, quantileCut = c(0.025,0.975) will take the 2.5th percentile and 97.5 percentile of values and set
 values below/above to the value of the 2.5th and 97.5th percentile values respectively.</p></dd>
+
+
 <dt>discreteSet</dt>
 <dd><p>The name of a discrete palette from <code>ArchRPalettes</code> for visualizing <code>colorBy</code> in the embedding if a discrete color set is desired.</p></dd>
+
+
 <dt>continuousSet</dt>
 <dd><p>The name of a continuous palette from <code>ArchRPalettes</code> for visualizing <code>colorBy</code> in the embedding if a continuous color set is desired.</p></dd>
+
+
 <dt>randomize</dt>
 <dd><p>A boolean value that indicates whether to randomize points prior to plotting to prevent cells from one cluster being
 uniformly present at the front of the plot.</p></dd>
+
+
 <dt>keepAxis</dt>
 <dd><p>A boolean value that indicates whether the x- and y-axis ticks and labels should be plotted.</p></dd>
+
+
 <dt>baseSize</dt>
 <dd><p>The base font size to use in the plot.</p></dd>
+
+
 <dt>plotAs</dt>
 <dd><p>A string that indicates whether points ("points") should be plotted or a hexplot ("hex") should be plotted. By default
 if <code>colorBy</code> is numeric, then <code>plotAs</code> is set to "hex".</p></dd>
+
+
 <dt>threads</dt>
 <dd><p>The number of threads to be used for parallel computing.</p></dd>
+
+
 <dt>logFile</dt>
 <dd><p>The path to a file to be used for logging ArchR output.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional parameters to pass to <code><a href="ggPoint.html">ggPoint()</a></code> or <code><a href="ggHex.html">ggHex()</a></code>.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Get Test Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Plot UMAP</span></span></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">plotEmbedding</span><span class="op">(</span><span class="va">proj</span>, name <span class="op">=</span> <span class="st">"Clusters"</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plotEmbedding(proj, name = "Clusters"):</span> could not find function "plotEmbedding"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#PDF</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="plotPDF.html">plotPDF</a></span><span class="op">(</span><span class="va">p</span>, name <span class="op">=</span> <span class="st">"UMAP-Clusters"</span>, ArchRProj <span class="op">=</span> <span class="va">proj</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plotPDF(p, name = "UMAP-Clusters", ArchRProj = proj):</span> could not find function "plotPDF"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -181,7 +244,7 @@ if <code>colorBy</code> is numeric, then <code>plotAs</code> is set to "hex".</p
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,7 +86,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">addArchRGenome</span><span class="op">(</span>genome <span class="op">=</span> <span class="cn">NULL</span>, install <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">addArchRGenome</span><span class="op">(</span>genome <span class="op">=</span> <span class="cn">NULL</span>, install <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -97,11 +97,23 @@ Currently supported values include "hg19","hg38","mm9", and "mm10".
 This value is stored as a global environment variable, not part of the <code>ArchRProject</code>.
 This can be overwritten on a per-function basis using the given function's <code>geneAnnotation</code>and <code>genomeAnnotation</code> parameter.
 For something other than one of the currently supported, see <code>createGeneAnnnotation()</code> and <code>createGenomeAnnnotation()</code>.</p></dd>
+
+
 <dt>install</dt>
 <dd><p>A boolean value indicating whether the <code>BSgenome</code> object associated with the provided <code>genome</code> should be
 automatically installed if it is not currently installed. This is useful for helping reduce user download requirements.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Add ArchR Genome to use globally</span></span></span>
+<span class="r-in"><span><span class="fu">addArchRGenome</span><span class="op">(</span><span class="st">"hg19test2"</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in addArchRGenome("hg19test2"):</span> could not find function "addArchRGenome"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -114,7 +126,7 @@ automatically installed if it is not currently installed. This is useful for hel
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

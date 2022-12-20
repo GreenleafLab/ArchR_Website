@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,31 +86,65 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">createGenomeAnnotation</span><span class="op">(</span>
-  genome <span class="op">=</span> <span class="cn">NULL</span>,
-  chromSizes <span class="op">=</span> <span class="cn">NULL</span>,
-  blacklist <span class="op">=</span> <span class="cn">NULL</span>,
-  filter <span class="op">=</span> <span class="cn">TRUE</span>,
-  filterChr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"chrM"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">createGenomeAnnotation</span><span class="op">(</span></span>
+<span>  genome <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  chromSizes <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  blacklist <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  filter <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  filterChr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"chrM"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>genome</dt>
 <dd><p>Either (i) a string that is a valid <code>BSgenome</code> or (ii) a <code>BSgenome</code> object (ie "hg38" or "BSgenome.Hsapiens.UCSC.hg38").</p></dd>
+
+
 <dt>chromSizes</dt>
 <dd><p>A <code>GRanges</code> object containing chromosome start and end coordinates.</p></dd>
+
+
 <dt>blacklist</dt>
 <dd><p>A <code>GRanges</code> object containing regions that should be excluded from analyses due to unwanted biases.</p></dd>
+
+
 <dt>filter</dt>
 <dd><p>A boolean value indicating whether non-standard chromosome scaffolds should be excluded.
-These "non-standard" chromosomes are defined by <code><a href="filterChrGR.html">filterChrGR()</a></code>.</p></dd>
+These "non-standard" chromosomes are defined by <code><a href="filterChrGR.html">filterChrGR()</a></code> and by manual annotation using the <code>filterChr</code> parameter.</p></dd>
+
+
 <dt>filterChr</dt>
 <dd><p>A character vector indicating the seqlevels that should be removed if manual removal is desired for certain seqlevels.
-If no manual removal is desired, <code>filterChr</code> should be set to <code>NULL</code>.</p></dd>
+If no manual removal is desired, <code>filterChr</code> should be set to <code>NULL</code>. If <code>filter</code> is set to <code>TRUE</code> but <code>filterChr</code> is set to <code>NULL</code>,
+non-standard chromosomes will still be removed as defined in <code><a href="filterChrGR.html">filterChrGR()</a></code>.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st">"BSgenome.Hsapiens.UCSC.hg19"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"BSgenome.Hsapiens.UCSC.hg19"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘Biostrings’</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:base’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     strsplit</span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">BSgenome.Hsapiens.UCSC.hg19</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Genome</span></span></span>
+<span class="r-in"><span><span class="va">genome</span> <span class="op">&lt;-</span> <span class="va">BSgenome.Hsapiens.UCSC.hg19</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Create Genome Annotation</span></span></span>
+<span class="r-in"><span><span class="va">genomeAnno</span> <span class="op">&lt;-</span> <span class="fu">createGenomeAnnotation</span><span class="op">(</span><span class="va">genome</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in createGenomeAnnotation(genome):</span> could not find function "createGenomeAnnotation"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Also can create from a string if BSgenome exists</span></span></span>
+<span class="r-in"><span><span class="va">genomeAnno</span> <span class="op">&lt;-</span> <span class="fu">createGenomeAnnotation</span><span class="op">(</span><span class="st">"hg19"</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in createGenomeAnnotation("hg19"):</span> could not find function "createGenomeAnnotation"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -123,7 +157,7 @@ If no manual removal is desired, <code>filterChr</code> should be set to <code>N
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,32 +86,54 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">addCellColData</span><span class="op">(</span>
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  data <span class="op">=</span> <span class="cn">NULL</span>,
-  name <span class="op">=</span> <span class="cn">NULL</span>,
-  cells <span class="op">=</span> <span class="cn">NULL</span>,
-  force <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">addCellColData</span><span class="op">(</span></span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cells <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  force <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object.</p></dd>
+
+
 <dt>data</dt>
 <dd><p>The data to add to <code>cellColData</code>.</p></dd>
+
+
 <dt>name</dt>
 <dd><p>The column header name to be used for this new data in <code>cellColData</code>. If a column with this name already exists,
 you may set <code>force</code> equal to <code>TRUE</code> to overwrite the data in this column.</p></dd>
+
+
 <dt>cells</dt>
 <dd><p>The names of the cells corresponding to <code>data</code>. Typically new data is added to all cells but you may use this
 argument to only add data to a subset of cells. Cells where <code>data</code> is not added are set to <code>NA</code>.</p></dd>
+
+
 <dt>force</dt>
 <dd><p>A boolean value indicating whether or not to overwrite data in a given column when the value passed to <code>name</code>
 already exists as a column name in <code>cellColData</code>.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Add Cell Column Data</span></span></span>
+<span class="r-in"><span><span class="fu">addCellColData</span><span class="op">(</span><span class="va">proj</span>, data <span class="op">=</span> <span class="va">proj</span><span class="op">$</span><span class="va">TSSEnrichment</span>, name <span class="op">=</span> <span class="st">"TSS2"</span>, cells <span class="op">=</span> <span class="fu"><a href="getCellNames.html">getCellNames</a></span><span class="op">(</span><span class="va">proj</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in addCellColData(proj, data = proj$TSSEnrichment, name = "TSS2",     cells = getCellNames(proj)):</span> could not find function "addCellColData"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -124,7 +146,7 @@ already exists as a column name in <code>cellColData</code>.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

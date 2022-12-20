@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,92 +86,155 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">plotTrajectory</span><span class="op">(</span>
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  embedding <span class="op">=</span> <span class="st">"UMAP"</span>,
-  trajectory <span class="op">=</span> <span class="st">"Trajectory"</span>,
-  colorBy <span class="op">=</span> <span class="st">"colData"</span>,
-  name <span class="op">=</span> <span class="st">"Trajectory"</span>,
-  log2Norm <span class="op">=</span> <span class="cn">NULL</span>,
-  imputeWeights <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"coldata"</span>, <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="va">colorBy</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-    <span class="fu"><a href="getImputeWeights.html">getImputeWeights</a></span><span class="op">(</span><span class="va">ArchRProj</span><span class="op">)</span>,
-  pal <span class="op">=</span> <span class="cn">NULL</span>,
-  size <span class="op">=</span> <span class="fl">0.2</span>,
-  rastr <span class="op">=</span> <span class="cn">TRUE</span>,
-  quantCut <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.99</span><span class="op">)</span>,
-  quantHex <span class="op">=</span> <span class="fl">0.5</span>,
-  discreteSet <span class="op">=</span> <span class="cn">NULL</span>,
-  continuousSet <span class="op">=</span> <span class="cn">NULL</span>,
-  randomize <span class="op">=</span> <span class="cn">TRUE</span>,
-  keepAxis <span class="op">=</span> <span class="cn">FALSE</span>,
-  baseSize <span class="op">=</span> <span class="fl">6</span>,
-  addArrow <span class="op">=</span> <span class="cn">TRUE</span>,
-  plotAs <span class="op">=</span> <span class="cn">NULL</span>,
-  smoothWindow <span class="op">=</span> <span class="fl">5</span>,
-  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"plotTrajectory"</span><span class="op">)</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plotTrajectory</span><span class="op">(</span></span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  embedding <span class="op">=</span> <span class="st">"UMAP"</span>,</span>
+<span>  trajectory <span class="op">=</span> <span class="st">"Trajectory"</span>,</span>
+<span>  colorBy <span class="op">=</span> <span class="st">"colData"</span>,</span>
+<span>  name <span class="op">=</span> <span class="st">"Trajectory"</span>,</span>
+<span>  log2Norm <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  imputeWeights <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"coldata"</span>, <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="va">colorBy</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="getImputeWeights.html">getImputeWeights</a></span><span class="op">(</span><span class="va">ArchRProj</span><span class="op">)</span>,</span>
+<span>  pal <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  size <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  rastr <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  quantCut <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.99</span><span class="op">)</span>,</span>
+<span>  quantHex <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  discreteSet <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  continuousSet <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  randomize <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  keepAxis <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  baseSize <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>  addArrow <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  plotAs <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  smoothWindow <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"plotTrajectory"</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object.</p></dd>
+
+
 <dt>embedding</dt>
 <dd><p>The name of the embedding to use to visualize the given <code>trajectory</code>. See <code>addEmbedding()</code> for more information.</p></dd>
+
+
 <dt>trajectory</dt>
 <dd><p>The column name in <code>cellColData</code> that refers the trajectory to be plotted. See <code><a href="addTrajectory.html">addTrajectory()</a></code> for more information.</p></dd>
+
+
 <dt>colorBy</dt>
 <dd><p>A string indicating whether points in the plot should be colored by a column in <code>cellColData</code> ("cellColData")
 or by a data matrix in the associated ArrowFiles (i.e. "GeneScoreMatrix", "MotifMatrix", "PeakMatrix").</p></dd>
+
+
 <dt>name</dt>
 <dd><p>The name of the column in <code>cellColData</code> or the featureName/rowname of the data matrix to be used for plotting.
 For example if colorBy is "cellColData" then <code>name</code> refers to a column name in the cellcoldata (see <code>getCellcoldata()</code>). If <code>colorBy</code>
 is "GeneScoreMatrix" then <code>name</code> refers to a gene name which can be listed by <code>getFeatures(ArchRProj, useMatrix = "GeneScoreMatrix")</code>.</p></dd>
+
+
 <dt>log2Norm</dt>
 <dd><p>A boolean value indicating whether a log2 transformation should be performed on the values from <code>colorBy</code>.</p></dd>
+
+
 <dt>imputeWeights</dt>
 <dd><p>The weights to be used for imputing numerical values for each cell as a linear combination of other cells'
 values. See <code>addImputationWeights()</code> and <code>getImutationWeights()</code> for more information.</p></dd>
+
+
 <dt>pal</dt>
 <dd><p>The name of a custom palette from <code>ArchRPalettes</code> to use for coloring cells.</p></dd>
+
+
 <dt>size</dt>
 <dd><p>A number indicating the size of the points to plot if <code>plotAs</code> is set to "points".</p></dd>
+
+
 <dt>rastr</dt>
 <dd><p>A boolean value that indicates whether the plot should be rasterized. This does not rasterize lines and labels,
 just the internal portions of the plot.</p></dd>
+
+
 <dt>quantCut</dt>
 <dd><p>If this is not <code>NULL</code>, a quantile cut is performed to threshold the top and bottom of the distribution of numerical values.
 This prevents skewed color scales caused by strong outliers. The format of this should be c(x,y) where x is the lower threshold and y is
 the upper threshold. For example, quantileCut = c(0.025,0.975) will take the 2.5th percentile and 97.5 percentile of values and
 set values below/above to the value of the 2.5th and 97.5th percentile values respectively.</p></dd>
+
+
 <dt>quantHex</dt>
 <dd><p>The numeric xth quantile of all dots within each individual hexagon will determine the numerical value for
 coloring to be displayed. This occurs when (i) <code>plotAs</code> is set to "hex" or (ii) <code>plotAs</code> is set to <code>NULL</code> and the values of <code>colorBy</code> are numeric.</p></dd>
+
+
 <dt>discreteSet</dt>
 <dd><p>The name of a discrete palette from <code>ArchRPalettes</code> for visualizing <code>colorBy</code> in the embedding if a discrete color set is desired.</p></dd>
+
+
 <dt>continuousSet</dt>
 <dd><p>The name of a continuous palette from <code>ArchRPalettes</code> for visualizing <code>colorBy</code> in the embedding if a continuous color set is desired.</p></dd>
+
+
 <dt>randomize</dt>
 <dd><p>A boolean value that indicates whether to randomize points prior to plotting to prevent cells from one cluster
 being present at the front of the plot.</p></dd>
+
+
 <dt>keepAxis</dt>
 <dd><p>A boolean value that indicates whether the x and y axis ticks and labels should be plotted.</p></dd>
+
+
 <dt>baseSize</dt>
 <dd><p>The base font size to use in the plot.</p></dd>
+
+
 <dt>addArrow</dt>
 <dd><p>A boolean value that indicates whether to add a smoothed arrow in the embedding based on the aligned trajectory.</p></dd>
+
+
 <dt>plotAs</dt>
 <dd><p>A string that indicates whether points ("points") should be plotted or a hexplot ("hex") should be plotted. By default
 if <code>colorBy</code> is numeric, then <code>plotAs</code> is set to "hex".</p></dd>
+
+
 <dt>smoothWindow</dt>
 <dd><p>An integer value indicating the smoothing window for creating inferred Arrow overlay on to embedding.</p></dd>
+
+
 <dt>logFile</dt>
 <dd><p>The path to a file to be used for logging ArchR output.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional parameters to pass to <code><a href="ggPoint.html">ggPoint()</a></code> or <code><a href="ggHex.html">ggHex()</a></code>.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Add Trajectory</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="addTrajectory.html">addTrajectory</a></span><span class="op">(</span><span class="va">proj</span>, trajectory <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"C1"</span>, <span class="st">"C2"</span>, <span class="st">"C3"</span><span class="op">)</span>, embedding <span class="op">=</span> <span class="st">"UMAP"</span>, force <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in addTrajectory(proj, trajectory = c("C1", "C2", "C3"), embedding = "UMAP",     force = TRUE):</span> could not find function "addTrajectory"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Plot Trajectory</span></span></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">plotTrajectory</span><span class="op">(</span><span class="va">proj</span>, smoothWindow <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plotTrajectory(proj, smoothWindow = 20):</span> could not find function "plotTrajectory"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#PDF</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="plotPDF.html">plotPDF</a></span><span class="op">(</span><span class="va">p</span>, name <span class="op">=</span> <span class="st">"Trajcetory"</span>, ArchRProj <span class="op">=</span> <span class="va">proj</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plotPDF(p, name = "Trajcetory", ArchRProj = proj):</span> could not find function "plotPDF"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -184,7 +247,7 @@ if <code>colorBy</code> is numeric, then <code>plotAs</code> is set to "hex".</p
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

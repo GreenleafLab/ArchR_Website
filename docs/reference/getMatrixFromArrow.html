@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,42 +86,75 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">getMatrixFromArrow</span><span class="op">(</span>
-  ArrowFile <span class="op">=</span> <span class="cn">NULL</span>,
-  useMatrix <span class="op">=</span> <span class="st">"GeneScoreMatrix"</span>,
-  useSeqnames <span class="op">=</span> <span class="cn">NULL</span>,
-  cellNames <span class="op">=</span> <span class="cn">NULL</span>,
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  binarize <span class="op">=</span> <span class="cn">FALSE</span>,
-  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"getMatrixFromArrow"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getMatrixFromArrow</span><span class="op">(</span></span>
+<span>  ArrowFile <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  useMatrix <span class="op">=</span> <span class="st">"GeneScoreMatrix"</span>,</span>
+<span>  useSeqnames <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  excludeChr <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cellNames <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  binarize <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"getMatrixFromArrow"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArrowFile</dt>
 <dd><p>The path to an ArrowFile from which the selected data matrix should be obtained.</p></dd>
+
+
 <dt>useMatrix</dt>
 <dd><p>The name of the data matrix to retrieve from the given ArrowFile. Options include "TileMatrix", "GeneScoreMatrix", etc.</p></dd>
+
+
 <dt>useSeqnames</dt>
 <dd><p>A character vector of chromosome names to be used to subset the data matrix being obtained.</p></dd>
+
+
+<dt>excludeChr</dt>
+<dd><p>A character vector containing the <code>seqnames</code> of the chromosomes that should be excluded from this analysis.</p></dd>
+
+
 <dt>cellNames</dt>
 <dd><p>A character vector indicating the cell names of a subset of cells from which fragments whould be extracted.
 This allows for extraction of fragments from only a subset of selected cells. By default, this function will extract all cells from
 the provided ArrowFile using <code><a href="getCellNames.html">getCellNames()</a></code>.</p></dd>
+
+
 <dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object to be used for getting additional information for cells in <code>cellColData</code>.
 In some cases, data exists within the <code>ArchRProject</code> object that does not exist within the ArrowFiles. To access this data, you can
 provide the <code>ArchRProject</code> object here.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>A boolean value indicating whether to use verbose output during execution of  this function. Can be set to FALSE for a cleaner output.</p></dd>
+
+
 <dt>binarize</dt>
 <dd><p>A boolean value indicating whether the matrix should be binarized before return. This is often desired when working with insertion counts.</p></dd>
+
+
 <dt>logFile</dt>
 <dd><p>The path to a file to be used for logging ArchR output.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Get Test Arrow</span></span></span>
+<span class="r-in"><span><span class="va">arrow</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestArrow.html">getTestArrow</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestArrow():</span> could not find function "getTestArrow"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Fragments</span></span></span>
+<span class="r-in"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu">getMatrixFromArrow</span><span class="op">(</span><span class="va">arrow</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getMatrixFromArrow(arrow):</span> could not find function "getMatrixFromArrow"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -134,7 +167,7 @@ provide the <code>ArchRProject</code> object here.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

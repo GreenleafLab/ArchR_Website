@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,58 +86,83 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">getMarkerFeatures</span><span class="op">(</span>
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  groupBy <span class="op">=</span> <span class="st">"Clusters"</span>,
-  useGroups <span class="op">=</span> <span class="cn">NULL</span>,
-  bgdGroups <span class="op">=</span> <span class="cn">NULL</span>,
-  useMatrix <span class="op">=</span> <span class="st">"GeneScoreMatrix"</span>,
-  bias <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TSSEnrichment"</span>, <span class="st">"log10(nFrags)"</span><span class="op">)</span>,
-  normBy <span class="op">=</span> <span class="cn">NULL</span>,
-  testMethod <span class="op">=</span> <span class="st">"wilcoxon"</span>,
-  maxCells <span class="op">=</span> <span class="fl">500</span>,
-  scaleTo <span class="op">=</span> <span class="fl">10</span><span class="op">^</span><span class="fl">4</span>,
-  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,
-  k <span class="op">=</span> <span class="fl">100</span>,
-  bufferRatio <span class="op">=</span> <span class="fl">0.8</span>,
-  binarize <span class="op">=</span> <span class="cn">FALSE</span>,
-  useSeqnames <span class="op">=</span> <span class="cn">NULL</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"getMarkerFeatures"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getMarkerFeatures</span><span class="op">(</span></span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  groupBy <span class="op">=</span> <span class="st">"Clusters"</span>,</span>
+<span>  useGroups <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  bgdGroups <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  useMatrix <span class="op">=</span> <span class="st">"GeneScoreMatrix"</span>,</span>
+<span>  bias <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TSSEnrichment"</span>, <span class="st">"log10(nFrags)"</span><span class="op">)</span>,</span>
+<span>  normBy <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  testMethod <span class="op">=</span> <span class="st">"wilcoxon"</span>,</span>
+<span>  maxCells <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>  scaleTo <span class="op">=</span> <span class="fl">10</span><span class="op">^</span><span class="fl">4</span>,</span>
+<span>  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  k <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  bufferRatio <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span>  binarize <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  useSeqnames <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  closest <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"getMarkerFeatures"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object.</p></dd>
+
+
 <dt>groupBy</dt>
 <dd><p>The name of the column in <code>cellColData</code> to use for grouping cells together for marker feature identification.</p></dd>
+
+
 <dt>useGroups</dt>
 <dd><p>A character vector that is used to select a subset of groups by name from the designated <code>groupBy</code> column
 in <code>cellColData</code>. This limits the groups used to perform marker feature identification.</p></dd>
+
+
 <dt>bgdGroups</dt>
 <dd><p>A character vector that is used to select a subset of groups by name from the designated <code>groupBy</code> column
 in <code>cellColData</code> to be used for background calculations in marker feature identification.</p></dd>
+
+
 <dt>useMatrix</dt>
 <dd><p>The name of the matrix to be used for performing differential analyses. Options include "GeneScoreMatrix", "PeakMatrix", etc.</p></dd>
+
+
 <dt>bias</dt>
 <dd><p>A character vector indicating the potential bias variables (i.e. c("TSSEnrichment", "log10(nFrags)")) to account
 for in selecting a matched null group for marker feature identification. These should be column names from <code>cellColData</code>.</p></dd>
+
+
 <dt>normBy</dt>
 <dd><p>The name of a numeric column in <code>cellColData</code> that should be normalized across cells (i.e. "ReadsInTSS") prior
 to performing marker feature identification.</p></dd>
+
+
 <dt>testMethod</dt>
 <dd><p>The name of the pairwise test method to use in comparing cell groupings to the null cell grouping during
 marker feature identification. Valid options include "wilcoxon", "ttest", and "binomial".</p></dd>
+
+
 <dt>maxCells</dt>
 <dd><p>The maximum number of cells to consider from a single-cell group when performing marker feature identification.</p></dd>
+
+
 <dt>scaleTo</dt>
 <dd><p>Each column in the matrix designated by <code>useMatrix</code> will be normalized to a column sum designated by <code>scaleTo</code>.</p></dd>
+
+
 <dt>threads</dt>
 <dd><p>The number of threads to be used for parallel computing.</p></dd>
+
+
 <dt>k</dt>
 <dd><p>The number of nearby cells to use for selecting a biased-matched background while accounting for <code>bgdGroups</code> proportions.</p></dd>
+
+
 <dt>bufferRatio</dt>
 <dd><p>When generating optimal biased-matched background groups of cells to determine significance, it can be difficult
 to find sufficient numbers of well-matched cells to create a background group made up of an equal number of cells. The <code>bufferRatio</code>
@@ -145,20 +170,52 @@ indicates the fraction of the total cells that must be obtained when creating th
 biased-matched background for a group of 100 cells, when <code>bufferRatio</code> is set to 0.8 the biased-matched background group will be
 composed of the 80 best-matched cells. This option provides flexibility in the generation of biased-matched background groups given
 the stringency of also maintaining the group proportions from <code>bgdGroups</code>.</p></dd>
+
+
 <dt>binarize</dt>
 <dd><p>A boolean value indicating whether to binarize the matrix prior to differential testing. This is useful when
 <code>useMatrix</code> is an insertion counts-based matrix.</p></dd>
+
+
 <dt>useSeqnames</dt>
 <dd><p>A character vector that indicates which <code>seqnames</code> should be plotted in the heatmap. Features from
 <code>seqnames</code> that are not listed will be ignored. In the context of a <code>Sparse.Assays.Matrix</code>, such as a matrix containing chromVAR
 deviations, the <code>seqnames</code> do not correspond to chromosomes, rather they correspond to the sub-portions of the matrix, for example
 raw deviations ("deviations") or deviation z-scores ("z") for a chromVAR deviations matrix.</p></dd>
+
+
+<dt>closest</dt>
+<dd><p>A boolean value that indicated whether to use closest cells from foreground and background instead of random sampling
+of the foreground cells.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>A boolean value that determines whether standard output is printed.</p></dd>
+
+
 <dt>logFile</dt>
 <dd><p>The path to a file to be used for logging ArchR output.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Markers</span></span></span>
+<span class="r-in"><span><span class="va">seMarker</span> <span class="op">&lt;-</span> <span class="fu">getMarkerFeatures</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  ArchRProj <span class="op">=</span> <span class="va">proj</span>, </span></span>
+<span class="r-in"><span>  useMatrix <span class="op">=</span> <span class="st">"PeakMatrix"</span>, </span></span>
+<span class="r-in"><span>  testMethod <span class="op">=</span> <span class="st">"binomial"</span>, </span></span>
+<span class="r-in"><span>  binarize <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getMarkerFeatures(ArchRProj = proj, useMatrix = "PeakMatrix",     testMethod = "binomial", binarize = TRUE):</span> could not find function "getMarkerFeatures"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -171,7 +228,7 @@ raw deviations ("deviations") or deviation z-scores ("z") for a chromVAR deviati
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

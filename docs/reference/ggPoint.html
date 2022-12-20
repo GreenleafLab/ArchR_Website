@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,129 +86,219 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">ggPoint</span><span class="op">(</span>
-  x <span class="op">=</span> <span class="cn">NULL</span>,
-  y <span class="op">=</span> <span class="cn">NULL</span>,
-  color <span class="op">=</span> <span class="cn">NULL</span>,
-  discrete <span class="op">=</span> <span class="cn">TRUE</span>,
-  discreteSet <span class="op">=</span> <span class="st">"stallion"</span>,
-  continuousSet <span class="op">=</span> <span class="st">"solarExtra"</span>,
-  labelMeans <span class="op">=</span> <span class="cn">TRUE</span>,
-  pal <span class="op">=</span> <span class="cn">NULL</span>,
-  defaultColor <span class="op">=</span> <span class="st">"lightGrey"</span>,
-  highlightPoints <span class="op">=</span> <span class="cn">NULL</span>,
-  colorDensity <span class="op">=</span> <span class="cn">FALSE</span>,
-  size <span class="op">=</span> <span class="fl">1</span>,
-  xlim <span class="op">=</span> <span class="cn">NULL</span>,
-  ylim <span class="op">=</span> <span class="cn">NULL</span>,
-  extend <span class="op">=</span> <span class="fl">0.05</span>,
-  xlabel <span class="op">=</span> <span class="st">"x"</span>,
-  ylabel <span class="op">=</span> <span class="st">"y"</span>,
-  title <span class="op">=</span> <span class="st">""</span>,
-  randomize <span class="op">=</span> <span class="cn">FALSE</span>,
-  seed <span class="op">=</span> <span class="fl">1</span>,
-  colorTitle <span class="op">=</span> <span class="cn">NULL</span>,
-  colorOrder <span class="op">=</span> <span class="cn">NULL</span>,
-  colorLimits <span class="op">=</span> <span class="cn">NULL</span>,
-  alpha <span class="op">=</span> <span class="fl">1</span>,
-  baseSize <span class="op">=</span> <span class="fl">10</span>,
-  legendSize <span class="op">=</span> <span class="fl">3</span>,
-  ratioYX <span class="op">=</span> <span class="fl">1</span>,
-  labelAsFactors <span class="op">=</span> <span class="cn">TRUE</span>,
-  fgColor <span class="op">=</span> <span class="st">"black"</span>,
-  bgColor <span class="op">=</span> <span class="st">"white"</span>,
-  bgWidth <span class="op">=</span> <span class="fl">1</span>,
-  labelSize <span class="op">=</span> <span class="fl">3</span>,
-  addFit <span class="op">=</span> <span class="cn">NULL</span>,
-  rastr <span class="op">=</span> <span class="cn">FALSE</span>,
-  dpi <span class="op">=</span> <span class="fl">300</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ggPoint</span><span class="op">(</span></span>
+<span>  x <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  color <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  discrete <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  discreteSet <span class="op">=</span> <span class="st">"stallion"</span>,</span>
+<span>  continuousSet <span class="op">=</span> <span class="st">"solarExtra"</span>,</span>
+<span>  labelMeans <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  pal <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  defaultColor <span class="op">=</span> <span class="st">"lightGrey"</span>,</span>
+<span>  highlightPoints <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  colorDensity <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  size <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  xlim <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ylim <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  extend <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  xlabel <span class="op">=</span> <span class="st">"x"</span>,</span>
+<span>  ylabel <span class="op">=</span> <span class="st">"y"</span>,</span>
+<span>  title <span class="op">=</span> <span class="st">""</span>,</span>
+<span>  randomize <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  colorTitle <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  colorOrder <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  colorLimits <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  baseSize <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  legendSize <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  ratioYX <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  labelAsFactors <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  fgColor <span class="op">=</span> <span class="st">"black"</span>,</span>
+<span>  bgColor <span class="op">=</span> <span class="st">"white"</span>,</span>
+<span>  bgWidth <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  labelSize <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  addFit <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  rastr <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  dpi <span class="op">=</span> <span class="fl">300</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A numeric vector containing the x-axis values for each point.</p></dd>
+
+
 <dt>y</dt>
 <dd><p>A numeric vector containing the y-axis values for each point.</p></dd>
+
+
 <dt>color</dt>
 <dd><p>A numeric/categorical vector used to determine the coloration for each point.</p></dd>
+
+
 <dt>discrete</dt>
 <dd><p>A boolean value indicating whether the supplied data is discrete (<code>TRUE</code>) or continuous (<code>FALSE</code>).</p></dd>
+
+
 <dt>discreteSet</dt>
 <dd><p>The name of a custom palette from <code>ArchRPalettes</code> to use for categorical/discrete color.
 This argument is only used if <code>discrete</code> is set to <code>TRUE</code>.</p></dd>
+
+
 <dt>continuousSet</dt>
 <dd><p>The name of a custom palette from <code>ArchRPalettes</code> to use for numeric color.
 This argument is only used if <code>discrete</code> is set to <code>FALSE</code>.</p></dd>
+
+
 <dt>labelMeans</dt>
 <dd><p>A boolean value indicating whether the mean of each categorical/discrete color should be labeled.</p></dd>
+
+
 <dt>pal</dt>
 <dd><p>A custom palette used to override discreteSet/continuousSet for coloring vector.</p></dd>
+
+
 <dt>defaultColor</dt>
 <dd><p>The default color for points that do not have another color applied (i.e. <code>NA</code> values).</p></dd>
+
+
 <dt>highlightPoints</dt>
 <dd><p>A integer vector describing which points to hightlight. The remainder of points will be colored light gray.</p></dd>
+
+
 <dt>colorDensity</dt>
 <dd><p>A boolean value indicating whether the density of points on the plot should be indicated by color.
 If <code>TRUE</code>, continuousSet is used as the color palette.</p></dd>
+
+
 <dt>size</dt>
 <dd><p>The numeric size of the points to be plotted.</p></dd>
+
+
 <dt>xlim</dt>
 <dd><p>A numeric vector of two values indicating the lower and upper bounds of the x-axis on the plot.</p></dd>
+
+
 <dt>ylim</dt>
 <dd><p>A numeric vector of two values indicating the lower and upper bounds of the y-axis on the plot.</p></dd>
+
+
 <dt>extend</dt>
 <dd><p>A numeric value indicating the fraction to extend the x-axis and y-axis beyond the maximum and minimum
 values if <code>xlim</code> and <code>ylim</code> are not provided. For example, 0.05 will extend the x-axis and y-axis by 5 percent on each end.</p></dd>
+
+
 <dt>xlabel</dt>
 <dd><p>The label to plot for the x-axis.</p></dd>
+
+
 <dt>ylabel</dt>
 <dd><p>The label to plot for the y-axis.</p></dd>
+
+
 <dt>title</dt>
 <dd><p>The title of the plot.</p></dd>
+
+
 <dt>randomize</dt>
 <dd><p>A boolean value indicating whether to randomize the order of the points when plotting.</p></dd>
+
+
 <dt>seed</dt>
 <dd><p>A numeric seed number for use in randomization.</p></dd>
+
+
 <dt>colorTitle</dt>
 <dd><p>A title to be added to the legend if <code>color</code> is supplied.</p></dd>
+
+
 <dt>colorOrder</dt>
 <dd><p>A vector that allows you to control the order of palette colors associated with the values in <code>color</code>.
 For example if you have <code>color</code> as <code>c("a","b","c")</code> and want to have the first color selected from the palette be used for
 "c", the second color for "b", and the third color for "a", you would supply the <code>colorOrder</code> as <code>c("c", "b", "a")</code>.</p></dd>
+
+
 <dt>colorLimits</dt>
 <dd><p>A numeric vector of two values indicating the lower and upper bounds of colors if numeric. Values
 beyond these limits are thresholded.</p></dd>
+
+
 <dt>alpha</dt>
 <dd><p>A number indicating the transparency to use for each point. See <code>ggplot2</code> for more details.</p></dd>
+
+
 <dt>baseSize</dt>
 <dd><p>The base font size (in points) to use in the plot.</p></dd>
+
+
 <dt>legendSize</dt>
 <dd><p>The size in inches to use for plotting the color legend.</p></dd>
+
+
 <dt>ratioYX</dt>
 <dd><p>The aspect ratio of the x and y axes on the plot.</p></dd>
+
+
 <dt>labelAsFactors</dt>
 <dd><p>A boolean indicating whether to label the <code>color</code> input as a numeric factor (<code>TRUE</code>) or with a character string (<code>FALSE</code>).</p></dd>
+
+
 <dt>fgColor</dt>
 <dd><p>The foreground color of the plot.</p></dd>
+
+
 <dt>bgColor</dt>
 <dd><p>The background color of the plot.</p></dd>
+
+
 <dt>bgWidth</dt>
 <dd><p>The background relative width size of the halos in the labeling.</p></dd>
+
+
 <dt>labelSize</dt>
 <dd><p>The numeric font size of labels.</p></dd>
+
+
 <dt>addFit</dt>
 <dd><p>A string indicating the method to use for adding a fit/regression line to the plot (see <code><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" class="external-link">ggplot2::geom_smooth()</a></code> methods).
 If set to <code>NULL</code>, no fit/regression line is added.</p></dd>
+
+
 <dt>rastr</dt>
 <dd><p>A boolean value that indicates whether the plot should be rasterized using <code>ggrastr</code>. This does not rasterize
 lines and labels, just the internal portions of the plot.</p></dd>
+
+
 <dt>dpi</dt>
 <dd><p>The resolution in dots per inch to use for the plot.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Create Random Data</span></span></span>
+<span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">2</span><span class="op">)</span>,ncol<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">m</span><span class="op">$</span><span class="va">color</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/AnnotationDbi/man/Bimap-envirAPI.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span>, <span class="fl">10</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Plot</span></span></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">ggPoint</span><span class="op">(</span>x <span class="op">=</span> <span class="va">m</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">m</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>, color <span class="op">=</span> <span class="va">m</span><span class="op">[</span>,<span class="fl">3</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in ggPoint(x = m[, 1], y = m[, 2], color = m[, 3]):</span> could not find function "ggPoint"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># To PDF</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf</a></span><span class="op">(</span><span class="st">"test.pdf"</span>, width <span class="op">=</span> <span class="fl">4</span>, height <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">p</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'p' not found</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> agg_png </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       2 </span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -221,7 +311,7 @@ lines and labels, just the internal portions of the plot.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

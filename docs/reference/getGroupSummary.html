@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,29 +86,51 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">getGroupSummary</span><span class="op">(</span>
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  groupBy <span class="op">=</span> <span class="st">"Sample"</span>,
-  select <span class="op">=</span> <span class="st">"TSSEnrichment"</span>,
-  summary <span class="op">=</span> <span class="st">"median"</span>,
-  removeNA <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getGroupSummary</span><span class="op">(</span></span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  groupBy <span class="op">=</span> <span class="st">"Sample"</span>,</span>
+<span>  select <span class="op">=</span> <span class="st">"TSSEnrichment"</span>,</span>
+<span>  summary <span class="op">=</span> <span class="st">"median"</span>,</span>
+<span>  removeNA <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object.</p></dd>
+
+
 <dt>groupBy</dt>
 <dd><p>The name of the column in <code>cellColData</code> to use for grouping multiple cells together for summarizing information.</p></dd>
+
+
 <dt>select</dt>
 <dd><p>A character vector containing the column names to select from <code>cellColData</code>.</p></dd>
+
+
 <dt>summary</dt>
 <dd><p>A character vector describing which method for summarizing across group. Options include "median", "mean", or "sum".</p></dd>
+
+
 <dt>removeNA</dt>
 <dd><p>Remove NA's from summary method.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Group Summary</span></span></span>
+<span class="r-in"><span><span class="fu">getGroupSummary</span><span class="op">(</span><span class="va">proj</span>, groupBy <span class="op">=</span> <span class="st">"Clusters"</span>, select <span class="op">=</span> <span class="st">"TSSEnrichment"</span>, summary <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getGroupSummary(proj, groupBy = "Clusters", select = "TSSEnrichment",     summary = "mean"):</span> could not find function "getGroupSummary"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -121,7 +143,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

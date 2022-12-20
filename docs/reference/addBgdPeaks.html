@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,40 +86,68 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">addBgdPeaks</span><span class="op">(</span>
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  nIterations <span class="op">=</span> <span class="fl">50</span>,
-  w <span class="op">=</span> <span class="fl">0.1</span>,
-  binSize <span class="op">=</span> <span class="fl">50</span>,
-  seed <span class="op">=</span> <span class="fl">1</span>,
-  method <span class="op">=</span> <span class="st">"chromVAR"</span>,
-  outFile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="getOutputDirectory.html">getOutputDirectory</a></span><span class="op">(</span><span class="va">ArchRProj</span><span class="op">)</span>, <span class="st">"Background-Peaks.rds"</span><span class="op">)</span>,
-  force <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">addBgdPeaks</span><span class="op">(</span></span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  nIterations <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  w <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  binSize <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  method <span class="op">=</span> <span class="st">"chromVAR"</span>,</span>
+<span>  outFile <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="getOutputDirectory.html">getOutputDirectory</a></span><span class="op">(</span><span class="va">ArchRProj</span><span class="op">)</span>, <span class="st">"Background-Peaks.rds"</span><span class="op">)</span>,</span>
+<span>  force <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object.</p></dd>
+
+
 <dt>nIterations</dt>
 <dd><p>The number of background peaks to sample. See <code><a href="https://rdrr.io/pkg/chromVAR/man/getBackgroundPeaks.html" class="external-link">chromVAR::getBackgroundPeaks()</a></code>.</p></dd>
+
+
 <dt>w</dt>
 <dd><p>The parameter controlling similarity of background peaks. See <code><a href="https://rdrr.io/pkg/chromVAR/man/getBackgroundPeaks.html" class="external-link">chromVAR::getBackgroundPeaks()</a></code>.</p></dd>
+
+
 <dt>binSize</dt>
 <dd><p>The precision with which the similarity is computed. See <code><a href="https://rdrr.io/pkg/chromVAR/man/getBackgroundPeaks.html" class="external-link">chromVAR::getBackgroundPeaks()</a></code>.</p></dd>
+
+
 <dt>seed</dt>
 <dd><p>A number to be used as the seed for random number generation. It is recommended to keep track of the seed used so that
 you can reproduce results downstream.</p></dd>
+
+
 <dt>method</dt>
 <dd><p>A string indicating whether to use chromVAR or ArchR for background peak identification.</p></dd>
+
+
 <dt>outFile</dt>
 <dd><p>The path to save the <code>backgroundPeaks</code> object as a <code>.RDS</code> file for the given <code>ArchRProject</code>. The default action
 is to save this file in the <code>outputDirectory</code> of the <code>ArchRProject</code>.</p></dd>
+
+
 <dt>force</dt>
 <dd><p>A boolean value indicating whether to force the file indicated by <code>outFile</code> to be overwritten if it already exists.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Add Background Peaks</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu">addBgdPeaks</span><span class="op">(</span><span class="va">proj</span>, force <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in addBgdPeaks(proj, force = TRUE):</span> could not find function "addBgdPeaks"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -132,7 +160,7 @@ is to save this file in the <code>outputDirectory</code> of the <code>ArchRProje
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

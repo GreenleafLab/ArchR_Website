@@ -24,7 +24,7 @@ per cell and then infer gene activity scores."><meta property="og:image" content
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -88,91 +88,147 @@ per cell and then infer gene activity scores.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">addGeneScoreMatrix</span><span class="op">(</span>
-  input <span class="op">=</span> <span class="cn">NULL</span>,
-  genes <span class="op">=</span> <span class="fu"><a href="getGenes.html">getGenes</a></span><span class="op">(</span><span class="va">input</span><span class="op">)</span>,
-  geneModel <span class="op">=</span> <span class="st">"exp(-abs(x)/5000) + exp(-1)"</span>,
-  matrixName <span class="op">=</span> <span class="st">"GeneScoreMatrix"</span>,
-  extendUpstream <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">1e+05</span><span class="op">)</span>,
-  extendDownstream <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">1e+05</span><span class="op">)</span>,
-  geneUpstream <span class="op">=</span> <span class="fl">5000</span>,
-  geneDownstream <span class="op">=</span> <span class="fl">0</span>,
-  useGeneBoundaries <span class="op">=</span> <span class="cn">TRUE</span>,
-  useTSS <span class="op">=</span> <span class="cn">FALSE</span>,
-  extendTSS <span class="op">=</span> <span class="cn">FALSE</span>,
-  tileSize <span class="op">=</span> <span class="fl">500</span>,
-  ceiling <span class="op">=</span> <span class="fl">4</span>,
-  geneScaleFactor <span class="op">=</span> <span class="fl">5</span>,
-  scaleTo <span class="op">=</span> <span class="fl">10000</span>,
-  excludeChr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"chrY"</span>, <span class="st">"chrM"</span><span class="op">)</span>,
-  blacklist <span class="op">=</span> <span class="fu"><a href="getBlacklist.html">getBlacklist</a></span><span class="op">(</span><span class="va">input</span><span class="op">)</span>,
-  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,
-  parallelParam <span class="op">=</span> <span class="cn">NULL</span>,
-  subThreading <span class="op">=</span> <span class="cn">TRUE</span>,
-  force <span class="op">=</span> <span class="cn">FALSE</span>,
-  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"addGeneScoreMatrix"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">addGeneScoreMatrix</span><span class="op">(</span></span>
+<span>  input <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  genes <span class="op">=</span> <span class="fu"><a href="getGenes.html">getGenes</a></span><span class="op">(</span><span class="va">input</span><span class="op">)</span>,</span>
+<span>  geneModel <span class="op">=</span> <span class="st">"exp(-abs(x)/5000) + exp(-1)"</span>,</span>
+<span>  matrixName <span class="op">=</span> <span class="st">"GeneScoreMatrix"</span>,</span>
+<span>  extendUpstream <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">1e+05</span><span class="op">)</span>,</span>
+<span>  extendDownstream <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">1e+05</span><span class="op">)</span>,</span>
+<span>  geneUpstream <span class="op">=</span> <span class="fl">5000</span>,</span>
+<span>  geneDownstream <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  useGeneBoundaries <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  useTSS <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  extendTSS <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  tileSize <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>  ceiling <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  geneScaleFactor <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  scaleTo <span class="op">=</span> <span class="fl">10000</span>,</span>
+<span>  excludeChr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"chrY"</span>, <span class="st">"chrM"</span><span class="op">)</span>,</span>
+<span>  blacklist <span class="op">=</span> <span class="fu"><a href="getBlacklist.html">getBlacklist</a></span><span class="op">(</span><span class="va">input</span><span class="op">)</span>,</span>
+<span>  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  parallelParam <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  subThreading <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  force <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"addGeneScoreMatrix"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>input</dt>
 <dd><p>An <code>ArchRProject</code> object or character vector of ArrowFiles.</p></dd>
+
+
 <dt>genes</dt>
 <dd><p>A stranded <code>GRanges</code> object containing the ranges associated with all gene start and end coordinates.</p></dd>
+
+
 <dt>geneModel</dt>
 <dd><p>A string giving a "gene model function" used for weighting peaks for gene score calculation. This string
 should be a function of <code>x</code>, where <code>x</code> is the stranded distance from the transcription start site of the gene.</p></dd>
+
+
 <dt>matrixName</dt>
 <dd><p>The name to be used for storage of the gene activity score matrix in the provided <code>ArchRProject</code> or ArrowFiles.</p></dd>
+
+
 <dt>extendUpstream</dt>
 <dd><p>The minimum and maximum number of basepairs upstream of the transcription start site to consider for gene
 activity score calculation.</p></dd>
+
+
 <dt>extendDownstream</dt>
 <dd><p>The minimum and maximum number of basepairs downstream of the transcription start site or transcription termination site
-(based on 'useTSS') to consider for gene activity score calculation.</p></dd>
+(based on 'useTSS' and 'extendTSS') to consider for gene activity score calculation.</p></dd>
+
+
 <dt>geneUpstream</dt>
 <dd><p>An integer describing the number of bp upstream the gene to extend the gene body. This effectively makes the gene body larger as there
 are proximal peaks that should be weighted equally to the gene body. This parameter is used if 'useTSS=FALSE'.</p></dd>
+
+
 <dt>geneDownstream</dt>
 <dd><p>An integer describing the number of bp downstream the gene to extend the gene body.This effectively makes the gene body larger as there
 are proximal peaks that should be weighted equally to the gene body. This parameter is used if 'useTSS=FALSE'.</p></dd>
+
+
 <dt>useGeneBoundaries</dt>
 <dd><p>A boolean value indicating whether gene boundaries should be employed during gene activity score
 calculation. Gene boundaries refers to the process of preventing tiles from contributing to the gene score of a given gene
 if there is a second gene's transcription start site between the tile and the gene of interest.</p></dd>
+
+
 <dt>useTSS</dt>
 <dd><p>A boolean describing whether to build gene model based on gene TSS or the gene body.</p></dd>
+
+
 <dt>extendTSS</dt>
 <dd><p>A boolean describing whether to extend the gene TSS. By default useTSS uses the 1bp TSS while this parameter enables the extension of this
 region with 'geneUpstream' and 'geneDownstream' respectively.</p></dd>
+
+
 <dt>tileSize</dt>
 <dd><p>The size of the tiles used for binning counts prior to gene activity score calculation.</p></dd>
+
+
 <dt>ceiling</dt>
 <dd><p>The maximum counts per tile allowed. This is used to prevent large biases in tile counts.</p></dd>
+
+
 <dt>geneScaleFactor</dt>
 <dd><p>A numeric scaling factor to weight genes based on the inverse of there length i.e. (Scale Factor)/(Gene Length). This
 is scaled from 1 to the scale factor. Small genes will be the scale factor while extremely large genes will be closer to 1. This scaling helps with
 the relative gene score value.</p></dd>
+
+
 <dt>scaleTo</dt>
 <dd><p>Each column in the calculated gene score matrix will be normalized to a column sum designated by <code>scaleTo</code>.</p></dd>
+
+
 <dt>excludeChr</dt>
 <dd><p>A character vector containing the <code>seqnames</code> of the chromosomes that should be excluded from this analysis.</p></dd>
+
+
 <dt>blacklist</dt>
 <dd><p>A <code>GRanges</code> object containing genomic regions to blacklist that may be extremeley over-represented and thus
 biasing the geneScores for genes nearby that locus.</p></dd>
+
+
 <dt>threads</dt>
 <dd><p>The number of threads to be used for parallel computing.</p></dd>
+
+
 <dt>parallelParam</dt>
 <dd><p>A list of parameters to be passed for biocparallel/batchtools parallel computing.</p></dd>
+
+
 <dt>subThreading</dt>
 <dd><p>A boolean determining whether possible use threads within each multi-threaded subprocess if greater than the number of input samples.</p></dd>
+
+
 <dt>force</dt>
 <dd><p>A boolean value indicating whether to force the matrix indicated by <code>matrixName</code> to be overwritten if it already exist in the given <code>input</code>.</p></dd>
+
+
 <dt>logFile</dt>
 <dd><p>The path to a file to be used for logging ArchR output.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Add Gene Score Matrix With New Model</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu">addGeneScoreMatrix</span><span class="op">(</span><span class="va">proj</span>, matrixName <span class="op">=</span> <span class="st">"GeneScoreMatrix2"</span>, geneModel <span class="op">=</span> <span class="st">"exp(-abs(x)/10000) + exp(-1)"</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in addGeneScoreMatrix(proj, matrixName = "GeneScoreMatrix2", geneModel = "exp(-abs(x)/10000) + exp(-1)"):</span> could not find function "addGeneScoreMatrix"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -185,7 +241,7 @@ biasing the geneScores for genes nearby that locus.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

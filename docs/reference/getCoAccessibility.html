@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,27 +86,52 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">getCoAccessibility</span><span class="op">(</span>
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  corCutOff <span class="op">=</span> <span class="fl">0.5</span>,
-  resolution <span class="op">=</span> <span class="fl">1</span>,
-  returnLoops <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getCoAccessibility</span><span class="op">(</span></span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  corCutOff <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  resolution <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  returnLoops <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object.</p></dd>
+
+
 <dt>corCutOff</dt>
 <dd><p>A numeric describing the minimum numeric peak-to-peak correlation to return.</p></dd>
+
+
 <dt>resolution</dt>
-<dd><p>A numeric describing the bp resolution to return loops as. This helps with overplotting of correlated regions.</p></dd>
+<dd><p>A numeric describing the bp resolution to use when returning loops. This helps with overplotting of correlated regions.
+This only takes affect if <code>returnLoops = TRUE</code>.</p></dd>
+
+
 <dt>returnLoops</dt>
 <dd><p>A boolean indicating to return the co-accessibility signal as a <code>GRanges</code> "loops" object designed for use with
 the <code><a href="ArchRBrowser.html">ArchRBrowser()</a></code> or as an <code>ArchRBrowserTrack()</code>.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Add Co Accessibility</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="addCoAccessibility.html">addCoAccessibility</a></span><span class="op">(</span><span class="va">proj</span>, k <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in addCoAccessibility(proj, k = 20):</span> could not find function "addCoAccessibility"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Co Accessibility</span></span></span>
+<span class="r-in"><span><span class="va">CoA</span> <span class="op">&lt;-</span> <span class="fu">getCoAccessibility</span><span class="op">(</span><span class="va">proj</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getCoAccessibility(proj):</span> could not find function "getCoAccessibility"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -119,7 +144,7 @@ the <code><a href="ArchRBrowser.html">ArchRBrowser()</a></code> or as an <code>A
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

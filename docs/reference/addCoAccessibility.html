@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,69 +86,118 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">addCoAccessibility</span><span class="op">(</span>
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  reducedDims <span class="op">=</span> <span class="st">"IterativeLSI"</span>,
-  dimsToUse <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">30</span>,
-  scaleDims <span class="op">=</span> <span class="cn">NULL</span>,
-  corCutOff <span class="op">=</span> <span class="fl">0.75</span>,
-  cellsToUse <span class="op">=</span> <span class="cn">NULL</span>,
-  k <span class="op">=</span> <span class="fl">100</span>,
-  knnIteration <span class="op">=</span> <span class="fl">500</span>,
-  overlapCutoff <span class="op">=</span> <span class="fl">0.8</span>,
-  maxDist <span class="op">=</span> <span class="fl">1e+05</span>,
-  scaleTo <span class="op">=</span> <span class="fl">10</span><span class="op">^</span><span class="fl">4</span>,
-  log2Norm <span class="op">=</span> <span class="cn">TRUE</span>,
-  seed <span class="op">=</span> <span class="fl">1</span>,
-  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"addCoAccessibility"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">addCoAccessibility</span><span class="op">(</span></span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  reducedDims <span class="op">=</span> <span class="st">"IterativeLSI"</span>,</span>
+<span>  dimsToUse <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">30</span>,</span>
+<span>  scaleDims <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  corCutOff <span class="op">=</span> <span class="fl">0.75</span>,</span>
+<span>  cellsToUse <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  excludeChr <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  k <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  knnIteration <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>  overlapCutoff <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span>  maxDist <span class="op">=</span> <span class="fl">1e+05</span>,</span>
+<span>  scaleTo <span class="op">=</span> <span class="fl">10</span><span class="op">^</span><span class="fl">4</span>,</span>
+<span>  log2Norm <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  seed <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"addCoAccessibility"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object.</p></dd>
+
+
 <dt>reducedDims</dt>
 <dd><p>The name of the <code>reducedDims</code> object (i.e. "IterativeLSI") to retrieve from the designated <code>ArchRProject</code>.</p></dd>
+
+
 <dt>dimsToUse</dt>
 <dd><p>A vector containing the dimensions from the <code>reducedDims</code> object to use in clustering.</p></dd>
+
+
 <dt>scaleDims</dt>
 <dd><p>A boolean value that indicates whether to z-score the reduced dimensions for each cell. This is useful for minimizing
 the contribution of strong biases (dominating early PCs) and lowly abundant populations. However, this may lead to stronger sample-specific
 biases since it is over-weighting latent PCs. If set to <code>NULL</code> this will scale the dimensions based on the value of <code>scaleDims</code> when the
 <code>reducedDims</code> were originally created during dimensionality reduction. This idea was introduced by Timothy Stuart.</p></dd>
+
+
 <dt>corCutOff</dt>
 <dd><p>A numeric cutoff for the correlation of each dimension to the sequencing depth. If the dimension has a correlation to
 sequencing depth that is greater than the <code>corCutOff</code>, it will be excluded from analysis.</p></dd>
+
+
 <dt>cellsToUse</dt>
 <dd><p>A character vector of cellNames to compute coAccessibility on if desired to run on a subset of the total cells.</p></dd>
+
+
+<dt>excludeChr</dt>
+<dd><p>A character vector containing the <code>seqnames</code> of the chromosomes that should be excluded from this analysis.</p></dd>
+
+
 <dt>k</dt>
 <dd><p>The number of k-nearest neighbors to use for creating single-cell groups for correlation analyses.</p></dd>
+
+
 <dt>knnIteration</dt>
 <dd><p>The number of k-nearest neighbor groupings to test for passing the supplied <code>overlapCutoff</code>.</p></dd>
+
+
 <dt>overlapCutoff</dt>
 <dd><p>The maximum allowable overlap between the current group and all previous groups to permit the current group be
 added to the group list during k-nearest neighbor calculations.</p></dd>
+
+
 <dt>maxDist</dt>
 <dd><p>The maximum allowable distance in basepairs between two peaks to consider for co-accessibility.</p></dd>
+
+
 <dt>scaleTo</dt>
 <dd><p>The total insertion counts from the designated group of single cells is summed across all relevant peak regions from
 the <code>peakSet</code> of the <code>ArchRProject</code> and normalized to the total depth provided by <code>scaleTo</code>.</p></dd>
+
+
 <dt>log2Norm</dt>
 <dd><p>A boolean value indicating whether to log2 transform the single-cell groups prior to computing co-accessibility correlations.</p></dd>
+
+
 <dt>seed</dt>
 <dd><p>A number to be used as the seed for random number generation required in knn determination. It is recommended to keep track
 of the seed used so that you can reproduce results downstream.</p></dd>
+
+
 <dt>threads</dt>
 <dd><p>The number of threads to be used for parallel computing.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>A boolean value that determines whether standard output should be printed.</p></dd>
+
+
 <dt>logFile</dt>
 <dd><p>The path to a file to be used for logging ArchR output.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Co-Accessibility</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu">addCoAccessibility</span><span class="op">(</span><span class="va">proj</span>, k <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in addCoAccessibility(proj, k = 20):</span> could not find function "addCoAccessibility"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -161,7 +210,7 @@ of the seed used so that you can reproduce results downstream.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,75 +86,126 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">plotGroups</span><span class="op">(</span>
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  groupBy <span class="op">=</span> <span class="st">"Sample"</span>,
-  colorBy <span class="op">=</span> <span class="st">"colData"</span>,
-  name <span class="op">=</span> <span class="st">"TSSEnrichment"</span>,
-  imputeWeights <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"coldata"</span>, <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="va">colorBy</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-    <span class="fu"><a href="getImputeWeights.html">getImputeWeights</a></span><span class="op">(</span><span class="va">ArchRProj</span><span class="op">)</span>,
-  maxCells <span class="op">=</span> <span class="fl">1000</span>,
-  quantCut <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.002</span>, <span class="fl">0.998</span><span class="op">)</span>,
-  log2Norm <span class="op">=</span> <span class="cn">NULL</span>,
-  pal <span class="op">=</span> <span class="cn">NULL</span>,
-  discreteSet <span class="op">=</span> <span class="st">"stallion"</span>,
-  ylim <span class="op">=</span> <span class="cn">NULL</span>,
-  size <span class="op">=</span> <span class="fl">0.5</span>,
-  baseSize <span class="op">=</span> <span class="fl">6</span>,
-  ratioYX <span class="op">=</span> <span class="cn">NULL</span>,
-  ridgeScale <span class="op">=</span> <span class="fl">2</span>,
-  plotAs <span class="op">=</span> <span class="st">"ridges"</span>,
-  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plotGroups</span><span class="op">(</span></span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  groupBy <span class="op">=</span> <span class="st">"Sample"</span>,</span>
+<span>  colorBy <span class="op">=</span> <span class="st">"colData"</span>,</span>
+<span>  name <span class="op">=</span> <span class="st">"TSSEnrichment"</span>,</span>
+<span>  imputeWeights <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"coldata"</span>, <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="va">colorBy</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="getImputeWeights.html">getImputeWeights</a></span><span class="op">(</span><span class="va">ArchRProj</span><span class="op">)</span>,</span>
+<span>  maxCells <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  quantCut <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.002</span>, <span class="fl">0.998</span><span class="op">)</span>,</span>
+<span>  log2Norm <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  pal <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  discreteSet <span class="op">=</span> <span class="st">"stallion"</span>,</span>
+<span>  ylim <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  size <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  baseSize <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>  ratioYX <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ridgeScale <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  plotAs <span class="op">=</span> <span class="st">"ridges"</span>,</span>
+<span>  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object.</p></dd>
+
+
 <dt>groupBy</dt>
 <dd><p>The name of the column in <code>cellColData</code> to use for grouping cells together for summarizing and plotting.</p></dd>
+
+
 <dt>colorBy</dt>
 <dd><p>A string indicating whether the numeric values to be used in the violin plot should be from a column in
 <code>cellColData</code> ("cellColData") or from a data matrix in the ArrowFiles (i.e. "GeneScoreMatrix", "MotifMatrix", "PeakMatrix").</p></dd>
+
+
 <dt>name</dt>
 <dd><p>The name of the column in <code>cellColData</code> or the featureName/rowname of the data matrix to be used for plotting.
 For example if <code>colorBy</code> is "cellColData" then <code>name</code> refers to a column name in the cellcoldata (see <code>getCellcoldata()</code>). If <code>colorBy</code>
 is "GeneScoreMatrix" then <code>name</code> refers to a gene name which can be listed by <code>getFeatures(ArchRProj, useMatrix = "GeneScoreMatrix")</code>.</p></dd>
+
+
 <dt>imputeWeights</dt>
 <dd><p>The weights to be used for imputing numerical values for each cell as a linear combination of other cells values. See <code>addImputationWeights()</code> and <code>getImutationWeights()</code> for more information.</p></dd>
+
+
 <dt>maxCells</dt>
 <dd><p>The maximum cells to consider when making the plot.</p></dd>
+
+
 <dt>quantCut</dt>
 <dd><p>If this is not null, a quantile cut is performed to threshold the top and bottom of the distribution of values.
 This prevents skewed color scales caused by strong outliers. The format of this should be c(a,b) where <code>a</code> is the upper threshold and
 <code>b</code> is the lower threshold. For example, quantCut = c(0.025,0.975) will take the top and bottom 2.5 percent of values and set them
 to the value of the 97.5th and 2.5th percentile values respectively.</p></dd>
+
+
 <dt>log2Norm</dt>
 <dd><p>A boolean value indicating whether a log2 transformation should be performed on the values (if continuous) in plotting.</p></dd>
+
+
 <dt>pal</dt>
 <dd><p>A custom palette (see <code>paletteDiscrete</code> or <code>ArchRPalettes</code>) used to override discreteSet/continuousSet for coloring vector.</p></dd>
+
+
 <dt>discreteSet</dt>
 <dd><p>The name of a discrete palette from <code>ArchRPalettes</code> for visualizing <code>colorBy</code> if a discrete color set is desired.</p></dd>
+
+
 <dt>ylim</dt>
 <dd><p>A vector of two numeric values indicating the lower and upper bounds of the y-axis on the plot.</p></dd>
+
+
 <dt>size</dt>
 <dd><p>The numeric size of the points to be plotted.</p></dd>
+
+
 <dt>baseSize</dt>
 <dd><p>The base font size to use in the plot.</p></dd>
+
+
 <dt>ratioYX</dt>
 <dd><p>The aspect ratio of the x and y axes on the plot.</p></dd>
+
+
 <dt>ridgeScale</dt>
 <dd><p>The scale factor for the relative heights of each ridge when making a ridgeplot with <code>ggridges</code>.</p></dd>
+
+
 <dt>plotAs</dt>
 <dd><p>A string that indicates whether a rigdge plot ("ridges") should be plotted or a violin plot ("violin") should be plotted.</p></dd>
+
+
 <dt>threads</dt>
 <dd><p>The number of threads to be used for parallel computing.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional parameters to pass to <code><a href="ggGroup.html">ggGroup()</a></code>.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Get Test Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Plot Groups</span></span></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">plotGroups</span><span class="op">(</span><span class="va">proj</span>, groupBy <span class="op">=</span> <span class="st">"Clusters"</span>, colorBy <span class="op">=</span> <span class="st">"colData"</span>, name <span class="op">=</span> <span class="st">"TSSEnrichment"</span>, plotAs <span class="op">=</span> <span class="st">"violin"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plotGroups(proj, groupBy = "Clusters", colorBy = "colData", name = "TSSEnrichment",     plotAs = "violin", alpha = 0.5):</span> could not find function "plotGroups"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#PDF</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="plotPDF.html">plotPDF</a></span><span class="op">(</span><span class="va">p</span>, name <span class="op">=</span> <span class="st">"Clusters-TSS"</span>, ArchRProj <span class="op">=</span> <span class="va">proj</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plotPDF(p, name = "Clusters-TSS", ArchRProj = proj):</span> could not find function "plotPDF"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -167,7 +218,7 @@ to the value of the 97.5th and 2.5th percentile values respectively.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

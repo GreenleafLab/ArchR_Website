@@ -24,7 +24,7 @@ from a desired matrix, and smooth each value across the input trajectory."><meta
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -88,45 +88,84 @@ from a desired matrix, and smooth each value across the input trajectory.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">getTrajectory</span><span class="op">(</span>
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  name <span class="op">=</span> <span class="st">"Trajectory"</span>,
-  useMatrix <span class="op">=</span> <span class="st">"GeneScoreMatrix"</span>,
-  groupEvery <span class="op">=</span> <span class="fl">1</span>,
-  log2Norm <span class="op">=</span> <span class="cn">TRUE</span>,
-  scaleTo <span class="op">=</span> <span class="fl">10000</span>,
-  smoothWindow <span class="op">=</span> <span class="fl">11</span>,
-  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getTrajectory</span><span class="op">(</span></span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  name <span class="op">=</span> <span class="st">"Trajectory"</span>,</span>
+<span>  useMatrix <span class="op">=</span> <span class="st">"GeneScoreMatrix"</span>,</span>
+<span>  groupEvery <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  log2Norm <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  scaleTo <span class="op">=</span> <span class="fl">10000</span>,</span>
+<span>  smoothWindow <span class="op">=</span> <span class="fl">11</span>,</span>
+<span>  trajectoryLabel <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object.</p></dd>
+
+
 <dt>name</dt>
 <dd><p>A string indicating the name of the fitted trajectory in <code>cellColData</code> to retrieve from the given <code>ArchRProject</code>.</p></dd>
+
+
 <dt>useMatrix</dt>
 <dd><p>The name of the data matrix from the <code>ArrowFiles</code> to get numerical values for each cell from. Recommended
 matrices are "GeneScoreMatrix", "PeakMatrix", or "MotifMatrix".</p></dd>
+
+
 <dt>groupEvery</dt>
 <dd><p>The number of sequential percentiles to group together when generating a trajectory. This is similar to smoothing
 via a non-overlapping sliding window across pseudo-time. If <code>groupEvery = 2</code>, the values for percentiles 1 and 2, 3 and 4,
 5 and 6, etc. will be grouped together.</p></dd>
+
+
 <dt>log2Norm</dt>
 <dd><p>A boolean value that indicates whether the summarized trajectory matrix should be log2 transformed. If you are using
 a "MotifMatrix" set to FALSE.</p></dd>
+
+
 <dt>scaleTo</dt>
 <dd><p>Once the sequential trajectory matrix is created, each column in that matrix will be normalized to a column sum
 indicated by <code>scaleTo</code>. Setting this to <code>NULL</code> will prevent any normalization and should be done in certain circumstances
 (for ex. if you are using a "MotifMatrix").</p></dd>
+
+
 <dt>smoothWindow</dt>
 <dd><p>An integer value indicating the smoothing window in size (relaive to <code>groupEvery</code>) for the sequential
 trajectory matrix to better reveal temporal dynamics.</p></dd>
+
+
+<dt>trajectoryLabel</dt>
+<dd><p>The name of a column in <code>cellColData</code> to be used for labeling the quantile bins of the trajectory.
+This is used in <code><a href="plotTrajectoryHeatmap.html">plotTrajectoryHeatmap()</a></code> when you want to create a color label for the columns across the top
+of the heatmap. Typically, this should be the same column used in <code>groupBy</code> in the <code><a href="addTrajectory.html">addTrajectory()</a></code> function.</p></dd>
+
+
 <dt>threads</dt>
 <dd><p>The number of threads to be used for parallel computing.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Add Trajectory</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="addTrajectory.html">addTrajectory</a></span><span class="op">(</span><span class="va">proj</span>, trajectory <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"C1"</span>, <span class="st">"C2"</span>, <span class="st">"C3"</span><span class="op">)</span>, embedding <span class="op">=</span> <span class="st">"UMAP"</span>, force <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in addTrajectory(proj, trajectory = c("C1", "C2", "C3"), embedding = "UMAP",     force = TRUE):</span> could not find function "addTrajectory"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Get Trajectory</span></span></span>
+<span class="r-in"><span><span class="va">seTraj</span> <span class="op">&lt;-</span> <span class="fu">getTrajectory</span><span class="op">(</span><span class="va">proj</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTrajectory(proj):</span> could not find function "getTrajectory"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -139,7 +178,7 @@ trajectory matrix to better reveal temporal dynamics.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

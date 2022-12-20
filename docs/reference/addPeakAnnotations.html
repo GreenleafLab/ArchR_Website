@@ -24,7 +24,7 @@ binary value is stored indicating whether each region is observed within the pea
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -88,30 +88,56 @@ binary value is stored indicating whether each region is observed within the pea
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">addPeakAnnotations</span><span class="op">(</span>
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  regions <span class="op">=</span> <span class="cn">NULL</span>,
-  name <span class="op">=</span> <span class="st">"Region"</span>,
-  force <span class="op">=</span> <span class="cn">FALSE</span>,
-  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"addPeakAnnotations"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">addPeakAnnotations</span><span class="op">(</span></span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  regions <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  name <span class="op">=</span> <span class="st">"Region"</span>,</span>
+<span>  force <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"addPeakAnnotations"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object.</p></dd>
+
+
 <dt>regions</dt>
 <dd><p>A named <code>list</code> of <code>GRanges</code> that are to be overlapped with the <code>peakSet</code> in the <code>ArchRProject</code>.</p></dd>
+
+
 <dt>name</dt>
 <dd><p>The name of <code>peakAnnotation</code> object to be stored as in <code>ArchRProject</code>.</p></dd>
+
+
 <dt>force</dt>
 <dd><p>A boolean value indicating whether to force the <code>peakAnnotation</code> object indicated by <code>name</code> to be overwritten
 if it already exists in the given <code>ArchRProject</code>.</p></dd>
+
+
 <dt>logFile</dt>
 <dd><p>The path to a file to be used for logging ArchR output.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Motif Positions Can Be Any Interval GRanges List</span></span></span>
+<span class="r-in"><span><span class="va">positions</span> <span class="op">&lt;-</span> <span class="fu"><a href="getPositions.html">getPositions</a></span><span class="op">(</span><span class="va">proj</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getPositions(proj):</span> could not find function "getPositions"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Add Peak Annotations</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu">addPeakAnnotations</span><span class="op">(</span><span class="va">proj</span>, regions <span class="op">=</span> <span class="va">positions</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in addPeakAnnotations(proj, regions = positions):</span> could not find function "addPeakAnnotations"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -124,7 +150,7 @@ if it already exists in the given <code>ArchRProject</code>.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

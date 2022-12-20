@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,29 +86,68 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">plotMarkers</span><span class="op">(</span>
-  seMarker <span class="op">=</span> <span class="cn">NULL</span>,
-  name <span class="op">=</span> <span class="cn">NULL</span>,
-  cutOff <span class="op">=</span> <span class="st">"FDR &lt;= 0.01 &amp; abs(Log2FC) &gt;= 0.5"</span>,
-  plotAs <span class="op">=</span> <span class="st">"Volcano"</span>,
-  scaleTo <span class="op">=</span> <span class="fl">10</span><span class="op">^</span><span class="fl">4</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plotMarkers</span><span class="op">(</span></span>
+<span>  seMarker <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cutOff <span class="op">=</span> <span class="st">"FDR &lt;= 0.01 &amp; abs(Log2FC) &gt;= 0.5"</span>,</span>
+<span>  plotAs <span class="op">=</span> <span class="st">"Volcano"</span>,</span>
+<span>  scaleTo <span class="op">=</span> <span class="fl">10</span><span class="op">^</span><span class="fl">4</span>,</span>
+<span>  rastr <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>seMarker</dt>
 <dd><p>A <code>SummarizedExperiment</code> object returned by <code><a href="getMarkerFeatures.html">getMarkerFeatures()</a></code>.</p></dd>
+
+
 <dt>name</dt>
 <dd><p>The name of a column in <code>seMarker</code> (i.e. cell grouping in <code>groupBy</code> or <code>useGroups</code> for <code><a href="getMarkerFeatures.html">getMarkerFeatures()</a></code>) to be plotted.
 To see available options try <code>colnames(seMarker)</code>.</p></dd>
+
+
 <dt>cutOff</dt>
 <dd><p>A valid-syntax logical statement that defines which marker features from <code>seMarker</code> will be plotted.
 <code>cutoff</code> can contain any of the <code>assayNames</code> from <code>seMarker</code>.</p></dd>
+
+
 <dt>plotAs</dt>
 <dd><p>A string indicating whether to plot a volcano plot ("Volcano") or an MA plot ("MA").</p></dd>
+
+
+<dt>rastr</dt>
+<dd><p>A boolean value that indicates whether the plot should be rasterized using <code>ggrastr</code>. This does not rasterize
+lines and labels, just the internal portions of the plot.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Get Test Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Get Markers</span></span></span>
+<span class="r-in"><span><span class="va">seMarker</span> <span class="op">&lt;-</span> <span class="fu"><a href="getMarkerFeatures.html">getMarkerFeatures</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  ArchRProj <span class="op">=</span> <span class="va">proj</span>, </span></span>
+<span class="r-in"><span>  useMatrix <span class="op">=</span> <span class="st">"PeakMatrix"</span>, </span></span>
+<span class="r-in"><span>  testMethod <span class="op">=</span> <span class="st">"binomial"</span>, </span></span>
+<span class="r-in"><span>  binarize <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getMarkerFeatures(ArchRProj = proj, useMatrix = "PeakMatrix",     testMethod = "binomial", binarize = TRUE):</span> could not find function "getMarkerFeatures"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Plot Markers</span></span></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">plotMarkers</span><span class="op">(</span><span class="va">seMarker</span>, name <span class="op">=</span> <span class="st">"C1"</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plotMarkers(seMarker, name = "C1"):</span> could not find function "plotMarkers"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#PDF</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="plotPDF.html">plotPDF</a></span><span class="op">(</span><span class="va">p</span>, name <span class="op">=</span> <span class="st">"Marker-Plot"</span>, ArchRProj <span class="op">=</span> <span class="va">proj</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plotPDF(p, name = "Marker-Plot", ArchRProj = proj):</span> could not find function "plotPDF"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -121,7 +160,7 @@ To see available options try <code>colnames(seMarker)</code>.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

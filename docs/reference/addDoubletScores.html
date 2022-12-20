@@ -25,7 +25,7 @@ contained two cells, causing the ATAC-seq data to be a mixture of the signal fro
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -90,72 +90,118 @@ contained two cells, causing the ATAC-seq data to be a mixture of the signal fro
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">addDoubletScores</span><span class="op">(</span>
-  input <span class="op">=</span> <span class="cn">NULL</span>,
-  useMatrix <span class="op">=</span> <span class="st">"TileMatrix"</span>,
-  k <span class="op">=</span> <span class="fl">10</span>,
-  nTrials <span class="op">=</span> <span class="fl">5</span>,
-  dimsToUse <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">30</span>,
-  LSIMethod <span class="op">=</span> <span class="fl">1</span>,
-  scaleDims <span class="op">=</span> <span class="cn">FALSE</span>,
-  corCutOff <span class="op">=</span> <span class="fl">0.75</span>,
-  knnMethod <span class="op">=</span> <span class="st">"UMAP"</span>,
-  UMAPParams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>n_neighbors <span class="op">=</span> <span class="fl">40</span>, min_dist <span class="op">=</span> <span class="fl">0.4</span>, metric <span class="op">=</span> <span class="st">"euclidean"</span>, verbose <span class="op">=</span>
-    <span class="cn">FALSE</span><span class="op">)</span>,
-  LSIParams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>outlierQuantiles <span class="op">=</span> <span class="cn">NULL</span>, filterBias <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
-  outDir <span class="op">=</span> <span class="fu"><a href="getOutputDirectory.html">getOutputDirectory</a></span><span class="op">(</span><span class="va">input</span><span class="op">)</span>,
-  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,
-  force <span class="op">=</span> <span class="cn">FALSE</span>,
-  parallelParam <span class="op">=</span> <span class="cn">NULL</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"addDoubletScores"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">addDoubletScores</span><span class="op">(</span></span>
+<span>  input <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  useMatrix <span class="op">=</span> <span class="st">"TileMatrix"</span>,</span>
+<span>  k <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  nTrials <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  dimsToUse <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">30</span>,</span>
+<span>  LSIMethod <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  scaleDims <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  corCutOff <span class="op">=</span> <span class="fl">0.75</span>,</span>
+<span>  knnMethod <span class="op">=</span> <span class="st">"UMAP"</span>,</span>
+<span>  UMAPParams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>n_neighbors <span class="op">=</span> <span class="fl">40</span>, min_dist <span class="op">=</span> <span class="fl">0.4</span>, metric <span class="op">=</span> <span class="st">"euclidean"</span>, verbose <span class="op">=</span></span>
+<span>    <span class="cn">FALSE</span><span class="op">)</span>,</span>
+<span>  LSIParams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>outlierQuantiles <span class="op">=</span> <span class="cn">NULL</span>, filterBias <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
+<span>  outDir <span class="op">=</span> <span class="fu"><a href="getOutputDirectory.html">getOutputDirectory</a></span><span class="op">(</span><span class="va">input</span><span class="op">)</span>,</span>
+<span>  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  force <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  parallelParam <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"addDoubletScores"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>input</dt>
 <dd><p>An <code>ArchRProject</code> object or a character vector containing the paths to the ArrowFiles to be used.</p></dd>
+
+
 <dt>useMatrix</dt>
 <dd><p>The name of the matrix to be used for performing doublet identification analyses. Options include "TileMatrix" and "PeakMatrix".</p></dd>
+
+
 <dt>k</dt>
 <dd><p>The number of cells neighboring a simulated doublet to be considered as putative doublets.</p></dd>
+
+
 <dt>nTrials</dt>
 <dd><p>The number of times to simulate nCell (number of cells in the sample) doublets to use for doublet simulation when calculating doublet scores.</p></dd>
+
+
 <dt>dimsToUse</dt>
 <dd><p>A vector containing the dimensions from the <code>reducedDims</code> object to use in clustering.</p></dd>
+
+
 <dt>LSIMethod</dt>
 <dd><p>A number or string indicating the order of operations in the TF-IDF normalization.
 Possible values are: 1 or "tf-logidf", 2 or "log(tf-idf)", and 3 or "logtf-logidf".</p></dd>
+
+
 <dt>scaleDims</dt>
 <dd><p>A boolean that indicates whether to z-score the reduced dimensions for each cell during the LSI
 method performed for doublet determination. This is useful for minimizing the contribution of strong biases (dominating early PCs)
 and lowly abundant populations. However, this may lead to stronger sample-specific biases since it is over-weighting latent PCs.</p></dd>
+
+
 <dt>corCutOff</dt>
 <dd><p>A numeric cutoff for the correlation of each dimension to the sequencing depth. If the dimension has a correlation
 to sequencing depth that is greater than the <code>corCutOff</code>, it will be excluded from analysis.</p></dd>
+
+
 <dt>knnMethod</dt>
 <dd><p>The name of the dimensionality reduction method to be used for k-nearest neighbors calculation. Possible values are "UMAP" or "LSI".</p></dd>
+
+
 <dt>UMAPParams</dt>
 <dd><p>The list of parameters to pass to the UMAP function if "UMAP" is designated to <code>knnMethod</code>. See the function <code>umap</code> in the uwot package.</p></dd>
+
+
 <dt>LSIParams</dt>
 <dd><p>The list of parameters to pass to the <code>IterativeLSI()</code> function. See <code>IterativeLSI()</code>.</p></dd>
+
+
 <dt>outDir</dt>
 <dd><p>The relative path to the output directory for relevant plots/results from doublet identification.</p></dd>
+
+
 <dt>threads</dt>
 <dd><p>The number of threads to be used for parallel computing.</p></dd>
+
+
 <dt>force</dt>
 <dd><p>If the UMAP projection is not accurate (when R &lt; 0.8 for the reprojection of the training data - this occurs when you
 have a very homogenous population of cells), setting <code>force=FALSE</code> will return -1 for all doubletScores and doubletEnrichments. If you would like to
 override this (not recommended!), you can bypass this warning by setting <code>force=TRUE</code>.</p></dd>
+
+
 <dt>parallelParam</dt>
 <dd><p>A list of parameters to be passed for biocparallel/batchtools parallel computing.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>A boolean value that determines whether standard output is printed.</p></dd>
+
+
 <dt>logFile</dt>
 <dd><p>The path to a file to be used for logging ArchR output.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Add Doublet Scores for Small Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu">addDoubletScores</span><span class="op">(</span><span class="va">proj</span>, dimsToUse <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, LSIParams <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dimsToUse <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, varFeatures<span class="op">=</span><span class="fl">1000</span>, iterations <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in addDoubletScores(proj, dimsToUse = 1:5, LSIParams = list(dimsToUse = 1:5,     varFeatures = 1000, iterations = 2)):</span> could not find function "addDoubletScores"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -168,7 +214,7 @@ override this (not recommended!), you can bypass this warning by setting <code>f
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

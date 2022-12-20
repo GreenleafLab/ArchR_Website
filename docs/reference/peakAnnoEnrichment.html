@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,37 +86,76 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">peakAnnoEnrichment</span><span class="op">(</span>
-  seMarker <span class="op">=</span> <span class="cn">NULL</span>,
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  peakAnnotation <span class="op">=</span> <span class="cn">NULL</span>,
-  matches <span class="op">=</span> <span class="cn">NULL</span>,
-  cutOff <span class="op">=</span> <span class="st">"FDR &lt;= 0.1 &amp; Log2FC &gt;= 0.5"</span>,
-  background <span class="op">=</span> <span class="st">"all"</span>,
-  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"peakAnnoEnrichment"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">peakAnnoEnrichment</span><span class="op">(</span></span>
+<span>  seMarker <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  peakAnnotation <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  matches <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cutOff <span class="op">=</span> <span class="st">"FDR &lt;= 0.1 &amp; Log2FC &gt;= 0.5"</span>,</span>
+<span>  background <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span>  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"peakAnnoEnrichment"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>seMarker</dt>
 <dd><p>A <code>SummarizedExperiment</code> object returned by <code>markerFeatures()</code>.</p></dd>
+
+
 <dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object.</p></dd>
+
+
 <dt>peakAnnotation</dt>
 <dd><p>A <code>peakAnnotation</code> object in the provided <code>ArchRProject</code> to be used for hypergeometric testing.</p></dd>
+
+
 <dt>matches</dt>
 <dd><p>A custom <code>peakAnnotation</code> matches object used as input for the hypergeometric test. See
 <code>motifmatchr::matchmotifs()</code> for additional information.</p></dd>
+
+
 <dt>cutOff</dt>
 <dd><p>A valid-syntax logical statement that defines which marker features from <code>seMarker</code> to use.
 <code>cutoff</code> can contain any of the <code>assayNames</code> from <code>seMarker</code>.</p></dd>
+
+
 <dt>background</dt>
 <dd><p>A string that indicates whether to use a background set of matched peaks to compare against ("bgdPeaks") or all peaks ("all").</p></dd>
+
+
 <dt>logFile</dt>
 <dd><p>The path to a file to be used for logging ArchR output.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Markers</span></span></span>
+<span class="r-in"><span><span class="va">seMarker</span> <span class="op">&lt;-</span> <span class="fu"><a href="getMarkerFeatures.html">getMarkerFeatures</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  ArchRProj <span class="op">=</span> <span class="va">proj</span>, </span></span>
+<span class="r-in"><span>  useMatrix <span class="op">=</span> <span class="st">"PeakMatrix"</span>, </span></span>
+<span class="r-in"><span>  testMethod <span class="op">=</span> <span class="st">"binomial"</span>, </span></span>
+<span class="r-in"><span>  binarize <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getMarkerFeatures(ArchRProj = proj, useMatrix = "PeakMatrix",     testMethod = "binomial", binarize = TRUE):</span> could not find function "getMarkerFeatures"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Peak Annotation Enrichment</span></span></span>
+<span class="r-in"><span><span class="va">annoEnrich</span> <span class="op">&lt;-</span> <span class="fu">peakAnnoEnrichment</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  seMarker <span class="op">=</span> <span class="va">seMarker</span>, </span></span>
+<span class="r-in"><span>  ArchRProj <span class="op">=</span> <span class="va">proj</span>,</span></span>
+<span class="r-in"><span>  cutOff <span class="op">=</span> <span class="st">"FDR &lt;= 0.1 &amp; Log2FC &gt;= 0"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in peakAnnoEnrichment(seMarker = seMarker, ArchRProj = proj, cutOff = "FDR &lt;= 0.1 &amp; Log2FC &gt;= 0"):</span> could not find function "peakAnnoEnrichment"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -129,7 +168,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

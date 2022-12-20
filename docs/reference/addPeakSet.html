@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,28 +86,48 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">addPeakSet</span><span class="op">(</span>
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  peakSet <span class="op">=</span> <span class="cn">NULL</span>,
-  genomeAnnotation <span class="op">=</span> <span class="fu"><a href="getGenomeAnnotation.html">getGenomeAnnotation</a></span><span class="op">(</span><span class="va">ArchRProj</span><span class="op">)</span>,
-  force <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">addPeakSet</span><span class="op">(</span></span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  peakSet <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  genomeAnnotation <span class="op">=</span> <span class="fu"><a href="getGenomeAnnotation.html">getGenomeAnnotation</a></span><span class="op">(</span><span class="va">ArchRProj</span><span class="op">)</span>,</span>
+<span>  force <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object.</p></dd>
+
+
 <dt>peakSet</dt>
 <dd><p>A <code>GRanges</code> object containing the set of regions that define all peaks in the desired peak set.</p></dd>
+
+
 <dt>genomeAnnotation</dt>
 <dd><p>The genomeAnnotation (see <code><a href="createGenomeAnnotation.html">createGenomeAnnotation()</a></code>) to be used for generating peak metadata such as nucleotide
 information (GC content) or chromosome sizes.</p></dd>
+
+
 <dt>force</dt>
 <dd><p>If a <code>peakSet</code> object has already been added to the given <code>ArchRProject</code>, the value of <code>force</code> determines
 whether or not to overwrite this <code>peakSet</code>.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Add PeakSet</span></span></span>
+<span class="r-in"><span><span class="fu">addPeakSet</span><span class="op">(</span><span class="va">proj</span>, peakSet <span class="op">=</span> <span class="fu"><a href="getPeakSet.html">getPeakSet</a></span><span class="op">(</span><span class="va">proj</span><span class="op">)</span>, force <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in addPeakSet(proj, peakSet = getPeakSet(proj), force = TRUE):</span> could not find function "addPeakSet"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -120,7 +140,7 @@ whether or not to overwrite this <code>peakSet</code>.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

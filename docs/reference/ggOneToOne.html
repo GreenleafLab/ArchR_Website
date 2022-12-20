@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,65 +86,118 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">ggOneToOne</span><span class="op">(</span>
-  x <span class="op">=</span> <span class="cn">NULL</span>,
-  y <span class="op">=</span> <span class="cn">NULL</span>,
-  size <span class="op">=</span> <span class="fl">2</span>,
-  alpha <span class="op">=</span> <span class="fl">1</span>,
-  xlabel <span class="op">=</span> <span class="st">"x"</span>,
-  ylabel <span class="op">=</span> <span class="st">"y"</span>,
-  title <span class="op">=</span> <span class="st">"Correlation"</span>,
-  min <span class="op">=</span> <span class="fl">0.05</span>,
-  max <span class="op">=</span> <span class="fl">0.9999</span>,
-  nPlot <span class="op">=</span> <span class="fl">100</span> <span class="op">*</span> <span class="fl">10</span><span class="op">^</span><span class="fl">3</span>,
-  nKernel <span class="op">=</span> <span class="fl">100</span>,
-  densityMax <span class="op">=</span> <span class="fl">0.95</span>,
-  extend <span class="op">=</span> <span class="fl">0.05</span>,
-  baseSize <span class="op">=</span> <span class="fl">6</span>,
-  rastr <span class="op">=</span> <span class="cn">TRUE</span>,
-  pal <span class="op">=</span> <span class="fu"><a href="paletteContinuous.html">paletteContinuous</a></span><span class="op">(</span>set <span class="op">=</span> <span class="st">"blueYellow"</span><span class="op">)</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ggOneToOne</span><span class="op">(</span></span>
+<span>  x <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  size <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  xlabel <span class="op">=</span> <span class="st">"x"</span>,</span>
+<span>  ylabel <span class="op">=</span> <span class="st">"y"</span>,</span>
+<span>  title <span class="op">=</span> <span class="st">"Correlation"</span>,</span>
+<span>  min <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  max <span class="op">=</span> <span class="fl">0.9999</span>,</span>
+<span>  nPlot <span class="op">=</span> <span class="fl">100</span> <span class="op">*</span> <span class="fl">10</span><span class="op">^</span><span class="fl">3</span>,</span>
+<span>  nKernel <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  densityMax <span class="op">=</span> <span class="fl">0.95</span>,</span>
+<span>  extend <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  baseSize <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>  rastr <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  pal <span class="op">=</span> <span class="fu"><a href="paletteContinuous.html">paletteContinuous</a></span><span class="op">(</span>set <span class="op">=</span> <span class="st">"blueYellow"</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A numeric vector containing the x-axis values for each point.</p></dd>
+
+
 <dt>y</dt>
 <dd><p>A numeric vector containing the y-axis values for each point.</p></dd>
+
+
 <dt>size</dt>
 <dd><p>The numeric size of the points to plot.</p></dd>
+
+
 <dt>alpha</dt>
 <dd><p>A number indicating the transparency to use for each point. See <code>ggplot2</code> for more details.</p></dd>
+
+
 <dt>xlabel</dt>
 <dd><p>The label to plot for the x-axis.</p></dd>
+
+
 <dt>ylabel</dt>
 <dd><p>The label to plot for the y-axis.</p></dd>
+
+
 <dt>title</dt>
 <dd><p>The title of the plot.</p></dd>
+
+
 <dt>min</dt>
 <dd><p>The lower limit of the x and y axes as a numeric quantile between 0 and 1.</p></dd>
+
+
 <dt>max</dt>
 <dd><p>The upper limit of the x and y axes as a numeric quantile between 0 and 1.</p></dd>
+
+
 <dt>nPlot</dt>
 <dd><p>The number of points to plot. When this value is less than the total points, the <code>sample</code> function is used to extract random data points to be plotted.</p></dd>
+
+
 <dt>nKernel</dt>
 <dd><p>The number of grid points in each direction to use when computing the kernel with <code><a href="https://rdrr.io/pkg/MASS/man/kde2d.html" class="external-link">MASS::kde2d()</a></code>.</p></dd>
+
+
 <dt>densityMax</dt>
 <dd><p>The quantile that should be represented by the maximum color on the continuous scale designated by <code>pal</code>. Values above <code>densityMax</code> will be thresholded to the maximum color on the color scale.</p></dd>
+
+
 <dt>extend</dt>
 <dd><p>A numeric value indicating the fraction to extend the x-axis and y-axis beyond the maximum value on either axis. For example, 0.05 will extend the x-axis and y-axis by 5 percent on each end beyond <code>quantile(c(x,y), max)</code> and <code>quantile(c(x,y), min)</code>.</p></dd>
+
+
 <dt>baseSize</dt>
 <dd><p>The base font size (in points) to use in the plot.</p></dd>
+
+
 <dt>rastr</dt>
 <dd><p>A boolean value that indicates whether the plot should be rasterized. This does not rasterize lines and labels, just the internal portions of the plot.</p></dd>
+
+
 <dt>pal</dt>
 <dd><p>A custom palette from <code>ArchRPalettes</code> used to display the density of points on the plot.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional params to be supplied to ggPoint</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Create Random Data</span></span></span>
+<span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">2</span><span class="op">)</span>,ncol<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Plot</span></span></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">ggOneToOne</span><span class="op">(</span>x <span class="op">=</span> <span class="va">m</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">m</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in ggOneToOne(x = m[, 1], y = m[, 2]):</span> could not find function "ggOneToOne"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># To PDF</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf</a></span><span class="op">(</span><span class="st">"test.pdf"</span>, width <span class="op">=</span> <span class="fl">4</span>, height <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">p</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'p' not found</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> agg_png </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       2 </span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -157,7 +210,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

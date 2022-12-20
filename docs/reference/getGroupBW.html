@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,44 +86,75 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">getGroupBW</span><span class="op">(</span>
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  groupBy <span class="op">=</span> <span class="st">"Sample"</span>,
-  normMethod <span class="op">=</span> <span class="st">"ReadsInTSS"</span>,
-  tileSize <span class="op">=</span> <span class="fl">100</span>,
-  maxCells <span class="op">=</span> <span class="fl">1000</span>,
-  ceiling <span class="op">=</span> <span class="fl">4</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,
-  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"getGroupBW"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getGroupBW</span><span class="op">(</span></span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  groupBy <span class="op">=</span> <span class="st">"Sample"</span>,</span>
+<span>  normMethod <span class="op">=</span> <span class="st">"ReadsInTSS"</span>,</span>
+<span>  tileSize <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  maxCells <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  ceiling <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"getGroupBW"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object.</p></dd>
+
+
 <dt>groupBy</dt>
 <dd><p>A string that indicates how cells should be grouped. This string corresponds to one of the standard or
 user-supplied <code>cellColData</code> metadata columns (for example, "Clusters"). Cells with the same value annotated in this metadata
 column will be grouped together and the average signal will be plotted.</p></dd>
+
+
 <dt>normMethod</dt>
 <dd><p>The name of the column in <code>cellColData</code> by which normalization should be performed. The recommended and default value
-is "ReadsInTSS" which simultaneously normalizes tracks based on sequencing depth and sample data quality.</p></dd>
+is "ReadsInTSS" which simultaneously normalizes tracks based on sequencing depth and sample data quality. Accepted values are
+"None", "ReadsInTSS", "nCells", "ReadsInPromoter", or "nFrags".</p></dd>
+
+
 <dt>tileSize</dt>
 <dd><p>The numeric width of the tile/bin in basepairs for plotting ATAC-seq signal tracks. All insertions in a single bin will be summed.</p></dd>
+
+
 <dt>maxCells</dt>
 <dd><p>Maximum number of cells used for each bigwig.</p></dd>
+
+
 <dt>ceiling</dt>
 <dd><p>Maximum contribution of accessibility per cell in each tile.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>A boolean specifying to print messages during computation.</p></dd>
+
+
 <dt>threads</dt>
 <dd><p>An integer specifying the number of threads for parallel.</p></dd>
+
+
 <dt>logFile</dt>
 <dd><p>The path to a file to be used for logging ArchR output.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Group BW</span></span></span>
+<span class="r-in"><span><span class="va">bw</span> <span class="op">&lt;-</span> <span class="fu">getGroupBW</span><span class="op">(</span><span class="va">proj</span>, groupBy <span class="op">=</span> <span class="st">"Clusters"</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getGroupBW(proj, groupBy = "Clusters"):</span> could not find function "getGroupBW"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -136,7 +167,7 @@ is "ReadsInTSS" which simultaneously normalizes tracks based on sequencing depth
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

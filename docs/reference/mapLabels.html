@@ -24,7 +24,7 @@ to re-map from the old label set to the new label set."><meta property="og:image
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -88,19 +88,37 @@ to re-map from the old label set to the new label set.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">mapLabels</span><span class="op">(</span>labels <span class="op">=</span> <span class="cn">NULL</span>, newLabels <span class="op">=</span> <span class="cn">NULL</span>, oldLabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">newLabels</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mapLabels</span><span class="op">(</span>labels <span class="op">=</span> <span class="cn">NULL</span>, newLabels <span class="op">=</span> <span class="cn">NULL</span>, oldLabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">newLabels</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>labels</dt>
 <dd><p>A character vector containing lables to map.</p></dd>
+
+
 <dt>newLabels</dt>
 <dd><p>A character vector (same length as oldLabels) to map labels to from oldLabels.</p></dd>
+
+
 <dt>oldLabels</dt>
 <dd><p>A character vector (same length as newLabels) to map labels from to newLabels</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Peak Annotations</span></span></span>
+<span class="r-in"><span><span class="va">proj</span><span class="op">$</span><span class="va">ClusterLabels</span> <span class="op">&lt;-</span> <span class="fu">mapLabels</span><span class="op">(</span><span class="va">proj</span><span class="op">$</span><span class="va">Clusters</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"T"</span>, <span class="st">"B"</span>, <span class="st">"M"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"C1"</span>, <span class="st">"C2"</span>, <span class="st">"C3"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in mapLabels(proj$Clusters, c("T", "B", "M"), c("C1", "C2", "C3")):</span> could not find function "mapLabels"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -113,7 +131,7 @@ to re-map from the old label set to the new label set.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

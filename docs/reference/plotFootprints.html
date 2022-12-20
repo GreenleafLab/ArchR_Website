@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,65 +86,118 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">plotFootprints</span><span class="op">(</span>
-  seFoot <span class="op">=</span> <span class="cn">NULL</span>,
-  names <span class="op">=</span> <span class="cn">NULL</span>,
-  pal <span class="op">=</span> <span class="cn">NULL</span>,
-  flank <span class="op">=</span> <span class="fl">250</span>,
-  flankNorm <span class="op">=</span> <span class="fl">50</span>,
-  normMethod <span class="op">=</span> <span class="st">"Subtract"</span>,
-  smoothWindow <span class="op">=</span> <span class="cn">NULL</span>,
-  baseSize <span class="op">=</span> <span class="fl">6</span>,
-  plot <span class="op">=</span> <span class="cn">TRUE</span>,
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  plotName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Plot-Footprints-"</span>, <span class="va">normMethod</span><span class="op">)</span>,
-  height <span class="op">=</span> <span class="fl">6</span>,
-  width <span class="op">=</span> <span class="fl">4</span>,
-  addDOC <span class="op">=</span> <span class="cn">TRUE</span>,
-  force <span class="op">=</span> <span class="cn">FALSE</span>,
-  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"plotFootprints"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plotFootprints</span><span class="op">(</span></span>
+<span>  seFoot <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  names <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  pal <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  flank <span class="op">=</span> <span class="fl">250</span>,</span>
+<span>  flankNorm <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  normMethod <span class="op">=</span> <span class="st">"Subtract"</span>,</span>
+<span>  smoothWindow <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  baseSize <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>  plot <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  plotName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Plot-Footprints-"</span>, <span class="va">normMethod</span><span class="op">)</span>,</span>
+<span>  height <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>  width <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  addDOC <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  force <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"plotFootprints"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>seFoot</dt>
 <dd><p>A summarized experiment object containing information on footprints returned by the <code><a href="getFootprints.html">getFootprints()</a></code> function.</p></dd>
+
+
 <dt>names</dt>
 <dd><p>A character vector containing the names of the transcription factors to be plotted. These should match colnames of <code>seFoot</code>.</p></dd>
+
+
 <dt>pal</dt>
 <dd><p>The name of a custom palette from <code>ArchRPalettes</code> to use for plotting the lines corresponding to the footprints.</p></dd>
+
+
 <dt>flank</dt>
 <dd><p>The number of basepairs from the position center (+/-) to consider as the flank.</p></dd>
+
+
 <dt>flankNorm</dt>
 <dd><p>The number of basepairs to consider at the edge of the flank region (+/-) to be used for footprint normalization.</p></dd>
+
+
 <dt>normMethod</dt>
 <dd><p>The name of the normalization method to use to normalize the footprint relative to the Tn5 insertion bias. Options
 include "none", "subtract", "divide". "Subtract" means subtracting the normalized Tn5 Bias. "Divide" means dividing the normalized Tn5 Bias.</p></dd>
+
+
 <dt>smoothWindow</dt>
 <dd><p>The size in basepairs of the sliding window to be used for smoothing of the footprint signal.</p></dd>
+
+
 <dt>baseSize</dt>
 <dd><p>A numeric specifying the baseSize of font in the plots.</p></dd>
+
+
 <dt>plot</dt>
 <dd><p>A boolean value indicating whether or not the footprints should be plotted (<code>TRUE</code>) or returned as grob objects (<code>FALSE</code>).</p></dd>
+
+
 <dt>ArchRProj</dt>
-<dd><p>An <code>ArchRProject</code> object to be used for plotting directory in <code>getOutputDirectory</code>.</p></dd>
+<dd><p>An <code>ArchRProject</code> object to be used for plotting directory in <code>getOutputDirectory</code>. If no <code>ArchRProj</code> is supplied,
+then plots will be stored in a directory called "Plots" in the current working directory.</p></dd>
+
+
 <dt>plotName</dt>
 <dd><p>A string indicating the name/prefix of the file to be used for output plots.</p></dd>
+
+
 <dt>height</dt>
 <dd><p>The height in inches to be used for the output PDF file.</p></dd>
+
+
 <dt>width</dt>
 <dd><p>The width in inches to be used for the output PDF file.</p></dd>
+
+
 <dt>addDOC</dt>
 <dd><p>A boolean variable that determines whether to add the date of creation to end of the PDF file name. This is useful for
 preventing overwritting of old plots.</p></dd>
+
+
 <dt>force</dt>
 <dd><p>If many footprints are requested when plot = FALSE, please set force = TRUE.
 This prevents large amount of footprint plots stored as an object.</p></dd>
+
+
 <dt>logFile</dt>
 <dd><p>The path to a file to be used for logging ArchR output.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Motif Positions</span></span></span>
+<span class="r-in"><span><span class="va">positions</span> <span class="op">&lt;-</span> <span class="fu"><a href="getPositions.html">getPositions</a></span><span class="op">(</span><span class="va">proj</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getPositions(proj):</span> could not find function "getPositions"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Footprints</span></span></span>
+<span class="r-in"><span><span class="va">seFoot</span> <span class="op">&lt;-</span> <span class="fu"><a href="getFootprints.html">getFootprints</a></span><span class="op">(</span>ArchRProj <span class="op">=</span> <span class="va">proj</span>, positions <span class="op">=</span> <span class="va">positions</span>, groupBy <span class="op">=</span> <span class="st">"Clusters"</span>, minCells <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getFootprints(ArchRProj = proj, positions = positions, groupBy = "Clusters",     minCells = 10):</span> could not find function "getFootprints"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Plot Footprints</span></span></span>
+<span class="r-in"><span><span class="fu">plotFootprints</span><span class="op">(</span><span class="va">seFoot</span>, smoothWindow <span class="op">=</span> <span class="fl">11</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plotFootprints(seFoot, smoothWindow = 11):</span> could not find function "plotFootprints"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -157,7 +210,7 @@ This prevents large amount of footprint plots stored as an object.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

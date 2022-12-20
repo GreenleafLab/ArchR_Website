@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,76 +86,153 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">plotMarkerHeatmap</span><span class="op">(</span>
-  seMarker <span class="op">=</span> <span class="cn">NULL</span>,
-  cutOff <span class="op">=</span> <span class="st">"FDR &lt;= 0.01 &amp; Log2FC &gt;= 0.5"</span>,
-  log2Norm <span class="op">=</span> <span class="cn">TRUE</span>,
-  scaleTo <span class="op">=</span> <span class="fl">10</span><span class="op">^</span><span class="fl">4</span>,
-  scaleRows <span class="op">=</span> <span class="cn">TRUE</span>,
-  plotLog2FC <span class="op">=</span> <span class="cn">FALSE</span>,
-  limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>,
-  grepExclude <span class="op">=</span> <span class="cn">NULL</span>,
-  pal <span class="op">=</span> <span class="cn">NULL</span>,
-  binaryClusterRows <span class="op">=</span> <span class="cn">TRUE</span>,
-  clusterCols <span class="op">=</span> <span class="cn">TRUE</span>,
-  labelMarkers <span class="op">=</span> <span class="cn">NULL</span>,
-  nLabel <span class="op">=</span> <span class="fl">15</span>,
-  nPrint <span class="op">=</span> <span class="fl">15</span>,
-  labelRows <span class="op">=</span> <span class="cn">FALSE</span>,
-  returnMatrix <span class="op">=</span> <span class="cn">FALSE</span>,
-  transpose <span class="op">=</span> <span class="cn">FALSE</span>,
-  invert <span class="op">=</span> <span class="cn">FALSE</span>,
-  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"plotMarkerHeatmap"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plotMarkerHeatmap</span><span class="op">(</span></span>
+<span>  seMarker <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cutOff <span class="op">=</span> <span class="st">"FDR &lt;= 0.01 &amp; Log2FC &gt;= 0.5"</span>,</span>
+<span>  log2Norm <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  scaleTo <span class="op">=</span> <span class="fl">10</span><span class="op">^</span><span class="fl">4</span>,</span>
+<span>  scaleRows <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  plotLog2FC <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>  grepExclude <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  pal <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  binaryClusterRows <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  clusterCols <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  subsetMarkers <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  labelMarkers <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  nLabel <span class="op">=</span> <span class="fl">15</span>,</span>
+<span>  nPrint <span class="op">=</span> <span class="fl">15</span>,</span>
+<span>  labelRows <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  returnMatrix <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  transpose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  invert <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"plotMarkerHeatmap"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>seMarker</dt>
 <dd><p>A <code>SummarizedExperiment</code> object returned by <code><a href="getMarkerFeatures.html">getMarkerFeatures()</a></code>.</p></dd>
+
+
 <dt>cutOff</dt>
 <dd><p>A valid-syntax logical statement that defines which marker features from <code>seMarker</code> will be plotted
 in the heatmap. <code>cutoff</code> can contain any of the <code>assayNames</code> from <code>seMarker</code>.</p></dd>
+
+
 <dt>log2Norm</dt>
 <dd><p>A boolean value indicating whether a log2 transformation should be performed on the values in
-<code>seMarker</code> prior to plotting. Should be set to <code>TRUE</code> for counts-based assays (but not assays like "DeviationsMatrix").</p></dd>
+<code>seMarker</code> prior to plotting. Should be set to <code>TRUE</code> for counts-based assays (but not assays like "DeviationsMatrix").
+This only applies if <code>plotLog2FC = FALSE</code>.</p></dd>
+
+
 <dt>scaleTo</dt>
 <dd><p>Each column in the assay Mean from <code>seMarker</code> will be normalized to a column sum designated by <code>scaleTo</code>
-prior to log2 normalization. If log2Norm is <code>FALSE</code> this option has no effect.</p></dd>
+prior to log2 normalization. If <code>log2Norm = FALSE</code> this option has no effect.</p></dd>
+
+
 <dt>scaleRows</dt>
 <dd><p>A boolean value that indicates whether the heatmap should display row-wise z-scores instead of raw values.</p></dd>
+
+
+<dt>plotLog2FC</dt>
+<dd><p>A boolean value that indicates whether the <code>log2(fold change)</code> values should be plotted on the heatmap or not.
+If <code>TRUE</code>, the <code>log2(fold change)</code> value (stored in the assay of <code>seMarker</code> labeled "Log2FC") is plotted.
+If <code>FALSE</code>, the mean value (stored in the assay of <code>seMarker</code> labeled "Mean") is plotted instead, with optional log normalization
+based on the <code>log2Norm</code> parameter.</p></dd>
+
+
 <dt>limits</dt>
 <dd><p>A numeric vector of two numbers that represent the lower and upper limits of the heatmap color scheme.</p></dd>
+
+
 <dt>grepExclude</dt>
 <dd><p>A character vector or string that indicates the <code>rownames</code> or a specific pattern that identifies
 rownames from <code>seMarker</code> to be excluded from the heatmap.</p></dd>
+
+
 <dt>pal</dt>
 <dd><p>A custom continuous palette from <code>ArchRPalettes</code> (see <code><a href="paletteContinuous.html">paletteContinuous()</a></code>) used to override the default continuous palette for the heatmap.</p></dd>
+
+
 <dt>binaryClusterRows</dt>
 <dd><p>A boolean value that indicates whether a binary sorting algorithm should be used for fast clustering of heatmap rows.</p></dd>
+
+
 <dt>clusterCols</dt>
 <dd><p>A boolean value that indicates whether the columns of the marker heatmap should be clustered.</p></dd>
+
+
+<dt>subsetMarkers</dt>
+<dd><p>A vector of rownames from seMarker to use for subsetting of seMarker to only plot specific features on the heatmap.
+Note that these rownames are expected to be integers that come from <code>rownames(rowData(seMarker))</code>. If this parameter is used for
+subsetting, then the values provided to <code>cutOff</code> are effectively ignored.</p></dd>
+
+
 <dt>labelMarkers</dt>
 <dd><p>A character vector listing the <code>rownames</code> of <code>seMarker</code> that should be labeled on the side of the heatmap.</p></dd>
+
+
 <dt>nLabel</dt>
-<dd><p>An integer value that indicates whether the top <code>n</code> features for each column in <code>seMarker</code> should be labeled on the side of the heatmap.</p></dd>
+<dd><p>An integer value that indicates how many of the top <code>n</code> features for each column in <code>seMarker</code> should be labeled on the side of the heatmap.
+To remove all feature labels, set <code>nLabel = 0</code>.</p></dd>
+
+
 <dt>nPrint</dt>
-<dd><p>If provided <code>seMarker</code> is from "GeneScoreMatrix" print the top n genes for each group based on how uniquely up-regulated the gene is.</p></dd>
+<dd><p>If provided <code>seMarker</code> is from "GeneScoreMatrix" print the top <code>n</code> genes for each group based on how uniquely up-regulated the gene is.</p></dd>
+
+
 <dt>labelRows</dt>
 <dd><p>A boolean value that indicates whether all rows should be labeled on the side of the heatmap.</p></dd>
+
+
 <dt>returnMatrix</dt>
 <dd><p>A boolean value that indicates whether the final heatmap matrix should be returned in lieu of plotting the actual heatmap.</p></dd>
+
+
 <dt>transpose</dt>
 <dd><p>A boolean value that indicates whether the heatmap should be transposed prior to plotting or returning.</p></dd>
+
+
 <dt>invert</dt>
 <dd><p>A boolean value that indicates whether the heatmap will display the features with the
 lowest <code>log2(fold change)</code>. In this case, the heatmap will display features that are specifically lower in the given cell
 group compared to all other cell groups. Additionally, the color palette is inverted for visualization. This is useful when
 looking for down-regulated markers (<code>log2(fold change) &lt; 0</code>) instead of up-regulated markers (<code>log2(fold change) &gt; 0</code>).</p></dd>
+
+
 <dt>logFile</dt>
 <dd><p>The path to a file to be used for logging ArchR output.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Get Test Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Get Markers</span></span></span>
+<span class="r-in"><span><span class="va">seMarker</span> <span class="op">&lt;-</span> <span class="fu"><a href="getMarkerFeatures.html">getMarkerFeatures</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  ArchRProj <span class="op">=</span> <span class="va">proj</span>, </span></span>
+<span class="r-in"><span>  useMatrix <span class="op">=</span> <span class="st">"PeakMatrix"</span>, </span></span>
+<span class="r-in"><span>  testMethod <span class="op">=</span> <span class="st">"binomial"</span>, </span></span>
+<span class="r-in"><span>  binarize <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getMarkerFeatures(ArchRProj = proj, useMatrix = "PeakMatrix",     testMethod = "binomial", binarize = TRUE):</span> could not find function "getMarkerFeatures"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Plot Markers</span></span></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">plotMarkerHeatmap</span><span class="op">(</span><span class="va">seMarker</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plotMarkerHeatmap(seMarker):</span> could not find function "plotMarkerHeatmap"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#PDF</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="plotPDF.html">plotPDF</a></span><span class="op">(</span><span class="va">p</span>, name <span class="op">=</span> <span class="st">"Marker-Heatmap"</span>, ArchRProj <span class="op">=</span> <span class="va">proj</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plotPDF(p, name = "Marker-Heatmap", ArchRProj = proj):</span> could not find function "plotPDF"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -168,7 +245,7 @@ looking for down-regulated markers (<code>log2(fold change) &lt; 0</code>) inste
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

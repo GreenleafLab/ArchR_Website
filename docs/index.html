@@ -49,7 +49,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -114,7 +114,7 @@
 <div class="page-header"><h1 id="section">
 <img src="reference/figures/ArchR_Logo_Integrated.png" alt="" width="200"><a class="anchor" aria-label="anchor" href="#section"></a>
 </h1></div>
-
+<p><a href="https://www.tidyverse.org/lifecycle/#maturing" class="external-link"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="Lifecycle: maturing"></a></p>
 <p>ArchR is a full-featured R package for processing and analyzing single-cell ATAC-seq data. ArchR provides the most extensive suite of scATAC-seq analysis tools of any software available. Additionally, ArchR excels in both speed and resource usage, making it possible to analyze 1 million cells in 8 hours on a MacBook Pro laptop.</p>
 <p>To get started, we recommend running through <a href="articles/Articles/tutorial.html">the brief ArchR tutorial</a>. For a detailed description of all of the features of ArchR applied to a test dataset of hematopoietic cells, please see the searchable <a href="bookdown/index.html">full manual</a>. If you havent already done so, we also recommend reading <a href="https://www.nature.com/articles/s41588-021-00790-6" class="external-link">the publication</a> to get a better idea of what ArchR can do.</p>
 <hr>
@@ -123,16 +123,17 @@
 <h1 id="installation-of-archr">Installation of ArchR<a class="anchor" aria-label="anchor" href="#installation-of-archr"></a>
 </h1>
 <p><strong>ArchR is designed to be run on Unix-based operating systems such as macOS and linux. ArchR is NOT supported on Windows or other operating systems.</strong></p>
-<p>ArchR installation currently requires <code>devtools</code> and <code>BiocManager</code> for installation of GitHub and Bioconductor packages. Run the following commands to install the various dependencies used by ArchR:</p>
+<p>ArchR installation currently requires <code>devtools</code> and <code>BiocManager</code> for installation of GitHub and Bioconductor packages. We highly encourage all users to utilize the <code>renv</code> environment and R version that have been confirmed to be functional with each stable release. This ensures that there are no incompatibilities between package dependencies. See <a href="bookdown/manage-archrs-dependencies.html">this page of the full manual</a> for full instructions.</p>
+<p>If you do not wish to use the provided stable environment, then you would follow the below commands to install ArchR and its various dependencies:</p>
 <p>First, install devtools (for installing GitHub packages) if it isn’t already installed:</p>
-<pre><code><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"devtools"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></code></pre>
+<pre><code><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"devtools"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span></code></pre>
 <p>Then, install BiocManager (for installing bioconductor packages) if it isn’t already installed:</p>
-<pre><code><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></code></pre>
+<pre><code><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span></code></pre>
 <p>Then, install ArchR:</p>
-<pre><code><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"GreenleafLab/ArchR"</span>, ref<span class="op">=</span><span class="st">"master"</span>, repos <span class="op">=</span> <span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/repositories.html" class="external-link">repositories</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre>
+<pre><code><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"GreenleafLab/ArchR"</span>, ref<span class="op">=</span><span class="st">"master"</span>, repos <span class="op">=</span> <span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/repositories.html" class="external-link">repositories</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre>
 <p>Lastly, install all of the ArchR dependencies that arent installed by default:</p>
-<pre><code><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.ArchRProject.com" class="external-link">ArchR</a></span><span class="op">)</span>
-<span class="fu">ArchR</span><span class="fu">::</span><span class="fu"><a href="reference/installExtraPackages.html">installExtraPackages</a></span><span class="op">(</span><span class="op">)</span></code></pre>
+<pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.ArchRProject.com" class="external-link">ArchR</a></span><span class="op">)</span></span>
+<span><span class="fu">ArchR</span><span class="fu">::</span><span class="fu"><a href="reference/installExtraPackages.html">installExtraPackages</a></span><span class="op">(</span><span class="op">)</span></span></code></pre>
 <p>If any of these steps fails, you should identify the offending package and troubleshoot that individual installation before proceeding. The one exception is <code>Cairo</code> (see below) which is installed by the <code><a href="reference/installExtraPackages.html">ArchR::installExtraPackages()</a></code> function. <code>Cairo</code> is not required but is highly recommended.</p>
 <p>It is also highly recommended that you <a href="https://github.com/taoliu/MACS/blob/master/INSTALL.md" class="external-link">install MACS2</a>, which requires python, and have the <code>macs2</code> executable in your <code>PATH</code> variable. This will allow ArchR to call peaks using MACS2.</p>
 <p><strong>If you are installing on macOS</strong> <br> 1. You will need a current version of GNU Fortran (gfortran). You can download and install the <code>.dmg</code> file from <a href="https://github.com/fxcoudert/gfortran-for-macOS/releases" class="external-link">the gfortran github page</a>. 2. You will need a current version of XQuartz. You can download and install the <code>.dmg</code> file from <a href="https://www.xquartz.org/" class="external-link">the XQuartz project page</a>.</p>
@@ -141,7 +142,7 @@
 </h3>
 <p><strong>Cairo graphics library</strong> <br> ArchR uses <code>Cairo</code> to <a href="https://en.wikipedia.org/wiki/Rasterisation" class="external-link">rasterize</a> plots. <code>Cairo</code> can be tricky to install depending on your system and we have had multiple reports of installation issues related to <code>Cairo</code>. We have removed the dependency on <code>Cairo</code> and ArchR will run fine without it but output plots will be vectorized and difficult to edit due to the presence of thousands of individual dots for the cells.</p>
 <p><strong>General problems encountered</strong> <br> 1. Some of the dependencies in ArchR require the <a href="https://www.gnu.org/software/gsl/" class="external-link">GNU Scientific Library (GSL)</a>, for example the <code>DirichletMultinomial</code> package. Instructions for installing GSL are shown <a href="https://github.com/GreenleafLab/ArchR/issues/86" class="external-link">in this issue</a>.</p>
-<p><strong>If you have installed R through Conda</strong>, we have had reports of compile errors when installing ArchR that can be fixed by running <code>Sys.setenv(CONDA_BUILD_SYSROOT="/")</code> prior to executing the <code><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">devtools::install_github()</a></code> command as outlined in <a href="https://stackoverflow.com/questions/53637414/conda-build-r-package-fails-at-c-compiler-issue-on-macos-mojave" class="external-link">this post</a>.</p>
+<p><strong>If you have installed R through Conda</strong>, we have had reports of compile errors when installing ArchR that can be fixed by running <code>Sys.setenv(CONDA_BUILD_SYSROOT="/")</code> prior to executing the <code><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">devtools::install_github()</a></code> command as outlined in <a href="https://stackoverflow.com/questions/53637414/conda-build-r-package-fails-at-c-compiler-issue-on-macos-mojave" class="external-link">this post</a>.</p>
 <hr>
 </div>
 </div>
@@ -150,6 +151,13 @@
 </h1>
 <p><img src="reference/figures/ArchR_Workflow_Horizontal.png" alt=""></p>
 <hr>
+<div class="section level3">
+<h3 id="previous-versions-of-archr-documentation">Previous versions of ArchR documentation<a class="anchor" aria-label="anchor" href="#previous-versions-of-archr-documentation"></a>
+</h3>
+<p>If you are using a version of ArchR other than the one shown at the top of this page, you can access previous versions of the ArchR documentation at the links below. Note that these snapshots only began in earnest as of ArchR version <code>1.0.3</code>.</p>
+<p><a href="archive/1.0.1/index.html">v1.0.1</a></p>
+<hr>
+</div>
 </div>
 <div class="section level1">
 <h1 id="how-to-cite-archr">How to cite ArchR?<a class="anchor" aria-label="anchor" href="#how-to-cite-archr"></a>
@@ -162,9 +170,6 @@
 <div class="section level1">
 <h1 id="issues-using-archr">Issues using ArchR?<a class="anchor" aria-label="anchor" href="#issues-using-archr"></a>
 </h1>
-<p>ArchR is still in active development. We expect there to be bumps in the road. If you think you have found a bug, please first install the latest version of ArchR via</p>
-<pre class="{r}"><code><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"GreenleafLab/ArchR"</span>, ref<span class="op">=</span><span class="st">"master"</span>, repos <span class="op">=</span> <span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/repositories.html" class="external-link">repositories</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre>
-<p>If this does not fix your problem, please <a href="https://github.com/GreenleafLab/ArchR/issues" class="external-link">report an issue on Github</a> with the <strong>Bug Report</strong> form.</p>
 <p>If you have questions about ArchR usage, please refer to the <a href="https://www.archrproject.com/bookdown/index.html" class="external-link">the searchable full user’s manual</a>, <a href="https://www.archrproject.com/articles/Articles/faq.html" class="external-link">the FAQ section</a>, and the <a href="https://www.nature.com/articles/s41588-021-00790-6" class="external-link">publication</a>. If you think the documentation on this website or in the function annotations is unclear, please <a href="https://github.com/GreenleafLab/ArchR/discussions" class="external-link">post to the Github Discussions forum</a> with the <strong>Q&amp;A</strong> form. If there is a feature that you think is missing from ArchR <em>and you have already searched the user’s manual</em>, <a href="https://github.com/GreenleafLab/ArchR/discussions" class="external-link">post to the Github Discussions forum</a> with the <strong>Ideas</strong> form. If none of these options help, <a href="mailto:archr.devs@gmail.com">send us an email</a>. We will do our best to respond to questions that are not otherwise answered in the documentation.</p>
 </div>
 
@@ -196,12 +201,7 @@
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://www.tidyverse.org/lifecycle/#maturing" class="external-link"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="Lifecycle: maturing"></a></li>
-</ul>
-</div>
+
 
   </div>
 </div>
@@ -214,7 +214,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

@@ -24,7 +24,7 @@ merge these replicates into a single insertion coverage file."><meta property="o
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -88,66 +88,123 @@ merge these replicates into a single insertion coverage file.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">addGroupCoverages</span><span class="op">(</span>
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  groupBy <span class="op">=</span> <span class="st">"Clusters"</span>,
-  useLabels <span class="op">=</span> <span class="cn">TRUE</span>,
-  minCells <span class="op">=</span> <span class="fl">40</span>,
-  maxCells <span class="op">=</span> <span class="fl">500</span>,
-  maxFragments <span class="op">=</span> <span class="fl">25</span> <span class="op">*</span> <span class="fl">10</span><span class="op">^</span><span class="fl">6</span>,
-  minReplicates <span class="op">=</span> <span class="fl">2</span>,
-  maxReplicates <span class="op">=</span> <span class="fl">5</span>,
-  sampleRatio <span class="op">=</span> <span class="fl">0.8</span>,
-  kmerLength <span class="op">=</span> <span class="fl">6</span>,
-  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,
-  returnGroups <span class="op">=</span> <span class="cn">FALSE</span>,
-  parallelParam <span class="op">=</span> <span class="cn">NULL</span>,
-  force <span class="op">=</span> <span class="cn">FALSE</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>,
-  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"addGroupCoverages"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">addGroupCoverages</span><span class="op">(</span></span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  groupBy <span class="op">=</span> <span class="st">"Clusters"</span>,</span>
+<span>  useLabels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  sampleLabels <span class="op">=</span> <span class="st">"Sample"</span>,</span>
+<span>  minCells <span class="op">=</span> <span class="fl">40</span>,</span>
+<span>  maxCells <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>  maxFragments <span class="op">=</span> <span class="fl">25</span> <span class="op">*</span> <span class="fl">10</span><span class="op">^</span><span class="fl">6</span>,</span>
+<span>  minReplicates <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  maxReplicates <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  sampleRatio <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span>  excludeChr <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  kmerLength <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  returnGroups <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  parallelParam <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  force <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  logFile <span class="op">=</span> <span class="fu"><a href="createLogFile.html">createLogFile</a></span><span class="op">(</span><span class="st">"addGroupCoverages"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object.</p></dd>
+
+
 <dt>groupBy</dt>
 <dd><p>The name of the column in <code>cellColData</code> to use for grouping multiple cells together prior to generation of the insertion coverage file.</p></dd>
+
+
 <dt>useLabels</dt>
 <dd><p>A boolean value indicating whether to use sample labels to create sample-aware subgroupings during as pseudo-bulk replicate generation.</p></dd>
+
+
+<dt>sampleLabels</dt>
+<dd><p>The name of a column in <code>cellColData</code> to use to identify samples. In most cases, this parameter should be left as <code>NULL</code> and you
+should only use this parameter if you do not want to use the default sample labels stored in <code>cellColData$Sample</code>. However, if your individual Arrow
+files do not map to individual samples, then you should set this parameter to accurately identify your samples. This is the case in (for example)
+multiplexing applications where cells from different biological samples are mixed into the same reaction and demultiplexed based on a lipid barcode or genotype.</p></dd>
+
+
 <dt>minCells</dt>
 <dd><p>The minimum number of cells required in a given cell group to permit insertion coverage file generation.</p></dd>
+
+
 <dt>maxCells</dt>
 <dd><p>The maximum number of cells to use during insertion coverage file generation.</p></dd>
+
+
 <dt>maxFragments</dt>
 <dd><p>The maximum number of fragments per cell group to use in insertion coverage file generation. This prevents the generation
 of excessively large files which would negatively impact memory requirements.</p></dd>
+
+
 <dt>minReplicates</dt>
 <dd><p>The minimum number of pseudo-bulk replicates to be generated.</p></dd>
+
+
 <dt>maxReplicates</dt>
 <dd><p>The maximum number of pseudo-bulk replicates to be generated.</p></dd>
+
+
 <dt>sampleRatio</dt>
 <dd><p>The fraction of the total cells that can be sampled to generate any given pseudo-bulk replicate.</p></dd>
+
+
+<dt>excludeChr</dt>
+<dd><p>A character vector containing the <code>seqnames</code> of the chromosomes that should be excluded from this analysis.</p></dd>
+
+
 <dt>kmerLength</dt>
 <dd><p>The length of the k-mer used for estimating Tn5 bias.</p></dd>
+
+
 <dt>threads</dt>
 <dd><p>The number of threads to be used for parallel computing.</p></dd>
+
+
 <dt>returnGroups</dt>
 <dd><p>A boolean value that indicates whether to return sample-guided cell-groupings without creating coverages.
 This is used mainly in <code><a href="addReproduciblePeakSet.html">addReproduciblePeakSet()</a></code> when MACS2 is not being used to call peaks but rather peaks are called from a
 TileMatrix (<code>peakMethod = "Tiles"</code>).</p></dd>
+
+
 <dt>parallelParam</dt>
 <dd><p>A list of parameters to be passed for biocparallel/batchtools parallel computing.</p></dd>
+
+
 <dt>force</dt>
-<dd><p>A boolean value that indicates whether or not to overwrite the relevant data in the <code>ArchRProject</code> object if
+<dd><p>A boolean value that indicates whether or not to skip validation and overwrite the relevant data in the <code>ArchRProject</code> object if
 insertion coverage / pseudo-bulk replicate information already exists.</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>A boolean value that determines whether standard output includes verbose sections.</p></dd>
+
+
 <dt>logFile</dt>
 <dd><p>The path to a file to be used for logging ArchR output.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Add Group Coverages</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu">addGroupCoverages</span><span class="op">(</span><span class="va">proj</span>, force <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in addGroupCoverages(proj, force = TRUE):</span> could not find function "addGroupCoverages"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -160,7 +217,7 @@ insertion coverage / pseudo-bulk replicate information already exists.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

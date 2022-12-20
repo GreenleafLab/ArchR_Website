@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,37 +86,63 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">ArchRProject</span><span class="op">(</span>
-  ArrowFiles <span class="op">=</span> <span class="cn">NULL</span>,
-  outputDirectory <span class="op">=</span> <span class="st">"ArchROutput"</span>,
-  copyArrows <span class="op">=</span> <span class="cn">TRUE</span>,
-  geneAnnotation <span class="op">=</span> <span class="fu"><a href="getGeneAnnotation.html">getGeneAnnotation</a></span><span class="op">(</span><span class="op">)</span>,
-  genomeAnnotation <span class="op">=</span> <span class="fu"><a href="getGenomeAnnotation.html">getGenomeAnnotation</a></span><span class="op">(</span><span class="op">)</span>,
-  showLogo <span class="op">=</span> <span class="cn">TRUE</span>,
-  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ArchRProject</span><span class="op">(</span></span>
+<span>  ArrowFiles <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  outputDirectory <span class="op">=</span> <span class="st">"ArchROutput"</span>,</span>
+<span>  copyArrows <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  geneAnnotation <span class="op">=</span> <span class="fu"><a href="getGeneAnnotation.html">getGeneAnnotation</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  genomeAnnotation <span class="op">=</span> <span class="fu"><a href="getGenomeAnnotation.html">getGenomeAnnotation</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  showLogo <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  threads <span class="op">=</span> <span class="fu"><a href="getArchRThreads.html">getArchRThreads</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArrowFiles</dt>
 <dd><p>A character vector containing the relative paths to the ArrowFiles to be used.</p></dd>
+
+
 <dt>outputDirectory</dt>
 <dd><p>A name for the relative path of the outputDirectory for ArchR results. Relative to the current working directory.</p></dd>
+
+
 <dt>copyArrows</dt>
 <dd><p>A boolean value indicating whether ArrowFiles should be copied into <code>outputDirectory</code>.</p></dd>
+
+
 <dt>geneAnnotation</dt>
 <dd><p>The <code>geneAnnotation</code> object (see <code><a href="createGeneAnnotation.html">createGeneAnnotation()</a></code>) to be used for downstream analyses such as calculating
 TSS Enrichment Scores, Gene Scores, etc.</p></dd>
+
+
 <dt>genomeAnnotation</dt>
 <dd><p>The <code>genomeAnnotation</code> object (see <code><a href="createGenomeAnnotation.html">createGenomeAnnotation()</a></code>) to be used for downstream analyses requiring
 genome information such as nucleotide information or chromosome sizes.</p></dd>
+
+
 <dt>showLogo</dt>
 <dd><p>A boolean value indicating whether to show the ascii ArchR logo after successful creation of an <code>ArchRProject</code>.</p></dd>
+
+
 <dt>threads</dt>
 <dd><p>The number of threads to use for parallel execution.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test Arrow</span></span></span>
+<span class="r-in"><span><span class="va">arrow</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestArrow.html">getTestArrow</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestArrow():</span> could not find function "getTestArrow"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Create ArchR Project for Analysis</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu">ArchRProject</span><span class="op">(</span><span class="va">arrow</span><span class="op">)</span>   </span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in ArchRProject(arrow):</span> could not find function "ArchRProject"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -129,7 +155,7 @@ genome information such as nucleotide information or chromosome sizes.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

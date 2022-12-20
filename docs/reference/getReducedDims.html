@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ArchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.3</span>
       </span>
     </div>
 
@@ -86,37 +86,61 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">getReducedDims</span><span class="op">(</span>
-  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,
-  reducedDims <span class="op">=</span> <span class="st">"IterativeLSI"</span>,
-  returnMatrix <span class="op">=</span> <span class="cn">TRUE</span>,
-  dimsToUse <span class="op">=</span> <span class="cn">NULL</span>,
-  scaleDims <span class="op">=</span> <span class="cn">NULL</span>,
-  corCutOff <span class="op">=</span> <span class="fl">0.75</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getReducedDims</span><span class="op">(</span></span>
+<span>  ArchRProj <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  reducedDims <span class="op">=</span> <span class="st">"IterativeLSI"</span>,</span>
+<span>  returnMatrix <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  dimsToUse <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  scaleDims <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  corCutOff <span class="op">=</span> <span class="fl">0.75</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>ArchRProj</dt>
 <dd><p>An <code>ArchRProject</code> object.</p></dd>
+
+
 <dt>reducedDims</dt>
 <dd><p>The name of the <code>reducedDims</code> object (i.e. "IterativeLSI") to retrieve from the designated <code>ArchRProject</code>.</p></dd>
+
+
 <dt>returnMatrix</dt>
 <dd><p>If set to "mat" or "matrix", the function will return the <code>reducedDims</code> object as a matrix with entries for
 each individual cell. Otherwise, it will return the full <code>reducedDims</code> object.</p></dd>
+
+
 <dt>dimsToUse</dt>
 <dd><p>A vector containing the dimensions (i.e. 1:30) to return from the <code>reducedDims</code> object.</p></dd>
+
+
 <dt>scaleDims</dt>
 <dd><p>A boolean describing whether to z-score the reduced dimensions for each cell. This is useful for minimizing the
 contribution of strong biases (dominating early PCs) and lowly abundant populations. However, this may lead to stronger sample-specific
 biases since it is over-weighting latent PCs. If <code>NULL</code> this will scale the dimensions depending on if this were set true when the
 <code>reducedDims</code> were created by the dimensionality reduction method. This idea was introduced by Timothy Stuart.</p></dd>
+
+
 <dt>corCutOff</dt>
 <dd><p>A numeric cutoff for the correlation of each dimension to the sequencing depth. If the dimension has a correlation
 to sequencing depth that is greater than the <code>corCutOff</code>, it will be excluded.</p></dd>
+
 </dl></div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Test ArchR Project</span></span></span>
+<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Get Iterative LSI</span></span></span>
+<span class="r-in"><span><span class="fu">getReducedDims</span><span class="op">(</span><span class="va">proj</span>, reducedDims <span class="op">=</span> <span class="st">"IterativeLSI"</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getReducedDims(proj, reducedDims = "IterativeLSI"):</span> could not find function "getReducedDims"</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
@@ -129,7 +153,7 @@ to sequencing depth that is greater than the <code>corCutOff</code>, it will be 
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
