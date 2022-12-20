@@ -272,37 +272,32 @@ the assignment accuracy of the group in the RNA cells. Lower scores represent am
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#Get Test Project</span></span></span>
-<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#Get RNA Matrix</span></span></span>
-<span class="r-in"><span><span class="va">sePBMC</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"testdata"</span>, package <span class="op">=</span> <span class="st">"ArchR"</span><span class="op">)</span>, <span class="st">"seRNA_PBMC.rds"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot open compressed file '/seRNA_PBMC.rds', probable reason 'No such file or directory'</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in gzfile(file, "rb"):</span> cannot open the connection</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#Gene Integration Matrix</span></span></span>
-<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu">addGeneIntegrationMatrix</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    ArchRProj <span class="op">=</span> <span class="va">proj</span>, </span></span>
-<span class="r-in"><span>    useMatrix <span class="op">=</span> <span class="st">"GeneScoreMatrix"</span>,</span></span>
-<span class="r-in"><span>    matrixName <span class="op">=</span> <span class="st">"GeneIntegrationMatrix"</span>,</span></span>
-<span class="r-in"><span>    reducedDims <span class="op">=</span> <span class="st">"IterativeLSI"</span>,</span></span>
-<span class="r-in"><span>    seRNA <span class="op">=</span> <span class="va">sePBMC</span>,</span></span>
-<span class="r-in"><span>    addToArrow <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
-<span class="r-in"><span>    groupRNA <span class="op">=</span> <span class="st">"CellType"</span>,</span></span>
-<span class="r-in"><span>    nameCell <span class="op">=</span> <span class="st">"predictedCell_Un2"</span>,</span></span>
-<span class="r-in"><span>    nameGroup <span class="op">=</span> <span class="st">"predictedGroup_Un2"</span>,</span></span>
-<span class="r-in"><span>    nameScore <span class="op">=</span> <span class="st">"predictedScore_Un2"</span>,</span></span>
-<span class="r-in"><span>    dimsToUse <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,</span></span>
-<span class="r-in"><span>    nGenes <span class="op">=</span> <span class="fl">250</span>,</span></span>
-<span class="r-in"><span>    force <span class="op">=</span> <span class="cn">TRUE</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in addGeneIntegrationMatrix(ArchRProj = proj, useMatrix = "GeneScoreMatrix",     matrixName = "GeneIntegrationMatrix", reducedDims = "IterativeLSI",     seRNA = sePBMC, addToArrow = FALSE, groupRNA = "CellType",     nameCell = "predictedCell_Un2", nameGroup = "predictedGroup_Un2",     nameScore = "predictedScore_Un2", dimsToUse = 1:10, nGenes = 250,     force = TRUE):</span> could not find function "addGeneIntegrationMatrix"</span>
-<span class="r-in"><span></span></span>
-</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span></span>
+<span><span class="co">#Get Test Project</span></span>
+<span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#Get RNA Matrix</span></span>
+<span><span class="va">sePBMC</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"testdata"</span>, package <span class="op">=</span> <span class="st">"ArchR"</span><span class="op">)</span>, <span class="st">"seRNA_PBMC.rds"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#Gene Integration Matrix</span></span>
+<span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu">addGeneIntegrationMatrix</span><span class="op">(</span></span>
+<span>    ArchRProj <span class="op">=</span> <span class="va">proj</span>, </span>
+<span>    useMatrix <span class="op">=</span> <span class="st">"GeneScoreMatrix"</span>,</span>
+<span>    matrixName <span class="op">=</span> <span class="st">"GeneIntegrationMatrix"</span>,</span>
+<span>    reducedDims <span class="op">=</span> <span class="st">"IterativeLSI"</span>,</span>
+<span>    seRNA <span class="op">=</span> <span class="va">sePBMC</span>,</span>
+<span>    addToArrow <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    groupRNA <span class="op">=</span> <span class="st">"CellType"</span>,</span>
+<span>    nameCell <span class="op">=</span> <span class="st">"predictedCell_Un2"</span>,</span>
+<span>    nameGroup <span class="op">=</span> <span class="st">"predictedGroup_Un2"</span>,</span>
+<span>    nameScore <span class="op">=</span> <span class="st">"predictedScore_Un2"</span>,</span>
+<span>    dimsToUse <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,</span>
+<span>    nGenes <span class="op">=</span> <span class="fl">250</span>,</span>
+<span>    force <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span></code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -312,7 +307,7 @@ the assignment accuracy of the group in the RNA cells. Lower scores represent am
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by <a href="https://twitter.com/JeffreyGranja" class="external-link">Jeffrey Granja</a>, Ryan cre Corces.</p>
+  <p></p><p>Developed by <a href="https://twitter.com/JeffreyGranja" class="external-link">Jeffrey Granja</a>, <a href="https://twitter.com/doctorcorces" class="external-link">Ryan Corces</a>.</p>
 </div>
 
 <div class="pkgdown">

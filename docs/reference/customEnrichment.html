@@ -107,62 +107,56 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#Project</span></span></span>
-<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#Get Peaks</span></span></span>
-<span class="r-in"><span><span class="va">peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="getPeakSet.html">getPeakSet</a></span><span class="op">(</span><span class="va">proj</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getPeakSet(proj):</span> could not find function "getPeakSet"</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#Custom C1 Mono</span></span></span>
-<span class="r-in"><span><span class="va">peaks1</span> <span class="op">&lt;-</span> <span class="va">peaks</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">peaks</span><span class="op">)</span><span class="op">==</span><span class="st">"C1"</span><span class="op">]</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'peaks' not found</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#All Peaks</span></span></span>
-<span class="r-in"><span><span class="fu">customEnrichment</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  ranges <span class="op">=</span> <span class="va">peaks1</span>, </span></span>
-<span class="r-in"><span>  matches <span class="op">=</span> <span class="fu"><a href="getMatches.html">getMatches</a></span><span class="op">(</span><span class="va">proj</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in customEnrichment(ranges = peaks1, matches = getMatches(proj)):</span> could not find function "customEnrichment"</span>
-<span class="r-in"><span><span class="co">#         feature CompareFrequency nCompare CompareProportion BackgroundFrequency</span></span></span>
-<span class="r-in"><span><span class="co"># CEBPB_1 CEBPB_1               70      635        0.11023622                 122</span></span></span>
-<span class="r-in"><span><span class="co"># CEBPA_2 CEBPA_2               81      635        0.12755906                 156</span></span></span>
-<span class="r-in"><span><span class="co"># IRF4_4   IRF4_4              103      635        0.16220472                 276</span></span></span>
-<span class="r-in"><span><span class="co"># EOMES_6 EOMES_6               36      635        0.05669291                 120</span></span></span>
-<span class="r-in"><span><span class="co"># ETS1_3   ETS1_3               38      635        0.05984252                 149</span></span></span>
-<span class="r-in"><span><span class="co"># PAX5_5   PAX5_5               23      635        0.03622047                 124</span></span></span>
-<span class="r-in"><span><span class="co">#         nBackground BackgroundProporition Enrichment mlog10p mlog10Padj</span></span></span>
-<span class="r-in"><span><span class="co"># CEBPB_1        2142            0.05695612  1.9354589 10.3279   9.373657</span></span></span>
-<span class="r-in"><span><span class="co"># CEBPA_2        2142            0.07282913  1.7514839  8.9394   7.985157</span></span></span>
-<span class="r-in"><span><span class="co"># IRF4_4         2142            0.12885154  1.2588497  2.6938   1.739557</span></span></span>
-<span class="r-in"><span><span class="co"># EOMES_6        2142            0.05602241  1.0119685  0.3001   0.000000</span></span></span>
-<span class="r-in"><span><span class="co"># ETS1_3         2142            0.06956116  0.8602864  0.0487   0.000000</span></span></span>
-<span class="r-in"><span><span class="co"># PAX5_5         2142            0.05788982  0.6256795  0.0006   0.000000</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#Background Peaks</span></span></span>
-<span class="r-in"><span><span class="fu">customEnrichment</span><span class="op">(</span></span></span>
-<span class="r-in"><span> ranges <span class="op">=</span> <span class="va">peaks1</span>, </span></span>
-<span class="r-in"><span>  matches <span class="op">=</span> <span class="fu"><a href="getMatches.html">getMatches</a></span><span class="op">(</span><span class="va">proj</span><span class="op">)</span>, </span></span>
-<span class="r-in"><span> bgdPeaks <span class="op">=</span> <span class="fu"><a href="getBgdPeaks.html">getBgdPeaks</a></span><span class="op">(</span><span class="va">proj</span>, force<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in customEnrichment(ranges = peaks1, matches = getMatches(proj),     bgdPeaks = getBgdPeaks(proj, force = TRUE)):</span> could not find function "customEnrichment"</span>
-<span class="r-in"><span><span class="co">#         feature CompareFrequency nCompare CompareProportion BackgroundFrequency</span></span></span>
-<span class="r-in"><span><span class="co"># CEBPB_1 CEBPB_1               70      635        0.11023622                2459</span></span></span>
-<span class="r-in"><span><span class="co"># CEBPA_2 CEBPA_2               81      635        0.12755906                3154</span></span></span>
-<span class="r-in"><span><span class="co"># IRF4_4   IRF4_4              103      635        0.16220472                4836</span></span></span>
-<span class="r-in"><span><span class="co"># ETS1_3   ETS1_3               38      635        0.05984252                1781</span></span></span>
-<span class="r-in"><span><span class="co"># EOMES_6 EOMES_6               36      635        0.05669291                1975</span></span></span>
-<span class="r-in"><span><span class="co"># PAX5_5   PAX5_5               23      635        0.03622047                1495</span></span></span>
-<span class="r-in"><span><span class="co">#         nBackground BackgroundProporition Enrichment mlog10p mlog10Padj</span></span></span>
-<span class="r-in"><span><span class="co"># CEBPB_1       32385            0.07593021  1.4518097  2.9544   2.000157</span></span></span>
-<span class="r-in"><span><span class="co"># CEBPA_2       32385            0.09739077  1.3097654  2.1341   1.179857</span></span></span>
-<span class="r-in"><span><span class="co"># IRF4_4        32385            0.14932839  1.0862283  0.7142   0.000000</span></span></span>
-<span class="r-in"><span><span class="co"># ETS1_3        32385            0.05499460  1.0881527  0.4975   0.000000</span></span></span>
-<span class="r-in"><span><span class="co"># EOMES_6       32385            0.06098502  0.9296203  0.1551   0.000000</span></span></span>
-<span class="r-in"><span><span class="co"># PAX5_5        32385            0.04616335  0.7846154  0.0422   0.000000</span></span></span>
-<span class="r-in"><span><span class="co">#</span></span></span>
-</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co">#Project</span></span>
+<span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#Get Peaks</span></span>
+<span><span class="va">peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="getPeakSet.html">getPeakSet</a></span><span class="op">(</span><span class="va">proj</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#Custom C1 Mono</span></span>
+<span><span class="va">peaks1</span> <span class="op">&lt;-</span> <span class="va">peaks</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">peaks</span><span class="op">)</span><span class="op">==</span><span class="st">"C1"</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co">#All Peaks</span></span>
+<span><span class="fu">customEnrichment</span><span class="op">(</span></span>
+<span>  ranges <span class="op">=</span> <span class="va">peaks1</span>, </span>
+<span>  matches <span class="op">=</span> <span class="fu"><a href="getMatches.html">getMatches</a></span><span class="op">(</span><span class="va">proj</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#         feature CompareFrequency nCompare CompareProportion BackgroundFrequency</span></span>
+<span><span class="co"># CEBPB_1 CEBPB_1               70      635        0.11023622                 122</span></span>
+<span><span class="co"># CEBPA_2 CEBPA_2               81      635        0.12755906                 156</span></span>
+<span><span class="co"># IRF4_4   IRF4_4              103      635        0.16220472                 276</span></span>
+<span><span class="co"># EOMES_6 EOMES_6               36      635        0.05669291                 120</span></span>
+<span><span class="co"># ETS1_3   ETS1_3               38      635        0.05984252                 149</span></span>
+<span><span class="co"># PAX5_5   PAX5_5               23      635        0.03622047                 124</span></span>
+<span><span class="co">#         nBackground BackgroundProporition Enrichment mlog10p mlog10Padj</span></span>
+<span><span class="co"># CEBPB_1        2142            0.05695612  1.9354589 10.3279   9.373657</span></span>
+<span><span class="co"># CEBPA_2        2142            0.07282913  1.7514839  8.9394   7.985157</span></span>
+<span><span class="co"># IRF4_4         2142            0.12885154  1.2588497  2.6938   1.739557</span></span>
+<span><span class="co"># EOMES_6        2142            0.05602241  1.0119685  0.3001   0.000000</span></span>
+<span><span class="co"># ETS1_3         2142            0.06956116  0.8602864  0.0487   0.000000</span></span>
+<span><span class="co"># PAX5_5         2142            0.05788982  0.6256795  0.0006   0.000000</span></span>
+<span></span>
+<span><span class="co">#Background Peaks</span></span>
+<span><span class="fu">customEnrichment</span><span class="op">(</span></span>
+<span> ranges <span class="op">=</span> <span class="va">peaks1</span>, </span>
+<span>  matches <span class="op">=</span> <span class="fu"><a href="getMatches.html">getMatches</a></span><span class="op">(</span><span class="va">proj</span><span class="op">)</span>, </span>
+<span> bgdPeaks <span class="op">=</span> <span class="fu"><a href="getBgdPeaks.html">getBgdPeaks</a></span><span class="op">(</span><span class="va">proj</span>, force<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#         feature CompareFrequency nCompare CompareProportion BackgroundFrequency</span></span>
+<span><span class="co"># CEBPB_1 CEBPB_1               70      635        0.11023622                2459</span></span>
+<span><span class="co"># CEBPA_2 CEBPA_2               81      635        0.12755906                3154</span></span>
+<span><span class="co"># IRF4_4   IRF4_4              103      635        0.16220472                4836</span></span>
+<span><span class="co"># ETS1_3   ETS1_3               38      635        0.05984252                1781</span></span>
+<span><span class="co"># EOMES_6 EOMES_6               36      635        0.05669291                1975</span></span>
+<span><span class="co"># PAX5_5   PAX5_5               23      635        0.03622047                1495</span></span>
+<span><span class="co">#         nBackground BackgroundProporition Enrichment mlog10p mlog10Padj</span></span>
+<span><span class="co"># CEBPB_1       32385            0.07593021  1.4518097  2.9544   2.000157</span></span>
+<span><span class="co"># CEBPA_2       32385            0.09739077  1.3097654  2.1341   1.179857</span></span>
+<span><span class="co"># IRF4_4        32385            0.14932839  1.0862283  0.7142   0.000000</span></span>
+<span><span class="co"># ETS1_3        32385            0.05499460  1.0881527  0.4975   0.000000</span></span>
+<span><span class="co"># EOMES_6       32385            0.06098502  0.9296203  0.1551   0.000000</span></span>
+<span><span class="co"># PAX5_5        32385            0.04616335  0.7846154  0.0422   0.000000</span></span>
+<span><span class="co">#</span></span></code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -172,7 +166,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by <a href="https://twitter.com/JeffreyGranja" class="external-link">Jeffrey Granja</a>, Ryan cre Corces.</p>
+  <p></p><p>Developed by <a href="https://twitter.com/JeffreyGranja" class="external-link">Jeffrey Granja</a>, <a href="https://twitter.com/doctorcorces" class="external-link">Ryan Corces</a>.</p>
 </div>
 
 <div class="pkgdown">

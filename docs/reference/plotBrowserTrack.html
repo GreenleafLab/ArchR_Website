@@ -280,26 +280,20 @@ or a hex color (i.e. "#bfefff")</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#Get Test ArchR Project</span></span></span>
-<span class="r-in"><span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getTestProject():</span> could not find function "getTestProject"</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#Highlight</span></span></span>
-<span class="r-in"><span><span class="va">genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="getGenes.html">getGenes</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getGenes():</span> could not find function "getGenes"</span>
-<span class="r-in"><span><span class="va">genes</span> <span class="op">&lt;-</span> <span class="va">genes</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">genes</span><span class="op">$</span><span class="va">symbol</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD3D"</span>, <span class="st">"MS4A1"</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'i' in selecting a method for function '[': error in evaluating the argument 'x' in selecting a method for function 'which': error in evaluating the argument 'x' in selecting a method for function '%in%': object of type 'closure' is not subsettable</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#Plot Track</span></span></span>
-<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">plotBrowserTrack</span><span class="op">(</span><span class="va">proj</span>, geneSymbol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD3D"</span>, <span class="st">"MS4A1"</span><span class="op">)</span>, groupBy <span class="op">=</span> <span class="st">"CellType"</span>, highlight <span class="op">=</span> <span class="va">genes</span>, highlightFill <span class="op">=</span> <span class="st">"dodgerblue3"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plotBrowserTrack(proj, geneSymbol = c("CD3D", "MS4A1"), groupBy = "CellType",     highlight = genes, highlightFill = "dodgerblue3"):</span> could not find function "plotBrowserTrack"</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#Plot PDF</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="plotPDF.html">plotPDF</a></span><span class="op">(</span><span class="va">p</span>, name <span class="op">=</span> <span class="st">"Track-CD3D-MS4A1"</span>, ArchRProj <span class="op">=</span> <span class="va">proj</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plotPDF(p, name = "Track-CD3D-MS4A1", ArchRProj = proj):</span> could not find function "plotPDF"</span>
-<span class="r-in"><span></span></span>
-</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span></span>
+<span><span class="co">#Get Test ArchR Project</span></span>
+<span><span class="va">proj</span> <span class="op">&lt;-</span> <span class="fu"><a href="getTestProject.html">getTestProject</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#Highlight</span></span>
+<span><span class="va">genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="getGenes.html">getGenes</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">genes</span> <span class="op">&lt;-</span> <span class="va">genes</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">genes</span><span class="op">$</span><span class="va">symbol</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD3D"</span>, <span class="st">"MS4A1"</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co">#Plot Track</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">plotBrowserTrack</span><span class="op">(</span><span class="va">proj</span>, geneSymbol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CD3D"</span>, <span class="st">"MS4A1"</span><span class="op">)</span>, groupBy <span class="op">=</span> <span class="st">"CellType"</span>, highlight <span class="op">=</span> <span class="va">genes</span>, highlightFill <span class="op">=</span> <span class="st">"dodgerblue3"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#Plot PDF</span></span>
+<span><span class="fu"><a href="plotPDF.html">plotPDF</a></span><span class="op">(</span><span class="va">p</span>, name <span class="op">=</span> <span class="st">"Track-CD3D-MS4A1"</span>, ArchRProj <span class="op">=</span> <span class="va">proj</span><span class="op">)</span></span>
+<span></span></code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -309,7 +303,7 @@ or a hex color (i.e. "#bfefff")</p></dd>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by <a href="https://twitter.com/JeffreyGranja" class="external-link">Jeffrey Granja</a>, Ryan cre Corces.</p>
+  <p></p><p>Developed by <a href="https://twitter.com/JeffreyGranja" class="external-link">Jeffrey Granja</a>, <a href="https://twitter.com/doctorcorces" class="external-link">Ryan Corces</a>.</p>
 </div>
 
 <div class="pkgdown">
