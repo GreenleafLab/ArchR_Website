@@ -26,13 +26,13 @@ An `ArchRProject` allows us to group multiple Arrow files together into a single
 
 ## Creating An ArchRProject
 
-First, we must create our `ArchRProject` by providing a list of Arrow files and a few other parameters. The `outputDirectory` here describes where all downstream analyses and plots will be saved. ArchR will automatically associate the previously provided `geneAnnotation` and `genomeAnnotation` with the new `ArchRProject`. These were stored when we ran `addArchRGenome("hg19")` in a previous chapter. Importantly, multiple `ArchRProject` objects **cannot** be combined later so any samples that you want to analyze must be included as Arrow files at this project creation step.
+First, we must create our `ArchRProject` by providing a list of Arrow files and a few other parameters. The `outputDirectory` here describes where all downstream analyses and plots will be saved. ArchR will automatically associate the previously provided `geneAnnotation` and `genomeAnnotation` with the new `ArchRProject`. These were stored when we ran `addArchRGenome("hg19")` in a previous chapter. Importantly, multiple `ArchRProject` objects **cannot** be combined later so any samples that you want to analyze must be included as Arrow files at this project creation step. You'll note that we set the parameter `copyArrows = TRUE` which is recommended because we will modify the Arrow files in downstream operations and this preserves an original copy of the Arrow files for future usage as necessary.
 
 ```{r createArchRProj, collapse=TRUE}
 projHeme1 <- ArchRProject(
   ArrowFiles = ArrowFiles, 
   outputDirectory = "HemeTutorial",
-  copyArrows = TRUE #This is recommended so that if you modify the Arrow files you have an original copy for later usage.,
+  copyArrows = TRUE
 )
 ```
 

@@ -55,7 +55,7 @@ projHeme5 <- addBgdPeaks(projHeme5)
 
 We are now ready to compute per-cell deviations accross all of our motif annotations using the `addDeviationsMatrix()` function. This function has an optional parameter called `matrixName` that allows us to define the name of the deviations matrix that will be stored in the Arrow files. If we do not provide a value to this parameter, as in the example below, this function creates a matrix name by adding the word "Matrix" to the name of the `peakAnnotation`. The example below creates a deviations matrix in each of our Arrow files called "MotifMatrix".
 
-```{r addDeviationsMatrix, collapse=TRUE, cache=TRUE}
+```{r addDeviationsMatrix, collapse=TRUE}
 projHeme5 <- addDeviationsMatrix(
   ArchRProj = projHeme5, 
   peakAnnotation = "Motif",
@@ -254,7 +254,7 @@ if("EncodeTFBS" %ni% names(projHeme5@peakAnnotation)){
 
 Then, we create a deviations matrix, providing this peak annotation to the `peakAnnotation` parameter.
 
-```{r addDeviationsMatrix2, collapse=TRUE, cache=TRUE}
+```{r addDeviationsMatrix2, collapse=TRUE}
 projHeme5 <- addDeviationsMatrix(
   ArchRProj = projHeme5, 
   peakAnnotation = "EncodeTFBS",
@@ -330,7 +330,7 @@ if("ATAC" %ni% names(projHeme5@peakAnnotation)){
 
 Then, we create a deviations matrix, providing this peak annotation to the `peakAnnotation` parameter.
 
-```{r addDeviationsMatrix3, collapse=TRUE, cache=TRUE}
+```{r addDeviationsMatrix3, collapse=TRUE}
 projHeme5 <- addDeviationsMatrix(
   ArchRProj = projHeme5, 
   peakAnnotation = "ATAC",
@@ -403,7 +403,7 @@ if("ChIP" %ni% names(projHeme5@peakAnnotation)){
 ```
 
 Then, we make a deviations matrix from this peak annotation.
-```{r addDeviationsMatrix4, collapse=TRUE, cache=TRUE}
+```{r addDeviationsMatrix4, collapse=TRUE}
 projHeme5 <- addDeviationsMatrix(
   ArchRProj = projHeme5, 
   peakAnnotation = "ChIP",

@@ -236,7 +236,7 @@ Once we have our fragment files, we provide their paths as a character vector to
 
 The tutorial data can be downloaded using the `getTutorialData()` function. The tutorial data is approximately 0.5 GB in size. If you have already downloaded the tutorial in the current working directory, ArchR will bypass downloading.
 
-```{r GetTutorialData, collapse=TRUE}
+```{r GetTutorialData, cache=TRUE, collapse=TRUE}
 library(ArchR)
 library(parallel)
 inputFiles <- getTutorialData("Hematopoiesis")
@@ -266,7 +266,7 @@ Now we will create our Arrow Files which will take 10-15 minutes for the tutoria
 4. Create a genome-wide TileMatrix using 500-bp bins.
 5. Create a GeneScoreMatrix using the custom `geneAnnotation` that was defined when we called `addArchRGenome()`.
 
-```{r ArrowFileCreation, collapse=TRUE}
+```{r ArrowFileCreation, cache=TRUE, collapse=TRUE}
 ArrowFiles <- createArrowFiles(
   inputFiles = inputFiles,
   sampleNames = names(inputFiles),
@@ -346,7 +346,7 @@ We are now ready to tidy up these Arrow files and then create an `ArchRProject`.
 
 Though fragment files are strongly preferred because of their very standardized format, BAM files can also be used as input for Arrow File creation in ArchR. The key to getting this to work is understanding your BAM file structure, in particular which field of the BAM file contains the cell-specific barcode information. In this example, we will download some data from 10x Genomics to illustrate how to use BAM files as input to `createArrowFiles()`. Using `samtools view` 
 
-```{r BAMdownload, collapse=TRUE}
+```{r BAMdownload, cache=TRUE, collapse=TRUE}
 #set timeout to prevent interrupting large file download
 options(timeout=1000)
 dir.create(path = "./PBMC_BAM")
