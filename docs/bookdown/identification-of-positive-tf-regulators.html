@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>17.4 Identification of Positive TF-Regulators | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
+  <meta name="description" content="A guide to ArchR" />
+  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="17.4 Identification of Positive TF-Regulators | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="A guide to ArchR" />
+  <meta name="github-repo" content="GreenleafLab/ArchR" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="17.4 Identification of Positive TF-Regulators | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
+  
+  <meta name="twitter:description" content="A guide to ArchR" />
+  
+
+<meta name="author" content="Jeffrey Granja and Ryan Corces" />
+
+
+<meta name="date" content="2022-12-23" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+<link rel="prev" href="peak2genelinkage-with-archr.html"/>
+<link rel="next" href="trajectory-analysis-with-archr.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="../index.html">Back to ArchR Home</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><img src="images/ArchR_Logo_Integrated.png" alt="" width="200"></a></li>
+<li class="chapter" data-level="1" data-path="debugging-and-troubleshooting-in-archr.html"><a href="debugging-and-troubleshooting-in-archr.html"><i class="fa fa-check"></i><b>1</b> Debugging and Troubleshooting in ArchR</a></li>
+<li class="chapter" data-level="2" data-path="manage-archrs-dependencies.html"><a href="manage-archrs-dependencies.html"><i class="fa fa-check"></i><b>2</b> Manage ArchR’s Dependencies</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
+<li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="a-brief-primer-on-atac-seq-terminology.html"><a href="a-brief-primer-on-atac-seq-terminology.html"><i class="fa fa-check"></i><b>3.1</b> A Brief Primer on ATAC-seq Terminology</a></li>
+<li class="chapter" data-level="3.2" data-path="why-use-archr.html"><a href="why-use-archr.html"><i class="fa fa-check"></i><b>3.2</b> Why use ArchR?</a></li>
+<li class="chapter" data-level="3.3" data-path="what-is-an-arrow-file-archrproject.html"><a href="what-is-an-arrow-file-archrproject.html"><i class="fa fa-check"></i><b>3.3</b> What is an Arrow file / <code>ArchRProject</code>?</a></li>
+<li class="chapter" data-level="3.4" data-path="input-file-types-in-archr.html"><a href="input-file-types-in-archr.html"><i class="fa fa-check"></i><b>3.4</b> Input File Types in ArchR</a></li>
+<li class="chapter" data-level="3.5" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>3.5</b> Getting Set Up</a></li>
+<li class="chapter" data-level="3.6" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>3.6</b> Creating Arrow Files</a></li>
+<li class="chapter" data-level="3.7" data-path="per-cell-quality-control.html"><a href="per-cell-quality-control.html"><i class="fa fa-check"></i><b>3.7</b> Per-cell Quality Control</a></li>
+<li class="chapter" data-level="3.8" data-path="using-bam-files-for-arrow-file-creation.html"><a href="using-bam-files-for-arrow-file-creation.html"><i class="fa fa-check"></i><b>3.8</b> Using BAM files for Arrow File creation</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="doublet-inference-with-archr.html"><a href="doublet-inference-with-archr.html"><i class="fa fa-check"></i><b>4</b> Doublet Inference with ArchR</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="how-does-doublet-identification-work-in-archr.html"><a href="how-does-doublet-identification-work-in-archr.html"><i class="fa fa-check"></i><b>4.1</b> How does doublet identification work in ArchR?</a></li>
+<li class="chapter" data-level="4.2" data-path="inferring-scatac-seq-doublets-with-archr.html"><a href="inferring-scatac-seq-doublets-with-archr.html"><i class="fa fa-check"></i><b>4.2</b> Inferring scATAC-seq Doublets with ArchR</a></li>
+<li class="chapter" data-level="4.3" data-path="using-demuxlet-with-archr.html"><a href="using-demuxlet-with-archr.html"><i class="fa fa-check"></i><b>4.3</b> Using <em>demuxlet</em> with ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="creating-an-archrproject.html"><a href="creating-an-archrproject.html"><i class="fa fa-check"></i><b>5</b> Creating an ArchRProject</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="creating-an-archrproject-1.html"><a href="creating-an-archrproject-1.html"><i class="fa fa-check"></i><b>5.1</b> Creating An ArchRProject</a></li>
+<li class="chapter" data-level="5.2" data-path="manipulating-an-archrproject.html"><a href="manipulating-an-archrproject.html"><i class="fa fa-check"></i><b>5.2</b> Manipulating An ArchRProject</a></li>
+<li class="chapter" data-level="5.3" data-path="plotting-sample-statistics-from-an-archrproject.html"><a href="plotting-sample-statistics-from-an-archrproject.html"><i class="fa fa-check"></i><b>5.3</b> Plotting Sample Statistics from an ArchRProject</a></li>
+<li class="chapter" data-level="5.4" data-path="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles..html"><a href="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles..html"><i class="fa fa-check"></i><b>5.4</b> Plotting Sample Fragment Size Distribution and TSS Enrichment Profiles.</a></li>
+<li class="chapter" data-level="5.5" data-path="saving-and-loading-an-archrproject.html"><a href="saving-and-loading-an-archrproject.html"><i class="fa fa-check"></i><b>5.5</b> Saving and Loading an <code>ArchRProject</code></a></li>
+<li class="chapter" data-level="5.6" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>5.6</b> Filtering Doublets from an ArchRProject</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="dimensionality-reduction-with-archr.html"><a href="dimensionality-reduction-with-archr.html"><i class="fa fa-check"></i><b>6</b> Dimensionality Reduction with ArchR</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>6.1</b> ArchR’s LSI Implementation</a></li>
+<li class="chapter" data-level="6.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>6.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
+<li class="chapter" data-level="6.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>6.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="6.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>6.4</b> Batch Effect Correction wtih Harmony</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>7</b> Clustering with ArchR</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>7.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="7.2" data-path="clustering-using-scran.html"><a href="clustering-using-scran.html"><i class="fa fa-check"></i><b>7.2</b> Clustering using <code>scran</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>8</b> Single-cell Embeddings</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>8.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
+<li class="chapter" data-level="8.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>8.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
+<li class="chapter" data-level="8.3" data-path="dimensionality-reduction-after-harmony.html"><a href="dimensionality-reduction-after-harmony.html"><i class="fa fa-check"></i><b>8.3</b> Dimensionality Reduction After Harmony</a></li>
+<li class="chapter" data-level="8.4" data-path="highlighting-specific-cells-on-an-embedding.html"><a href="highlighting-specific-cells-on-an-embedding.html"><i class="fa fa-check"></i><b>8.4</b> Highlighting specific cells on an embedding</a></li>
+<li class="chapter" data-level="8.5" data-path="importing-an-embedding-from-external-software.html"><a href="importing-an-embedding-from-external-software.html"><i class="fa fa-check"></i><b>8.5</b> Importing an embedding from external software</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="gene-scores-and-marker-genes-with-archr.html"><a href="gene-scores-and-marker-genes-with-archr.html"><i class="fa fa-check"></i><b>9</b> Gene Scores and Marker Genes with ArchR</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="calculating-gene-scores-in-archr.html"><a href="calculating-gene-scores-in-archr.html"><i class="fa fa-check"></i><b>9.1</b> Calculating Gene Scores in ArchR</a></li>
+<li class="chapter" data-level="9.2" data-path="identification-of-marker-features.html"><a href="identification-of-marker-features.html"><i class="fa fa-check"></i><b>9.2</b> Identification of Marker Features</a></li>
+<li class="chapter" data-level="9.3" data-path="identifying-marker-genes.html"><a href="identifying-marker-genes.html"><i class="fa fa-check"></i><b>9.3</b> Identifying Marker Genes</a></li>
+<li class="chapter" data-level="9.4" data-path="visualizing-marker-genes-on-an-embedding.html"><a href="visualizing-marker-genes-on-an-embedding.html"><i class="fa fa-check"></i><b>9.4</b> Visualizing Marker Genes on an Embedding</a></li>
+<li class="chapter" data-level="9.5" data-path="marker-genes-imputation-with-magic.html"><a href="marker-genes-imputation-with-magic.html"><i class="fa fa-check"></i><b>9.5</b> Marker Genes Imputation with MAGIC</a></li>
+<li class="chapter" data-level="9.6" data-path="module-scores.html"><a href="module-scores.html"><i class="fa fa-check"></i><b>9.6</b> Module Scores</a></li>
+<li class="chapter" data-level="9.7" data-path="track-plotting-with-archrbrowser.html"><a href="track-plotting-with-archrbrowser.html"><i class="fa fa-check"></i><b>9.7</b> Track Plotting with ArchRBrowser</a></li>
+<li class="chapter" data-level="9.8" data-path="launching-the-interactive-archrbrowser.html"><a href="launching-the-interactive-archrbrowser.html"><i class="fa fa-check"></i><b>9.8</b> Launching the Interactive ArchRBrowser</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="defining-cluster-identity-with-scrna-seq.html"><a href="defining-cluster-identity-with-scrna-seq.html"><i class="fa fa-check"></i><b>10</b> Defining Cluster Identity with scRNA-seq</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><i class="fa fa-check"></i><b>10.1</b> Cross-platform linkage of scATAC-seq cells with scRNA-seq cells</a></li>
+<li class="chapter" data-level="10.2" data-path="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><i class="fa fa-check"></i><b>10.2</b> Adding Pseudo-scRNA-seq profiles for each scATAC-seq cell</a></li>
+<li class="chapter" data-level="10.3" data-path="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><a href="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><i class="fa fa-check"></i><b>10.3</b> Labeling scATAC-seq clusters with scRNA-seq information</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="pseudo-bulk-replicates-in-archr.html"><a href="pseudo-bulk-replicates-in-archr.html"><i class="fa fa-check"></i><b>11</b> Pseudo-bulk Replicates in ArchR</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="how-does-archr-make-pseudo-bulk-replicates.html"><a href="how-does-archr-make-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>11.1</b> How Does ArchR Make Pseudo-bulk Replicates?</a></li>
+<li class="chapter" data-level="11.2" data-path="making-pseudo-bulk-replicates.html"><a href="making-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>11.2</b> Making Pseudo-bulk Replicates</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="calling-peaks-with-archr.html"><a href="calling-peaks-with-archr.html"><i class="fa fa-check"></i><b>12</b> Calling Peaks with ArchR</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="the-iterative-overlap-peak-merging-procedure.html"><a href="the-iterative-overlap-peak-merging-procedure.html"><i class="fa fa-check"></i><b>12.1</b> The Iterative Overlap Peak Merging Procedure</a></li>
+<li class="chapter" data-level="12.2" data-path="calling-peaks-w-macs2.html"><a href="calling-peaks-w-macs2.html"><i class="fa fa-check"></i><b>12.2</b> Calling Peaks w/ Macs2</a></li>
+<li class="chapter" data-level="12.3" data-path="calling-peaks-w-tilematrix.html"><a href="calling-peaks-w-tilematrix.html"><i class="fa fa-check"></i><b>12.3</b> Calling Peaks w/ TileMatrix</a></li>
+<li class="chapter" data-level="12.4" data-path="adding-a-peak-matrix.html"><a href="adding-a-peak-matrix.html"><i class="fa fa-check"></i><b>12.4</b> Adding a Peak Matrix</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="identifying-marker-peaks.html"><a href="identifying-marker-peaks.html"><i class="fa fa-check"></i><b>13</b> Identifying Marker Peaks</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="identifying-marker-peaks-with-archr.html"><a href="identifying-marker-peaks-with-archr.html"><i class="fa fa-check"></i><b>13.1</b> Identifying Marker Peaks with ArchR</a></li>
+<li class="chapter" data-level="13.2" data-path="plotting-marker-peaks-in-archr.html"><a href="plotting-marker-peaks-in-archr.html"><i class="fa fa-check"></i><b>13.2</b> Plotting Marker Peaks in ArchR</a></li>
+<li class="chapter" data-level="13.3" data-path="pairwise-testing-between-groups.html"><a href="pairwise-testing-between-groups.html"><i class="fa fa-check"></i><b>13.3</b> Pairwise Testing Between Groups</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="motif-and-feature-enrichment-with-archr.html"><a href="motif-and-feature-enrichment-with-archr.html"><i class="fa fa-check"></i><b>14</b> Motif and Feature Enrichment with ArchR</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="motif-enrichment.html"><a href="motif-enrichment.html"><i class="fa fa-check"></i><b>14.1</b> Motif Enrichment</a></li>
+<li class="chapter" data-level="14.2" data-path="archr-enrichment.html"><a href="archr-enrichment.html"><i class="fa fa-check"></i><b>14.2</b> ArchR Enrichment</a></li>
+<li class="chapter" data-level="14.3" data-path="custom-enrichment.html"><a href="custom-enrichment.html"><i class="fa fa-check"></i><b>14.3</b> Custom Enrichment</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="chromvar-deviatons-enrichment-with-archr.html"><a href="chromvar-deviatons-enrichment-with-archr.html"><i class="fa fa-check"></i><b>15</b> ChromVAR Deviatons Enrichment with ArchR</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="motif-deviations.html"><a href="motif-deviations.html"><i class="fa fa-check"></i><b>15.1</b> Motif Deviations</a></li>
+<li class="chapter" data-level="15.2" data-path="archr-and-custom-deviations.html"><a href="archr-and-custom-deviations.html"><i class="fa fa-check"></i><b>15.2</b> ArchR and Custom Deviations</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="footprinting-with-archr.html"><a href="footprinting-with-archr.html"><i class="fa fa-check"></i><b>16</b> Footprinting with ArchR</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="motif-footprinting.html"><a href="motif-footprinting.html"><i class="fa fa-check"></i><b>16.1</b> Motif Footprinting</a></li>
+<li class="chapter" data-level="16.2" data-path="normalization-of-footprints-for-tn5-bias.html"><a href="normalization-of-footprints-for-tn5-bias.html"><i class="fa fa-check"></i><b>16.2</b> Normalization of Footprints for Tn5 Bias</a></li>
+<li class="chapter" data-level="16.3" data-path="feature-footprinting.html"><a href="feature-footprinting.html"><i class="fa fa-check"></i><b>16.3</b> Feature Footprinting</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>17</b> Integrative Analysis with ArchR</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="creating-low-overlapping-aggregates-of-cells.html"><a href="creating-low-overlapping-aggregates-of-cells.html"><i class="fa fa-check"></i><b>17.1</b> Creating Low-Overlapping Aggregates of Cells</a></li>
+<li class="chapter" data-level="17.2" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>17.2</b> Co-accessibility with ArchR</a></li>
+<li class="chapter" data-level="17.3" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>17.3</b> Peak2GeneLinkage with ArchR</a></li>
+<li class="chapter" data-level="17.4" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>17.4</b> Identification of Positive TF-Regulators</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-cifferentiation.html"><a href="lymphoid-trajectory---b-cell-cifferentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Cifferentiation</a></li>
+<li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
+<li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
+<li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="handling-archr-output.html"><a href="handling-archr-output.html"><i class="fa fa-check"></i><b>19</b> Handling ArchR Output</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="exporting-fragment-level-data.html"><a href="exporting-fragment-level-data.html"><i class="fa fa-check"></i><b>19.1</b> Exporting fragment-level data</a></li>
+<li class="chapter" data-level="19.2" data-path="exporting-matrix-level-data.html"><a href="exporting-matrix-level-data.html"><i class="fa fa-check"></i><b>19.2</b> Exporting matrix-level data</a></li>
+<li class="chapter" data-level="19.3" data-path="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html"><i class="fa fa-check"></i><b>19.3</b> Exporting pseudo-bulked data to a <code>SummarizedExperiment</code></a></li>
+<li class="chapter" data-level="19.4" data-path="exporting-pseudo-bulked-data-to-a-bigwig-file.html"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html"><i class="fa fa-check"></i><b>19.4</b> Exporting pseudo-bulked data to a bigWig file</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="integration-with-bulk-atac-seq.html"><a href="integration-with-bulk-atac-seq.html"><i class="fa fa-check"></i><b>20</b> Integration with bulk ATAC-seq</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="projecting-bulk-atac-seq-data.html"><a href="projecting-bulk-atac-seq-data.html"><i class="fa fa-check"></i><b>20.1</b> Projecting bulk ATAC-seq data</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="multiomic-data-analysis-in-archr.html"><a href="multiomic-data-analysis-in-archr.html"><i class="fa fa-check"></i><b>21</b> Multiomic data analysis in ArchR</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="importing-data-and-setting-up-a-multiome-project.html"><a href="importing-data-and-setting-up-a-multiome-project.html"><i class="fa fa-check"></i><b>21.1</b> Importing data and setting up a Multiome project</a></li>
+<li class="chapter" data-level="21.2" data-path="analysis-of-multiome-data-in-archr.html"><a href="analysis-of-multiome-data-in-archr.html"><i class="fa fa-check"></i><b>21.2</b> Analysis of multiome data in ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="plot-aesthetics-in-archr.html"><a href="plot-aesthetics-in-archr.html"><i class="fa fa-check"></i><b>22</b> Plot aesthetics in ArchR</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="using-and-manipulating-palettes-in-archr.html"><a href="using-and-manipulating-palettes-in-archr.html"><i class="fa fa-check"></i><b>22.1</b> Using and manipulating palettes in ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="testing-your-archr-installation.html"><a href="testing-your-archr-installation.html"><i class="fa fa-check"></i><b>23</b> Testing Your ArchR Installation</a></li>
+<li class="chapter" data-level="24" data-path="session-information.html"><a href="session-information.html"><i class="fa fa-check"></i><b>24</b> Session Information</a></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="_blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="identification-of-positive-tf-regulators" class="section level2 hasAnchor" number="17.4">
+<h2><span class="header-section-number">17.4</span> Identification of Positive TF-Regulators<a href="identification-of-positive-tf-regulators.html#identification-of-positive-tf-regulators" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>ATAC-seq allows for the unbiased identification of TFs that exhibit large changes in chromatin accessibility at sites containing their DNA binding motifs. However, families of TFs (for ex. GATA factors) share similar features in their binding motifs when looking in aggregate through position weight matrices (PWMs).</p>
+<center>
+<img src="images/GATA_Motif_PWMs.png" width="500" />
+</center>
+<p>This motif similarity makes it challenging to identify the specific TFs that might be driving observed changes in chromatin accessibility at their predicted binding sites. To circumvent this challenge, we have previously ATAC-seq and RNA-seq to identify TFs whose gene expression is positively correlated to changes in the accessibility of their corresponding motif. We term these TFs “positive regulators”. However, this analysis relies on matched gene expression data which may not be readily available in all experiments. To overcome this dependency, ArchR can identify TFs whose inferred gene scores are correlated to their chromVAR TF deviation z-scores. To achieve this, ArchR correlates chromVAR deviation z-scores of TF motifs with gene activity scores of TF genes from the low-overlapping cell aggregates. When using scRNA-seq integration with ArchR, gene expression of the TF can be used instead of inferred gene activity score.</p>
+<div id="step-1.-identify-deviant-tf-motifs" class="section level3 hasAnchor" number="17.4.1">
+<h3><span class="header-section-number">17.4.1</span> Step 1. Identify Deviant TF Motifs<a href="identification-of-positive-tf-regulators.html#step-1.-identify-deviant-tf-motifs" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The first part of identifying positive TF regulators is identification of deviant TF motifs. We performed this analysis in a previous chapter, creating a <code>MotifMatrix</code> of chromVAR deviations and deviation z-scores for all motifs. We can obtain this data, aggregated by clusters, by using the <code>getGroupSE()</code> function which returns a <code>SummarizedExperiment</code>.</p>
+<div class="sourceCode" id="cb352"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb352-1"><a href="identification-of-positive-tf-regulators.html#cb352-1" aria-hidden="true" tabindex="-1"></a>seGroupMotif <span class="ot">&lt;-</span> <span class="fu">getGroupSE</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">useMatrix =</span> <span class="st">&quot;MotifMatrix&quot;</span>, <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>)</span>
+<span id="cb352-2"><a href="identification-of-positive-tf-regulators.html#cb352-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-getGroupSE-371b04341f344-Date-2022-12-23_Time-08-52-14.log</span></span>
+<span id="cb352-3"><a href="identification-of-positive-tf-regulators.html#cb352-3" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb352-4"><a href="identification-of-positive-tf-regulators.html#cb352-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting Group Matrix</span></span>
+<span id="cb352-5"><a href="identification-of-positive-tf-regulators.html#cb352-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:52:23 : Successfully Created Group Matrix, 0.116 mins elapsed.</span></span>
+<span id="cb352-6"><a href="identification-of-positive-tf-regulators.html#cb352-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalizing by number of Cells</span></span>
+<span id="cb352-7"><a href="identification-of-positive-tf-regulators.html#cb352-7" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-getGroupSE-371b04341f344-Date-2022-12-23_Time-08-52-14.log</span></span></code></pre></div>
+<p>Because this <code>SummarizedExperiment</code> object comes from the <code>MotifMatrix</code> is has two seqnames - “deviations” and “z” - corresponding to the raw deviations and deviation z-scores from chromVAR.</p>
+<div class="sourceCode" id="cb353"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb353-1"><a href="identification-of-positive-tf-regulators.html#cb353-1" aria-hidden="true" tabindex="-1"></a>seGroupMotif</span>
+<span id="cb353-2"><a href="identification-of-positive-tf-regulators.html#cb353-2" aria-hidden="true" tabindex="-1"></a><span class="do">## class: SummarizedExperiment </span></span>
+<span id="cb353-3"><a href="identification-of-positive-tf-regulators.html#cb353-3" aria-hidden="true" tabindex="-1"></a><span class="do">## dim: 1740 11 </span></span>
+<span id="cb353-4"><a href="identification-of-positive-tf-regulators.html#cb353-4" aria-hidden="true" tabindex="-1"></a><span class="do">## metadata(0):</span></span>
+<span id="cb353-5"><a href="identification-of-positive-tf-regulators.html#cb353-5" aria-hidden="true" tabindex="-1"></a><span class="do">## assays(1): MotifMatrix</span></span>
+<span id="cb353-6"><a href="identification-of-positive-tf-regulators.html#cb353-6" aria-hidden="true" tabindex="-1"></a><span class="do">## rownames(1740): f1 f2 ... f1739 f1740</span></span>
+<span id="cb353-7"><a href="identification-of-positive-tf-regulators.html#cb353-7" aria-hidden="true" tabindex="-1"></a><span class="do">## rowData names(3): seqnames idx name</span></span>
+<span id="cb353-8"><a href="identification-of-positive-tf-regulators.html#cb353-8" aria-hidden="true" tabindex="-1"></a><span class="do">## colnames(11): B CD4.M ... PreB Progenitor</span></span>
+<span id="cb353-9"><a href="identification-of-positive-tf-regulators.html#cb353-9" aria-hidden="true" tabindex="-1"></a><span class="do">## colData names(22): TSSEnrichment ReadsInTSS ... FRIP nCells</span></span></code></pre></div>
+<p>We can subset this <code>SummarizedExperiment</code> to just the deviation z-scores.</p>
+<div class="sourceCode" id="cb354"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb354-1"><a href="identification-of-positive-tf-regulators.html#cb354-1" aria-hidden="true" tabindex="-1"></a>seZ <span class="ot">&lt;-</span> seGroupMotif[<span class="fu">rowData</span>(seGroupMotif)<span class="sc">$</span>seqnames<span class="sc">==</span><span class="st">&quot;z&quot;</span>,]</span></code></pre></div>
+<p>Then we can identify the maximum delta in z-score between all clusters. This will be helpful in stratifying motifs based on the degree of variation observed across clusters.</p>
+<div class="sourceCode" id="cb355"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb355-1"><a href="identification-of-positive-tf-regulators.html#cb355-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rowData</span>(seZ)<span class="sc">$</span>maxDelta <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">seq_len</span>(<span class="fu">ncol</span>(seZ)), <span class="cf">function</span>(x){</span>
+<span id="cb355-2"><a href="identification-of-positive-tf-regulators.html#cb355-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowMaxs</span>(<span class="fu">assay</span>(seZ) <span class="sc">-</span> <span class="fu">assay</span>(seZ)[,x])</span>
+<span id="cb355-3"><a href="identification-of-positive-tf-regulators.html#cb355-3" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">%&gt;%</span> <span class="fu">Reduce</span>(<span class="st">&quot;cbind&quot;</span>, .) <span class="sc">%&gt;%</span> rowMaxs</span></code></pre></div>
+</div>
+<div id="step-2.-identify-correlated-tf-motifs-and-tf-gene-scoreexpression" class="section level3 hasAnchor" number="17.4.2">
+<h3><span class="header-section-number">17.4.2</span> Step 2. Identify Correlated TF Motifs and TF Gene Score/Expression<a href="identification-of-positive-tf-regulators.html#step-2.-identify-correlated-tf-motifs-and-tf-gene-scoreexpression" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To identify TFs whose motif accessibility is correlated with with their own gene activity (either by gene score or gene expression), we use the <code>correlateMatrices()</code> function and provide the two matrices that we are interested in, in this case the <code>GeneScoreMatrix</code> and the <code>MotifMatrix</code>. As mentioned previously, these correlations are determined across many low-overlapping cell aggregates determined in the lower dimension space specified in the <code>reducedDims</code> parameter.</p>
+<div class="sourceCode" id="cb356"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb356-1"><a href="identification-of-positive-tf-regulators.html#cb356-1" aria-hidden="true" tabindex="-1"></a>corGSM_MM <span class="ot">&lt;-</span> <span class="fu">correlateMatrices</span>(</span>
+<span id="cb356-2"><a href="identification-of-positive-tf-regulators.html#cb356-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb356-3"><a href="identification-of-positive-tf-regulators.html#cb356-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">useMatrix1 =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>,</span>
+<span id="cb356-4"><a href="identification-of-positive-tf-regulators.html#cb356-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">useMatrix2 =</span> <span class="st">&quot;MotifMatrix&quot;</span>,</span>
+<span id="cb356-5"><a href="identification-of-positive-tf-regulators.html#cb356-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span></span>
+<span id="cb356-6"><a href="identification-of-positive-tf-regulators.html#cb356-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb356-7"><a href="identification-of-positive-tf-regulators.html#cb356-7" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-correlateMatrices-371b01449776c-Date-2022-12-23_Time-08-52-25.log</span></span>
+<span id="cb356-8"><a href="identification-of-positive-tf-regulators.html#cb356-8" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb356-9"><a href="identification-of-positive-tf-regulators.html#cb356-9" aria-hidden="true" tabindex="-1"></a><span class="do">## When accessing features from a matrix of class Sparse.Assays.Matrix it requires 1 seqname!</span></span>
+<span id="cb356-10"><a href="identification-of-positive-tf-regulators.html#cb356-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Continuing with first seqname &#39;z&#39;!</span></span>
+<span id="cb356-11"><a href="identification-of-positive-tf-regulators.html#cb356-11" aria-hidden="true" tabindex="-1"></a><span class="do">## If confused, try getFeatures(ArchRProj, &#39;MotifMatrix&#39;) to list out available seqnames for input!</span></span>
+<span id="cb356-12"><a href="identification-of-positive-tf-regulators.html#cb356-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:52:31 : Testing 825 Mappings!, 0.095 mins elapsed.</span></span>
+<span id="cb356-13"><a href="identification-of-positive-tf-regulators.html#cb356-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:52:31 : Computing KNN, 0.095 mins elapsed.</span></span>
+<span id="cb356-14"><a href="identification-of-positive-tf-regulators.html#cb356-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:52:31 : Identifying Non-Overlapping KNN pairs, 0.097 mins elapsed.</span></span>
+<span id="cb356-15"><a href="identification-of-positive-tf-regulators.html#cb356-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:52:33 : Identified 490 Groupings!, 0.124 mins elapsed.</span></span>
+<span id="cb356-16"><a href="identification-of-positive-tf-regulators.html#cb356-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:52:33 : Getting Group Matrix 1, 0.131 mins elapsed.</span></span>
+<span id="cb356-17"><a href="identification-of-positive-tf-regulators.html#cb356-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:52:51 : Getting Group Matrix 2, 0.422 mins elapsed.</span></span>
+<span id="cb356-18"><a href="identification-of-positive-tf-regulators.html#cb356-18" aria-hidden="true" tabindex="-1"></a><span class="do">## Some entries in groupMat2 are less than 0, continuing without Log2 Normalization.</span></span>
+<span id="cb356-19"><a href="identification-of-positive-tf-regulators.html#cb356-19" aria-hidden="true" tabindex="-1"></a><span class="do">## Most likely this assay is a deviations matrix.</span></span>
+<span id="cb356-20"><a href="identification-of-positive-tf-regulators.html#cb356-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting Correlations...</span></span>
+<span id="cb356-21"><a href="identification-of-positive-tf-regulators.html#cb356-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:52:59 :</span></span>
+<span id="cb356-22"><a href="identification-of-positive-tf-regulators.html#cb356-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Computing Correlation (250 of 825)</span></span>
+<span id="cb356-23"><a href="identification-of-positive-tf-regulators.html#cb356-23" aria-hidden="true" tabindex="-1"></a><span class="do">## Computing Correlation (500 of 825)</span></span>
+<span id="cb356-24"><a href="identification-of-positive-tf-regulators.html#cb356-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Computing Correlation (750 of 825)</span></span>
+<span id="cb356-25"><a href="identification-of-positive-tf-regulators.html#cb356-25" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-correlateMatrices-371b01449776c-Date-2022-12-23_Time-08-52-25.log</span></span></code></pre></div>
+<p>This function returns a <code>DataFrame</code> object that that contains the elements from each matrix and the correlation across the low-overlapping cell aggregates.</p>
+<div class="sourceCode" id="cb357"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb357-1"><a href="identification-of-positive-tf-regulators.html#cb357-1" aria-hidden="true" tabindex="-1"></a>corGSM_MM</span>
+<span id="cb357-2"><a href="identification-of-positive-tf-regulators.html#cb357-2" aria-hidden="true" tabindex="-1"></a><span class="do">## DataFrame with 825 rows and 14 columns</span></span>
+<span id="cb357-3"><a href="identification-of-positive-tf-regulators.html#cb357-3" aria-hidden="true" tabindex="-1"></a><span class="do">##     GeneScoreMatrix_name MotifMatrix_name         cor        padj        pval</span></span>
+<span id="cb357-4"><a href="identification-of-positive-tf-regulators.html#cb357-4" aria-hidden="true" tabindex="-1"></a><span class="do">##              &lt;character&gt;      &lt;character&gt;   &lt;numeric&gt;   &lt;numeric&gt;   &lt;numeric&gt;</span></span>
+<span id="cb357-5"><a href="identification-of-positive-tf-regulators.html#cb357-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 1                   HES4          HES4_95  -0.0222476 1.00000e+00 6.23232e-01</span></span>
+<span id="cb357-6"><a href="identification-of-positive-tf-regulators.html#cb357-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 2                   HES5          HES5_98   0.1930514 1.37831e-02 1.68498e-05</span></span>
+<span id="cb357-7"><a href="identification-of-positive-tf-regulators.html#cb357-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 3                 PRDM16       PRDM16_211   0.4968602 5.34096e-29 6.52929e-32</span></span>
+<span id="cb357-8"><a href="identification-of-positive-tf-regulators.html#cb357-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 4                   TP73         TP73_705   0.4367128 2.52781e-21 3.09024e-24</span></span>
+<span id="cb357-9"><a href="identification-of-positive-tf-regulators.html#cb357-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 5               TP73-AS1         TP73_705  -0.1481933 8.18935e-01 1.00114e-03</span></span>
+<span id="cb357-10"><a href="identification-of-positive-tf-regulators.html#cb357-10" aria-hidden="true" tabindex="-1"></a><span class="do">## ...                  ...              ...         ...         ...         ...</span></span>
+<span id="cb357-11"><a href="identification-of-positive-tf-regulators.html#cb357-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 821                TFDP3        TFDP3_309 -0.00717456           1    0.874132</span></span>
+<span id="cb357-12"><a href="identification-of-positive-tf-regulators.html#cb357-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 822               ZNF75D       ZNF75D_272  0.00376659           1    0.933721</span></span>
+<span id="cb357-13"><a href="identification-of-positive-tf-regulators.html#cb357-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 823                 ZIC3         ZIC3_215 -0.03655746           1    0.419415</span></span>
+<span id="cb357-14"><a href="identification-of-positive-tf-regulators.html#cb357-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 824                 SOX3         SOX3_759 -0.00537698           1    0.905496</span></span>
+<span id="cb357-15"><a href="identification-of-positive-tf-regulators.html#cb357-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 825                MECP2        MECP2_645  0.01997529           1    0.659150</span></span>
+<span id="cb357-16"><a href="identification-of-positive-tf-regulators.html#cb357-16" aria-hidden="true" tabindex="-1"></a><span class="do">##     GeneScoreMatrix_seqnames GeneScoreMatrix_start GeneScoreMatrix_end</span></span>
+<span id="cb357-17"><a href="identification-of-positive-tf-regulators.html#cb357-17" aria-hidden="true" tabindex="-1"></a><span class="do">##                  &lt;character&gt;             &lt;integer&gt;           &lt;integer&gt;</span></span>
+<span id="cb357-18"><a href="identification-of-positive-tf-regulators.html#cb357-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 1                       chr1                935552              934342</span></span>
+<span id="cb357-19"><a href="identification-of-positive-tf-regulators.html#cb357-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 2                       chr1               2461684             2460184</span></span>
+<span id="cb357-20"><a href="identification-of-positive-tf-regulators.html#cb357-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 3                       chr1               2985742             3355185</span></span>
+<span id="cb357-21"><a href="identification-of-positive-tf-regulators.html#cb357-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 4                       chr1               3569129             3652765</span></span>
+<span id="cb357-22"><a href="identification-of-positive-tf-regulators.html#cb357-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 5                       chr1               3663937             3652548</span></span>
+<span id="cb357-23"><a href="identification-of-positive-tf-regulators.html#cb357-23" aria-hidden="true" tabindex="-1"></a><span class="do">## ...                      ...                   ...                 ...</span></span>
+<span id="cb357-24"><a href="identification-of-positive-tf-regulators.html#cb357-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 821                     chrX             132352376           132350697</span></span>
+<span id="cb357-25"><a href="identification-of-positive-tf-regulators.html#cb357-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 822                     chrX             134429965           134419723</span></span>
+<span id="cb357-26"><a href="identification-of-positive-tf-regulators.html#cb357-26" aria-hidden="true" tabindex="-1"></a><span class="do">## 823                     chrX             136648346           136654259</span></span>
+<span id="cb357-27"><a href="identification-of-positive-tf-regulators.html#cb357-27" aria-hidden="true" tabindex="-1"></a><span class="do">## 824                     chrX             139587225           139585152</span></span>
+<span id="cb357-28"><a href="identification-of-positive-tf-regulators.html#cb357-28" aria-hidden="true" tabindex="-1"></a><span class="do">## 825                     chrX             153363188           153287264</span></span>
+<span id="cb357-29"><a href="identification-of-positive-tf-regulators.html#cb357-29" aria-hidden="true" tabindex="-1"></a><span class="do">##     GeneScoreMatrix_strand GeneScoreMatrix_idx GeneScoreMatrix_matchName</span></span>
+<span id="cb357-30"><a href="identification-of-positive-tf-regulators.html#cb357-30" aria-hidden="true" tabindex="-1"></a><span class="do">##                  &lt;integer&gt;           &lt;integer&gt;               &lt;character&gt;</span></span>
+<span id="cb357-31"><a href="identification-of-positive-tf-regulators.html#cb357-31" aria-hidden="true" tabindex="-1"></a><span class="do">## 1                        2                  15                      HES4</span></span>
+<span id="cb357-32"><a href="identification-of-positive-tf-regulators.html#cb357-32" aria-hidden="true" tabindex="-1"></a><span class="do">## 2                        2                  74                      HES5</span></span>
+<span id="cb357-33"><a href="identification-of-positive-tf-regulators.html#cb357-33" aria-hidden="true" tabindex="-1"></a><span class="do">## 3                        1                  82                    PRDM16</span></span>
+<span id="cb357-34"><a href="identification-of-positive-tf-regulators.html#cb357-34" aria-hidden="true" tabindex="-1"></a><span class="do">## 4                        1                  89                      TP73</span></span>
+<span id="cb357-35"><a href="identification-of-positive-tf-regulators.html#cb357-35" aria-hidden="true" tabindex="-1"></a><span class="do">## 5                        2                  90                      TP73</span></span>
+<span id="cb357-36"><a href="identification-of-positive-tf-regulators.html#cb357-36" aria-hidden="true" tabindex="-1"></a><span class="do">## ...                    ...                 ...                       ...</span></span>
+<span id="cb357-37"><a href="identification-of-positive-tf-regulators.html#cb357-37" aria-hidden="true" tabindex="-1"></a><span class="do">## 821                      2                 697                     TFDP3</span></span>
+<span id="cb357-38"><a href="identification-of-positive-tf-regulators.html#cb357-38" aria-hidden="true" tabindex="-1"></a><span class="do">## 822                      2                 728                    ZNF75D</span></span>
+<span id="cb357-39"><a href="identification-of-positive-tf-regulators.html#cb357-39" aria-hidden="true" tabindex="-1"></a><span class="do">## 823                      1                 753                      ZIC3</span></span>
+<span id="cb357-40"><a href="identification-of-positive-tf-regulators.html#cb357-40" aria-hidden="true" tabindex="-1"></a><span class="do">## 824                      2                 765                      SOX3</span></span>
+<span id="cb357-41"><a href="identification-of-positive-tf-regulators.html#cb357-41" aria-hidden="true" tabindex="-1"></a><span class="do">## 825                      2                 874                     MECP2</span></span>
+<span id="cb357-42"><a href="identification-of-positive-tf-regulators.html#cb357-42" aria-hidden="true" tabindex="-1"></a><span class="do">##     MotifMatrix_seqnames MotifMatrix_idx MotifMatrix_matchName</span></span>
+<span id="cb357-43"><a href="identification-of-positive-tf-regulators.html#cb357-43" aria-hidden="true" tabindex="-1"></a><span class="do">##              &lt;character&gt;       &lt;integer&gt;           &lt;character&gt;</span></span>
+<span id="cb357-44"><a href="identification-of-positive-tf-regulators.html#cb357-44" aria-hidden="true" tabindex="-1"></a><span class="do">## 1                      z              95                  HES4</span></span>
+<span id="cb357-45"><a href="identification-of-positive-tf-regulators.html#cb357-45" aria-hidden="true" tabindex="-1"></a><span class="do">## 2                      z              98                  HES5</span></span>
+<span id="cb357-46"><a href="identification-of-positive-tf-regulators.html#cb357-46" aria-hidden="true" tabindex="-1"></a><span class="do">## 3                      z             211                PRDM16</span></span>
+<span id="cb357-47"><a href="identification-of-positive-tf-regulators.html#cb357-47" aria-hidden="true" tabindex="-1"></a><span class="do">## 4                      z             705                  TP73</span></span>
+<span id="cb357-48"><a href="identification-of-positive-tf-regulators.html#cb357-48" aria-hidden="true" tabindex="-1"></a><span class="do">## 5                      z             705                  TP73</span></span>
+<span id="cb357-49"><a href="identification-of-positive-tf-regulators.html#cb357-49" aria-hidden="true" tabindex="-1"></a><span class="do">## ...                  ...             ...                   ...</span></span>
+<span id="cb357-50"><a href="identification-of-positive-tf-regulators.html#cb357-50" aria-hidden="true" tabindex="-1"></a><span class="do">## 821                    z             309                 TFDP3</span></span>
+<span id="cb357-51"><a href="identification-of-positive-tf-regulators.html#cb357-51" aria-hidden="true" tabindex="-1"></a><span class="do">## 822                    z             272                ZNF75D</span></span>
+<span id="cb357-52"><a href="identification-of-positive-tf-regulators.html#cb357-52" aria-hidden="true" tabindex="-1"></a><span class="do">## 823                    z             215                  ZIC3</span></span>
+<span id="cb357-53"><a href="identification-of-positive-tf-regulators.html#cb357-53" aria-hidden="true" tabindex="-1"></a><span class="do">## 824                    z             759                  SOX3</span></span>
+<span id="cb357-54"><a href="identification-of-positive-tf-regulators.html#cb357-54" aria-hidden="true" tabindex="-1"></a><span class="do">## 825                    z             645                 MECP2</span></span></code></pre></div>
+<p>We can perform the same analysis using the <code>GeneIntegrationMatrix</code> instead of the <code>GeneScoreMatrix</code>.</p>
+<div class="sourceCode" id="cb358"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb358-1"><a href="identification-of-positive-tf-regulators.html#cb358-1" aria-hidden="true" tabindex="-1"></a>corGIM_MM <span class="ot">&lt;-</span> <span class="fu">correlateMatrices</span>(</span>
+<span id="cb358-2"><a href="identification-of-positive-tf-regulators.html#cb358-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb358-3"><a href="identification-of-positive-tf-regulators.html#cb358-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">useMatrix1 =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>,</span>
+<span id="cb358-4"><a href="identification-of-positive-tf-regulators.html#cb358-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">useMatrix2 =</span> <span class="st">&quot;MotifMatrix&quot;</span>,</span>
+<span id="cb358-5"><a href="identification-of-positive-tf-regulators.html#cb358-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span></span>
+<span id="cb358-6"><a href="identification-of-positive-tf-regulators.html#cb358-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb358-7"><a href="identification-of-positive-tf-regulators.html#cb358-7" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-correlateMatrices-371b05aa57e2d-Date-2022-12-23_Time-08-52-59.log</span></span>
+<span id="cb358-8"><a href="identification-of-positive-tf-regulators.html#cb358-8" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb358-9"><a href="identification-of-positive-tf-regulators.html#cb358-9" aria-hidden="true" tabindex="-1"></a><span class="do">## When accessing features from a matrix of class Sparse.Assays.Matrix it requires 1 seqname!</span></span>
+<span id="cb358-10"><a href="identification-of-positive-tf-regulators.html#cb358-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Continuing with first seqname &#39;z&#39;!</span></span>
+<span id="cb358-11"><a href="identification-of-positive-tf-regulators.html#cb358-11" aria-hidden="true" tabindex="-1"></a><span class="do">## If confused, try getFeatures(ArchRProj, &#39;MotifMatrix&#39;) to list out available seqnames for input!</span></span>
+<span id="cb358-12"><a href="identification-of-positive-tf-regulators.html#cb358-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:53:05 : Testing 798 Mappings!, 0.086 mins elapsed.</span></span>
+<span id="cb358-13"><a href="identification-of-positive-tf-regulators.html#cb358-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:53:05 : Computing KNN, 0.087 mins elapsed.</span></span>
+<span id="cb358-14"><a href="identification-of-positive-tf-regulators.html#cb358-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:53:05 : Identifying Non-Overlapping KNN pairs, 0.089 mins elapsed.</span></span>
+<span id="cb358-15"><a href="identification-of-positive-tf-regulators.html#cb358-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:53:07 : Identified 490 Groupings!, 0.119 mins elapsed.</span></span>
+<span id="cb358-16"><a href="identification-of-positive-tf-regulators.html#cb358-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:53:07 : Getting Group Matrix 1, 0.127 mins elapsed.</span></span>
+<span id="cb358-17"><a href="identification-of-positive-tf-regulators.html#cb358-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:53:23 : Getting Group Matrix 2, 0.397 mins elapsed.</span></span>
+<span id="cb358-18"><a href="identification-of-positive-tf-regulators.html#cb358-18" aria-hidden="true" tabindex="-1"></a><span class="do">## Some entries in groupMat2 are less than 0, continuing without Log2 Normalization.</span></span>
+<span id="cb358-19"><a href="identification-of-positive-tf-regulators.html#cb358-19" aria-hidden="true" tabindex="-1"></a><span class="do">## Most likely this assay is a deviations matrix.</span></span>
+<span id="cb358-20"><a href="identification-of-positive-tf-regulators.html#cb358-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting Correlations...</span></span>
+<span id="cb358-21"><a href="identification-of-positive-tf-regulators.html#cb358-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:53:32 :</span></span>
+<span id="cb358-22"><a href="identification-of-positive-tf-regulators.html#cb358-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Computing Correlation (250 of 798)</span></span>
+<span id="cb358-23"><a href="identification-of-positive-tf-regulators.html#cb358-23" aria-hidden="true" tabindex="-1"></a><span class="do">## Computing Correlation (500 of 798)</span></span>
+<span id="cb358-24"><a href="identification-of-positive-tf-regulators.html#cb358-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Computing Correlation (750 of 798)</span></span>
+<span id="cb358-25"><a href="identification-of-positive-tf-regulators.html#cb358-25" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-correlateMatrices-371b05aa57e2d-Date-2022-12-23_Time-08-52-59.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb359"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb359-1"><a href="identification-of-positive-tf-regulators.html#cb359-1" aria-hidden="true" tabindex="-1"></a>corGIM_MM</span>
+<span id="cb359-2"><a href="identification-of-positive-tf-regulators.html#cb359-2" aria-hidden="true" tabindex="-1"></a><span class="do">## DataFrame with 798 rows and 14 columns</span></span>
+<span id="cb359-3"><a href="identification-of-positive-tf-regulators.html#cb359-3" aria-hidden="true" tabindex="-1"></a><span class="do">##     GeneIntegrationMatrix_name MotifMatrix_name        cor        padj</span></span>
+<span id="cb359-4"><a href="identification-of-positive-tf-regulators.html#cb359-4" aria-hidden="true" tabindex="-1"></a><span class="do">##                    &lt;character&gt;      &lt;character&gt;  &lt;numeric&gt;   &lt;numeric&gt;</span></span>
+<span id="cb359-5"><a href="identification-of-positive-tf-regulators.html#cb359-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 1                         HES4          HES4_95 -0.3948468 5.14257e-17</span></span>
+<span id="cb359-6"><a href="identification-of-positive-tf-regulators.html#cb359-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 2                         HES5          HES5_98 -0.5198649 1.47068e-32</span></span>
+<span id="cb359-7"><a href="identification-of-positive-tf-regulators.html#cb359-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 3                       PRDM16       PRDM16_211  0.0870686 1.00000e+00</span></span>
+<span id="cb359-8"><a href="identification-of-positive-tf-regulators.html#cb359-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 4                         TP73         TP73_705         NA          NA</span></span>
+<span id="cb359-9"><a href="identification-of-positive-tf-regulators.html#cb359-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 5                         HES2          HES2_19  0.2852406 6.53411e-08</span></span>
+<span id="cb359-10"><a href="identification-of-positive-tf-regulators.html#cb359-10" aria-hidden="true" tabindex="-1"></a><span class="do">## ...                        ...              ...        ...         ...</span></span>
+<span id="cb359-11"><a href="identification-of-positive-tf-regulators.html#cb359-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 794                      TFDP3        TFDP3_309         NA          NA</span></span>
+<span id="cb359-12"><a href="identification-of-positive-tf-regulators.html#cb359-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 795                     ZNF75D       ZNF75D_272   0.474335 3.83736e-26</span></span>
+<span id="cb359-13"><a href="identification-of-positive-tf-regulators.html#cb359-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 796                       ZIC3         ZIC3_215         NA          NA</span></span>
+<span id="cb359-14"><a href="identification-of-positive-tf-regulators.html#cb359-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 797                       SOX3         SOX3_759         NA          NA</span></span>
+<span id="cb359-15"><a href="identification-of-positive-tf-regulators.html#cb359-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 798                      MECP2        MECP2_645   0.455404 9.57311e-24</span></span>
+<span id="cb359-16"><a href="identification-of-positive-tf-regulators.html#cb359-16" aria-hidden="true" tabindex="-1"></a><span class="do">##            pval GeneIntegrationMatrix_seqnames GeneIntegrationMatrix_start</span></span>
+<span id="cb359-17"><a href="identification-of-positive-tf-regulators.html#cb359-17" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;numeric&gt;                    &lt;character&gt;                   &lt;integer&gt;</span></span>
+<span id="cb359-18"><a href="identification-of-positive-tf-regulators.html#cb359-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 1   9.90860e-20                           chr1                      935552</span></span>
+<span id="cb359-19"><a href="identification-of-positive-tf-regulators.html#cb359-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 2   2.83368e-35                           chr1                     2461684</span></span>
+<span id="cb359-20"><a href="identification-of-positive-tf-regulators.html#cb359-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 3   5.40941e-02                           chr1                     2985742</span></span>
+<span id="cb359-21"><a href="identification-of-positive-tf-regulators.html#cb359-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 4            NA                           chr1                     3569129</span></span>
+<span id="cb359-22"><a href="identification-of-positive-tf-regulators.html#cb359-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 5   1.25898e-10                           chr1                     6484730</span></span>
+<span id="cb359-23"><a href="identification-of-positive-tf-regulators.html#cb359-23" aria-hidden="true" tabindex="-1"></a><span class="do">## ...         ...                            ...                         ...</span></span>
+<span id="cb359-24"><a href="identification-of-positive-tf-regulators.html#cb359-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 794          NA                           chrX                   132352376</span></span>
+<span id="cb359-25"><a href="identification-of-positive-tf-regulators.html#cb359-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 795 7.39377e-29                           chrX                   134429965</span></span>
+<span id="cb359-26"><a href="identification-of-positive-tf-regulators.html#cb359-26" aria-hidden="true" tabindex="-1"></a><span class="do">## 796          NA                           chrX                   136648346</span></span>
+<span id="cb359-27"><a href="identification-of-positive-tf-regulators.html#cb359-27" aria-hidden="true" tabindex="-1"></a><span class="do">## 797          NA                           chrX                   139587225</span></span>
+<span id="cb359-28"><a href="identification-of-positive-tf-regulators.html#cb359-28" aria-hidden="true" tabindex="-1"></a><span class="do">## 798 1.84453e-26                           chrX                   153363188</span></span>
+<span id="cb359-29"><a href="identification-of-positive-tf-regulators.html#cb359-29" aria-hidden="true" tabindex="-1"></a><span class="do">##     GeneIntegrationMatrix_end GeneIntegrationMatrix_strand</span></span>
+<span id="cb359-30"><a href="identification-of-positive-tf-regulators.html#cb359-30" aria-hidden="true" tabindex="-1"></a><span class="do">##                     &lt;integer&gt;                    &lt;integer&gt;</span></span>
+<span id="cb359-31"><a href="identification-of-positive-tf-regulators.html#cb359-31" aria-hidden="true" tabindex="-1"></a><span class="do">## 1                      934342                            2</span></span>
+<span id="cb359-32"><a href="identification-of-positive-tf-regulators.html#cb359-32" aria-hidden="true" tabindex="-1"></a><span class="do">## 2                     2460184                            2</span></span>
+<span id="cb359-33"><a href="identification-of-positive-tf-regulators.html#cb359-33" aria-hidden="true" tabindex="-1"></a><span class="do">## 3                     3355185                            1</span></span>
+<span id="cb359-34"><a href="identification-of-positive-tf-regulators.html#cb359-34" aria-hidden="true" tabindex="-1"></a><span class="do">## 4                     3652765                            1</span></span>
+<span id="cb359-35"><a href="identification-of-positive-tf-regulators.html#cb359-35" aria-hidden="true" tabindex="-1"></a><span class="do">## 5                     6472498                            2</span></span>
+<span id="cb359-36"><a href="identification-of-positive-tf-regulators.html#cb359-36" aria-hidden="true" tabindex="-1"></a><span class="do">## ...                       ...                          ...</span></span>
+<span id="cb359-37"><a href="identification-of-positive-tf-regulators.html#cb359-37" aria-hidden="true" tabindex="-1"></a><span class="do">## 794                 132350697                            2</span></span>
+<span id="cb359-38"><a href="identification-of-positive-tf-regulators.html#cb359-38" aria-hidden="true" tabindex="-1"></a><span class="do">## 795                 134419723                            2</span></span>
+<span id="cb359-39"><a href="identification-of-positive-tf-regulators.html#cb359-39" aria-hidden="true" tabindex="-1"></a><span class="do">## 796                 136654259                            1</span></span>
+<span id="cb359-40"><a href="identification-of-positive-tf-regulators.html#cb359-40" aria-hidden="true" tabindex="-1"></a><span class="do">## 797                 139585152                            2</span></span>
+<span id="cb359-41"><a href="identification-of-positive-tf-regulators.html#cb359-41" aria-hidden="true" tabindex="-1"></a><span class="do">## 798                 153287264                            2</span></span>
+<span id="cb359-42"><a href="identification-of-positive-tf-regulators.html#cb359-42" aria-hidden="true" tabindex="-1"></a><span class="do">##     GeneIntegrationMatrix_idx GeneIntegrationMatrix_matchName</span></span>
+<span id="cb359-43"><a href="identification-of-positive-tf-regulators.html#cb359-43" aria-hidden="true" tabindex="-1"></a><span class="do">##                     &lt;integer&gt;                     &lt;character&gt;</span></span>
+<span id="cb359-44"><a href="identification-of-positive-tf-regulators.html#cb359-44" aria-hidden="true" tabindex="-1"></a><span class="do">## 1                           8                            HES4</span></span>
+<span id="cb359-45"><a href="identification-of-positive-tf-regulators.html#cb359-45" aria-hidden="true" tabindex="-1"></a><span class="do">## 2                          53                            HES5</span></span>
+<span id="cb359-46"><a href="identification-of-positive-tf-regulators.html#cb359-46" aria-hidden="true" tabindex="-1"></a><span class="do">## 3                          59                          PRDM16</span></span>
+<span id="cb359-47"><a href="identification-of-positive-tf-regulators.html#cb359-47" aria-hidden="true" tabindex="-1"></a><span class="do">## 4                          64                            TP73</span></span>
+<span id="cb359-48"><a href="identification-of-positive-tf-regulators.html#cb359-48" aria-hidden="true" tabindex="-1"></a><span class="do">## 5                          81                            HES2</span></span>
+<span id="cb359-49"><a href="identification-of-positive-tf-regulators.html#cb359-49" aria-hidden="true" tabindex="-1"></a><span class="do">## ...                       ...                             ...</span></span>
+<span id="cb359-50"><a href="identification-of-positive-tf-regulators.html#cb359-50" aria-hidden="true" tabindex="-1"></a><span class="do">## 794                       562                           TFDP3</span></span>
+<span id="cb359-51"><a href="identification-of-positive-tf-regulators.html#cb359-51" aria-hidden="true" tabindex="-1"></a><span class="do">## 795                       576                          ZNF75D</span></span>
+<span id="cb359-52"><a href="identification-of-positive-tf-regulators.html#cb359-52" aria-hidden="true" tabindex="-1"></a><span class="do">## 796                       595                            ZIC3</span></span>
+<span id="cb359-53"><a href="identification-of-positive-tf-regulators.html#cb359-53" aria-hidden="true" tabindex="-1"></a><span class="do">## 797                       602                            SOX3</span></span>
+<span id="cb359-54"><a href="identification-of-positive-tf-regulators.html#cb359-54" aria-hidden="true" tabindex="-1"></a><span class="do">## 798                       680                           MECP2</span></span>
+<span id="cb359-55"><a href="identification-of-positive-tf-regulators.html#cb359-55" aria-hidden="true" tabindex="-1"></a><span class="do">##     MotifMatrix_seqnames MotifMatrix_idx MotifMatrix_matchName</span></span>
+<span id="cb359-56"><a href="identification-of-positive-tf-regulators.html#cb359-56" aria-hidden="true" tabindex="-1"></a><span class="do">##              &lt;character&gt;       &lt;integer&gt;           &lt;character&gt;</span></span>
+<span id="cb359-57"><a href="identification-of-positive-tf-regulators.html#cb359-57" aria-hidden="true" tabindex="-1"></a><span class="do">## 1                      z              95                  HES4</span></span>
+<span id="cb359-58"><a href="identification-of-positive-tf-regulators.html#cb359-58" aria-hidden="true" tabindex="-1"></a><span class="do">## 2                      z              98                  HES5</span></span>
+<span id="cb359-59"><a href="identification-of-positive-tf-regulators.html#cb359-59" aria-hidden="true" tabindex="-1"></a><span class="do">## 3                      z             211                PRDM16</span></span>
+<span id="cb359-60"><a href="identification-of-positive-tf-regulators.html#cb359-60" aria-hidden="true" tabindex="-1"></a><span class="do">## 4                      z             705                  TP73</span></span>
+<span id="cb359-61"><a href="identification-of-positive-tf-regulators.html#cb359-61" aria-hidden="true" tabindex="-1"></a><span class="do">## 5                      z              19                  HES2</span></span>
+<span id="cb359-62"><a href="identification-of-positive-tf-regulators.html#cb359-62" aria-hidden="true" tabindex="-1"></a><span class="do">## ...                  ...             ...                   ...</span></span>
+<span id="cb359-63"><a href="identification-of-positive-tf-regulators.html#cb359-63" aria-hidden="true" tabindex="-1"></a><span class="do">## 794                    z             309                 TFDP3</span></span>
+<span id="cb359-64"><a href="identification-of-positive-tf-regulators.html#cb359-64" aria-hidden="true" tabindex="-1"></a><span class="do">## 795                    z             272                ZNF75D</span></span>
+<span id="cb359-65"><a href="identification-of-positive-tf-regulators.html#cb359-65" aria-hidden="true" tabindex="-1"></a><span class="do">## 796                    z             215                  ZIC3</span></span>
+<span id="cb359-66"><a href="identification-of-positive-tf-regulators.html#cb359-66" aria-hidden="true" tabindex="-1"></a><span class="do">## 797                    z             759                  SOX3</span></span>
+<span id="cb359-67"><a href="identification-of-positive-tf-regulators.html#cb359-67" aria-hidden="true" tabindex="-1"></a><span class="do">## 798                    z             645                 MECP2</span></span></code></pre></div>
+<p>Step 3. Add Maximum Delta Deviation to the Correlation Data Frame</p>
+<p>For each of these correlation analyses, we can annotate each motif with the maximum delta observed between clusters which we calculated in Step 1.</p>
+<div class="sourceCode" id="cb360"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb360-1"><a href="identification-of-positive-tf-regulators.html#cb360-1" aria-hidden="true" tabindex="-1"></a>corGSM_MM<span class="sc">$</span>maxDelta <span class="ot">&lt;-</span> <span class="fu">rowData</span>(seZ)[<span class="fu">match</span>(corGSM_MM<span class="sc">$</span>MotifMatrix_name, <span class="fu">rowData</span>(seZ)<span class="sc">$</span>name), <span class="st">&quot;maxDelta&quot;</span>]</span>
+<span id="cb360-2"><a href="identification-of-positive-tf-regulators.html#cb360-2" aria-hidden="true" tabindex="-1"></a>corGIM_MM<span class="sc">$</span>maxDelta <span class="ot">&lt;-</span> <span class="fu">rowData</span>(seZ)[<span class="fu">match</span>(corGIM_MM<span class="sc">$</span>MotifMatrix_name, <span class="fu">rowData</span>(seZ)<span class="sc">$</span>name), <span class="st">&quot;maxDelta&quot;</span>]</span></code></pre></div>
+<p>Step 4. Identify Positive TF Regulators</p>
+<p>We can use all of this information to identify positive TF regulators. In the examples below, we consider positive regulators as those TFs whose correlation between motif and gene score (or gene expression) is greater than 0.5 with an adjusted p-value less than 0.01 and a maximum inter-cluster difference in deviation z-score that is in the top quartile.</p>
+<p>We apply these selection criteria and do a little text juggling to isolate the TF names.</p>
+<div class="sourceCode" id="cb361"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb361-1"><a href="identification-of-positive-tf-regulators.html#cb361-1" aria-hidden="true" tabindex="-1"></a>corGSM_MM <span class="ot">&lt;-</span> corGSM_MM[<span class="fu">order</span>(<span class="fu">abs</span>(corGSM_MM<span class="sc">$</span>cor), <span class="at">decreasing =</span> <span class="cn">TRUE</span>), ]</span>
+<span id="cb361-2"><a href="identification-of-positive-tf-regulators.html#cb361-2" aria-hidden="true" tabindex="-1"></a>corGSM_MM <span class="ot">&lt;-</span> corGSM_MM[<span class="fu">which</span>(<span class="sc">!</span><span class="fu">duplicated</span>(<span class="fu">gsub</span>(<span class="st">&quot;</span><span class="sc">\\</span><span class="st">-.*&quot;</span>,<span class="st">&quot;&quot;</span>,corGSM_MM[,<span class="st">&quot;MotifMatrix_name&quot;</span>]))), ]</span>
+<span id="cb361-3"><a href="identification-of-positive-tf-regulators.html#cb361-3" aria-hidden="true" tabindex="-1"></a>corGSM_MM<span class="sc">$</span>TFRegulator <span class="ot">&lt;-</span> <span class="st">&quot;NO&quot;</span></span>
+<span id="cb361-4"><a href="identification-of-positive-tf-regulators.html#cb361-4" aria-hidden="true" tabindex="-1"></a>corGSM_MM<span class="sc">$</span>TFRegulator[<span class="fu">which</span>(corGSM_MM<span class="sc">$</span>cor <span class="sc">&gt;</span> <span class="fl">0.5</span> <span class="sc">&amp;</span> corGSM_MM<span class="sc">$</span>padj <span class="sc">&lt;</span> <span class="fl">0.01</span> <span class="sc">&amp;</span> corGSM_MM<span class="sc">$</span>maxDelta <span class="sc">&gt;</span> <span class="fu">quantile</span>(corGSM_MM<span class="sc">$</span>maxDelta, <span class="fl">0.75</span>))] <span class="ot">&lt;-</span> <span class="st">&quot;YES&quot;</span></span>
+<span id="cb361-5"><a href="identification-of-positive-tf-regulators.html#cb361-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(corGSM_MM[corGSM_MM<span class="sc">$</span>TFRegulator<span class="sc">==</span><span class="st">&quot;YES&quot;</span>,<span class="dv">1</span>])</span>
+<span id="cb361-6"><a href="identification-of-positive-tf-regulators.html#cb361-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] &quot;ASCL1&quot;    &quot;BCL11A&quot;   &quot;CEBPA-DT&quot; &quot;CEBPB&quot;    &quot;CEBPD&quot;    &quot;EBF1&quot;    </span></span>
+<span id="cb361-7"><a href="identification-of-positive-tf-regulators.html#cb361-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] &quot;EGR1&quot;     &quot;EGR2&quot;     &quot;EGR4&quot;     &quot;EOMES&quot;    &quot;ERF&quot;      &quot;ETS1&quot;    </span></span>
+<span id="cb361-8"><a href="identification-of-positive-tf-regulators.html#cb361-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] &quot;ETV6&quot;     &quot;FUBP1&quot;    &quot;GATA1&quot;    &quot;GATA2&quot;    &quot;GATA5&quot;    &quot;IRF2&quot;    </span></span>
+<span id="cb361-9"><a href="identification-of-positive-tf-regulators.html#cb361-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] &quot;JDP2&quot;     &quot;KLF11&quot;    &quot;LEF1&quot;     &quot;MECOM&quot;    &quot;MEF2A&quot;    &quot;MITF&quot;    </span></span>
+<span id="cb361-10"><a href="identification-of-positive-tf-regulators.html#cb361-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [25] &quot;NFE2&quot;     &quot;NFIA&quot;     &quot;NFIC&quot;     &quot;NFIL3&quot;    &quot;NFIX&quot;     &quot;NFKB2&quot;   </span></span>
+<span id="cb361-11"><a href="identification-of-positive-tf-regulators.html#cb361-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [31] &quot;PAX5&quot;     &quot;POU2F1&quot;   &quot;REL&quot;      &quot;SMAD1&quot;    &quot;SPI1&quot;     &quot;SPIB&quot;    </span></span>
+<span id="cb361-12"><a href="identification-of-positive-tf-regulators.html#cb361-12" aria-hidden="true" tabindex="-1"></a><span class="do">## [37] &quot;TAL1&quot;     &quot;TCF15&quot;    &quot;TFAP2C&quot;   &quot;YY1&quot;      &quot;ZEB1-AS1&quot;</span></span></code></pre></div>
+<p>Having identified these positive TF regulators from gene scores and motif deviation z-scores, we can highlight them in a dot plot.</p>
+<div class="sourceCode" id="cb362"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb362-1"><a href="identification-of-positive-tf-regulators.html#cb362-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">data.frame</span>(corGSM_MM), <span class="fu">aes</span>(cor, maxDelta, <span class="at">color =</span> TFRegulator)) <span class="sc">+</span></span>
+<span id="cb362-2"><a href="identification-of-positive-tf-regulators.html#cb362-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb362-3"><a href="identification-of-positive-tf-regulators.html#cb362-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_ArchR</span>() <span class="sc">+</span></span>
+<span id="cb362-4"><a href="identification-of-positive-tf-regulators.html#cb362-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb362-5"><a href="identification-of-positive-tf-regulators.html#cb362-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;NO&quot;</span><span class="ot">=</span><span class="st">&quot;darkgrey&quot;</span>, <span class="st">&quot;YES&quot;</span><span class="ot">=</span><span class="st">&quot;firebrick3&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb362-6"><a href="identification-of-positive-tf-regulators.html#cb362-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Correlation To Gene Score&quot;</span>) <span class="sc">+</span></span>
+<span id="cb362-7"><a href="identification-of-positive-tf-regulators.html#cb362-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Max TF Motif Delta&quot;</span>) <span class="sc">+</span></span>
+<span id="cb362-8"><a href="identification-of-positive-tf-regulators.html#cb362-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb362-9"><a href="identification-of-positive-tf-regulators.html#cb362-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), </span>
+<span id="cb362-10"><a href="identification-of-positive-tf-regulators.html#cb362-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">max</span>(corGSM_MM<span class="sc">$</span>maxDelta)<span class="sc">*</span><span class="fl">1.05</span>)</span>
+<span id="cb362-11"><a href="identification-of-positive-tf-regulators.html#cb362-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb362-12"><a href="identification-of-positive-tf-regulators.html#cb362-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb362-13"><a href="identification-of-positive-tf-regulators.html#cb362-13" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb362-14"><a href="identification-of-positive-tf-regulators.html#cb362-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Removed 7 rows containing missing values (geom_point).</span></span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-359-1.svg" width="672" /></p>
+<p>We can perform the same analysis for the correlations derived from our <code>GeneIntegrationMatrix</code>.</p>
+<div class="sourceCode" id="cb363"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb363-1"><a href="identification-of-positive-tf-regulators.html#cb363-1" aria-hidden="true" tabindex="-1"></a>corGIM_MM <span class="ot">&lt;-</span> corGIM_MM[<span class="fu">order</span>(<span class="fu">abs</span>(corGIM_MM<span class="sc">$</span>cor), <span class="at">decreasing =</span> <span class="cn">TRUE</span>), ]</span>
+<span id="cb363-2"><a href="identification-of-positive-tf-regulators.html#cb363-2" aria-hidden="true" tabindex="-1"></a>corGIM_MM <span class="ot">&lt;-</span> corGIM_MM[<span class="fu">which</span>(<span class="sc">!</span><span class="fu">duplicated</span>(<span class="fu">gsub</span>(<span class="st">&quot;</span><span class="sc">\\</span><span class="st">-.*&quot;</span>,<span class="st">&quot;&quot;</span>,corGIM_MM[,<span class="st">&quot;MotifMatrix_name&quot;</span>]))), ]</span>
+<span id="cb363-3"><a href="identification-of-positive-tf-regulators.html#cb363-3" aria-hidden="true" tabindex="-1"></a>corGIM_MM<span class="sc">$</span>TFRegulator <span class="ot">&lt;-</span> <span class="st">&quot;NO&quot;</span></span>
+<span id="cb363-4"><a href="identification-of-positive-tf-regulators.html#cb363-4" aria-hidden="true" tabindex="-1"></a>corGIM_MM<span class="sc">$</span>TFRegulator[<span class="fu">which</span>(corGIM_MM<span class="sc">$</span>cor <span class="sc">&gt;</span> <span class="fl">0.5</span> <span class="sc">&amp;</span> corGIM_MM<span class="sc">$</span>padj <span class="sc">&lt;</span> <span class="fl">0.01</span> <span class="sc">&amp;</span> corGIM_MM<span class="sc">$</span>maxDelta <span class="sc">&gt;</span> <span class="fu">quantile</span>(corGIM_MM<span class="sc">$</span>maxDelta, <span class="fl">0.75</span>))] <span class="ot">&lt;-</span> <span class="st">&quot;YES&quot;</span></span>
+<span id="cb363-5"><a href="identification-of-positive-tf-regulators.html#cb363-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(corGIM_MM[corGIM_MM<span class="sc">$</span>TFRegulator<span class="sc">==</span><span class="st">&quot;YES&quot;</span>,<span class="dv">1</span>])</span>
+<span id="cb363-6"><a href="identification-of-positive-tf-regulators.html#cb363-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] &quot;BACH1&quot;   &quot;CEBPA&quot;   &quot;CEBPB&quot;   &quot;CEBPD&quot;   &quot;CEBPE&quot;   &quot;CTCF&quot;    &quot;EBF1&quot;   </span></span>
+<span id="cb363-7"><a href="identification-of-positive-tf-regulators.html#cb363-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  [8] &quot;EOMES&quot;   &quot;ETS1&quot;    &quot;FOS&quot;     &quot;FOSL2&quot;   &quot;GATA1&quot;   &quot;GATA2&quot;   &quot;ID3&quot;    </span></span>
+<span id="cb363-8"><a href="identification-of-positive-tf-regulators.html#cb363-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [15] &quot;IRF7&quot;    &quot;JDP2&quot;    &quot;KLF2&quot;    &quot;LEF1&quot;    &quot;MECOM&quot;   &quot;MEF2A&quot;   &quot;MITF&quot;   </span></span>
+<span id="cb363-9"><a href="identification-of-positive-tf-regulators.html#cb363-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [22] &quot;NFE2&quot;    &quot;NFIA&quot;    &quot;NFIB&quot;    &quot;NFIC&quot;    &quot;NFIL3&quot;   &quot;NFIX&quot;    &quot;NFKB2&quot;  </span></span>
+<span id="cb363-10"><a href="identification-of-positive-tf-regulators.html#cb363-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [29] &quot;NR4A1&quot;   &quot;PAX5&quot;    &quot;POU2F1&quot;  &quot;POU5F1B&quot; &quot;RFX3&quot;    &quot;RUNX1&quot;   &quot;SPI1&quot;   </span></span>
+<span id="cb363-11"><a href="identification-of-positive-tf-regulators.html#cb363-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [36] &quot;STAT2&quot;   &quot;TCF3&quot;    &quot;TCF4&quot;    &quot;TCF7L1&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb364"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb364-1"><a href="identification-of-positive-tf-regulators.html#cb364-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">data.frame</span>(corGIM_MM), <span class="fu">aes</span>(cor, maxDelta, <span class="at">color =</span> TFRegulator)) <span class="sc">+</span></span>
+<span id="cb364-2"><a href="identification-of-positive-tf-regulators.html#cb364-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb364-3"><a href="identification-of-positive-tf-regulators.html#cb364-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_ArchR</span>() <span class="sc">+</span></span>
+<span id="cb364-4"><a href="identification-of-positive-tf-regulators.html#cb364-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">lty =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb364-5"><a href="identification-of-positive-tf-regulators.html#cb364-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;NO&quot;</span><span class="ot">=</span><span class="st">&quot;darkgrey&quot;</span>, <span class="st">&quot;YES&quot;</span><span class="ot">=</span><span class="st">&quot;firebrick3&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb364-6"><a href="identification-of-positive-tf-regulators.html#cb364-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Correlation To Gene Expression&quot;</span>) <span class="sc">+</span></span>
+<span id="cb364-7"><a href="identification-of-positive-tf-regulators.html#cb364-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Max TF Motif Delta&quot;</span>) <span class="sc">+</span></span>
+<span id="cb364-8"><a href="identification-of-positive-tf-regulators.html#cb364-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb364-9"><a href="identification-of-positive-tf-regulators.html#cb364-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), </span>
+<span id="cb364-10"><a href="identification-of-positive-tf-regulators.html#cb364-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">max</span>(corGIM_MM<span class="sc">$</span>maxDelta)<span class="sc">*</span><span class="fl">1.05</span>)</span>
+<span id="cb364-11"><a href="identification-of-positive-tf-regulators.html#cb364-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb364-12"><a href="identification-of-positive-tf-regulators.html#cb364-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb364-13"><a href="identification-of-positive-tf-regulators.html#cb364-13" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb364-14"><a href="identification-of-positive-tf-regulators.html#cb364-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Removed 260 rows containing missing values (geom_point).</span></span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-361-1.svg" width="672" /></p>
+
+</div>
+</div>
+<!-- </div> -->
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="peak2genelinkage-with-archr.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="trajectory-analysis-with-archr.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": null
+},
+"fontsettings": null,
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "none"
+},
+"info": false
+});
+});
+</script>
+
+</body>
+
+</html>

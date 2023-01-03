@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>21.2 Analysis of multiome data in ArchR | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
+  <meta name="description" content="A guide to ArchR" />
+  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="21.2 Analysis of multiome data in ArchR | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="A guide to ArchR" />
+  <meta name="github-repo" content="GreenleafLab/ArchR" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="21.2 Analysis of multiome data in ArchR | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
+  
+  <meta name="twitter:description" content="A guide to ArchR" />
+  
+
+<meta name="author" content="Jeffrey Granja and Ryan Corces" />
+
+
+<meta name="date" content="2022-12-23" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+<link rel="prev" href="importing-data-and-setting-up-a-multiome-project.html"/>
+<link rel="next" href="plot-aesthetics-in-archr.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="../index.html">Back to ArchR Home</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><img src="images/ArchR_Logo_Integrated.png" alt="" width="200"></a></li>
+<li class="chapter" data-level="1" data-path="debugging-and-troubleshooting-in-archr.html"><a href="debugging-and-troubleshooting-in-archr.html"><i class="fa fa-check"></i><b>1</b> Debugging and Troubleshooting in ArchR</a></li>
+<li class="chapter" data-level="2" data-path="manage-archrs-dependencies.html"><a href="manage-archrs-dependencies.html"><i class="fa fa-check"></i><b>2</b> Manage ArchR’s Dependencies</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
+<li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="a-brief-primer-on-atac-seq-terminology.html"><a href="a-brief-primer-on-atac-seq-terminology.html"><i class="fa fa-check"></i><b>3.1</b> A Brief Primer on ATAC-seq Terminology</a></li>
+<li class="chapter" data-level="3.2" data-path="why-use-archr.html"><a href="why-use-archr.html"><i class="fa fa-check"></i><b>3.2</b> Why use ArchR?</a></li>
+<li class="chapter" data-level="3.3" data-path="what-is-an-arrow-file-archrproject.html"><a href="what-is-an-arrow-file-archrproject.html"><i class="fa fa-check"></i><b>3.3</b> What is an Arrow file / <code>ArchRProject</code>?</a></li>
+<li class="chapter" data-level="3.4" data-path="input-file-types-in-archr.html"><a href="input-file-types-in-archr.html"><i class="fa fa-check"></i><b>3.4</b> Input File Types in ArchR</a></li>
+<li class="chapter" data-level="3.5" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>3.5</b> Getting Set Up</a></li>
+<li class="chapter" data-level="3.6" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>3.6</b> Creating Arrow Files</a></li>
+<li class="chapter" data-level="3.7" data-path="per-cell-quality-control.html"><a href="per-cell-quality-control.html"><i class="fa fa-check"></i><b>3.7</b> Per-cell Quality Control</a></li>
+<li class="chapter" data-level="3.8" data-path="using-bam-files-for-arrow-file-creation.html"><a href="using-bam-files-for-arrow-file-creation.html"><i class="fa fa-check"></i><b>3.8</b> Using BAM files for Arrow File creation</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="doublet-inference-with-archr.html"><a href="doublet-inference-with-archr.html"><i class="fa fa-check"></i><b>4</b> Doublet Inference with ArchR</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="how-does-doublet-identification-work-in-archr.html"><a href="how-does-doublet-identification-work-in-archr.html"><i class="fa fa-check"></i><b>4.1</b> How does doublet identification work in ArchR?</a></li>
+<li class="chapter" data-level="4.2" data-path="inferring-scatac-seq-doublets-with-archr.html"><a href="inferring-scatac-seq-doublets-with-archr.html"><i class="fa fa-check"></i><b>4.2</b> Inferring scATAC-seq Doublets with ArchR</a></li>
+<li class="chapter" data-level="4.3" data-path="using-demuxlet-with-archr.html"><a href="using-demuxlet-with-archr.html"><i class="fa fa-check"></i><b>4.3</b> Using <em>demuxlet</em> with ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="creating-an-archrproject.html"><a href="creating-an-archrproject.html"><i class="fa fa-check"></i><b>5</b> Creating an ArchRProject</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="creating-an-archrproject-1.html"><a href="creating-an-archrproject-1.html"><i class="fa fa-check"></i><b>5.1</b> Creating An ArchRProject</a></li>
+<li class="chapter" data-level="5.2" data-path="manipulating-an-archrproject.html"><a href="manipulating-an-archrproject.html"><i class="fa fa-check"></i><b>5.2</b> Manipulating An ArchRProject</a></li>
+<li class="chapter" data-level="5.3" data-path="plotting-sample-statistics-from-an-archrproject.html"><a href="plotting-sample-statistics-from-an-archrproject.html"><i class="fa fa-check"></i><b>5.3</b> Plotting Sample Statistics from an ArchRProject</a></li>
+<li class="chapter" data-level="5.4" data-path="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles..html"><a href="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles..html"><i class="fa fa-check"></i><b>5.4</b> Plotting Sample Fragment Size Distribution and TSS Enrichment Profiles.</a></li>
+<li class="chapter" data-level="5.5" data-path="saving-and-loading-an-archrproject.html"><a href="saving-and-loading-an-archrproject.html"><i class="fa fa-check"></i><b>5.5</b> Saving and Loading an <code>ArchRProject</code></a></li>
+<li class="chapter" data-level="5.6" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>5.6</b> Filtering Doublets from an ArchRProject</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="dimensionality-reduction-with-archr.html"><a href="dimensionality-reduction-with-archr.html"><i class="fa fa-check"></i><b>6</b> Dimensionality Reduction with ArchR</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>6.1</b> ArchR’s LSI Implementation</a></li>
+<li class="chapter" data-level="6.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>6.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
+<li class="chapter" data-level="6.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>6.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="6.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>6.4</b> Batch Effect Correction wtih Harmony</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>7</b> Clustering with ArchR</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>7.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="7.2" data-path="clustering-using-scran.html"><a href="clustering-using-scran.html"><i class="fa fa-check"></i><b>7.2</b> Clustering using <code>scran</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>8</b> Single-cell Embeddings</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>8.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
+<li class="chapter" data-level="8.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>8.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
+<li class="chapter" data-level="8.3" data-path="dimensionality-reduction-after-harmony.html"><a href="dimensionality-reduction-after-harmony.html"><i class="fa fa-check"></i><b>8.3</b> Dimensionality Reduction After Harmony</a></li>
+<li class="chapter" data-level="8.4" data-path="highlighting-specific-cells-on-an-embedding.html"><a href="highlighting-specific-cells-on-an-embedding.html"><i class="fa fa-check"></i><b>8.4</b> Highlighting specific cells on an embedding</a></li>
+<li class="chapter" data-level="8.5" data-path="importing-an-embedding-from-external-software.html"><a href="importing-an-embedding-from-external-software.html"><i class="fa fa-check"></i><b>8.5</b> Importing an embedding from external software</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="gene-scores-and-marker-genes-with-archr.html"><a href="gene-scores-and-marker-genes-with-archr.html"><i class="fa fa-check"></i><b>9</b> Gene Scores and Marker Genes with ArchR</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="calculating-gene-scores-in-archr.html"><a href="calculating-gene-scores-in-archr.html"><i class="fa fa-check"></i><b>9.1</b> Calculating Gene Scores in ArchR</a></li>
+<li class="chapter" data-level="9.2" data-path="identification-of-marker-features.html"><a href="identification-of-marker-features.html"><i class="fa fa-check"></i><b>9.2</b> Identification of Marker Features</a></li>
+<li class="chapter" data-level="9.3" data-path="identifying-marker-genes.html"><a href="identifying-marker-genes.html"><i class="fa fa-check"></i><b>9.3</b> Identifying Marker Genes</a></li>
+<li class="chapter" data-level="9.4" data-path="visualizing-marker-genes-on-an-embedding.html"><a href="visualizing-marker-genes-on-an-embedding.html"><i class="fa fa-check"></i><b>9.4</b> Visualizing Marker Genes on an Embedding</a></li>
+<li class="chapter" data-level="9.5" data-path="marker-genes-imputation-with-magic.html"><a href="marker-genes-imputation-with-magic.html"><i class="fa fa-check"></i><b>9.5</b> Marker Genes Imputation with MAGIC</a></li>
+<li class="chapter" data-level="9.6" data-path="module-scores.html"><a href="module-scores.html"><i class="fa fa-check"></i><b>9.6</b> Module Scores</a></li>
+<li class="chapter" data-level="9.7" data-path="track-plotting-with-archrbrowser.html"><a href="track-plotting-with-archrbrowser.html"><i class="fa fa-check"></i><b>9.7</b> Track Plotting with ArchRBrowser</a></li>
+<li class="chapter" data-level="9.8" data-path="launching-the-interactive-archrbrowser.html"><a href="launching-the-interactive-archrbrowser.html"><i class="fa fa-check"></i><b>9.8</b> Launching the Interactive ArchRBrowser</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="defining-cluster-identity-with-scrna-seq.html"><a href="defining-cluster-identity-with-scrna-seq.html"><i class="fa fa-check"></i><b>10</b> Defining Cluster Identity with scRNA-seq</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><i class="fa fa-check"></i><b>10.1</b> Cross-platform linkage of scATAC-seq cells with scRNA-seq cells</a></li>
+<li class="chapter" data-level="10.2" data-path="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><i class="fa fa-check"></i><b>10.2</b> Adding Pseudo-scRNA-seq profiles for each scATAC-seq cell</a></li>
+<li class="chapter" data-level="10.3" data-path="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><a href="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><i class="fa fa-check"></i><b>10.3</b> Labeling scATAC-seq clusters with scRNA-seq information</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="pseudo-bulk-replicates-in-archr.html"><a href="pseudo-bulk-replicates-in-archr.html"><i class="fa fa-check"></i><b>11</b> Pseudo-bulk Replicates in ArchR</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="how-does-archr-make-pseudo-bulk-replicates.html"><a href="how-does-archr-make-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>11.1</b> How Does ArchR Make Pseudo-bulk Replicates?</a></li>
+<li class="chapter" data-level="11.2" data-path="making-pseudo-bulk-replicates.html"><a href="making-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>11.2</b> Making Pseudo-bulk Replicates</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="calling-peaks-with-archr.html"><a href="calling-peaks-with-archr.html"><i class="fa fa-check"></i><b>12</b> Calling Peaks with ArchR</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="the-iterative-overlap-peak-merging-procedure.html"><a href="the-iterative-overlap-peak-merging-procedure.html"><i class="fa fa-check"></i><b>12.1</b> The Iterative Overlap Peak Merging Procedure</a></li>
+<li class="chapter" data-level="12.2" data-path="calling-peaks-w-macs2.html"><a href="calling-peaks-w-macs2.html"><i class="fa fa-check"></i><b>12.2</b> Calling Peaks w/ Macs2</a></li>
+<li class="chapter" data-level="12.3" data-path="calling-peaks-w-tilematrix.html"><a href="calling-peaks-w-tilematrix.html"><i class="fa fa-check"></i><b>12.3</b> Calling Peaks w/ TileMatrix</a></li>
+<li class="chapter" data-level="12.4" data-path="adding-a-peak-matrix.html"><a href="adding-a-peak-matrix.html"><i class="fa fa-check"></i><b>12.4</b> Adding a Peak Matrix</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="identifying-marker-peaks.html"><a href="identifying-marker-peaks.html"><i class="fa fa-check"></i><b>13</b> Identifying Marker Peaks</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="identifying-marker-peaks-with-archr.html"><a href="identifying-marker-peaks-with-archr.html"><i class="fa fa-check"></i><b>13.1</b> Identifying Marker Peaks with ArchR</a></li>
+<li class="chapter" data-level="13.2" data-path="plotting-marker-peaks-in-archr.html"><a href="plotting-marker-peaks-in-archr.html"><i class="fa fa-check"></i><b>13.2</b> Plotting Marker Peaks in ArchR</a></li>
+<li class="chapter" data-level="13.3" data-path="pairwise-testing-between-groups.html"><a href="pairwise-testing-between-groups.html"><i class="fa fa-check"></i><b>13.3</b> Pairwise Testing Between Groups</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="motif-and-feature-enrichment-with-archr.html"><a href="motif-and-feature-enrichment-with-archr.html"><i class="fa fa-check"></i><b>14</b> Motif and Feature Enrichment with ArchR</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="motif-enrichment.html"><a href="motif-enrichment.html"><i class="fa fa-check"></i><b>14.1</b> Motif Enrichment</a></li>
+<li class="chapter" data-level="14.2" data-path="archr-enrichment.html"><a href="archr-enrichment.html"><i class="fa fa-check"></i><b>14.2</b> ArchR Enrichment</a></li>
+<li class="chapter" data-level="14.3" data-path="custom-enrichment.html"><a href="custom-enrichment.html"><i class="fa fa-check"></i><b>14.3</b> Custom Enrichment</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="chromvar-deviatons-enrichment-with-archr.html"><a href="chromvar-deviatons-enrichment-with-archr.html"><i class="fa fa-check"></i><b>15</b> ChromVAR Deviatons Enrichment with ArchR</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="motif-deviations.html"><a href="motif-deviations.html"><i class="fa fa-check"></i><b>15.1</b> Motif Deviations</a></li>
+<li class="chapter" data-level="15.2" data-path="archr-and-custom-deviations.html"><a href="archr-and-custom-deviations.html"><i class="fa fa-check"></i><b>15.2</b> ArchR and Custom Deviations</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="footprinting-with-archr.html"><a href="footprinting-with-archr.html"><i class="fa fa-check"></i><b>16</b> Footprinting with ArchR</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="motif-footprinting.html"><a href="motif-footprinting.html"><i class="fa fa-check"></i><b>16.1</b> Motif Footprinting</a></li>
+<li class="chapter" data-level="16.2" data-path="normalization-of-footprints-for-tn5-bias.html"><a href="normalization-of-footprints-for-tn5-bias.html"><i class="fa fa-check"></i><b>16.2</b> Normalization of Footprints for Tn5 Bias</a></li>
+<li class="chapter" data-level="16.3" data-path="feature-footprinting.html"><a href="feature-footprinting.html"><i class="fa fa-check"></i><b>16.3</b> Feature Footprinting</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>17</b> Integrative Analysis with ArchR</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="creating-low-overlapping-aggregates-of-cells.html"><a href="creating-low-overlapping-aggregates-of-cells.html"><i class="fa fa-check"></i><b>17.1</b> Creating Low-Overlapping Aggregates of Cells</a></li>
+<li class="chapter" data-level="17.2" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>17.2</b> Co-accessibility with ArchR</a></li>
+<li class="chapter" data-level="17.3" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>17.3</b> Peak2GeneLinkage with ArchR</a></li>
+<li class="chapter" data-level="17.4" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>17.4</b> Identification of Positive TF-Regulators</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-cifferentiation.html"><a href="lymphoid-trajectory---b-cell-cifferentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Cifferentiation</a></li>
+<li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
+<li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
+<li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="handling-archr-output.html"><a href="handling-archr-output.html"><i class="fa fa-check"></i><b>19</b> Handling ArchR Output</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="exporting-fragment-level-data.html"><a href="exporting-fragment-level-data.html"><i class="fa fa-check"></i><b>19.1</b> Exporting fragment-level data</a></li>
+<li class="chapter" data-level="19.2" data-path="exporting-matrix-level-data.html"><a href="exporting-matrix-level-data.html"><i class="fa fa-check"></i><b>19.2</b> Exporting matrix-level data</a></li>
+<li class="chapter" data-level="19.3" data-path="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html"><i class="fa fa-check"></i><b>19.3</b> Exporting pseudo-bulked data to a <code>SummarizedExperiment</code></a></li>
+<li class="chapter" data-level="19.4" data-path="exporting-pseudo-bulked-data-to-a-bigwig-file.html"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html"><i class="fa fa-check"></i><b>19.4</b> Exporting pseudo-bulked data to a bigWig file</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="integration-with-bulk-atac-seq.html"><a href="integration-with-bulk-atac-seq.html"><i class="fa fa-check"></i><b>20</b> Integration with bulk ATAC-seq</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="projecting-bulk-atac-seq-data.html"><a href="projecting-bulk-atac-seq-data.html"><i class="fa fa-check"></i><b>20.1</b> Projecting bulk ATAC-seq data</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="multiomic-data-analysis-in-archr.html"><a href="multiomic-data-analysis-in-archr.html"><i class="fa fa-check"></i><b>21</b> Multiomic data analysis in ArchR</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="importing-data-and-setting-up-a-multiome-project.html"><a href="importing-data-and-setting-up-a-multiome-project.html"><i class="fa fa-check"></i><b>21.1</b> Importing data and setting up a Multiome project</a></li>
+<li class="chapter" data-level="21.2" data-path="analysis-of-multiome-data-in-archr.html"><a href="analysis-of-multiome-data-in-archr.html"><i class="fa fa-check"></i><b>21.2</b> Analysis of multiome data in ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="plot-aesthetics-in-archr.html"><a href="plot-aesthetics-in-archr.html"><i class="fa fa-check"></i><b>22</b> Plot aesthetics in ArchR</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="using-and-manipulating-palettes-in-archr.html"><a href="using-and-manipulating-palettes-in-archr.html"><i class="fa fa-check"></i><b>22.1</b> Using and manipulating palettes in ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="testing-your-archr-installation.html"><a href="testing-your-archr-installation.html"><i class="fa fa-check"></i><b>23</b> Testing Your ArchR Installation</a></li>
+<li class="chapter" data-level="24" data-path="session-information.html"><a href="session-information.html"><i class="fa fa-check"></i><b>24</b> Session Information</a></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="_blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="analysis-of-multiome-data-in-archr" class="section level2 hasAnchor" number="21.2">
+<h2><span class="header-section-number">21.2</span> Analysis of multiome data in ArchR<a href="analysis-of-multiome-data-in-archr.html#analysis-of-multiome-data-in-archr" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>With our multiome project created, we’re now ready to start analysis. It is worth mentioning that the analyses below aren’t altogether different from the analyses presented in the rest of this manual. Because of the inclusion of gene scores, ArchR was already performing analyses that leveraged gene-level information and scATAC-seq information. The primary difference between ATAC-only analysis and multiomic analysis is that we are using the <code>GeneExpressionMatrix</code> instead of the <code>GeneScoreMatrix</code>.</p>
+<p>The first thing we will do is perform dimensionality reduction using <code>addIterativeLSI()</code>. We can do this on the scATAC-seq data via the <code>TileMatrix</code> and on the scRNA-seq data via the <code>GeneExpressionMatrix</code>.</p>
+<div class="sourceCode" id="cb462"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb462-1"><a href="analysis-of-multiome-data-in-archr.html#cb462-1" aria-hidden="true" tabindex="-1"></a>projMulti2 <span class="ot">&lt;-</span> <span class="fu">addIterativeLSI</span>(</span>
+<span id="cb462-2"><a href="analysis-of-multiome-data-in-archr.html#cb462-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">ArchRProj =</span> projMulti2, </span>
+<span id="cb462-3"><a href="analysis-of-multiome-data-in-archr.html#cb462-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">clusterParams =</span> <span class="fu">list</span>(</span>
+<span id="cb462-4"><a href="analysis-of-multiome-data-in-archr.html#cb462-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">resolution =</span> <span class="fl">0.2</span>, </span>
+<span id="cb462-5"><a href="analysis-of-multiome-data-in-archr.html#cb462-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sampleCells =</span> <span class="dv">10000</span>,</span>
+<span id="cb462-6"><a href="analysis-of-multiome-data-in-archr.html#cb462-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">n.start =</span> <span class="dv">10</span></span>
+<span id="cb462-7"><a href="analysis-of-multiome-data-in-archr.html#cb462-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb462-8"><a href="analysis-of-multiome-data-in-archr.html#cb462-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">saveIterations =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb462-9"><a href="analysis-of-multiome-data-in-archr.html#cb462-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">useMatrix =</span> <span class="st">&quot;TileMatrix&quot;</span>, </span>
+<span id="cb462-10"><a href="analysis-of-multiome-data-in-archr.html#cb462-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">depthCol =</span> <span class="st">&quot;nFrags&quot;</span>,</span>
+<span id="cb462-11"><a href="analysis-of-multiome-data-in-archr.html#cb462-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> <span class="st">&quot;LSI_ATAC&quot;</span></span>
+<span id="cb462-12"><a href="analysis-of-multiome-data-in-archr.html#cb462-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb462-13"><a href="analysis-of-multiome-data-in-archr.html#cb462-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Checking Inputs...</span></span>
+<span id="cb462-14"><a href="analysis-of-multiome-data-in-archr.html#cb462-14" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addIterativeLSI-371b016b3a3dd-Date-2022-12-23_Time-09-48-41.log</span></span>
+<span id="cb462-15"><a href="analysis-of-multiome-data-in-archr.html#cb462-15" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb462-16"><a href="analysis-of-multiome-data-in-archr.html#cb462-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:48:43 : Computing Total Across All Features, 0.022 mins elapsed.</span></span>
+<span id="cb462-17"><a href="analysis-of-multiome-data-in-archr.html#cb462-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:48:44 : Computing Top Features, 0.039 mins elapsed.</span></span>
+<span id="cb462-18"><a href="analysis-of-multiome-data-in-archr.html#cb462-18" aria-hidden="true" tabindex="-1"></a><span class="do">## ###########</span></span>
+<span id="cb462-19"><a href="analysis-of-multiome-data-in-archr.html#cb462-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:48:47 : Running LSI (1 of 2) on Top Features, 0.079 mins elapsed.</span></span>
+<span id="cb462-20"><a href="analysis-of-multiome-data-in-archr.html#cb462-20" aria-hidden="true" tabindex="-1"></a><span class="do">## ###########</span></span>
+<span id="cb462-21"><a href="analysis-of-multiome-data-in-archr.html#cb462-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:48:47 : Creating Partial Matrix, 0.079 mins elapsed.</span></span>
+<span id="cb462-22"><a href="analysis-of-multiome-data-in-archr.html#cb462-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:48:59 : Computing LSI, 0.279 mins elapsed.</span></span>
+<span id="cb462-23"><a href="analysis-of-multiome-data-in-archr.html#cb462-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:49:37 : Identifying Clusters, 0.907 mins elapsed.</span></span>
+<span id="cb462-24"><a href="analysis-of-multiome-data-in-archr.html#cb462-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: The following arguments are not used: row.names</span></span>
+<span id="cb462-25"><a href="analysis-of-multiome-data-in-archr.html#cb462-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:49:44 : Identified 5 Clusters, 1.029 mins elapsed.</span></span>
+<span id="cb462-26"><a href="analysis-of-multiome-data-in-archr.html#cb462-26" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:49:44 : Creating Cluster Matrix on the total Group Features, 1.029 mins elapsed.</span></span>
+<span id="cb462-27"><a href="analysis-of-multiome-data-in-archr.html#cb462-27" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:50:06 : Computing Variable Features, 1.391 mins elapsed.</span></span>
+<span id="cb462-28"><a href="analysis-of-multiome-data-in-archr.html#cb462-28" aria-hidden="true" tabindex="-1"></a><span class="do">## ###########</span></span>
+<span id="cb462-29"><a href="analysis-of-multiome-data-in-archr.html#cb462-29" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:50:06 : Running LSI (2 of 2) on Variable Features, 1.393 mins elapsed.</span></span>
+<span id="cb462-30"><a href="analysis-of-multiome-data-in-archr.html#cb462-30" aria-hidden="true" tabindex="-1"></a><span class="do">## ###########</span></span>
+<span id="cb462-31"><a href="analysis-of-multiome-data-in-archr.html#cb462-31" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:50:06 : Creating Partial Matrix, 1.393 mins elapsed.</span></span>
+<span id="cb462-32"><a href="analysis-of-multiome-data-in-archr.html#cb462-32" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:50:17 : Computing LSI, 1.578 mins elapsed.</span></span>
+<span id="cb462-33"><a href="analysis-of-multiome-data-in-archr.html#cb462-33" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:50:41 : Finished Running IterativeLSI, 1.983 mins elapsed.</span></span></code></pre></div>
+<div class="sourceCode" id="cb463"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb463-1"><a href="analysis-of-multiome-data-in-archr.html#cb463-1" aria-hidden="true" tabindex="-1"></a>projMulti2 <span class="ot">&lt;-</span> <span class="fu">addIterativeLSI</span>(</span>
+<span id="cb463-2"><a href="analysis-of-multiome-data-in-archr.html#cb463-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">ArchRProj =</span> projMulti2, </span>
+<span id="cb463-3"><a href="analysis-of-multiome-data-in-archr.html#cb463-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">clusterParams =</span> <span class="fu">list</span>(</span>
+<span id="cb463-4"><a href="analysis-of-multiome-data-in-archr.html#cb463-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">resolution =</span> <span class="fl">0.2</span>, </span>
+<span id="cb463-5"><a href="analysis-of-multiome-data-in-archr.html#cb463-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sampleCells =</span> <span class="dv">10000</span>,</span>
+<span id="cb463-6"><a href="analysis-of-multiome-data-in-archr.html#cb463-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">n.start =</span> <span class="dv">10</span></span>
+<span id="cb463-7"><a href="analysis-of-multiome-data-in-archr.html#cb463-7" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb463-8"><a href="analysis-of-multiome-data-in-archr.html#cb463-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">saveIterations =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb463-9"><a href="analysis-of-multiome-data-in-archr.html#cb463-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">useMatrix =</span> <span class="st">&quot;GeneExpressionMatrix&quot;</span>, </span>
+<span id="cb463-10"><a href="analysis-of-multiome-data-in-archr.html#cb463-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">depthCol =</span> <span class="st">&quot;Gex_nUMI&quot;</span>,</span>
+<span id="cb463-11"><a href="analysis-of-multiome-data-in-archr.html#cb463-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">varFeatures =</span> <span class="dv">2500</span>,</span>
+<span id="cb463-12"><a href="analysis-of-multiome-data-in-archr.html#cb463-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">firstSelection =</span> <span class="st">&quot;variable&quot;</span>,</span>
+<span id="cb463-13"><a href="analysis-of-multiome-data-in-archr.html#cb463-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">binarize =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb463-14"><a href="analysis-of-multiome-data-in-archr.html#cb463-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> <span class="st">&quot;LSI_RNA&quot;</span></span>
+<span id="cb463-15"><a href="analysis-of-multiome-data-in-archr.html#cb463-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb463-16"><a href="analysis-of-multiome-data-in-archr.html#cb463-16" aria-hidden="true" tabindex="-1"></a><span class="do">## Checking Inputs...</span></span>
+<span id="cb463-17"><a href="analysis-of-multiome-data-in-archr.html#cb463-17" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addIterativeLSI-371b0711d1aee-Date-2022-12-23_Time-09-50-41.log</span></span>
+<span id="cb463-18"><a href="analysis-of-multiome-data-in-archr.html#cb463-18" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb463-19"><a href="analysis-of-multiome-data-in-archr.html#cb463-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:50:44 : Computing Variability Across All Features, 0.022 mins elapsed.</span></span>
+<span id="cb463-20"><a href="analysis-of-multiome-data-in-archr.html#cb463-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:50:45 : Computing Variable Features, 0.037 mins elapsed.</span></span>
+<span id="cb463-21"><a href="analysis-of-multiome-data-in-archr.html#cb463-21" aria-hidden="true" tabindex="-1"></a><span class="do">## ###########</span></span>
+<span id="cb463-22"><a href="analysis-of-multiome-data-in-archr.html#cb463-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:50:47 : Running LSI (1 of 2) on Top Features, 0.069 mins elapsed.</span></span>
+<span id="cb463-23"><a href="analysis-of-multiome-data-in-archr.html#cb463-23" aria-hidden="true" tabindex="-1"></a><span class="do">## ###########</span></span>
+<span id="cb463-24"><a href="analysis-of-multiome-data-in-archr.html#cb463-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:50:47 : Creating Partial Matrix, 0.069 mins elapsed.</span></span>
+<span id="cb463-25"><a href="analysis-of-multiome-data-in-archr.html#cb463-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:50:52 : Computing LSI, 0.156 mins elapsed.</span></span>
+<span id="cb463-26"><a href="analysis-of-multiome-data-in-archr.html#cb463-26" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:51:05 : Identifying Clusters, 0.367 mins elapsed.</span></span>
+<span id="cb463-27"><a href="analysis-of-multiome-data-in-archr.html#cb463-27" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: The following arguments are not used: row.names</span></span>
+<span id="cb463-28"><a href="analysis-of-multiome-data-in-archr.html#cb463-28" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:51:11 : Identified 8 Clusters, 0.479 mins elapsed.</span></span>
+<span id="cb463-29"><a href="analysis-of-multiome-data-in-archr.html#cb463-29" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:51:11 : Creating Cluster Matrix on the total Group Features, 0.479 mins elapsed.</span></span>
+<span id="cb463-30"><a href="analysis-of-multiome-data-in-archr.html#cb463-30" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:51:31 : Computing Variable Features, 0.809 mins elapsed.</span></span>
+<span id="cb463-31"><a href="analysis-of-multiome-data-in-archr.html#cb463-31" aria-hidden="true" tabindex="-1"></a><span class="do">## ###########</span></span>
+<span id="cb463-32"><a href="analysis-of-multiome-data-in-archr.html#cb463-32" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:51:31 : Running LSI (2 of 2) on Variable Features, 0.809 mins elapsed.</span></span>
+<span id="cb463-33"><a href="analysis-of-multiome-data-in-archr.html#cb463-33" aria-hidden="true" tabindex="-1"></a><span class="do">## ###########</span></span>
+<span id="cb463-34"><a href="analysis-of-multiome-data-in-archr.html#cb463-34" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:51:31 : Creating Partial Matrix, 0.809 mins elapsed.</span></span>
+<span id="cb463-35"><a href="analysis-of-multiome-data-in-archr.html#cb463-35" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:51:36 : Computing LSI, 0.893 mins elapsed.</span></span>
+<span id="cb463-36"><a href="analysis-of-multiome-data-in-archr.html#cb463-36" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:51:46 : Finished Running IterativeLSI, 1.066 mins elapsed.</span></span></code></pre></div>
+<p>We can also create a dimensionality reduction that uses information from both the scATAC-seq and scRNA-seq data. We will name this <code>reducedDims</code> object “LSI_Combined”.</p>
+<div class="sourceCode" id="cb464"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb464-1"><a href="analysis-of-multiome-data-in-archr.html#cb464-1" aria-hidden="true" tabindex="-1"></a>projMulti2 <span class="ot">&lt;-</span> <span class="fu">addCombinedDims</span>(projMulti2, <span class="at">reducedDims =</span> <span class="fu">c</span>(<span class="st">&quot;LSI_ATAC&quot;</span>, <span class="st">&quot;LSI_RNA&quot;</span>), <span class="at">name =</span>  <span class="st">&quot;LSI_Combined&quot;</span>)</span></code></pre></div>
+<p>We can create UMAP embeddings for each of these dimensionality reductions.</p>
+<div class="sourceCode" id="cb465"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb465-1"><a href="analysis-of-multiome-data-in-archr.html#cb465-1" aria-hidden="true" tabindex="-1"></a>projMulti2 <span class="ot">&lt;-</span> <span class="fu">addUMAP</span>(projMulti2, <span class="at">reducedDims =</span> <span class="st">&quot;LSI_ATAC&quot;</span>, <span class="at">name =</span> <span class="st">&quot;UMAP_ATAC&quot;</span>, <span class="at">minDist =</span> <span class="fl">0.8</span>, <span class="at">force =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb465-2"><a href="analysis-of-multiome-data-in-archr.html#cb465-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:51:47 UMAP embedding parameters a = 0.2321 b = 1.681</span></span>
+<span id="cb465-3"><a href="analysis-of-multiome-data-in-archr.html#cb465-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:51:47 Read 5323 rows and found 30 numeric columns</span></span>
+<span id="cb465-4"><a href="analysis-of-multiome-data-in-archr.html#cb465-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:51:47 Using Annoy for neighbor search, n_neighbors = 40</span></span>
+<span id="cb465-5"><a href="analysis-of-multiome-data-in-archr.html#cb465-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:51:47 Building Annoy index with metric = cosine, n_trees = 50</span></span>
+<span id="cb465-6"><a href="analysis-of-multiome-data-in-archr.html#cb465-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 0%   10   20   30   40   50   60   70   80   90   100%</span></span>
+<span id="cb465-7"><a href="analysis-of-multiome-data-in-archr.html#cb465-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [----|----|----|----|----|----|----|----|----|----|</span></span>
+<span id="cb465-8"><a href="analysis-of-multiome-data-in-archr.html#cb465-8" aria-hidden="true" tabindex="-1"></a><span class="do">## **************************************************|</span></span>
+<span id="cb465-9"><a href="analysis-of-multiome-data-in-archr.html#cb465-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:51:47 Writing NN index file to temp file /tmp/Rtmp5J9pWv/file371b02d82c885</span></span>
+<span id="cb465-10"><a href="analysis-of-multiome-data-in-archr.html#cb465-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:51:47 Searching Annoy index using 64 threads, search_k = 4000</span></span>
+<span id="cb465-11"><a href="analysis-of-multiome-data-in-archr.html#cb465-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:51:47 Annoy recall = 100%</span></span>
+<span id="cb465-12"><a href="analysis-of-multiome-data-in-archr.html#cb465-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:51:49 Commencing smooth kNN distance calibration using 64 threads</span></span>
+<span id="cb465-13"><a href="analysis-of-multiome-data-in-archr.html#cb465-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:51:51 Initializing from normalized Laplacian + noise</span></span>
+<span id="cb465-14"><a href="analysis-of-multiome-data-in-archr.html#cb465-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:51:51 Commencing optimization for 500 epochs, with 303770 positive edges</span></span>
+<span id="cb465-15"><a href="analysis-of-multiome-data-in-archr.html#cb465-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:51:59 Optimization finished</span></span>
+<span id="cb465-16"><a href="analysis-of-multiome-data-in-archr.html#cb465-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:51:59 Creating temp model dir /tmp/Rtmp5J9pWv/dir371b042bd833c</span></span>
+<span id="cb465-17"><a href="analysis-of-multiome-data-in-archr.html#cb465-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:51:59 Creating dir /tmp/Rtmp5J9pWv/dir371b042bd833c</span></span>
+<span id="cb465-18"><a href="analysis-of-multiome-data-in-archr.html#cb465-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:00 Changing to /tmp/Rtmp5J9pWv/dir371b042bd833c</span></span>
+<span id="cb465-19"><a href="analysis-of-multiome-data-in-archr.html#cb465-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:00 Creating /corces/home/rcorces/scripts/github/ArchR_Website_Testing/bookdown/Save-ProjMulti2/Embeddings/Save-Uwot-UMAP-Params-LSI_ATAC-371b07518ee96-Date-2022-12-23_Time-09-51-59.tar</span></span>
+<span id="cb465-20"><a href="analysis-of-multiome-data-in-archr.html#cb465-20" aria-hidden="true" tabindex="-1"></a>projMulti2 <span class="ot">&lt;-</span> <span class="fu">addUMAP</span>(projMulti2, <span class="at">reducedDims =</span> <span class="st">&quot;LSI_RNA&quot;</span>, <span class="at">name =</span> <span class="st">&quot;UMAP_RNA&quot;</span>, <span class="at">minDist =</span> <span class="fl">0.8</span>, <span class="at">force =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb465-21"><a href="analysis-of-multiome-data-in-archr.html#cb465-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:00 UMAP embedding parameters a = 0.2321 b = 1.681</span></span>
+<span id="cb465-22"><a href="analysis-of-multiome-data-in-archr.html#cb465-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:00 Read 5323 rows and found 30 numeric columns</span></span>
+<span id="cb465-23"><a href="analysis-of-multiome-data-in-archr.html#cb465-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:00 Using Annoy for neighbor search, n_neighbors = 40</span></span>
+<span id="cb465-24"><a href="analysis-of-multiome-data-in-archr.html#cb465-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:00 Building Annoy index with metric = cosine, n_trees = 50</span></span>
+<span id="cb465-25"><a href="analysis-of-multiome-data-in-archr.html#cb465-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 0%   10   20   30   40   50   60   70   80   90   100%</span></span>
+<span id="cb465-26"><a href="analysis-of-multiome-data-in-archr.html#cb465-26" aria-hidden="true" tabindex="-1"></a><span class="do">## [----|----|----|----|----|----|----|----|----|----|</span></span>
+<span id="cb465-27"><a href="analysis-of-multiome-data-in-archr.html#cb465-27" aria-hidden="true" tabindex="-1"></a><span class="do">## **************************************************|</span></span>
+<span id="cb465-28"><a href="analysis-of-multiome-data-in-archr.html#cb465-28" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:01 Writing NN index file to temp file /tmp/Rtmp5J9pWv/file371b02b083ee5</span></span>
+<span id="cb465-29"><a href="analysis-of-multiome-data-in-archr.html#cb465-29" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:01 Searching Annoy index using 64 threads, search_k = 4000</span></span>
+<span id="cb465-30"><a href="analysis-of-multiome-data-in-archr.html#cb465-30" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:01 Annoy recall = 100%</span></span>
+<span id="cb465-31"><a href="analysis-of-multiome-data-in-archr.html#cb465-31" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:03 Commencing smooth kNN distance calibration using 64 threads</span></span>
+<span id="cb465-32"><a href="analysis-of-multiome-data-in-archr.html#cb465-32" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:04 Initializing from normalized Laplacian + noise</span></span>
+<span id="cb465-33"><a href="analysis-of-multiome-data-in-archr.html#cb465-33" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:05 Commencing optimization for 500 epochs, with 294502 positive edges</span></span>
+<span id="cb465-34"><a href="analysis-of-multiome-data-in-archr.html#cb465-34" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:12 Optimization finished</span></span>
+<span id="cb465-35"><a href="analysis-of-multiome-data-in-archr.html#cb465-35" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:12 Creating temp model dir /tmp/Rtmp5J9pWv/dir371b076558c32</span></span>
+<span id="cb465-36"><a href="analysis-of-multiome-data-in-archr.html#cb465-36" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:12 Creating dir /tmp/Rtmp5J9pWv/dir371b076558c32</span></span>
+<span id="cb465-37"><a href="analysis-of-multiome-data-in-archr.html#cb465-37" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:14 Changing to /tmp/Rtmp5J9pWv/dir371b076558c32</span></span>
+<span id="cb465-38"><a href="analysis-of-multiome-data-in-archr.html#cb465-38" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:14 Creating /corces/home/rcorces/scripts/github/ArchR_Website_Testing/bookdown/Save-ProjMulti2/Embeddings/Save-Uwot-UMAP-Params-LSI_RNA-371b06fc93dd1-Date-2022-12-23_Time-09-52-12.tar</span></span>
+<span id="cb465-39"><a href="analysis-of-multiome-data-in-archr.html#cb465-39" aria-hidden="true" tabindex="-1"></a>projMulti2 <span class="ot">&lt;-</span> <span class="fu">addUMAP</span>(projMulti2, <span class="at">reducedDims =</span> <span class="st">&quot;LSI_Combined&quot;</span>, <span class="at">name =</span> <span class="st">&quot;UMAP_Combined&quot;</span>, <span class="at">minDist =</span> <span class="fl">0.8</span>, <span class="at">force =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb465-40"><a href="analysis-of-multiome-data-in-archr.html#cb465-40" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:14 UMAP embedding parameters a = 0.2321 b = 1.681</span></span>
+<span id="cb465-41"><a href="analysis-of-multiome-data-in-archr.html#cb465-41" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:14 Read 5323 rows and found 60 numeric columns</span></span>
+<span id="cb465-42"><a href="analysis-of-multiome-data-in-archr.html#cb465-42" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:14 Using Annoy for neighbor search, n_neighbors = 40</span></span>
+<span id="cb465-43"><a href="analysis-of-multiome-data-in-archr.html#cb465-43" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:14 Building Annoy index with metric = cosine, n_trees = 50</span></span>
+<span id="cb465-44"><a href="analysis-of-multiome-data-in-archr.html#cb465-44" aria-hidden="true" tabindex="-1"></a><span class="do">## 0%   10   20   30   40   50   60   70   80   90   100%</span></span>
+<span id="cb465-45"><a href="analysis-of-multiome-data-in-archr.html#cb465-45" aria-hidden="true" tabindex="-1"></a><span class="do">## [----|----|----|----|----|----|----|----|----|----|</span></span>
+<span id="cb465-46"><a href="analysis-of-multiome-data-in-archr.html#cb465-46" aria-hidden="true" tabindex="-1"></a><span class="do">## **************************************************|</span></span>
+<span id="cb465-47"><a href="analysis-of-multiome-data-in-archr.html#cb465-47" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:15 Writing NN index file to temp file /tmp/Rtmp5J9pWv/file371b04d133045</span></span>
+<span id="cb465-48"><a href="analysis-of-multiome-data-in-archr.html#cb465-48" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:15 Searching Annoy index using 64 threads, search_k = 4000</span></span>
+<span id="cb465-49"><a href="analysis-of-multiome-data-in-archr.html#cb465-49" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:15 Annoy recall = 100%</span></span>
+<span id="cb465-50"><a href="analysis-of-multiome-data-in-archr.html#cb465-50" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:16 Commencing smooth kNN distance calibration using 64 threads</span></span>
+<span id="cb465-51"><a href="analysis-of-multiome-data-in-archr.html#cb465-51" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:18 Initializing from normalized Laplacian + noise</span></span>
+<span id="cb465-52"><a href="analysis-of-multiome-data-in-archr.html#cb465-52" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:18 Commencing optimization for 500 epochs, with 301584 positive edges</span></span>
+<span id="cb465-53"><a href="analysis-of-multiome-data-in-archr.html#cb465-53" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:26 Optimization finished</span></span>
+<span id="cb465-54"><a href="analysis-of-multiome-data-in-archr.html#cb465-54" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:26 Creating temp model dir /tmp/Rtmp5J9pWv/dir371b0bbfa8b3</span></span>
+<span id="cb465-55"><a href="analysis-of-multiome-data-in-archr.html#cb465-55" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:26 Creating dir /tmp/Rtmp5J9pWv/dir371b0bbfa8b3</span></span>
+<span id="cb465-56"><a href="analysis-of-multiome-data-in-archr.html#cb465-56" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:28 Changing to /tmp/Rtmp5J9pWv/dir371b0bbfa8b3</span></span>
+<span id="cb465-57"><a href="analysis-of-multiome-data-in-archr.html#cb465-57" aria-hidden="true" tabindex="-1"></a><span class="do">## 09:52:28 Creating /corces/home/rcorces/scripts/github/ArchR_Website_Testing/bookdown/Save-ProjMulti2/Embeddings/Save-Uwot-UMAP-Params-LSI_Combined-371b0296d5304-Date-2022-12-23_Time-09-52-26.tar</span></span></code></pre></div>
+<p>And then call clusters for each.</p>
+<div class="sourceCode" id="cb466"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb466-1"><a href="analysis-of-multiome-data-in-archr.html#cb466-1" aria-hidden="true" tabindex="-1"></a>projMulti2 <span class="ot">&lt;-</span> <span class="fu">addClusters</span>(projMulti2, <span class="at">reducedDims =</span> <span class="st">&quot;LSI_ATAC&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Clusters_ATAC&quot;</span>, <span class="at">resolution =</span> <span class="fl">0.4</span>, <span class="at">force =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb466-2"><a href="analysis-of-multiome-data-in-archr.html#cb466-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addClusters-371b068b5564e-Date-2022-12-23_Time-09-52-28.log</span></span>
+<span id="cb466-3"><a href="analysis-of-multiome-data-in-archr.html#cb466-3" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb466-4"><a href="analysis-of-multiome-data-in-archr.html#cb466-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:52:29 : Running Seurats FindClusters (Stuart et al. Cell 2019), 0.001 mins elapsed.</span></span>
+<span id="cb466-5"><a href="analysis-of-multiome-data-in-archr.html#cb466-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: The following arguments are not used: row.names</span></span>
+<span id="cb466-6"><a href="analysis-of-multiome-data-in-archr.html#cb466-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Computing nearest neighbor graph</span></span>
+<span id="cb466-7"><a href="analysis-of-multiome-data-in-archr.html#cb466-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Computing SNN</span></span>
+<span id="cb466-8"><a href="analysis-of-multiome-data-in-archr.html#cb466-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck</span></span>
+<span id="cb466-9"><a href="analysis-of-multiome-data-in-archr.html#cb466-9" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb466-10"><a href="analysis-of-multiome-data-in-archr.html#cb466-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of nodes: 5323</span></span>
+<span id="cb466-11"><a href="analysis-of-multiome-data-in-archr.html#cb466-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of edges: 230133</span></span>
+<span id="cb466-12"><a href="analysis-of-multiome-data-in-archr.html#cb466-12" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb466-13"><a href="analysis-of-multiome-data-in-archr.html#cb466-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Running Louvain algorithm...</span></span>
+<span id="cb466-14"><a href="analysis-of-multiome-data-in-archr.html#cb466-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Maximum modularity in 10 random starts: 0.9129</span></span>
+<span id="cb466-15"><a href="analysis-of-multiome-data-in-archr.html#cb466-15" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of communities: 11</span></span>
+<span id="cb466-16"><a href="analysis-of-multiome-data-in-archr.html#cb466-16" aria-hidden="true" tabindex="-1"></a><span class="do">## Elapsed time: 0 seconds</span></span>
+<span id="cb466-17"><a href="analysis-of-multiome-data-in-archr.html#cb466-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:52:36 : Testing Biased Clusters, 0.109 mins elapsed.</span></span>
+<span id="cb466-18"><a href="analysis-of-multiome-data-in-archr.html#cb466-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:52:36 : Testing Outlier Clusters, 0.109 mins elapsed.</span></span>
+<span id="cb466-19"><a href="analysis-of-multiome-data-in-archr.html#cb466-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:52:36 : Assigning Cluster Names to 11 Clusters, 0.109 mins elapsed.</span></span>
+<span id="cb466-20"><a href="analysis-of-multiome-data-in-archr.html#cb466-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:52:36 : Finished addClusters, 0.11 mins elapsed.</span></span>
+<span id="cb466-21"><a href="analysis-of-multiome-data-in-archr.html#cb466-21" aria-hidden="true" tabindex="-1"></a>projMulti2 <span class="ot">&lt;-</span> <span class="fu">addClusters</span>(projMulti2, <span class="at">reducedDims =</span> <span class="st">&quot;LSI_RNA&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Clusters_RNA&quot;</span>, <span class="at">resolution =</span> <span class="fl">0.4</span>, <span class="at">force =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb466-22"><a href="analysis-of-multiome-data-in-archr.html#cb466-22" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addClusters-371b05622e7b4-Date-2022-12-23_Time-09-52-36.log</span></span>
+<span id="cb466-23"><a href="analysis-of-multiome-data-in-archr.html#cb466-23" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb466-24"><a href="analysis-of-multiome-data-in-archr.html#cb466-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:52:37 : Running Seurats FindClusters (Stuart et al. Cell 2019), 0.001 mins elapsed.</span></span>
+<span id="cb466-25"><a href="analysis-of-multiome-data-in-archr.html#cb466-25" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: The following arguments are not used: row.names</span></span>
+<span id="cb466-26"><a href="analysis-of-multiome-data-in-archr.html#cb466-26" aria-hidden="true" tabindex="-1"></a><span class="do">## Computing nearest neighbor graph</span></span>
+<span id="cb466-27"><a href="analysis-of-multiome-data-in-archr.html#cb466-27" aria-hidden="true" tabindex="-1"></a><span class="do">## Computing SNN</span></span>
+<span id="cb466-28"><a href="analysis-of-multiome-data-in-archr.html#cb466-28" aria-hidden="true" tabindex="-1"></a><span class="do">## Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck</span></span>
+<span id="cb466-29"><a href="analysis-of-multiome-data-in-archr.html#cb466-29" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb466-30"><a href="analysis-of-multiome-data-in-archr.html#cb466-30" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of nodes: 5323</span></span>
+<span id="cb466-31"><a href="analysis-of-multiome-data-in-archr.html#cb466-31" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of edges: 210178</span></span>
+<span id="cb466-32"><a href="analysis-of-multiome-data-in-archr.html#cb466-32" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb466-33"><a href="analysis-of-multiome-data-in-archr.html#cb466-33" aria-hidden="true" tabindex="-1"></a><span class="do">## Running Louvain algorithm...</span></span>
+<span id="cb466-34"><a href="analysis-of-multiome-data-in-archr.html#cb466-34" aria-hidden="true" tabindex="-1"></a><span class="do">## Maximum modularity in 10 random starts: 0.9160</span></span>
+<span id="cb466-35"><a href="analysis-of-multiome-data-in-archr.html#cb466-35" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of communities: 12</span></span>
+<span id="cb466-36"><a href="analysis-of-multiome-data-in-archr.html#cb466-36" aria-hidden="true" tabindex="-1"></a><span class="do">## Elapsed time: 0 seconds</span></span>
+<span id="cb466-37"><a href="analysis-of-multiome-data-in-archr.html#cb466-37" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:52:43 : Testing Biased Clusters, 0.105 mins elapsed.</span></span>
+<span id="cb466-38"><a href="analysis-of-multiome-data-in-archr.html#cb466-38" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:52:43 : Testing Outlier Clusters, 0.105 mins elapsed.</span></span>
+<span id="cb466-39"><a href="analysis-of-multiome-data-in-archr.html#cb466-39" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:52:43 : Assigning Cluster Names to 12 Clusters, 0.105 mins elapsed.</span></span>
+<span id="cb466-40"><a href="analysis-of-multiome-data-in-archr.html#cb466-40" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:52:44 : Finished addClusters, 0.106 mins elapsed.</span></span>
+<span id="cb466-41"><a href="analysis-of-multiome-data-in-archr.html#cb466-41" aria-hidden="true" tabindex="-1"></a>projMulti2 <span class="ot">&lt;-</span> <span class="fu">addClusters</span>(projMulti2, <span class="at">reducedDims =</span> <span class="st">&quot;LSI_Combined&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Clusters_Combined&quot;</span>, <span class="at">resolution =</span> <span class="fl">0.4</span>, <span class="at">force =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb466-42"><a href="analysis-of-multiome-data-in-archr.html#cb466-42" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addClusters-371b06f19f297-Date-2022-12-23_Time-09-52-44.log</span></span>
+<span id="cb466-43"><a href="analysis-of-multiome-data-in-archr.html#cb466-43" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb466-44"><a href="analysis-of-multiome-data-in-archr.html#cb466-44" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:52:45 : Running Seurats FindClusters (Stuart et al. Cell 2019), 0.001 mins elapsed.</span></span>
+<span id="cb466-45"><a href="analysis-of-multiome-data-in-archr.html#cb466-45" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: The following arguments are not used: row.names</span></span>
+<span id="cb466-46"><a href="analysis-of-multiome-data-in-archr.html#cb466-46" aria-hidden="true" tabindex="-1"></a><span class="do">## Computing nearest neighbor graph</span></span>
+<span id="cb466-47"><a href="analysis-of-multiome-data-in-archr.html#cb466-47" aria-hidden="true" tabindex="-1"></a><span class="do">## Computing SNN</span></span>
+<span id="cb466-48"><a href="analysis-of-multiome-data-in-archr.html#cb466-48" aria-hidden="true" tabindex="-1"></a><span class="do">## Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck</span></span>
+<span id="cb466-49"><a href="analysis-of-multiome-data-in-archr.html#cb466-49" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb466-50"><a href="analysis-of-multiome-data-in-archr.html#cb466-50" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of nodes: 5323</span></span>
+<span id="cb466-51"><a href="analysis-of-multiome-data-in-archr.html#cb466-51" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of edges: 229883</span></span>
+<span id="cb466-52"><a href="analysis-of-multiome-data-in-archr.html#cb466-52" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb466-53"><a href="analysis-of-multiome-data-in-archr.html#cb466-53" aria-hidden="true" tabindex="-1"></a><span class="do">## Running Louvain algorithm...</span></span>
+<span id="cb466-54"><a href="analysis-of-multiome-data-in-archr.html#cb466-54" aria-hidden="true" tabindex="-1"></a><span class="do">## Maximum modularity in 10 random starts: 0.9242</span></span>
+<span id="cb466-55"><a href="analysis-of-multiome-data-in-archr.html#cb466-55" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of communities: 12</span></span>
+<span id="cb466-56"><a href="analysis-of-multiome-data-in-archr.html#cb466-56" aria-hidden="true" tabindex="-1"></a><span class="do">## Elapsed time: 0 seconds</span></span>
+<span id="cb466-57"><a href="analysis-of-multiome-data-in-archr.html#cb466-57" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:52:53 : Testing Outlier Clusters, 0.142 mins elapsed.</span></span>
+<span id="cb466-58"><a href="analysis-of-multiome-data-in-archr.html#cb466-58" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:52:53 : Assigning Cluster Names to 12 Clusters, 0.142 mins elapsed.</span></span>
+<span id="cb466-59"><a href="analysis-of-multiome-data-in-archr.html#cb466-59" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:52:53 : Finished addClusters, 0.143 mins elapsed.</span></span></code></pre></div>
+<p>We can plot how each of these dimensionality reductions look with respect to the clusters called in “LSI_Combined”.</p>
+<div class="sourceCode" id="cb467"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb467-1"><a href="analysis-of-multiome-data-in-archr.html#cb467-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">plotEmbedding</span>(projMulti2, <span class="at">name =</span> <span class="st">&quot;Clusters_Combined&quot;</span>, <span class="at">embedding =</span> <span class="st">&quot;UMAP_ATAC&quot;</span>, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">labelAsFactors=</span>F, <span class="at">labelMeans=</span>F)</span>
+<span id="cb467-2"><a href="analysis-of-multiome-data-in-archr.html#cb467-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-371b026eae8ba-Date-2022-12-23_Time-09-52-54.log</span></span>
+<span id="cb467-3"><a href="analysis-of-multiome-data-in-archr.html#cb467-3" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb467-4"><a href="analysis-of-multiome-data-in-archr.html#cb467-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
+<span id="cb467-5"><a href="analysis-of-multiome-data-in-archr.html#cb467-5" aria-hidden="true" tabindex="-1"></a><span class="do">## ColorBy = cellColData</span></span>
+<span id="cb467-6"><a href="analysis-of-multiome-data-in-archr.html#cb467-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
+<span id="cb467-7"><a href="analysis-of-multiome-data-in-archr.html#cb467-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 </span></span>
+<span id="cb467-8"><a href="analysis-of-multiome-data-in-archr.html#cb467-8" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-371b026eae8ba-Date-2022-12-23_Time-09-52-54.log</span></span>
+<span id="cb467-9"><a href="analysis-of-multiome-data-in-archr.html#cb467-9" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">plotEmbedding</span>(projMulti2, <span class="at">name =</span> <span class="st">&quot;Clusters_Combined&quot;</span>, <span class="at">embedding =</span> <span class="st">&quot;UMAP_RNA&quot;</span>, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">labelAsFactors=</span>F, <span class="at">labelMeans=</span>F)</span>
+<span id="cb467-10"><a href="analysis-of-multiome-data-in-archr.html#cb467-10" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-371b07c3aed0d-Date-2022-12-23_Time-09-52-56.log</span></span>
+<span id="cb467-11"><a href="analysis-of-multiome-data-in-archr.html#cb467-11" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb467-12"><a href="analysis-of-multiome-data-in-archr.html#cb467-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
+<span id="cb467-13"><a href="analysis-of-multiome-data-in-archr.html#cb467-13" aria-hidden="true" tabindex="-1"></a><span class="do">## ColorBy = cellColData</span></span>
+<span id="cb467-14"><a href="analysis-of-multiome-data-in-archr.html#cb467-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
+<span id="cb467-15"><a href="analysis-of-multiome-data-in-archr.html#cb467-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 </span></span>
+<span id="cb467-16"><a href="analysis-of-multiome-data-in-archr.html#cb467-16" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-371b07c3aed0d-Date-2022-12-23_Time-09-52-56.log</span></span>
+<span id="cb467-17"><a href="analysis-of-multiome-data-in-archr.html#cb467-17" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">plotEmbedding</span>(projMulti2, <span class="at">name =</span> <span class="st">&quot;Clusters_Combined&quot;</span>, <span class="at">embedding =</span> <span class="st">&quot;UMAP_Combined&quot;</span>, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">labelAsFactors=</span>F, <span class="at">labelMeans=</span>F)</span>
+<span id="cb467-18"><a href="analysis-of-multiome-data-in-archr.html#cb467-18" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-371b082872b9-Date-2022-12-23_Time-09-52-59.log</span></span>
+<span id="cb467-19"><a href="analysis-of-multiome-data-in-archr.html#cb467-19" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb467-20"><a href="analysis-of-multiome-data-in-archr.html#cb467-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
+<span id="cb467-21"><a href="analysis-of-multiome-data-in-archr.html#cb467-21" aria-hidden="true" tabindex="-1"></a><span class="do">## ColorBy = cellColData</span></span>
+<span id="cb467-22"><a href="analysis-of-multiome-data-in-archr.html#cb467-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
+<span id="cb467-23"><a href="analysis-of-multiome-data-in-archr.html#cb467-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 </span></span>
+<span id="cb467-24"><a href="analysis-of-multiome-data-in-archr.html#cb467-24" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-371b082872b9-Date-2022-12-23_Time-09-52-59.log</span></span>
+<span id="cb467-25"><a href="analysis-of-multiome-data-in-archr.html#cb467-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb467-26"><a href="analysis-of-multiome-data-in-archr.html#cb467-26" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">list</span>(p1,p2,p3), <span class="cf">function</span>(x){</span>
+<span id="cb467-27"><a href="analysis-of-multiome-data-in-archr.html#cb467-27" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">+</span> <span class="fu">guides</span>(<span class="at">color =</span> <span class="st">&quot;none&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb467-28"><a href="analysis-of-multiome-data-in-archr.html#cb467-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_ArchR</span>(<span class="at">baseSize =</span> <span class="fl">6.5</span>) <span class="sc">+</span></span>
+<span id="cb467-29"><a href="analysis-of-multiome-data-in-archr.html#cb467-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>), <span class="st">&quot;cm&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb467-30"><a href="analysis-of-multiome-data-in-archr.html#cb467-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb467-31"><a href="analysis-of-multiome-data-in-archr.html#cb467-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.text.x=</span><span class="fu">element_blank</span>(), </span>
+<span id="cb467-32"><a href="analysis-of-multiome-data-in-archr.html#cb467-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.ticks.x=</span><span class="fu">element_blank</span>(), </span>
+<span id="cb467-33"><a href="analysis-of-multiome-data-in-archr.html#cb467-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.text.y=</span><span class="fu">element_blank</span>(), </span>
+<span id="cb467-34"><a href="analysis-of-multiome-data-in-archr.html#cb467-34" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.ticks.y=</span><span class="fu">element_blank</span>()</span>
+<span id="cb467-35"><a href="analysis-of-multiome-data-in-archr.html#cb467-35" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb467-36"><a href="analysis-of-multiome-data-in-archr.html#cb467-36" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb467-37"><a href="analysis-of-multiome-data-in-archr.html#cb467-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb467-38"><a href="analysis-of-multiome-data-in-archr.html#cb467-38" aria-hidden="true" tabindex="-1"></a><span class="fu">do.call</span>(cowplot<span class="sc">::</span>plot_grid, <span class="fu">c</span>(<span class="fu">list</span>(<span class="at">ncol =</span> <span class="dv">3</span>),p))</span></code></pre></div>
+<p><img src="ArchR_files/figure-html/multiomePlotEmb-1.svg" width="672" /></p>
+<p>We can also save this to a PDF file.</p>
+<div class="sourceCode" id="cb468"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb468-1"><a href="analysis-of-multiome-data-in-archr.html#cb468-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotPDF</span>(p1, p2, p3, <span class="at">name =</span> <span class="st">&quot;UMAP-scATAC-scRNA-Combined&quot;</span>, <span class="at">addDOC =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb468-2"><a href="analysis-of-multiome-data-in-archr.html#cb468-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
+<span id="cb468-3"><a href="analysis-of-multiome-data-in-archr.html#cb468-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
+<span id="cb468-4"><a href="analysis-of-multiome-data-in-archr.html#cb468-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span></code></pre></div>
+<p>You’ll notice that there are some differences between the cluster residence of cells in the scATAC-seq space and cells in the scRNA-seq space. We can visualize these differences using a confusion matrix.</p>
+<div class="sourceCode" id="cb469"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb469-1"><a href="analysis-of-multiome-data-in-archr.html#cb469-1" aria-hidden="true" tabindex="-1"></a>cM_atac_rna <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(<span class="fu">paste0</span>(projMulti2<span class="sc">$</span>Clusters_ATAC), <span class="fu">paste0</span>(projMulti2<span class="sc">$</span>Clusters_RNA))</span>
+<span id="cb469-2"><a href="analysis-of-multiome-data-in-archr.html#cb469-2" aria-hidden="true" tabindex="-1"></a>cM_atac_rna <span class="ot">&lt;-</span> cM_atac_rna <span class="sc">/</span> Matrix<span class="sc">::</span><span class="fu">rowSums</span>(cM_atac_rna)</span>
+<span id="cb469-3"><a href="analysis-of-multiome-data-in-archr.html#cb469-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb469-4"><a href="analysis-of-multiome-data-in-archr.html#cb469-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pheatmap)</span>
+<span id="cb469-5"><a href="analysis-of-multiome-data-in-archr.html#cb469-5" aria-hidden="true" tabindex="-1"></a>p_atac_rna <span class="ot">&lt;-</span> pheatmap<span class="sc">::</span><span class="fu">pheatmap</span>(</span>
+<span id="cb469-6"><a href="analysis-of-multiome-data-in-archr.html#cb469-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">mat =</span> <span class="fu">as.matrix</span>(cM_atac_rna), </span>
+<span id="cb469-7"><a href="analysis-of-multiome-data-in-archr.html#cb469-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="fu">paletteContinuous</span>(<span class="st">&quot;whiteBlue&quot;</span>), </span>
+<span id="cb469-8"><a href="analysis-of-multiome-data-in-archr.html#cb469-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">border_color =</span> <span class="st">&quot;black&quot;</span></span>
+<span id="cb469-9"><a href="analysis-of-multiome-data-in-archr.html#cb469-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>Nearly all of the operations that you will want to do downstream are equivalent to what is shown throughout the manual for the scATAC-seq-only analyses so we wont go into them here. As an example, to get peak-to-gene links from multiome data, we could use the following code.</p>
+<div class="sourceCode" id="cb470"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb470-1"><a href="analysis-of-multiome-data-in-archr.html#cb470-1" aria-hidden="true" tabindex="-1"></a>projMulti2 <span class="ot">&lt;-</span> <span class="fu">addGroupCoverages</span>(<span class="at">ArchRProj =</span> projMulti2, <span class="at">groupBy =</span> <span class="st">&quot;Clusters_Combined&quot;</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb470-2"><a href="analysis-of-multiome-data-in-archr.html#cb470-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addGroupCoverages-371b042a9fe8b-Date-2022-12-23_Time-09-53-11.log</span></span>
+<span id="cb470-3"><a href="analysis-of-multiome-data-in-archr.html#cb470-3" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb470-4"><a href="analysis-of-multiome-data-in-archr.html#cb470-4" aria-hidden="true" tabindex="-1"></a><span class="do">## C1 (1 of 12) : CellGroups N = 2</span></span>
+<span id="cb470-5"><a href="analysis-of-multiome-data-in-archr.html#cb470-5" aria-hidden="true" tabindex="-1"></a><span class="do">## C2 (2 of 12) : CellGroups N = 2</span></span>
+<span id="cb470-6"><a href="analysis-of-multiome-data-in-archr.html#cb470-6" aria-hidden="true" tabindex="-1"></a><span class="do">## C3 (3 of 12) : CellGroups N = 2</span></span>
+<span id="cb470-7"><a href="analysis-of-multiome-data-in-archr.html#cb470-7" aria-hidden="true" tabindex="-1"></a><span class="do">## C4 (4 of 12) : CellGroups N = 2</span></span>
+<span id="cb470-8"><a href="analysis-of-multiome-data-in-archr.html#cb470-8" aria-hidden="true" tabindex="-1"></a><span class="do">## C5 (5 of 12) : CellGroups N = 2</span></span>
+<span id="cb470-9"><a href="analysis-of-multiome-data-in-archr.html#cb470-9" aria-hidden="true" tabindex="-1"></a><span class="do">## C6 (6 of 12) : CellGroups N = 2</span></span>
+<span id="cb470-10"><a href="analysis-of-multiome-data-in-archr.html#cb470-10" aria-hidden="true" tabindex="-1"></a><span class="do">## C7 (7 of 12) : CellGroups N = 2</span></span>
+<span id="cb470-11"><a href="analysis-of-multiome-data-in-archr.html#cb470-11" aria-hidden="true" tabindex="-1"></a><span class="do">## C8 (8 of 12) : CellGroups N = 2</span></span>
+<span id="cb470-12"><a href="analysis-of-multiome-data-in-archr.html#cb470-12" aria-hidden="true" tabindex="-1"></a><span class="do">## C9 (9 of 12) : CellGroups N = 2</span></span>
+<span id="cb470-13"><a href="analysis-of-multiome-data-in-archr.html#cb470-13" aria-hidden="true" tabindex="-1"></a><span class="do">## C10 (10 of 12) : CellGroups N = 2</span></span>
+<span id="cb470-14"><a href="analysis-of-multiome-data-in-archr.html#cb470-14" aria-hidden="true" tabindex="-1"></a><span class="do">## C11 (11 of 12) : CellGroups N = 2</span></span>
+<span id="cb470-15"><a href="analysis-of-multiome-data-in-archr.html#cb470-15" aria-hidden="true" tabindex="-1"></a><span class="do">## C12 (12 of 12) : CellGroups N = 2</span></span>
+<span id="cb470-16"><a href="analysis-of-multiome-data-in-archr.html#cb470-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:53:32 : Creating Coverage Files!, 0.348 mins elapsed.</span></span>
+<span id="cb470-17"><a href="analysis-of-multiome-data-in-archr.html#cb470-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:53:32 : Batch Execution w/ safelapply!, 0.348 mins elapsed.</span></span>
+<span id="cb470-18"><a href="analysis-of-multiome-data-in-archr.html#cb470-18" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 40</span></span>
+<span id="cb470-19"><a href="analysis-of-multiome-data-in-archr.html#cb470-19" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-20"><a href="analysis-of-multiome-data-in-archr.html#cb470-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-21"><a href="analysis-of-multiome-data-in-archr.html#cb470-21" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-22"><a href="analysis-of-multiome-data-in-archr.html#cb470-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-23"><a href="analysis-of-multiome-data-in-archr.html#cb470-23" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-24"><a href="analysis-of-multiome-data-in-archr.html#cb470-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-25"><a href="analysis-of-multiome-data-in-archr.html#cb470-25" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 40</span></span>
+<span id="cb470-26"><a href="analysis-of-multiome-data-in-archr.html#cb470-26" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-27"><a href="analysis-of-multiome-data-in-archr.html#cb470-27" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-28"><a href="analysis-of-multiome-data-in-archr.html#cb470-28" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-29"><a href="analysis-of-multiome-data-in-archr.html#cb470-29" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-30"><a href="analysis-of-multiome-data-in-archr.html#cb470-30" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-31"><a href="analysis-of-multiome-data-in-archr.html#cb470-31" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-32"><a href="analysis-of-multiome-data-in-archr.html#cb470-32" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 76</span></span>
+<span id="cb470-33"><a href="analysis-of-multiome-data-in-archr.html#cb470-33" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-34"><a href="analysis-of-multiome-data-in-archr.html#cb470-34" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-35"><a href="analysis-of-multiome-data-in-archr.html#cb470-35" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-36"><a href="analysis-of-multiome-data-in-archr.html#cb470-36" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-37"><a href="analysis-of-multiome-data-in-archr.html#cb470-37" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-38"><a href="analysis-of-multiome-data-in-archr.html#cb470-38" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-39"><a href="analysis-of-multiome-data-in-archr.html#cb470-39" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 47</span></span>
+<span id="cb470-40"><a href="analysis-of-multiome-data-in-archr.html#cb470-40" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-41"><a href="analysis-of-multiome-data-in-archr.html#cb470-41" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-42"><a href="analysis-of-multiome-data-in-archr.html#cb470-42" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-43"><a href="analysis-of-multiome-data-in-archr.html#cb470-43" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-44"><a href="analysis-of-multiome-data-in-archr.html#cb470-44" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-45"><a href="analysis-of-multiome-data-in-archr.html#cb470-45" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-46"><a href="analysis-of-multiome-data-in-archr.html#cb470-46" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
+<span id="cb470-47"><a href="analysis-of-multiome-data-in-archr.html#cb470-47" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-48"><a href="analysis-of-multiome-data-in-archr.html#cb470-48" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-49"><a href="analysis-of-multiome-data-in-archr.html#cb470-49" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-50"><a href="analysis-of-multiome-data-in-archr.html#cb470-50" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-51"><a href="analysis-of-multiome-data-in-archr.html#cb470-51" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-52"><a href="analysis-of-multiome-data-in-archr.html#cb470-52" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-53"><a href="analysis-of-multiome-data-in-archr.html#cb470-53" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
+<span id="cb470-54"><a href="analysis-of-multiome-data-in-archr.html#cb470-54" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-55"><a href="analysis-of-multiome-data-in-archr.html#cb470-55" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-56"><a href="analysis-of-multiome-data-in-archr.html#cb470-56" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-57"><a href="analysis-of-multiome-data-in-archr.html#cb470-57" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-58"><a href="analysis-of-multiome-data-in-archr.html#cb470-58" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-59"><a href="analysis-of-multiome-data-in-archr.html#cb470-59" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-60"><a href="analysis-of-multiome-data-in-archr.html#cb470-60" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 121</span></span>
+<span id="cb470-61"><a href="analysis-of-multiome-data-in-archr.html#cb470-61" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-62"><a href="analysis-of-multiome-data-in-archr.html#cb470-62" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-63"><a href="analysis-of-multiome-data-in-archr.html#cb470-63" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-64"><a href="analysis-of-multiome-data-in-archr.html#cb470-64" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-65"><a href="analysis-of-multiome-data-in-archr.html#cb470-65" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-66"><a href="analysis-of-multiome-data-in-archr.html#cb470-66" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-67"><a href="analysis-of-multiome-data-in-archr.html#cb470-67" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 112</span></span>
+<span id="cb470-68"><a href="analysis-of-multiome-data-in-archr.html#cb470-68" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-69"><a href="analysis-of-multiome-data-in-archr.html#cb470-69" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-70"><a href="analysis-of-multiome-data-in-archr.html#cb470-70" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-71"><a href="analysis-of-multiome-data-in-archr.html#cb470-71" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-72"><a href="analysis-of-multiome-data-in-archr.html#cb470-72" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-73"><a href="analysis-of-multiome-data-in-archr.html#cb470-73" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-74"><a href="analysis-of-multiome-data-in-archr.html#cb470-74" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 285</span></span>
+<span id="cb470-75"><a href="analysis-of-multiome-data-in-archr.html#cb470-75" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-76"><a href="analysis-of-multiome-data-in-archr.html#cb470-76" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-77"><a href="analysis-of-multiome-data-in-archr.html#cb470-77" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-78"><a href="analysis-of-multiome-data-in-archr.html#cb470-78" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-79"><a href="analysis-of-multiome-data-in-archr.html#cb470-79" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-80"><a href="analysis-of-multiome-data-in-archr.html#cb470-80" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-81"><a href="analysis-of-multiome-data-in-archr.html#cb470-81" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 185</span></span>
+<span id="cb470-82"><a href="analysis-of-multiome-data-in-archr.html#cb470-82" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-83"><a href="analysis-of-multiome-data-in-archr.html#cb470-83" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-84"><a href="analysis-of-multiome-data-in-archr.html#cb470-84" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-85"><a href="analysis-of-multiome-data-in-archr.html#cb470-85" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-86"><a href="analysis-of-multiome-data-in-archr.html#cb470-86" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-87"><a href="analysis-of-multiome-data-in-archr.html#cb470-87" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-88"><a href="analysis-of-multiome-data-in-archr.html#cb470-88" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 234</span></span>
+<span id="cb470-89"><a href="analysis-of-multiome-data-in-archr.html#cb470-89" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-90"><a href="analysis-of-multiome-data-in-archr.html#cb470-90" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-91"><a href="analysis-of-multiome-data-in-archr.html#cb470-91" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-92"><a href="analysis-of-multiome-data-in-archr.html#cb470-92" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-93"><a href="analysis-of-multiome-data-in-archr.html#cb470-93" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-94"><a href="analysis-of-multiome-data-in-archr.html#cb470-94" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-95"><a href="analysis-of-multiome-data-in-archr.html#cb470-95" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 194</span></span>
+<span id="cb470-96"><a href="analysis-of-multiome-data-in-archr.html#cb470-96" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-97"><a href="analysis-of-multiome-data-in-archr.html#cb470-97" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-98"><a href="analysis-of-multiome-data-in-archr.html#cb470-98" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-99"><a href="analysis-of-multiome-data-in-archr.html#cb470-99" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-100"><a href="analysis-of-multiome-data-in-archr.html#cb470-100" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-101"><a href="analysis-of-multiome-data-in-archr.html#cb470-101" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-102"><a href="analysis-of-multiome-data-in-archr.html#cb470-102" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 100</span></span>
+<span id="cb470-103"><a href="analysis-of-multiome-data-in-archr.html#cb470-103" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-104"><a href="analysis-of-multiome-data-in-archr.html#cb470-104" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-105"><a href="analysis-of-multiome-data-in-archr.html#cb470-105" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-106"><a href="analysis-of-multiome-data-in-archr.html#cb470-106" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-107"><a href="analysis-of-multiome-data-in-archr.html#cb470-107" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-108"><a href="analysis-of-multiome-data-in-archr.html#cb470-108" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-109"><a href="analysis-of-multiome-data-in-archr.html#cb470-109" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 93</span></span>
+<span id="cb470-110"><a href="analysis-of-multiome-data-in-archr.html#cb470-110" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-111"><a href="analysis-of-multiome-data-in-archr.html#cb470-111" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-112"><a href="analysis-of-multiome-data-in-archr.html#cb470-112" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-113"><a href="analysis-of-multiome-data-in-archr.html#cb470-113" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-114"><a href="analysis-of-multiome-data-in-archr.html#cb470-114" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-115"><a href="analysis-of-multiome-data-in-archr.html#cb470-115" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-116"><a href="analysis-of-multiome-data-in-archr.html#cb470-116" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
+<span id="cb470-117"><a href="analysis-of-multiome-data-in-archr.html#cb470-117" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-118"><a href="analysis-of-multiome-data-in-archr.html#cb470-118" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-119"><a href="analysis-of-multiome-data-in-archr.html#cb470-119" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-120"><a href="analysis-of-multiome-data-in-archr.html#cb470-120" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-121"><a href="analysis-of-multiome-data-in-archr.html#cb470-121" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-122"><a href="analysis-of-multiome-data-in-archr.html#cb470-122" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-123"><a href="analysis-of-multiome-data-in-archr.html#cb470-123" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 76</span></span>
+<span id="cb470-124"><a href="analysis-of-multiome-data-in-archr.html#cb470-124" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-125"><a href="analysis-of-multiome-data-in-archr.html#cb470-125" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-126"><a href="analysis-of-multiome-data-in-archr.html#cb470-126" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-127"><a href="analysis-of-multiome-data-in-archr.html#cb470-127" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-128"><a href="analysis-of-multiome-data-in-archr.html#cb470-128" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-129"><a href="analysis-of-multiome-data-in-archr.html#cb470-129" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-130"><a href="analysis-of-multiome-data-in-archr.html#cb470-130" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 286</span></span>
+<span id="cb470-131"><a href="analysis-of-multiome-data-in-archr.html#cb470-131" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-132"><a href="analysis-of-multiome-data-in-archr.html#cb470-132" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-133"><a href="analysis-of-multiome-data-in-archr.html#cb470-133" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-134"><a href="analysis-of-multiome-data-in-archr.html#cb470-134" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-135"><a href="analysis-of-multiome-data-in-archr.html#cb470-135" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-136"><a href="analysis-of-multiome-data-in-archr.html#cb470-136" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-137"><a href="analysis-of-multiome-data-in-archr.html#cb470-137" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 40</span></span>
+<span id="cb470-138"><a href="analysis-of-multiome-data-in-archr.html#cb470-138" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-139"><a href="analysis-of-multiome-data-in-archr.html#cb470-139" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-140"><a href="analysis-of-multiome-data-in-archr.html#cb470-140" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-141"><a href="analysis-of-multiome-data-in-archr.html#cb470-141" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-142"><a href="analysis-of-multiome-data-in-archr.html#cb470-142" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-143"><a href="analysis-of-multiome-data-in-archr.html#cb470-143" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-144"><a href="analysis-of-multiome-data-in-archr.html#cb470-144" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 370</span></span>
+<span id="cb470-145"><a href="analysis-of-multiome-data-in-archr.html#cb470-145" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-146"><a href="analysis-of-multiome-data-in-archr.html#cb470-146" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-147"><a href="analysis-of-multiome-data-in-archr.html#cb470-147" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-148"><a href="analysis-of-multiome-data-in-archr.html#cb470-148" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-149"><a href="analysis-of-multiome-data-in-archr.html#cb470-149" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-150"><a href="analysis-of-multiome-data-in-archr.html#cb470-150" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-151"><a href="analysis-of-multiome-data-in-archr.html#cb470-151" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 40</span></span>
+<span id="cb470-152"><a href="analysis-of-multiome-data-in-archr.html#cb470-152" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-153"><a href="analysis-of-multiome-data-in-archr.html#cb470-153" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-154"><a href="analysis-of-multiome-data-in-archr.html#cb470-154" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-155"><a href="analysis-of-multiome-data-in-archr.html#cb470-155" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-156"><a href="analysis-of-multiome-data-in-archr.html#cb470-156" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-157"><a href="analysis-of-multiome-data-in-archr.html#cb470-157" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-158"><a href="analysis-of-multiome-data-in-archr.html#cb470-158" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 334</span></span>
+<span id="cb470-159"><a href="analysis-of-multiome-data-in-archr.html#cb470-159" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-160"><a href="analysis-of-multiome-data-in-archr.html#cb470-160" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-161"><a href="analysis-of-multiome-data-in-archr.html#cb470-161" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-162"><a href="analysis-of-multiome-data-in-archr.html#cb470-162" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-163"><a href="analysis-of-multiome-data-in-archr.html#cb470-163" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-164"><a href="analysis-of-multiome-data-in-archr.html#cb470-164" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-165"><a href="analysis-of-multiome-data-in-archr.html#cb470-165" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 40</span></span>
+<span id="cb470-166"><a href="analysis-of-multiome-data-in-archr.html#cb470-166" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-167"><a href="analysis-of-multiome-data-in-archr.html#cb470-167" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-168"><a href="analysis-of-multiome-data-in-archr.html#cb470-168" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-169"><a href="analysis-of-multiome-data-in-archr.html#cb470-169" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-170"><a href="analysis-of-multiome-data-in-archr.html#cb470-170" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-171"><a href="analysis-of-multiome-data-in-archr.html#cb470-171" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-172"><a href="analysis-of-multiome-data-in-archr.html#cb470-172" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 302</span></span>
+<span id="cb470-173"><a href="analysis-of-multiome-data-in-archr.html#cb470-173" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-174"><a href="analysis-of-multiome-data-in-archr.html#cb470-174" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-175"><a href="analysis-of-multiome-data-in-archr.html#cb470-175" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-176"><a href="analysis-of-multiome-data-in-archr.html#cb470-176" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-177"><a href="analysis-of-multiome-data-in-archr.html#cb470-177" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-178"><a href="analysis-of-multiome-data-in-archr.html#cb470-178" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-179"><a href="analysis-of-multiome-data-in-archr.html#cb470-179" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 40</span></span>
+<span id="cb470-180"><a href="analysis-of-multiome-data-in-archr.html#cb470-180" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb470-181"><a href="analysis-of-multiome-data-in-archr.html#cb470-181" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb470-182"><a href="analysis-of-multiome-data-in-archr.html#cb470-182" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb470-183"><a href="analysis-of-multiome-data-in-archr.html#cb470-183" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb470-184"><a href="analysis-of-multiome-data-in-archr.html#cb470-184" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb470-185"><a href="analysis-of-multiome-data-in-archr.html#cb470-185" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb470-186"><a href="analysis-of-multiome-data-in-archr.html#cb470-186" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:11:46 : Adding Kmer Bias to Coverage Files!, 18.586 mins elapsed.</span></span>
+<span id="cb470-187"><a href="analysis-of-multiome-data-in-archr.html#cb470-187" aria-hidden="true" tabindex="-1"></a><span class="do">## Completed Kmer Bias Calculation</span></span>
+<span id="cb470-188"><a href="analysis-of-multiome-data-in-archr.html#cb470-188" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (1 of 24)</span></span>
+<span id="cb470-189"><a href="analysis-of-multiome-data-in-archr.html#cb470-189" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (2 of 24)</span></span>
+<span id="cb470-190"><a href="analysis-of-multiome-data-in-archr.html#cb470-190" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (3 of 24)</span></span>
+<span id="cb470-191"><a href="analysis-of-multiome-data-in-archr.html#cb470-191" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (4 of 24)</span></span>
+<span id="cb470-192"><a href="analysis-of-multiome-data-in-archr.html#cb470-192" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (5 of 24)</span></span>
+<span id="cb470-193"><a href="analysis-of-multiome-data-in-archr.html#cb470-193" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (6 of 24)</span></span>
+<span id="cb470-194"><a href="analysis-of-multiome-data-in-archr.html#cb470-194" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (7 of 24)</span></span>
+<span id="cb470-195"><a href="analysis-of-multiome-data-in-archr.html#cb470-195" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (8 of 24)</span></span>
+<span id="cb470-196"><a href="analysis-of-multiome-data-in-archr.html#cb470-196" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (9 of 24)</span></span>
+<span id="cb470-197"><a href="analysis-of-multiome-data-in-archr.html#cb470-197" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (10 of 24)</span></span>
+<span id="cb470-198"><a href="analysis-of-multiome-data-in-archr.html#cb470-198" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (11 of 24)</span></span>
+<span id="cb470-199"><a href="analysis-of-multiome-data-in-archr.html#cb470-199" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (12 of 24)</span></span>
+<span id="cb470-200"><a href="analysis-of-multiome-data-in-archr.html#cb470-200" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (13 of 24)</span></span>
+<span id="cb470-201"><a href="analysis-of-multiome-data-in-archr.html#cb470-201" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (14 of 24)</span></span>
+<span id="cb470-202"><a href="analysis-of-multiome-data-in-archr.html#cb470-202" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (15 of 24)</span></span>
+<span id="cb470-203"><a href="analysis-of-multiome-data-in-archr.html#cb470-203" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (16 of 24)</span></span>
+<span id="cb470-204"><a href="analysis-of-multiome-data-in-archr.html#cb470-204" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (17 of 24)</span></span>
+<span id="cb470-205"><a href="analysis-of-multiome-data-in-archr.html#cb470-205" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (18 of 24)</span></span>
+<span id="cb470-206"><a href="analysis-of-multiome-data-in-archr.html#cb470-206" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (19 of 24)</span></span>
+<span id="cb470-207"><a href="analysis-of-multiome-data-in-archr.html#cb470-207" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (20 of 24)</span></span>
+<span id="cb470-208"><a href="analysis-of-multiome-data-in-archr.html#cb470-208" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (21 of 24)</span></span>
+<span id="cb470-209"><a href="analysis-of-multiome-data-in-archr.html#cb470-209" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (22 of 24)</span></span>
+<span id="cb470-210"><a href="analysis-of-multiome-data-in-archr.html#cb470-210" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (23 of 24)</span></span>
+<span id="cb470-211"><a href="analysis-of-multiome-data-in-archr.html#cb470-211" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (24 of 24)</span></span>
+<span id="cb470-212"><a href="analysis-of-multiome-data-in-archr.html#cb470-212" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:13:19 : Finished Creation of Coverage Files!, 20.141 mins elapsed.</span></span>
+<span id="cb470-213"><a href="analysis-of-multiome-data-in-archr.html#cb470-213" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-addGroupCoverages-371b042a9fe8b-Date-2022-12-23_Time-09-53-11.log</span></span>
+<span id="cb470-214"><a href="analysis-of-multiome-data-in-archr.html#cb470-214" aria-hidden="true" tabindex="-1"></a>projMulti2 <span class="ot">&lt;-</span> <span class="fu">addReproduciblePeakSet</span>(<span class="at">ArchRProj =</span> projMulti2, <span class="at">groupBy =</span> <span class="st">&quot;Clusters_Combined&quot;</span>, <span class="at">pathToMacs2 =</span> <span class="st">&quot;/corces/home/rcorces/tools/python/p3.8.5/bin/macs2&quot;</span>)</span>
+<span id="cb470-215"><a href="analysis-of-multiome-data-in-archr.html#cb470-215" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addReproduciblePeakSet-371b05b5e6e3c-Date-2022-12-23_Time-10-13-22.log</span></span>
+<span id="cb470-216"><a href="analysis-of-multiome-data-in-archr.html#cb470-216" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb470-217"><a href="analysis-of-multiome-data-in-archr.html#cb470-217" aria-hidden="true" tabindex="-1"></a><span class="do">## Calling Peaks with Macs2</span></span>
+<span id="cb470-218"><a href="analysis-of-multiome-data-in-archr.html#cb470-218" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:13:25 : Peak Calling Parameters!, 0.045 mins elapsed.</span></span>
+<span id="cb470-219"><a href="analysis-of-multiome-data-in-archr.html#cb470-219" aria-hidden="true" tabindex="-1"></a><span class="do">##     Group nCells nCellsUsed nReplicates nMin nMax maxPeaks</span></span>
+<span id="cb470-220"><a href="analysis-of-multiome-data-in-archr.html#cb470-220" aria-hidden="true" tabindex="-1"></a><span class="do">## C1     C1     54         53           2   40   40    26500</span></span>
+<span id="cb470-221"><a href="analysis-of-multiome-data-in-archr.html#cb470-221" aria-hidden="true" tabindex="-1"></a><span class="do">## C2     C2    123        123           2   47   76    61500</span></span>
+<span id="cb470-222"><a href="analysis-of-multiome-data-in-archr.html#cb470-222" aria-hidden="true" tabindex="-1"></a><span class="do">## C3     C3   1536       1000           2  500  500   150000</span></span>
+<span id="cb470-223"><a href="analysis-of-multiome-data-in-archr.html#cb470-223" aria-hidden="true" tabindex="-1"></a><span class="do">## C4     C4    233        233           2  112  121   116500</span></span>
+<span id="cb470-224"><a href="analysis-of-multiome-data-in-archr.html#cb470-224" aria-hidden="true" tabindex="-1"></a><span class="do">## C5     C5    470        470           2  185  285   150000</span></span>
+<span id="cb470-225"><a href="analysis-of-multiome-data-in-archr.html#cb470-225" aria-hidden="true" tabindex="-1"></a><span class="do">## C6     C6    428        428           2  194  234   150000</span></span>
+<span id="cb470-226"><a href="analysis-of-multiome-data-in-archr.html#cb470-226" aria-hidden="true" tabindex="-1"></a><span class="do">## C7     C7    193        193           2   93  100    96500</span></span>
+<span id="cb470-227"><a href="analysis-of-multiome-data-in-archr.html#cb470-227" aria-hidden="true" tabindex="-1"></a><span class="do">## C8     C8    834        576           2   76  500   150000</span></span>
+<span id="cb470-228"><a href="analysis-of-multiome-data-in-archr.html#cb470-228" aria-hidden="true" tabindex="-1"></a><span class="do">## C9     C9    326        326           2   40  286   150000</span></span>
+<span id="cb470-229"><a href="analysis-of-multiome-data-in-archr.html#cb470-229" aria-hidden="true" tabindex="-1"></a><span class="do">## C10   C10    410        410           2   40  370   150000</span></span>
+<span id="cb470-230"><a href="analysis-of-multiome-data-in-archr.html#cb470-230" aria-hidden="true" tabindex="-1"></a><span class="do">## C11   C11    374        374           2   40  334   150000</span></span>
+<span id="cb470-231"><a href="analysis-of-multiome-data-in-archr.html#cb470-231" aria-hidden="true" tabindex="-1"></a><span class="do">## C12   C12    342        342           2   40  302   150000</span></span>
+<span id="cb470-232"><a href="analysis-of-multiome-data-in-archr.html#cb470-232" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:13:25 : Batching Peak Calls!, 0.045 mins elapsed.</span></span>
+<span id="cb470-233"><a href="analysis-of-multiome-data-in-archr.html#cb470-233" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:13:25 : Batch Execution w/ safelapply!, 0 mins elapsed.</span></span>
+<span id="cb470-234"><a href="analysis-of-multiome-data-in-archr.html#cb470-234" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:15:10 : Identifying Reproducible Peaks!, 1.797 mins elapsed.</span></span>
+<span id="cb470-235"><a href="analysis-of-multiome-data-in-archr.html#cb470-235" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:15:22 : Creating Union Peak Set!, 2 mins elapsed.</span></span>
+<span id="cb470-236"><a href="analysis-of-multiome-data-in-archr.html#cb470-236" aria-hidden="true" tabindex="-1"></a><span class="do">## Converged after 7 iterations!</span></span>
+<span id="cb470-237"><a href="analysis-of-multiome-data-in-archr.html#cb470-237" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
+<span id="cb470-238"><a href="analysis-of-multiome-data-in-archr.html#cb470-238" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:15:29 : Finished Creating Union Peak Set (159055)!, 2.109 mins elapsed.</span></span>
+<span id="cb470-239"><a href="analysis-of-multiome-data-in-archr.html#cb470-239" aria-hidden="true" tabindex="-1"></a>projMulti2 <span class="ot">&lt;-</span> <span class="fu">addPeakMatrix</span>(<span class="at">ArchRProj =</span> projMulti2)</span>
+<span id="cb470-240"><a href="analysis-of-multiome-data-in-archr.html#cb470-240" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addPeakMatrix-371b012570adc-Date-2022-12-23_Time-10-15-29.log</span></span>
+<span id="cb470-241"><a href="analysis-of-multiome-data-in-archr.html#cb470-241" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb470-242"><a href="analysis-of-multiome-data-in-archr.html#cb470-242" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:15:30 : Batch Execution w/ safelapply!, 0 mins elapsed.</span></span>
+<span id="cb470-243"><a href="analysis-of-multiome-data-in-archr.html#cb470-243" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-addPeakMatrix-371b012570adc-Date-2022-12-23_Time-10-15-29.log</span></span>
+<span id="cb470-244"><a href="analysis-of-multiome-data-in-archr.html#cb470-244" aria-hidden="true" tabindex="-1"></a>projMulti2 <span class="ot">&lt;-</span> <span class="fu">addPeak2GeneLinks</span>(<span class="at">ArchRProj =</span> projMulti2, <span class="at">reducedDims =</span> <span class="st">&quot;LSI_Combined&quot;</span>, <span class="at">useMatrix =</span> <span class="st">&quot;GeneExpressionMatrix&quot;</span>)</span>
+<span id="cb470-245"><a href="analysis-of-multiome-data-in-archr.html#cb470-245" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addPeak2GeneLinks-371b04c7b892a-Date-2022-12-23_Time-10-17-20.log</span></span>
+<span id="cb470-246"><a href="analysis-of-multiome-data-in-archr.html#cb470-246" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb470-247"><a href="analysis-of-multiome-data-in-archr.html#cb470-247" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:17:21 : Getting Available Matrices, 0.023 mins elapsed.</span></span>
+<span id="cb470-248"><a href="analysis-of-multiome-data-in-archr.html#cb470-248" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:17:24 : Filtered Low Prediction Score Cells (0 of 5471, 0), 0.021 mins elapsed.</span></span>
+<span id="cb470-249"><a href="analysis-of-multiome-data-in-archr.html#cb470-249" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:17:24 : Computing KNN, 0.027 mins elapsed.</span></span>
+<span id="cb470-250"><a href="analysis-of-multiome-data-in-archr.html#cb470-250" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:17:24 : Identifying Non-Overlapping KNN pairs, 0.028 mins elapsed.</span></span>
+<span id="cb470-251"><a href="analysis-of-multiome-data-in-archr.html#cb470-251" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:17:26 : Identified 484 Groupings!, 0.054 mins elapsed.</span></span>
+<span id="cb470-252"><a href="analysis-of-multiome-data-in-archr.html#cb470-252" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:17:26 : Getting Group RNA Matrix, 0.054 mins elapsed.</span></span>
+<span id="cb470-253"><a href="analysis-of-multiome-data-in-archr.html#cb470-253" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:17:47 : Getting Group ATAC Matrix, 0.413 mins elapsed.</span></span>
+<span id="cb470-254"><a href="analysis-of-multiome-data-in-archr.html#cb470-254" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:18:12 : Normalizing Group Matrices, 0.823 mins elapsed.</span></span>
+<span id="cb470-255"><a href="analysis-of-multiome-data-in-archr.html#cb470-255" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:18:16 : Finding Peak Gene Pairings, 0.9 mins elapsed.</span></span>
+<span id="cb470-256"><a href="analysis-of-multiome-data-in-archr.html#cb470-256" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:18:17 : Computing Correlations, 0.91 mins elapsed.</span></span>
+<span id="cb470-257"><a href="analysis-of-multiome-data-in-archr.html#cb470-257" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:18:24 : Completed Peak2Gene Correlations!, 1.028 mins elapsed.</span></span>
+<span id="cb470-258"><a href="analysis-of-multiome-data-in-archr.html#cb470-258" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-addPeak2GeneLinks-371b04c7b892a-Date-2022-12-23_Time-10-17-20.log</span></span>
+<span id="cb470-259"><a href="analysis-of-multiome-data-in-archr.html#cb470-259" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb470-260"><a href="analysis-of-multiome-data-in-archr.html#cb470-260" aria-hidden="true" tabindex="-1"></a>p2g <span class="ot">&lt;-</span> <span class="fu">getPeak2GeneLinks</span>(<span class="at">ArchRProj =</span> projMulti2)</span>
+<span id="cb470-261"><a href="analysis-of-multiome-data-in-archr.html#cb470-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb470-262"><a href="analysis-of-multiome-data-in-archr.html#cb470-262" aria-hidden="true" tabindex="-1"></a>p2g[[<span class="dv">1</span>]]</span>
+<span id="cb470-263"><a href="analysis-of-multiome-data-in-archr.html#cb470-263" aria-hidden="true" tabindex="-1"></a><span class="do">## GRanges object with 103777 ranges and 2 metadata columns:</span></span>
+<span id="cb470-264"><a href="analysis-of-multiome-data-in-archr.html#cb470-264" aria-hidden="true" tabindex="-1"></a><span class="do">##            seqnames              ranges strand |     value         FDR</span></span>
+<span id="cb470-265"><a href="analysis-of-multiome-data-in-archr.html#cb470-265" aria-hidden="true" tabindex="-1"></a><span class="do">##               &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;   &lt;numeric&gt;</span></span>
+<span id="cb470-266"><a href="analysis-of-multiome-data-in-archr.html#cb470-266" aria-hidden="true" tabindex="-1"></a><span class="do">##        [1]     chr1       817339-998050      * |  0.564826 6.98634e-41</span></span>
+<span id="cb470-267"><a href="analysis-of-multiome-data-in-archr.html#cb470-267" aria-hidden="true" tabindex="-1"></a><span class="do">##        [2]     chr1       817339-999980      * |  0.558695 7.68749e-40</span></span>
+<span id="cb470-268"><a href="analysis-of-multiome-data-in-archr.html#cb470-268" aria-hidden="true" tabindex="-1"></a><span class="do">##        [3]     chr1      817339-1001137      * |  0.609546 3.44229e-49</span></span>
+<span id="cb470-269"><a href="analysis-of-multiome-data-in-archr.html#cb470-269" aria-hidden="true" tabindex="-1"></a><span class="do">##        [4]     chr1       827597-844654      * |  0.451604 1.01690e-24</span></span>
+<span id="cb470-270"><a href="analysis-of-multiome-data-in-archr.html#cb470-270" aria-hidden="true" tabindex="-1"></a><span class="do">##        [5]     chr1       906926-966481      * |  0.545307 1.22247e-37</span></span>
+<span id="cb470-271"><a href="analysis-of-multiome-data-in-archr.html#cb470-271" aria-hidden="true" tabindex="-1"></a><span class="do">##        ...      ...                 ...    ... .       ...         ...</span></span>
+<span id="cb470-272"><a href="analysis-of-multiome-data-in-archr.html#cb470-272" aria-hidden="true" tabindex="-1"></a><span class="do">##   [103773]     chrX 154801028-154805396      * |  0.774142 8.67329e-96</span></span>
+<span id="cb470-273"><a href="analysis-of-multiome-data-in-archr.html#cb470-273" aria-hidden="true" tabindex="-1"></a><span class="do">##   [103774]     chrX 154805396-155027875      * |  0.491940 8.62482e-30</span></span>
+<span id="cb470-274"><a href="analysis-of-multiome-data-in-archr.html#cb470-274" aria-hidden="true" tabindex="-1"></a><span class="do">##   [103775]     chrX 154886348-155026868      * |  0.477557 6.64926e-28</span></span>
+<span id="cb470-275"><a href="analysis-of-multiome-data-in-archr.html#cb470-275" aria-hidden="true" tabindex="-1"></a><span class="do">##   [103776]     chrX 155611481-155612876      * |  0.550036 2.09262e-38</span></span>
+<span id="cb470-276"><a href="analysis-of-multiome-data-in-archr.html#cb470-276" aria-hidden="true" tabindex="-1"></a><span class="do">##   [103777]     chrX 155612876-155841550      * |  0.528625 4.93144e-35</span></span>
+<span id="cb470-277"><a href="analysis-of-multiome-data-in-archr.html#cb470-277" aria-hidden="true" tabindex="-1"></a><span class="do">##   -------</span></span>
+<span id="cb470-278"><a href="analysis-of-multiome-data-in-archr.html#cb470-278" aria-hidden="true" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
+<p>There are, of course, some aspects of the analysis which you should tweak when using multiome data. One such example is the <code>bias</code> argument to <code>getMarkerFeatures()</code> which can be tweaked to account for both scATAC-seq data quality (<code>"TSSEnrichment</code>) and read depth for both assays (<code>"log10(nFrags)"</code> for scATAC-seq and <code>"log10(Gex_nUMI)"</code> for scRNA-seq).</p>
+<div class="sourceCode" id="cb471"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb471-1"><a href="analysis-of-multiome-data-in-archr.html#cb471-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">getMarkerFeatures</span>(<span class="at">ArchRProj =</span> projMulti2,</span>
+<span id="cb471-2"><a href="analysis-of-multiome-data-in-archr.html#cb471-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">groupBy =</span> <span class="st">&quot;Clusters_Combined&quot;</span>,</span>
+<span id="cb471-3"><a href="analysis-of-multiome-data-in-archr.html#cb471-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">bias =</span> <span class="fu">c</span>(<span class="st">&quot;TSSEnrichment&quot;</span>, <span class="st">&quot;log10(nFrags)&quot;</span>, <span class="st">&quot;log10(Gex_nUMI)&quot;</span>))</span>
+<span id="cb471-4"><a href="analysis-of-multiome-data-in-archr.html#cb471-4" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-getMarkerFeatures-371b08f5621b-Date-2022-12-23_Time-10-18-24.log</span></span>
+<span id="cb471-5"><a href="analysis-of-multiome-data-in-archr.html#cb471-5" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb471-6"><a href="analysis-of-multiome-data-in-archr.html#cb471-6" aria-hidden="true" tabindex="-1"></a><span class="do">## MatrixClass = Sparse.Double.Matrix</span></span>
+<span id="cb471-7"><a href="analysis-of-multiome-data-in-archr.html#cb471-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:18:26 : Matching Known Biases, 0.004 mins elapsed.</span></span>
+<span id="cb471-8"><a href="analysis-of-multiome-data-in-archr.html#cb471-8" aria-hidden="true" tabindex="-1"></a><span class="do">## ###########</span></span>
+<span id="cb471-9"><a href="analysis-of-multiome-data-in-archr.html#cb471-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 10:19:40 : Completed Pairwise Tests, 1.23 mins elapsed.</span></span>
+<span id="cb471-10"><a href="analysis-of-multiome-data-in-archr.html#cb471-10" aria-hidden="true" tabindex="-1"></a><span class="do">## ###########</span></span>
+<span id="cb471-11"><a href="analysis-of-multiome-data-in-archr.html#cb471-11" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-getMarkerFeatures-371b08f5621b-Date-2022-12-23_Time-10-18-24.log</span></span>
+<span id="cb471-12"><a href="analysis-of-multiome-data-in-archr.html#cb471-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb471-13"><a href="analysis-of-multiome-data-in-archr.html#cb471-13" aria-hidden="true" tabindex="-1"></a>heatmap_gex <span class="ot">&lt;-</span> <span class="fu">plotMarkerHeatmap</span>(</span>
+<span id="cb471-14"><a href="analysis-of-multiome-data-in-archr.html#cb471-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">seMarker =</span> se, </span>
+<span id="cb471-15"><a href="analysis-of-multiome-data-in-archr.html#cb471-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.01 &amp; Log2FC &gt;= 2&quot;</span>,</span>
+<span id="cb471-16"><a href="analysis-of-multiome-data-in-archr.html#cb471-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">nLabel =</span> <span class="dv">4</span>,</span>
+<span id="cb471-17"><a href="analysis-of-multiome-data-in-archr.html#cb471-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">transpose =</span> <span class="cn">TRUE</span></span>
+<span id="cb471-18"><a href="analysis-of-multiome-data-in-archr.html#cb471-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb471-19"><a href="analysis-of-multiome-data-in-archr.html#cb471-19" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotMarkerHeatmap-371b079fe51b0-Date-2022-12-23_Time-10-19-40.log</span></span>
+<span id="cb471-20"><a href="analysis-of-multiome-data-in-archr.html#cb471-20" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb471-21"><a href="analysis-of-multiome-data-in-archr.html#cb471-21" aria-hidden="true" tabindex="-1"></a><span class="do">## Printing Top Marker Genes:</span></span>
+<span id="cb471-22"><a href="analysis-of-multiome-data-in-archr.html#cb471-22" aria-hidden="true" tabindex="-1"></a><span class="do">## C1:</span></span>
+<span id="cb471-23"><a href="analysis-of-multiome-data-in-archr.html#cb471-23" aria-hidden="true" tabindex="-1"></a><span class="do">##  MIR6729, LRRC38, TSPAN1, TTC39A, TTC39A-AS1, LOC100129046, LINC01356, NGF, SFT2D2, PKP1, LAD1, VASH2, SLC35F3, PARD3, LOC101929445</span></span>
+<span id="cb471-24"><a href="analysis-of-multiome-data-in-archr.html#cb471-24" aria-hidden="true" tabindex="-1"></a><span class="do">## C2:</span></span>
+<span id="cb471-25"><a href="analysis-of-multiome-data-in-archr.html#cb471-25" aria-hidden="true" tabindex="-1"></a><span class="do">##  TGFB2-AS1, VSTM4, CSNK2A3, LOC387810, PRMT8, ADCY6, CFAP73, C2orf91, LINC01854, TFPI, LINC01427, LINC02011, RBMS3, DCLK3, CACNA2D3-AS1</span></span>
+<span id="cb471-26"><a href="analysis-of-multiome-data-in-archr.html#cb471-26" aria-hidden="true" tabindex="-1"></a><span class="do">## C3:</span></span>
+<span id="cb471-27"><a href="analysis-of-multiome-data-in-archr.html#cb471-27" aria-hidden="true" tabindex="-1"></a><span class="do">##  PDPN, TMEM51, C1orf195, CTRC, CELA2A, PADI2, PADI3, MIR3972, PADI4, PADI6, ARHGEF10L, CDA, EPHB2, MIR4684, TENT5B</span></span>
+<span id="cb471-28"><a href="analysis-of-multiome-data-in-archr.html#cb471-28" aria-hidden="true" tabindex="-1"></a><span class="do">## C4:</span></span>
+<span id="cb471-29"><a href="analysis-of-multiome-data-in-archr.html#cb471-29" aria-hidden="true" tabindex="-1"></a><span class="do">##  IGSF21, ELAVL4, SPATA42, ATP1A4, BECN2, LIPK, TCF7L2, HABP2, TMTC1, MIR6074, DLK1, LINC02182, OR1G1, OR1A2, OR1A1</span></span>
+<span id="cb471-30"><a href="analysis-of-multiome-data-in-archr.html#cb471-30" aria-hidden="true" tabindex="-1"></a><span class="do">## C5:</span></span>
+<span id="cb471-31"><a href="analysis-of-multiome-data-in-archr.html#cb471-31" aria-hidden="true" tabindex="-1"></a><span class="do">##  LINC01346, PLA2G5, PLA2G2D, LINC01141, ALPL, GRIK3, MIR4255, LINC01343, BEND5, ROR1, CYR61, NTNG1, KCND3, KCND3-IT1, KCND3-AS1</span></span>
+<span id="cb471-32"><a href="analysis-of-multiome-data-in-archr.html#cb471-32" aria-hidden="true" tabindex="-1"></a><span class="do">## C6:</span></span>
+<span id="cb471-33"><a href="analysis-of-multiome-data-in-archr.html#cb471-33" aria-hidden="true" tabindex="-1"></a><span class="do">##  PODN, GLIS1, BRDT, SOX13, DLG5-AS1, SLIT1-AS1, FGFR2, CADM1, LOC105369509, B3GAT1, LOC283177, PZP, STYK1, KRT75, KRT6B</span></span>
+<span id="cb471-34"><a href="analysis-of-multiome-data-in-archr.html#cb471-34" aria-hidden="true" tabindex="-1"></a><span class="do">## C7:</span></span>
+<span id="cb471-35"><a href="analysis-of-multiome-data-in-archr.html#cb471-35" aria-hidden="true" tabindex="-1"></a><span class="do">##  KAZN, LEXM, C8A, C8B, IL23R, IL12RB2, ABCA4, PDZK1, SH2D1B, LOC100505795, C1orf21, LINC01221, LINC01655, GREM2, AKR1C1</span></span>
+<span id="cb471-36"><a href="analysis-of-multiome-data-in-archr.html#cb471-36" aria-hidden="true" tabindex="-1"></a><span class="do">## C8:</span></span>
+<span id="cb471-37"><a href="analysis-of-multiome-data-in-archr.html#cb471-37" aria-hidden="true" tabindex="-1"></a><span class="do">##  MIR4735, TCERG1L-AS1, SNHG18, SNORD123, NAP1L3, LINC01346, MIR6729, LRRC38, PDPN, KAZN, TMEM51-AS1, TMEM51, C1orf195, CTRC, CELA2A</span></span>
+<span id="cb471-38"><a href="analysis-of-multiome-data-in-archr.html#cb471-38" aria-hidden="true" tabindex="-1"></a><span class="do">## C9:</span></span>
+<span id="cb471-39"><a href="analysis-of-multiome-data-in-archr.html#cb471-39" aria-hidden="true" tabindex="-1"></a><span class="do">##  NELL2, KRT72, SNORD116-2, SNORD116-3, LOC100144595, LINC01455, MAGI2-AS3, CPA2, KLRC1, CD8B, BPIFB2, KRTAP12-1, CD8A, LINC01346, MIR6729</span></span>
+<span id="cb471-40"><a href="analysis-of-multiome-data-in-archr.html#cb471-40" aria-hidden="true" tabindex="-1"></a><span class="do">## C10:</span></span>
+<span id="cb471-41"><a href="analysis-of-multiome-data-in-archr.html#cb471-41" aria-hidden="true" tabindex="-1"></a><span class="do">##  LINC00853, GJA5, FAM78B, MIR194-1, KRTAP5-2, LOC399886, OR4C3, LINC02410, RNF17, OR2Z1, SCARNA22, IL2, LOC101926905, NEFL, H2BFM</span></span>
+<span id="cb471-42"><a href="analysis-of-multiome-data-in-archr.html#cb471-42" aria-hidden="true" tabindex="-1"></a><span class="do">## C11:</span></span>
+<span id="cb471-43"><a href="analysis-of-multiome-data-in-archr.html#cb471-43" aria-hidden="true" tabindex="-1"></a><span class="do">##  MIR4794, MIR675, KRT3, OR10G2, MIR4508, C2CD4C, IZUMO2, SYT3, C19orf81, KCNG3, RAPGEF4-AS1, APCDD1L, BIRC7, MIR3196, FLJ16779</span></span>
+<span id="cb471-44"><a href="analysis-of-multiome-data-in-archr.html#cb471-44" aria-hidden="true" tabindex="-1"></a><span class="do">## C12:</span></span>
+<span id="cb471-45"><a href="analysis-of-multiome-data-in-archr.html#cb471-45" aria-hidden="true" tabindex="-1"></a><span class="do">##  PAX7, PROX1, TCERG1L, THRSP, FAM181B, FZD10-DT, MIR6785, SPRY4-IT1, KLHL34, KRTAP10-11, LINC01346, MIR6729, LRRC38, PDPN, KAZN</span></span>
+<span id="cb471-46"><a href="analysis-of-multiome-data-in-archr.html#cb471-46" aria-hidden="true" tabindex="-1"></a><span class="do">## Identified 1662 markers!</span></span>
+<span id="cb471-47"><a href="analysis-of-multiome-data-in-archr.html#cb471-47" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] &quot;MIR6729&quot;     &quot;LRRC38&quot;      &quot;TSPAN1&quot;      &quot;TTC39A&quot;      &quot;TGFB2-AS1&quot;  </span></span>
+<span id="cb471-48"><a href="analysis-of-multiome-data-in-archr.html#cb471-48" aria-hidden="true" tabindex="-1"></a><span class="do">##  [6] &quot;VSTM4&quot;       &quot;CSNK2A3&quot;     &quot;LOC387810&quot;   &quot;PDPN&quot;        &quot;TMEM51&quot;     </span></span>
+<span id="cb471-49"><a href="analysis-of-multiome-data-in-archr.html#cb471-49" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] &quot;C1orf195&quot;    &quot;CTRC&quot;        &quot;IGSF21&quot;      &quot;ELAVL4&quot;      &quot;SPATA42&quot;    </span></span>
+<span id="cb471-50"><a href="analysis-of-multiome-data-in-archr.html#cb471-50" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] &quot;ATP1A4&quot;      &quot;LINC01346&quot;   &quot;PLA2G5&quot;      &quot;PLA2G2D&quot;     &quot;LINC01141&quot;  </span></span>
+<span id="cb471-51"><a href="analysis-of-multiome-data-in-archr.html#cb471-51" aria-hidden="true" tabindex="-1"></a><span class="do">## [21] &quot;PODN&quot;        &quot;GLIS1&quot;       &quot;BRDT&quot;        &quot;SOX13&quot;       &quot;KAZN&quot;       </span></span>
+<span id="cb471-52"><a href="analysis-of-multiome-data-in-archr.html#cb471-52" aria-hidden="true" tabindex="-1"></a><span class="do">## [26] &quot;LEXM&quot;        &quot;C8A&quot;         &quot;C8B&quot;         &quot;MIR4735&quot;     &quot;TCERG1L-AS1&quot;</span></span>
+<span id="cb471-53"><a href="analysis-of-multiome-data-in-archr.html#cb471-53" aria-hidden="true" tabindex="-1"></a><span class="do">## [31] &quot;SNHG18&quot;      &quot;SNORD123&quot;    &quot;NELL2&quot;       &quot;KRT72&quot;       &quot;SNORD116-2&quot; </span></span>
+<span id="cb471-54"><a href="analysis-of-multiome-data-in-archr.html#cb471-54" aria-hidden="true" tabindex="-1"></a><span class="do">## [36] &quot;SNORD116-3&quot;  &quot;LINC00853&quot;   &quot;GJA5&quot;        &quot;FAM78B&quot;      &quot;MIR194-1&quot;   </span></span>
+<span id="cb471-55"><a href="analysis-of-multiome-data-in-archr.html#cb471-55" aria-hidden="true" tabindex="-1"></a><span class="do">## [41] &quot;MIR4794&quot;     &quot;MIR675&quot;      &quot;KRT3&quot;        &quot;OR10G2&quot;      &quot;PAX7&quot;       </span></span>
+<span id="cb471-56"><a href="analysis-of-multiome-data-in-archr.html#cb471-56" aria-hidden="true" tabindex="-1"></a><span class="do">## [46] &quot;PROX1&quot;       &quot;TCERG1L&quot;     &quot;THRSP&quot;</span></span>
+<span id="cb471-57"><a href="analysis-of-multiome-data-in-archr.html#cb471-57" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Annotations..</span></span>
+<span id="cb471-58"><a href="analysis-of-multiome-data-in-archr.html#cb471-58" aria-hidden="true" tabindex="-1"></a><span class="do">## Preparing Main Heatmap..</span></span>
+<span id="cb471-59"><a href="analysis-of-multiome-data-in-archr.html#cb471-59" aria-hidden="true" tabindex="-1"></a><span class="do">## &#39;magick&#39; package is suggested to install to give better rasterization.</span></span>
+<span id="cb471-60"><a href="analysis-of-multiome-data-in-archr.html#cb471-60" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb471-61"><a href="analysis-of-multiome-data-in-archr.html#cb471-61" aria-hidden="true" tabindex="-1"></a><span class="do">## Set `ht_opt$message = FALSE` to turn off this message.</span></span>
+<span id="cb471-62"><a href="analysis-of-multiome-data-in-archr.html#cb471-62" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotMarkerHeatmap-371b079fe51b0-Date-2022-12-23_Time-10-19-40.log</span></span>
+<span id="cb471-63"><a href="analysis-of-multiome-data-in-archr.html#cb471-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb471-64"><a href="analysis-of-multiome-data-in-archr.html#cb471-64" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(heatmap_gex, <span class="at">heatmap_legend_side =</span> <span class="st">&quot;bot&quot;</span>, <span class="at">annotation_legend_side =</span> <span class="st">&quot;bot&quot;</span>)</span></code></pre></div>
+<p><img src="ArchR_files/figure-html/multiomeGetMF-1.svg" width="672" /></p>
+<p>Lastly, we will save this project for future reference.</p>
+<div class="sourceCode" id="cb472"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb472-1"><a href="analysis-of-multiome-data-in-archr.html#cb472-1" aria-hidden="true" tabindex="-1"></a>projMulti2 <span class="ot">&lt;-</span> <span class="fu">saveArchRProject</span>(<span class="at">ArchRProj =</span> projMulti2, <span class="at">outputDirectory =</span> <span class="st">&quot;Save-ProjMulti2&quot;</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>, <span class="at">load =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb472-2"><a href="analysis-of-multiome-data-in-archr.html#cb472-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Saving ArchRProject...</span></span>
+<span id="cb472-3"><a href="analysis-of-multiome-data-in-archr.html#cb472-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Loading ArchRProject...</span></span>
+<span id="cb472-4"><a href="analysis-of-multiome-data-in-archr.html#cb472-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Successfully loaded ArchRProject!</span></span>
+<span id="cb472-5"><a href="analysis-of-multiome-data-in-archr.html#cb472-5" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb472-6"><a href="analysis-of-multiome-data-in-archr.html#cb472-6" aria-hidden="true" tabindex="-1"></a><span class="do">##                                                    / |</span></span>
+<span id="cb472-7"><a href="analysis-of-multiome-data-in-archr.html#cb472-7" aria-hidden="true" tabindex="-1"></a><span class="do">##                                                  /    \</span></span>
+<span id="cb472-8"><a href="analysis-of-multiome-data-in-archr.html#cb472-8" aria-hidden="true" tabindex="-1"></a><span class="do">##             .                                  /      |.</span></span>
+<span id="cb472-9"><a href="analysis-of-multiome-data-in-archr.html#cb472-9" aria-hidden="true" tabindex="-1"></a><span class="do">##             \\\                              /        |.</span></span>
+<span id="cb472-10"><a href="analysis-of-multiome-data-in-archr.html#cb472-10" aria-hidden="true" tabindex="-1"></a><span class="do">##               \\\                          /           `|.</span></span>
+<span id="cb472-11"><a href="analysis-of-multiome-data-in-archr.html#cb472-11" aria-hidden="true" tabindex="-1"></a><span class="do">##                 \\\                      /              |.</span></span>
+<span id="cb472-12"><a href="analysis-of-multiome-data-in-archr.html#cb472-12" aria-hidden="true" tabindex="-1"></a><span class="do">##                   \                    /                |\</span></span>
+<span id="cb472-13"><a href="analysis-of-multiome-data-in-archr.html#cb472-13" aria-hidden="true" tabindex="-1"></a><span class="do">##                   \\#####\           /                  ||</span></span>
+<span id="cb472-14"><a href="analysis-of-multiome-data-in-archr.html#cb472-14" aria-hidden="true" tabindex="-1"></a><span class="do">##                 ==###########&gt;      /                   ||</span></span>
+<span id="cb472-15"><a href="analysis-of-multiome-data-in-archr.html#cb472-15" aria-hidden="true" tabindex="-1"></a><span class="do">##                  \\##==......\    /                     ||</span></span>
+<span id="cb472-16"><a href="analysis-of-multiome-data-in-archr.html#cb472-16" aria-hidden="true" tabindex="-1"></a><span class="do">##             ______ =       =|__ /__                     ||      \\\</span></span>
+<span id="cb472-17"><a href="analysis-of-multiome-data-in-archr.html#cb472-17" aria-hidden="true" tabindex="-1"></a><span class="do">##         ,--&#39; ,----`-,__ ___/&#39;  --,-`-===================##========&gt;</span></span>
+<span id="cb472-18"><a href="analysis-of-multiome-data-in-archr.html#cb472-18" aria-hidden="true" tabindex="-1"></a><span class="do">##        \               &#39;        ##_______ _____ ,--,__,=##,__   ///</span></span>
+<span id="cb472-19"><a href="analysis-of-multiome-data-in-archr.html#cb472-19" aria-hidden="true" tabindex="-1"></a><span class="do">##         ,    __==    ___,-,__,--&#39;#&#39;  ===&#39;      `-&#39;    | ##,-/</span></span>
+<span id="cb472-20"><a href="analysis-of-multiome-data-in-archr.html#cb472-20" aria-hidden="true" tabindex="-1"></a><span class="do">##         -,____,---&#39;       \\####\\________________,--\\_##,/</span></span>
+<span id="cb472-21"><a href="analysis-of-multiome-data-in-archr.html#cb472-21" aria-hidden="true" tabindex="-1"></a><span class="do">##            ___      .______        ______  __    __  .______      </span></span>
+<span id="cb472-22"><a href="analysis-of-multiome-data-in-archr.html#cb472-22" aria-hidden="true" tabindex="-1"></a><span class="do">##           /   \     |   _  \      /      ||  |  |  | |   _  \     </span></span>
+<span id="cb472-23"><a href="analysis-of-multiome-data-in-archr.html#cb472-23" aria-hidden="true" tabindex="-1"></a><span class="do">##          /  ^  \    |  |_)  |    |  ,----&#39;|  |__|  | |  |_)  |    </span></span>
+<span id="cb472-24"><a href="analysis-of-multiome-data-in-archr.html#cb472-24" aria-hidden="true" tabindex="-1"></a><span class="do">##         /  /_\  \   |      /     |  |     |   __   | |      /     </span></span>
+<span id="cb472-25"><a href="analysis-of-multiome-data-in-archr.html#cb472-25" aria-hidden="true" tabindex="-1"></a><span class="do">##        /  _____  \  |  |\  \\___ |  `----.|  |  |  | |  |\  \\___.</span></span>
+<span id="cb472-26"><a href="analysis-of-multiome-data-in-archr.html#cb472-26" aria-hidden="true" tabindex="-1"></a><span class="do">##       /__/     \__\ | _| `._____| \______||__|  |__| | _| `._____|</span></span>
+<span id="cb472-27"><a href="analysis-of-multiome-data-in-archr.html#cb472-27" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span></code></pre></div>
+
+</div>
+<!-- </div> -->
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="importing-data-and-setting-up-a-multiome-project.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="plot-aesthetics-in-archr.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": null
+},
+"fontsettings": null,
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "none"
+},
+"info": false
+});
+});
+</script>
+
+</body>
+
+</html>

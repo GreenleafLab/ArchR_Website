@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>13.2 Plotting Marker Peaks in ArchR | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
+  <meta name="description" content="A guide to ArchR" />
+  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="13.2 Plotting Marker Peaks in ArchR | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="A guide to ArchR" />
+  <meta name="github-repo" content="GreenleafLab/ArchR" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="13.2 Plotting Marker Peaks in ArchR | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
+  
+  <meta name="twitter:description" content="A guide to ArchR" />
+  
+
+<meta name="author" content="Jeffrey Granja and Ryan Corces" />
+
+
+<meta name="date" content="2022-12-23" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+<link rel="prev" href="identifying-marker-peaks-with-archr.html"/>
+<link rel="next" href="pairwise-testing-between-groups.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="../index.html">Back to ArchR Home</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><img src="images/ArchR_Logo_Integrated.png" alt="" width="200"></a></li>
+<li class="chapter" data-level="1" data-path="debugging-and-troubleshooting-in-archr.html"><a href="debugging-and-troubleshooting-in-archr.html"><i class="fa fa-check"></i><b>1</b> Debugging and Troubleshooting in ArchR</a></li>
+<li class="chapter" data-level="2" data-path="manage-archrs-dependencies.html"><a href="manage-archrs-dependencies.html"><i class="fa fa-check"></i><b>2</b> Manage ArchR’s Dependencies</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
+<li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="a-brief-primer-on-atac-seq-terminology.html"><a href="a-brief-primer-on-atac-seq-terminology.html"><i class="fa fa-check"></i><b>3.1</b> A Brief Primer on ATAC-seq Terminology</a></li>
+<li class="chapter" data-level="3.2" data-path="why-use-archr.html"><a href="why-use-archr.html"><i class="fa fa-check"></i><b>3.2</b> Why use ArchR?</a></li>
+<li class="chapter" data-level="3.3" data-path="what-is-an-arrow-file-archrproject.html"><a href="what-is-an-arrow-file-archrproject.html"><i class="fa fa-check"></i><b>3.3</b> What is an Arrow file / <code>ArchRProject</code>?</a></li>
+<li class="chapter" data-level="3.4" data-path="input-file-types-in-archr.html"><a href="input-file-types-in-archr.html"><i class="fa fa-check"></i><b>3.4</b> Input File Types in ArchR</a></li>
+<li class="chapter" data-level="3.5" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>3.5</b> Getting Set Up</a></li>
+<li class="chapter" data-level="3.6" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>3.6</b> Creating Arrow Files</a></li>
+<li class="chapter" data-level="3.7" data-path="per-cell-quality-control.html"><a href="per-cell-quality-control.html"><i class="fa fa-check"></i><b>3.7</b> Per-cell Quality Control</a></li>
+<li class="chapter" data-level="3.8" data-path="using-bam-files-for-arrow-file-creation.html"><a href="using-bam-files-for-arrow-file-creation.html"><i class="fa fa-check"></i><b>3.8</b> Using BAM files for Arrow File creation</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="doublet-inference-with-archr.html"><a href="doublet-inference-with-archr.html"><i class="fa fa-check"></i><b>4</b> Doublet Inference with ArchR</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="how-does-doublet-identification-work-in-archr.html"><a href="how-does-doublet-identification-work-in-archr.html"><i class="fa fa-check"></i><b>4.1</b> How does doublet identification work in ArchR?</a></li>
+<li class="chapter" data-level="4.2" data-path="inferring-scatac-seq-doublets-with-archr.html"><a href="inferring-scatac-seq-doublets-with-archr.html"><i class="fa fa-check"></i><b>4.2</b> Inferring scATAC-seq Doublets with ArchR</a></li>
+<li class="chapter" data-level="4.3" data-path="using-demuxlet-with-archr.html"><a href="using-demuxlet-with-archr.html"><i class="fa fa-check"></i><b>4.3</b> Using <em>demuxlet</em> with ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="creating-an-archrproject.html"><a href="creating-an-archrproject.html"><i class="fa fa-check"></i><b>5</b> Creating an ArchRProject</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="creating-an-archrproject-1.html"><a href="creating-an-archrproject-1.html"><i class="fa fa-check"></i><b>5.1</b> Creating An ArchRProject</a></li>
+<li class="chapter" data-level="5.2" data-path="manipulating-an-archrproject.html"><a href="manipulating-an-archrproject.html"><i class="fa fa-check"></i><b>5.2</b> Manipulating An ArchRProject</a></li>
+<li class="chapter" data-level="5.3" data-path="plotting-sample-statistics-from-an-archrproject.html"><a href="plotting-sample-statistics-from-an-archrproject.html"><i class="fa fa-check"></i><b>5.3</b> Plotting Sample Statistics from an ArchRProject</a></li>
+<li class="chapter" data-level="5.4" data-path="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles..html"><a href="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles..html"><i class="fa fa-check"></i><b>5.4</b> Plotting Sample Fragment Size Distribution and TSS Enrichment Profiles.</a></li>
+<li class="chapter" data-level="5.5" data-path="saving-and-loading-an-archrproject.html"><a href="saving-and-loading-an-archrproject.html"><i class="fa fa-check"></i><b>5.5</b> Saving and Loading an <code>ArchRProject</code></a></li>
+<li class="chapter" data-level="5.6" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>5.6</b> Filtering Doublets from an ArchRProject</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="dimensionality-reduction-with-archr.html"><a href="dimensionality-reduction-with-archr.html"><i class="fa fa-check"></i><b>6</b> Dimensionality Reduction with ArchR</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>6.1</b> ArchR’s LSI Implementation</a></li>
+<li class="chapter" data-level="6.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>6.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
+<li class="chapter" data-level="6.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>6.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="6.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>6.4</b> Batch Effect Correction wtih Harmony</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>7</b> Clustering with ArchR</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>7.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="7.2" data-path="clustering-using-scran.html"><a href="clustering-using-scran.html"><i class="fa fa-check"></i><b>7.2</b> Clustering using <code>scran</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>8</b> Single-cell Embeddings</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>8.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
+<li class="chapter" data-level="8.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>8.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
+<li class="chapter" data-level="8.3" data-path="dimensionality-reduction-after-harmony.html"><a href="dimensionality-reduction-after-harmony.html"><i class="fa fa-check"></i><b>8.3</b> Dimensionality Reduction After Harmony</a></li>
+<li class="chapter" data-level="8.4" data-path="highlighting-specific-cells-on-an-embedding.html"><a href="highlighting-specific-cells-on-an-embedding.html"><i class="fa fa-check"></i><b>8.4</b> Highlighting specific cells on an embedding</a></li>
+<li class="chapter" data-level="8.5" data-path="importing-an-embedding-from-external-software.html"><a href="importing-an-embedding-from-external-software.html"><i class="fa fa-check"></i><b>8.5</b> Importing an embedding from external software</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="gene-scores-and-marker-genes-with-archr.html"><a href="gene-scores-and-marker-genes-with-archr.html"><i class="fa fa-check"></i><b>9</b> Gene Scores and Marker Genes with ArchR</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="calculating-gene-scores-in-archr.html"><a href="calculating-gene-scores-in-archr.html"><i class="fa fa-check"></i><b>9.1</b> Calculating Gene Scores in ArchR</a></li>
+<li class="chapter" data-level="9.2" data-path="identification-of-marker-features.html"><a href="identification-of-marker-features.html"><i class="fa fa-check"></i><b>9.2</b> Identification of Marker Features</a></li>
+<li class="chapter" data-level="9.3" data-path="identifying-marker-genes.html"><a href="identifying-marker-genes.html"><i class="fa fa-check"></i><b>9.3</b> Identifying Marker Genes</a></li>
+<li class="chapter" data-level="9.4" data-path="visualizing-marker-genes-on-an-embedding.html"><a href="visualizing-marker-genes-on-an-embedding.html"><i class="fa fa-check"></i><b>9.4</b> Visualizing Marker Genes on an Embedding</a></li>
+<li class="chapter" data-level="9.5" data-path="marker-genes-imputation-with-magic.html"><a href="marker-genes-imputation-with-magic.html"><i class="fa fa-check"></i><b>9.5</b> Marker Genes Imputation with MAGIC</a></li>
+<li class="chapter" data-level="9.6" data-path="module-scores.html"><a href="module-scores.html"><i class="fa fa-check"></i><b>9.6</b> Module Scores</a></li>
+<li class="chapter" data-level="9.7" data-path="track-plotting-with-archrbrowser.html"><a href="track-plotting-with-archrbrowser.html"><i class="fa fa-check"></i><b>9.7</b> Track Plotting with ArchRBrowser</a></li>
+<li class="chapter" data-level="9.8" data-path="launching-the-interactive-archrbrowser.html"><a href="launching-the-interactive-archrbrowser.html"><i class="fa fa-check"></i><b>9.8</b> Launching the Interactive ArchRBrowser</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="defining-cluster-identity-with-scrna-seq.html"><a href="defining-cluster-identity-with-scrna-seq.html"><i class="fa fa-check"></i><b>10</b> Defining Cluster Identity with scRNA-seq</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><i class="fa fa-check"></i><b>10.1</b> Cross-platform linkage of scATAC-seq cells with scRNA-seq cells</a></li>
+<li class="chapter" data-level="10.2" data-path="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><i class="fa fa-check"></i><b>10.2</b> Adding Pseudo-scRNA-seq profiles for each scATAC-seq cell</a></li>
+<li class="chapter" data-level="10.3" data-path="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><a href="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><i class="fa fa-check"></i><b>10.3</b> Labeling scATAC-seq clusters with scRNA-seq information</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="pseudo-bulk-replicates-in-archr.html"><a href="pseudo-bulk-replicates-in-archr.html"><i class="fa fa-check"></i><b>11</b> Pseudo-bulk Replicates in ArchR</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="how-does-archr-make-pseudo-bulk-replicates.html"><a href="how-does-archr-make-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>11.1</b> How Does ArchR Make Pseudo-bulk Replicates?</a></li>
+<li class="chapter" data-level="11.2" data-path="making-pseudo-bulk-replicates.html"><a href="making-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>11.2</b> Making Pseudo-bulk Replicates</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="calling-peaks-with-archr.html"><a href="calling-peaks-with-archr.html"><i class="fa fa-check"></i><b>12</b> Calling Peaks with ArchR</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="the-iterative-overlap-peak-merging-procedure.html"><a href="the-iterative-overlap-peak-merging-procedure.html"><i class="fa fa-check"></i><b>12.1</b> The Iterative Overlap Peak Merging Procedure</a></li>
+<li class="chapter" data-level="12.2" data-path="calling-peaks-w-macs2.html"><a href="calling-peaks-w-macs2.html"><i class="fa fa-check"></i><b>12.2</b> Calling Peaks w/ Macs2</a></li>
+<li class="chapter" data-level="12.3" data-path="calling-peaks-w-tilematrix.html"><a href="calling-peaks-w-tilematrix.html"><i class="fa fa-check"></i><b>12.3</b> Calling Peaks w/ TileMatrix</a></li>
+<li class="chapter" data-level="12.4" data-path="adding-a-peak-matrix.html"><a href="adding-a-peak-matrix.html"><i class="fa fa-check"></i><b>12.4</b> Adding a Peak Matrix</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="identifying-marker-peaks.html"><a href="identifying-marker-peaks.html"><i class="fa fa-check"></i><b>13</b> Identifying Marker Peaks</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="identifying-marker-peaks-with-archr.html"><a href="identifying-marker-peaks-with-archr.html"><i class="fa fa-check"></i><b>13.1</b> Identifying Marker Peaks with ArchR</a></li>
+<li class="chapter" data-level="13.2" data-path="plotting-marker-peaks-in-archr.html"><a href="plotting-marker-peaks-in-archr.html"><i class="fa fa-check"></i><b>13.2</b> Plotting Marker Peaks in ArchR</a></li>
+<li class="chapter" data-level="13.3" data-path="pairwise-testing-between-groups.html"><a href="pairwise-testing-between-groups.html"><i class="fa fa-check"></i><b>13.3</b> Pairwise Testing Between Groups</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="motif-and-feature-enrichment-with-archr.html"><a href="motif-and-feature-enrichment-with-archr.html"><i class="fa fa-check"></i><b>14</b> Motif and Feature Enrichment with ArchR</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="motif-enrichment.html"><a href="motif-enrichment.html"><i class="fa fa-check"></i><b>14.1</b> Motif Enrichment</a></li>
+<li class="chapter" data-level="14.2" data-path="archr-enrichment.html"><a href="archr-enrichment.html"><i class="fa fa-check"></i><b>14.2</b> ArchR Enrichment</a></li>
+<li class="chapter" data-level="14.3" data-path="custom-enrichment.html"><a href="custom-enrichment.html"><i class="fa fa-check"></i><b>14.3</b> Custom Enrichment</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="chromvar-deviatons-enrichment-with-archr.html"><a href="chromvar-deviatons-enrichment-with-archr.html"><i class="fa fa-check"></i><b>15</b> ChromVAR Deviatons Enrichment with ArchR</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="motif-deviations.html"><a href="motif-deviations.html"><i class="fa fa-check"></i><b>15.1</b> Motif Deviations</a></li>
+<li class="chapter" data-level="15.2" data-path="archr-and-custom-deviations.html"><a href="archr-and-custom-deviations.html"><i class="fa fa-check"></i><b>15.2</b> ArchR and Custom Deviations</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="footprinting-with-archr.html"><a href="footprinting-with-archr.html"><i class="fa fa-check"></i><b>16</b> Footprinting with ArchR</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="motif-footprinting.html"><a href="motif-footprinting.html"><i class="fa fa-check"></i><b>16.1</b> Motif Footprinting</a></li>
+<li class="chapter" data-level="16.2" data-path="normalization-of-footprints-for-tn5-bias.html"><a href="normalization-of-footprints-for-tn5-bias.html"><i class="fa fa-check"></i><b>16.2</b> Normalization of Footprints for Tn5 Bias</a></li>
+<li class="chapter" data-level="16.3" data-path="feature-footprinting.html"><a href="feature-footprinting.html"><i class="fa fa-check"></i><b>16.3</b> Feature Footprinting</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>17</b> Integrative Analysis with ArchR</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="creating-low-overlapping-aggregates-of-cells.html"><a href="creating-low-overlapping-aggregates-of-cells.html"><i class="fa fa-check"></i><b>17.1</b> Creating Low-Overlapping Aggregates of Cells</a></li>
+<li class="chapter" data-level="17.2" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>17.2</b> Co-accessibility with ArchR</a></li>
+<li class="chapter" data-level="17.3" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>17.3</b> Peak2GeneLinkage with ArchR</a></li>
+<li class="chapter" data-level="17.4" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>17.4</b> Identification of Positive TF-Regulators</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-cifferentiation.html"><a href="lymphoid-trajectory---b-cell-cifferentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Cifferentiation</a></li>
+<li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
+<li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
+<li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="handling-archr-output.html"><a href="handling-archr-output.html"><i class="fa fa-check"></i><b>19</b> Handling ArchR Output</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="exporting-fragment-level-data.html"><a href="exporting-fragment-level-data.html"><i class="fa fa-check"></i><b>19.1</b> Exporting fragment-level data</a></li>
+<li class="chapter" data-level="19.2" data-path="exporting-matrix-level-data.html"><a href="exporting-matrix-level-data.html"><i class="fa fa-check"></i><b>19.2</b> Exporting matrix-level data</a></li>
+<li class="chapter" data-level="19.3" data-path="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html"><i class="fa fa-check"></i><b>19.3</b> Exporting pseudo-bulked data to a <code>SummarizedExperiment</code></a></li>
+<li class="chapter" data-level="19.4" data-path="exporting-pseudo-bulked-data-to-a-bigwig-file.html"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html"><i class="fa fa-check"></i><b>19.4</b> Exporting pseudo-bulked data to a bigWig file</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="integration-with-bulk-atac-seq.html"><a href="integration-with-bulk-atac-seq.html"><i class="fa fa-check"></i><b>20</b> Integration with bulk ATAC-seq</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="projecting-bulk-atac-seq-data.html"><a href="projecting-bulk-atac-seq-data.html"><i class="fa fa-check"></i><b>20.1</b> Projecting bulk ATAC-seq data</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="multiomic-data-analysis-in-archr.html"><a href="multiomic-data-analysis-in-archr.html"><i class="fa fa-check"></i><b>21</b> Multiomic data analysis in ArchR</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="importing-data-and-setting-up-a-multiome-project.html"><a href="importing-data-and-setting-up-a-multiome-project.html"><i class="fa fa-check"></i><b>21.1</b> Importing data and setting up a Multiome project</a></li>
+<li class="chapter" data-level="21.2" data-path="analysis-of-multiome-data-in-archr.html"><a href="analysis-of-multiome-data-in-archr.html"><i class="fa fa-check"></i><b>21.2</b> Analysis of multiome data in ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="plot-aesthetics-in-archr.html"><a href="plot-aesthetics-in-archr.html"><i class="fa fa-check"></i><b>22</b> Plot aesthetics in ArchR</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="using-and-manipulating-palettes-in-archr.html"><a href="using-and-manipulating-palettes-in-archr.html"><i class="fa fa-check"></i><b>22.1</b> Using and manipulating palettes in ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="testing-your-archr-installation.html"><a href="testing-your-archr-installation.html"><i class="fa fa-check"></i><b>23</b> Testing Your ArchR Installation</a></li>
+<li class="chapter" data-level="24" data-path="session-information.html"><a href="session-information.html"><i class="fa fa-check"></i><b>24</b> Session Information</a></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="_blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="plotting-marker-peaks-in-archr" class="section level2 hasAnchor" number="13.2">
+<h2><span class="header-section-number">13.2</span> Plotting Marker Peaks in ArchR<a href="plotting-marker-peaks-in-archr.html#plotting-marker-peaks-in-archr" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>ArchR provides multiple plotting functions to interact with the <code>SummarizedExperiment</code> objects returned by <code>getMarkerFeatures()</code>.</p>
+<div id="marker-peak-heatmaps" class="section level3 hasAnchor" number="13.2.1">
+<h3><span class="header-section-number">13.2.1</span> Marker Peak Heatmaps<a href="plotting-marker-peaks-in-archr.html#marker-peak-heatmaps" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We can visualize these marker peaks (or any features output by <code>getMarkerFeatures()</code>) as a heatmap using the <code>markerHeatmap()</code> function.</p>
+<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="plotting-marker-peaks-in-archr.html#cb209-1" aria-hidden="true" tabindex="-1"></a>heatmapPeaks <span class="ot">&lt;-</span> <span class="fu">markerHeatmap</span>(</span>
+<span id="cb209-2"><a href="plotting-marker-peaks-in-archr.html#cb209-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">seMarker =</span> markerPeaks, </span>
+<span id="cb209-3"><a href="plotting-marker-peaks-in-archr.html#cb209-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 0.5&quot;</span>,</span>
+<span id="cb209-4"><a href="plotting-marker-peaks-in-archr.html#cb209-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">transpose =</span> <span class="cn">TRUE</span></span>
+<span id="cb209-5"><a href="plotting-marker-peaks-in-archr.html#cb209-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb209-6"><a href="plotting-marker-peaks-in-archr.html#cb209-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: &#39;markerHeatmap&#39; is deprecated.</span></span>
+<span id="cb209-7"><a href="plotting-marker-peaks-in-archr.html#cb209-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Use &#39;plotMarkerHeatmap&#39; instead.</span></span>
+<span id="cb209-8"><a href="plotting-marker-peaks-in-archr.html#cb209-8" aria-hidden="true" tabindex="-1"></a><span class="do">## See help(&quot;Deprecated&quot;)</span></span>
+<span id="cb209-9"><a href="plotting-marker-peaks-in-archr.html#cb209-9" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotMarkerHeatmap-371b035768790-Date-2022-12-23_Time-07-44-47.log</span></span>
+<span id="cb209-10"><a href="plotting-marker-peaks-in-archr.html#cb209-10" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb209-11"><a href="plotting-marker-peaks-in-archr.html#cb209-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Identified 40319 markers!</span></span>
+<span id="cb209-12"><a href="plotting-marker-peaks-in-archr.html#cb209-12" aria-hidden="true" tabindex="-1"></a><span class="do">##   [1] &quot;chr1:1071786-1072286&quot;     &quot;chr1:4067482-4067982&quot;    </span></span>
+<span id="cb209-13"><a href="plotting-marker-peaks-in-archr.html#cb209-13" aria-hidden="true" tabindex="-1"></a><span class="do">##   [3] &quot;chr1:4087539-4088039&quot;     &quot;chr1:11341008-11341508&quot;  </span></span>
+<span id="cb209-14"><a href="plotting-marker-peaks-in-archr.html#cb209-14" aria-hidden="true" tabindex="-1"></a><span class="do">##   [5] &quot;chr1:14039984-14040484&quot;   &quot;chr1:15208404-15208904&quot;  </span></span>
+<span id="cb209-15"><a href="plotting-marker-peaks-in-archr.html#cb209-15" aria-hidden="true" tabindex="-1"></a><span class="do">##   [7] &quot;chr1:16023328-16023828&quot;   &quot;chr1:20960267-20960767&quot;  </span></span>
+<span id="cb209-16"><a href="plotting-marker-peaks-in-archr.html#cb209-16" aria-hidden="true" tabindex="-1"></a><span class="do">##   [9] &quot;chr1:24239630-24240130&quot;   &quot;chr1:25068767-25069267&quot;  </span></span>
+<span id="cb209-17"><a href="plotting-marker-peaks-in-archr.html#cb209-17" aria-hidden="true" tabindex="-1"></a><span class="do">##  [11] &quot;chr1:25074842-25075342&quot;   &quot;chr1:26615563-26616063&quot;  </span></span>
+<span id="cb209-18"><a href="plotting-marker-peaks-in-archr.html#cb209-18" aria-hidden="true" tabindex="-1"></a><span class="do">##  [13] &quot;chr1:27854618-27855118&quot;   &quot;chr1:31226442-31226942&quot;  </span></span>
+<span id="cb209-19"><a href="plotting-marker-peaks-in-archr.html#cb209-19" aria-hidden="true" tabindex="-1"></a><span class="do">##  [15] &quot;chr1:31227400-31227900&quot;   &quot;chr1:894963-895463&quot;      </span></span>
+<span id="cb209-20"><a href="plotting-marker-peaks-in-archr.html#cb209-20" aria-hidden="true" tabindex="-1"></a><span class="do">##  [17] &quot;chr1:895698-896198&quot;       &quot;chr1:936606-937106&quot;      </span></span>
+<span id="cb209-21"><a href="plotting-marker-peaks-in-archr.html#cb209-21" aria-hidden="true" tabindex="-1"></a><span class="do">##  [19] &quot;chr1:1004512-1005012&quot;     &quot;chr1:1243738-1244238&quot;    </span></span>
+<span id="cb209-22"><a href="plotting-marker-peaks-in-archr.html#cb209-22" aria-hidden="true" tabindex="-1"></a><span class="do">##  [21] &quot;chr1:1259856-1260356&quot;     &quot;chr1:1307362-1307862&quot;    </span></span>
+<span id="cb209-23"><a href="plotting-marker-peaks-in-archr.html#cb209-23" aria-hidden="true" tabindex="-1"></a><span class="do">##  [23] &quot;chr1:1447203-1447703&quot;     &quot;chr1:1590336-1590836&quot;    </span></span>
+<span id="cb209-24"><a href="plotting-marker-peaks-in-archr.html#cb209-24" aria-hidden="true" tabindex="-1"></a><span class="do">##  [25] &quot;chr1:1624365-1624865&quot;     &quot;chr1:1709660-1710160&quot;    </span></span>
+<span id="cb209-25"><a href="plotting-marker-peaks-in-archr.html#cb209-25" aria-hidden="true" tabindex="-1"></a><span class="do">##  [27] &quot;chr1:2065270-2065770&quot;     &quot;chr1:2126025-2126525&quot;    </span></span>
+<span id="cb209-26"><a href="plotting-marker-peaks-in-archr.html#cb209-26" aria-hidden="true" tabindex="-1"></a><span class="do">##  [29] &quot;chr1:2163264-2163764&quot;     &quot;chr1:2187769-2188269&quot;    </span></span>
+<span id="cb209-27"><a href="plotting-marker-peaks-in-archr.html#cb209-27" aria-hidden="true" tabindex="-1"></a><span class="do">##  [31] &quot;chr1:1034092-1034592&quot;     &quot;chr1:1306243-1306743&quot;    </span></span>
+<span id="cb209-28"><a href="plotting-marker-peaks-in-archr.html#cb209-28" aria-hidden="true" tabindex="-1"></a><span class="do">##  [33] &quot;chr1:1406855-1407355&quot;     &quot;chr1:3566410-3566910&quot;    </span></span>
+<span id="cb209-29"><a href="plotting-marker-peaks-in-archr.html#cb209-29" aria-hidden="true" tabindex="-1"></a><span class="do">##  [35] &quot;chr1:8761187-8761687&quot;     &quot;chr1:9776968-9777468&quot;    </span></span>
+<span id="cb209-30"><a href="plotting-marker-peaks-in-archr.html#cb209-30" aria-hidden="true" tabindex="-1"></a><span class="do">##  [37] &quot;chr1:15905389-15905889&quot;   &quot;chr1:19717721-19718221&quot;  </span></span>
+<span id="cb209-31"><a href="plotting-marker-peaks-in-archr.html#cb209-31" aria-hidden="true" tabindex="-1"></a><span class="do">##  [39] &quot;chr1:23927484-23927984&quot;   &quot;chr1:24069639-24070139&quot;  </span></span>
+<span id="cb209-32"><a href="plotting-marker-peaks-in-archr.html#cb209-32" aria-hidden="true" tabindex="-1"></a><span class="do">##  [41] &quot;chr1:24741916-24742416&quot;   &quot;chr1:24862916-24863416&quot;  </span></span>
+<span id="cb209-33"><a href="plotting-marker-peaks-in-archr.html#cb209-33" aria-hidden="true" tabindex="-1"></a><span class="do">##  [43] &quot;chr1:26147089-26147589&quot;   &quot;chr1:26452853-26453353&quot;  </span></span>
+<span id="cb209-34"><a href="plotting-marker-peaks-in-archr.html#cb209-34" aria-hidden="true" tabindex="-1"></a><span class="do">##  [45] &quot;chr1:26644134-26644634&quot;   &quot;chr1:1114597-1115097&quot;    </span></span>
+<span id="cb209-35"><a href="plotting-marker-peaks-in-archr.html#cb209-35" aria-hidden="true" tabindex="-1"></a><span class="do">##  [47] &quot;chr1:1827293-1827793&quot;     &quot;chr1:2232382-2232882&quot;    </span></span>
+<span id="cb209-36"><a href="plotting-marker-peaks-in-archr.html#cb209-36" aria-hidden="true" tabindex="-1"></a><span class="do">##  [49] &quot;chr1:5777263-5777763&quot;     &quot;chr1:6640958-6641458&quot;    </span></span>
+<span id="cb209-37"><a href="plotting-marker-peaks-in-archr.html#cb209-37" aria-hidden="true" tabindex="-1"></a><span class="do">##  [51] &quot;chr1:9477690-9478190&quot;     &quot;chr1:9483076-9483576&quot;    </span></span>
+<span id="cb209-38"><a href="plotting-marker-peaks-in-archr.html#cb209-38" aria-hidden="true" tabindex="-1"></a><span class="do">##  [53] &quot;chr1:10964800-10965300&quot;   &quot;chr1:11412790-11413290&quot;  </span></span>
+<span id="cb209-39"><a href="plotting-marker-peaks-in-archr.html#cb209-39" aria-hidden="true" tabindex="-1"></a><span class="do">##  [55] &quot;chr1:11435901-11436401&quot;   &quot;chr1:11467303-11467803&quot;  </span></span>
+<span id="cb209-40"><a href="plotting-marker-peaks-in-archr.html#cb209-40" aria-hidden="true" tabindex="-1"></a><span class="do">##  [57] &quot;chr1:13825006-13825506&quot;   &quot;chr1:15082323-15082823&quot;  </span></span>
+<span id="cb209-41"><a href="plotting-marker-peaks-in-archr.html#cb209-41" aria-hidden="true" tabindex="-1"></a><span class="do">##  [59] &quot;chr1:15671250-15671750&quot;   &quot;chr1:17336171-17336671&quot;  </span></span>
+<span id="cb209-42"><a href="plotting-marker-peaks-in-archr.html#cb209-42" aria-hidden="true" tabindex="-1"></a><span class="do">##  [61] &quot;chr1:940301-940801&quot;       &quot;chr1:1790044-1790544&quot;    </span></span>
+<span id="cb209-43"><a href="plotting-marker-peaks-in-archr.html#cb209-43" aria-hidden="true" tabindex="-1"></a><span class="do">##  [63] &quot;chr1:2528847-2529347&quot;     &quot;chr1:2995271-2995771&quot;    </span></span>
+<span id="cb209-44"><a href="plotting-marker-peaks-in-archr.html#cb209-44" aria-hidden="true" tabindex="-1"></a><span class="do">##  [65] &quot;chr1:3036637-3037137&quot;     &quot;chr1:3091380-3091880&quot;    </span></span>
+<span id="cb209-45"><a href="plotting-marker-peaks-in-archr.html#cb209-45" aria-hidden="true" tabindex="-1"></a><span class="do">##  [67] &quot;chr1:3244618-3245118&quot;     &quot;chr1:3458561-3459061&quot;    </span></span>
+<span id="cb209-46"><a href="plotting-marker-peaks-in-archr.html#cb209-46" aria-hidden="true" tabindex="-1"></a><span class="do">##  [69] &quot;chr1:3691306-3691806&quot;     &quot;chr1:4388443-4388943&quot;    </span></span>
+<span id="cb209-47"><a href="plotting-marker-peaks-in-archr.html#cb209-47" aria-hidden="true" tabindex="-1"></a><span class="do">##  [71] &quot;chr1:6489777-6490277&quot;     &quot;chr1:6732571-6733071&quot;    </span></span>
+<span id="cb209-48"><a href="plotting-marker-peaks-in-archr.html#cb209-48" aria-hidden="true" tabindex="-1"></a><span class="do">##  [73] &quot;chr1:7296076-7296576&quot;     &quot;chr1:7609289-7609789&quot;    </span></span>
+<span id="cb209-49"><a href="plotting-marker-peaks-in-archr.html#cb209-49" aria-hidden="true" tabindex="-1"></a><span class="do">##  [75] &quot;chr1:7615806-7616306&quot;     &quot;chr1:6230805-6231305&quot;    </span></span>
+<span id="cb209-50"><a href="plotting-marker-peaks-in-archr.html#cb209-50" aria-hidden="true" tabindex="-1"></a><span class="do">##  [77] &quot;chr1:6651188-6651688&quot;     &quot;chr1:22150168-22150668&quot;  </span></span>
+<span id="cb209-51"><a href="plotting-marker-peaks-in-archr.html#cb209-51" aria-hidden="true" tabindex="-1"></a><span class="do">##  [79] &quot;chr1:22232660-22233160&quot;   &quot;chr1:24130826-24131326&quot;  </span></span>
+<span id="cb209-52"><a href="plotting-marker-peaks-in-archr.html#cb209-52" aria-hidden="true" tabindex="-1"></a><span class="do">##  [81] &quot;chr1:30265820-30266320&quot;   &quot;chr1:39269628-39270128&quot;  </span></span>
+<span id="cb209-53"><a href="plotting-marker-peaks-in-archr.html#cb209-53" aria-hidden="true" tabindex="-1"></a><span class="do">##  [83] &quot;chr1:39299797-39300297&quot;   &quot;chr1:54703945-54704445&quot;  </span></span>
+<span id="cb209-54"><a href="plotting-marker-peaks-in-archr.html#cb209-54" aria-hidden="true" tabindex="-1"></a><span class="do">##  [85] &quot;chr1:55325286-55325786&quot;   &quot;chr1:58717043-58717543&quot;  </span></span>
+<span id="cb209-55"><a href="plotting-marker-peaks-in-archr.html#cb209-55" aria-hidden="true" tabindex="-1"></a><span class="do">##  [87] &quot;chr1:87617206-87617706&quot;   &quot;chr1:154724065-154724565&quot;</span></span>
+<span id="cb209-56"><a href="plotting-marker-peaks-in-archr.html#cb209-56" aria-hidden="true" tabindex="-1"></a><span class="do">##  [89] &quot;chr1:156083864-156084364&quot; &quot;chr1:161461166-161461666&quot;</span></span>
+<span id="cb209-57"><a href="plotting-marker-peaks-in-archr.html#cb209-57" aria-hidden="true" tabindex="-1"></a><span class="do">##  [91] &quot;chr1:1695612-1696112&quot;     &quot;chr1:1711625-1712125&quot;    </span></span>
+<span id="cb209-58"><a href="plotting-marker-peaks-in-archr.html#cb209-58" aria-hidden="true" tabindex="-1"></a><span class="do">##  [93] &quot;chr1:1837584-1838084&quot;     &quot;chr1:2080086-2080586&quot;    </span></span>
+<span id="cb209-59"><a href="plotting-marker-peaks-in-archr.html#cb209-59" aria-hidden="true" tabindex="-1"></a><span class="do">##  [95] &quot;chr1:2082675-2083175&quot;     &quot;chr1:2120838-2121338&quot;    </span></span>
+<span id="cb209-60"><a href="plotting-marker-peaks-in-archr.html#cb209-60" aria-hidden="true" tabindex="-1"></a><span class="do">##  [97] &quot;chr1:2165763-2166263&quot;     &quot;chr1:2230467-2230967&quot;    </span></span>
+<span id="cb209-61"><a href="plotting-marker-peaks-in-archr.html#cb209-61" aria-hidden="true" tabindex="-1"></a><span class="do">##  [99] &quot;chr1:3585359-3585859&quot;     &quot;chr1:3817714-3818214&quot;    </span></span>
+<span id="cb209-62"><a href="plotting-marker-peaks-in-archr.html#cb209-62" aria-hidden="true" tabindex="-1"></a><span class="do">## [101] &quot;chr1:6116576-6117076&quot;     &quot;chr1:6641925-6642425&quot;    </span></span>
+<span id="cb209-63"><a href="plotting-marker-peaks-in-archr.html#cb209-63" aria-hidden="true" tabindex="-1"></a><span class="do">## [103] &quot;chr1:7830467-7830967&quot;     &quot;chr1:7831033-7831533&quot;    </span></span>
+<span id="cb209-64"><a href="plotting-marker-peaks-in-archr.html#cb209-64" aria-hidden="true" tabindex="-1"></a><span class="do">## [105] &quot;chr1:8001634-8002134&quot;     &quot;chr1:762696-763196&quot;      </span></span>
+<span id="cb209-65"><a href="plotting-marker-peaks-in-archr.html#cb209-65" aria-hidden="true" tabindex="-1"></a><span class="do">## [107] &quot;chr1:936020-936520&quot;       &quot;chr1:955448-955948&quot;      </span></span>
+<span id="cb209-66"><a href="plotting-marker-peaks-in-archr.html#cb209-66" aria-hidden="true" tabindex="-1"></a><span class="do">## [109] &quot;chr1:976015-976515&quot;       &quot;chr1:1051983-1052483&quot;    </span></span>
+<span id="cb209-67"><a href="plotting-marker-peaks-in-archr.html#cb209-67" aria-hidden="true" tabindex="-1"></a><span class="do">## [111] &quot;chr1:1092100-1092600&quot;     &quot;chr1:1148107-1148607&quot;    </span></span>
+<span id="cb209-68"><a href="plotting-marker-peaks-in-archr.html#cb209-68" aria-hidden="true" tabindex="-1"></a><span class="do">## [113] &quot;chr1:1154655-1155155&quot;     &quot;chr1:1509522-1510022&quot;    </span></span>
+<span id="cb209-69"><a href="plotting-marker-peaks-in-archr.html#cb209-69" aria-hidden="true" tabindex="-1"></a><span class="do">## [115] &quot;chr1:1510041-1510541&quot;     &quot;chr1:1564723-1565223&quot;    </span></span>
+<span id="cb209-70"><a href="plotting-marker-peaks-in-archr.html#cb209-70" aria-hidden="true" tabindex="-1"></a><span class="do">## [117] &quot;chr1:1565421-1565921&quot;     &quot;chr1:1566251-1566751&quot;    </span></span>
+<span id="cb209-71"><a href="plotting-marker-peaks-in-archr.html#cb209-71" aria-hidden="true" tabindex="-1"></a><span class="do">## [119] &quot;chr1:1623718-1624218&quot;     &quot;chr1:2158373-2158873&quot;    </span></span>
+<span id="cb209-72"><a href="plotting-marker-peaks-in-archr.html#cb209-72" aria-hidden="true" tabindex="-1"></a><span class="do">## [121] &quot;chr1:1144252-1144752&quot;     &quot;chr1:4856470-4856970&quot;    </span></span>
+<span id="cb209-73"><a href="plotting-marker-peaks-in-archr.html#cb209-73" aria-hidden="true" tabindex="-1"></a><span class="do">## [123] &quot;chr1:6420694-6421194&quot;     &quot;chr1:8030215-8030715&quot;    </span></span>
+<span id="cb209-74"><a href="plotting-marker-peaks-in-archr.html#cb209-74" aria-hidden="true" tabindex="-1"></a><span class="do">## [125] &quot;chr1:13820452-13820952&quot;   &quot;chr1:16393580-16394080&quot;  </span></span>
+<span id="cb209-75"><a href="plotting-marker-peaks-in-archr.html#cb209-75" aria-hidden="true" tabindex="-1"></a><span class="do">## [127] &quot;chr1:16416444-16416944&quot;   &quot;chr1:17349563-17350063&quot;  </span></span>
+<span id="cb209-76"><a href="plotting-marker-peaks-in-archr.html#cb209-76" aria-hidden="true" tabindex="-1"></a><span class="do">## [129] &quot;chr1:17467808-17468308&quot;   &quot;chr1:17567375-17567875&quot;  </span></span>
+<span id="cb209-77"><a href="plotting-marker-peaks-in-archr.html#cb209-77" aria-hidden="true" tabindex="-1"></a><span class="do">## [131] &quot;chr1:19732550-19733050&quot;   &quot;chr1:20404699-20405199&quot;  </span></span>
+<span id="cb209-78"><a href="plotting-marker-peaks-in-archr.html#cb209-78" aria-hidden="true" tabindex="-1"></a><span class="do">## [133] &quot;chr1:20427393-20427893&quot;   &quot;chr1:22198382-22198882&quot;  </span></span>
+<span id="cb209-79"><a href="plotting-marker-peaks-in-archr.html#cb209-79" aria-hidden="true" tabindex="-1"></a><span class="do">## [135] &quot;chr1:24515973-24516473&quot;   &quot;chr1:1774220-1774720&quot;    </span></span>
+<span id="cb209-80"><a href="plotting-marker-peaks-in-archr.html#cb209-80" aria-hidden="true" tabindex="-1"></a><span class="do">## [137] &quot;chr1:3688925-3689425&quot;     &quot;chr1:6647396-6647896&quot;    </span></span>
+<span id="cb209-81"><a href="plotting-marker-peaks-in-archr.html#cb209-81" aria-hidden="true" tabindex="-1"></a><span class="do">## [139] &quot;chr1:9473097-9473597&quot;     &quot;chr1:9686219-9686719&quot;    </span></span>
+<span id="cb209-82"><a href="plotting-marker-peaks-in-archr.html#cb209-82" aria-hidden="true" tabindex="-1"></a><span class="do">## [141] &quot;chr1:20669571-20670071&quot;   &quot;chr1:26869783-26870283&quot;  </span></span>
+<span id="cb209-83"><a href="plotting-marker-peaks-in-archr.html#cb209-83" aria-hidden="true" tabindex="-1"></a><span class="do">## [143] &quot;chr1:27928767-27929267&quot;   &quot;chr1:31228520-31229020&quot;  </span></span>
+<span id="cb209-84"><a href="plotting-marker-peaks-in-archr.html#cb209-84" aria-hidden="true" tabindex="-1"></a><span class="do">## [145] &quot;chr1:31949766-31950266&quot;   &quot;chr1:33523674-33524174&quot;  </span></span>
+<span id="cb209-85"><a href="plotting-marker-peaks-in-archr.html#cb209-85" aria-hidden="true" tabindex="-1"></a><span class="do">## [147] &quot;chr1:35384646-35385146&quot;   &quot;chr1:41480609-41481109&quot;  </span></span>
+<span id="cb209-86"><a href="plotting-marker-peaks-in-archr.html#cb209-86" aria-hidden="true" tabindex="-1"></a><span class="do">## [149] &quot;chr1:41984090-41984590&quot;   &quot;chr1:54941604-54942104&quot;  </span></span>
+<span id="cb209-87"><a href="plotting-marker-peaks-in-archr.html#cb209-87" aria-hidden="true" tabindex="-1"></a><span class="do">## [151] &quot;chr1:845326-845826&quot;       &quot;chr1:856376-856876&quot;      </span></span>
+<span id="cb209-88"><a href="plotting-marker-peaks-in-archr.html#cb209-88" aria-hidden="true" tabindex="-1"></a><span class="do">## [153] &quot;chr1:859015-859515&quot;       &quot;chr1:931439-931939&quot;      </span></span>
+<span id="cb209-89"><a href="plotting-marker-peaks-in-archr.html#cb209-89" aria-hidden="true" tabindex="-1"></a><span class="do">## [155] &quot;chr1:999440-999940&quot;       &quot;chr1:1079383-1079883&quot;    </span></span>
+<span id="cb209-90"><a href="plotting-marker-peaks-in-archr.html#cb209-90" aria-hidden="true" tabindex="-1"></a><span class="do">## [157] &quot;chr1:1240604-1241104&quot;     &quot;chr1:1293750-1294250&quot;    </span></span>
+<span id="cb209-91"><a href="plotting-marker-peaks-in-archr.html#cb209-91" aria-hidden="true" tabindex="-1"></a><span class="do">## [159] &quot;chr1:1935041-1935541&quot;     &quot;chr1:2058367-2058867&quot;    </span></span>
+<span id="cb209-92"><a href="plotting-marker-peaks-in-archr.html#cb209-92" aria-hidden="true" tabindex="-1"></a><span class="do">## [161] &quot;chr1:2210524-2211024&quot;     &quot;chr1:2221930-2222430&quot;    </span></span>
+<span id="cb209-93"><a href="plotting-marker-peaks-in-archr.html#cb209-93" aria-hidden="true" tabindex="-1"></a><span class="do">## [163] &quot;chr1:2225956-2226456&quot;     &quot;chr1:2487416-2487916&quot;    </span></span>
+<span id="cb209-94"><a href="plotting-marker-peaks-in-archr.html#cb209-94" aria-hidden="true" tabindex="-1"></a><span class="do">## [165] &quot;chr1:2705411-2705911&quot;</span></span>
+<span id="cb209-95"><a href="plotting-marker-peaks-in-archr.html#cb209-95" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Annotations..</span></span>
+<span id="cb209-96"><a href="plotting-marker-peaks-in-archr.html#cb209-96" aria-hidden="true" tabindex="-1"></a><span class="do">## Preparing Main Heatmap..</span></span>
+<span id="cb209-97"><a href="plotting-marker-peaks-in-archr.html#cb209-97" aria-hidden="true" tabindex="-1"></a><span class="do">## &#39;magick&#39; package is suggested to install to give better rasterization.</span></span>
+<span id="cb209-98"><a href="plotting-marker-peaks-in-archr.html#cb209-98" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb209-99"><a href="plotting-marker-peaks-in-archr.html#cb209-99" aria-hidden="true" tabindex="-1"></a><span class="do">## Set `ht_opt$message = FALSE` to turn off this message.</span></span>
+<span id="cb209-100"><a href="plotting-marker-peaks-in-archr.html#cb209-100" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotMarkerHeatmap-371b035768790-Date-2022-12-23_Time-07-44-47.log</span></span></code></pre></div>
+<p>We can plot this heatmap using <code>draw()</code>.</p>
+<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="plotting-marker-peaks-in-archr.html#cb210-1" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(heatmapPeaks, <span class="at">heatmap_legend_side =</span> <span class="st">&quot;bot&quot;</span>, <span class="at">annotation_legend_side =</span> <span class="st">&quot;bot&quot;</span>)</span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-211-1.svg" width="672" /></p>
+<p>To save an editable vectorized version of this plot, we use the <code>plotPDF()</code> function.</p>
+<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="plotting-marker-peaks-in-archr.html#cb211-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotPDF</span>(heatmapPeaks, <span class="at">name =</span> <span class="st">&quot;Peak-Marker-Heatmap&quot;</span>, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">6</span>, <span class="at">ArchRProj =</span> projHeme5, <span class="at">addDOC =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb211-2"><a href="plotting-marker-peaks-in-archr.html#cb211-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting ComplexHeatmap!</span></span></code></pre></div>
+</div>
+<div id="marker-peak-ma-and-volcano-plots" class="section level3 hasAnchor" number="13.2.2">
+<h3><span class="header-section-number">13.2.2</span> Marker Peak MA and Volcano Plots<a href="plotting-marker-peaks-in-archr.html#marker-peak-ma-and-volcano-plots" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Instead of plotting a heatmap, we can also plot an MA or Volcano plot for any individual cell group. To do this, we use the <code>plotMarkers()</code> function. For an MA plot we specify <code>plotAs = "MA"</code>. Here we specify the “Erythroid” cell group via the <code>name</code> parameter.</p>
+<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="plotting-marker-peaks-in-archr.html#cb212-1" aria-hidden="true" tabindex="-1"></a>pma <span class="ot">&lt;-</span> <span class="fu">plotMarkers</span>(<span class="at">seMarker =</span> markerPeaks, <span class="at">name =</span> <span class="st">&quot;Erythroid&quot;</span>, <span class="at">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 1&quot;</span>, <span class="at">plotAs =</span> <span class="st">&quot;MA&quot;</span>)</span>
+<span id="cb212-2"><a href="plotting-marker-peaks-in-archr.html#cb212-2" aria-hidden="true" tabindex="-1"></a>pma</span>
+<span id="cb212-3"><a href="plotting-marker-peaks-in-archr.html#cb212-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Removed 46 rows containing missing values (geom_point_rast).</span></span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-213-1.svg" width="672" /></p>
+<p>Similarly, for a Volcano plot, we specify <code>plotAs = "Volcano"</code>.</p>
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="plotting-marker-peaks-in-archr.html#cb213-1" aria-hidden="true" tabindex="-1"></a>pv <span class="ot">&lt;-</span> <span class="fu">plotMarkers</span>(<span class="at">seMarker =</span> markerPeaks, <span class="at">name =</span> <span class="st">&quot;Erythroid&quot;</span>, <span class="at">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 1&quot;</span>, <span class="at">plotAs =</span> <span class="st">&quot;Volcano&quot;</span>)</span>
+<span id="cb213-2"><a href="plotting-marker-peaks-in-archr.html#cb213-2" aria-hidden="true" tabindex="-1"></a>pv</span>
+<span id="cb213-3"><a href="plotting-marker-peaks-in-archr.html#cb213-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: Removed 46 rows containing missing values (geom_point_rast).</span></span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-214-1.svg" width="672" /></p>
+<p>To save an editable vectorized version of these plots, we use the <code>plotPDF()</code> function.</p>
+<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="plotting-marker-peaks-in-archr.html#cb214-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotPDF</span>(pma, pv, <span class="at">name =</span> <span class="st">&quot;Erythroid-Markers-MA-Volcano&quot;</span>, <span class="at">width =</span> <span class="dv">5</span>, <span class="at">height =</span> <span class="dv">5</span>, <span class="at">ArchRProj =</span> projHeme5, <span class="at">addDOC =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb214-2"><a href="plotting-marker-peaks-in-archr.html#cb214-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
+<span id="cb214-3"><a href="plotting-marker-peaks-in-archr.html#cb214-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span></code></pre></div>
+</div>
+<div id="marker-peaks-in-browser-tracks" class="section level3 hasAnchor" number="13.2.3">
+<h3><span class="header-section-number">13.2.3</span> Marker Peaks in Browser Tracks<a href="plotting-marker-peaks-in-archr.html#marker-peaks-in-browser-tracks" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Additionally we can see these peak regions overlayed on our browser tracks by passing the relevant peak regions to the <code>features</code> parameterin the <code>plotBrowserTrack()</code> function. This will add an additional BED-style track of marker peak regions to the bottom of our ArchR track plot. Here we specify plotting the GATA1 gene via the <code>geneSymbol</code> parameter.</p>
+<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="plotting-marker-peaks-in-archr.html#cb215-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plotBrowserTrack</span>(</span>
+<span id="cb215-2"><a href="plotting-marker-peaks-in-archr.html#cb215-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5, </span>
+<span id="cb215-3"><a href="plotting-marker-peaks-in-archr.html#cb215-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>, </span>
+<span id="cb215-4"><a href="plotting-marker-peaks-in-archr.html#cb215-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">geneSymbol =</span> <span class="fu">c</span>(<span class="st">&quot;GATA1&quot;</span>),</span>
+<span id="cb215-5"><a href="plotting-marker-peaks-in-archr.html#cb215-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">features =</span>  <span class="fu">getMarkers</span>(markerPeaks, <span class="at">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 1&quot;</span>, <span class="at">returnGR =</span> <span class="cn">TRUE</span>)[<span class="st">&quot;Erythroid&quot;</span>],</span>
+<span id="cb215-6"><a href="plotting-marker-peaks-in-archr.html#cb215-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">upstream =</span> <span class="dv">50000</span>,</span>
+<span id="cb215-7"><a href="plotting-marker-peaks-in-archr.html#cb215-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">downstream =</span> <span class="dv">50000</span></span>
+<span id="cb215-8"><a href="plotting-marker-peaks-in-archr.html#cb215-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb215-9"><a href="plotting-marker-peaks-in-archr.html#cb215-9" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotBrowserTrack-371b0224bbbb5-Date-2022-12-23_Time-07-45-48.log</span></span>
+<span id="cb215-10"><a href="plotting-marker-peaks-in-archr.html#cb215-10" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb215-11"><a href="plotting-marker-peaks-in-archr.html#cb215-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:45:49 : Validating Region, 0.015 mins elapsed.</span></span>
+<span id="cb215-12"><a href="plotting-marker-peaks-in-archr.html#cb215-12" aria-hidden="true" tabindex="-1"></a><span class="do">## GRanges object with 1 range and 2 metadata columns:</span></span>
+<span id="cb215-13"><a href="plotting-marker-peaks-in-archr.html#cb215-13" aria-hidden="true" tabindex="-1"></a><span class="do">##       seqnames            ranges strand |     gene_id      symbol</span></span>
+<span id="cb215-14"><a href="plotting-marker-peaks-in-archr.html#cb215-14" aria-hidden="true" tabindex="-1"></a><span class="do">##          &lt;Rle&gt;         &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt; &lt;character&gt;</span></span>
+<span id="cb215-15"><a href="plotting-marker-peaks-in-archr.html#cb215-15" aria-hidden="true" tabindex="-1"></a><span class="do">##   [1]     chrX 48644982-48652717      + |        2623       GATA1</span></span>
+<span id="cb215-16"><a href="plotting-marker-peaks-in-archr.html#cb215-16" aria-hidden="true" tabindex="-1"></a><span class="do">##   -------</span></span>
+<span id="cb215-17"><a href="plotting-marker-peaks-in-archr.html#cb215-17" aria-hidden="true" tabindex="-1"></a><span class="do">##   seqinfo: 24 sequences from hg19 genome</span></span>
+<span id="cb215-18"><a href="plotting-marker-peaks-in-archr.html#cb215-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:45:49 : Adding Bulk Tracks (1 of 1), 0.017 mins elapsed.</span></span>
+<span id="cb215-19"><a href="plotting-marker-peaks-in-archr.html#cb215-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:45:50 : Adding Feature Tracks (1 of 1), 0.043 mins elapsed.</span></span>
+<span id="cb215-20"><a href="plotting-marker-peaks-in-archr.html#cb215-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:45:50 : Adding Gene Tracks (1 of 1), 0.044 mins elapsed.</span></span>
+<span id="cb215-21"><a href="plotting-marker-peaks-in-archr.html#cb215-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:45:50 : Plotting, 0.048 mins elapsed.</span></span>
+<span id="cb215-22"><a href="plotting-marker-peaks-in-archr.html#cb215-22" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotBrowserTrack-371b0224bbbb5-Date-2022-12-23_Time-07-45-48.log</span></span></code></pre></div>
+<p>We can plot this using <code>grid::grid.draw()</code>.</p>
+<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb216-1"><a href="plotting-marker-peaks-in-archr.html#cb216-1" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">::</span><span class="fu">grid.newpage</span>()</span>
+<span id="cb216-2"><a href="plotting-marker-peaks-in-archr.html#cb216-2" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">::</span><span class="fu">grid.draw</span>(p<span class="sc">$</span>GATA1)</span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-217-1.svg" width="672" /></p>
+<p>To save an editable vectorized version of this plot, we use the <code>plotPDF()</code> function.</p>
+<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="plotting-marker-peaks-in-archr.html#cb217-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotPDF</span>(p, <span class="at">name =</span> <span class="st">&quot;Plot-Tracks-With-Features&quot;</span>, <span class="at">width =</span> <span class="dv">5</span>, <span class="at">height =</span> <span class="dv">5</span>, <span class="at">ArchRProj =</span> projHeme5, <span class="at">addDOC =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb217-2"><a href="plotting-marker-peaks-in-archr.html#cb217-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb217-3"><a href="plotting-marker-peaks-in-archr.html#cb217-3" aria-hidden="true" tabindex="-1"></a><span class="do">## NULL</span></span></code></pre></div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="identifying-marker-peaks-with-archr.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="pairwise-testing-between-groups.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": null
+},
+"fontsettings": null,
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "none"
+},
+"info": false
+});
+});
+</script>
+
+</body>
+
+</html>

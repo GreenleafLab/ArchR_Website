@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 24 Session Information | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
+  <meta name="description" content="A guide to ArchR" />
+  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 24 Session Information | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="A guide to ArchR" />
+  <meta name="github-repo" content="GreenleafLab/ArchR" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 24 Session Information | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
+  
+  <meta name="twitter:description" content="A guide to ArchR" />
+  
+
+<meta name="author" content="Jeffrey Granja and Ryan Corces" />
+
+
+<meta name="date" content="2022-12-23" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+<link rel="prev" href="testing-your-archr-installation.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="../index.html">Back to ArchR Home</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><img src="images/ArchR_Logo_Integrated.png" alt="" width="200"></a></li>
+<li class="chapter" data-level="1" data-path="debugging-and-troubleshooting-in-archr.html"><a href="debugging-and-troubleshooting-in-archr.html"><i class="fa fa-check"></i><b>1</b> Debugging and Troubleshooting in ArchR</a></li>
+<li class="chapter" data-level="2" data-path="manage-archrs-dependencies.html"><a href="manage-archrs-dependencies.html"><i class="fa fa-check"></i><b>2</b> Manage ArchR’s Dependencies</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
+<li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="a-brief-primer-on-atac-seq-terminology.html"><a href="a-brief-primer-on-atac-seq-terminology.html"><i class="fa fa-check"></i><b>3.1</b> A Brief Primer on ATAC-seq Terminology</a></li>
+<li class="chapter" data-level="3.2" data-path="why-use-archr.html"><a href="why-use-archr.html"><i class="fa fa-check"></i><b>3.2</b> Why use ArchR?</a></li>
+<li class="chapter" data-level="3.3" data-path="what-is-an-arrow-file-archrproject.html"><a href="what-is-an-arrow-file-archrproject.html"><i class="fa fa-check"></i><b>3.3</b> What is an Arrow file / <code>ArchRProject</code>?</a></li>
+<li class="chapter" data-level="3.4" data-path="input-file-types-in-archr.html"><a href="input-file-types-in-archr.html"><i class="fa fa-check"></i><b>3.4</b> Input File Types in ArchR</a></li>
+<li class="chapter" data-level="3.5" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>3.5</b> Getting Set Up</a></li>
+<li class="chapter" data-level="3.6" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>3.6</b> Creating Arrow Files</a></li>
+<li class="chapter" data-level="3.7" data-path="per-cell-quality-control.html"><a href="per-cell-quality-control.html"><i class="fa fa-check"></i><b>3.7</b> Per-cell Quality Control</a></li>
+<li class="chapter" data-level="3.8" data-path="using-bam-files-for-arrow-file-creation.html"><a href="using-bam-files-for-arrow-file-creation.html"><i class="fa fa-check"></i><b>3.8</b> Using BAM files for Arrow File creation</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="doublet-inference-with-archr.html"><a href="doublet-inference-with-archr.html"><i class="fa fa-check"></i><b>4</b> Doublet Inference with ArchR</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="how-does-doublet-identification-work-in-archr.html"><a href="how-does-doublet-identification-work-in-archr.html"><i class="fa fa-check"></i><b>4.1</b> How does doublet identification work in ArchR?</a></li>
+<li class="chapter" data-level="4.2" data-path="inferring-scatac-seq-doublets-with-archr.html"><a href="inferring-scatac-seq-doublets-with-archr.html"><i class="fa fa-check"></i><b>4.2</b> Inferring scATAC-seq Doublets with ArchR</a></li>
+<li class="chapter" data-level="4.3" data-path="using-demuxlet-with-archr.html"><a href="using-demuxlet-with-archr.html"><i class="fa fa-check"></i><b>4.3</b> Using <em>demuxlet</em> with ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="creating-an-archrproject.html"><a href="creating-an-archrproject.html"><i class="fa fa-check"></i><b>5</b> Creating an ArchRProject</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="creating-an-archrproject-1.html"><a href="creating-an-archrproject-1.html"><i class="fa fa-check"></i><b>5.1</b> Creating An ArchRProject</a></li>
+<li class="chapter" data-level="5.2" data-path="manipulating-an-archrproject.html"><a href="manipulating-an-archrproject.html"><i class="fa fa-check"></i><b>5.2</b> Manipulating An ArchRProject</a></li>
+<li class="chapter" data-level="5.3" data-path="plotting-sample-statistics-from-an-archrproject.html"><a href="plotting-sample-statistics-from-an-archrproject.html"><i class="fa fa-check"></i><b>5.3</b> Plotting Sample Statistics from an ArchRProject</a></li>
+<li class="chapter" data-level="5.4" data-path="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles..html"><a href="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles..html"><i class="fa fa-check"></i><b>5.4</b> Plotting Sample Fragment Size Distribution and TSS Enrichment Profiles.</a></li>
+<li class="chapter" data-level="5.5" data-path="saving-and-loading-an-archrproject.html"><a href="saving-and-loading-an-archrproject.html"><i class="fa fa-check"></i><b>5.5</b> Saving and Loading an <code>ArchRProject</code></a></li>
+<li class="chapter" data-level="5.6" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>5.6</b> Filtering Doublets from an ArchRProject</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="dimensionality-reduction-with-archr.html"><a href="dimensionality-reduction-with-archr.html"><i class="fa fa-check"></i><b>6</b> Dimensionality Reduction with ArchR</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>6.1</b> ArchR’s LSI Implementation</a></li>
+<li class="chapter" data-level="6.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>6.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
+<li class="chapter" data-level="6.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>6.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="6.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>6.4</b> Batch Effect Correction wtih Harmony</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>7</b> Clustering with ArchR</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>7.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="7.2" data-path="clustering-using-scran.html"><a href="clustering-using-scran.html"><i class="fa fa-check"></i><b>7.2</b> Clustering using <code>scran</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>8</b> Single-cell Embeddings</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>8.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
+<li class="chapter" data-level="8.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>8.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
+<li class="chapter" data-level="8.3" data-path="dimensionality-reduction-after-harmony.html"><a href="dimensionality-reduction-after-harmony.html"><i class="fa fa-check"></i><b>8.3</b> Dimensionality Reduction After Harmony</a></li>
+<li class="chapter" data-level="8.4" data-path="highlighting-specific-cells-on-an-embedding.html"><a href="highlighting-specific-cells-on-an-embedding.html"><i class="fa fa-check"></i><b>8.4</b> Highlighting specific cells on an embedding</a></li>
+<li class="chapter" data-level="8.5" data-path="importing-an-embedding-from-external-software.html"><a href="importing-an-embedding-from-external-software.html"><i class="fa fa-check"></i><b>8.5</b> Importing an embedding from external software</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="gene-scores-and-marker-genes-with-archr.html"><a href="gene-scores-and-marker-genes-with-archr.html"><i class="fa fa-check"></i><b>9</b> Gene Scores and Marker Genes with ArchR</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="calculating-gene-scores-in-archr.html"><a href="calculating-gene-scores-in-archr.html"><i class="fa fa-check"></i><b>9.1</b> Calculating Gene Scores in ArchR</a></li>
+<li class="chapter" data-level="9.2" data-path="identification-of-marker-features.html"><a href="identification-of-marker-features.html"><i class="fa fa-check"></i><b>9.2</b> Identification of Marker Features</a></li>
+<li class="chapter" data-level="9.3" data-path="identifying-marker-genes.html"><a href="identifying-marker-genes.html"><i class="fa fa-check"></i><b>9.3</b> Identifying Marker Genes</a></li>
+<li class="chapter" data-level="9.4" data-path="visualizing-marker-genes-on-an-embedding.html"><a href="visualizing-marker-genes-on-an-embedding.html"><i class="fa fa-check"></i><b>9.4</b> Visualizing Marker Genes on an Embedding</a></li>
+<li class="chapter" data-level="9.5" data-path="marker-genes-imputation-with-magic.html"><a href="marker-genes-imputation-with-magic.html"><i class="fa fa-check"></i><b>9.5</b> Marker Genes Imputation with MAGIC</a></li>
+<li class="chapter" data-level="9.6" data-path="module-scores.html"><a href="module-scores.html"><i class="fa fa-check"></i><b>9.6</b> Module Scores</a></li>
+<li class="chapter" data-level="9.7" data-path="track-plotting-with-archrbrowser.html"><a href="track-plotting-with-archrbrowser.html"><i class="fa fa-check"></i><b>9.7</b> Track Plotting with ArchRBrowser</a></li>
+<li class="chapter" data-level="9.8" data-path="launching-the-interactive-archrbrowser.html"><a href="launching-the-interactive-archrbrowser.html"><i class="fa fa-check"></i><b>9.8</b> Launching the Interactive ArchRBrowser</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="defining-cluster-identity-with-scrna-seq.html"><a href="defining-cluster-identity-with-scrna-seq.html"><i class="fa fa-check"></i><b>10</b> Defining Cluster Identity with scRNA-seq</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><i class="fa fa-check"></i><b>10.1</b> Cross-platform linkage of scATAC-seq cells with scRNA-seq cells</a></li>
+<li class="chapter" data-level="10.2" data-path="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><i class="fa fa-check"></i><b>10.2</b> Adding Pseudo-scRNA-seq profiles for each scATAC-seq cell</a></li>
+<li class="chapter" data-level="10.3" data-path="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><a href="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><i class="fa fa-check"></i><b>10.3</b> Labeling scATAC-seq clusters with scRNA-seq information</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="pseudo-bulk-replicates-in-archr.html"><a href="pseudo-bulk-replicates-in-archr.html"><i class="fa fa-check"></i><b>11</b> Pseudo-bulk Replicates in ArchR</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="how-does-archr-make-pseudo-bulk-replicates.html"><a href="how-does-archr-make-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>11.1</b> How Does ArchR Make Pseudo-bulk Replicates?</a></li>
+<li class="chapter" data-level="11.2" data-path="making-pseudo-bulk-replicates.html"><a href="making-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>11.2</b> Making Pseudo-bulk Replicates</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="calling-peaks-with-archr.html"><a href="calling-peaks-with-archr.html"><i class="fa fa-check"></i><b>12</b> Calling Peaks with ArchR</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="the-iterative-overlap-peak-merging-procedure.html"><a href="the-iterative-overlap-peak-merging-procedure.html"><i class="fa fa-check"></i><b>12.1</b> The Iterative Overlap Peak Merging Procedure</a></li>
+<li class="chapter" data-level="12.2" data-path="calling-peaks-w-macs2.html"><a href="calling-peaks-w-macs2.html"><i class="fa fa-check"></i><b>12.2</b> Calling Peaks w/ Macs2</a></li>
+<li class="chapter" data-level="12.3" data-path="calling-peaks-w-tilematrix.html"><a href="calling-peaks-w-tilematrix.html"><i class="fa fa-check"></i><b>12.3</b> Calling Peaks w/ TileMatrix</a></li>
+<li class="chapter" data-level="12.4" data-path="adding-a-peak-matrix.html"><a href="adding-a-peak-matrix.html"><i class="fa fa-check"></i><b>12.4</b> Adding a Peak Matrix</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="identifying-marker-peaks.html"><a href="identifying-marker-peaks.html"><i class="fa fa-check"></i><b>13</b> Identifying Marker Peaks</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="identifying-marker-peaks-with-archr.html"><a href="identifying-marker-peaks-with-archr.html"><i class="fa fa-check"></i><b>13.1</b> Identifying Marker Peaks with ArchR</a></li>
+<li class="chapter" data-level="13.2" data-path="plotting-marker-peaks-in-archr.html"><a href="plotting-marker-peaks-in-archr.html"><i class="fa fa-check"></i><b>13.2</b> Plotting Marker Peaks in ArchR</a></li>
+<li class="chapter" data-level="13.3" data-path="pairwise-testing-between-groups.html"><a href="pairwise-testing-between-groups.html"><i class="fa fa-check"></i><b>13.3</b> Pairwise Testing Between Groups</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="motif-and-feature-enrichment-with-archr.html"><a href="motif-and-feature-enrichment-with-archr.html"><i class="fa fa-check"></i><b>14</b> Motif and Feature Enrichment with ArchR</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="motif-enrichment.html"><a href="motif-enrichment.html"><i class="fa fa-check"></i><b>14.1</b> Motif Enrichment</a></li>
+<li class="chapter" data-level="14.2" data-path="archr-enrichment.html"><a href="archr-enrichment.html"><i class="fa fa-check"></i><b>14.2</b> ArchR Enrichment</a></li>
+<li class="chapter" data-level="14.3" data-path="custom-enrichment.html"><a href="custom-enrichment.html"><i class="fa fa-check"></i><b>14.3</b> Custom Enrichment</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="chromvar-deviatons-enrichment-with-archr.html"><a href="chromvar-deviatons-enrichment-with-archr.html"><i class="fa fa-check"></i><b>15</b> ChromVAR Deviatons Enrichment with ArchR</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="motif-deviations.html"><a href="motif-deviations.html"><i class="fa fa-check"></i><b>15.1</b> Motif Deviations</a></li>
+<li class="chapter" data-level="15.2" data-path="archr-and-custom-deviations.html"><a href="archr-and-custom-deviations.html"><i class="fa fa-check"></i><b>15.2</b> ArchR and Custom Deviations</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="footprinting-with-archr.html"><a href="footprinting-with-archr.html"><i class="fa fa-check"></i><b>16</b> Footprinting with ArchR</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="motif-footprinting.html"><a href="motif-footprinting.html"><i class="fa fa-check"></i><b>16.1</b> Motif Footprinting</a></li>
+<li class="chapter" data-level="16.2" data-path="normalization-of-footprints-for-tn5-bias.html"><a href="normalization-of-footprints-for-tn5-bias.html"><i class="fa fa-check"></i><b>16.2</b> Normalization of Footprints for Tn5 Bias</a></li>
+<li class="chapter" data-level="16.3" data-path="feature-footprinting.html"><a href="feature-footprinting.html"><i class="fa fa-check"></i><b>16.3</b> Feature Footprinting</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>17</b> Integrative Analysis with ArchR</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="creating-low-overlapping-aggregates-of-cells.html"><a href="creating-low-overlapping-aggregates-of-cells.html"><i class="fa fa-check"></i><b>17.1</b> Creating Low-Overlapping Aggregates of Cells</a></li>
+<li class="chapter" data-level="17.2" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>17.2</b> Co-accessibility with ArchR</a></li>
+<li class="chapter" data-level="17.3" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>17.3</b> Peak2GeneLinkage with ArchR</a></li>
+<li class="chapter" data-level="17.4" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>17.4</b> Identification of Positive TF-Regulators</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-cifferentiation.html"><a href="lymphoid-trajectory---b-cell-cifferentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Cifferentiation</a></li>
+<li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
+<li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
+<li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="handling-archr-output.html"><a href="handling-archr-output.html"><i class="fa fa-check"></i><b>19</b> Handling ArchR Output</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="exporting-fragment-level-data.html"><a href="exporting-fragment-level-data.html"><i class="fa fa-check"></i><b>19.1</b> Exporting fragment-level data</a></li>
+<li class="chapter" data-level="19.2" data-path="exporting-matrix-level-data.html"><a href="exporting-matrix-level-data.html"><i class="fa fa-check"></i><b>19.2</b> Exporting matrix-level data</a></li>
+<li class="chapter" data-level="19.3" data-path="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html"><i class="fa fa-check"></i><b>19.3</b> Exporting pseudo-bulked data to a <code>SummarizedExperiment</code></a></li>
+<li class="chapter" data-level="19.4" data-path="exporting-pseudo-bulked-data-to-a-bigwig-file.html"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html"><i class="fa fa-check"></i><b>19.4</b> Exporting pseudo-bulked data to a bigWig file</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="integration-with-bulk-atac-seq.html"><a href="integration-with-bulk-atac-seq.html"><i class="fa fa-check"></i><b>20</b> Integration with bulk ATAC-seq</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="projecting-bulk-atac-seq-data.html"><a href="projecting-bulk-atac-seq-data.html"><i class="fa fa-check"></i><b>20.1</b> Projecting bulk ATAC-seq data</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="multiomic-data-analysis-in-archr.html"><a href="multiomic-data-analysis-in-archr.html"><i class="fa fa-check"></i><b>21</b> Multiomic data analysis in ArchR</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="importing-data-and-setting-up-a-multiome-project.html"><a href="importing-data-and-setting-up-a-multiome-project.html"><i class="fa fa-check"></i><b>21.1</b> Importing data and setting up a Multiome project</a></li>
+<li class="chapter" data-level="21.2" data-path="analysis-of-multiome-data-in-archr.html"><a href="analysis-of-multiome-data-in-archr.html"><i class="fa fa-check"></i><b>21.2</b> Analysis of multiome data in ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="plot-aesthetics-in-archr.html"><a href="plot-aesthetics-in-archr.html"><i class="fa fa-check"></i><b>22</b> Plot aesthetics in ArchR</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="using-and-manipulating-palettes-in-archr.html"><a href="using-and-manipulating-palettes-in-archr.html"><i class="fa fa-check"></i><b>22.1</b> Using and manipulating palettes in ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="testing-your-archr-installation.html"><a href="testing-your-archr-installation.html"><i class="fa fa-check"></i><b>23</b> Testing Your ArchR Installation</a></li>
+<li class="chapter" data-level="24" data-path="session-information.html"><a href="session-information.html"><i class="fa fa-check"></i><b>24</b> Session Information</a></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="_blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="session-information" class="section level1 hasAnchor" number="24">
+<h1><span class="header-section-number">Chapter 24</span> Session Information<a href="session-information.html#session-information" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This tutorial was run on the date specified below.</p>
+<pre><code>## [1] &quot;2022-12-23&quot;</code></pre>
+<p>The <code>sessionInfo()</code> at run time was:</p>
+<div class="sourceCode" id="cb489"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb489-1"><a href="session-information.html#cb489-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb489-2"><a href="session-information.html#cb489-2" aria-hidden="true" tabindex="-1"></a><span class="do">## R version 4.1.1 (2021-08-10)</span></span>
+<span id="cb489-3"><a href="session-information.html#cb489-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
+<span id="cb489-4"><a href="session-information.html#cb489-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Running under: Rocky Linux 8.5 (Green Obsidian)</span></span>
+<span id="cb489-5"><a href="session-information.html#cb489-5" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb489-6"><a href="session-information.html#cb489-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Matrix products: default</span></span>
+<span id="cb489-7"><a href="session-information.html#cb489-7" aria-hidden="true" tabindex="-1"></a><span class="do">## BLAS/LAPACK: /usr/lib64/libopenblasp-r0.3.12.so</span></span>
+<span id="cb489-8"><a href="session-information.html#cb489-8" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb489-9"><a href="session-information.html#cb489-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Random number generation:</span></span>
+<span id="cb489-10"><a href="session-information.html#cb489-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  RNG:     L&#39;Ecuyer-CMRG </span></span>
+<span id="cb489-11"><a href="session-information.html#cb489-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  Normal:  Inversion </span></span>
+<span id="cb489-12"><a href="session-information.html#cb489-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  Sample:  Rejection </span></span>
+<span id="cb489-13"><a href="session-information.html#cb489-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  </span></span>
+<span id="cb489-14"><a href="session-information.html#cb489-14" aria-hidden="true" tabindex="-1"></a><span class="do">## locale:</span></span>
+<span id="cb489-15"><a href="session-information.html#cb489-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></span>
+<span id="cb489-16"><a href="session-information.html#cb489-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span></span>
+<span id="cb489-17"><a href="session-information.html#cb489-17" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span></span>
+<span id="cb489-18"><a href="session-information.html#cb489-18" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span></span>
+<span id="cb489-19"><a href="session-information.html#cb489-19" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
+<span id="cb489-20"><a href="session-information.html#cb489-20" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span></span>
+<span id="cb489-21"><a href="session-information.html#cb489-21" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb489-22"><a href="session-information.html#cb489-22" aria-hidden="true" tabindex="-1"></a><span class="do">## attached base packages:</span></span>
+<span id="cb489-23"><a href="session-information.html#cb489-23" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] compiler  parallel  stats4    grid      stats     graphics  grDevices</span></span>
+<span id="cb489-24"><a href="session-information.html#cb489-24" aria-hidden="true" tabindex="-1"></a><span class="do">##  [8] datasets  utils     methods   base     </span></span>
+<span id="cb489-25"><a href="session-information.html#cb489-25" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb489-26"><a href="session-information.html#cb489-26" aria-hidden="true" tabindex="-1"></a><span class="do">## other attached packages:</span></span>
+<span id="cb489-27"><a href="session-information.html#cb489-27" aria-hidden="true" tabindex="-1"></a><span class="do">##   [1] zlibbioc_1.40.0                           </span></span>
+<span id="cb489-28"><a href="session-information.html#cb489-28" aria-hidden="true" tabindex="-1"></a><span class="do">##   [2] zip_2.2.0                                 </span></span>
+<span id="cb489-29"><a href="session-information.html#cb489-29" aria-hidden="true" tabindex="-1"></a><span class="do">##   [3] yaml_2.2.1                                </span></span>
+<span id="cb489-30"><a href="session-information.html#cb489-30" aria-hidden="true" tabindex="-1"></a><span class="do">##   [4] xtable_1.8-4                              </span></span>
+<span id="cb489-31"><a href="session-information.html#cb489-31" aria-hidden="true" tabindex="-1"></a><span class="do">##   [5] xopen_1.0.0                               </span></span>
+<span id="cb489-32"><a href="session-information.html#cb489-32" aria-hidden="true" tabindex="-1"></a><span class="do">##   [6] xml2_1.3.3                                </span></span>
+<span id="cb489-33"><a href="session-information.html#cb489-33" aria-hidden="true" tabindex="-1"></a><span class="do">##   [7] xfun_0.35                                 </span></span>
+<span id="cb489-34"><a href="session-information.html#cb489-34" aria-hidden="true" tabindex="-1"></a><span class="do">##   [8] withr_2.4.3                               </span></span>
+<span id="cb489-35"><a href="session-information.html#cb489-35" aria-hidden="true" tabindex="-1"></a><span class="do">##   [9] whisker_0.4                               </span></span>
+<span id="cb489-36"><a href="session-information.html#cb489-36" aria-hidden="true" tabindex="-1"></a><span class="do">##  [10] waldo_0.3.1                               </span></span>
+<span id="cb489-37"><a href="session-information.html#cb489-37" aria-hidden="true" tabindex="-1"></a><span class="do">##  [11] vroom_1.5.6                               </span></span>
+<span id="cb489-38"><a href="session-information.html#cb489-38" aria-hidden="true" tabindex="-1"></a><span class="do">##  [12] viridisLite_0.4.0                         </span></span>
+<span id="cb489-39"><a href="session-information.html#cb489-39" aria-hidden="true" tabindex="-1"></a><span class="do">##  [13] vctrs_0.5.1                               </span></span>
+<span id="cb489-40"><a href="session-information.html#cb489-40" aria-hidden="true" tabindex="-1"></a><span class="do">##  [14] utf8_1.2.2                                </span></span>
+<span id="cb489-41"><a href="session-information.html#cb489-41" aria-hidden="true" tabindex="-1"></a><span class="do">##  [15] tzdb_0.2.0                                </span></span>
+<span id="cb489-42"><a href="session-information.html#cb489-42" aria-hidden="true" tabindex="-1"></a><span class="do">##  [16] tidyselect_1.1.1                          </span></span>
+<span id="cb489-43"><a href="session-information.html#cb489-43" aria-hidden="true" tabindex="-1"></a><span class="do">##  [17] tidyr_1.1.4                               </span></span>
+<span id="cb489-44"><a href="session-information.html#cb489-44" aria-hidden="true" tabindex="-1"></a><span class="do">##  [18] tibble_3.1.6                              </span></span>
+<span id="cb489-45"><a href="session-information.html#cb489-45" aria-hidden="true" tabindex="-1"></a><span class="do">##  [19] testthat_3.1.1                            </span></span>
+<span id="cb489-46"><a href="session-information.html#cb489-46" aria-hidden="true" tabindex="-1"></a><span class="do">##  [20] sys_3.4                                   </span></span>
+<span id="cb489-47"><a href="session-information.html#cb489-47" aria-hidden="true" tabindex="-1"></a><span class="do">##  [21] stringi_1.7.6                             </span></span>
+<span id="cb489-48"><a href="session-information.html#cb489-48" aria-hidden="true" tabindex="-1"></a><span class="do">##  [22] statmod_1.4.36                            </span></span>
+<span id="cb489-49"><a href="session-information.html#cb489-49" aria-hidden="true" tabindex="-1"></a><span class="do">##  [23] spatstat.utils_2.2-0                      </span></span>
+<span id="cb489-50"><a href="session-information.html#cb489-50" aria-hidden="true" tabindex="-1"></a><span class="do">##  [24] spatstat.sparse_2.0-0                     </span></span>
+<span id="cb489-51"><a href="session-information.html#cb489-51" aria-hidden="true" tabindex="-1"></a><span class="do">##  [25] tensor_1.5                                </span></span>
+<span id="cb489-52"><a href="session-information.html#cb489-52" aria-hidden="true" tabindex="-1"></a><span class="do">##  [26] spatstat.core_2.3-1                       </span></span>
+<span id="cb489-53"><a href="session-information.html#cb489-53" aria-hidden="true" tabindex="-1"></a><span class="do">##  [27] spatstat.geom_2.3-0                       </span></span>
+<span id="cb489-54"><a href="session-information.html#cb489-54" aria-hidden="true" tabindex="-1"></a><span class="do">##  [28] spatstat.data_2.1-0                       </span></span>
+<span id="cb489-55"><a href="session-information.html#cb489-55" aria-hidden="true" tabindex="-1"></a><span class="do">##  [29] spatial_7.3-14                            </span></span>
+<span id="cb489-56"><a href="session-information.html#cb489-56" aria-hidden="true" tabindex="-1"></a><span class="do">##  [30] sourcetools_0.1.7                         </span></span>
+<span id="cb489-57"><a href="session-information.html#cb489-57" aria-hidden="true" tabindex="-1"></a><span class="do">##  [31] snow_0.4-4                                </span></span>
+<span id="cb489-58"><a href="session-information.html#cb489-58" aria-hidden="true" tabindex="-1"></a><span class="do">##  [32] sitmo_2.0.2                               </span></span>
+<span id="cb489-59"><a href="session-information.html#cb489-59" aria-hidden="true" tabindex="-1"></a><span class="do">##  [33] shinythemes_1.2.0                         </span></span>
+<span id="cb489-60"><a href="session-information.html#cb489-60" aria-hidden="true" tabindex="-1"></a><span class="do">##  [34] shiny_1.7.1                               </span></span>
+<span id="cb489-61"><a href="session-information.html#cb489-61" aria-hidden="true" tabindex="-1"></a><span class="do">##  [35] shape_1.4.6                               </span></span>
+<span id="cb489-62"><a href="session-information.html#cb489-62" aria-hidden="true" tabindex="-1"></a><span class="do">##  [36] sessioninfo_1.2.1                         </span></span>
+<span id="cb489-63"><a href="session-information.html#cb489-63" aria-hidden="true" tabindex="-1"></a><span class="do">##  [37] seqLogo_1.60.0                            </span></span>
+<span id="cb489-64"><a href="session-information.html#cb489-64" aria-hidden="true" tabindex="-1"></a><span class="do">##  [38] sctransform_0.3.2                         </span></span>
+<span id="cb489-65"><a href="session-information.html#cb489-65" aria-hidden="true" tabindex="-1"></a><span class="do">##  [39] scattermore_0.7                           </span></span>
+<span id="cb489-66"><a href="session-information.html#cb489-66" aria-hidden="true" tabindex="-1"></a><span class="do">##  [40] scales_1.1.1                              </span></span>
+<span id="cb489-67"><a href="session-information.html#cb489-67" aria-hidden="true" tabindex="-1"></a><span class="do">##  [41] sass_0.4.0                                </span></span>
+<span id="cb489-68"><a href="session-information.html#cb489-68" aria-hidden="true" tabindex="-1"></a><span class="do">##  [42] rversions_2.1.1                           </span></span>
+<span id="cb489-69"><a href="session-information.html#cb489-69" aria-hidden="true" tabindex="-1"></a><span class="do">##  [43] rsvd_1.0.5                                </span></span>
+<span id="cb489-70"><a href="session-information.html#cb489-70" aria-hidden="true" tabindex="-1"></a><span class="do">##  [44] rstudioapi_0.13                           </span></span>
+<span id="cb489-71"><a href="session-information.html#cb489-71" aria-hidden="true" tabindex="-1"></a><span class="do">##  [45] rprojroot_2.0.2                           </span></span>
+<span id="cb489-72"><a href="session-information.html#cb489-72" aria-hidden="true" tabindex="-1"></a><span class="do">##  [46] rpart_4.1-15                              </span></span>
+<span id="cb489-73"><a href="session-information.html#cb489-73" aria-hidden="true" tabindex="-1"></a><span class="do">##  [47] roxygen2_7.1.2                            </span></span>
+<span id="cb489-74"><a href="session-information.html#cb489-74" aria-hidden="true" tabindex="-1"></a><span class="do">##  [48] rlang_1.0.6                               </span></span>
+<span id="cb489-75"><a href="session-information.html#cb489-75" aria-hidden="true" tabindex="-1"></a><span class="do">##  [49] rjson_0.2.21                              </span></span>
+<span id="cb489-76"><a href="session-information.html#cb489-76" aria-hidden="true" tabindex="-1"></a><span class="do">##  [50] rhdf5filters_1.6.0                        </span></span>
+<span id="cb489-77"><a href="session-information.html#cb489-77" aria-hidden="true" tabindex="-1"></a><span class="do">##  [51] rhandsontable_0.3.8                       </span></span>
+<span id="cb489-78"><a href="session-information.html#cb489-78" aria-hidden="true" tabindex="-1"></a><span class="do">##  [52] reticulate_1.22                           </span></span>
+<span id="cb489-79"><a href="session-information.html#cb489-79" aria-hidden="true" tabindex="-1"></a><span class="do">##  [53] restfulr_0.0.13                           </span></span>
+<span id="cb489-80"><a href="session-information.html#cb489-80" aria-hidden="true" tabindex="-1"></a><span class="do">##  [54] reshape2_1.4.4                            </span></span>
+<span id="cb489-81"><a href="session-information.html#cb489-81" aria-hidden="true" tabindex="-1"></a><span class="do">##  [55] renv_0.16.0                               </span></span>
+<span id="cb489-82"><a href="session-information.html#cb489-82" aria-hidden="true" tabindex="-1"></a><span class="do">##  [56] remotes_2.4.2                             </span></span>
+<span id="cb489-83"><a href="session-information.html#cb489-83" aria-hidden="true" tabindex="-1"></a><span class="do">##  [57] rematch2_2.1.2                            </span></span>
+<span id="cb489-84"><a href="session-information.html#cb489-84" aria-hidden="true" tabindex="-1"></a><span class="do">##  [58] readr_2.1.0                               </span></span>
+<span id="cb489-85"><a href="session-information.html#cb489-85" aria-hidden="true" tabindex="-1"></a><span class="do">##  [59] rcmdcheck_1.4.0                           </span></span>
+<span id="cb489-86"><a href="session-information.html#cb489-86" aria-hidden="true" tabindex="-1"></a><span class="do">##  [60] rappdirs_0.3.3                            </span></span>
+<span id="cb489-87"><a href="session-information.html#cb489-87" aria-hidden="true" tabindex="-1"></a><span class="do">##  [61] purrr_0.3.4                               </span></span>
+<span id="cb489-88"><a href="session-information.html#cb489-88" aria-hidden="true" tabindex="-1"></a><span class="do">##  [62] ps_1.6.0                                  </span></span>
+<span id="cb489-89"><a href="session-information.html#cb489-89" aria-hidden="true" tabindex="-1"></a><span class="do">##  [63] promises_1.2.0.1                          </span></span>
+<span id="cb489-90"><a href="session-information.html#cb489-90" aria-hidden="true" tabindex="-1"></a><span class="do">##  [64] progress_1.2.2                            </span></span>
+<span id="cb489-91"><a href="session-information.html#cb489-91" aria-hidden="true" tabindex="-1"></a><span class="do">##  [65] processx_3.8.0                            </span></span>
+<span id="cb489-92"><a href="session-information.html#cb489-92" aria-hidden="true" tabindex="-1"></a><span class="do">##  [66] prettyunits_1.1.1                         </span></span>
+<span id="cb489-93"><a href="session-information.html#cb489-93" aria-hidden="true" tabindex="-1"></a><span class="do">##  [67] praise_1.0.0                              </span></span>
+<span id="cb489-94"><a href="session-information.html#cb489-94" aria-hidden="true" tabindex="-1"></a><span class="do">##  [68] pracma_2.3.3                              </span></span>
+<span id="cb489-95"><a href="session-information.html#cb489-95" aria-hidden="true" tabindex="-1"></a><span class="do">##  [69] poweRlaw_0.70.6                           </span></span>
+<span id="cb489-96"><a href="session-information.html#cb489-96" aria-hidden="true" tabindex="-1"></a><span class="do">##  [70] polyclip_1.10-0                           </span></span>
+<span id="cb489-97"><a href="session-information.html#cb489-97" aria-hidden="true" tabindex="-1"></a><span class="do">##  [71] png_0.1-7                                 </span></span>
+<span id="cb489-98"><a href="session-information.html#cb489-98" aria-hidden="true" tabindex="-1"></a><span class="do">##  [72] plotly_4.10.0                             </span></span>
+<span id="cb489-99"><a href="session-information.html#cb489-99" aria-hidden="true" tabindex="-1"></a><span class="do">##  [73] plogr_0.2.0                               </span></span>
+<span id="cb489-100"><a href="session-information.html#cb489-100" aria-hidden="true" tabindex="-1"></a><span class="do">##  [74] pkgload_1.2.4                             </span></span>
+<span id="cb489-101"><a href="session-information.html#cb489-101" aria-hidden="true" tabindex="-1"></a><span class="do">##  [75] pkgconfig_2.0.3                           </span></span>
+<span id="cb489-102"><a href="session-information.html#cb489-102" aria-hidden="true" tabindex="-1"></a><span class="do">##  [76] pkgbuild_1.2.1                            </span></span>
+<span id="cb489-103"><a href="session-information.html#cb489-103" aria-hidden="true" tabindex="-1"></a><span class="do">##  [77] pillar_1.6.4                              </span></span>
+<span id="cb489-104"><a href="session-information.html#cb489-104" aria-hidden="true" tabindex="-1"></a><span class="do">##  [78] pbapply_1.5-0                             </span></span>
+<span id="cb489-105"><a href="session-information.html#cb489-105" aria-hidden="true" tabindex="-1"></a><span class="do">##  [79] patchwork_1.1.1                           </span></span>
+<span id="cb489-106"><a href="session-information.html#cb489-106" aria-hidden="true" tabindex="-1"></a><span class="do">##  [80] parallelly_1.28.1                         </span></span>
+<span id="cb489-107"><a href="session-information.html#cb489-107" aria-hidden="true" tabindex="-1"></a><span class="do">##  [81] openssl_1.4.5                             </span></span>
+<span id="cb489-108"><a href="session-information.html#cb489-108" aria-hidden="true" tabindex="-1"></a><span class="do">##  [82] nnet_7.3-16                               </span></span>
+<span id="cb489-109"><a href="session-information.html#cb489-109" aria-hidden="true" tabindex="-1"></a><span class="do">##  [83] munsell_0.5.0                             </span></span>
+<span id="cb489-110"><a href="session-information.html#cb489-110" aria-hidden="true" tabindex="-1"></a><span class="do">##  [84] miniUI_0.1.1.1                            </span></span>
+<span id="cb489-111"><a href="session-information.html#cb489-111" aria-hidden="true" tabindex="-1"></a><span class="do">##  [85] mime_0.12                                 </span></span>
+<span id="cb489-112"><a href="session-information.html#cb489-112" aria-hidden="true" tabindex="-1"></a><span class="do">##  [86] mgcv_1.8-38                               </span></span>
+<span id="cb489-113"><a href="session-information.html#cb489-113" aria-hidden="true" tabindex="-1"></a><span class="do">##  [87] nlme_3.1-153                              </span></span>
+<span id="cb489-114"><a href="session-information.html#cb489-114" aria-hidden="true" tabindex="-1"></a><span class="do">##  [88] metapod_1.2.0                             </span></span>
+<span id="cb489-115"><a href="session-information.html#cb489-115" aria-hidden="true" tabindex="-1"></a><span class="do">##  [89] memoise_2.0.1                             </span></span>
+<span id="cb489-116"><a href="session-information.html#cb489-116" aria-hidden="true" tabindex="-1"></a><span class="do">##  [90] locfit_1.5-9.4                            </span></span>
+<span id="cb489-117"><a href="session-information.html#cb489-117" aria-hidden="true" tabindex="-1"></a><span class="do">##  [91] lmtest_0.9-39                             </span></span>
+<span id="cb489-118"><a href="session-information.html#cb489-118" aria-hidden="true" tabindex="-1"></a><span class="do">##  [92] zoo_1.8-9                                 </span></span>
+<span id="cb489-119"><a href="session-information.html#cb489-119" aria-hidden="true" tabindex="-1"></a><span class="do">##  [93] listenv_0.8.0                             </span></span>
+<span id="cb489-120"><a href="session-information.html#cb489-120" aria-hidden="true" tabindex="-1"></a><span class="do">##  [94] lifecycle_1.0.3                           </span></span>
+<span id="cb489-121"><a href="session-information.html#cb489-121" aria-hidden="true" tabindex="-1"></a><span class="do">##  [95] leiden_0.3.9                              </span></span>
+<span id="cb489-122"><a href="session-information.html#cb489-122" aria-hidden="true" tabindex="-1"></a><span class="do">##  [96] lazyeval_0.2.2                            </span></span>
+<span id="cb489-123"><a href="session-information.html#cb489-123" aria-hidden="true" tabindex="-1"></a><span class="do">##  [97] later_1.3.0                               </span></span>
+<span id="cb489-124"><a href="session-information.html#cb489-124" aria-hidden="true" tabindex="-1"></a><span class="do">##  [98] lambda.r_1.2.4                            </span></span>
+<span id="cb489-125"><a href="session-information.html#cb489-125" aria-hidden="true" tabindex="-1"></a><span class="do">##  [99] labeling_0.4.2                            </span></span>
+<span id="cb489-126"><a href="session-information.html#cb489-126" aria-hidden="true" tabindex="-1"></a><span class="do">## [100] knitr_1.41                                </span></span>
+<span id="cb489-127"><a href="session-information.html#cb489-127" aria-hidden="true" tabindex="-1"></a><span class="do">## [101] jsonlite_1.7.2                            </span></span>
+<span id="cb489-128"><a href="session-information.html#cb489-128" aria-hidden="true" tabindex="-1"></a><span class="do">## [102] jquerylib_0.1.4                           </span></span>
+<span id="cb489-129"><a href="session-information.html#cb489-129" aria-hidden="true" tabindex="-1"></a><span class="do">## [103] isoband_0.2.5                             </span></span>
+<span id="cb489-130"><a href="session-information.html#cb489-130" aria-hidden="true" tabindex="-1"></a><span class="do">## [104] irlba_2.3.3                               </span></span>
+<span id="cb489-131"><a href="session-information.html#cb489-131" aria-hidden="true" tabindex="-1"></a><span class="do">## [105] ini_0.3.1                                 </span></span>
+<span id="cb489-132"><a href="session-information.html#cb489-132" aria-hidden="true" tabindex="-1"></a><span class="do">## [106] ica_1.0-2                                 </span></span>
+<span id="cb489-133"><a href="session-information.html#cb489-133" aria-hidden="true" tabindex="-1"></a><span class="do">## [107] httr_1.4.2                                </span></span>
+<span id="cb489-134"><a href="session-information.html#cb489-134" aria-hidden="true" tabindex="-1"></a><span class="do">## [108] httpuv_1.6.3                              </span></span>
+<span id="cb489-135"><a href="session-information.html#cb489-135" aria-hidden="true" tabindex="-1"></a><span class="do">## [109] htmlwidgets_1.5.4                         </span></span>
+<span id="cb489-136"><a href="session-information.html#cb489-136" aria-hidden="true" tabindex="-1"></a><span class="do">## [110] htmltools_0.5.2                           </span></span>
+<span id="cb489-137"><a href="session-information.html#cb489-137" aria-hidden="true" tabindex="-1"></a><span class="do">## [111] hms_1.1.1                                 </span></span>
+<span id="cb489-138"><a href="session-information.html#cb489-138" aria-hidden="true" tabindex="-1"></a><span class="do">## [112] highr_0.9                                 </span></span>
+<span id="cb489-139"><a href="session-information.html#cb489-139" aria-hidden="true" tabindex="-1"></a><span class="do">## [113] here_1.0.1                                </span></span>
+<span id="cb489-140"><a href="session-information.html#cb489-140" aria-hidden="true" tabindex="-1"></a><span class="do">## [114] gplots_3.1.1                              </span></span>
+<span id="cb489-141"><a href="session-information.html#cb489-141" aria-hidden="true" tabindex="-1"></a><span class="do">## [115] goftest_1.2-3                             </span></span>
+<span id="cb489-142"><a href="session-information.html#cb489-142" aria-hidden="true" tabindex="-1"></a><span class="do">## [116] glue_1.5.1                                </span></span>
+<span id="cb489-143"><a href="session-information.html#cb489-143" aria-hidden="true" tabindex="-1"></a><span class="do">## [117] globals_0.14.0                            </span></span>
+<span id="cb489-144"><a href="session-information.html#cb489-144" aria-hidden="true" tabindex="-1"></a><span class="do">## [118] gitcreds_0.1.1                            </span></span>
+<span id="cb489-145"><a href="session-information.html#cb489-145" aria-hidden="true" tabindex="-1"></a><span class="do">## [119] gh_1.3.0                                  </span></span>
+<span id="cb489-146"><a href="session-information.html#cb489-146" aria-hidden="true" tabindex="-1"></a><span class="do">## [120] gert_1.4.3                                </span></span>
+<span id="cb489-147"><a href="session-information.html#cb489-147" aria-hidden="true" tabindex="-1"></a><span class="do">## [121] generics_0.1.1                            </span></span>
+<span id="cb489-148"><a href="session-information.html#cb489-148" aria-hidden="true" tabindex="-1"></a><span class="do">## [122] geneplotter_1.72.0                        </span></span>
+<span id="cb489-149"><a href="session-information.html#cb489-149" aria-hidden="true" tabindex="-1"></a><span class="do">## [123] lattice_0.20-45                           </span></span>
+<span id="cb489-150"><a href="session-information.html#cb489-150" aria-hidden="true" tabindex="-1"></a><span class="do">## [124] genefilter_1.76.0                         </span></span>
+<span id="cb489-151"><a href="session-information.html#cb489-151" aria-hidden="true" tabindex="-1"></a><span class="do">## [125] future.apply_1.8.1                        </span></span>
+<span id="cb489-152"><a href="session-information.html#cb489-152" aria-hidden="true" tabindex="-1"></a><span class="do">## [126] future_1.23.0                             </span></span>
+<span id="cb489-153"><a href="session-information.html#cb489-153" aria-hidden="true" tabindex="-1"></a><span class="do">## [127] futile.options_1.0.1                      </span></span>
+<span id="cb489-154"><a href="session-information.html#cb489-154" aria-hidden="true" tabindex="-1"></a><span class="do">## [128] futile.logger_1.4.3                       </span></span>
+<span id="cb489-155"><a href="session-information.html#cb489-155" aria-hidden="true" tabindex="-1"></a><span class="do">## [129] fs_1.5.0                                  </span></span>
+<span id="cb489-156"><a href="session-information.html#cb489-156" aria-hidden="true" tabindex="-1"></a><span class="do">## [130] formatR_1.11                              </span></span>
+<span id="cb489-157"><a href="session-information.html#cb489-157" aria-hidden="true" tabindex="-1"></a><span class="do">## [131] foreign_0.8-81                            </span></span>
+<span id="cb489-158"><a href="session-information.html#cb489-158" aria-hidden="true" tabindex="-1"></a><span class="do">## [132] fontawesome_0.2.2                         </span></span>
+<span id="cb489-159"><a href="session-information.html#cb489-159" aria-hidden="true" tabindex="-1"></a><span class="do">## [133] fitdistrplus_1.1-6                        </span></span>
+<span id="cb489-160"><a href="session-information.html#cb489-160" aria-hidden="true" tabindex="-1"></a><span class="do">## [134] survival_3.2-13                           </span></span>
+<span id="cb489-161"><a href="session-information.html#cb489-161" aria-hidden="true" tabindex="-1"></a><span class="do">## [135] fastmap_1.1.0                             </span></span>
+<span id="cb489-162"><a href="session-information.html#cb489-162" aria-hidden="true" tabindex="-1"></a><span class="do">## [136] farver_2.1.0                              </span></span>
+<span id="cb489-163"><a href="session-information.html#cb489-163" aria-hidden="true" tabindex="-1"></a><span class="do">## [137] fansi_0.5.0                               </span></span>
+<span id="cb489-164"><a href="session-information.html#cb489-164" aria-hidden="true" tabindex="-1"></a><span class="do">## [138] evaluate_0.19                             </span></span>
+<span id="cb489-165"><a href="session-information.html#cb489-165" aria-hidden="true" tabindex="-1"></a><span class="do">## [139] ellipsis_0.3.2                            </span></span>
+<span id="cb489-166"><a href="session-information.html#cb489-166" aria-hidden="true" tabindex="-1"></a><span class="do">## [140] edgeR_3.36.0                              </span></span>
+<span id="cb489-167"><a href="session-information.html#cb489-167" aria-hidden="true" tabindex="-1"></a><span class="do">## [141] limma_3.50.0                              </span></span>
+<span id="cb489-168"><a href="session-information.html#cb489-168" aria-hidden="true" tabindex="-1"></a><span class="do">## [142] dqrng_0.3.0                               </span></span>
+<span id="cb489-169"><a href="session-information.html#cb489-169" aria-hidden="true" tabindex="-1"></a><span class="do">## [143] dplyr_1.0.10                              </span></span>
+<span id="cb489-170"><a href="session-information.html#cb489-170" aria-hidden="true" tabindex="-1"></a><span class="do">## [144] doParallel_1.0.16                         </span></span>
+<span id="cb489-171"><a href="session-information.html#cb489-171" aria-hidden="true" tabindex="-1"></a><span class="do">## [145] iterators_1.0.13                          </span></span>
+<span id="cb489-172"><a href="session-information.html#cb489-172" aria-hidden="true" tabindex="-1"></a><span class="do">## [146] foreach_1.5.1                             </span></span>
+<span id="cb489-173"><a href="session-information.html#cb489-173" aria-hidden="true" tabindex="-1"></a><span class="do">## [147] digest_0.6.29                             </span></span>
+<span id="cb489-174"><a href="session-information.html#cb489-174" aria-hidden="true" tabindex="-1"></a><span class="do">## [148] diffobj_0.3.5                             </span></span>
+<span id="cb489-175"><a href="session-information.html#cb489-175" aria-hidden="true" tabindex="-1"></a><span class="do">## [149] desc_1.4.0                                </span></span>
+<span id="cb489-176"><a href="session-information.html#cb489-176" aria-hidden="true" tabindex="-1"></a><span class="do">## [150] deldir_1.0-6                              </span></span>
+<span id="cb489-177"><a href="session-information.html#cb489-177" aria-hidden="true" tabindex="-1"></a><span class="do">## [151] curl_4.3.2                                </span></span>
+<span id="cb489-178"><a href="session-information.html#cb489-178" aria-hidden="true" tabindex="-1"></a><span class="do">## [152] crosstalk_1.2.0                           </span></span>
+<span id="cb489-179"><a href="session-information.html#cb489-179" aria-hidden="true" tabindex="-1"></a><span class="do">## [153] credentials_1.3.2                         </span></span>
+<span id="cb489-180"><a href="session-information.html#cb489-180" aria-hidden="true" tabindex="-1"></a><span class="do">## [154] crayon_1.4.2                              </span></span>
+<span id="cb489-181"><a href="session-information.html#cb489-181" aria-hidden="true" tabindex="-1"></a><span class="do">## [155] cpp11_0.4.2                               </span></span>
+<span id="cb489-182"><a href="session-information.html#cb489-182" aria-hidden="true" tabindex="-1"></a><span class="do">## [156] cowplot_1.1.1                             </span></span>
+<span id="cb489-183"><a href="session-information.html#cb489-183" aria-hidden="true" tabindex="-1"></a><span class="do">## [157] commonmark_1.7                            </span></span>
+<span id="cb489-184"><a href="session-information.html#cb489-184" aria-hidden="true" tabindex="-1"></a><span class="do">## [158] colorspace_2.0-2                          </span></span>
+<span id="cb489-185"><a href="session-information.html#cb489-185" aria-hidden="true" tabindex="-1"></a><span class="do">## [159] codetools_0.2-18                          </span></span>
+<span id="cb489-186"><a href="session-information.html#cb489-186" aria-hidden="true" tabindex="-1"></a><span class="do">## [160] cluster_2.1.2                             </span></span>
+<span id="cb489-187"><a href="session-information.html#cb489-187" aria-hidden="true" tabindex="-1"></a><span class="do">## [161] clue_0.3-60                               </span></span>
+<span id="cb489-188"><a href="session-information.html#cb489-188" aria-hidden="true" tabindex="-1"></a><span class="do">## [162] clipr_0.7.1                               </span></span>
+<span id="cb489-189"><a href="session-information.html#cb489-189" aria-hidden="true" tabindex="-1"></a><span class="do">## [163] cli_3.5.0                                 </span></span>
+<span id="cb489-190"><a href="session-information.html#cb489-190" aria-hidden="true" tabindex="-1"></a><span class="do">## [164] class_7.3-19                              </span></span>
+<span id="cb489-191"><a href="session-information.html#cb489-191" aria-hidden="true" tabindex="-1"></a><span class="do">## [165] callr_3.7.3                               </span></span>
+<span id="cb489-192"><a href="session-information.html#cb489-192" aria-hidden="true" tabindex="-1"></a><span class="do">## [166] cachem_1.0.6                              </span></span>
+<span id="cb489-193"><a href="session-information.html#cb489-193" aria-hidden="true" tabindex="-1"></a><span class="do">## [167] caTools_1.18.2                            </span></span>
+<span id="cb489-194"><a href="session-information.html#cb489-194" aria-hidden="true" tabindex="-1"></a><span class="do">## [168] bslib_0.3.1                               </span></span>
+<span id="cb489-195"><a href="session-information.html#cb489-195" aria-hidden="true" tabindex="-1"></a><span class="do">## [169] brio_1.1.3                                </span></span>
+<span id="cb489-196"><a href="session-information.html#cb489-196" aria-hidden="true" tabindex="-1"></a><span class="do">## [170] brew_1.0-6                                </span></span>
+<span id="cb489-197"><a href="session-information.html#cb489-197" aria-hidden="true" tabindex="-1"></a><span class="do">## [171] boot_1.3-28                               </span></span>
+<span id="cb489-198"><a href="session-information.html#cb489-198" aria-hidden="true" tabindex="-1"></a><span class="do">## [172] bluster_1.4.0                             </span></span>
+<span id="cb489-199"><a href="session-information.html#cb489-199" aria-hidden="true" tabindex="-1"></a><span class="do">## [173] blob_1.2.2                                </span></span>
+<span id="cb489-200"><a href="session-information.html#cb489-200" aria-hidden="true" tabindex="-1"></a><span class="do">## [174] bitops_1.0-7                              </span></span>
+<span id="cb489-201"><a href="session-information.html#cb489-201" aria-hidden="true" tabindex="-1"></a><span class="do">## [175] bit64_4.0.5                               </span></span>
+<span id="cb489-202"><a href="session-information.html#cb489-202" aria-hidden="true" tabindex="-1"></a><span class="do">## [176] bit_4.0.4                                 </span></span>
+<span id="cb489-203"><a href="session-information.html#cb489-203" aria-hidden="true" tabindex="-1"></a><span class="do">## [177] beachmat_2.10.0                           </span></span>
+<span id="cb489-204"><a href="session-information.html#cb489-204" aria-hidden="true" tabindex="-1"></a><span class="do">## [178] base64enc_0.1-3                           </span></span>
+<span id="cb489-205"><a href="session-information.html#cb489-205" aria-hidden="true" tabindex="-1"></a><span class="do">## [179] askpass_1.1                               </span></span>
+<span id="cb489-206"><a href="session-information.html#cb489-206" aria-hidden="true" tabindex="-1"></a><span class="do">## [180] annotate_1.72.0                           </span></span>
+<span id="cb489-207"><a href="session-information.html#cb489-207" aria-hidden="true" tabindex="-1"></a><span class="do">## [181] abind_1.4-5                               </span></span>
+<span id="cb489-208"><a href="session-information.html#cb489-208" aria-hidden="true" tabindex="-1"></a><span class="do">## [182] XML_3.99-0.8                              </span></span>
+<span id="cb489-209"><a href="session-information.html#cb489-209" aria-hidden="true" tabindex="-1"></a><span class="do">## [183] TFMPvalue_0.0.8                           </span></span>
+<span id="cb489-210"><a href="session-information.html#cb489-210" aria-hidden="true" tabindex="-1"></a><span class="do">## [184] TFBSTools_1.32.0                          </span></span>
+<span id="cb489-211"><a href="session-information.html#cb489-211" aria-hidden="true" tabindex="-1"></a><span class="do">## [185] ScaledMatrix_1.2.0                        </span></span>
+<span id="cb489-212"><a href="session-information.html#cb489-212" aria-hidden="true" tabindex="-1"></a><span class="do">## [186] Rhtslib_1.26.0                            </span></span>
+<span id="cb489-213"><a href="session-information.html#cb489-213" aria-hidden="true" tabindex="-1"></a><span class="do">## [187] Rhdf5lib_1.16.0                           </span></span>
+<span id="cb489-214"><a href="session-information.html#cb489-214" aria-hidden="true" tabindex="-1"></a><span class="do">## [188] RcppProgress_0.4.2                        </span></span>
+<span id="cb489-215"><a href="session-information.html#cb489-215" aria-hidden="true" tabindex="-1"></a><span class="do">## [189] RcppHNSW_0.3.0                            </span></span>
+<span id="cb489-216"><a href="session-information.html#cb489-216" aria-hidden="true" tabindex="-1"></a><span class="do">## [190] RcppEigen_0.3.3.9.1                       </span></span>
+<span id="cb489-217"><a href="session-information.html#cb489-217" aria-hidden="true" tabindex="-1"></a><span class="do">## [191] RcppAnnoy_0.0.19                          </span></span>
+<span id="cb489-218"><a href="session-information.html#cb489-218" aria-hidden="true" tabindex="-1"></a><span class="do">## [192] RSpectra_0.16-0                           </span></span>
+<span id="cb489-219"><a href="session-information.html#cb489-219" aria-hidden="true" tabindex="-1"></a><span class="do">## [193] RSQLite_2.2.8                             </span></span>
+<span id="cb489-220"><a href="session-information.html#cb489-220" aria-hidden="true" tabindex="-1"></a><span class="do">## [194] ROCR_1.0-11                               </span></span>
+<span id="cb489-221"><a href="session-information.html#cb489-221" aria-hidden="true" tabindex="-1"></a><span class="do">## [195] RCurl_1.98-1.5                            </span></span>
+<span id="cb489-222"><a href="session-information.html#cb489-222" aria-hidden="true" tabindex="-1"></a><span class="do">## [196] RColorBrewer_1.1-2                        </span></span>
+<span id="cb489-223"><a href="session-information.html#cb489-223" aria-hidden="true" tabindex="-1"></a><span class="do">## [197] RANN_2.6.1                                </span></span>
+<span id="cb489-224"><a href="session-information.html#cb489-224" aria-hidden="true" tabindex="-1"></a><span class="do">## [198] R6_2.5.1                                  </span></span>
+<span id="cb489-225"><a href="session-information.html#cb489-225" aria-hidden="true" tabindex="-1"></a><span class="do">## [199] R.utils_2.11.0                            </span></span>
+<span id="cb489-226"><a href="session-information.html#cb489-226" aria-hidden="true" tabindex="-1"></a><span class="do">## [200] R.oo_1.24.0                               </span></span>
+<span id="cb489-227"><a href="session-information.html#cb489-227" aria-hidden="true" tabindex="-1"></a><span class="do">## [201] R.methodsS3_1.8.1                         </span></span>
+<span id="cb489-228"><a href="session-information.html#cb489-228" aria-hidden="true" tabindex="-1"></a><span class="do">## [202] MASS_7.3-54                               </span></span>
+<span id="cb489-229"><a href="session-information.html#cb489-229" aria-hidden="true" tabindex="-1"></a><span class="do">## [203] KernSmooth_2.23-20                        </span></span>
+<span id="cb489-230"><a href="session-information.html#cb489-230" aria-hidden="true" tabindex="-1"></a><span class="do">## [204] KEGGREST_1.34.0                           </span></span>
+<span id="cb489-231"><a href="session-information.html#cb489-231" aria-hidden="true" tabindex="-1"></a><span class="do">## [205] GlobalOptions_0.1.2                       </span></span>
+<span id="cb489-232"><a href="session-information.html#cb489-232" aria-hidden="true" tabindex="-1"></a><span class="do">## [206] GetoptLong_1.0.5                          </span></span>
+<span id="cb489-233"><a href="session-information.html#cb489-233" aria-hidden="true" tabindex="-1"></a><span class="do">## [207] GenomicAlignments_1.30.0                  </span></span>
+<span id="cb489-234"><a href="session-information.html#cb489-234" aria-hidden="true" tabindex="-1"></a><span class="do">## [208] Rsamtools_2.10.0                          </span></span>
+<span id="cb489-235"><a href="session-information.html#cb489-235" aria-hidden="true" tabindex="-1"></a><span class="do">## [209] GenomeInfoDbData_1.2.7                    </span></span>
+<span id="cb489-236"><a href="session-information.html#cb489-236" aria-hidden="true" tabindex="-1"></a><span class="do">## [210] GO.db_3.14.0                              </span></span>
+<span id="cb489-237"><a href="session-information.html#cb489-237" aria-hidden="true" tabindex="-1"></a><span class="do">## [211] FNN_1.1.3                                 </span></span>
+<span id="cb489-238"><a href="session-information.html#cb489-238" aria-hidden="true" tabindex="-1"></a><span class="do">## [212] DirichletMultinomial_1.36.0               </span></span>
+<span id="cb489-239"><a href="session-information.html#cb489-239" aria-hidden="true" tabindex="-1"></a><span class="do">## [213] DelayedMatrixStats_1.16.0                 </span></span>
+<span id="cb489-240"><a href="session-information.html#cb489-240" aria-hidden="true" tabindex="-1"></a><span class="do">## [214] DelayedArray_0.20.0                       </span></span>
+<span id="cb489-241"><a href="session-information.html#cb489-241" aria-hidden="true" tabindex="-1"></a><span class="do">## [215] DT_0.20                                   </span></span>
+<span id="cb489-242"><a href="session-information.html#cb489-242" aria-hidden="true" tabindex="-1"></a><span class="do">## [216] DESeq2_1.34.0                             </span></span>
+<span id="cb489-243"><a href="session-information.html#cb489-243" aria-hidden="true" tabindex="-1"></a><span class="do">## [217] DBI_1.1.1                                 </span></span>
+<span id="cb489-244"><a href="session-information.html#cb489-244" aria-hidden="true" tabindex="-1"></a><span class="do">## [218] Cairo_1.5-12.2                            </span></span>
+<span id="cb489-245"><a href="session-information.html#cb489-245" aria-hidden="true" tabindex="-1"></a><span class="do">## [219] CNEr_1.30.0                               </span></span>
+<span id="cb489-246"><a href="session-information.html#cb489-246" aria-hidden="true" tabindex="-1"></a><span class="do">## [220] BiocVersion_3.14.0                        </span></span>
+<span id="cb489-247"><a href="session-information.html#cb489-247" aria-hidden="true" tabindex="-1"></a><span class="do">## [221] BiocSingular_1.10.0                       </span></span>
+<span id="cb489-248"><a href="session-information.html#cb489-248" aria-hidden="true" tabindex="-1"></a><span class="do">## [222] BiocParallel_1.28.2                       </span></span>
+<span id="cb489-249"><a href="session-information.html#cb489-249" aria-hidden="true" tabindex="-1"></a><span class="do">## [223] BiocNeighbors_1.12.0                      </span></span>
+<span id="cb489-250"><a href="session-information.html#cb489-250" aria-hidden="true" tabindex="-1"></a><span class="do">## [224] BiocManager_1.30.16                       </span></span>
+<span id="cb489-251"><a href="session-information.html#cb489-251" aria-hidden="true" tabindex="-1"></a><span class="do">## [225] BiocIO_1.4.0                              </span></span>
+<span id="cb489-252"><a href="session-information.html#cb489-252" aria-hidden="true" tabindex="-1"></a><span class="do">## [226] BH_1.75.0-0                               </span></span>
+<span id="cb489-253"><a href="session-information.html#cb489-253" aria-hidden="true" tabindex="-1"></a><span class="do">## [227] EnsDb.Hsapiens.v86_2.99.0                 </span></span>
+<span id="cb489-254"><a href="session-information.html#cb489-254" aria-hidden="true" tabindex="-1"></a><span class="do">## [228] ensembldb_2.18.4                          </span></span>
+<span id="cb489-255"><a href="session-information.html#cb489-255" aria-hidden="true" tabindex="-1"></a><span class="do">## [229] AnnotationFilter_1.18.0                   </span></span>
+<span id="cb489-256"><a href="session-information.html#cb489-256" aria-hidden="true" tabindex="-1"></a><span class="do">## [230] BSgenome.Hsapiens.UCSC.hg38_1.4.4         </span></span>
+<span id="cb489-257"><a href="session-information.html#cb489-257" aria-hidden="true" tabindex="-1"></a><span class="do">## [231] slingshot_2.2.1                           </span></span>
+<span id="cb489-258"><a href="session-information.html#cb489-258" aria-hidden="true" tabindex="-1"></a><span class="do">## [232] TrajectoryUtils_1.2.0                     </span></span>
+<span id="cb489-259"><a href="session-information.html#cb489-259" aria-hidden="true" tabindex="-1"></a><span class="do">## [233] princurve_2.1.6                           </span></span>
+<span id="cb489-260"><a href="session-information.html#cb489-260" aria-hidden="true" tabindex="-1"></a><span class="do">## [234] monocle3_1.3.1                            </span></span>
+<span id="cb489-261"><a href="session-information.html#cb489-261" aria-hidden="true" tabindex="-1"></a><span class="do">## [235] chromVAR_1.16.0                           </span></span>
+<span id="cb489-262"><a href="session-information.html#cb489-262" aria-hidden="true" tabindex="-1"></a><span class="do">## [236] ggseqlogo_0.1                             </span></span>
+<span id="cb489-263"><a href="session-information.html#cb489-263" aria-hidden="true" tabindex="-1"></a><span class="do">## [237] chromVARmotifs_0.2.0                      </span></span>
+<span id="cb489-264"><a href="session-information.html#cb489-264" aria-hidden="true" tabindex="-1"></a><span class="do">## [238] motifmatchr_1.16.0                        </span></span>
+<span id="cb489-265"><a href="session-information.html#cb489-265" aria-hidden="true" tabindex="-1"></a><span class="do">## [239] presto_1.0.0                              </span></span>
+<span id="cb489-266"><a href="session-information.html#cb489-266" aria-hidden="true" tabindex="-1"></a><span class="do">## [240] ggrepel_0.9.1                             </span></span>
+<span id="cb489-267"><a href="session-information.html#cb489-267" aria-hidden="true" tabindex="-1"></a><span class="do">## [241] hexbin_1.28.2                             </span></span>
+<span id="cb489-268"><a href="session-information.html#cb489-268" aria-hidden="true" tabindex="-1"></a><span class="do">## [242] circlize_0.4.13                           </span></span>
+<span id="cb489-269"><a href="session-information.html#cb489-269" aria-hidden="true" tabindex="-1"></a><span class="do">## [243] ComplexHeatmap_2.10.0                     </span></span>
+<span id="cb489-270"><a href="session-information.html#cb489-270" aria-hidden="true" tabindex="-1"></a><span class="do">## [244] Rtsne_0.15                                </span></span>
+<span id="cb489-271"><a href="session-information.html#cb489-271" aria-hidden="true" tabindex="-1"></a><span class="do">## [245] igraph_1.3.5                              </span></span>
+<span id="cb489-272"><a href="session-information.html#cb489-272" aria-hidden="true" tabindex="-1"></a><span class="do">## [246] scran_1.22.1                              </span></span>
+<span id="cb489-273"><a href="session-information.html#cb489-273" aria-hidden="true" tabindex="-1"></a><span class="do">## [247] scuttle_1.4.0                             </span></span>
+<span id="cb489-274"><a href="session-information.html#cb489-274" aria-hidden="true" tabindex="-1"></a><span class="do">## [248] SingleCellExperiment_1.16.0               </span></span>
+<span id="cb489-275"><a href="session-information.html#cb489-275" aria-hidden="true" tabindex="-1"></a><span class="do">## [249] pheatmap_1.0.12                           </span></span>
+<span id="cb489-276"><a href="session-information.html#cb489-276" aria-hidden="true" tabindex="-1"></a><span class="do">## [250] harmony_0.1.1                             </span></span>
+<span id="cb489-277"><a href="session-information.html#cb489-277" aria-hidden="true" tabindex="-1"></a><span class="do">## [251] uwot_0.1.10                               </span></span>
+<span id="cb489-278"><a href="session-information.html#cb489-278" aria-hidden="true" tabindex="-1"></a><span class="do">## [252] ggridges_0.5.3                            </span></span>
+<span id="cb489-279"><a href="session-information.html#cb489-279" aria-hidden="true" tabindex="-1"></a><span class="do">## [253] BSgenome.Hsapiens.UCSC.hg19_1.4.3         </span></span>
+<span id="cb489-280"><a href="session-information.html#cb489-280" aria-hidden="true" tabindex="-1"></a><span class="do">## [254] nabor_0.5.0                               </span></span>
+<span id="cb489-281"><a href="session-information.html#cb489-281" aria-hidden="true" tabindex="-1"></a><span class="do">## [255] SeuratObject_4.0.3                        </span></span>
+<span id="cb489-282"><a href="session-information.html#cb489-282" aria-hidden="true" tabindex="-1"></a><span class="do">## [256] Seurat_4.0.5                              </span></span>
+<span id="cb489-283"><a href="session-information.html#cb489-283" aria-hidden="true" tabindex="-1"></a><span class="do">## [257] pdftools_3.3.2                            </span></span>
+<span id="cb489-284"><a href="session-information.html#cb489-284" aria-hidden="true" tabindex="-1"></a><span class="do">## [258] org.Dm.eg.db_3.14.0                       </span></span>
+<span id="cb489-285"><a href="session-information.html#cb489-285" aria-hidden="true" tabindex="-1"></a><span class="do">## [259] TxDb.Dmelanogaster.UCSC.dm6.ensGene_3.12.0</span></span>
+<span id="cb489-286"><a href="session-information.html#cb489-286" aria-hidden="true" tabindex="-1"></a><span class="do">## [260] GenomicFeatures_1.46.5                    </span></span>
+<span id="cb489-287"><a href="session-information.html#cb489-287" aria-hidden="true" tabindex="-1"></a><span class="do">## [261] AnnotationDbi_1.56.2                      </span></span>
+<span id="cb489-288"><a href="session-information.html#cb489-288" aria-hidden="true" tabindex="-1"></a><span class="do">## [262] BSgenome.Dmelanogaster.UCSC.dm6_1.4.1     </span></span>
+<span id="cb489-289"><a href="session-information.html#cb489-289" aria-hidden="true" tabindex="-1"></a><span class="do">## [263] BSgenome_1.62.0                           </span></span>
+<span id="cb489-290"><a href="session-information.html#cb489-290" aria-hidden="true" tabindex="-1"></a><span class="do">## [264] rtracklayer_1.54.0                        </span></span>
+<span id="cb489-291"><a href="session-information.html#cb489-291" aria-hidden="true" tabindex="-1"></a><span class="do">## [265] Biostrings_2.62.0                         </span></span>
+<span id="cb489-292"><a href="session-information.html#cb489-292" aria-hidden="true" tabindex="-1"></a><span class="do">## [266] XVector_0.34.0                            </span></span>
+<span id="cb489-293"><a href="session-information.html#cb489-293" aria-hidden="true" tabindex="-1"></a><span class="do">## [267] rhdf5_2.38.0                              </span></span>
+<span id="cb489-294"><a href="session-information.html#cb489-294" aria-hidden="true" tabindex="-1"></a><span class="do">## [268] SummarizedExperiment_1.24.0               </span></span>
+<span id="cb489-295"><a href="session-information.html#cb489-295" aria-hidden="true" tabindex="-1"></a><span class="do">## [269] Biobase_2.54.0                            </span></span>
+<span id="cb489-296"><a href="session-information.html#cb489-296" aria-hidden="true" tabindex="-1"></a><span class="do">## [270] RcppArmadillo_0.10.7.3.0                  </span></span>
+<span id="cb489-297"><a href="session-information.html#cb489-297" aria-hidden="true" tabindex="-1"></a><span class="do">## [271] Rcpp_1.0.7                                </span></span>
+<span id="cb489-298"><a href="session-information.html#cb489-298" aria-hidden="true" tabindex="-1"></a><span class="do">## [272] Matrix_1.3-4                              </span></span>
+<span id="cb489-299"><a href="session-information.html#cb489-299" aria-hidden="true" tabindex="-1"></a><span class="do">## [273] GenomicRanges_1.46.1                      </span></span>
+<span id="cb489-300"><a href="session-information.html#cb489-300" aria-hidden="true" tabindex="-1"></a><span class="do">## [274] GenomeInfoDb_1.30.0                       </span></span>
+<span id="cb489-301"><a href="session-information.html#cb489-301" aria-hidden="true" tabindex="-1"></a><span class="do">## [275] IRanges_2.28.0                            </span></span>
+<span id="cb489-302"><a href="session-information.html#cb489-302" aria-hidden="true" tabindex="-1"></a><span class="do">## [276] S4Vectors_0.32.4                          </span></span>
+<span id="cb489-303"><a href="session-information.html#cb489-303" aria-hidden="true" tabindex="-1"></a><span class="do">## [277] BiocGenerics_0.40.0                       </span></span>
+<span id="cb489-304"><a href="session-information.html#cb489-304" aria-hidden="true" tabindex="-1"></a><span class="do">## [278] sparseMatrixStats_1.6.0                   </span></span>
+<span id="cb489-305"><a href="session-information.html#cb489-305" aria-hidden="true" tabindex="-1"></a><span class="do">## [279] MatrixGenerics_1.6.0                      </span></span>
+<span id="cb489-306"><a href="session-information.html#cb489-306" aria-hidden="true" tabindex="-1"></a><span class="do">## [280] matrixStats_0.61.0                        </span></span>
+<span id="cb489-307"><a href="session-information.html#cb489-307" aria-hidden="true" tabindex="-1"></a><span class="do">## [281] data.table_1.14.2                         </span></span>
+<span id="cb489-308"><a href="session-information.html#cb489-308" aria-hidden="true" tabindex="-1"></a><span class="do">## [282] stringr_1.4.0                             </span></span>
+<span id="cb489-309"><a href="session-information.html#cb489-309" aria-hidden="true" tabindex="-1"></a><span class="do">## [283] plyr_1.8.6                                </span></span>
+<span id="cb489-310"><a href="session-information.html#cb489-310" aria-hidden="true" tabindex="-1"></a><span class="do">## [284] magrittr_2.0.1                            </span></span>
+<span id="cb489-311"><a href="session-information.html#cb489-311" aria-hidden="true" tabindex="-1"></a><span class="do">## [285] ggplot2_3.3.5                             </span></span>
+<span id="cb489-312"><a href="session-information.html#cb489-312" aria-hidden="true" tabindex="-1"></a><span class="do">## [286] gtable_0.3.0                              </span></span>
+<span id="cb489-313"><a href="session-information.html#cb489-313" aria-hidden="true" tabindex="-1"></a><span class="do">## [287] gtools_3.9.2                              </span></span>
+<span id="cb489-314"><a href="session-information.html#cb489-314" aria-hidden="true" tabindex="-1"></a><span class="do">## [288] gridExtra_2.3                             </span></span>
+<span id="cb489-315"><a href="session-information.html#cb489-315" aria-hidden="true" tabindex="-1"></a><span class="do">## [289] devtools_2.4.3                            </span></span>
+<span id="cb489-316"><a href="session-information.html#cb489-316" aria-hidden="true" tabindex="-1"></a><span class="do">## [290] usethis_2.1.3                             </span></span>
+<span id="cb489-317"><a href="session-information.html#cb489-317" aria-hidden="true" tabindex="-1"></a><span class="do">## [291] ArchR_1.0.3                               </span></span>
+<span id="cb489-318"><a href="session-information.html#cb489-318" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb489-319"><a href="session-information.html#cb489-319" aria-hidden="true" tabindex="-1"></a><span class="do">## loaded via a namespace (and not attached):</span></span>
+<span id="cb489-320"><a href="session-information.html#cb489-320" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] terra_1.6-47        nloptr_2.0.3        bookdown_0.31      </span></span>
+<span id="cb489-321"><a href="session-information.html#cb489-321" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] ggbeeswarm_0.7.1    minqa_1.2.5         beeswarm_0.4.0     </span></span>
+<span id="cb489-322"><a href="session-information.html#cb489-322" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] systemfonts_1.0.4   leidenbase_0.1.14   dbplyr_2.2.1       </span></span>
+<span id="cb489-323"><a href="session-information.html#cb489-323" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] vipor_0.4.5         qpdf_1.3.0          BiocFileCache_2.2.1</span></span>
+<span id="cb489-324"><a href="session-information.html#cb489-324" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] ProtGenerics_1.26.0 tools_4.1.1         proxy_0.4-27       </span></span>
+<span id="cb489-325"><a href="session-information.html#cb489-325" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] assertthat_0.2.1    rmarkdown_2.19      ggrastr_1.0.1      </span></span>
+<span id="cb489-326"><a href="session-information.html#cb489-326" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] splines_4.1.1       biomaRt_2.50.3      filelock_1.0.2     </span></span>
+<span id="cb489-327"><a href="session-information.html#cb489-327" aria-hidden="true" tabindex="-1"></a><span class="do">## [22] lme4_1.1-31         viridis_0.6.2       svglite_2.1.0</span></span></code></pre></div>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="testing-your-archr-installation.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": null
+},
+"fontsettings": null,
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "none"
+},
+"info": false
+});
+});
+</script>
+
+</body>
+
+</html>

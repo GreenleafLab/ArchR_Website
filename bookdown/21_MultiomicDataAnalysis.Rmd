@@ -42,7 +42,7 @@ set.seed(1)
 
 We can download the files associated with the multiome tutorial just like we did for the main tutorial but using `tutorial = "Multiome"`.
 
-```{r, collapse=TRUE}
+```{r multiomeDownload, collapse=TRUE}
 inputFiles <- getTutorialData(tutorial = "Multiome")
 ```
 
@@ -75,15 +75,14 @@ all.equal(names(atacFiles), names(rnaFiles))
 
 As in the main tutorial, the first step is to create ArrowFiles from the scATAC-seq fragment files.
 
-```{r, collapse=TRUE}
+```{r multiomeCreateArrow, collapse=TRUE}
 ArrowFiles <- createArrowFiles(
   inputFiles = atacFiles,
   sampleNames = names(atacFiles),
   minTSS = 4,
   minFrags = 1000,
   addTileMat = TRUE,
-  addGeneScoreMat = TRUE,
-  force = TRUE
+  addGeneScoreMat = TRUE
 )
 ```
 
@@ -94,7 +93,7 @@ projMulti1 <- ArchRProject(ArrowFiles = ArrowFiles)
 
 Now that we've handled the scATAC-seq data, we turn out attention to the scRNA-seq data. ArchR provides the `import10xFeatureMatrix()` function which will perform this automatically for all of the `filtered_feature_bc_matrix.h5` files in your data set. While this process may seem straightforward, there are a few things going on under-the-hood which are important to understand. First, the `filtered_feature_bc_matrix.h5` created by `cellranger-arc` are not always perfectly matched across samples. For example, ArchR will throw an error if your various scRNA-seq input files do not match based on the gene names or the metadata columns because we view this as an unforseen incompatibility between data, potentially caused by alignment to different reference genomes or something similar. There are also more permissible mismatches that occur across these input files. Relatively frequently, the transcript-level data that is associated with each gene can vary slightly across samples for reasons that aren't completely clear. For more information, see [this post](https://github.com/GreenleafLab/ArchR/issues/507#issuecomment-1063139673). Because of this, you have to decide what to do when these minor conflicts arise. We provide two options which are controlled by the `strictMatch` parameter. If you want to try to keep the genes with mis-matched metadata information, set `strictMatch = FALSE` which will coerce all samples to match the metadata information of the first sample from your `input`. Alternatively, if you would prefer to remove genes whose metadata is mis-matched across samples, you can set `strictMatch = TRUE` which will remove the offending genes from all samples. This is often a very small number of genes so it is unlikely to affect your analysis either way.
 
-```{r, collapse=TRUE}
+```{r import10xFM1, collapse=TRUE}
 seRNA <- import10xFeatureMatrix(
   input = rnaFiles,
   names = names(rnaFiles),
@@ -105,12 +104,13 @@ seRNA <- import10xFeatureMatrix(
 In this tutorial data, there actually aren't any examples of this transcript-level metadata mismatch. But if there were, ArchR would output warnings to tell you about the genes that were being excluded or coerced. However, what you do see is a warning that some of the features (genes) did not have an "interval" (or genomic location) present in the 10x input file. This is most frequently the case for genes encoded on the mitochondrial DNA but could in theory happen for other genes in other species as well. This causes problems for ArchR because we assume that every gene has a position in the genome. To get around this problem, ArchR will default to assigning these genes a fake genomic position on "chrNA". All of these genes will then get excluded from downstream analyses. If you want to rescue these genes, then you must provide this information via the `features` parameter. This is most easily done using an Ensembl database object from BioConductor. The below code assumes that you have installed the `EnsDb.Hsapiens.v86` package from BioConductor.
 
 
-```{r, collapse=TRUE}
+```{r import10xFM2, collapse=TRUE}
+library(EnsDb.Hsapiens.v86)
 seRNA <- import10xFeatureMatrix(
   input = rnaFiles,
   names = names(rnaFiles),
   strictMatch = TRUE,
-  features = genes(EnsDb.Hsapiens.v86::EnsDb.Hsapiens.v86)
+  features = genes(EnsDb.Hsapiens.v86)
 )
 ```
 After supplying the genes to the `features` param, you can see that all of the genes encoded on the mitochondrial genome are rescued.
@@ -123,21 +123,21 @@ length(which(getCellNames(projMulti1) %ni% colnames(seRNA)))
 
 Though not many cells in this case, we need to remove these cells from our project before proceeding. We do this using the `subsetArchRProject()` function and saving this as a new `ArchRProject` called `projMulti2`. Again, this removal isn't explicitly necessary but there are downstream ArchR functions that could break if all cells dont have both data types so the safest thing to do is remove them.
 
-```{r, collapse=TRUE}
+```{r multiomeFilterCells, collapse=TRUE}
 cellsToKeep <- which(getCellNames(projMulti1) %in% colnames(seRNA))
-projMulti2 <- subsetArchRProject(ArchRProj = projMulti1, cells = getCellNames(projMulti1)[cellsToKeep], outputDirectory = "Save-ProjMulti2")
+projMulti2 <- subsetArchRProject(ArchRProj = projMulti1, cells = getCellNames(projMulti1)[cellsToKeep], outputDirectory = "Save-ProjMulti2", force = TRUE)
 ```
 
 
 Finally, we are ready to add the gene expression data to our project. You'll notice here another parameter called `strictMatch`. When `strictMatch = TRUE`, this will ensure that all cells in the `ArchRProject` are also represented in the `seRNA` object. This is a nice fail-safe to make sure that the above project subsetting went smoothly. If `strictMatch = FALSE` (the default), then this function will merely throw a warning telling you that not all of your cells have scRNA-seq information and that this could cause problems downstream.
 
-```{r, collapse=TRUE}
+```{r multiomeAddGEX, collapse=TRUE}
 projMulti2 <- addGeneExpressionMatrix(input = projMulti2, seRNA = seRNA, strictMatch = TRUE, force = TRUE)
 ```
 
 The last thing that we will do during this project setup phase is filter out any doublets.
 
-```{r, collapse=TRUE}
+```{r multiomeAddDoublets, collapse=TRUE}
 projMulti2 <- addDoubletScores(projMulti2, force = TRUE)
 projMulti2 <- filterDoublets(projMulti2)
 ```
@@ -148,7 +148,7 @@ With our multiome project created, we're now ready to start analysis. It is wort
 
 The first thing we will do is perform dimensionality reduction using `addIterativeLSI()`. We can do this on the scATAC-seq data via the `TileMatrix` and on the scRNA-seq data via the `GeneExpressionMatrix`.
 
-```{r, collapse=TRUE}
+```{r multiomeLSIATAC, collapse=TRUE}
 projMulti2 <- addIterativeLSI(
   ArchRProj = projMulti2, 
   clusterParams = list(
@@ -163,7 +163,7 @@ projMulti2 <- addIterativeLSI(
 )
 ```
 
-```{r, collapse=TRUE}
+```{r multiomeLSIRNA, collapse=TRUE}
 projMulti2 <- addIterativeLSI(
   ArchRProj = projMulti2, 
   clusterParams = list(
@@ -183,14 +183,14 @@ projMulti2 <- addIterativeLSI(
 
 We can also create a dimensionality reduction that uses information from both the scATAC-seq and scRNA-seq data. We will name this `reducedDims` object "LSI_Combined".
 
-```{r, collapse=TRUE}
+```{r multiomeAddCombDims, collapse=TRUE}
 projMulti2 <- addCombinedDims(projMulti2, reducedDims = c("LSI_ATAC", "LSI_RNA"), name =  "LSI_Combined")
 ```
 
 
 We can create UMAP embeddings for each of these dimensionality reductions.
 
-```{r, collapse=TRUE}
+```{r multiomeAddUMAP, collapse=TRUE}
 projMulti2 <- addUMAP(projMulti2, reducedDims = "LSI_ATAC", name = "UMAP_ATAC", minDist = 0.8, force = TRUE)
 projMulti2 <- addUMAP(projMulti2, reducedDims = "LSI_RNA", name = "UMAP_RNA", minDist = 0.8, force = TRUE)
 projMulti2 <- addUMAP(projMulti2, reducedDims = "LSI_Combined", name = "UMAP_Combined", minDist = 0.8, force = TRUE)
@@ -198,7 +198,7 @@ projMulti2 <- addUMAP(projMulti2, reducedDims = "LSI_Combined", name = "UMAP_Com
 
 And then call clusters for each.
 
-```{r, collapse=TRUE}
+```{r multiomeAddClust, collapse=TRUE}
 projMulti2 <- addClusters(projMulti2, reducedDims = "LSI_ATAC", name = "Clusters_ATAC", resolution = 0.4, force = TRUE)
 projMulti2 <- addClusters(projMulti2, reducedDims = "LSI_RNA", name = "Clusters_RNA", resolution = 0.4, force = TRUE)
 projMulti2 <- addClusters(projMulti2, reducedDims = "LSI_Combined", name = "Clusters_Combined", resolution = 0.4, force = TRUE)
@@ -206,7 +206,7 @@ projMulti2 <- addClusters(projMulti2, reducedDims = "LSI_Combined", name = "Clus
 
 We can plot how each of these dimensionality reductions look with respect to the clusters called in "LSI_Combined".
 
-```{r, collapse=TRUE}
+```{r multiomePlotEmb, collapse=TRUE}
 p1 <- plotEmbedding(projMulti2, name = "Clusters_Combined", embedding = "UMAP_ATAC", size = 1, labelAsFactors=F, labelMeans=F)
 p2 <- plotEmbedding(projMulti2, name = "Clusters_Combined", embedding = "UMAP_RNA", size = 1, labelAsFactors=F, labelMeans=F)
 p3 <- plotEmbedding(projMulti2, name = "Clusters_Combined", embedding = "UMAP_Combined", size = 1, labelAsFactors=F, labelMeans=F)
@@ -249,7 +249,7 @@ p_atac_rna <- pheatmap::pheatmap(
 Nearly all of the operations that you will want to do downstream are equivalent to what is shown throughout the manual for the scATAC-seq-only analyses so we wont go into them here. As an example, to get peak-to-gene links from multiome data, we could use the following code.
 
 
-```{r, collapse=TRUE}
+```{r multiomeP2G, collapse=TRUE}
 projMulti2 <- addGroupCoverages(ArchRProj = projMulti2, groupBy = "Clusters_Combined", verbose = FALSE)
 projMulti2 <- addReproduciblePeakSet(ArchRProj = projMulti2, groupBy = "Clusters_Combined", pathToMacs2 = "/corces/home/rcorces/tools/python/p3.8.5/bin/macs2")
 projMulti2 <- addPeakMatrix(ArchRProj = projMulti2)
@@ -262,7 +262,7 @@ p2g[[1]]
 
 There are, of course, some aspects of the analysis which you should tweak when using multiome data. One such example is the `bias` argument to `getMarkerFeatures()` which can be tweaked to account for both scATAC-seq data quality (`"TSSEnrichment`) and read depth for both assays (`"log10(nFrags)"` for scATAC-seq and `"log10(Gex_nUMI)"` for scRNA-seq).
 
-```{r, collapse=TRUE}
+```{r multiomeGetMF, collapse=TRUE}
 se <- getMarkerFeatures(ArchRProj = projMulti2,
                         groupBy = "Clusters_Combined",
                         bias = c("TSSEnrichment", "log10(nFrags)", "log10(Gex_nUMI)"))
@@ -279,8 +279,8 @@ draw(heatmap_gex, heatmap_legend_side = "bot", annotation_legend_side = "bot")
 
 Lastly, we will save this project for future reference.
 
-```{r, collapse=TRUE}
-projMulti2 <- saveArchRProject(ArchRProj = projMulti2, outputDirectory = "Save-ProjMulti2", load = TRUE)
+```{r multiomeSaveProj, collapse=TRUE}
+projMulti2 <- saveArchRProject(ArchRProj = projMulti2, outputDirectory = "Save-ProjMulti2", overwrite = TRUE, load = TRUE)
 ```
 
 ```{r, include=FALSE}

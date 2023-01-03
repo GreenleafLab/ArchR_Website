@@ -21,7 +21,7 @@ Sys.Date()
 
 ```{r loadAllDependencies, include=FALSE}
 #load all packages specified in the renv.lock file
-renv_json <- rjson::fromJSON(file = "renv.lock")
+renv_json <- rjson::fromJSON(file = "../renv.lock")
 packages <- unique(names(renv_json$Packages))
 package_load <- suppressPackageStartupMessages(lapply(packages, require, character.only = TRUE))
 if(!all(unlist(package_load))) {
