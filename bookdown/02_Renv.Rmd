@@ -55,7 +55,7 @@ setwd("./ArchRTutorial")
 Then, lets download the lock file for the current `master` branch of ArchR.
 
 ```{r, eval=FALSE}
-download.file(url = "https://raw.githubusercontent.com/rcorces/ArchR_docker/main/renv.lock?token=AOHUDISVOOHAHDXW7AJBJFLB3XHEM", destfile = "renv.lock")
+download.file(url = "https://pub-9ae435458ecc412abbbc9420a502ec38.r2.dev/renv.lock", destfile = "./renv.lock")
 ```
 
 Now, we can initiate our `renv` project environment. If you've never installed ArchR before, this should take care of installing all of the dependencies. Because of that, it may take quite some time to complete so go get a coffee if thats the case. When you run the below `renv::init()` command, it will ask you how you want to load the project and you should select the option that says to initialize the environment from the provided lock file.
@@ -116,4 +116,40 @@ filename <- paste0("./chapter_images/chapter",current_chapter,".RData")
 remove(current_chapter)
 remove(previous_chapter)
 save.image(file =  filename)
+```
+
+
+## Using Docker for pre-compiled environment setup
+
+Some users may choose to use pre-compiled containers to run ArchR instead.  Containers allow for the creation of pre-compiled environments
+that already have all of the necessary dependencies pre-installed.  This is a great option for users who may not have the time or resources to set up their own environment.
+
+
+We also provide Docker images, built off of `rocker/rstudio`, that already have ArchR and all dependencies pre-loaded.
+
+The latest version can be found at:
+```
+greenleaf/archr:latest
+```
+and other versions, including images built with differing R versions, can be found at:
+```
+https://hub.docker.com/r/greenleaflab/archr/tags
+```
+
+To utilize these images, the user can first install Docker as mentioned in their [documentation](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)
+
+Following, create a container using the following command:
+```
+docker image pull immanuelazn/archr:latest
+docker run -it --rm -v <your_workspace>:/workspace -p <your_port_of_interest>:8787
+```
+This will spin up a container that has Rstudio turned on by default. Rstudio can be accessed through:
+
+```
+localhost:<your_port_of_interest>
+```
+If you would like an interactive bash console instead, the following command can instead be called:
+
+```
+docker run -it --rm -v <your_workspace>:/workspace -p <your_port_of_interest>:8787 bash
 ```
