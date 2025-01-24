@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>16.2 Normalization of Footprints for Tn5 Bias | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
   <meta name="description" content="A guide to ArchR" />
-  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
   <meta property="og:title" content="16.2 Normalization of Footprints for Tn5 Bias | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2022-12-23" />
+<meta name="date" content="2025-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,13 +52,13 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -68,7 +68,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -94,7 +94,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -107,7 +107,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -121,6 +121,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -144,6 +148,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
 <li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+<li class="chapter" data-level="2.3" data-path="using-docker-for-pre-compiled-environment-setup.html"><a href="using-docker-for-pre-compiled-environment-setup.html"><i class="fa fa-check"></i><b>2.3</b> Using Docker for pre-compiled environment setup</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
 <ul>
@@ -307,41 +312,41 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="subtracting-the-tn5-bias" class="section level3 hasAnchor" number="16.2.1">
 <h3><span class="header-section-number">16.2.1</span> Subtracting the Tn5 Bias<a href="normalization-of-footprints-for-tn5-bias.html#subtracting-the-tn5-bias" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>One normalization method subtracts the Tn5 bias from the footprinting signal. This normalization is performed by setting <code>normMethod = "Subtract"</code> when calling <code>plotFootprints()</code>.</p>
-<div class="sourceCode" id="cb320"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb320-1"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotFootprints</span>(</span>
-<span id="cb320-2"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">seFoot =</span> seFoot,</span>
-<span id="cb320-3"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ArchRProj =</span> projHeme5, </span>
-<span id="cb320-4"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">normMethod =</span> <span class="st">&quot;Subtract&quot;</span>,</span>
-<span id="cb320-5"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">plotName =</span> <span class="st">&quot;Footprints-Subtract-Bias&quot;</span>,</span>
-<span id="cb320-6"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">addDOC =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb320-7"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">smoothWindow =</span> <span class="dv">5</span></span>
-<span id="cb320-8"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb320-9"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-9" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotFootprints-371b063162b59-Date-2022-12-23_Time-08-36-12.log</span></span>
-<span id="cb320-10"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-10" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb320-11"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:36:13 : Plotting Footprint : GATA1_383 (1 of 6), 0.018 mins elapsed.</span></span>
-<span id="cb320-12"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
-<span id="cb320-13"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
-<span id="cb320-14"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-14" aria-hidden="true" tabindex="-1"></a><span class="do">## NormMethod = Subtract</span></span>
-<span id="cb320-15"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:36:14 : Plotting Footprint : CEBPA_155 (2 of 6), 0.047 mins elapsed.</span></span>
-<span id="cb320-16"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-16" aria-hidden="true" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
-<span id="cb320-17"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-17" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
-<span id="cb320-18"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-18" aria-hidden="true" tabindex="-1"></a><span class="do">## NormMethod = Subtract</span></span>
-<span id="cb320-19"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:36:16 : Plotting Footprint : EBF1_67 (3 of 6), 0.078 mins elapsed.</span></span>
-<span id="cb320-20"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
-<span id="cb320-21"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-21" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
-<span id="cb320-22"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-22" aria-hidden="true" tabindex="-1"></a><span class="do">## NormMethod = Subtract</span></span>
-<span id="cb320-23"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:36:18 : Plotting Footprint : IRF4_632 (4 of 6), 0.108 mins elapsed.</span></span>
-<span id="cb320-24"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
-<span id="cb320-25"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-25" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
-<span id="cb320-26"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-26" aria-hidden="true" tabindex="-1"></a><span class="do">## NormMethod = Subtract</span></span>
-<span id="cb320-27"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-27" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:36:20 : Plotting Footprint : TBX21_780 (5 of 6), 0.138 mins elapsed.</span></span>
-<span id="cb320-28"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-28" aria-hidden="true" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
-<span id="cb320-29"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-29" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
-<span id="cb320-30"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-30" aria-hidden="true" tabindex="-1"></a><span class="do">## NormMethod = Subtract</span></span>
-<span id="cb320-31"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-31" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:36:22 : Plotting Footprint : PAX5_709 (6 of 6), 0.168 mins elapsed.</span></span>
-<span id="cb320-32"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-32" aria-hidden="true" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
-<span id="cb320-33"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-33" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
-<span id="cb320-34"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-34" aria-hidden="true" tabindex="-1"></a><span class="do">## NormMethod = Subtract</span></span>
-<span id="cb320-35"><a href="normalization-of-footprints-for-tn5-bias.html#cb320-35" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotFootprints-371b063162b59-Date-2022-12-23_Time-08-36-12.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb325"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb325-1"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-1" tabindex="-1"></a><span class="fu">plotFootprints</span>(</span>
+<span id="cb325-2"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-2" tabindex="-1"></a>  <span class="at">seFoot =</span> seFoot,</span>
+<span id="cb325-3"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-3" tabindex="-1"></a>  <span class="at">ArchRProj =</span> projHeme5, </span>
+<span id="cb325-4"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-4" tabindex="-1"></a>  <span class="at">normMethod =</span> <span class="st">&quot;Subtract&quot;</span>,</span>
+<span id="cb325-5"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-5" tabindex="-1"></a>  <span class="at">plotName =</span> <span class="st">&quot;Footprints-Subtract-Bias&quot;</span>,</span>
+<span id="cb325-6"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-6" tabindex="-1"></a>  <span class="at">addDOC =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb325-7"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-7" tabindex="-1"></a>  <span class="at">smoothWindow =</span> <span class="dv">5</span></span>
+<span id="cb325-8"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-8" tabindex="-1"></a>)</span>
+<span id="cb325-9"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-9" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotFootprints-1a16d22cfac-Date-2025-01-23_Time-22-42-10.90419.log</span></span>
+<span id="cb325-10"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-10" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb325-11"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-11" tabindex="-1"></a><span class="do">## 2025-01-23 22:42:11.108506 : Plotting Footprint : GATA1_383 (1 of 6), 0.003 mins elapsed.</span></span>
+<span id="cb325-12"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-12" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
+<span id="cb325-13"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-13" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
+<span id="cb325-14"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-14" tabindex="-1"></a><span class="do">## NormMethod = Subtract</span></span>
+<span id="cb325-15"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-15" tabindex="-1"></a><span class="do">## 2025-01-23 22:42:12.218951 : Plotting Footprint : CEBPA_155 (2 of 6), 0.022 mins elapsed.</span></span>
+<span id="cb325-16"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-16" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
+<span id="cb325-17"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-17" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
+<span id="cb325-18"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-18" tabindex="-1"></a><span class="do">## NormMethod = Subtract</span></span>
+<span id="cb325-19"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-19" tabindex="-1"></a><span class="do">## 2025-01-23 22:42:14.127651 : Plotting Footprint : EBF1_67 (3 of 6), 0.054 mins elapsed.</span></span>
+<span id="cb325-20"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-20" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
+<span id="cb325-21"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-21" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
+<span id="cb325-22"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-22" tabindex="-1"></a><span class="do">## NormMethod = Subtract</span></span>
+<span id="cb325-23"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-23" tabindex="-1"></a><span class="do">## 2025-01-23 22:42:15.278526 : Plotting Footprint : IRF4_632 (4 of 6), 0.073 mins elapsed.</span></span>
+<span id="cb325-24"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-24" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
+<span id="cb325-25"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-25" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
+<span id="cb325-26"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-26" tabindex="-1"></a><span class="do">## NormMethod = Subtract</span></span>
+<span id="cb325-27"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-27" tabindex="-1"></a><span class="do">## 2025-01-23 22:42:16.533057 : Plotting Footprint : TBX21_780 (5 of 6), 0.094 mins elapsed.</span></span>
+<span id="cb325-28"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-28" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
+<span id="cb325-29"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-29" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
+<span id="cb325-30"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-30" tabindex="-1"></a><span class="do">## NormMethod = Subtract</span></span>
+<span id="cb325-31"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-31" tabindex="-1"></a><span class="do">## 2025-01-23 22:42:17.671235 : Plotting Footprint : PAX5_709 (6 of 6), 0.113 mins elapsed.</span></span>
+<span id="cb325-32"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-32" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
+<span id="cb325-33"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-33" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
+<span id="cb325-34"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-34" tabindex="-1"></a><span class="do">## NormMethod = Subtract</span></span>
+<span id="cb325-35"><a href="normalization-of-footprints-for-tn5-bias.html#cb325-35" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotFootprints-1a16d22cfac-Date-2025-01-23_Time-22-42-10.90419.log</span></span></code></pre></div>
 <p>By default, these plots will be saved in the <code>outputDirectory</code> of the <code>ArchRProject</code>. If you requested to plot all motifs and returned this as a <code>ggplot</code> object, this <code>ggplot</code> object would be extremely large. An example of motif footprints from bias-subtracted analyses are shown below.</p>
 <p><img src="images/bookdown/Footprints-Subtract-Bias_1.png" width="250" height="400" />
 <img src="images/bookdown/Footprints-Subtract-Bias_2.png" width="250" height="400" />
@@ -350,41 +355,41 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="dividing-by-the-tn5-bias" class="section level3 hasAnchor" number="16.2.2">
 <h3><span class="header-section-number">16.2.2</span> Dividing by the Tn5 Bias<a href="normalization-of-footprints-for-tn5-bias.html#dividing-by-the-tn5-bias" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>A second strategy for normalization divides the footprinting signal by the Tn5 bias signal. This normalization is performed by setting <code>normMethod = "Divide"</code> when calling <code>plotFootprints()</code>.</p>
-<div class="sourceCode" id="cb321"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb321-1"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotFootprints</span>(</span>
-<span id="cb321-2"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">seFoot =</span> seFoot,</span>
-<span id="cb321-3"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ArchRProj =</span> projHeme5, </span>
-<span id="cb321-4"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">normMethod =</span> <span class="st">&quot;Divide&quot;</span>,</span>
-<span id="cb321-5"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">plotName =</span> <span class="st">&quot;Footprints-Divide-Bias&quot;</span>,</span>
-<span id="cb321-6"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">addDOC =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb321-7"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">smoothWindow =</span> <span class="dv">5</span></span>
-<span id="cb321-8"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb321-9"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-9" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotFootprints-371b023a605d6-Date-2022-12-23_Time-08-36-29.log</span></span>
-<span id="cb321-10"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-10" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb321-11"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:36:30 : Plotting Footprint : GATA1_383 (1 of 6), 0.018 mins elapsed.</span></span>
-<span id="cb321-12"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
-<span id="cb321-13"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
-<span id="cb321-14"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-14" aria-hidden="true" tabindex="-1"></a><span class="do">## NormMethod = Divide</span></span>
-<span id="cb321-15"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:36:32 : Plotting Footprint : CEBPA_155 (2 of 6), 0.052 mins elapsed.</span></span>
-<span id="cb321-16"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-16" aria-hidden="true" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
-<span id="cb321-17"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-17" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
-<span id="cb321-18"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-18" aria-hidden="true" tabindex="-1"></a><span class="do">## NormMethod = Divide</span></span>
-<span id="cb321-19"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:36:34 : Plotting Footprint : EBF1_67 (3 of 6), 0.082 mins elapsed.</span></span>
-<span id="cb321-20"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
-<span id="cb321-21"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-21" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
-<span id="cb321-22"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-22" aria-hidden="true" tabindex="-1"></a><span class="do">## NormMethod = Divide</span></span>
-<span id="cb321-23"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:36:35 : Plotting Footprint : IRF4_632 (4 of 6), 0.113 mins elapsed.</span></span>
-<span id="cb321-24"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
-<span id="cb321-25"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-25" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
-<span id="cb321-26"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-26" aria-hidden="true" tabindex="-1"></a><span class="do">## NormMethod = Divide</span></span>
-<span id="cb321-27"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-27" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:36:37 : Plotting Footprint : TBX21_780 (5 of 6), 0.143 mins elapsed.</span></span>
-<span id="cb321-28"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-28" aria-hidden="true" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
-<span id="cb321-29"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-29" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
-<span id="cb321-30"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-30" aria-hidden="true" tabindex="-1"></a><span class="do">## NormMethod = Divide</span></span>
-<span id="cb321-31"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-31" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:36:39 : Plotting Footprint : PAX5_709 (6 of 6), 0.173 mins elapsed.</span></span>
-<span id="cb321-32"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-32" aria-hidden="true" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
-<span id="cb321-33"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-33" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
-<span id="cb321-34"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-34" aria-hidden="true" tabindex="-1"></a><span class="do">## NormMethod = Divide</span></span>
-<span id="cb321-35"><a href="normalization-of-footprints-for-tn5-bias.html#cb321-35" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotFootprints-371b023a605d6-Date-2022-12-23_Time-08-36-29.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb326"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb326-1"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-1" tabindex="-1"></a><span class="fu">plotFootprints</span>(</span>
+<span id="cb326-2"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-2" tabindex="-1"></a>  <span class="at">seFoot =</span> seFoot,</span>
+<span id="cb326-3"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-3" tabindex="-1"></a>  <span class="at">ArchRProj =</span> projHeme5, </span>
+<span id="cb326-4"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-4" tabindex="-1"></a>  <span class="at">normMethod =</span> <span class="st">&quot;Divide&quot;</span>,</span>
+<span id="cb326-5"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-5" tabindex="-1"></a>  <span class="at">plotName =</span> <span class="st">&quot;Footprints-Divide-Bias&quot;</span>,</span>
+<span id="cb326-6"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-6" tabindex="-1"></a>  <span class="at">addDOC =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb326-7"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-7" tabindex="-1"></a>  <span class="at">smoothWindow =</span> <span class="dv">5</span></span>
+<span id="cb326-8"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-8" tabindex="-1"></a>)</span>
+<span id="cb326-9"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-9" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotFootprints-1a13c2f284f-Date-2025-01-23_Time-22-42-22.218022.log</span></span>
+<span id="cb326-10"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-10" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb326-11"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-11" tabindex="-1"></a><span class="do">## 2025-01-23 22:42:22.426031 : Plotting Footprint : GATA1_383 (1 of 6), 0.003 mins elapsed.</span></span>
+<span id="cb326-12"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-12" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
+<span id="cb326-13"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-13" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
+<span id="cb326-14"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-14" tabindex="-1"></a><span class="do">## NormMethod = Divide</span></span>
+<span id="cb326-15"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-15" tabindex="-1"></a><span class="do">## 2025-01-23 22:42:23.516497 : Plotting Footprint : CEBPA_155 (2 of 6), 0.022 mins elapsed.</span></span>
+<span id="cb326-16"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-16" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
+<span id="cb326-17"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-17" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
+<span id="cb326-18"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-18" tabindex="-1"></a><span class="do">## NormMethod = Divide</span></span>
+<span id="cb326-19"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-19" tabindex="-1"></a><span class="do">## 2025-01-23 22:42:24.785786 : Plotting Footprint : EBF1_67 (3 of 6), 0.043 mins elapsed.</span></span>
+<span id="cb326-20"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-20" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
+<span id="cb326-21"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-21" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
+<span id="cb326-22"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-22" tabindex="-1"></a><span class="do">## NormMethod = Divide</span></span>
+<span id="cb326-23"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-23" tabindex="-1"></a><span class="do">## 2025-01-23 22:42:25.905829 : Plotting Footprint : IRF4_632 (4 of 6), 0.061 mins elapsed.</span></span>
+<span id="cb326-24"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-24" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
+<span id="cb326-25"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-25" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
+<span id="cb326-26"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-26" tabindex="-1"></a><span class="do">## NormMethod = Divide</span></span>
+<span id="cb326-27"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-27" tabindex="-1"></a><span class="do">## 2025-01-23 22:42:27.166749 : Plotting Footprint : TBX21_780 (5 of 6), 0.082 mins elapsed.</span></span>
+<span id="cb326-28"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-28" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
+<span id="cb326-29"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-29" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
+<span id="cb326-30"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-30" tabindex="-1"></a><span class="do">## NormMethod = Divide</span></span>
+<span id="cb326-31"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-31" tabindex="-1"></a><span class="do">## 2025-01-23 22:42:28.332831 : Plotting Footprint : PAX5_709 (6 of 6), 0.102 mins elapsed.</span></span>
+<span id="cb326-32"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-32" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
+<span id="cb326-33"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-33" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
+<span id="cb326-34"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-34" tabindex="-1"></a><span class="do">## NormMethod = Divide</span></span>
+<span id="cb326-35"><a href="normalization-of-footprints-for-tn5-bias.html#cb326-35" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotFootprints-1a13c2f284f-Date-2025-01-23_Time-22-42-22.218022.log</span></span></code></pre></div>
 <p>An example of motif footprints from bias-divided analyses are shown below.</p>
 <p><img src="images/bookdown/Footprints-Divide-Bias_1.png" width="250" height="400" />
 <img src="images/bookdown/Footprints-Divide-Bias_2.png" width="250" height="400" />
@@ -393,41 +398,41 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="footprinting-without-normalization-for-tn5-bias" class="section level3 hasAnchor" number="16.2.3">
 <h3><span class="header-section-number">16.2.3</span> Footprinting Without Normalization for Tn5 Bias<a href="normalization-of-footprints-for-tn5-bias.html#footprinting-without-normalization-for-tn5-bias" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>While we highly recommend normalizing footprints for Tn5 sequence insertion bias, it is possible to perform footprinting without normalization by setting <code>normMethod = "None"</code> in the <code>plotFootprints()</code> function.</p>
-<div class="sourceCode" id="cb322"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb322-1"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotFootprints</span>(</span>
-<span id="cb322-2"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">seFoot =</span> seFoot,</span>
-<span id="cb322-3"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ArchRProj =</span> projHeme5, </span>
-<span id="cb322-4"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">normMethod =</span> <span class="st">&quot;None&quot;</span>,</span>
-<span id="cb322-5"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">plotName =</span> <span class="st">&quot;Footprints-No-Normalization&quot;</span>,</span>
-<span id="cb322-6"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">addDOC =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb322-7"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">smoothWindow =</span> <span class="dv">5</span></span>
-<span id="cb322-8"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb322-9"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-9" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotFootprints-371b02731658a-Date-2022-12-23_Time-08-36-46.log</span></span>
-<span id="cb322-10"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-10" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb322-11"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:36:47 : Plotting Footprint : GATA1_383 (1 of 6), 0.018 mins elapsed.</span></span>
-<span id="cb322-12"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
-<span id="cb322-13"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
-<span id="cb322-14"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-14" aria-hidden="true" tabindex="-1"></a><span class="do">## NormMethod = None</span></span>
-<span id="cb322-15"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:36:49 : Plotting Footprint : CEBPA_155 (2 of 6), 0.052 mins elapsed.</span></span>
-<span id="cb322-16"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-16" aria-hidden="true" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
-<span id="cb322-17"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-17" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
-<span id="cb322-18"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-18" aria-hidden="true" tabindex="-1"></a><span class="do">## NormMethod = None</span></span>
-<span id="cb322-19"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:36:51 : Plotting Footprint : EBF1_67 (3 of 6), 0.082 mins elapsed.</span></span>
-<span id="cb322-20"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
-<span id="cb322-21"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-21" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
-<span id="cb322-22"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-22" aria-hidden="true" tabindex="-1"></a><span class="do">## NormMethod = None</span></span>
-<span id="cb322-23"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:36:53 : Plotting Footprint : IRF4_632 (4 of 6), 0.115 mins elapsed.</span></span>
-<span id="cb322-24"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
-<span id="cb322-25"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-25" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
-<span id="cb322-26"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-26" aria-hidden="true" tabindex="-1"></a><span class="do">## NormMethod = None</span></span>
-<span id="cb322-27"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-27" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:36:55 : Plotting Footprint : TBX21_780 (5 of 6), 0.147 mins elapsed.</span></span>
-<span id="cb322-28"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-28" aria-hidden="true" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
-<span id="cb322-29"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-29" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
-<span id="cb322-30"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-30" aria-hidden="true" tabindex="-1"></a><span class="do">## NormMethod = None</span></span>
-<span id="cb322-31"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-31" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:36:57 : Plotting Footprint : PAX5_709 (6 of 6), 0.178 mins elapsed.</span></span>
-<span id="cb322-32"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-32" aria-hidden="true" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
-<span id="cb322-33"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-33" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
-<span id="cb322-34"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-34" aria-hidden="true" tabindex="-1"></a><span class="do">## NormMethod = None</span></span>
-<span id="cb322-35"><a href="normalization-of-footprints-for-tn5-bias.html#cb322-35" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotFootprints-371b02731658a-Date-2022-12-23_Time-08-36-46.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb327"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb327-1"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-1" tabindex="-1"></a><span class="fu">plotFootprints</span>(</span>
+<span id="cb327-2"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-2" tabindex="-1"></a>  <span class="at">seFoot =</span> seFoot,</span>
+<span id="cb327-3"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-3" tabindex="-1"></a>  <span class="at">ArchRProj =</span> projHeme5, </span>
+<span id="cb327-4"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-4" tabindex="-1"></a>  <span class="at">normMethod =</span> <span class="st">&quot;None&quot;</span>,</span>
+<span id="cb327-5"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-5" tabindex="-1"></a>  <span class="at">plotName =</span> <span class="st">&quot;Footprints-No-Normalization&quot;</span>,</span>
+<span id="cb327-6"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-6" tabindex="-1"></a>  <span class="at">addDOC =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb327-7"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-7" tabindex="-1"></a>  <span class="at">smoothWindow =</span> <span class="dv">5</span></span>
+<span id="cb327-8"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-8" tabindex="-1"></a>)</span>
+<span id="cb327-9"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-9" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotFootprints-1a14d86678e-Date-2025-01-23_Time-22-42-32.70605.log</span></span>
+<span id="cb327-10"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-10" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb327-11"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-11" tabindex="-1"></a><span class="do">## 2025-01-23 22:42:32.899096 : Plotting Footprint : GATA1_383 (1 of 6), 0.003 mins elapsed.</span></span>
+<span id="cb327-12"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-12" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
+<span id="cb327-13"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-13" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
+<span id="cb327-14"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-14" tabindex="-1"></a><span class="do">## NormMethod = None</span></span>
+<span id="cb327-15"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-15" tabindex="-1"></a><span class="do">## 2025-01-23 22:42:33.958723 : Plotting Footprint : CEBPA_155 (2 of 6), 0.021 mins elapsed.</span></span>
+<span id="cb327-16"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-16" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
+<span id="cb327-17"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-17" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
+<span id="cb327-18"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-18" tabindex="-1"></a><span class="do">## NormMethod = None</span></span>
+<span id="cb327-19"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-19" tabindex="-1"></a><span class="do">## 2025-01-23 22:42:35.467004 : Plotting Footprint : EBF1_67 (3 of 6), 0.046 mins elapsed.</span></span>
+<span id="cb327-20"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-20" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
+<span id="cb327-21"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-21" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
+<span id="cb327-22"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-22" tabindex="-1"></a><span class="do">## NormMethod = None</span></span>
+<span id="cb327-23"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-23" tabindex="-1"></a><span class="do">## 2025-01-23 22:42:34.477108 : Plotting Footprint : IRF4_632 (4 of 6), 0.03 mins elapsed.</span></span>
+<span id="cb327-24"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-24" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
+<span id="cb327-25"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-25" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
+<span id="cb327-26"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-26" tabindex="-1"></a><span class="do">## NormMethod = None</span></span>
+<span id="cb327-27"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-27" tabindex="-1"></a><span class="do">## 2025-01-23 22:42:35.824706 : Plotting Footprint : TBX21_780 (5 of 6), 0.052 mins elapsed.</span></span>
+<span id="cb327-28"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-28" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
+<span id="cb327-29"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-29" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
+<span id="cb327-30"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-30" tabindex="-1"></a><span class="do">## NormMethod = None</span></span>
+<span id="cb327-31"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-31" tabindex="-1"></a><span class="do">## 2025-01-23 22:42:37.32027 : Plotting Footprint : PAX5_709 (6 of 6), 0.077 mins elapsed.</span></span>
+<span id="cb327-32"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-32" tabindex="-1"></a><span class="do">## Applying smoothing window to footprint</span></span>
+<span id="cb327-33"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-33" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
+<span id="cb327-34"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-34" tabindex="-1"></a><span class="do">## NormMethod = None</span></span>
+<span id="cb327-35"><a href="normalization-of-footprints-for-tn5-bias.html#cb327-35" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotFootprints-1a14d86678e-Date-2025-01-23_Time-22-42-32.70605.log</span></span></code></pre></div>
 <p>An example of motif footprints without normalization are shown below.</p>
 <p><img src="images/bookdown/Footprints-No-Normalization_1.png" width="250" height="400" />
 <img src="images/bookdown/Footprints-No-Normalization_2.png" width="250" height="400" />

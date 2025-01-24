@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>19.4 Exporting pseudo-bulked data to a bigWig file | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
   <meta name="description" content="A guide to ArchR" />
-  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
   <meta property="og:title" content="19.4 Exporting pseudo-bulked data to a bigWig file | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2022-12-23" />
+<meta name="date" content="2025-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,13 +52,13 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -68,7 +68,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -94,7 +94,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -107,7 +107,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -121,6 +121,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -144,6 +148,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
 <li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+<li class="chapter" data-level="2.3" data-path="using-docker-for-pre-compiled-environment-setup.html"><a href="using-docker-for-pre-compiled-environment-setup.html"><i class="fa fa-check"></i><b>2.3</b> Using Docker for pre-compiled environment setup</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
 <ul>
@@ -304,34 +309,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">19.4</span> Exporting pseudo-bulked data to a bigWig file<a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#exporting-pseudo-bulked-data-to-a-bigwig-file" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Another common use for pseudo-bulked data is to look at genome browser tracks. Of course, ArchR does have its own built-in genome browser which can be accessed via <code>ArchRBrowser()</code>, but we also enable users to export pseudo-bulked bigWig tracks for use with other tools. To do this, we use the <code>getGroupBW()</code> function. This function uses the same <code>groupBy</code> parameter as above. Additionally, users can toggle how the tracks are normalized but we recommend the default which is “ReadsInTSS” which simultaneously normalized for sequencing depth and data quality.</p>
 <p>When we run this function, a folder is created within the <code>outputDirectory</code> of our <code>ArchRProject</code> called “GroupBigWigs” and within that directory a subdirectory is created based on the value passed to <code>groupBy</code>. In the below example, we extract bigWig tracks for each group in <code>Clusters2</code>:</p>
-<div class="sourceCode" id="cb437"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb437-1"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb437-1" aria-hidden="true" tabindex="-1"></a>coverageFiles <span class="ot">&lt;-</span> <span class="fu">getGroupBW</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>)</span>
-<span id="cb437-2"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb437-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-getGroupBW-371b024857b00-Date-2022-12-23_Time-09-19-56.log</span></span>
-<span id="cb437-3"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb437-3" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb437-4"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb437-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:20:04 : B (1 of 11) : Creating BigWig for Group, 0.128 mins elapsed.</span></span>
-<span id="cb437-5"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb437-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:20:23 : CD4.M (2 of 11) : Creating BigWig for Group, 0.442 mins elapsed.</span></span>
-<span id="cb437-6"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb437-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:20:38 : CD4.N (3 of 11) : Creating BigWig for Group, 0.701 mins elapsed.</span></span>
-<span id="cb437-7"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb437-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:20:54 : CLP (4 of 11) : Creating BigWig for Group, 0.964 mins elapsed.</span></span>
-<span id="cb437-8"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb437-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:21:09 : Erythroid (5 of 11) : Creating BigWig for Group, 1.205 mins elapsed.</span></span>
-<span id="cb437-9"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb437-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:21:25 : GMP (6 of 11) : Creating BigWig for Group, 1.475 mins elapsed.</span></span>
-<span id="cb437-10"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb437-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:21:46 : Mono (7 of 11) : Creating BigWig for Group, 1.818 mins elapsed.</span></span>
-<span id="cb437-11"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb437-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:22:05 : NK (8 of 11) : Creating BigWig for Group, 2.151 mins elapsed.</span></span>
-<span id="cb437-12"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb437-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:22:22 : pDC (9 of 11) : Creating BigWig for Group, 2.428 mins elapsed.</span></span>
-<span id="cb437-13"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb437-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:22:40 : PreB (10 of 11) : Creating BigWig for Group, 2.729 mins elapsed.</span></span>
-<span id="cb437-14"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb437-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:22:52 : Progenitor (11 of 11) : Creating BigWig for Group, 2.921 mins elapsed.</span></span>
-<span id="cb437-15"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb437-15" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-getGroupBW-371b024857b00-Date-2022-12-23_Time-09-19-56.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb442"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb442-1"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb442-1" tabindex="-1"></a>coverageFiles <span class="ot">&lt;-</span> <span class="fu">getGroupBW</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>)</span>
+<span id="cb442-2"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb442-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-getGroupBW-1a156cad862-Date-2025-01-23_Time-23-16-51.942558.log</span></span>
+<span id="cb442-3"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb442-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb442-4"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb442-4" tabindex="-1"></a><span class="do">## 2025-01-23 23:16:53.86691 : B (1 of 11) : Creating BigWig for Group, 0.032 mins elapsed.</span></span>
+<span id="cb442-5"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb442-5" tabindex="-1"></a><span class="do">## 2025-01-23 23:17:46.614253 : CD4.M (2 of 11) : Creating BigWig for Group, 0.911 mins elapsed.</span></span>
+<span id="cb442-6"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb442-6" tabindex="-1"></a><span class="do">## 2025-01-23 23:18:22.262609 : CD4.N (3 of 11) : Creating BigWig for Group, 1.505 mins elapsed.</span></span>
+<span id="cb442-7"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb442-7" tabindex="-1"></a><span class="do">## 2025-01-23 23:18:57.452585 : CLP (4 of 11) : Creating BigWig for Group, 2.092 mins elapsed.</span></span>
+<span id="cb442-8"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb442-8" tabindex="-1"></a><span class="do">## 2025-01-23 23:19:31.876812 : Erythroid (5 of 11) : Creating BigWig for Group, 2.666 mins elapsed.</span></span>
+<span id="cb442-9"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb442-9" tabindex="-1"></a><span class="do">## 2025-01-23 23:20:05.622878 : GMP (6 of 11) : Creating BigWig for Group, 3.228 mins elapsed.</span></span>
+<span id="cb442-10"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb442-10" tabindex="-1"></a><span class="do">## 2025-01-23 23:20:57.17904 : Mono (7 of 11) : Creating BigWig for Group, 4.087 mins elapsed.</span></span>
+<span id="cb442-11"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb442-11" tabindex="-1"></a><span class="do">## 2025-01-23 23:21:49.067038 : NK (8 of 11) : Creating BigWig for Group, 4.952 mins elapsed.</span></span>
+<span id="cb442-12"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb442-12" tabindex="-1"></a><span class="do">## 2025-01-23 23:22:24.357363 : pDC (9 of 11) : Creating BigWig for Group, 5.54 mins elapsed.</span></span>
+<span id="cb442-13"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb442-13" tabindex="-1"></a><span class="do">## 2025-01-23 23:23:13.254133 : PreB (10 of 11) : Creating BigWig for Group, 6.355 mins elapsed.</span></span>
+<span id="cb442-14"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb442-14" tabindex="-1"></a><span class="do">## 2025-01-23 23:23:34.494661 : Progenitor (11 of 11) : Creating BigWig for Group, 6.709 mins elapsed.</span></span>
+<span id="cb442-15"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb442-15" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-getGroupBW-1a156cad862-Date-2025-01-23_Time-23-16-51.942558.log</span></span></code></pre></div>
 <p>The return value of <code>getGroupBW()</code> is a vector of file paths to the created bigWig files.</p>
-<div class="sourceCode" id="cb438"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb438-1"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb438-1" aria-hidden="true" tabindex="-1"></a>coverageFiles</span>
-<span id="cb438-2"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb438-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] &quot;/corces/home/rcorces/scripts/github/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/B-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot;         </span></span>
-<span id="cb438-3"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb438-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [2] &quot;/corces/home/rcorces/scripts/github/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/CD4.M-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot;     </span></span>
-<span id="cb438-4"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb438-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [3] &quot;/corces/home/rcorces/scripts/github/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/CD4.N-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot;     </span></span>
-<span id="cb438-5"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb438-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] &quot;/corces/home/rcorces/scripts/github/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/CLP-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot;       </span></span>
-<span id="cb438-6"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb438-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] &quot;/corces/home/rcorces/scripts/github/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/Erythroid-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot; </span></span>
-<span id="cb438-7"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb438-7" aria-hidden="true" tabindex="-1"></a><span class="do">##  [6] &quot;/corces/home/rcorces/scripts/github/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/GMP-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot;       </span></span>
-<span id="cb438-8"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb438-8" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] &quot;/corces/home/rcorces/scripts/github/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/Mono-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot;      </span></span>
-<span id="cb438-9"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb438-9" aria-hidden="true" tabindex="-1"></a><span class="do">##  [8] &quot;/corces/home/rcorces/scripts/github/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/NK-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot;        </span></span>
-<span id="cb438-10"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb438-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] &quot;/corces/home/rcorces/scripts/github/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/pDC-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot;       </span></span>
-<span id="cb438-11"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb438-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] &quot;/corces/home/rcorces/scripts/github/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/PreB-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot;      </span></span>
-<span id="cb438-12"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb438-12" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] &quot;/corces/home/rcorces/scripts/github/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/Progenitor-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb443"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb443-1"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb443-1" tabindex="-1"></a>coverageFiles</span>
+<span id="cb443-2"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb443-2" tabindex="-1"></a><span class="do">##  [1] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/B-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot;         </span></span>
+<span id="cb443-3"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb443-3" tabindex="-1"></a><span class="do">##  [2] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/CD4.M-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot;     </span></span>
+<span id="cb443-4"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb443-4" tabindex="-1"></a><span class="do">##  [3] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/CD4.N-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot;     </span></span>
+<span id="cb443-5"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb443-5" tabindex="-1"></a><span class="do">##  [4] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/CLP-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot;       </span></span>
+<span id="cb443-6"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb443-6" tabindex="-1"></a><span class="do">##  [5] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/Erythroid-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot; </span></span>
+<span id="cb443-7"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb443-7" tabindex="-1"></a><span class="do">##  [6] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/GMP-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot;       </span></span>
+<span id="cb443-8"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb443-8" tabindex="-1"></a><span class="do">##  [7] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/Mono-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot;      </span></span>
+<span id="cb443-9"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb443-9" tabindex="-1"></a><span class="do">##  [8] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/NK-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot;        </span></span>
+<span id="cb443-10"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb443-10" tabindex="-1"></a><span class="do">##  [9] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/pDC-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot;       </span></span>
+<span id="cb443-11"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb443-11" tabindex="-1"></a><span class="do">## [10] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/PreB-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot;      </span></span>
+<span id="cb443-12"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html#cb443-12" tabindex="-1"></a><span class="do">## [11] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupBigWigs/Clusters2/Progenitor-TileSize-100-normMethod-ReadsInTSS-ArchR.bw&quot;</span></span></code></pre></div>
 
 </div>
 <!-- </div> -->

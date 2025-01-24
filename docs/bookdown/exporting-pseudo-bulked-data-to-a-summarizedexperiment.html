@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>19.3 Exporting pseudo-bulked data to a SummarizedExperiment | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
   <meta name="description" content="A guide to ArchR" />
-  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
   <meta property="og:title" content="19.3 Exporting pseudo-bulked data to a SummarizedExperiment | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2022-12-23" />
+<meta name="date" content="2025-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,13 +52,13 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -68,7 +68,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -94,7 +94,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -107,7 +107,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -121,6 +121,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -144,6 +148,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
 <li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+<li class="chapter" data-level="2.3" data-path="using-docker-for-pre-compiled-environment-setup.html"><a href="using-docker-for-pre-compiled-environment-setup.html"><i class="fa fa-check"></i><b>2.3</b> Using Docker for pre-compiled environment setup</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
 <ul>
@@ -304,34 +309,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">19.3</span> Exporting pseudo-bulked data to a <code>SummarizedExperiment</code><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#exporting-pseudo-bulked-data-to-a-summarizedexperiment" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Often times, we want to analyze our single-cell data as if it were bulk data to get around issues of sparsity. For example, you might want to use pseudo-bulk replicates when trying to understand “how does cluster X or cell type Y differ across cases and controls”. To enable this type of analysis, ArchR provides the <code>getGroupSE()</code> and <code>getPBGroupSE()</code> functions. These function will group your cells based on different parameters. <code>getGroupSE()</code> will group cells based on the values found in a column of <code>cellColData</code>. For example, you might want to get an SE containing information from each sample for each cluster. As you will remember from earlier chapters, you can add whatever information you want as new columns to <code>cellColData</code> and this can be helpful to create the grouping divisions that you want to extract with <code>getGroupSE()</code>. <code>getPBGroupSE()</code> is similar but it uses the exact pseudo-bulk cell groupings that were used in your <code>ArchRProject</code> to create coverage files, call peaks, etc. If the difference between these functions seems subtle, you should re-read the chapter on pseudo-bulks to understand the difference.</p>
 <p>For example, if we wanted to create pseudo-bulk replicates based on Cluster and Sample, creating a single replicate for each sample x cluster combination, we could add a new column to <code>cellColData</code> representing this information:</p>
-<div class="sourceCode" id="cb435"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb435-1"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb435-1" aria-hidden="true" tabindex="-1"></a>projHeme5 <span class="ot">&lt;-</span> <span class="fu">addCellColData</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">data =</span> <span class="fu">paste0</span>(projHeme5<span class="sc">@</span>cellColData<span class="sc">$</span>Sample,<span class="st">&quot;_x_&quot;</span>,projHeme5<span class="sc">@</span>cellColData<span class="sc">$</span>Clusters2), <span class="at">name =</span> <span class="st">&quot;Clusters2_x_Sample&quot;</span>, <span class="at">cells =</span> <span class="fu">getCellNames</span>(projHeme5))</span>
-<span id="cb435-2"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb435-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(projHeme5<span class="sc">@</span>cellColData<span class="sc">$</span>Clusters2_x_Sample)</span>
-<span id="cb435-3"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb435-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;scATAC_BMMC_R1_x_B&quot;    &quot;scATAC_BMMC_R1_x_NK&quot;   &quot;scATAC_BMMC_R1_x_PreB&quot;</span></span>
-<span id="cb435-4"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb435-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [4] &quot;scATAC_BMMC_R1_x_PreB&quot; &quot;scATAC_BMMC_R1_x_PreB&quot; &quot;scATAC_BMMC_R1_x_GMP&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb440"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb440-1"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb440-1" tabindex="-1"></a>projHeme5 <span class="ot">&lt;-</span> <span class="fu">addCellColData</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">data =</span> <span class="fu">paste0</span>(projHeme5<span class="sc">@</span>cellColData<span class="sc">$</span>Sample,<span class="st">&quot;_x_&quot;</span>,projHeme5<span class="sc">@</span>cellColData<span class="sc">$</span>Clusters2), <span class="at">name =</span> <span class="st">&quot;Clusters2_x_Sample&quot;</span>, <span class="at">cells =</span> <span class="fu">getCellNames</span>(projHeme5))</span>
+<span id="cb440-2"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb440-2" tabindex="-1"></a><span class="fu">head</span>(projHeme5<span class="sc">@</span>cellColData<span class="sc">$</span>Clusters2_x_Sample)</span>
+<span id="cb440-3"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb440-3" tabindex="-1"></a><span class="do">## [1] &quot;scATAC_BMMC_R1_x_B&quot;     &quot;scATAC_BMMC_R1_x_CD4.N&quot; &quot;scATAC_BMMC_R1_x_PreB&quot; </span></span>
+<span id="cb440-4"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb440-4" tabindex="-1"></a><span class="do">## [4] &quot;scATAC_BMMC_R1_x_PreB&quot;  &quot;scATAC_BMMC_R1_x_PreB&quot;  &quot;scATAC_BMMC_R1_x_GMP&quot;</span></span></code></pre></div>
 <p>We can then use this column in <code>cellColData</code> as the <code>groupBy</code> parameter to <code>getGroupSE()</code> to get a <code>SummarizedExperiment</code> object containing a single column per sample x cluster combination:</p>
-<div class="sourceCode" id="cb436"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb436-1"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-1" aria-hidden="true" tabindex="-1"></a>groupSE <span class="ot">&lt;-</span> <span class="fu">getGroupSE</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">useMatrix =</span> <span class="st">&quot;PeakMatrix&quot;</span>, <span class="at">groupBy =</span> <span class="st">&quot;Clusters2_x_Sample&quot;</span>)</span>
-<span id="cb436-2"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-getGroupSE-371b02380712b-Date-2022-12-23_Time-09-19-33.log</span></span>
-<span id="cb436-3"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-3" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb436-4"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting Group Matrix</span></span>
-<span id="cb436-5"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 09:19:54 : Successfully Created Group Matrix, 0.295 mins elapsed.</span></span>
-<span id="cb436-6"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Normalizing by number of Cells</span></span>
-<span id="cb436-7"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-7" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-getGroupSE-371b02380712b-Date-2022-12-23_Time-09-19-33.log</span></span>
-<span id="cb436-8"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-8" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(groupSE)</span>
-<span id="cb436-9"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 142475     25</span></span>
-<span id="cb436-10"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(groupSE)</span>
-<span id="cb436-11"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] &quot;scATAC_BMMC_R1_x_B&quot;               &quot;scATAC_BMMC_R1_x_CD4.M&quot;          </span></span>
-<span id="cb436-12"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  [3] &quot;scATAC_BMMC_R1_x_CD4.N&quot;           &quot;scATAC_BMMC_R1_x_CLP&quot;            </span></span>
-<span id="cb436-13"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] &quot;scATAC_BMMC_R1_x_Erythroid&quot;       &quot;scATAC_BMMC_R1_x_GMP&quot;            </span></span>
-<span id="cb436-14"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] &quot;scATAC_BMMC_R1_x_Mono&quot;            &quot;scATAC_BMMC_R1_x_NK&quot;             </span></span>
-<span id="cb436-15"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] &quot;scATAC_BMMC_R1_x_pDC&quot;             &quot;scATAC_BMMC_R1_x_PreB&quot;           </span></span>
-<span id="cb436-16"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-16" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] &quot;scATAC_BMMC_R1_x_Progenitor&quot;      &quot;scATAC_CD34_BMMC_R1_x_B&quot;         </span></span>
-<span id="cb436-17"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-17" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] &quot;scATAC_CD34_BMMC_R1_x_CLP&quot;        &quot;scATAC_CD34_BMMC_R1_x_Erythroid&quot; </span></span>
-<span id="cb436-18"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-18" aria-hidden="true" tabindex="-1"></a><span class="do">## [15] &quot;scATAC_CD34_BMMC_R1_x_GMP&quot;        &quot;scATAC_CD34_BMMC_R1_x_Mono&quot;      </span></span>
-<span id="cb436-19"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-19" aria-hidden="true" tabindex="-1"></a><span class="do">## [17] &quot;scATAC_CD34_BMMC_R1_x_pDC&quot;        &quot;scATAC_CD34_BMMC_R1_x_Progenitor&quot;</span></span>
-<span id="cb436-20"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-20" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] &quot;scATAC_PBMC_R1_x_B&quot;               &quot;scATAC_PBMC_R1_x_CD4.M&quot;          </span></span>
-<span id="cb436-21"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-21" aria-hidden="true" tabindex="-1"></a><span class="do">## [21] &quot;scATAC_PBMC_R1_x_CD4.N&quot;           &quot;scATAC_PBMC_R1_x_GMP&quot;            </span></span>
-<span id="cb436-22"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-22" aria-hidden="true" tabindex="-1"></a><span class="do">## [23] &quot;scATAC_PBMC_R1_x_Mono&quot;            &quot;scATAC_PBMC_R1_x_NK&quot;             </span></span>
-<span id="cb436-23"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb436-23" aria-hidden="true" tabindex="-1"></a><span class="do">## [25] &quot;scATAC_PBMC_R1_x_pDC&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb441"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb441-1"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-1" tabindex="-1"></a>groupSE <span class="ot">&lt;-</span> <span class="fu">getGroupSE</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">useMatrix =</span> <span class="st">&quot;PeakMatrix&quot;</span>, <span class="at">groupBy =</span> <span class="st">&quot;Clusters2_x_Sample&quot;</span>)</span>
+<span id="cb441-2"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-getGroupSE-1a19e8fd90-Date-2025-01-23_Time-23-16-17.426349.log</span></span>
+<span id="cb441-3"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb441-4"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-4" tabindex="-1"></a><span class="do">## Getting Group Matrix</span></span>
+<span id="cb441-5"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-5" tabindex="-1"></a><span class="do">## 2025-01-23 23:16:47.459363 : Successfully Created Group Matrix, 0.48 mins elapsed.</span></span>
+<span id="cb441-6"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-6" tabindex="-1"></a><span class="do">## Normalizing by number of Cells</span></span>
+<span id="cb441-7"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-7" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-getGroupSE-1a19e8fd90-Date-2025-01-23_Time-23-16-17.426349.log</span></span>
+<span id="cb441-8"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-8" tabindex="-1"></a><span class="fu">dim</span>(groupSE)</span>
+<span id="cb441-9"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-9" tabindex="-1"></a><span class="do">## [1] 147407     25</span></span>
+<span id="cb441-10"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-10" tabindex="-1"></a><span class="fu">colnames</span>(groupSE)</span>
+<span id="cb441-11"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-11" tabindex="-1"></a><span class="do">##  [1] &quot;scATAC_BMMC_R1_x_B&quot;               &quot;scATAC_BMMC_R1_x_CD4.M&quot;          </span></span>
+<span id="cb441-12"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-12" tabindex="-1"></a><span class="do">##  [3] &quot;scATAC_BMMC_R1_x_CD4.N&quot;           &quot;scATAC_BMMC_R1_x_CLP&quot;            </span></span>
+<span id="cb441-13"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-13" tabindex="-1"></a><span class="do">##  [5] &quot;scATAC_BMMC_R1_x_Erythroid&quot;       &quot;scATAC_BMMC_R1_x_GMP&quot;            </span></span>
+<span id="cb441-14"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-14" tabindex="-1"></a><span class="do">##  [7] &quot;scATAC_BMMC_R1_x_Mono&quot;            &quot;scATAC_BMMC_R1_x_NK&quot;             </span></span>
+<span id="cb441-15"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-15" tabindex="-1"></a><span class="do">##  [9] &quot;scATAC_BMMC_R1_x_pDC&quot;             &quot;scATAC_BMMC_R1_x_PreB&quot;           </span></span>
+<span id="cb441-16"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-16" tabindex="-1"></a><span class="do">## [11] &quot;scATAC_BMMC_R1_x_Progenitor&quot;      &quot;scATAC_CD34_BMMC_R1_x_B&quot;         </span></span>
+<span id="cb441-17"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-17" tabindex="-1"></a><span class="do">## [13] &quot;scATAC_CD34_BMMC_R1_x_CLP&quot;        &quot;scATAC_CD34_BMMC_R1_x_Erythroid&quot; </span></span>
+<span id="cb441-18"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-18" tabindex="-1"></a><span class="do">## [15] &quot;scATAC_CD34_BMMC_R1_x_GMP&quot;        &quot;scATAC_CD34_BMMC_R1_x_Mono&quot;      </span></span>
+<span id="cb441-19"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-19" tabindex="-1"></a><span class="do">## [17] &quot;scATAC_CD34_BMMC_R1_x_pDC&quot;        &quot;scATAC_CD34_BMMC_R1_x_Progenitor&quot;</span></span>
+<span id="cb441-20"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-20" tabindex="-1"></a><span class="do">## [19] &quot;scATAC_PBMC_R1_x_B&quot;               &quot;scATAC_PBMC_R1_x_CD4.M&quot;          </span></span>
+<span id="cb441-21"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-21" tabindex="-1"></a><span class="do">## [21] &quot;scATAC_PBMC_R1_x_CD4.N&quot;           &quot;scATAC_PBMC_R1_x_GMP&quot;            </span></span>
+<span id="cb441-22"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-22" tabindex="-1"></a><span class="do">## [23] &quot;scATAC_PBMC_R1_x_Mono&quot;            &quot;scATAC_PBMC_R1_x_NK&quot;             </span></span>
+<span id="cb441-23"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html#cb441-23" tabindex="-1"></a><span class="do">## [25] &quot;scATAC_PBMC_R1_x_pDC&quot;</span></span></code></pre></div>
 <p><code>getGroupSE()</code> is capable of exporting any matrix to a <code>SummarizedExperiment</code> object.</p>
 <p>The functionality of <code>getPBGroupSE()</code> is nearly identical to <code>getGroupSE()</code>. The primary difference is that the cell groupings used will be determined by calling <code>addGroupCoverages()</code> with <code>returnGroups = TRUE</code>.</p>
 </div>

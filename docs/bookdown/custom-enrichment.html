@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>14.3 Custom Enrichment | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
   <meta name="description" content="A guide to ArchR" />
-  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
   <meta property="og:title" content="14.3 Custom Enrichment | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2022-12-23" />
+<meta name="date" content="2025-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,13 +52,13 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -68,7 +68,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -94,7 +94,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -107,7 +107,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -121,6 +121,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -144,6 +148,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
 <li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+<li class="chapter" data-level="2.3" data-path="using-docker-for-pre-compiled-environment-setup.html"><a href="using-docker-for-pre-compiled-environment-setup.html"><i class="fa fa-check"></i><b>2.3</b> Using Docker for pre-compiled environment setup</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
 <ul>
@@ -304,62 +309,62 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">14.3</span> Custom Enrichment<a href="custom-enrichment.html#custom-enrichment" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>In addition to all of these curated annotation sets, ArchR is also capable of accepting user-defined annotations to perform custom enrichments. In the below example, we illustrate how to create a custom annotation based on select ENCODE ChIP-seq experiments.</p>
 <p>First, we will define the datasets that will be used and provide links for their download. Local files could be used in the same way.</p>
-<div class="sourceCode" id="cb267"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb267-1"><a href="custom-enrichment.html#cb267-1" aria-hidden="true" tabindex="-1"></a>EncodePeaks <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb267-2"><a href="custom-enrichment.html#cb267-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Encode_K562_GATA1 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF632NQI/@@download/ENCFF632NQI.bed.gz&quot;</span>,</span>
-<span id="cb267-3"><a href="custom-enrichment.html#cb267-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Encode_GM12878_CEBPB =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF761MGJ/@@download/ENCFF761MGJ.bed.gz&quot;</span>,</span>
-<span id="cb267-4"><a href="custom-enrichment.html#cb267-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Encode_K562_Ebf1 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF868VSY/@@download/ENCFF868VSY.bed.gz&quot;</span>,</span>
-<span id="cb267-5"><a href="custom-enrichment.html#cb267-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Encode_K562_Pax5 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF339KUO/@@download/ENCFF339KUO.bed.gz&quot;</span></span>
-<span id="cb267-6"><a href="custom-enrichment.html#cb267-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb272"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb272-1"><a href="custom-enrichment.html#cb272-1" tabindex="-1"></a>EncodePeaks <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb272-2"><a href="custom-enrichment.html#cb272-2" tabindex="-1"></a>  <span class="at">Encode_K562_GATA1 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF632NQI/@@download/ENCFF632NQI.bed.gz&quot;</span>,</span>
+<span id="cb272-3"><a href="custom-enrichment.html#cb272-3" tabindex="-1"></a>  <span class="at">Encode_GM12878_CEBPB =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF761MGJ/@@download/ENCFF761MGJ.bed.gz&quot;</span>,</span>
+<span id="cb272-4"><a href="custom-enrichment.html#cb272-4" tabindex="-1"></a>  <span class="at">Encode_K562_Ebf1 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF868VSY/@@download/ENCFF868VSY.bed.gz&quot;</span>,</span>
+<span id="cb272-5"><a href="custom-enrichment.html#cb272-5" tabindex="-1"></a>  <span class="at">Encode_K562_Pax5 =</span> <span class="st">&quot;https://www.encodeproject.org/files/ENCFF339KUO/@@download/ENCFF339KUO.bed.gz&quot;</span></span>
+<span id="cb272-6"><a href="custom-enrichment.html#cb272-6" tabindex="-1"></a>)</span></code></pre></div>
 <p>We then add a custom annotation to our <code>ArchRProject</code> using the <code>addPeakAnnotation()</code> function. Here, we call our custom annotation “ChIP”.</p>
-<div class="sourceCode" id="cb268"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb268-1"><a href="custom-enrichment.html#cb268-1" aria-hidden="true" tabindex="-1"></a>projHeme5 <span class="ot">&lt;-</span> <span class="fu">addPeakAnnotations</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">regions =</span> EncodePeaks, <span class="at">name =</span> <span class="st">&quot;ChIP&quot;</span>)</span>
-<span id="cb268-2"><a href="custom-enrichment.html#cb268-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addPeakAnnotations-371b01c1d7329-Date-2022-12-23_Time-08-00-00.log</span></span>
-<span id="cb268-3"><a href="custom-enrichment.html#cb268-3" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb268-4"><a href="custom-enrichment.html#cb268-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:00:03 : Creating Peak Overlap Matrix, 0.051 mins elapsed.</span></span>
-<span id="cb268-5"><a href="custom-enrichment.html#cb268-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:00:04 : All Regions Overlap at least 1 peak!, 0.053 mins elapsed.</span></span></code></pre></div>
+<div class="sourceCode" id="cb273"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb273-1"><a href="custom-enrichment.html#cb273-1" tabindex="-1"></a>projHeme5 <span class="ot">&lt;-</span> <span class="fu">addPeakAnnotations</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">regions =</span> EncodePeaks, <span class="at">name =</span> <span class="st">&quot;ChIP&quot;</span>)</span>
+<span id="cb273-2"><a href="custom-enrichment.html#cb273-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addPeakAnnotations-1a14305efeb-Date-2025-01-23_Time-21-28-55.340457.log</span></span>
+<span id="cb273-3"><a href="custom-enrichment.html#cb273-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb273-4"><a href="custom-enrichment.html#cb273-4" tabindex="-1"></a><span class="do">## 2025-01-23 21:28:58.990331 : Creating Peak Overlap Matrix, 0.061 mins elapsed.</span></span>
+<span id="cb273-5"><a href="custom-enrichment.html#cb273-5" tabindex="-1"></a><span class="do">## 2025-01-23 21:28:59.137728 : All Regions Overlap at least 1 peak!, 0.063 mins elapsed.</span></span></code></pre></div>
 <p>As before, we use this custom annotation to perform the peak annotation enrichment using <code>peakAnnoEnrichment()</code> and follow the same steps to create our annotation heatmap.</p>
-<div class="sourceCode" id="cb269"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb269-1"><a href="custom-enrichment.html#cb269-1" aria-hidden="true" tabindex="-1"></a>enrichRegions <span class="ot">&lt;-</span> <span class="fu">peakAnnoEnrichment</span>(</span>
-<span id="cb269-2"><a href="custom-enrichment.html#cb269-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">seMarker =</span> markerPeaks,</span>
-<span id="cb269-3"><a href="custom-enrichment.html#cb269-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb269-4"><a href="custom-enrichment.html#cb269-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">peakAnnotation =</span> <span class="st">&quot;ChIP&quot;</span>,</span>
-<span id="cb269-5"><a href="custom-enrichment.html#cb269-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 0.5&quot;</span></span>
-<span id="cb269-6"><a href="custom-enrichment.html#cb269-6" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb269-7"><a href="custom-enrichment.html#cb269-7" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-peakAnnoEnrichment-371b03da1b1c9-Date-2022-12-23_Time-08-00-04.log</span></span>
-<span id="cb269-8"><a href="custom-enrichment.html#cb269-8" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb269-9"><a href="custom-enrichment.html#cb269-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:00:09 : Computing Enrichments 1 of 11, 0.082 mins elapsed.</span></span>
-<span id="cb269-10"><a href="custom-enrichment.html#cb269-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:00:09 : Computing Enrichments 2 of 11, 0.083 mins elapsed.</span></span>
-<span id="cb269-11"><a href="custom-enrichment.html#cb269-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:00:09 : Computing Enrichments 3 of 11, 0.084 mins elapsed.</span></span>
-<span id="cb269-12"><a href="custom-enrichment.html#cb269-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:00:09 : Computing Enrichments 4 of 11, 0.084 mins elapsed.</span></span>
-<span id="cb269-13"><a href="custom-enrichment.html#cb269-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:00:09 : Computing Enrichments 5 of 11, 0.085 mins elapsed.</span></span>
-<span id="cb269-14"><a href="custom-enrichment.html#cb269-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:00:09 : Computing Enrichments 6 of 11, 0.085 mins elapsed.</span></span>
-<span id="cb269-15"><a href="custom-enrichment.html#cb269-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:00:09 : Computing Enrichments 7 of 11, 0.086 mins elapsed.</span></span>
-<span id="cb269-16"><a href="custom-enrichment.html#cb269-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:00:09 : Computing Enrichments 8 of 11, 0.086 mins elapsed.</span></span>
-<span id="cb269-17"><a href="custom-enrichment.html#cb269-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:00:09 : Computing Enrichments 9 of 11, 0.087 mins elapsed.</span></span>
-<span id="cb269-18"><a href="custom-enrichment.html#cb269-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:00:09 : Computing Enrichments 10 of 11, 0.087 mins elapsed.</span></span>
-<span id="cb269-19"><a href="custom-enrichment.html#cb269-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:00:09 : Computing Enrichments 11 of 11, 0.088 mins elapsed.</span></span>
-<span id="cb269-20"><a href="custom-enrichment.html#cb269-20" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-peakAnnoEnrichment-371b03da1b1c9-Date-2022-12-23_Time-08-00-04.log</span></span></code></pre></div>
-<div class="sourceCode" id="cb270"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb270-1"><a href="custom-enrichment.html#cb270-1" aria-hidden="true" tabindex="-1"></a>enrichRegions</span>
-<span id="cb270-2"><a href="custom-enrichment.html#cb270-2" aria-hidden="true" tabindex="-1"></a><span class="do">## class: SummarizedExperiment </span></span>
-<span id="cb270-3"><a href="custom-enrichment.html#cb270-3" aria-hidden="true" tabindex="-1"></a><span class="do">## dim: 4 11 </span></span>
-<span id="cb270-4"><a href="custom-enrichment.html#cb270-4" aria-hidden="true" tabindex="-1"></a><span class="do">## metadata(0):</span></span>
-<span id="cb270-5"><a href="custom-enrichment.html#cb270-5" aria-hidden="true" tabindex="-1"></a><span class="do">## assays(10): mlog10Padj mlog10p ... CompareFrequency feature</span></span>
-<span id="cb270-6"><a href="custom-enrichment.html#cb270-6" aria-hidden="true" tabindex="-1"></a><span class="do">## rownames(4): Encode_K562_GATA1 Encode_GM12878_CEBPB Encode_K562_Ebf1</span></span>
-<span id="cb270-7"><a href="custom-enrichment.html#cb270-7" aria-hidden="true" tabindex="-1"></a><span class="do">##   Encode_K562_Pax5</span></span>
-<span id="cb270-8"><a href="custom-enrichment.html#cb270-8" aria-hidden="true" tabindex="-1"></a><span class="do">## rowData names(0):</span></span>
-<span id="cb270-9"><a href="custom-enrichment.html#cb270-9" aria-hidden="true" tabindex="-1"></a><span class="do">## colnames(11): B CD4.M ... PreB Progenitor</span></span>
-<span id="cb270-10"><a href="custom-enrichment.html#cb270-10" aria-hidden="true" tabindex="-1"></a><span class="do">## colData names(0):</span></span></code></pre></div>
-<div class="sourceCode" id="cb271"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb271-1"><a href="custom-enrichment.html#cb271-1" aria-hidden="true" tabindex="-1"></a>heatmapRegions <span class="ot">&lt;-</span> <span class="fu">plotEnrichHeatmap</span>(enrichRegions, <span class="at">n =</span> <span class="dv">7</span>, <span class="at">transpose =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb271-2"><a href="custom-enrichment.html#cb271-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEnrichHeatmap-371b0fb4fe74-Date-2022-12-23_Time-08-00-09.log</span></span>
-<span id="cb271-3"><a href="custom-enrichment.html#cb271-3" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb271-4"><a href="custom-enrichment.html#cb271-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Annotations..</span></span>
-<span id="cb271-5"><a href="custom-enrichment.html#cb271-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Preparing Main Heatmap..</span></span>
-<span id="cb271-6"><a href="custom-enrichment.html#cb271-6" aria-hidden="true" tabindex="-1"></a><span class="do">## &#39;magick&#39; package is suggested to install to give better rasterization.</span></span>
-<span id="cb271-7"><a href="custom-enrichment.html#cb271-7" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb271-8"><a href="custom-enrichment.html#cb271-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Set `ht_opt$message = FALSE` to turn off this message.</span></span></code></pre></div>
-<div class="sourceCode" id="cb272"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb272-1"><a href="custom-enrichment.html#cb272-1" aria-hidden="true" tabindex="-1"></a>ComplexHeatmap<span class="sc">::</span><span class="fu">draw</span>(heatmapRegions, <span class="at">heatmap_legend_side =</span> <span class="st">&quot;bot&quot;</span>, <span class="at">annotation_legend_side =</span> <span class="st">&quot;bot&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb274"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb274-1"><a href="custom-enrichment.html#cb274-1" tabindex="-1"></a>enrichRegions <span class="ot">&lt;-</span> <span class="fu">peakAnnoEnrichment</span>(</span>
+<span id="cb274-2"><a href="custom-enrichment.html#cb274-2" tabindex="-1"></a>    <span class="at">seMarker =</span> markerPeaks,</span>
+<span id="cb274-3"><a href="custom-enrichment.html#cb274-3" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb274-4"><a href="custom-enrichment.html#cb274-4" tabindex="-1"></a>    <span class="at">peakAnnotation =</span> <span class="st">&quot;ChIP&quot;</span>,</span>
+<span id="cb274-5"><a href="custom-enrichment.html#cb274-5" tabindex="-1"></a>    <span class="at">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 0.5&quot;</span></span>
+<span id="cb274-6"><a href="custom-enrichment.html#cb274-6" tabindex="-1"></a>  )</span>
+<span id="cb274-7"><a href="custom-enrichment.html#cb274-7" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-peakAnnoEnrichment-1a14ec888b7-Date-2025-01-23_Time-21-29-00.588532.log</span></span>
+<span id="cb274-8"><a href="custom-enrichment.html#cb274-8" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb274-9"><a href="custom-enrichment.html#cb274-9" tabindex="-1"></a><span class="do">## 2025-01-23 21:29:04.656289 : Computing Enrichments 1 of 11, 0.068 mins elapsed.</span></span>
+<span id="cb274-10"><a href="custom-enrichment.html#cb274-10" tabindex="-1"></a><span class="do">## 2025-01-23 21:29:04.67881 : Computing Enrichments 2 of 11, 0.068 mins elapsed.</span></span>
+<span id="cb274-11"><a href="custom-enrichment.html#cb274-11" tabindex="-1"></a><span class="do">## 2025-01-23 21:29:04.700532 : Computing Enrichments 3 of 11, 0.069 mins elapsed.</span></span>
+<span id="cb274-12"><a href="custom-enrichment.html#cb274-12" tabindex="-1"></a><span class="do">## 2025-01-23 21:29:04.722897 : Computing Enrichments 4 of 11, 0.069 mins elapsed.</span></span>
+<span id="cb274-13"><a href="custom-enrichment.html#cb274-13" tabindex="-1"></a><span class="do">## 2025-01-23 21:29:04.744872 : Computing Enrichments 5 of 11, 0.069 mins elapsed.</span></span>
+<span id="cb274-14"><a href="custom-enrichment.html#cb274-14" tabindex="-1"></a><span class="do">## 2025-01-23 21:29:04.76641 : Computing Enrichments 6 of 11, 0.07 mins elapsed.</span></span>
+<span id="cb274-15"><a href="custom-enrichment.html#cb274-15" tabindex="-1"></a><span class="do">## 2025-01-23 21:29:04.788058 : Computing Enrichments 7 of 11, 0.07 mins elapsed.</span></span>
+<span id="cb274-16"><a href="custom-enrichment.html#cb274-16" tabindex="-1"></a><span class="do">## 2025-01-23 21:29:04.811298 : Computing Enrichments 8 of 11, 0.07 mins elapsed.</span></span>
+<span id="cb274-17"><a href="custom-enrichment.html#cb274-17" tabindex="-1"></a><span class="do">## 2025-01-23 21:29:04.834303 : Computing Enrichments 9 of 11, 0.071 mins elapsed.</span></span>
+<span id="cb274-18"><a href="custom-enrichment.html#cb274-18" tabindex="-1"></a><span class="do">## 2025-01-23 21:29:04.856284 : Computing Enrichments 10 of 11, 0.071 mins elapsed.</span></span>
+<span id="cb274-19"><a href="custom-enrichment.html#cb274-19" tabindex="-1"></a><span class="do">## 2025-01-23 21:29:04.877789 : Computing Enrichments 11 of 11, 0.071 mins elapsed.</span></span>
+<span id="cb274-20"><a href="custom-enrichment.html#cb274-20" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-peakAnnoEnrichment-1a14ec888b7-Date-2025-01-23_Time-21-29-00.588532.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb275"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb275-1"><a href="custom-enrichment.html#cb275-1" tabindex="-1"></a>enrichRegions</span>
+<span id="cb275-2"><a href="custom-enrichment.html#cb275-2" tabindex="-1"></a><span class="do">## class: SummarizedExperiment </span></span>
+<span id="cb275-3"><a href="custom-enrichment.html#cb275-3" tabindex="-1"></a><span class="do">## dim: 4 11 </span></span>
+<span id="cb275-4"><a href="custom-enrichment.html#cb275-4" tabindex="-1"></a><span class="do">## metadata(0):</span></span>
+<span id="cb275-5"><a href="custom-enrichment.html#cb275-5" tabindex="-1"></a><span class="do">## assays(10): mlog10Padj mlog10p ... CompareFrequency feature</span></span>
+<span id="cb275-6"><a href="custom-enrichment.html#cb275-6" tabindex="-1"></a><span class="do">## rownames(4): Encode_K562_GATA1 Encode_GM12878_CEBPB Encode_K562_Ebf1</span></span>
+<span id="cb275-7"><a href="custom-enrichment.html#cb275-7" tabindex="-1"></a><span class="do">##   Encode_K562_Pax5</span></span>
+<span id="cb275-8"><a href="custom-enrichment.html#cb275-8" tabindex="-1"></a><span class="do">## rowData names(0):</span></span>
+<span id="cb275-9"><a href="custom-enrichment.html#cb275-9" tabindex="-1"></a><span class="do">## colnames(11): B CD4.M ... PreB Progenitor</span></span>
+<span id="cb275-10"><a href="custom-enrichment.html#cb275-10" tabindex="-1"></a><span class="do">## colData names(0):</span></span></code></pre></div>
+<div class="sourceCode" id="cb276"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb276-1"><a href="custom-enrichment.html#cb276-1" tabindex="-1"></a>heatmapRegions <span class="ot">&lt;-</span> <span class="fu">plotEnrichHeatmap</span>(enrichRegions, <span class="at">n =</span> <span class="dv">7</span>, <span class="at">transpose =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb276-2"><a href="custom-enrichment.html#cb276-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEnrichHeatmap-1a117067c78-Date-2025-01-23_Time-21-29-05.025818.log</span></span>
+<span id="cb276-3"><a href="custom-enrichment.html#cb276-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb276-4"><a href="custom-enrichment.html#cb276-4" tabindex="-1"></a><span class="do">## Adding Annotations..</span></span>
+<span id="cb276-5"><a href="custom-enrichment.html#cb276-5" tabindex="-1"></a><span class="do">## Preparing Main Heatmap..</span></span>
+<span id="cb276-6"><a href="custom-enrichment.html#cb276-6" tabindex="-1"></a><span class="do">## &#39;magick&#39; package is suggested to install to give better rasterization.</span></span>
+<span id="cb276-7"><a href="custom-enrichment.html#cb276-7" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb276-8"><a href="custom-enrichment.html#cb276-8" tabindex="-1"></a><span class="do">## Set `ht_opt$message = FALSE` to turn off this message.</span></span></code></pre></div>
+<div class="sourceCode" id="cb277"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb277-1"><a href="custom-enrichment.html#cb277-1" tabindex="-1"></a>ComplexHeatmap<span class="sc">::</span><span class="fu">draw</span>(heatmapRegions, <span class="at">heatmap_legend_side =</span> <span class="st">&quot;bot&quot;</span>, <span class="at">annotation_legend_side =</span> <span class="st">&quot;bot&quot;</span>)</span></code></pre></div>
 <p><img src="ArchR_files/figure-html/unnamed-chunk-275-1.svg" width="672" /></p>
 <p>To save an editable vectorized version of this plot, we use the <code>plotPDF()</code> function.</p>
-<div class="sourceCode" id="cb273"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb273-1"><a href="custom-enrichment.html#cb273-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotPDF</span>(heatmapRegions, <span class="at">name =</span> <span class="st">&quot;Regions-Enriched-Marker-Heatmap&quot;</span>, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">6</span>, <span class="at">ArchRProj =</span> projHeme5, <span class="at">addDOC =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb273-2"><a href="custom-enrichment.html#cb273-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting ComplexHeatmap!</span></span></code></pre></div>
+<div class="sourceCode" id="cb278"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb278-1"><a href="custom-enrichment.html#cb278-1" tabindex="-1"></a><span class="fu">plotPDF</span>(heatmapRegions, <span class="at">name =</span> <span class="st">&quot;Regions-Enriched-Marker-Heatmap&quot;</span>, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">6</span>, <span class="at">ArchRProj =</span> projHeme5, <span class="at">addDOC =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb278-2"><a href="custom-enrichment.html#cb278-2" tabindex="-1"></a><span class="do">## Plotting ComplexHeatmap!</span></span></code></pre></div>
 
 </div>
 <!-- </div> -->

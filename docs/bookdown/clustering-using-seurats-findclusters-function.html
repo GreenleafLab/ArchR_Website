@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>7.1 Clustering using Seurat’s FindClusters() function | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
   <meta name="description" content="A guide to ArchR" />
-  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
   <meta property="og:title" content="7.1 Clustering using Seurat’s FindClusters() function | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2022-12-23" />
+<meta name="date" content="2025-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,13 +52,13 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -68,7 +68,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -94,7 +94,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -107,7 +107,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -121,6 +121,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -144,6 +148,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
 <li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+<li class="chapter" data-level="2.3" data-path="using-docker-for-pre-compiled-environment-setup.html"><a href="using-docker-for-pre-compiled-environment-setup.html"><i class="fa fa-check"></i><b>2.3</b> Using Docker for pre-compiled environment setup</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
 <ul>
@@ -303,65 +308,64 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="clustering-using-seurats-findclusters-function" class="section level2 hasAnchor" number="7.1">
 <h2><span class="header-section-number">7.1</span> Clustering using Seurat’s <code>FindClusters()</code> function<a href="clustering-using-seurats-findclusters-function.html#clustering-using-seurats-findclusters-function" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>We have had the most success using the graph clustering approach implemented by <a href="https://github.com/satijalab/seurat">Seurat</a>. In ArchR, clustering is performed using the <code>addClusters()</code> function which permits additional clustering parameters to be passed to the <code>Seurat::FindClusters()</code> function via <code>...</code>. In our hands, clustering using <code>Seurat::FindClusters()</code> is deterministic, meaning that the exact same input will always result in the exact same output.</p>
-<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="clustering-using-seurats-findclusters-function.html#cb78-1" aria-hidden="true" tabindex="-1"></a>projHeme2 <span class="ot">&lt;-</span> <span class="fu">addClusters</span>(</span>
-<span id="cb78-2"><a href="clustering-using-seurats-findclusters-function.html#cb78-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">input =</span> projHeme2,</span>
-<span id="cb78-3"><a href="clustering-using-seurats-findclusters-function.html#cb78-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
-<span id="cb78-4"><a href="clustering-using-seurats-findclusters-function.html#cb78-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;Seurat&quot;</span>,</span>
-<span id="cb78-5"><a href="clustering-using-seurats-findclusters-function.html#cb78-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Clusters&quot;</span>,</span>
-<span id="cb78-6"><a href="clustering-using-seurats-findclusters-function.html#cb78-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">resolution =</span> <span class="fl">0.8</span></span>
-<span id="cb78-7"><a href="clustering-using-seurats-findclusters-function.html#cb78-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb78-8"><a href="clustering-using-seurats-findclusters-function.html#cb78-8" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addClusters-371b039f6f826-Date-2022-12-23_Time-06-09-39.log</span></span>
-<span id="cb78-9"><a href="clustering-using-seurats-findclusters-function.html#cb78-9" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb78-10"><a href="clustering-using-seurats-findclusters-function.html#cb78-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:09:40 : Running Seurats FindClusters (Stuart et al. Cell 2019), 0.001 mins elapsed.</span></span>
-<span id="cb78-11"><a href="clustering-using-seurats-findclusters-function.html#cb78-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: The following arguments are not used: row.names</span></span>
-<span id="cb78-12"><a href="clustering-using-seurats-findclusters-function.html#cb78-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Computing nearest neighbor graph</span></span>
-<span id="cb78-13"><a href="clustering-using-seurats-findclusters-function.html#cb78-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Computing SNN</span></span>
-<span id="cb78-14"><a href="clustering-using-seurats-findclusters-function.html#cb78-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck</span></span>
-<span id="cb78-15"><a href="clustering-using-seurats-findclusters-function.html#cb78-15" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb78-16"><a href="clustering-using-seurats-findclusters-function.html#cb78-16" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of nodes: 10250</span></span>
-<span id="cb78-17"><a href="clustering-using-seurats-findclusters-function.html#cb78-17" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of edges: 453996</span></span>
-<span id="cb78-18"><a href="clustering-using-seurats-findclusters-function.html#cb78-18" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb78-19"><a href="clustering-using-seurats-findclusters-function.html#cb78-19" aria-hidden="true" tabindex="-1"></a><span class="do">## Running Louvain algorithm...</span></span>
-<span id="cb78-20"><a href="clustering-using-seurats-findclusters-function.html#cb78-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Maximum modularity in 10 random starts: 0.8665</span></span>
-<span id="cb78-21"><a href="clustering-using-seurats-findclusters-function.html#cb78-21" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of communities: 12</span></span>
-<span id="cb78-22"><a href="clustering-using-seurats-findclusters-function.html#cb78-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Elapsed time: 1 seconds</span></span>
-<span id="cb78-23"><a href="clustering-using-seurats-findclusters-function.html#cb78-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:09:53 : Testing Outlier Clusters, 0.221 mins elapsed.</span></span>
-<span id="cb78-24"><a href="clustering-using-seurats-findclusters-function.html#cb78-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:09:53 : Assigning Cluster Names to 12 Clusters, 0.221 mins elapsed.</span></span>
-<span id="cb78-25"><a href="clustering-using-seurats-findclusters-function.html#cb78-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:09:53 : Finished addClusters, 0.221 mins elapsed.</span></span></code></pre></div>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="clustering-using-seurats-findclusters-function.html#cb83-1" tabindex="-1"></a>projHeme2 <span class="ot">&lt;-</span> <span class="fu">addClusters</span>(</span>
+<span id="cb83-2"><a href="clustering-using-seurats-findclusters-function.html#cb83-2" tabindex="-1"></a>    <span class="at">input =</span> projHeme2,</span>
+<span id="cb83-3"><a href="clustering-using-seurats-findclusters-function.html#cb83-3" tabindex="-1"></a>    <span class="at">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
+<span id="cb83-4"><a href="clustering-using-seurats-findclusters-function.html#cb83-4" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;Seurat&quot;</span>,</span>
+<span id="cb83-5"><a href="clustering-using-seurats-findclusters-function.html#cb83-5" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Clusters&quot;</span>,</span>
+<span id="cb83-6"><a href="clustering-using-seurats-findclusters-function.html#cb83-6" tabindex="-1"></a>    <span class="at">resolution =</span> <span class="fl">0.8</span></span>
+<span id="cb83-7"><a href="clustering-using-seurats-findclusters-function.html#cb83-7" tabindex="-1"></a>)</span>
+<span id="cb83-8"><a href="clustering-using-seurats-findclusters-function.html#cb83-8" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addClusters-1a1219173cb-Date-2025-01-23_Time-20-08-35.968969.log</span></span>
+<span id="cb83-9"><a href="clustering-using-seurats-findclusters-function.html#cb83-9" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb83-10"><a href="clustering-using-seurats-findclusters-function.html#cb83-10" tabindex="-1"></a><span class="do">## 2025-01-23 20:08:36.6414 : Running Seurats FindClusters (Stuart et al. Cell 2019), 0.001 mins elapsed.</span></span>
+<span id="cb83-11"><a href="clustering-using-seurats-findclusters-function.html#cb83-11" tabindex="-1"></a><span class="do">## Computing nearest neighbor graph</span></span>
+<span id="cb83-12"><a href="clustering-using-seurats-findclusters-function.html#cb83-12" tabindex="-1"></a><span class="do">## Computing SNN</span></span>
+<span id="cb83-13"><a href="clustering-using-seurats-findclusters-function.html#cb83-13" tabindex="-1"></a><span class="do">## Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck</span></span>
+<span id="cb83-14"><a href="clustering-using-seurats-findclusters-function.html#cb83-14" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb83-15"><a href="clustering-using-seurats-findclusters-function.html#cb83-15" tabindex="-1"></a><span class="do">## Number of nodes: 10250</span></span>
+<span id="cb83-16"><a href="clustering-using-seurats-findclusters-function.html#cb83-16" tabindex="-1"></a><span class="do">## Number of edges: 458538</span></span>
+<span id="cb83-17"><a href="clustering-using-seurats-findclusters-function.html#cb83-17" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb83-18"><a href="clustering-using-seurats-findclusters-function.html#cb83-18" tabindex="-1"></a><span class="do">## Running Louvain algorithm...</span></span>
+<span id="cb83-19"><a href="clustering-using-seurats-findclusters-function.html#cb83-19" tabindex="-1"></a><span class="do">## Maximum modularity in 10 random starts: 0.8668</span></span>
+<span id="cb83-20"><a href="clustering-using-seurats-findclusters-function.html#cb83-20" tabindex="-1"></a><span class="do">## Number of communities: 12</span></span>
+<span id="cb83-21"><a href="clustering-using-seurats-findclusters-function.html#cb83-21" tabindex="-1"></a><span class="do">## Elapsed time: 1 seconds</span></span>
+<span id="cb83-22"><a href="clustering-using-seurats-findclusters-function.html#cb83-22" tabindex="-1"></a><span class="do">## 2025-01-23 20:08:58.784981 : Testing Outlier Clusters, 0.37 mins elapsed.</span></span>
+<span id="cb83-23"><a href="clustering-using-seurats-findclusters-function.html#cb83-23" tabindex="-1"></a><span class="do">## 2025-01-23 20:08:58.79122 : Assigning Cluster Names to 12 Clusters, 0.37 mins elapsed.</span></span>
+<span id="cb83-24"><a href="clustering-using-seurats-findclusters-function.html#cb83-24" tabindex="-1"></a><span class="do">## 2025-01-23 20:08:58.822637 : Finished addClusters, 0.371 mins elapsed.</span></span></code></pre></div>
 <p>To access these clusters we can use the <code>$</code> accessor which shows the cluster ID for each single cell.</p>
-<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="clustering-using-seurats-findclusters-function.html#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(projHeme2<span class="sc">$</span>Clusters)</span>
-<span id="cb79-2"><a href="clustering-using-seurats-findclusters-function.html#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;C9&quot;  &quot;C6&quot;  &quot;C10&quot; &quot;C10&quot; &quot;C10&quot; &quot;C4&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="clustering-using-seurats-findclusters-function.html#cb84-1" tabindex="-1"></a><span class="fu">head</span>(projHeme2<span class="sc">$</span>Clusters)</span>
+<span id="cb84-2"><a href="clustering-using-seurats-findclusters-function.html#cb84-2" tabindex="-1"></a><span class="do">## [1] &quot;C9&quot;  &quot;C11&quot; &quot;C4&quot;  &quot;C4&quot;  &quot;C4&quot;  &quot;C7&quot;</span></span></code></pre></div>
 <p>We can tabulate the number of cells present in each cluster:</p>
-<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="clustering-using-seurats-findclusters-function.html#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(projHeme2<span class="sc">$</span>Clusters)</span>
-<span id="cb80-2"><a href="clustering-using-seurats-findclusters-function.html#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb80-3"><a href="clustering-using-seurats-findclusters-function.html#cb80-3" aria-hidden="true" tabindex="-1"></a><span class="do">##   C1  C10  C11  C12   C2   C3   C4   C5   C6   C7   C8   C9 </span></span>
-<span id="cb80-4"><a href="clustering-using-seurats-findclusters-function.html#cb80-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 1553  354  315  383 1119  709 1200 1404  932 1239  614  428</span></span></code></pre></div>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="clustering-using-seurats-findclusters-function.html#cb85-1" tabindex="-1"></a><span class="fu">table</span>(projHeme2<span class="sc">$</span>Clusters)</span>
+<span id="cb85-2"><a href="clustering-using-seurats-findclusters-function.html#cb85-2" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb85-3"><a href="clustering-using-seurats-findclusters-function.html#cb85-3" tabindex="-1"></a><span class="do">##   C1  C10  C11  C12   C2   C3   C4   C5   C6   C7   C8   C9 </span></span>
+<span id="cb85-4"><a href="clustering-using-seurats-findclusters-function.html#cb85-4" tabindex="-1"></a><span class="do">## 1532  903 1250  633 1120  314  351  386  702 1261 1377  421</span></span></code></pre></div>
 <p>To better understand which samples reside in which clusters, we can create a cluster confusion matrix across each sample using the <code>confusionMatrix()</code> function.</p>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="clustering-using-seurats-findclusters-function.html#cb81-1" aria-hidden="true" tabindex="-1"></a>cM <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(<span class="fu">paste0</span>(projHeme2<span class="sc">$</span>Clusters), <span class="fu">paste0</span>(projHeme2<span class="sc">$</span>Sample))</span>
-<span id="cb81-2"><a href="clustering-using-seurats-findclusters-function.html#cb81-2" aria-hidden="true" tabindex="-1"></a>cM</span>
-<span id="cb81-3"><a href="clustering-using-seurats-findclusters-function.html#cb81-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 12 x 3 sparse Matrix of class &quot;dgCMatrix&quot;</span></span>
-<span id="cb81-4"><a href="clustering-using-seurats-findclusters-function.html#cb81-4" aria-hidden="true" tabindex="-1"></a><span class="do">##     scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1</span></span>
-<span id="cb81-5"><a href="clustering-using-seurats-findclusters-function.html#cb81-5" aria-hidden="true" tabindex="-1"></a><span class="do">## C9             257                   5            166</span></span>
-<span id="cb81-6"><a href="clustering-using-seurats-findclusters-function.html#cb81-6" aria-hidden="true" tabindex="-1"></a><span class="do">## C6             330                   .            602</span></span>
-<span id="cb81-7"><a href="clustering-using-seurats-findclusters-function.html#cb81-7" aria-hidden="true" tabindex="-1"></a><span class="do">## C10            354                   .              .</span></span>
-<span id="cb81-8"><a href="clustering-using-seurats-findclusters-function.html#cb81-8" aria-hidden="true" tabindex="-1"></a><span class="do">## C4             296                 894             10</span></span>
-<span id="cb81-9"><a href="clustering-using-seurats-findclusters-function.html#cb81-9" aria-hidden="true" tabindex="-1"></a><span class="do">## C1            1514                  16             23</span></span>
-<span id="cb81-10"><a href="clustering-using-seurats-findclusters-function.html#cb81-10" aria-hidden="true" tabindex="-1"></a><span class="do">## C3             170                 539              .</span></span>
-<span id="cb81-11"><a href="clustering-using-seurats-findclusters-function.html#cb81-11" aria-hidden="true" tabindex="-1"></a><span class="do">## C7            1199                   .             40</span></span>
-<span id="cb81-12"><a href="clustering-using-seurats-findclusters-function.html#cb81-12" aria-hidden="true" tabindex="-1"></a><span class="do">## C5             138                1266              .</span></span>
-<span id="cb81-13"><a href="clustering-using-seurats-findclusters-function.html#cb81-13" aria-hidden="true" tabindex="-1"></a><span class="do">## C8              84                   .            530</span></span>
-<span id="cb81-14"><a href="clustering-using-seurats-findclusters-function.html#cb81-14" aria-hidden="true" tabindex="-1"></a><span class="do">## C11            154                 151             10</span></span>
-<span id="cb81-15"><a href="clustering-using-seurats-findclusters-function.html#cb81-15" aria-hidden="true" tabindex="-1"></a><span class="do">## C12             87                 296              .</span></span>
-<span id="cb81-16"><a href="clustering-using-seurats-findclusters-function.html#cb81-16" aria-hidden="true" tabindex="-1"></a><span class="do">## C2             106                   1           1012</span></span></code></pre></div>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="clustering-using-seurats-findclusters-function.html#cb86-1" tabindex="-1"></a>cM <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(<span class="fu">paste0</span>(projHeme2<span class="sc">$</span>Clusters), <span class="fu">paste0</span>(projHeme2<span class="sc">$</span>Sample))</span>
+<span id="cb86-2"><a href="clustering-using-seurats-findclusters-function.html#cb86-2" tabindex="-1"></a>cM</span>
+<span id="cb86-3"><a href="clustering-using-seurats-findclusters-function.html#cb86-3" tabindex="-1"></a><span class="do">## 12 x 3 sparse Matrix of class &quot;dgCMatrix&quot;</span></span>
+<span id="cb86-4"><a href="clustering-using-seurats-findclusters-function.html#cb86-4" tabindex="-1"></a><span class="do">##     scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1</span></span>
+<span id="cb86-5"><a href="clustering-using-seurats-findclusters-function.html#cb86-5" tabindex="-1"></a><span class="do">## C9             254                   5            162</span></span>
+<span id="cb86-6"><a href="clustering-using-seurats-findclusters-function.html#cb86-6" tabindex="-1"></a><span class="do">## C11           1202                   .             48</span></span>
+<span id="cb86-7"><a href="clustering-using-seurats-findclusters-function.html#cb86-7" tabindex="-1"></a><span class="do">## C4             351                   .              .</span></span>
+<span id="cb86-8"><a href="clustering-using-seurats-findclusters-function.html#cb86-8" tabindex="-1"></a><span class="do">## C7             310                 940             11</span></span>
+<span id="cb86-9"><a href="clustering-using-seurats-findclusters-function.html#cb86-9" tabindex="-1"></a><span class="do">## C1            1489                  10             33</span></span>
+<span id="cb86-10"><a href="clustering-using-seurats-findclusters-function.html#cb86-10" tabindex="-1"></a><span class="do">## C6             171                 531              .</span></span>
+<span id="cb86-11"><a href="clustering-using-seurats-findclusters-function.html#cb86-11" tabindex="-1"></a><span class="do">## C8             139                1238              .</span></span>
+<span id="cb86-12"><a href="clustering-using-seurats-findclusters-function.html#cb86-12" tabindex="-1"></a><span class="do">## C12             86                   .            547</span></span>
+<span id="cb86-13"><a href="clustering-using-seurats-findclusters-function.html#cb86-13" tabindex="-1"></a><span class="do">## C3             160                 144             10</span></span>
+<span id="cb86-14"><a href="clustering-using-seurats-findclusters-function.html#cb86-14" tabindex="-1"></a><span class="do">## C10            322                   .            581</span></span>
+<span id="cb86-15"><a href="clustering-using-seurats-findclusters-function.html#cb86-15" tabindex="-1"></a><span class="do">## C2             117                   2           1001</span></span>
+<span id="cb86-16"><a href="clustering-using-seurats-findclusters-function.html#cb86-16" tabindex="-1"></a><span class="do">## C5              88                 298              .</span></span></code></pre></div>
 <p>To plot this confusion matrix as a heatmap, we use the <code>pheatmap</code> package:</p>
-<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="clustering-using-seurats-findclusters-function.html#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pheatmap)</span>
-<span id="cb82-2"><a href="clustering-using-seurats-findclusters-function.html#cb82-2" aria-hidden="true" tabindex="-1"></a>cM <span class="ot">&lt;-</span> cM <span class="sc">/</span> Matrix<span class="sc">::</span><span class="fu">rowSums</span>(cM)</span>
-<span id="cb82-3"><a href="clustering-using-seurats-findclusters-function.html#cb82-3" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> pheatmap<span class="sc">::</span><span class="fu">pheatmap</span>(</span>
-<span id="cb82-4"><a href="clustering-using-seurats-findclusters-function.html#cb82-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">mat =</span> <span class="fu">as.matrix</span>(cM), </span>
-<span id="cb82-5"><a href="clustering-using-seurats-findclusters-function.html#cb82-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="fu">paletteContinuous</span>(<span class="st">&quot;whiteBlue&quot;</span>), </span>
-<span id="cb82-6"><a href="clustering-using-seurats-findclusters-function.html#cb82-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">border_color =</span> <span class="st">&quot;black&quot;</span></span>
-<span id="cb82-7"><a href="clustering-using-seurats-findclusters-function.html#cb82-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb82-8"><a href="clustering-using-seurats-findclusters-function.html#cb82-8" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="clustering-using-seurats-findclusters-function.html#cb87-1" tabindex="-1"></a><span class="fu">library</span>(pheatmap)</span>
+<span id="cb87-2"><a href="clustering-using-seurats-findclusters-function.html#cb87-2" tabindex="-1"></a>cM <span class="ot">&lt;-</span> cM <span class="sc">/</span> Matrix<span class="sc">::</span><span class="fu">rowSums</span>(cM)</span>
+<span id="cb87-3"><a href="clustering-using-seurats-findclusters-function.html#cb87-3" tabindex="-1"></a>p <span class="ot">&lt;-</span> pheatmap<span class="sc">::</span><span class="fu">pheatmap</span>(</span>
+<span id="cb87-4"><a href="clustering-using-seurats-findclusters-function.html#cb87-4" tabindex="-1"></a>    <span class="at">mat =</span> <span class="fu">as.matrix</span>(cM), </span>
+<span id="cb87-5"><a href="clustering-using-seurats-findclusters-function.html#cb87-5" tabindex="-1"></a>    <span class="at">color =</span> <span class="fu">paletteContinuous</span>(<span class="st">&quot;whiteBlue&quot;</span>), </span>
+<span id="cb87-6"><a href="clustering-using-seurats-findclusters-function.html#cb87-6" tabindex="-1"></a>    <span class="at">border_color =</span> <span class="st">&quot;black&quot;</span></span>
+<span id="cb87-7"><a href="clustering-using-seurats-findclusters-function.html#cb87-7" tabindex="-1"></a>)</span>
+<span id="cb87-8"><a href="clustering-using-seurats-findclusters-function.html#cb87-8" tabindex="-1"></a>p</span></code></pre></div>
 <p>There are times where the relative location of cells within the 2-dimensional embedding does not agree perfectly with the identified clusters. More explicitly, cells from a single cluster may appear in multiple different areas of the embedding. In these contexts, it may be appropriate to adjust the clustering parameters or embedding parameters until there is agreement between the two.</p>
 </div>
             </section>
