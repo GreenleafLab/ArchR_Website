@@ -88,7 +88,8 @@ You could, of course, manually designate the path to the MACS2 executable instea
 
 <!-- We must manually define the path to macs2 because findMacs2() fails given the RStudioServer setup on our server -->
 ```{r, include=FALSE}
-pathToMacs2 <- "/corces/home/rcorces/tools/python/p3.8.5/bin/macs2"
+pathToMacs2 <- findMacs2()
+# pathToMacs2 <- "/corces/home/rcorces/tools/python/p3.8.5/bin/macs2"
 ```
 
 With the path to MACS2 identified, we can then create a reproducible merged peak set w/ MACS2 (5-10 minutes). To avoid bias from pseudo-bulk replicates that have very few cells, we can provide a cutoff for the upper limit of the number of peaks called per cell via the `peaksPerCell` parameter. This prevents clusters with very few cells from contributing lots of low quality peaks to the merged peak set. There are many other parameters that can be tweaked in `addReproduciblePeakSet()` - try `?addReproduciblePeakSet` or check out [the online function definition](https://www.archrproject.com/reference/addReproduciblePeakSet.html) for more information. Of particular note, the `reproducibility` parameter defines what is meant by a "reproducible peak". For example, `reproducibility = "2"` means at least 2 pseudo-bulk replicates must have a peak call at this locus and `reproducibility = "(n+1)/2"` means that the majority of pseudo-bulk replicates must have a peak call at this locus.

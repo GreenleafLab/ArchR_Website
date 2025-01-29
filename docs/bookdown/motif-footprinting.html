@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>16.1 Motif Footprinting | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
   <meta name="description" content="A guide to ArchR" />
-  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
   <meta property="og:title" content="16.1 Motif Footprinting | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2022-12-23" />
+<meta name="date" content="2025-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,13 +52,13 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -68,7 +68,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -94,7 +94,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -107,7 +107,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -121,6 +121,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -144,6 +148,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
 <li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+<li class="chapter" data-level="2.3" data-path="using-docker-for-pre-compiled-environment-setup.html"><a href="using-docker-for-pre-compiled-environment-setup.html"><i class="fa fa-check"></i><b>2.3</b> Using Docker for pre-compiled environment setup</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
 <ul>
@@ -304,53 +309,53 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">16.1</span> Motif Footprinting<a href="motif-footprinting.html#motif-footprinting" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Importantly, the footprints generated from this tutorial data are not as clean as would be desired but this is because of the small size of the tutorial dataset. Footprints generated from larger datasets would be expected to show even less variation.</p>
 <p>When footprinting, the first thing we need to do is obtain the positions of the relevant motifs. To do this, we call the <code>getPositions()</code> function. This function has an optional parameter called <code>name</code> which can accept the name of the <code>peakAnnotation</code> object from which we would like to obtain the positions. If <code>name = NULL</code>, then ArchR will use the first entry in the <code>peakAnnotation</code> slot. In the example shown below, we do not specify <code>name</code> and ArchR uses the first entry which is our CIS-BP motifs.</p>
-<div class="sourceCode" id="cb315"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb315-1"><a href="motif-footprinting.html#cb315-1" aria-hidden="true" tabindex="-1"></a>motifPositions <span class="ot">&lt;-</span> <span class="fu">getPositions</span>(projHeme5)</span></code></pre></div>
+<div class="sourceCode" id="cb320"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb320-1"><a href="motif-footprinting.html#cb320-1" tabindex="-1"></a>motifPositions <span class="ot">&lt;-</span> <span class="fu">getPositions</span>(projHeme5)</span></code></pre></div>
 <p>This creates a <code>GRangesList</code> object where each TF motif is represented by a separate <code>GRanges</code> object.</p>
-<div class="sourceCode" id="cb316"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb316-1"><a href="motif-footprinting.html#cb316-1" aria-hidden="true" tabindex="-1"></a>motifPositions</span>
-<span id="cb316-2"><a href="motif-footprinting.html#cb316-2" aria-hidden="true" tabindex="-1"></a><span class="do">## GRangesList object of length 870:</span></span>
-<span id="cb316-3"><a href="motif-footprinting.html#cb316-3" aria-hidden="true" tabindex="-1"></a><span class="do">## $TFAP2B_1</span></span>
-<span id="cb316-4"><a href="motif-footprinting.html#cb316-4" aria-hidden="true" tabindex="-1"></a><span class="do">## GRanges object with 16752 ranges and 1 metadata column:</span></span>
-<span id="cb316-5"><a href="motif-footprinting.html#cb316-5" aria-hidden="true" tabindex="-1"></a><span class="do">##           seqnames              ranges strand |     score</span></span>
-<span id="cb316-6"><a href="motif-footprinting.html#cb316-6" aria-hidden="true" tabindex="-1"></a><span class="do">##              &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;</span></span>
-<span id="cb316-7"><a href="motif-footprinting.html#cb316-7" aria-hidden="true" tabindex="-1"></a><span class="do">##       [1]     chr1       873916-873927      + |   8.33209</span></span>
-<span id="cb316-8"><a href="motif-footprinting.html#cb316-8" aria-hidden="true" tabindex="-1"></a><span class="do">##       [2]     chr1       873916-873927      - |   8.33209</span></span>
-<span id="cb316-9"><a href="motif-footprinting.html#cb316-9" aria-hidden="true" tabindex="-1"></a><span class="do">##       [3]     chr1       896470-896481      + |   8.88422</span></span>
-<span id="cb316-10"><a href="motif-footprinting.html#cb316-10" aria-hidden="true" tabindex="-1"></a><span class="do">##       [4]     chr1       896671-896682      + |   9.96507</span></span>
-<span id="cb316-11"><a href="motif-footprinting.html#cb316-11" aria-hidden="true" tabindex="-1"></a><span class="do">##       [5]     chr1       896470-896481      - |   8.81313</span></span>
-<span id="cb316-12"><a href="motif-footprinting.html#cb316-12" aria-hidden="true" tabindex="-1"></a><span class="do">##       ...      ...                 ...    ... .       ...</span></span>
-<span id="cb316-13"><a href="motif-footprinting.html#cb316-13" aria-hidden="true" tabindex="-1"></a><span class="do">##   [16748]     chrX 153824596-153824607      - |   9.70328</span></span>
-<span id="cb316-14"><a href="motif-footprinting.html#cb316-14" aria-hidden="true" tabindex="-1"></a><span class="do">##   [16749]     chrX 153991101-153991112      + |   8.40183</span></span>
-<span id="cb316-15"><a href="motif-footprinting.html#cb316-15" aria-hidden="true" tabindex="-1"></a><span class="do">##   [16750]     chrX 154299568-154299579      + |   8.90478</span></span>
-<span id="cb316-16"><a href="motif-footprinting.html#cb316-16" aria-hidden="true" tabindex="-1"></a><span class="do">##   [16751]     chrX 154807684-154807695      + |   9.58149</span></span>
-<span id="cb316-17"><a href="motif-footprinting.html#cb316-17" aria-hidden="true" tabindex="-1"></a><span class="do">##   [16752]     chrX 154807684-154807695      - |  10.61457</span></span>
-<span id="cb316-18"><a href="motif-footprinting.html#cb316-18" aria-hidden="true" tabindex="-1"></a><span class="do">##   -------</span></span>
-<span id="cb316-19"><a href="motif-footprinting.html#cb316-19" aria-hidden="true" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span>
-<span id="cb316-20"><a href="motif-footprinting.html#cb316-20" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb316-21"><a href="motif-footprinting.html#cb316-21" aria-hidden="true" tabindex="-1"></a><span class="do">## ...</span></span>
-<span id="cb316-22"><a href="motif-footprinting.html#cb316-22" aria-hidden="true" tabindex="-1"></a><span class="do">## &lt;869 more elements&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb321"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb321-1"><a href="motif-footprinting.html#cb321-1" tabindex="-1"></a>motifPositions</span>
+<span id="cb321-2"><a href="motif-footprinting.html#cb321-2" tabindex="-1"></a><span class="do">## GRangesList object of length 870:</span></span>
+<span id="cb321-3"><a href="motif-footprinting.html#cb321-3" tabindex="-1"></a><span class="do">## $TFAP2B_1</span></span>
+<span id="cb321-4"><a href="motif-footprinting.html#cb321-4" tabindex="-1"></a><span class="do">## GRanges object with 17409 ranges and 1 metadata column:</span></span>
+<span id="cb321-5"><a href="motif-footprinting.html#cb321-5" tabindex="-1"></a><span class="do">##           seqnames              ranges strand |     score</span></span>
+<span id="cb321-6"><a href="motif-footprinting.html#cb321-6" tabindex="-1"></a><span class="do">##              &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;</span></span>
+<span id="cb321-7"><a href="motif-footprinting.html#cb321-7" tabindex="-1"></a><span class="do">##       [1]     chr1       852468-852479      + |   8.17077</span></span>
+<span id="cb321-8"><a href="motif-footprinting.html#cb321-8" tabindex="-1"></a><span class="do">##       [2]     chr1       873916-873927      + |   8.31842</span></span>
+<span id="cb321-9"><a href="motif-footprinting.html#cb321-9" tabindex="-1"></a><span class="do">##       [3]     chr1       873916-873927      - |   8.31842</span></span>
+<span id="cb321-10"><a href="motif-footprinting.html#cb321-10" tabindex="-1"></a><span class="do">##       [4]     chr1       896671-896682      + |   9.95541</span></span>
+<span id="cb321-11"><a href="motif-footprinting.html#cb321-11" tabindex="-1"></a><span class="do">##       [5]     chr1       896671-896682      - |   8.91854</span></span>
+<span id="cb321-12"><a href="motif-footprinting.html#cb321-12" tabindex="-1"></a><span class="do">##       ...      ...                 ...    ... .       ...</span></span>
+<span id="cb321-13"><a href="motif-footprinting.html#cb321-13" tabindex="-1"></a><span class="do">##   [17405]     chrX 154004258-154004269      - |   9.05749</span></span>
+<span id="cb321-14"><a href="motif-footprinting.html#cb321-14" tabindex="-1"></a><span class="do">##   [17406]     chrX 154299568-154299579      + |   8.89420</span></span>
+<span id="cb321-15"><a href="motif-footprinting.html#cb321-15" tabindex="-1"></a><span class="do">##   [17407]     chrX 154664929-154664940      - |   8.15963</span></span>
+<span id="cb321-16"><a href="motif-footprinting.html#cb321-16" tabindex="-1"></a><span class="do">##   [17408]     chrX 154807684-154807695      + |   9.57083</span></span>
+<span id="cb321-17"><a href="motif-footprinting.html#cb321-17" tabindex="-1"></a><span class="do">##   [17409]     chrX 154807684-154807695      - |  10.60491</span></span>
+<span id="cb321-18"><a href="motif-footprinting.html#cb321-18" tabindex="-1"></a><span class="do">##   -------</span></span>
+<span id="cb321-19"><a href="motif-footprinting.html#cb321-19" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span>
+<span id="cb321-20"><a href="motif-footprinting.html#cb321-20" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb321-21"><a href="motif-footprinting.html#cb321-21" tabindex="-1"></a><span class="do">## ...</span></span>
+<span id="cb321-22"><a href="motif-footprinting.html#cb321-22" tabindex="-1"></a><span class="do">## &lt;869 more elements&gt;</span></span></code></pre></div>
 <p>We can subset this <code>GRangesList</code> to a few TF motifs that we are interested in. Because the SREBF1 TF comes up when we search for “EBF1”, we explicitly remove it from the downstream analyses below using the <code>%ni%</code> helper function which provides the opposite functionality of <code>%in%</code> from base R.</p>
-<div class="sourceCode" id="cb317"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb317-1"><a href="motif-footprinting.html#cb317-1" aria-hidden="true" tabindex="-1"></a>motifs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;GATA1&quot;</span>, <span class="st">&quot;CEBPA&quot;</span>, <span class="st">&quot;EBF1&quot;</span>, <span class="st">&quot;IRF4&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;PAX5&quot;</span>)</span>
-<span id="cb317-2"><a href="motif-footprinting.html#cb317-2" aria-hidden="true" tabindex="-1"></a>markerMotifs <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(motifs, <span class="cf">function</span>(x) <span class="fu">grep</span>(x, <span class="fu">names</span>(motifPositions), <span class="at">value =</span> <span class="cn">TRUE</span>)))</span>
-<span id="cb317-3"><a href="motif-footprinting.html#cb317-3" aria-hidden="true" tabindex="-1"></a>markerMotifs <span class="ot">&lt;-</span> markerMotifs[markerMotifs <span class="sc">%ni%</span> <span class="st">&quot;SREBF1_22&quot;</span>]</span>
-<span id="cb317-4"><a href="motif-footprinting.html#cb317-4" aria-hidden="true" tabindex="-1"></a>markerMotifs</span>
-<span id="cb317-5"><a href="motif-footprinting.html#cb317-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;GATA1_383&quot; &quot;CEBPA_155&quot; &quot;EBF1_67&quot;   &quot;IRF4_632&quot;  &quot;TBX21_780&quot; &quot;PAX5_709&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb322"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb322-1"><a href="motif-footprinting.html#cb322-1" tabindex="-1"></a>motifs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;GATA1&quot;</span>, <span class="st">&quot;CEBPA&quot;</span>, <span class="st">&quot;EBF1&quot;</span>, <span class="st">&quot;IRF4&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;PAX5&quot;</span>)</span>
+<span id="cb322-2"><a href="motif-footprinting.html#cb322-2" tabindex="-1"></a>markerMotifs <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(motifs, <span class="cf">function</span>(x) <span class="fu">grep</span>(x, <span class="fu">names</span>(motifPositions), <span class="at">value =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb322-3"><a href="motif-footprinting.html#cb322-3" tabindex="-1"></a>markerMotifs <span class="ot">&lt;-</span> markerMotifs[markerMotifs <span class="sc">%ni%</span> <span class="st">&quot;SREBF1_22&quot;</span>]</span>
+<span id="cb322-4"><a href="motif-footprinting.html#cb322-4" tabindex="-1"></a>markerMotifs</span>
+<span id="cb322-5"><a href="motif-footprinting.html#cb322-5" tabindex="-1"></a><span class="do">## [1] &quot;GATA1_383&quot; &quot;CEBPA_155&quot; &quot;EBF1_67&quot;   &quot;IRF4_632&quot;  &quot;TBX21_780&quot; &quot;PAX5_709&quot;</span></span></code></pre></div>
 <p>To accurately profile TF footprints, a large number of reads are required. Therefore, cells are grouped to create pseudo-bulk ATAC-seq profiles that can be then used for TF footprinting. These pseudo-bulk profiles are stored as group coverage files which we originally created in a previous chapter to perform peak calling. If you haven’t already added group coverages to your <code>ArchRProject</code>, lets do that now.</p>
-<div class="sourceCode" id="cb318"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb318-1"><a href="motif-footprinting.html#cb318-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">is.null</span>(projHeme5<span class="sc">@</span>projectMetadata<span class="sc">$</span>GroupCoverages<span class="sc">$</span>Clusters2)){</span>
-<span id="cb318-2"><a href="motif-footprinting.html#cb318-2" aria-hidden="true" tabindex="-1"></a>  projHeme5 <span class="ot">&lt;-</span> <span class="fu">addGroupCoverages</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>)</span>
-<span id="cb318-3"><a href="motif-footprinting.html#cb318-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb323"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb323-1"><a href="motif-footprinting.html#cb323-1" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">is.null</span>(projHeme5<span class="sc">@</span>projectMetadata<span class="sc">$</span>GroupCoverages<span class="sc">$</span>Clusters2)){</span>
+<span id="cb323-2"><a href="motif-footprinting.html#cb323-2" tabindex="-1"></a>  projHeme5 <span class="ot">&lt;-</span> <span class="fu">addGroupCoverages</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>)</span>
+<span id="cb323-3"><a href="motif-footprinting.html#cb323-3" tabindex="-1"></a>}</span></code></pre></div>
 <p>With group coverages calculated, we can now compute footprints for the subset of marker motifs that we previously selected using the <code>getFootprints()</code> function. Even though ArchR implements a highly optimized footprinting workflow, it is recommended to perform footprinting on a subset of motifs rather than all motifs. As such, we provide the subset of motifs to footprint via the <code>positions</code> parameter.</p>
-<div class="sourceCode" id="cb319"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb319-1"><a href="motif-footprinting.html#cb319-1" aria-hidden="true" tabindex="-1"></a>seFoot <span class="ot">&lt;-</span> <span class="fu">getFootprints</span>(</span>
-<span id="cb319-2"><a href="motif-footprinting.html#cb319-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">ArchRProj =</span> projHeme5, </span>
-<span id="cb319-3"><a href="motif-footprinting.html#cb319-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">positions =</span> motifPositions[markerMotifs], </span>
-<span id="cb319-4"><a href="motif-footprinting.html#cb319-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span></span>
-<span id="cb319-5"><a href="motif-footprinting.html#cb319-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb319-6"><a href="motif-footprinting.html#cb319-6" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-getFootprints-371b058ad1429-Date-2022-12-23_Time-08-35-30.log</span></span>
-<span id="cb319-7"><a href="motif-footprinting.html#cb319-7" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb319-8"><a href="motif-footprinting.html#cb319-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:35:32 : Computing Kmer Bias Table, 0.022 mins elapsed.</span></span>
-<span id="cb319-9"><a href="motif-footprinting.html#cb319-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:35:40 : Finished Computing Kmer Tables, 0.142 mins elapsed.</span></span>
-<span id="cb319-10"><a href="motif-footprinting.html#cb319-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:35:40 : Computing Footprints, 0.163 mins elapsed.</span></span>
-<span id="cb319-11"><a href="motif-footprinting.html#cb319-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:35:55 : Computing Footprints Bias, 0.408 mins elapsed.</span></span>
-<span id="cb319-12"><a href="motif-footprinting.html#cb319-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 08:36:09 : Summarizing Footprints, 0.647 mins elapsed.</span></span></code></pre></div>
+<div class="sourceCode" id="cb324"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb324-1"><a href="motif-footprinting.html#cb324-1" tabindex="-1"></a>seFoot <span class="ot">&lt;-</span> <span class="fu">getFootprints</span>(</span>
+<span id="cb324-2"><a href="motif-footprinting.html#cb324-2" tabindex="-1"></a>  <span class="at">ArchRProj =</span> projHeme5, </span>
+<span id="cb324-3"><a href="motif-footprinting.html#cb324-3" tabindex="-1"></a>  <span class="at">positions =</span> motifPositions[markerMotifs], </span>
+<span id="cb324-4"><a href="motif-footprinting.html#cb324-4" tabindex="-1"></a>  <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span></span>
+<span id="cb324-5"><a href="motif-footprinting.html#cb324-5" tabindex="-1"></a>)</span>
+<span id="cb324-6"><a href="motif-footprinting.html#cb324-6" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-getFootprints-1a166fbef53-Date-2025-01-23_Time-22-41-06.26788.log</span></span>
+<span id="cb324-7"><a href="motif-footprinting.html#cb324-7" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb324-8"><a href="motif-footprinting.html#cb324-8" tabindex="-1"></a><span class="do">## 2025-01-23 22:41:06.86609 : Computing Kmer Bias Table, 0.01 mins elapsed.</span></span>
+<span id="cb324-9"><a href="motif-footprinting.html#cb324-9" tabindex="-1"></a><span class="do">## 2025-01-23 22:41:27.878845 : Finished Computing Kmer Tables, 0.35 mins elapsed.</span></span>
+<span id="cb324-10"><a href="motif-footprinting.html#cb324-10" tabindex="-1"></a><span class="do">## 2025-01-23 22:41:27.880001 : Computing Footprints, 0.36 mins elapsed.</span></span>
+<span id="cb324-11"><a href="motif-footprinting.html#cb324-11" tabindex="-1"></a><span class="do">## 2025-01-23 22:41:50.082988 : Computing Footprints Bias, 0.73 mins elapsed.</span></span>
+<span id="cb324-12"><a href="motif-footprinting.html#cb324-12" tabindex="-1"></a><span class="do">## 2025-01-23 22:42:07.294801 : Summarizing Footprints, 1.017 mins elapsed.</span></span></code></pre></div>
 <p>Once we have retrieved these footprints, we can plot them using the <code>plotFootprints()</code> function. This function can simultaneously normalize the footprints in various ways. This normalization and the actual plotting of the footprints is discussed in the next section.</p>
 </div>
             </section>

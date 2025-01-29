@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>9.7 Track Plotting with ArchRBrowser | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
   <meta name="description" content="A guide to ArchR" />
-  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
   <meta property="og:title" content="9.7 Track Plotting with ArchRBrowser | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2022-12-23" />
+<meta name="date" content="2025-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,13 +52,13 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -68,7 +68,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -94,7 +94,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -107,7 +107,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -121,6 +121,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -144,6 +148,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
 <li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+<li class="chapter" data-level="2.3" data-path="using-docker-for-pre-compiled-environment-setup.html"><a href="using-docker-for-pre-compiled-environment-setup.html"><i class="fa fa-check"></i><b>2.3</b> Using Docker for pre-compiled environment setup</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
 <ul>
@@ -304,95 +309,95 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">9.7</span> Track Plotting with ArchRBrowser<a href="track-plotting-with-archrbrowser.html#track-plotting-with-archrbrowser" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>In addition to plotting gene scores per cell as a UMAP overlay, we can browse the local chromatin accessibility at these marker genes on a per cluster basis with genome browser tracks. To do this, we use the <code>plotBrowserTrack()</code> function which will create a list of plots, one for each of the genes specified by <code>markerGenes</code>. This function will plot a single track for each group in the <code>groupBy</code> parameter.</p>
 <p>It is worth noting that the <code>plotBrowserTrack()</code> function plots “pseudobulk” level data from the single-cell ATAC-seq data by grouping many individual cells together. The cells selected are random and the number of cells selected and the cell groupings that can be displayed are based on the <code>maxCells</code> and <code>minCells</code> parameters respectively. As such, to ensure reproducibility of the functionality of the <code>plotBrowserTrack()</code> function, you should make sure to set a consistent seed for random number generation prior to plotting.</p>
-<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="track-plotting-with-archrbrowser.html#cb135-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb135-2"><a href="track-plotting-with-archrbrowser.html#cb135-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb135-3"><a href="track-plotting-with-archrbrowser.html#cb135-3" aria-hidden="true" tabindex="-1"></a>markerGenes  <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb135-4"><a href="track-plotting-with-archrbrowser.html#cb135-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;CD34&quot;</span>, <span class="co">#Early Progenitor</span></span>
-<span id="cb135-5"><a href="track-plotting-with-archrbrowser.html#cb135-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;GATA1&quot;</span>, <span class="co">#Erythroid</span></span>
-<span id="cb135-6"><a href="track-plotting-with-archrbrowser.html#cb135-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;PAX5&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="co">#B-Cell Trajectory</span></span>
-<span id="cb135-7"><a href="track-plotting-with-archrbrowser.html#cb135-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;CD14&quot;</span>, <span class="co">#Monocytes</span></span>
-<span id="cb135-8"><a href="track-plotting-with-archrbrowser.html#cb135-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;CD3D&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;IL7R&quot;</span> <span class="co">#TCells</span></span>
-<span id="cb135-9"><a href="track-plotting-with-archrbrowser.html#cb135-9" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb135-10"><a href="track-plotting-with-archrbrowser.html#cb135-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb135-11"><a href="track-plotting-with-archrbrowser.html#cb135-11" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plotBrowserTrack</span>(</span>
-<span id="cb135-12"><a href="track-plotting-with-archrbrowser.html#cb135-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme2, </span>
-<span id="cb135-13"><a href="track-plotting-with-archrbrowser.html#cb135-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters&quot;</span>, </span>
-<span id="cb135-14"><a href="track-plotting-with-archrbrowser.html#cb135-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">geneSymbol =</span> markerGenes, </span>
-<span id="cb135-15"><a href="track-plotting-with-archrbrowser.html#cb135-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">upstream =</span> <span class="dv">50000</span>,</span>
-<span id="cb135-16"><a href="track-plotting-with-archrbrowser.html#cb135-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">downstream =</span> <span class="dv">50000</span></span>
-<span id="cb135-17"><a href="track-plotting-with-archrbrowser.html#cb135-17" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb135-18"><a href="track-plotting-with-archrbrowser.html#cb135-18" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotBrowserTrack-371b0780a630e-Date-2022-12-23_Time-06-33-36.log</span></span>
-<span id="cb135-19"><a href="track-plotting-with-archrbrowser.html#cb135-19" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb135-20"><a href="track-plotting-with-archrbrowser.html#cb135-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:37 : Validating Region, 0.015 mins elapsed.</span></span>
-<span id="cb135-21"><a href="track-plotting-with-archrbrowser.html#cb135-21" aria-hidden="true" tabindex="-1"></a><span class="do">## GRanges object with 9 ranges and 2 metadata columns:</span></span>
-<span id="cb135-22"><a href="track-plotting-with-archrbrowser.html#cb135-22" aria-hidden="true" tabindex="-1"></a><span class="do">##       seqnames              ranges strand |     gene_id      symbol</span></span>
-<span id="cb135-23"><a href="track-plotting-with-archrbrowser.html#cb135-23" aria-hidden="true" tabindex="-1"></a><span class="do">##          &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt; &lt;character&gt;</span></span>
-<span id="cb135-24"><a href="track-plotting-with-archrbrowser.html#cb135-24" aria-hidden="true" tabindex="-1"></a><span class="do">##   [1]     chr1 208059883-208084683      - |         947        CD34</span></span>
-<span id="cb135-25"><a href="track-plotting-with-archrbrowser.html#cb135-25" aria-hidden="true" tabindex="-1"></a><span class="do">##   [2]     chrX   48644982-48652717      + |        2623       GATA1</span></span>
-<span id="cb135-26"><a href="track-plotting-with-archrbrowser.html#cb135-26" aria-hidden="true" tabindex="-1"></a><span class="do">##   [3]     chr9   36838531-37034476      - |        5079        PAX5</span></span>
-<span id="cb135-27"><a href="track-plotting-with-archrbrowser.html#cb135-27" aria-hidden="true" tabindex="-1"></a><span class="do">##   [4]    chr11   60223282-60238225      + |         931       MS4A1</span></span>
-<span id="cb135-28"><a href="track-plotting-with-archrbrowser.html#cb135-28" aria-hidden="true" tabindex="-1"></a><span class="do">##   [5]     chr5 140011313-140013286      - |         929        CD14</span></span>
-<span id="cb135-29"><a href="track-plotting-with-archrbrowser.html#cb135-29" aria-hidden="true" tabindex="-1"></a><span class="do">##   [6]    chr11 118209789-118213459      - |         915        CD3D</span></span>
-<span id="cb135-30"><a href="track-plotting-with-archrbrowser.html#cb135-30" aria-hidden="true" tabindex="-1"></a><span class="do">##   [7]     chr2   87011728-87035519      - |         925        CD8A</span></span>
-<span id="cb135-31"><a href="track-plotting-with-archrbrowser.html#cb135-31" aria-hidden="true" tabindex="-1"></a><span class="do">##   [8]    chr17   45810610-45823485      + |       30009       TBX21</span></span>
-<span id="cb135-32"><a href="track-plotting-with-archrbrowser.html#cb135-32" aria-hidden="true" tabindex="-1"></a><span class="do">##   [9]     chr5   35856977-35879705      + |        3575        IL7R</span></span>
-<span id="cb135-33"><a href="track-plotting-with-archrbrowser.html#cb135-33" aria-hidden="true" tabindex="-1"></a><span class="do">##   -------</span></span>
-<span id="cb135-34"><a href="track-plotting-with-archrbrowser.html#cb135-34" aria-hidden="true" tabindex="-1"></a><span class="do">##   seqinfo: 24 sequences from hg19 genome</span></span>
-<span id="cb135-35"><a href="track-plotting-with-archrbrowser.html#cb135-35" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:37 : Adding Bulk Tracks (1 of 9), 0.016 mins elapsed.</span></span>
-<span id="cb135-36"><a href="track-plotting-with-archrbrowser.html#cb135-36" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:39 : Adding Gene Tracks (1 of 9), 0.044 mins elapsed.</span></span>
-<span id="cb135-37"><a href="track-plotting-with-archrbrowser.html#cb135-37" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:39 : Plotting, 0.047 mins elapsed.</span></span>
-<span id="cb135-38"><a href="track-plotting-with-archrbrowser.html#cb135-38" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:41 : Adding Bulk Tracks (2 of 9), 0.076 mins elapsed.</span></span>
-<span id="cb135-39"><a href="track-plotting-with-archrbrowser.html#cb135-39" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:42 : Adding Gene Tracks (2 of 9), 0.101 mins elapsed.</span></span>
-<span id="cb135-40"><a href="track-plotting-with-archrbrowser.html#cb135-40" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:42 : Plotting, 0.104 mins elapsed.</span></span>
-<span id="cb135-41"><a href="track-plotting-with-archrbrowser.html#cb135-41" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:44 : Adding Bulk Tracks (3 of 9), 0.124 mins elapsed.</span></span>
-<span id="cb135-42"><a href="track-plotting-with-archrbrowser.html#cb135-42" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:45 : Adding Gene Tracks (3 of 9), 0.149 mins elapsed.</span></span>
-<span id="cb135-43"><a href="track-plotting-with-archrbrowser.html#cb135-43" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:45 : Plotting, 0.152 mins elapsed.</span></span>
-<span id="cb135-44"><a href="track-plotting-with-archrbrowser.html#cb135-44" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:47 : Adding Bulk Tracks (4 of 9), 0.181 mins elapsed.</span></span>
-<span id="cb135-45"><a href="track-plotting-with-archrbrowser.html#cb135-45" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:49 : Adding Gene Tracks (4 of 9), 0.207 mins elapsed.</span></span>
-<span id="cb135-46"><a href="track-plotting-with-archrbrowser.html#cb135-46" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:49 : Plotting, 0.214 mins elapsed.</span></span>
-<span id="cb135-47"><a href="track-plotting-with-archrbrowser.html#cb135-47" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:50 : Adding Bulk Tracks (5 of 9), 0.229 mins elapsed.</span></span>
-<span id="cb135-48"><a href="track-plotting-with-archrbrowser.html#cb135-48" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:52 : Adding Gene Tracks (5 of 9), 0.256 mins elapsed.</span></span>
-<span id="cb135-49"><a href="track-plotting-with-archrbrowser.html#cb135-49" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:52 : Plotting, 0.259 mins elapsed.</span></span>
-<span id="cb135-50"><a href="track-plotting-with-archrbrowser.html#cb135-50" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:53 : Adding Bulk Tracks (6 of 9), 0.287 mins elapsed.</span></span>
-<span id="cb135-51"><a href="track-plotting-with-archrbrowser.html#cb135-51" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:55 : Adding Gene Tracks (6 of 9), 0.313 mins elapsed.</span></span>
-<span id="cb135-52"><a href="track-plotting-with-archrbrowser.html#cb135-52" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:55 : Plotting, 0.316 mins elapsed.</span></span>
-<span id="cb135-53"><a href="track-plotting-with-archrbrowser.html#cb135-53" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:57 : Adding Bulk Tracks (7 of 9), 0.341 mins elapsed.</span></span>
-<span id="cb135-54"><a href="track-plotting-with-archrbrowser.html#cb135-54" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:58 : Adding Gene Tracks (7 of 9), 0.368 mins elapsed.</span></span>
-<span id="cb135-55"><a href="track-plotting-with-archrbrowser.html#cb135-55" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:33:58 : Plotting, 0.371 mins elapsed.</span></span>
-<span id="cb135-56"><a href="track-plotting-with-archrbrowser.html#cb135-56" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:34:00 : Adding Bulk Tracks (8 of 9), 0.397 mins elapsed.</span></span>
-<span id="cb135-57"><a href="track-plotting-with-archrbrowser.html#cb135-57" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:34:02 : Adding Gene Tracks (8 of 9), 0.424 mins elapsed.</span></span>
-<span id="cb135-58"><a href="track-plotting-with-archrbrowser.html#cb135-58" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:34:02 : Plotting, 0.427 mins elapsed.</span></span>
-<span id="cb135-59"><a href="track-plotting-with-archrbrowser.html#cb135-59" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:34:04 : Adding Bulk Tracks (9 of 9), 0.458 mins elapsed.</span></span>
-<span id="cb135-60"><a href="track-plotting-with-archrbrowser.html#cb135-60" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:34:05 : Adding Gene Tracks (9 of 9), 0.484 mins elapsed.</span></span>
-<span id="cb135-61"><a href="track-plotting-with-archrbrowser.html#cb135-61" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 06:34:05 : Plotting, 0.487 mins elapsed.</span></span>
-<span id="cb135-62"><a href="track-plotting-with-archrbrowser.html#cb135-62" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotBrowserTrack-371b0780a630e-Date-2022-12-23_Time-06-33-36.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="track-plotting-with-archrbrowser.html#cb140-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb140-2"><a href="track-plotting-with-archrbrowser.html#cb140-2" tabindex="-1"></a></span>
+<span id="cb140-3"><a href="track-plotting-with-archrbrowser.html#cb140-3" tabindex="-1"></a>markerGenes  <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb140-4"><a href="track-plotting-with-archrbrowser.html#cb140-4" tabindex="-1"></a>    <span class="st">&quot;CD34&quot;</span>, <span class="co">#Early Progenitor</span></span>
+<span id="cb140-5"><a href="track-plotting-with-archrbrowser.html#cb140-5" tabindex="-1"></a>    <span class="st">&quot;GATA1&quot;</span>, <span class="co">#Erythroid</span></span>
+<span id="cb140-6"><a href="track-plotting-with-archrbrowser.html#cb140-6" tabindex="-1"></a>    <span class="st">&quot;PAX5&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="co">#B-Cell Trajectory</span></span>
+<span id="cb140-7"><a href="track-plotting-with-archrbrowser.html#cb140-7" tabindex="-1"></a>    <span class="st">&quot;CD14&quot;</span>, <span class="co">#Monocytes</span></span>
+<span id="cb140-8"><a href="track-plotting-with-archrbrowser.html#cb140-8" tabindex="-1"></a>    <span class="st">&quot;CD3D&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;IL7R&quot;</span> <span class="co">#TCells</span></span>
+<span id="cb140-9"><a href="track-plotting-with-archrbrowser.html#cb140-9" tabindex="-1"></a>  )</span>
+<span id="cb140-10"><a href="track-plotting-with-archrbrowser.html#cb140-10" tabindex="-1"></a></span>
+<span id="cb140-11"><a href="track-plotting-with-archrbrowser.html#cb140-11" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plotBrowserTrack</span>(</span>
+<span id="cb140-12"><a href="track-plotting-with-archrbrowser.html#cb140-12" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme2, </span>
+<span id="cb140-13"><a href="track-plotting-with-archrbrowser.html#cb140-13" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters&quot;</span>, </span>
+<span id="cb140-14"><a href="track-plotting-with-archrbrowser.html#cb140-14" tabindex="-1"></a>    <span class="at">geneSymbol =</span> markerGenes, </span>
+<span id="cb140-15"><a href="track-plotting-with-archrbrowser.html#cb140-15" tabindex="-1"></a>    <span class="at">upstream =</span> <span class="dv">50000</span>,</span>
+<span id="cb140-16"><a href="track-plotting-with-archrbrowser.html#cb140-16" tabindex="-1"></a>    <span class="at">downstream =</span> <span class="dv">50000</span></span>
+<span id="cb140-17"><a href="track-plotting-with-archrbrowser.html#cb140-17" tabindex="-1"></a>)</span>
+<span id="cb140-18"><a href="track-plotting-with-archrbrowser.html#cb140-18" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotBrowserTrack-1a16462d18d-Date-2025-01-23_Time-20-19-16.837045.log</span></span>
+<span id="cb140-19"><a href="track-plotting-with-archrbrowser.html#cb140-19" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb140-20"><a href="track-plotting-with-archrbrowser.html#cb140-20" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:17.501278 : Validating Region, 0.011 mins elapsed.</span></span>
+<span id="cb140-21"><a href="track-plotting-with-archrbrowser.html#cb140-21" tabindex="-1"></a><span class="do">## GRanges object with 9 ranges and 2 metadata columns:</span></span>
+<span id="cb140-22"><a href="track-plotting-with-archrbrowser.html#cb140-22" tabindex="-1"></a><span class="do">##       seqnames              ranges strand |     gene_id      symbol</span></span>
+<span id="cb140-23"><a href="track-plotting-with-archrbrowser.html#cb140-23" tabindex="-1"></a><span class="do">##          &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt; &lt;character&gt;</span></span>
+<span id="cb140-24"><a href="track-plotting-with-archrbrowser.html#cb140-24" tabindex="-1"></a><span class="do">##   [1]     chr1 208059883-208084683      - |         947        CD34</span></span>
+<span id="cb140-25"><a href="track-plotting-with-archrbrowser.html#cb140-25" tabindex="-1"></a><span class="do">##   [2]     chrX   48644982-48652717      + |        2623       GATA1</span></span>
+<span id="cb140-26"><a href="track-plotting-with-archrbrowser.html#cb140-26" tabindex="-1"></a><span class="do">##   [3]     chr9   36838531-37034476      - |        5079        PAX5</span></span>
+<span id="cb140-27"><a href="track-plotting-with-archrbrowser.html#cb140-27" tabindex="-1"></a><span class="do">##   [4]    chr11   60223282-60238225      + |         931       MS4A1</span></span>
+<span id="cb140-28"><a href="track-plotting-with-archrbrowser.html#cb140-28" tabindex="-1"></a><span class="do">##   [5]     chr5 140011313-140013286      - |         929        CD14</span></span>
+<span id="cb140-29"><a href="track-plotting-with-archrbrowser.html#cb140-29" tabindex="-1"></a><span class="do">##   [6]    chr11 118209789-118213459      - |         915        CD3D</span></span>
+<span id="cb140-30"><a href="track-plotting-with-archrbrowser.html#cb140-30" tabindex="-1"></a><span class="do">##   [7]     chr2   87011728-87035519      - |         925        CD8A</span></span>
+<span id="cb140-31"><a href="track-plotting-with-archrbrowser.html#cb140-31" tabindex="-1"></a><span class="do">##   [8]    chr17   45810610-45823485      + |       30009       TBX21</span></span>
+<span id="cb140-32"><a href="track-plotting-with-archrbrowser.html#cb140-32" tabindex="-1"></a><span class="do">##   [9]     chr5   35856977-35879705      + |        3575        IL7R</span></span>
+<span id="cb140-33"><a href="track-plotting-with-archrbrowser.html#cb140-33" tabindex="-1"></a><span class="do">##   -------</span></span>
+<span id="cb140-34"><a href="track-plotting-with-archrbrowser.html#cb140-34" tabindex="-1"></a><span class="do">##   seqinfo: 24 sequences from hg19 genome</span></span>
+<span id="cb140-35"><a href="track-plotting-with-archrbrowser.html#cb140-35" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:17.584247 : Adding Bulk Tracks (1 of 9), 0.012 mins elapsed.</span></span>
+<span id="cb140-36"><a href="track-plotting-with-archrbrowser.html#cb140-36" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:18.921915 : Adding Gene Tracks (1 of 9), 0.035 mins elapsed.</span></span>
+<span id="cb140-37"><a href="track-plotting-with-archrbrowser.html#cb140-37" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:19.195664 : Plotting, 0.039 mins elapsed.</span></span>
+<span id="cb140-38"><a href="track-plotting-with-archrbrowser.html#cb140-38" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:21.503763 : Adding Bulk Tracks (2 of 9), 0.078 mins elapsed.</span></span>
+<span id="cb140-39"><a href="track-plotting-with-archrbrowser.html#cb140-39" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:19.067302 : Adding Gene Tracks (2 of 9), 0.037 mins elapsed.</span></span>
+<span id="cb140-40"><a href="track-plotting-with-archrbrowser.html#cb140-40" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:19.402905 : Plotting, 0.043 mins elapsed.</span></span>
+<span id="cb140-41"><a href="track-plotting-with-archrbrowser.html#cb140-41" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:20.157611 : Adding Bulk Tracks (3 of 9), 0.055 mins elapsed.</span></span>
+<span id="cb140-42"><a href="track-plotting-with-archrbrowser.html#cb140-42" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:21.392212 : Adding Gene Tracks (3 of 9), 0.076 mins elapsed.</span></span>
+<span id="cb140-43"><a href="track-plotting-with-archrbrowser.html#cb140-43" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:21.603658 : Plotting, 0.079 mins elapsed.</span></span>
+<span id="cb140-44"><a href="track-plotting-with-archrbrowser.html#cb140-44" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:22.483531 : Adding Bulk Tracks (4 of 9), 0.094 mins elapsed.</span></span>
+<span id="cb140-45"><a href="track-plotting-with-archrbrowser.html#cb140-45" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:23.732543 : Adding Gene Tracks (4 of 9), 0.115 mins elapsed.</span></span>
+<span id="cb140-46"><a href="track-plotting-with-archrbrowser.html#cb140-46" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:23.948389 : Plotting, 0.119 mins elapsed.</span></span>
+<span id="cb140-47"><a href="track-plotting-with-archrbrowser.html#cb140-47" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:24.627934 : Adding Bulk Tracks (5 of 9), 0.13 mins elapsed.</span></span>
+<span id="cb140-48"><a href="track-plotting-with-archrbrowser.html#cb140-48" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:25.889378 : Adding Gene Tracks (5 of 9), 0.151 mins elapsed.</span></span>
+<span id="cb140-49"><a href="track-plotting-with-archrbrowser.html#cb140-49" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:26.101466 : Plotting, 0.154 mins elapsed.</span></span>
+<span id="cb140-50"><a href="track-plotting-with-archrbrowser.html#cb140-50" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:26.947893 : Adding Bulk Tracks (6 of 9), 0.169 mins elapsed.</span></span>
+<span id="cb140-51"><a href="track-plotting-with-archrbrowser.html#cb140-51" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:28.157929 : Adding Gene Tracks (6 of 9), 0.189 mins elapsed.</span></span>
+<span id="cb140-52"><a href="track-plotting-with-archrbrowser.html#cb140-52" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:28.371197 : Plotting, 0.192 mins elapsed.</span></span>
+<span id="cb140-53"><a href="track-plotting-with-archrbrowser.html#cb140-53" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:29.11274 : Adding Bulk Tracks (7 of 9), 0.205 mins elapsed.</span></span>
+<span id="cb140-54"><a href="track-plotting-with-archrbrowser.html#cb140-54" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:30.466452 : Adding Gene Tracks (7 of 9), 0.227 mins elapsed.</span></span>
+<span id="cb140-55"><a href="track-plotting-with-archrbrowser.html#cb140-55" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:30.678786 : Plotting, 0.231 mins elapsed.</span></span>
+<span id="cb140-56"><a href="track-plotting-with-archrbrowser.html#cb140-56" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:31.453751 : Adding Bulk Tracks (8 of 9), 0.244 mins elapsed.</span></span>
+<span id="cb140-57"><a href="track-plotting-with-archrbrowser.html#cb140-57" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:32.735101 : Adding Gene Tracks (8 of 9), 0.265 mins elapsed.</span></span>
+<span id="cb140-58"><a href="track-plotting-with-archrbrowser.html#cb140-58" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:32.950608 : Plotting, 0.269 mins elapsed.</span></span>
+<span id="cb140-59"><a href="track-plotting-with-archrbrowser.html#cb140-59" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:33.843326 : Adding Bulk Tracks (9 of 9), 0.283 mins elapsed.</span></span>
+<span id="cb140-60"><a href="track-plotting-with-archrbrowser.html#cb140-60" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:35.041549 : Adding Gene Tracks (9 of 9), 0.303 mins elapsed.</span></span>
+<span id="cb140-61"><a href="track-plotting-with-archrbrowser.html#cb140-61" tabindex="-1"></a><span class="do">## 2025-01-23 20:19:35.241047 : Plotting, 0.307 mins elapsed.</span></span>
+<span id="cb140-62"><a href="track-plotting-with-archrbrowser.html#cb140-62" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotBrowserTrack-1a16462d18d-Date-2025-01-23_Time-20-19-16.837045.log</span></span></code></pre></div>
 <p>Here, the output of <code>plotBrowserTrack()</code> is a list of plots. To plot a track of a specific gene, we can select one from the list.</p>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="track-plotting-with-archrbrowser.html#cb136-1" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">::</span><span class="fu">grid.newpage</span>()</span>
-<span id="cb136-2"><a href="track-plotting-with-archrbrowser.html#cb136-2" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">::</span><span class="fu">grid.draw</span>(p<span class="sc">$</span>CD14)</span></code></pre></div>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="track-plotting-with-archrbrowser.html#cb141-1" tabindex="-1"></a>grid<span class="sc">::</span><span class="fu">grid.newpage</span>()</span>
+<span id="cb141-2"><a href="track-plotting-with-archrbrowser.html#cb141-2" tabindex="-1"></a>grid<span class="sc">::</span><span class="fu">grid.draw</span>(p<span class="sc">$</span>CD14)</span></code></pre></div>
 <p><img src="ArchR_files/figure-html/unnamed-chunk-138-1.svg" width="672" /></p>
 <p>We can save a multi-page PDF with a single page for each gene locus in our plot list using the <code>plotPDF()</code> function.</p>
-<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="track-plotting-with-archrbrowser.html#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotPDF</span>(<span class="at">plotList =</span> p, </span>
-<span id="cb137-2"><a href="track-plotting-with-archrbrowser.html#cb137-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Plot-Tracks-Marker-Genes.pdf&quot;</span>, </span>
-<span id="cb137-3"><a href="track-plotting-with-archrbrowser.html#cb137-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme2, </span>
-<span id="cb137-4"><a href="track-plotting-with-archrbrowser.html#cb137-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">addDOC =</span> <span class="cn">FALSE</span>, <span class="at">width =</span> <span class="dv">5</span>, <span class="at">height =</span> <span class="dv">5</span>)</span>
-<span id="cb137-5"><a href="track-plotting-with-archrbrowser.html#cb137-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb137-6"><a href="track-plotting-with-archrbrowser.html#cb137-6" aria-hidden="true" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb137-7"><a href="track-plotting-with-archrbrowser.html#cb137-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb137-8"><a href="track-plotting-with-archrbrowser.html#cb137-8" aria-hidden="true" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb137-9"><a href="track-plotting-with-archrbrowser.html#cb137-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb137-10"><a href="track-plotting-with-archrbrowser.html#cb137-10" aria-hidden="true" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb137-11"><a href="track-plotting-with-archrbrowser.html#cb137-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb137-12"><a href="track-plotting-with-archrbrowser.html#cb137-12" aria-hidden="true" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb137-13"><a href="track-plotting-with-archrbrowser.html#cb137-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb137-14"><a href="track-plotting-with-archrbrowser.html#cb137-14" aria-hidden="true" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb137-15"><a href="track-plotting-with-archrbrowser.html#cb137-15" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb137-16"><a href="track-plotting-with-archrbrowser.html#cb137-16" aria-hidden="true" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb137-17"><a href="track-plotting-with-archrbrowser.html#cb137-17" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb137-18"><a href="track-plotting-with-archrbrowser.html#cb137-18" aria-hidden="true" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb137-19"><a href="track-plotting-with-archrbrowser.html#cb137-19" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb137-20"><a href="track-plotting-with-archrbrowser.html#cb137-20" aria-hidden="true" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb137-21"><a href="track-plotting-with-archrbrowser.html#cb137-21" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb137-22"><a href="track-plotting-with-archrbrowser.html#cb137-22" aria-hidden="true" tabindex="-1"></a><span class="do">## NULL</span></span></code></pre></div>
+<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="track-plotting-with-archrbrowser.html#cb142-1" tabindex="-1"></a><span class="fu">plotPDF</span>(<span class="at">plotList =</span> p, </span>
+<span id="cb142-2"><a href="track-plotting-with-archrbrowser.html#cb142-2" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Plot-Tracks-Marker-Genes.pdf&quot;</span>, </span>
+<span id="cb142-3"><a href="track-plotting-with-archrbrowser.html#cb142-3" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme2, </span>
+<span id="cb142-4"><a href="track-plotting-with-archrbrowser.html#cb142-4" tabindex="-1"></a>    <span class="at">addDOC =</span> <span class="cn">FALSE</span>, <span class="at">width =</span> <span class="dv">5</span>, <span class="at">height =</span> <span class="dv">5</span>)</span>
+<span id="cb142-5"><a href="track-plotting-with-archrbrowser.html#cb142-5" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb142-6"><a href="track-plotting-with-archrbrowser.html#cb142-6" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb142-7"><a href="track-plotting-with-archrbrowser.html#cb142-7" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb142-8"><a href="track-plotting-with-archrbrowser.html#cb142-8" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb142-9"><a href="track-plotting-with-archrbrowser.html#cb142-9" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb142-10"><a href="track-plotting-with-archrbrowser.html#cb142-10" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb142-11"><a href="track-plotting-with-archrbrowser.html#cb142-11" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb142-12"><a href="track-plotting-with-archrbrowser.html#cb142-12" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb142-13"><a href="track-plotting-with-archrbrowser.html#cb142-13" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb142-14"><a href="track-plotting-with-archrbrowser.html#cb142-14" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb142-15"><a href="track-plotting-with-archrbrowser.html#cb142-15" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb142-16"><a href="track-plotting-with-archrbrowser.html#cb142-16" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb142-17"><a href="track-plotting-with-archrbrowser.html#cb142-17" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb142-18"><a href="track-plotting-with-archrbrowser.html#cb142-18" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb142-19"><a href="track-plotting-with-archrbrowser.html#cb142-19" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb142-20"><a href="track-plotting-with-archrbrowser.html#cb142-20" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb142-21"><a href="track-plotting-with-archrbrowser.html#cb142-21" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb142-22"><a href="track-plotting-with-archrbrowser.html#cb142-22" tabindex="-1"></a><span class="do">## NULL</span></span></code></pre></div>
 <p>The <code>plotBrowserTrack()</code> function is highly versatile and therefore has a lot of different parameter options so you should explore all of those capabilities in the <a href="https://www.archrproject.com/reference/plotBrowserTrack.html">function documentation</a>. There are multiple different types of plot elements that can be plotted and these are controlled using the <code>plotSummary</code> parameter. Those options include:</p>
 <ol style="list-style-type: decimal">
 <li><code>bulkTrack</code> - A pseudobulk representation of the ATAC-seq signal in the given region</li>

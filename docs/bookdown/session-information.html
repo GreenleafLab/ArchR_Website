@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 24 Session Information | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
   <meta name="description" content="A guide to ArchR" />
-  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 24 Session Information | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2022-12-23" />
+<meta name="date" content="2025-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,13 +52,13 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -68,7 +68,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -94,7 +94,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -107,7 +107,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -121,6 +121,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -144,6 +148,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
 <li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+<li class="chapter" data-level="2.3" data-path="using-docker-for-pre-compiled-environment-setup.html"><a href="using-docker-for-pre-compiled-environment-setup.html"><i class="fa fa-check"></i><b>2.3</b> Using Docker for pre-compiled environment setup</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
 <ul>
@@ -303,335 +308,384 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="session-information" class="section level1 hasAnchor" number="24">
 <h1><span class="header-section-number">Chapter 24</span> Session Information<a href="session-information.html#session-information" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>This tutorial was run on the date specified below.</p>
-<pre><code>## [1] &quot;2022-12-23&quot;</code></pre>
+<pre><code>## [1] &quot;2025-01-24&quot;</code></pre>
 <p>The <code>sessionInfo()</code> at run time was:</p>
-<div class="sourceCode" id="cb489"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb489-1"><a href="session-information.html#cb489-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb489-2"><a href="session-information.html#cb489-2" aria-hidden="true" tabindex="-1"></a><span class="do">## R version 4.1.1 (2021-08-10)</span></span>
-<span id="cb489-3"><a href="session-information.html#cb489-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
-<span id="cb489-4"><a href="session-information.html#cb489-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Running under: Rocky Linux 8.5 (Green Obsidian)</span></span>
-<span id="cb489-5"><a href="session-information.html#cb489-5" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb489-6"><a href="session-information.html#cb489-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Matrix products: default</span></span>
-<span id="cb489-7"><a href="session-information.html#cb489-7" aria-hidden="true" tabindex="-1"></a><span class="do">## BLAS/LAPACK: /usr/lib64/libopenblasp-r0.3.12.so</span></span>
-<span id="cb489-8"><a href="session-information.html#cb489-8" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb489-9"><a href="session-information.html#cb489-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Random number generation:</span></span>
-<span id="cb489-10"><a href="session-information.html#cb489-10" aria-hidden="true" tabindex="-1"></a><span class="do">##  RNG:     L&#39;Ecuyer-CMRG </span></span>
-<span id="cb489-11"><a href="session-information.html#cb489-11" aria-hidden="true" tabindex="-1"></a><span class="do">##  Normal:  Inversion </span></span>
-<span id="cb489-12"><a href="session-information.html#cb489-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  Sample:  Rejection </span></span>
-<span id="cb489-13"><a href="session-information.html#cb489-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  </span></span>
-<span id="cb489-14"><a href="session-information.html#cb489-14" aria-hidden="true" tabindex="-1"></a><span class="do">## locale:</span></span>
-<span id="cb489-15"><a href="session-information.html#cb489-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></span>
-<span id="cb489-16"><a href="session-information.html#cb489-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span></span>
-<span id="cb489-17"><a href="session-information.html#cb489-17" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span></span>
-<span id="cb489-18"><a href="session-information.html#cb489-18" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span></span>
-<span id="cb489-19"><a href="session-information.html#cb489-19" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
-<span id="cb489-20"><a href="session-information.html#cb489-20" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span></span>
-<span id="cb489-21"><a href="session-information.html#cb489-21" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb489-22"><a href="session-information.html#cb489-22" aria-hidden="true" tabindex="-1"></a><span class="do">## attached base packages:</span></span>
-<span id="cb489-23"><a href="session-information.html#cb489-23" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] compiler  parallel  stats4    grid      stats     graphics  grDevices</span></span>
-<span id="cb489-24"><a href="session-information.html#cb489-24" aria-hidden="true" tabindex="-1"></a><span class="do">##  [8] datasets  utils     methods   base     </span></span>
-<span id="cb489-25"><a href="session-information.html#cb489-25" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb489-26"><a href="session-information.html#cb489-26" aria-hidden="true" tabindex="-1"></a><span class="do">## other attached packages:</span></span>
-<span id="cb489-27"><a href="session-information.html#cb489-27" aria-hidden="true" tabindex="-1"></a><span class="do">##   [1] zlibbioc_1.40.0                           </span></span>
-<span id="cb489-28"><a href="session-information.html#cb489-28" aria-hidden="true" tabindex="-1"></a><span class="do">##   [2] zip_2.2.0                                 </span></span>
-<span id="cb489-29"><a href="session-information.html#cb489-29" aria-hidden="true" tabindex="-1"></a><span class="do">##   [3] yaml_2.2.1                                </span></span>
-<span id="cb489-30"><a href="session-information.html#cb489-30" aria-hidden="true" tabindex="-1"></a><span class="do">##   [4] xtable_1.8-4                              </span></span>
-<span id="cb489-31"><a href="session-information.html#cb489-31" aria-hidden="true" tabindex="-1"></a><span class="do">##   [5] xopen_1.0.0                               </span></span>
-<span id="cb489-32"><a href="session-information.html#cb489-32" aria-hidden="true" tabindex="-1"></a><span class="do">##   [6] xml2_1.3.3                                </span></span>
-<span id="cb489-33"><a href="session-information.html#cb489-33" aria-hidden="true" tabindex="-1"></a><span class="do">##   [7] xfun_0.35                                 </span></span>
-<span id="cb489-34"><a href="session-information.html#cb489-34" aria-hidden="true" tabindex="-1"></a><span class="do">##   [8] withr_2.4.3                               </span></span>
-<span id="cb489-35"><a href="session-information.html#cb489-35" aria-hidden="true" tabindex="-1"></a><span class="do">##   [9] whisker_0.4                               </span></span>
-<span id="cb489-36"><a href="session-information.html#cb489-36" aria-hidden="true" tabindex="-1"></a><span class="do">##  [10] waldo_0.3.1                               </span></span>
-<span id="cb489-37"><a href="session-information.html#cb489-37" aria-hidden="true" tabindex="-1"></a><span class="do">##  [11] vroom_1.5.6                               </span></span>
-<span id="cb489-38"><a href="session-information.html#cb489-38" aria-hidden="true" tabindex="-1"></a><span class="do">##  [12] viridisLite_0.4.0                         </span></span>
-<span id="cb489-39"><a href="session-information.html#cb489-39" aria-hidden="true" tabindex="-1"></a><span class="do">##  [13] vctrs_0.5.1                               </span></span>
-<span id="cb489-40"><a href="session-information.html#cb489-40" aria-hidden="true" tabindex="-1"></a><span class="do">##  [14] utf8_1.2.2                                </span></span>
-<span id="cb489-41"><a href="session-information.html#cb489-41" aria-hidden="true" tabindex="-1"></a><span class="do">##  [15] tzdb_0.2.0                                </span></span>
-<span id="cb489-42"><a href="session-information.html#cb489-42" aria-hidden="true" tabindex="-1"></a><span class="do">##  [16] tidyselect_1.1.1                          </span></span>
-<span id="cb489-43"><a href="session-information.html#cb489-43" aria-hidden="true" tabindex="-1"></a><span class="do">##  [17] tidyr_1.1.4                               </span></span>
-<span id="cb489-44"><a href="session-information.html#cb489-44" aria-hidden="true" tabindex="-1"></a><span class="do">##  [18] tibble_3.1.6                              </span></span>
-<span id="cb489-45"><a href="session-information.html#cb489-45" aria-hidden="true" tabindex="-1"></a><span class="do">##  [19] testthat_3.1.1                            </span></span>
-<span id="cb489-46"><a href="session-information.html#cb489-46" aria-hidden="true" tabindex="-1"></a><span class="do">##  [20] sys_3.4                                   </span></span>
-<span id="cb489-47"><a href="session-information.html#cb489-47" aria-hidden="true" tabindex="-1"></a><span class="do">##  [21] stringi_1.7.6                             </span></span>
-<span id="cb489-48"><a href="session-information.html#cb489-48" aria-hidden="true" tabindex="-1"></a><span class="do">##  [22] statmod_1.4.36                            </span></span>
-<span id="cb489-49"><a href="session-information.html#cb489-49" aria-hidden="true" tabindex="-1"></a><span class="do">##  [23] spatstat.utils_2.2-0                      </span></span>
-<span id="cb489-50"><a href="session-information.html#cb489-50" aria-hidden="true" tabindex="-1"></a><span class="do">##  [24] spatstat.sparse_2.0-0                     </span></span>
-<span id="cb489-51"><a href="session-information.html#cb489-51" aria-hidden="true" tabindex="-1"></a><span class="do">##  [25] tensor_1.5                                </span></span>
-<span id="cb489-52"><a href="session-information.html#cb489-52" aria-hidden="true" tabindex="-1"></a><span class="do">##  [26] spatstat.core_2.3-1                       </span></span>
-<span id="cb489-53"><a href="session-information.html#cb489-53" aria-hidden="true" tabindex="-1"></a><span class="do">##  [27] spatstat.geom_2.3-0                       </span></span>
-<span id="cb489-54"><a href="session-information.html#cb489-54" aria-hidden="true" tabindex="-1"></a><span class="do">##  [28] spatstat.data_2.1-0                       </span></span>
-<span id="cb489-55"><a href="session-information.html#cb489-55" aria-hidden="true" tabindex="-1"></a><span class="do">##  [29] spatial_7.3-14                            </span></span>
-<span id="cb489-56"><a href="session-information.html#cb489-56" aria-hidden="true" tabindex="-1"></a><span class="do">##  [30] sourcetools_0.1.7                         </span></span>
-<span id="cb489-57"><a href="session-information.html#cb489-57" aria-hidden="true" tabindex="-1"></a><span class="do">##  [31] snow_0.4-4                                </span></span>
-<span id="cb489-58"><a href="session-information.html#cb489-58" aria-hidden="true" tabindex="-1"></a><span class="do">##  [32] sitmo_2.0.2                               </span></span>
-<span id="cb489-59"><a href="session-information.html#cb489-59" aria-hidden="true" tabindex="-1"></a><span class="do">##  [33] shinythemes_1.2.0                         </span></span>
-<span id="cb489-60"><a href="session-information.html#cb489-60" aria-hidden="true" tabindex="-1"></a><span class="do">##  [34] shiny_1.7.1                               </span></span>
-<span id="cb489-61"><a href="session-information.html#cb489-61" aria-hidden="true" tabindex="-1"></a><span class="do">##  [35] shape_1.4.6                               </span></span>
-<span id="cb489-62"><a href="session-information.html#cb489-62" aria-hidden="true" tabindex="-1"></a><span class="do">##  [36] sessioninfo_1.2.1                         </span></span>
-<span id="cb489-63"><a href="session-information.html#cb489-63" aria-hidden="true" tabindex="-1"></a><span class="do">##  [37] seqLogo_1.60.0                            </span></span>
-<span id="cb489-64"><a href="session-information.html#cb489-64" aria-hidden="true" tabindex="-1"></a><span class="do">##  [38] sctransform_0.3.2                         </span></span>
-<span id="cb489-65"><a href="session-information.html#cb489-65" aria-hidden="true" tabindex="-1"></a><span class="do">##  [39] scattermore_0.7                           </span></span>
-<span id="cb489-66"><a href="session-information.html#cb489-66" aria-hidden="true" tabindex="-1"></a><span class="do">##  [40] scales_1.1.1                              </span></span>
-<span id="cb489-67"><a href="session-information.html#cb489-67" aria-hidden="true" tabindex="-1"></a><span class="do">##  [41] sass_0.4.0                                </span></span>
-<span id="cb489-68"><a href="session-information.html#cb489-68" aria-hidden="true" tabindex="-1"></a><span class="do">##  [42] rversions_2.1.1                           </span></span>
-<span id="cb489-69"><a href="session-information.html#cb489-69" aria-hidden="true" tabindex="-1"></a><span class="do">##  [43] rsvd_1.0.5                                </span></span>
-<span id="cb489-70"><a href="session-information.html#cb489-70" aria-hidden="true" tabindex="-1"></a><span class="do">##  [44] rstudioapi_0.13                           </span></span>
-<span id="cb489-71"><a href="session-information.html#cb489-71" aria-hidden="true" tabindex="-1"></a><span class="do">##  [45] rprojroot_2.0.2                           </span></span>
-<span id="cb489-72"><a href="session-information.html#cb489-72" aria-hidden="true" tabindex="-1"></a><span class="do">##  [46] rpart_4.1-15                              </span></span>
-<span id="cb489-73"><a href="session-information.html#cb489-73" aria-hidden="true" tabindex="-1"></a><span class="do">##  [47] roxygen2_7.1.2                            </span></span>
-<span id="cb489-74"><a href="session-information.html#cb489-74" aria-hidden="true" tabindex="-1"></a><span class="do">##  [48] rlang_1.0.6                               </span></span>
-<span id="cb489-75"><a href="session-information.html#cb489-75" aria-hidden="true" tabindex="-1"></a><span class="do">##  [49] rjson_0.2.21                              </span></span>
-<span id="cb489-76"><a href="session-information.html#cb489-76" aria-hidden="true" tabindex="-1"></a><span class="do">##  [50] rhdf5filters_1.6.0                        </span></span>
-<span id="cb489-77"><a href="session-information.html#cb489-77" aria-hidden="true" tabindex="-1"></a><span class="do">##  [51] rhandsontable_0.3.8                       </span></span>
-<span id="cb489-78"><a href="session-information.html#cb489-78" aria-hidden="true" tabindex="-1"></a><span class="do">##  [52] reticulate_1.22                           </span></span>
-<span id="cb489-79"><a href="session-information.html#cb489-79" aria-hidden="true" tabindex="-1"></a><span class="do">##  [53] restfulr_0.0.13                           </span></span>
-<span id="cb489-80"><a href="session-information.html#cb489-80" aria-hidden="true" tabindex="-1"></a><span class="do">##  [54] reshape2_1.4.4                            </span></span>
-<span id="cb489-81"><a href="session-information.html#cb489-81" aria-hidden="true" tabindex="-1"></a><span class="do">##  [55] renv_0.16.0                               </span></span>
-<span id="cb489-82"><a href="session-information.html#cb489-82" aria-hidden="true" tabindex="-1"></a><span class="do">##  [56] remotes_2.4.2                             </span></span>
-<span id="cb489-83"><a href="session-information.html#cb489-83" aria-hidden="true" tabindex="-1"></a><span class="do">##  [57] rematch2_2.1.2                            </span></span>
-<span id="cb489-84"><a href="session-information.html#cb489-84" aria-hidden="true" tabindex="-1"></a><span class="do">##  [58] readr_2.1.0                               </span></span>
-<span id="cb489-85"><a href="session-information.html#cb489-85" aria-hidden="true" tabindex="-1"></a><span class="do">##  [59] rcmdcheck_1.4.0                           </span></span>
-<span id="cb489-86"><a href="session-information.html#cb489-86" aria-hidden="true" tabindex="-1"></a><span class="do">##  [60] rappdirs_0.3.3                            </span></span>
-<span id="cb489-87"><a href="session-information.html#cb489-87" aria-hidden="true" tabindex="-1"></a><span class="do">##  [61] purrr_0.3.4                               </span></span>
-<span id="cb489-88"><a href="session-information.html#cb489-88" aria-hidden="true" tabindex="-1"></a><span class="do">##  [62] ps_1.6.0                                  </span></span>
-<span id="cb489-89"><a href="session-information.html#cb489-89" aria-hidden="true" tabindex="-1"></a><span class="do">##  [63] promises_1.2.0.1                          </span></span>
-<span id="cb489-90"><a href="session-information.html#cb489-90" aria-hidden="true" tabindex="-1"></a><span class="do">##  [64] progress_1.2.2                            </span></span>
-<span id="cb489-91"><a href="session-information.html#cb489-91" aria-hidden="true" tabindex="-1"></a><span class="do">##  [65] processx_3.8.0                            </span></span>
-<span id="cb489-92"><a href="session-information.html#cb489-92" aria-hidden="true" tabindex="-1"></a><span class="do">##  [66] prettyunits_1.1.1                         </span></span>
-<span id="cb489-93"><a href="session-information.html#cb489-93" aria-hidden="true" tabindex="-1"></a><span class="do">##  [67] praise_1.0.0                              </span></span>
-<span id="cb489-94"><a href="session-information.html#cb489-94" aria-hidden="true" tabindex="-1"></a><span class="do">##  [68] pracma_2.3.3                              </span></span>
-<span id="cb489-95"><a href="session-information.html#cb489-95" aria-hidden="true" tabindex="-1"></a><span class="do">##  [69] poweRlaw_0.70.6                           </span></span>
-<span id="cb489-96"><a href="session-information.html#cb489-96" aria-hidden="true" tabindex="-1"></a><span class="do">##  [70] polyclip_1.10-0                           </span></span>
-<span id="cb489-97"><a href="session-information.html#cb489-97" aria-hidden="true" tabindex="-1"></a><span class="do">##  [71] png_0.1-7                                 </span></span>
-<span id="cb489-98"><a href="session-information.html#cb489-98" aria-hidden="true" tabindex="-1"></a><span class="do">##  [72] plotly_4.10.0                             </span></span>
-<span id="cb489-99"><a href="session-information.html#cb489-99" aria-hidden="true" tabindex="-1"></a><span class="do">##  [73] plogr_0.2.0                               </span></span>
-<span id="cb489-100"><a href="session-information.html#cb489-100" aria-hidden="true" tabindex="-1"></a><span class="do">##  [74] pkgload_1.2.4                             </span></span>
-<span id="cb489-101"><a href="session-information.html#cb489-101" aria-hidden="true" tabindex="-1"></a><span class="do">##  [75] pkgconfig_2.0.3                           </span></span>
-<span id="cb489-102"><a href="session-information.html#cb489-102" aria-hidden="true" tabindex="-1"></a><span class="do">##  [76] pkgbuild_1.2.1                            </span></span>
-<span id="cb489-103"><a href="session-information.html#cb489-103" aria-hidden="true" tabindex="-1"></a><span class="do">##  [77] pillar_1.6.4                              </span></span>
-<span id="cb489-104"><a href="session-information.html#cb489-104" aria-hidden="true" tabindex="-1"></a><span class="do">##  [78] pbapply_1.5-0                             </span></span>
-<span id="cb489-105"><a href="session-information.html#cb489-105" aria-hidden="true" tabindex="-1"></a><span class="do">##  [79] patchwork_1.1.1                           </span></span>
-<span id="cb489-106"><a href="session-information.html#cb489-106" aria-hidden="true" tabindex="-1"></a><span class="do">##  [80] parallelly_1.28.1                         </span></span>
-<span id="cb489-107"><a href="session-information.html#cb489-107" aria-hidden="true" tabindex="-1"></a><span class="do">##  [81] openssl_1.4.5                             </span></span>
-<span id="cb489-108"><a href="session-information.html#cb489-108" aria-hidden="true" tabindex="-1"></a><span class="do">##  [82] nnet_7.3-16                               </span></span>
-<span id="cb489-109"><a href="session-information.html#cb489-109" aria-hidden="true" tabindex="-1"></a><span class="do">##  [83] munsell_0.5.0                             </span></span>
-<span id="cb489-110"><a href="session-information.html#cb489-110" aria-hidden="true" tabindex="-1"></a><span class="do">##  [84] miniUI_0.1.1.1                            </span></span>
-<span id="cb489-111"><a href="session-information.html#cb489-111" aria-hidden="true" tabindex="-1"></a><span class="do">##  [85] mime_0.12                                 </span></span>
-<span id="cb489-112"><a href="session-information.html#cb489-112" aria-hidden="true" tabindex="-1"></a><span class="do">##  [86] mgcv_1.8-38                               </span></span>
-<span id="cb489-113"><a href="session-information.html#cb489-113" aria-hidden="true" tabindex="-1"></a><span class="do">##  [87] nlme_3.1-153                              </span></span>
-<span id="cb489-114"><a href="session-information.html#cb489-114" aria-hidden="true" tabindex="-1"></a><span class="do">##  [88] metapod_1.2.0                             </span></span>
-<span id="cb489-115"><a href="session-information.html#cb489-115" aria-hidden="true" tabindex="-1"></a><span class="do">##  [89] memoise_2.0.1                             </span></span>
-<span id="cb489-116"><a href="session-information.html#cb489-116" aria-hidden="true" tabindex="-1"></a><span class="do">##  [90] locfit_1.5-9.4                            </span></span>
-<span id="cb489-117"><a href="session-information.html#cb489-117" aria-hidden="true" tabindex="-1"></a><span class="do">##  [91] lmtest_0.9-39                             </span></span>
-<span id="cb489-118"><a href="session-information.html#cb489-118" aria-hidden="true" tabindex="-1"></a><span class="do">##  [92] zoo_1.8-9                                 </span></span>
-<span id="cb489-119"><a href="session-information.html#cb489-119" aria-hidden="true" tabindex="-1"></a><span class="do">##  [93] listenv_0.8.0                             </span></span>
-<span id="cb489-120"><a href="session-information.html#cb489-120" aria-hidden="true" tabindex="-1"></a><span class="do">##  [94] lifecycle_1.0.3                           </span></span>
-<span id="cb489-121"><a href="session-information.html#cb489-121" aria-hidden="true" tabindex="-1"></a><span class="do">##  [95] leiden_0.3.9                              </span></span>
-<span id="cb489-122"><a href="session-information.html#cb489-122" aria-hidden="true" tabindex="-1"></a><span class="do">##  [96] lazyeval_0.2.2                            </span></span>
-<span id="cb489-123"><a href="session-information.html#cb489-123" aria-hidden="true" tabindex="-1"></a><span class="do">##  [97] later_1.3.0                               </span></span>
-<span id="cb489-124"><a href="session-information.html#cb489-124" aria-hidden="true" tabindex="-1"></a><span class="do">##  [98] lambda.r_1.2.4                            </span></span>
-<span id="cb489-125"><a href="session-information.html#cb489-125" aria-hidden="true" tabindex="-1"></a><span class="do">##  [99] labeling_0.4.2                            </span></span>
-<span id="cb489-126"><a href="session-information.html#cb489-126" aria-hidden="true" tabindex="-1"></a><span class="do">## [100] knitr_1.41                                </span></span>
-<span id="cb489-127"><a href="session-information.html#cb489-127" aria-hidden="true" tabindex="-1"></a><span class="do">## [101] jsonlite_1.7.2                            </span></span>
-<span id="cb489-128"><a href="session-information.html#cb489-128" aria-hidden="true" tabindex="-1"></a><span class="do">## [102] jquerylib_0.1.4                           </span></span>
-<span id="cb489-129"><a href="session-information.html#cb489-129" aria-hidden="true" tabindex="-1"></a><span class="do">## [103] isoband_0.2.5                             </span></span>
-<span id="cb489-130"><a href="session-information.html#cb489-130" aria-hidden="true" tabindex="-1"></a><span class="do">## [104] irlba_2.3.3                               </span></span>
-<span id="cb489-131"><a href="session-information.html#cb489-131" aria-hidden="true" tabindex="-1"></a><span class="do">## [105] ini_0.3.1                                 </span></span>
-<span id="cb489-132"><a href="session-information.html#cb489-132" aria-hidden="true" tabindex="-1"></a><span class="do">## [106] ica_1.0-2                                 </span></span>
-<span id="cb489-133"><a href="session-information.html#cb489-133" aria-hidden="true" tabindex="-1"></a><span class="do">## [107] httr_1.4.2                                </span></span>
-<span id="cb489-134"><a href="session-information.html#cb489-134" aria-hidden="true" tabindex="-1"></a><span class="do">## [108] httpuv_1.6.3                              </span></span>
-<span id="cb489-135"><a href="session-information.html#cb489-135" aria-hidden="true" tabindex="-1"></a><span class="do">## [109] htmlwidgets_1.5.4                         </span></span>
-<span id="cb489-136"><a href="session-information.html#cb489-136" aria-hidden="true" tabindex="-1"></a><span class="do">## [110] htmltools_0.5.2                           </span></span>
-<span id="cb489-137"><a href="session-information.html#cb489-137" aria-hidden="true" tabindex="-1"></a><span class="do">## [111] hms_1.1.1                                 </span></span>
-<span id="cb489-138"><a href="session-information.html#cb489-138" aria-hidden="true" tabindex="-1"></a><span class="do">## [112] highr_0.9                                 </span></span>
-<span id="cb489-139"><a href="session-information.html#cb489-139" aria-hidden="true" tabindex="-1"></a><span class="do">## [113] here_1.0.1                                </span></span>
-<span id="cb489-140"><a href="session-information.html#cb489-140" aria-hidden="true" tabindex="-1"></a><span class="do">## [114] gplots_3.1.1                              </span></span>
-<span id="cb489-141"><a href="session-information.html#cb489-141" aria-hidden="true" tabindex="-1"></a><span class="do">## [115] goftest_1.2-3                             </span></span>
-<span id="cb489-142"><a href="session-information.html#cb489-142" aria-hidden="true" tabindex="-1"></a><span class="do">## [116] glue_1.5.1                                </span></span>
-<span id="cb489-143"><a href="session-information.html#cb489-143" aria-hidden="true" tabindex="-1"></a><span class="do">## [117] globals_0.14.0                            </span></span>
-<span id="cb489-144"><a href="session-information.html#cb489-144" aria-hidden="true" tabindex="-1"></a><span class="do">## [118] gitcreds_0.1.1                            </span></span>
-<span id="cb489-145"><a href="session-information.html#cb489-145" aria-hidden="true" tabindex="-1"></a><span class="do">## [119] gh_1.3.0                                  </span></span>
-<span id="cb489-146"><a href="session-information.html#cb489-146" aria-hidden="true" tabindex="-1"></a><span class="do">## [120] gert_1.4.3                                </span></span>
-<span id="cb489-147"><a href="session-information.html#cb489-147" aria-hidden="true" tabindex="-1"></a><span class="do">## [121] generics_0.1.1                            </span></span>
-<span id="cb489-148"><a href="session-information.html#cb489-148" aria-hidden="true" tabindex="-1"></a><span class="do">## [122] geneplotter_1.72.0                        </span></span>
-<span id="cb489-149"><a href="session-information.html#cb489-149" aria-hidden="true" tabindex="-1"></a><span class="do">## [123] lattice_0.20-45                           </span></span>
-<span id="cb489-150"><a href="session-information.html#cb489-150" aria-hidden="true" tabindex="-1"></a><span class="do">## [124] genefilter_1.76.0                         </span></span>
-<span id="cb489-151"><a href="session-information.html#cb489-151" aria-hidden="true" tabindex="-1"></a><span class="do">## [125] future.apply_1.8.1                        </span></span>
-<span id="cb489-152"><a href="session-information.html#cb489-152" aria-hidden="true" tabindex="-1"></a><span class="do">## [126] future_1.23.0                             </span></span>
-<span id="cb489-153"><a href="session-information.html#cb489-153" aria-hidden="true" tabindex="-1"></a><span class="do">## [127] futile.options_1.0.1                      </span></span>
-<span id="cb489-154"><a href="session-information.html#cb489-154" aria-hidden="true" tabindex="-1"></a><span class="do">## [128] futile.logger_1.4.3                       </span></span>
-<span id="cb489-155"><a href="session-information.html#cb489-155" aria-hidden="true" tabindex="-1"></a><span class="do">## [129] fs_1.5.0                                  </span></span>
-<span id="cb489-156"><a href="session-information.html#cb489-156" aria-hidden="true" tabindex="-1"></a><span class="do">## [130] formatR_1.11                              </span></span>
-<span id="cb489-157"><a href="session-information.html#cb489-157" aria-hidden="true" tabindex="-1"></a><span class="do">## [131] foreign_0.8-81                            </span></span>
-<span id="cb489-158"><a href="session-information.html#cb489-158" aria-hidden="true" tabindex="-1"></a><span class="do">## [132] fontawesome_0.2.2                         </span></span>
-<span id="cb489-159"><a href="session-information.html#cb489-159" aria-hidden="true" tabindex="-1"></a><span class="do">## [133] fitdistrplus_1.1-6                        </span></span>
-<span id="cb489-160"><a href="session-information.html#cb489-160" aria-hidden="true" tabindex="-1"></a><span class="do">## [134] survival_3.2-13                           </span></span>
-<span id="cb489-161"><a href="session-information.html#cb489-161" aria-hidden="true" tabindex="-1"></a><span class="do">## [135] fastmap_1.1.0                             </span></span>
-<span id="cb489-162"><a href="session-information.html#cb489-162" aria-hidden="true" tabindex="-1"></a><span class="do">## [136] farver_2.1.0                              </span></span>
-<span id="cb489-163"><a href="session-information.html#cb489-163" aria-hidden="true" tabindex="-1"></a><span class="do">## [137] fansi_0.5.0                               </span></span>
-<span id="cb489-164"><a href="session-information.html#cb489-164" aria-hidden="true" tabindex="-1"></a><span class="do">## [138] evaluate_0.19                             </span></span>
-<span id="cb489-165"><a href="session-information.html#cb489-165" aria-hidden="true" tabindex="-1"></a><span class="do">## [139] ellipsis_0.3.2                            </span></span>
-<span id="cb489-166"><a href="session-information.html#cb489-166" aria-hidden="true" tabindex="-1"></a><span class="do">## [140] edgeR_3.36.0                              </span></span>
-<span id="cb489-167"><a href="session-information.html#cb489-167" aria-hidden="true" tabindex="-1"></a><span class="do">## [141] limma_3.50.0                              </span></span>
-<span id="cb489-168"><a href="session-information.html#cb489-168" aria-hidden="true" tabindex="-1"></a><span class="do">## [142] dqrng_0.3.0                               </span></span>
-<span id="cb489-169"><a href="session-information.html#cb489-169" aria-hidden="true" tabindex="-1"></a><span class="do">## [143] dplyr_1.0.10                              </span></span>
-<span id="cb489-170"><a href="session-information.html#cb489-170" aria-hidden="true" tabindex="-1"></a><span class="do">## [144] doParallel_1.0.16                         </span></span>
-<span id="cb489-171"><a href="session-information.html#cb489-171" aria-hidden="true" tabindex="-1"></a><span class="do">## [145] iterators_1.0.13                          </span></span>
-<span id="cb489-172"><a href="session-information.html#cb489-172" aria-hidden="true" tabindex="-1"></a><span class="do">## [146] foreach_1.5.1                             </span></span>
-<span id="cb489-173"><a href="session-information.html#cb489-173" aria-hidden="true" tabindex="-1"></a><span class="do">## [147] digest_0.6.29                             </span></span>
-<span id="cb489-174"><a href="session-information.html#cb489-174" aria-hidden="true" tabindex="-1"></a><span class="do">## [148] diffobj_0.3.5                             </span></span>
-<span id="cb489-175"><a href="session-information.html#cb489-175" aria-hidden="true" tabindex="-1"></a><span class="do">## [149] desc_1.4.0                                </span></span>
-<span id="cb489-176"><a href="session-information.html#cb489-176" aria-hidden="true" tabindex="-1"></a><span class="do">## [150] deldir_1.0-6                              </span></span>
-<span id="cb489-177"><a href="session-information.html#cb489-177" aria-hidden="true" tabindex="-1"></a><span class="do">## [151] curl_4.3.2                                </span></span>
-<span id="cb489-178"><a href="session-information.html#cb489-178" aria-hidden="true" tabindex="-1"></a><span class="do">## [152] crosstalk_1.2.0                           </span></span>
-<span id="cb489-179"><a href="session-information.html#cb489-179" aria-hidden="true" tabindex="-1"></a><span class="do">## [153] credentials_1.3.2                         </span></span>
-<span id="cb489-180"><a href="session-information.html#cb489-180" aria-hidden="true" tabindex="-1"></a><span class="do">## [154] crayon_1.4.2                              </span></span>
-<span id="cb489-181"><a href="session-information.html#cb489-181" aria-hidden="true" tabindex="-1"></a><span class="do">## [155] cpp11_0.4.2                               </span></span>
-<span id="cb489-182"><a href="session-information.html#cb489-182" aria-hidden="true" tabindex="-1"></a><span class="do">## [156] cowplot_1.1.1                             </span></span>
-<span id="cb489-183"><a href="session-information.html#cb489-183" aria-hidden="true" tabindex="-1"></a><span class="do">## [157] commonmark_1.7                            </span></span>
-<span id="cb489-184"><a href="session-information.html#cb489-184" aria-hidden="true" tabindex="-1"></a><span class="do">## [158] colorspace_2.0-2                          </span></span>
-<span id="cb489-185"><a href="session-information.html#cb489-185" aria-hidden="true" tabindex="-1"></a><span class="do">## [159] codetools_0.2-18                          </span></span>
-<span id="cb489-186"><a href="session-information.html#cb489-186" aria-hidden="true" tabindex="-1"></a><span class="do">## [160] cluster_2.1.2                             </span></span>
-<span id="cb489-187"><a href="session-information.html#cb489-187" aria-hidden="true" tabindex="-1"></a><span class="do">## [161] clue_0.3-60                               </span></span>
-<span id="cb489-188"><a href="session-information.html#cb489-188" aria-hidden="true" tabindex="-1"></a><span class="do">## [162] clipr_0.7.1                               </span></span>
-<span id="cb489-189"><a href="session-information.html#cb489-189" aria-hidden="true" tabindex="-1"></a><span class="do">## [163] cli_3.5.0                                 </span></span>
-<span id="cb489-190"><a href="session-information.html#cb489-190" aria-hidden="true" tabindex="-1"></a><span class="do">## [164] class_7.3-19                              </span></span>
-<span id="cb489-191"><a href="session-information.html#cb489-191" aria-hidden="true" tabindex="-1"></a><span class="do">## [165] callr_3.7.3                               </span></span>
-<span id="cb489-192"><a href="session-information.html#cb489-192" aria-hidden="true" tabindex="-1"></a><span class="do">## [166] cachem_1.0.6                              </span></span>
-<span id="cb489-193"><a href="session-information.html#cb489-193" aria-hidden="true" tabindex="-1"></a><span class="do">## [167] caTools_1.18.2                            </span></span>
-<span id="cb489-194"><a href="session-information.html#cb489-194" aria-hidden="true" tabindex="-1"></a><span class="do">## [168] bslib_0.3.1                               </span></span>
-<span id="cb489-195"><a href="session-information.html#cb489-195" aria-hidden="true" tabindex="-1"></a><span class="do">## [169] brio_1.1.3                                </span></span>
-<span id="cb489-196"><a href="session-information.html#cb489-196" aria-hidden="true" tabindex="-1"></a><span class="do">## [170] brew_1.0-6                                </span></span>
-<span id="cb489-197"><a href="session-information.html#cb489-197" aria-hidden="true" tabindex="-1"></a><span class="do">## [171] boot_1.3-28                               </span></span>
-<span id="cb489-198"><a href="session-information.html#cb489-198" aria-hidden="true" tabindex="-1"></a><span class="do">## [172] bluster_1.4.0                             </span></span>
-<span id="cb489-199"><a href="session-information.html#cb489-199" aria-hidden="true" tabindex="-1"></a><span class="do">## [173] blob_1.2.2                                </span></span>
-<span id="cb489-200"><a href="session-information.html#cb489-200" aria-hidden="true" tabindex="-1"></a><span class="do">## [174] bitops_1.0-7                              </span></span>
-<span id="cb489-201"><a href="session-information.html#cb489-201" aria-hidden="true" tabindex="-1"></a><span class="do">## [175] bit64_4.0.5                               </span></span>
-<span id="cb489-202"><a href="session-information.html#cb489-202" aria-hidden="true" tabindex="-1"></a><span class="do">## [176] bit_4.0.4                                 </span></span>
-<span id="cb489-203"><a href="session-information.html#cb489-203" aria-hidden="true" tabindex="-1"></a><span class="do">## [177] beachmat_2.10.0                           </span></span>
-<span id="cb489-204"><a href="session-information.html#cb489-204" aria-hidden="true" tabindex="-1"></a><span class="do">## [178] base64enc_0.1-3                           </span></span>
-<span id="cb489-205"><a href="session-information.html#cb489-205" aria-hidden="true" tabindex="-1"></a><span class="do">## [179] askpass_1.1                               </span></span>
-<span id="cb489-206"><a href="session-information.html#cb489-206" aria-hidden="true" tabindex="-1"></a><span class="do">## [180] annotate_1.72.0                           </span></span>
-<span id="cb489-207"><a href="session-information.html#cb489-207" aria-hidden="true" tabindex="-1"></a><span class="do">## [181] abind_1.4-5                               </span></span>
-<span id="cb489-208"><a href="session-information.html#cb489-208" aria-hidden="true" tabindex="-1"></a><span class="do">## [182] XML_3.99-0.8                              </span></span>
-<span id="cb489-209"><a href="session-information.html#cb489-209" aria-hidden="true" tabindex="-1"></a><span class="do">## [183] TFMPvalue_0.0.8                           </span></span>
-<span id="cb489-210"><a href="session-information.html#cb489-210" aria-hidden="true" tabindex="-1"></a><span class="do">## [184] TFBSTools_1.32.0                          </span></span>
-<span id="cb489-211"><a href="session-information.html#cb489-211" aria-hidden="true" tabindex="-1"></a><span class="do">## [185] ScaledMatrix_1.2.0                        </span></span>
-<span id="cb489-212"><a href="session-information.html#cb489-212" aria-hidden="true" tabindex="-1"></a><span class="do">## [186] Rhtslib_1.26.0                            </span></span>
-<span id="cb489-213"><a href="session-information.html#cb489-213" aria-hidden="true" tabindex="-1"></a><span class="do">## [187] Rhdf5lib_1.16.0                           </span></span>
-<span id="cb489-214"><a href="session-information.html#cb489-214" aria-hidden="true" tabindex="-1"></a><span class="do">## [188] RcppProgress_0.4.2                        </span></span>
-<span id="cb489-215"><a href="session-information.html#cb489-215" aria-hidden="true" tabindex="-1"></a><span class="do">## [189] RcppHNSW_0.3.0                            </span></span>
-<span id="cb489-216"><a href="session-information.html#cb489-216" aria-hidden="true" tabindex="-1"></a><span class="do">## [190] RcppEigen_0.3.3.9.1                       </span></span>
-<span id="cb489-217"><a href="session-information.html#cb489-217" aria-hidden="true" tabindex="-1"></a><span class="do">## [191] RcppAnnoy_0.0.19                          </span></span>
-<span id="cb489-218"><a href="session-information.html#cb489-218" aria-hidden="true" tabindex="-1"></a><span class="do">## [192] RSpectra_0.16-0                           </span></span>
-<span id="cb489-219"><a href="session-information.html#cb489-219" aria-hidden="true" tabindex="-1"></a><span class="do">## [193] RSQLite_2.2.8                             </span></span>
-<span id="cb489-220"><a href="session-information.html#cb489-220" aria-hidden="true" tabindex="-1"></a><span class="do">## [194] ROCR_1.0-11                               </span></span>
-<span id="cb489-221"><a href="session-information.html#cb489-221" aria-hidden="true" tabindex="-1"></a><span class="do">## [195] RCurl_1.98-1.5                            </span></span>
-<span id="cb489-222"><a href="session-information.html#cb489-222" aria-hidden="true" tabindex="-1"></a><span class="do">## [196] RColorBrewer_1.1-2                        </span></span>
-<span id="cb489-223"><a href="session-information.html#cb489-223" aria-hidden="true" tabindex="-1"></a><span class="do">## [197] RANN_2.6.1                                </span></span>
-<span id="cb489-224"><a href="session-information.html#cb489-224" aria-hidden="true" tabindex="-1"></a><span class="do">## [198] R6_2.5.1                                  </span></span>
-<span id="cb489-225"><a href="session-information.html#cb489-225" aria-hidden="true" tabindex="-1"></a><span class="do">## [199] R.utils_2.11.0                            </span></span>
-<span id="cb489-226"><a href="session-information.html#cb489-226" aria-hidden="true" tabindex="-1"></a><span class="do">## [200] R.oo_1.24.0                               </span></span>
-<span id="cb489-227"><a href="session-information.html#cb489-227" aria-hidden="true" tabindex="-1"></a><span class="do">## [201] R.methodsS3_1.8.1                         </span></span>
-<span id="cb489-228"><a href="session-information.html#cb489-228" aria-hidden="true" tabindex="-1"></a><span class="do">## [202] MASS_7.3-54                               </span></span>
-<span id="cb489-229"><a href="session-information.html#cb489-229" aria-hidden="true" tabindex="-1"></a><span class="do">## [203] KernSmooth_2.23-20                        </span></span>
-<span id="cb489-230"><a href="session-information.html#cb489-230" aria-hidden="true" tabindex="-1"></a><span class="do">## [204] KEGGREST_1.34.0                           </span></span>
-<span id="cb489-231"><a href="session-information.html#cb489-231" aria-hidden="true" tabindex="-1"></a><span class="do">## [205] GlobalOptions_0.1.2                       </span></span>
-<span id="cb489-232"><a href="session-information.html#cb489-232" aria-hidden="true" tabindex="-1"></a><span class="do">## [206] GetoptLong_1.0.5                          </span></span>
-<span id="cb489-233"><a href="session-information.html#cb489-233" aria-hidden="true" tabindex="-1"></a><span class="do">## [207] GenomicAlignments_1.30.0                  </span></span>
-<span id="cb489-234"><a href="session-information.html#cb489-234" aria-hidden="true" tabindex="-1"></a><span class="do">## [208] Rsamtools_2.10.0                          </span></span>
-<span id="cb489-235"><a href="session-information.html#cb489-235" aria-hidden="true" tabindex="-1"></a><span class="do">## [209] GenomeInfoDbData_1.2.7                    </span></span>
-<span id="cb489-236"><a href="session-information.html#cb489-236" aria-hidden="true" tabindex="-1"></a><span class="do">## [210] GO.db_3.14.0                              </span></span>
-<span id="cb489-237"><a href="session-information.html#cb489-237" aria-hidden="true" tabindex="-1"></a><span class="do">## [211] FNN_1.1.3                                 </span></span>
-<span id="cb489-238"><a href="session-information.html#cb489-238" aria-hidden="true" tabindex="-1"></a><span class="do">## [212] DirichletMultinomial_1.36.0               </span></span>
-<span id="cb489-239"><a href="session-information.html#cb489-239" aria-hidden="true" tabindex="-1"></a><span class="do">## [213] DelayedMatrixStats_1.16.0                 </span></span>
-<span id="cb489-240"><a href="session-information.html#cb489-240" aria-hidden="true" tabindex="-1"></a><span class="do">## [214] DelayedArray_0.20.0                       </span></span>
-<span id="cb489-241"><a href="session-information.html#cb489-241" aria-hidden="true" tabindex="-1"></a><span class="do">## [215] DT_0.20                                   </span></span>
-<span id="cb489-242"><a href="session-information.html#cb489-242" aria-hidden="true" tabindex="-1"></a><span class="do">## [216] DESeq2_1.34.0                             </span></span>
-<span id="cb489-243"><a href="session-information.html#cb489-243" aria-hidden="true" tabindex="-1"></a><span class="do">## [217] DBI_1.1.1                                 </span></span>
-<span id="cb489-244"><a href="session-information.html#cb489-244" aria-hidden="true" tabindex="-1"></a><span class="do">## [218] Cairo_1.5-12.2                            </span></span>
-<span id="cb489-245"><a href="session-information.html#cb489-245" aria-hidden="true" tabindex="-1"></a><span class="do">## [219] CNEr_1.30.0                               </span></span>
-<span id="cb489-246"><a href="session-information.html#cb489-246" aria-hidden="true" tabindex="-1"></a><span class="do">## [220] BiocVersion_3.14.0                        </span></span>
-<span id="cb489-247"><a href="session-information.html#cb489-247" aria-hidden="true" tabindex="-1"></a><span class="do">## [221] BiocSingular_1.10.0                       </span></span>
-<span id="cb489-248"><a href="session-information.html#cb489-248" aria-hidden="true" tabindex="-1"></a><span class="do">## [222] BiocParallel_1.28.2                       </span></span>
-<span id="cb489-249"><a href="session-information.html#cb489-249" aria-hidden="true" tabindex="-1"></a><span class="do">## [223] BiocNeighbors_1.12.0                      </span></span>
-<span id="cb489-250"><a href="session-information.html#cb489-250" aria-hidden="true" tabindex="-1"></a><span class="do">## [224] BiocManager_1.30.16                       </span></span>
-<span id="cb489-251"><a href="session-information.html#cb489-251" aria-hidden="true" tabindex="-1"></a><span class="do">## [225] BiocIO_1.4.0                              </span></span>
-<span id="cb489-252"><a href="session-information.html#cb489-252" aria-hidden="true" tabindex="-1"></a><span class="do">## [226] BH_1.75.0-0                               </span></span>
-<span id="cb489-253"><a href="session-information.html#cb489-253" aria-hidden="true" tabindex="-1"></a><span class="do">## [227] EnsDb.Hsapiens.v86_2.99.0                 </span></span>
-<span id="cb489-254"><a href="session-information.html#cb489-254" aria-hidden="true" tabindex="-1"></a><span class="do">## [228] ensembldb_2.18.4                          </span></span>
-<span id="cb489-255"><a href="session-information.html#cb489-255" aria-hidden="true" tabindex="-1"></a><span class="do">## [229] AnnotationFilter_1.18.0                   </span></span>
-<span id="cb489-256"><a href="session-information.html#cb489-256" aria-hidden="true" tabindex="-1"></a><span class="do">## [230] BSgenome.Hsapiens.UCSC.hg38_1.4.4         </span></span>
-<span id="cb489-257"><a href="session-information.html#cb489-257" aria-hidden="true" tabindex="-1"></a><span class="do">## [231] slingshot_2.2.1                           </span></span>
-<span id="cb489-258"><a href="session-information.html#cb489-258" aria-hidden="true" tabindex="-1"></a><span class="do">## [232] TrajectoryUtils_1.2.0                     </span></span>
-<span id="cb489-259"><a href="session-information.html#cb489-259" aria-hidden="true" tabindex="-1"></a><span class="do">## [233] princurve_2.1.6                           </span></span>
-<span id="cb489-260"><a href="session-information.html#cb489-260" aria-hidden="true" tabindex="-1"></a><span class="do">## [234] monocle3_1.3.1                            </span></span>
-<span id="cb489-261"><a href="session-information.html#cb489-261" aria-hidden="true" tabindex="-1"></a><span class="do">## [235] chromVAR_1.16.0                           </span></span>
-<span id="cb489-262"><a href="session-information.html#cb489-262" aria-hidden="true" tabindex="-1"></a><span class="do">## [236] ggseqlogo_0.1                             </span></span>
-<span id="cb489-263"><a href="session-information.html#cb489-263" aria-hidden="true" tabindex="-1"></a><span class="do">## [237] chromVARmotifs_0.2.0                      </span></span>
-<span id="cb489-264"><a href="session-information.html#cb489-264" aria-hidden="true" tabindex="-1"></a><span class="do">## [238] motifmatchr_1.16.0                        </span></span>
-<span id="cb489-265"><a href="session-information.html#cb489-265" aria-hidden="true" tabindex="-1"></a><span class="do">## [239] presto_1.0.0                              </span></span>
-<span id="cb489-266"><a href="session-information.html#cb489-266" aria-hidden="true" tabindex="-1"></a><span class="do">## [240] ggrepel_0.9.1                             </span></span>
-<span id="cb489-267"><a href="session-information.html#cb489-267" aria-hidden="true" tabindex="-1"></a><span class="do">## [241] hexbin_1.28.2                             </span></span>
-<span id="cb489-268"><a href="session-information.html#cb489-268" aria-hidden="true" tabindex="-1"></a><span class="do">## [242] circlize_0.4.13                           </span></span>
-<span id="cb489-269"><a href="session-information.html#cb489-269" aria-hidden="true" tabindex="-1"></a><span class="do">## [243] ComplexHeatmap_2.10.0                     </span></span>
-<span id="cb489-270"><a href="session-information.html#cb489-270" aria-hidden="true" tabindex="-1"></a><span class="do">## [244] Rtsne_0.15                                </span></span>
-<span id="cb489-271"><a href="session-information.html#cb489-271" aria-hidden="true" tabindex="-1"></a><span class="do">## [245] igraph_1.3.5                              </span></span>
-<span id="cb489-272"><a href="session-information.html#cb489-272" aria-hidden="true" tabindex="-1"></a><span class="do">## [246] scran_1.22.1                              </span></span>
-<span id="cb489-273"><a href="session-information.html#cb489-273" aria-hidden="true" tabindex="-1"></a><span class="do">## [247] scuttle_1.4.0                             </span></span>
-<span id="cb489-274"><a href="session-information.html#cb489-274" aria-hidden="true" tabindex="-1"></a><span class="do">## [248] SingleCellExperiment_1.16.0               </span></span>
-<span id="cb489-275"><a href="session-information.html#cb489-275" aria-hidden="true" tabindex="-1"></a><span class="do">## [249] pheatmap_1.0.12                           </span></span>
-<span id="cb489-276"><a href="session-information.html#cb489-276" aria-hidden="true" tabindex="-1"></a><span class="do">## [250] harmony_0.1.1                             </span></span>
-<span id="cb489-277"><a href="session-information.html#cb489-277" aria-hidden="true" tabindex="-1"></a><span class="do">## [251] uwot_0.1.10                               </span></span>
-<span id="cb489-278"><a href="session-information.html#cb489-278" aria-hidden="true" tabindex="-1"></a><span class="do">## [252] ggridges_0.5.3                            </span></span>
-<span id="cb489-279"><a href="session-information.html#cb489-279" aria-hidden="true" tabindex="-1"></a><span class="do">## [253] BSgenome.Hsapiens.UCSC.hg19_1.4.3         </span></span>
-<span id="cb489-280"><a href="session-information.html#cb489-280" aria-hidden="true" tabindex="-1"></a><span class="do">## [254] nabor_0.5.0                               </span></span>
-<span id="cb489-281"><a href="session-information.html#cb489-281" aria-hidden="true" tabindex="-1"></a><span class="do">## [255] SeuratObject_4.0.3                        </span></span>
-<span id="cb489-282"><a href="session-information.html#cb489-282" aria-hidden="true" tabindex="-1"></a><span class="do">## [256] Seurat_4.0.5                              </span></span>
-<span id="cb489-283"><a href="session-information.html#cb489-283" aria-hidden="true" tabindex="-1"></a><span class="do">## [257] pdftools_3.3.2                            </span></span>
-<span id="cb489-284"><a href="session-information.html#cb489-284" aria-hidden="true" tabindex="-1"></a><span class="do">## [258] org.Dm.eg.db_3.14.0                       </span></span>
-<span id="cb489-285"><a href="session-information.html#cb489-285" aria-hidden="true" tabindex="-1"></a><span class="do">## [259] TxDb.Dmelanogaster.UCSC.dm6.ensGene_3.12.0</span></span>
-<span id="cb489-286"><a href="session-information.html#cb489-286" aria-hidden="true" tabindex="-1"></a><span class="do">## [260] GenomicFeatures_1.46.5                    </span></span>
-<span id="cb489-287"><a href="session-information.html#cb489-287" aria-hidden="true" tabindex="-1"></a><span class="do">## [261] AnnotationDbi_1.56.2                      </span></span>
-<span id="cb489-288"><a href="session-information.html#cb489-288" aria-hidden="true" tabindex="-1"></a><span class="do">## [262] BSgenome.Dmelanogaster.UCSC.dm6_1.4.1     </span></span>
-<span id="cb489-289"><a href="session-information.html#cb489-289" aria-hidden="true" tabindex="-1"></a><span class="do">## [263] BSgenome_1.62.0                           </span></span>
-<span id="cb489-290"><a href="session-information.html#cb489-290" aria-hidden="true" tabindex="-1"></a><span class="do">## [264] rtracklayer_1.54.0                        </span></span>
-<span id="cb489-291"><a href="session-information.html#cb489-291" aria-hidden="true" tabindex="-1"></a><span class="do">## [265] Biostrings_2.62.0                         </span></span>
-<span id="cb489-292"><a href="session-information.html#cb489-292" aria-hidden="true" tabindex="-1"></a><span class="do">## [266] XVector_0.34.0                            </span></span>
-<span id="cb489-293"><a href="session-information.html#cb489-293" aria-hidden="true" tabindex="-1"></a><span class="do">## [267] rhdf5_2.38.0                              </span></span>
-<span id="cb489-294"><a href="session-information.html#cb489-294" aria-hidden="true" tabindex="-1"></a><span class="do">## [268] SummarizedExperiment_1.24.0               </span></span>
-<span id="cb489-295"><a href="session-information.html#cb489-295" aria-hidden="true" tabindex="-1"></a><span class="do">## [269] Biobase_2.54.0                            </span></span>
-<span id="cb489-296"><a href="session-information.html#cb489-296" aria-hidden="true" tabindex="-1"></a><span class="do">## [270] RcppArmadillo_0.10.7.3.0                  </span></span>
-<span id="cb489-297"><a href="session-information.html#cb489-297" aria-hidden="true" tabindex="-1"></a><span class="do">## [271] Rcpp_1.0.7                                </span></span>
-<span id="cb489-298"><a href="session-information.html#cb489-298" aria-hidden="true" tabindex="-1"></a><span class="do">## [272] Matrix_1.3-4                              </span></span>
-<span id="cb489-299"><a href="session-information.html#cb489-299" aria-hidden="true" tabindex="-1"></a><span class="do">## [273] GenomicRanges_1.46.1                      </span></span>
-<span id="cb489-300"><a href="session-information.html#cb489-300" aria-hidden="true" tabindex="-1"></a><span class="do">## [274] GenomeInfoDb_1.30.0                       </span></span>
-<span id="cb489-301"><a href="session-information.html#cb489-301" aria-hidden="true" tabindex="-1"></a><span class="do">## [275] IRanges_2.28.0                            </span></span>
-<span id="cb489-302"><a href="session-information.html#cb489-302" aria-hidden="true" tabindex="-1"></a><span class="do">## [276] S4Vectors_0.32.4                          </span></span>
-<span id="cb489-303"><a href="session-information.html#cb489-303" aria-hidden="true" tabindex="-1"></a><span class="do">## [277] BiocGenerics_0.40.0                       </span></span>
-<span id="cb489-304"><a href="session-information.html#cb489-304" aria-hidden="true" tabindex="-1"></a><span class="do">## [278] sparseMatrixStats_1.6.0                   </span></span>
-<span id="cb489-305"><a href="session-information.html#cb489-305" aria-hidden="true" tabindex="-1"></a><span class="do">## [279] MatrixGenerics_1.6.0                      </span></span>
-<span id="cb489-306"><a href="session-information.html#cb489-306" aria-hidden="true" tabindex="-1"></a><span class="do">## [280] matrixStats_0.61.0                        </span></span>
-<span id="cb489-307"><a href="session-information.html#cb489-307" aria-hidden="true" tabindex="-1"></a><span class="do">## [281] data.table_1.14.2                         </span></span>
-<span id="cb489-308"><a href="session-information.html#cb489-308" aria-hidden="true" tabindex="-1"></a><span class="do">## [282] stringr_1.4.0                             </span></span>
-<span id="cb489-309"><a href="session-information.html#cb489-309" aria-hidden="true" tabindex="-1"></a><span class="do">## [283] plyr_1.8.6                                </span></span>
-<span id="cb489-310"><a href="session-information.html#cb489-310" aria-hidden="true" tabindex="-1"></a><span class="do">## [284] magrittr_2.0.1                            </span></span>
-<span id="cb489-311"><a href="session-information.html#cb489-311" aria-hidden="true" tabindex="-1"></a><span class="do">## [285] ggplot2_3.3.5                             </span></span>
-<span id="cb489-312"><a href="session-information.html#cb489-312" aria-hidden="true" tabindex="-1"></a><span class="do">## [286] gtable_0.3.0                              </span></span>
-<span id="cb489-313"><a href="session-information.html#cb489-313" aria-hidden="true" tabindex="-1"></a><span class="do">## [287] gtools_3.9.2                              </span></span>
-<span id="cb489-314"><a href="session-information.html#cb489-314" aria-hidden="true" tabindex="-1"></a><span class="do">## [288] gridExtra_2.3                             </span></span>
-<span id="cb489-315"><a href="session-information.html#cb489-315" aria-hidden="true" tabindex="-1"></a><span class="do">## [289] devtools_2.4.3                            </span></span>
-<span id="cb489-316"><a href="session-information.html#cb489-316" aria-hidden="true" tabindex="-1"></a><span class="do">## [290] usethis_2.1.3                             </span></span>
-<span id="cb489-317"><a href="session-information.html#cb489-317" aria-hidden="true" tabindex="-1"></a><span class="do">## [291] ArchR_1.0.3                               </span></span>
-<span id="cb489-318"><a href="session-information.html#cb489-318" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb489-319"><a href="session-information.html#cb489-319" aria-hidden="true" tabindex="-1"></a><span class="do">## loaded via a namespace (and not attached):</span></span>
-<span id="cb489-320"><a href="session-information.html#cb489-320" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] terra_1.6-47        nloptr_2.0.3        bookdown_0.31      </span></span>
-<span id="cb489-321"><a href="session-information.html#cb489-321" aria-hidden="true" tabindex="-1"></a><span class="do">##  [4] ggbeeswarm_0.7.1    minqa_1.2.5         beeswarm_0.4.0     </span></span>
-<span id="cb489-322"><a href="session-information.html#cb489-322" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] systemfonts_1.0.4   leidenbase_0.1.14   dbplyr_2.2.1       </span></span>
-<span id="cb489-323"><a href="session-information.html#cb489-323" aria-hidden="true" tabindex="-1"></a><span class="do">## [10] vipor_0.4.5         qpdf_1.3.0          BiocFileCache_2.2.1</span></span>
-<span id="cb489-324"><a href="session-information.html#cb489-324" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] ProtGenerics_1.26.0 tools_4.1.1         proxy_0.4-27       </span></span>
-<span id="cb489-325"><a href="session-information.html#cb489-325" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] assertthat_0.2.1    rmarkdown_2.19      ggrastr_1.0.1      </span></span>
-<span id="cb489-326"><a href="session-information.html#cb489-326" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] splines_4.1.1       biomaRt_2.50.3      filelock_1.0.2     </span></span>
-<span id="cb489-327"><a href="session-information.html#cb489-327" aria-hidden="true" tabindex="-1"></a><span class="do">## [22] lme4_1.1-31         viridis_0.6.2       svglite_2.1.0</span></span></code></pre></div>
+<div class="sourceCode" id="cb494"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb494-1"><a href="session-information.html#cb494-1" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb494-2"><a href="session-information.html#cb494-2" tabindex="-1"></a><span class="do">## R version 4.4.1 (2024-06-14)</span></span>
+<span id="cb494-3"><a href="session-information.html#cb494-3" tabindex="-1"></a><span class="do">## Platform: x86_64-pc-linux-gnu</span></span>
+<span id="cb494-4"><a href="session-information.html#cb494-4" tabindex="-1"></a><span class="do">## Running under: Ubuntu 22.04.5 LTS</span></span>
+<span id="cb494-5"><a href="session-information.html#cb494-5" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb494-6"><a href="session-information.html#cb494-6" tabindex="-1"></a><span class="do">## Matrix products: default</span></span>
+<span id="cb494-7"><a href="session-information.html#cb494-7" tabindex="-1"></a><span class="do">## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
+<span id="cb494-8"><a href="session-information.html#cb494-8" tabindex="-1"></a><span class="do">## LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.20.so;  LAPACK version 3.10.0</span></span>
+<span id="cb494-9"><a href="session-information.html#cb494-9" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb494-10"><a href="session-information.html#cb494-10" tabindex="-1"></a><span class="do">## Random number generation:</span></span>
+<span id="cb494-11"><a href="session-information.html#cb494-11" tabindex="-1"></a><span class="do">##  RNG:     L&#39;Ecuyer-CMRG </span></span>
+<span id="cb494-12"><a href="session-information.html#cb494-12" tabindex="-1"></a><span class="do">##  Normal:  Inversion </span></span>
+<span id="cb494-13"><a href="session-information.html#cb494-13" tabindex="-1"></a><span class="do">##  Sample:  Rejection </span></span>
+<span id="cb494-14"><a href="session-information.html#cb494-14" tabindex="-1"></a><span class="do">##  </span></span>
+<span id="cb494-15"><a href="session-information.html#cb494-15" tabindex="-1"></a><span class="do">## locale:</span></span>
+<span id="cb494-16"><a href="session-information.html#cb494-16" tabindex="-1"></a><span class="do">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></span>
+<span id="cb494-17"><a href="session-information.html#cb494-17" tabindex="-1"></a><span class="do">##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span></span>
+<span id="cb494-18"><a href="session-information.html#cb494-18" tabindex="-1"></a><span class="do">##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span></span>
+<span id="cb494-19"><a href="session-information.html#cb494-19" tabindex="-1"></a><span class="do">##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span></span>
+<span id="cb494-20"><a href="session-information.html#cb494-20" tabindex="-1"></a><span class="do">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
+<span id="cb494-21"><a href="session-information.html#cb494-21" tabindex="-1"></a><span class="do">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span></span>
+<span id="cb494-22"><a href="session-information.html#cb494-22" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb494-23"><a href="session-information.html#cb494-23" tabindex="-1"></a><span class="do">## time zone: Etc/UTC</span></span>
+<span id="cb494-24"><a href="session-information.html#cb494-24" tabindex="-1"></a><span class="do">## tzcode source: system (glibc)</span></span>
+<span id="cb494-25"><a href="session-information.html#cb494-25" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb494-26"><a href="session-information.html#cb494-26" tabindex="-1"></a><span class="do">## attached base packages:</span></span>
+<span id="cb494-27"><a href="session-information.html#cb494-27" tabindex="-1"></a><span class="do">##  [1] parallel  stats4    grid      stats     graphics  grDevices utils    </span></span>
+<span id="cb494-28"><a href="session-information.html#cb494-28" tabindex="-1"></a><span class="do">##  [8] datasets  methods   base     </span></span>
+<span id="cb494-29"><a href="session-information.html#cb494-29" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb494-30"><a href="session-information.html#cb494-30" tabindex="-1"></a><span class="do">## other attached packages:</span></span>
+<span id="cb494-31"><a href="session-information.html#cb494-31" tabindex="-1"></a><span class="do">##   [1] zlibbioc_1.50.0                           </span></span>
+<span id="cb494-32"><a href="session-information.html#cb494-32" tabindex="-1"></a><span class="do">##   [2] zip_2.3.1                                 </span></span>
+<span id="cb494-33"><a href="session-information.html#cb494-33" tabindex="-1"></a><span class="do">##   [3] yaml_2.3.10                               </span></span>
+<span id="cb494-34"><a href="session-information.html#cb494-34" tabindex="-1"></a><span class="do">##   [4] xtable_1.8-4                              </span></span>
+<span id="cb494-35"><a href="session-information.html#cb494-35" tabindex="-1"></a><span class="do">##   [5] xopen_1.0.1                               </span></span>
+<span id="cb494-36"><a href="session-information.html#cb494-36" tabindex="-1"></a><span class="do">##   [6] xml2_1.3.6                                </span></span>
+<span id="cb494-37"><a href="session-information.html#cb494-37" tabindex="-1"></a><span class="do">##   [7] xfun_0.48                                 </span></span>
+<span id="cb494-38"><a href="session-information.html#cb494-38" tabindex="-1"></a><span class="do">##   [8] wk_0.9.4                                  </span></span>
+<span id="cb494-39"><a href="session-information.html#cb494-39" tabindex="-1"></a><span class="do">##   [9] withr_3.0.2                               </span></span>
+<span id="cb494-40"><a href="session-information.html#cb494-40" tabindex="-1"></a><span class="do">##  [10] whisker_0.4.1                             </span></span>
+<span id="cb494-41"><a href="session-information.html#cb494-41" tabindex="-1"></a><span class="do">##  [11] warp_0.2.1                                </span></span>
+<span id="cb494-42"><a href="session-information.html#cb494-42" tabindex="-1"></a><span class="do">##  [12] waldo_0.5.3                               </span></span>
+<span id="cb494-43"><a href="session-information.html#cb494-43" tabindex="-1"></a><span class="do">##  [13] vroom_1.6.5                               </span></span>
+<span id="cb494-44"><a href="session-information.html#cb494-44" tabindex="-1"></a><span class="do">##  [14] viridis_0.6.5                             </span></span>
+<span id="cb494-45"><a href="session-information.html#cb494-45" tabindex="-1"></a><span class="do">##  [15] viridisLite_0.4.2                         </span></span>
+<span id="cb494-46"><a href="session-information.html#cb494-46" tabindex="-1"></a><span class="do">##  [16] vipor_0.4.7                               </span></span>
+<span id="cb494-47"><a href="session-information.html#cb494-47" tabindex="-1"></a><span class="do">##  [17] vctrs_0.6.5                               </span></span>
+<span id="cb494-48"><a href="session-information.html#cb494-48" tabindex="-1"></a><span class="do">##  [18] utf8_1.2.4                                </span></span>
+<span id="cb494-49"><a href="session-information.html#cb494-49" tabindex="-1"></a><span class="do">##  [19] urlchecker_1.0.1                          </span></span>
+<span id="cb494-50"><a href="session-information.html#cb494-50" tabindex="-1"></a><span class="do">##  [20] units_0.8-5                               </span></span>
+<span id="cb494-51"><a href="session-information.html#cb494-51" tabindex="-1"></a><span class="do">##  [21] tzdb_0.4.0                                </span></span>
+<span id="cb494-52"><a href="session-information.html#cb494-52" tabindex="-1"></a><span class="do">##  [22] tinytex_0.53                              </span></span>
+<span id="cb494-53"><a href="session-information.html#cb494-53" tabindex="-1"></a><span class="do">##  [23] tidyselect_1.2.1                          </span></span>
+<span id="cb494-54"><a href="session-information.html#cb494-54" tabindex="-1"></a><span class="do">##  [24] tidyr_1.3.1                               </span></span>
+<span id="cb494-55"><a href="session-information.html#cb494-55" tabindex="-1"></a><span class="do">##  [25] tibble_3.2.1                              </span></span>
+<span id="cb494-56"><a href="session-information.html#cb494-56" tabindex="-1"></a><span class="do">##  [26] textshaping_0.4.0                         </span></span>
+<span id="cb494-57"><a href="session-information.html#cb494-57" tabindex="-1"></a><span class="do">##  [27] systemfonts_1.1.0                         </span></span>
+<span id="cb494-58"><a href="session-information.html#cb494-58" tabindex="-1"></a><span class="do">##  [28] sys_3.4.3                                 </span></span>
+<span id="cb494-59"><a href="session-information.html#cb494-59" tabindex="-1"></a><span class="do">##  [29] stringi_1.8.4                             </span></span>
+<span id="cb494-60"><a href="session-information.html#cb494-60" tabindex="-1"></a><span class="do">##  [30] statmod_1.5.0                             </span></span>
+<span id="cb494-61"><a href="session-information.html#cb494-61" tabindex="-1"></a><span class="do">##  [31] speedglm_0.3-5                            </span></span>
+<span id="cb494-62"><a href="session-information.html#cb494-62" tabindex="-1"></a><span class="do">##  [32] spdep_1.3-6                               </span></span>
+<span id="cb494-63"><a href="session-information.html#cb494-63" tabindex="-1"></a><span class="do">##  [33] spatstat.utils_3.1-0                      </span></span>
+<span id="cb494-64"><a href="session-information.html#cb494-64" tabindex="-1"></a><span class="do">##  [34] spatstat.sparse_3.1-0                     </span></span>
+<span id="cb494-65"><a href="session-information.html#cb494-65" tabindex="-1"></a><span class="do">##  [35] tensor_1.5                                </span></span>
+<span id="cb494-66"><a href="session-information.html#cb494-66" tabindex="-1"></a><span class="do">##  [36] spatstat.explore_3.3-3                    </span></span>
+<span id="cb494-67"><a href="session-information.html#cb494-67" tabindex="-1"></a><span class="do">##  [37] spatstat.random_3.3-2                     </span></span>
+<span id="cb494-68"><a href="session-information.html#cb494-68" tabindex="-1"></a><span class="do">##  [38] spatstat.geom_3.3-3                       </span></span>
+<span id="cb494-69"><a href="session-information.html#cb494-69" tabindex="-1"></a><span class="do">##  [39] spatstat.univar_3.0-1                     </span></span>
+<span id="cb494-70"><a href="session-information.html#cb494-70" tabindex="-1"></a><span class="do">##  [40] spatstat.data_3.1-2                       </span></span>
+<span id="cb494-71"><a href="session-information.html#cb494-71" tabindex="-1"></a><span class="do">##  [41] spatial_7.3-17                            </span></span>
+<span id="cb494-72"><a href="session-information.html#cb494-72" tabindex="-1"></a><span class="do">##  [42] spam_2.11-0                               </span></span>
+<span id="cb494-73"><a href="session-information.html#cb494-73" tabindex="-1"></a><span class="do">##  [43] spData_2.3.3                              </span></span>
+<span id="cb494-74"><a href="session-information.html#cb494-74" tabindex="-1"></a><span class="do">##  [44] sourcetools_0.1.7-1                       </span></span>
+<span id="cb494-75"><a href="session-information.html#cb494-75" tabindex="-1"></a><span class="do">##  [45] snow_0.4-4                                </span></span>
+<span id="cb494-76"><a href="session-information.html#cb494-76" tabindex="-1"></a><span class="do">##  [46] slider_0.3.2                              </span></span>
+<span id="cb494-77"><a href="session-information.html#cb494-77" tabindex="-1"></a><span class="do">##  [47] slam_0.1-54                               </span></span>
+<span id="cb494-78"><a href="session-information.html#cb494-78" tabindex="-1"></a><span class="do">##  [48] sitmo_2.0.2                               </span></span>
+<span id="cb494-79"><a href="session-information.html#cb494-79" tabindex="-1"></a><span class="do">##  [49] shiny_1.9.1                               </span></span>
+<span id="cb494-80"><a href="session-information.html#cb494-80" tabindex="-1"></a><span class="do">##  [50] shape_1.4.6.1                             </span></span>
+<span id="cb494-81"><a href="session-information.html#cb494-81" tabindex="-1"></a><span class="do">##  [51] sf_1.0-18                                 </span></span>
+<span id="cb494-82"><a href="session-information.html#cb494-82" tabindex="-1"></a><span class="do">##  [52] sessioninfo_1.2.2                         </span></span>
+<span id="cb494-83"><a href="session-information.html#cb494-83" tabindex="-1"></a><span class="do">##  [53] seqLogo_1.70.0                            </span></span>
+<span id="cb494-84"><a href="session-information.html#cb494-84" tabindex="-1"></a><span class="do">##  [54] sctransform_0.4.1                         </span></span>
+<span id="cb494-85"><a href="session-information.html#cb494-85" tabindex="-1"></a><span class="do">##  [55] scattermore_1.2                           </span></span>
+<span id="cb494-86"><a href="session-information.html#cb494-86" tabindex="-1"></a><span class="do">##  [56] scales_1.3.0                              </span></span>
+<span id="cb494-87"><a href="session-information.html#cb494-87" tabindex="-1"></a><span class="do">##  [57] sass_0.4.9                                </span></span>
+<span id="cb494-88"><a href="session-information.html#cb494-88" tabindex="-1"></a><span class="do">##  [58] s2_1.1.7                                  </span></span>
+<span id="cb494-89"><a href="session-information.html#cb494-89" tabindex="-1"></a><span class="do">##  [59] rversions_2.1.2                           </span></span>
+<span id="cb494-90"><a href="session-information.html#cb494-90" tabindex="-1"></a><span class="do">##  [60] rsvd_1.0.5                                </span></span>
+<span id="cb494-91"><a href="session-information.html#cb494-91" tabindex="-1"></a><span class="do">##  [61] rstudioapi_0.17.1                         </span></span>
+<span id="cb494-92"><a href="session-information.html#cb494-92" tabindex="-1"></a><span class="do">##  [62] rsample_1.2.1                             </span></span>
+<span id="cb494-93"><a href="session-information.html#cb494-93" tabindex="-1"></a><span class="do">##  [63] rprojroot_2.0.4                           </span></span>
+<span id="cb494-94"><a href="session-information.html#cb494-94" tabindex="-1"></a><span class="do">##  [64] rpart_4.1.23                              </span></span>
+<span id="cb494-95"><a href="session-information.html#cb494-95" tabindex="-1"></a><span class="do">##  [65] roxygen2_7.3.2                            </span></span>
+<span id="cb494-96"><a href="session-information.html#cb494-96" tabindex="-1"></a><span class="do">##  [66] rmarkdown_2.28                            </span></span>
+<span id="cb494-97"><a href="session-information.html#cb494-97" tabindex="-1"></a><span class="do">##  [67] rlang_1.1.4                               </span></span>
+<span id="cb494-98"><a href="session-information.html#cb494-98" tabindex="-1"></a><span class="do">##  [68] rjson_0.2.23                              </span></span>
+<span id="cb494-99"><a href="session-information.html#cb494-99" tabindex="-1"></a><span class="do">##  [69] rhdf5filters_1.16.0                       </span></span>
+<span id="cb494-100"><a href="session-information.html#cb494-100" tabindex="-1"></a><span class="do">##  [70] reticulate_1.39.0                         </span></span>
+<span id="cb494-101"><a href="session-information.html#cb494-101" tabindex="-1"></a><span class="do">##  [71] restfulr_0.0.15                           </span></span>
+<span id="cb494-102"><a href="session-information.html#cb494-102" tabindex="-1"></a><span class="do">##  [72] reshape2_1.4.4                            </span></span>
+<span id="cb494-103"><a href="session-information.html#cb494-103" tabindex="-1"></a><span class="do">##  [73] renv_1.0.11.9000                          </span></span>
+<span id="cb494-104"><a href="session-information.html#cb494-104" tabindex="-1"></a><span class="do">##  [74] remotes_2.5.0                             </span></span>
+<span id="cb494-105"><a href="session-information.html#cb494-105" tabindex="-1"></a><span class="do">##  [75] rematch2_2.1.2                            </span></span>
+<span id="cb494-106"><a href="session-information.html#cb494-106" tabindex="-1"></a><span class="do">##  [76] readr_2.1.5                               </span></span>
+<span id="cb494-107"><a href="session-information.html#cb494-107" tabindex="-1"></a><span class="do">##  [77] rcmdcheck_1.4.0                           </span></span>
+<span id="cb494-108"><a href="session-information.html#cb494-108" tabindex="-1"></a><span class="do">##  [78] rappdirs_0.3.3                            </span></span>
+<span id="cb494-109"><a href="session-information.html#cb494-109" tabindex="-1"></a><span class="do">##  [79] ragg_1.3.3                                </span></span>
+<span id="cb494-110"><a href="session-information.html#cb494-110" tabindex="-1"></a><span class="do">##  [80] pwalign_1.0.0                             </span></span>
+<span id="cb494-111"><a href="session-information.html#cb494-111" tabindex="-1"></a><span class="do">##  [81] purrr_1.0.2                               </span></span>
+<span id="cb494-112"><a href="session-information.html#cb494-112" tabindex="-1"></a><span class="do">##  [82] pscl_1.5.9                                </span></span>
+<span id="cb494-113"><a href="session-information.html#cb494-113" tabindex="-1"></a><span class="do">##  [83] ps_1.8.1                                  </span></span>
+<span id="cb494-114"><a href="session-information.html#cb494-114" tabindex="-1"></a><span class="do">##  [84] proxy_0.4-27                              </span></span>
+<span id="cb494-115"><a href="session-information.html#cb494-115" tabindex="-1"></a><span class="do">##  [85] promises_1.3.0                            </span></span>
+<span id="cb494-116"><a href="session-information.html#cb494-116" tabindex="-1"></a><span class="do">##  [86] progressr_0.15.0                          </span></span>
+<span id="cb494-117"><a href="session-information.html#cb494-117" tabindex="-1"></a><span class="do">##  [87] progress_1.2.3                            </span></span>
+<span id="cb494-118"><a href="session-information.html#cb494-118" tabindex="-1"></a><span class="do">##  [88] profvis_0.4.0                             </span></span>
+<span id="cb494-119"><a href="session-information.html#cb494-119" tabindex="-1"></a><span class="do">##  [89] processx_3.8.4                            </span></span>
+<span id="cb494-120"><a href="session-information.html#cb494-120" tabindex="-1"></a><span class="do">##  [90] prettyunits_1.2.0                         </span></span>
+<span id="cb494-121"><a href="session-information.html#cb494-121" tabindex="-1"></a><span class="do">##  [91] praise_1.0.0                              </span></span>
+<span id="cb494-122"><a href="session-information.html#cb494-122" tabindex="-1"></a><span class="do">##  [92] pracma_2.4.4                              </span></span>
+<span id="cb494-123"><a href="session-information.html#cb494-123" tabindex="-1"></a><span class="do">##  [93] poweRlaw_0.80.0                           </span></span>
+<span id="cb494-124"><a href="session-information.html#cb494-124" tabindex="-1"></a><span class="do">##  [94] polyclip_1.10-7                           </span></span>
+<span id="cb494-125"><a href="session-information.html#cb494-125" tabindex="-1"></a><span class="do">##  [95] png_0.1-8                                 </span></span>
+<span id="cb494-126"><a href="session-information.html#cb494-126" tabindex="-1"></a><span class="do">##  [96] plotly_4.10.4                             </span></span>
+<span id="cb494-127"><a href="session-information.html#cb494-127" tabindex="-1"></a><span class="do">##  [97] plogr_0.2.0                               </span></span>
+<span id="cb494-128"><a href="session-information.html#cb494-128" tabindex="-1"></a><span class="do">##  [98] pkgload_1.4.0                             </span></span>
+<span id="cb494-129"><a href="session-information.html#cb494-129" tabindex="-1"></a><span class="do">##  [99] pkgdown_2.1.1                             </span></span>
+<span id="cb494-130"><a href="session-information.html#cb494-130" tabindex="-1"></a><span class="do">## [100] pkgconfig_2.0.3                           </span></span>
+<span id="cb494-131"><a href="session-information.html#cb494-131" tabindex="-1"></a><span class="do">## [101] pkgbuild_1.4.5                            </span></span>
+<span id="cb494-132"><a href="session-information.html#cb494-132" tabindex="-1"></a><span class="do">## [102] pillar_1.9.0                              </span></span>
+<span id="cb494-133"><a href="session-information.html#cb494-133" tabindex="-1"></a><span class="do">## [103] pbmcapply_1.5.1                           </span></span>
+<span id="cb494-134"><a href="session-information.html#cb494-134" tabindex="-1"></a><span class="do">## [104] pbapply_1.7-2                             </span></span>
+<span id="cb494-135"><a href="session-information.html#cb494-135" tabindex="-1"></a><span class="do">## [105] patchwork_1.3.0                           </span></span>
+<span id="cb494-136"><a href="session-information.html#cb494-136" tabindex="-1"></a><span class="do">## [106] parallelly_1.38.0                         </span></span>
+<span id="cb494-137"><a href="session-information.html#cb494-137" tabindex="-1"></a><span class="do">## [107] openssl_2.2.2                             </span></span>
+<span id="cb494-138"><a href="session-information.html#cb494-138" tabindex="-1"></a><span class="do">## [108] nnet_7.3-19                               </span></span>
+<span id="cb494-139"><a href="session-information.html#cb494-139" tabindex="-1"></a><span class="do">## [109] nloptr_2.1.1                              </span></span>
+<span id="cb494-140"><a href="session-information.html#cb494-140" tabindex="-1"></a><span class="do">## [110] munsell_0.5.1                             </span></span>
+<span id="cb494-141"><a href="session-information.html#cb494-141" tabindex="-1"></a><span class="do">## [111] minqa_1.2.8                               </span></span>
+<span id="cb494-142"><a href="session-information.html#cb494-142" tabindex="-1"></a><span class="do">## [112] miniUI_0.1.1.1                            </span></span>
+<span id="cb494-143"><a href="session-information.html#cb494-143" tabindex="-1"></a><span class="do">## [113] mime_0.12                                 </span></span>
+<span id="cb494-144"><a href="session-information.html#cb494-144" tabindex="-1"></a><span class="do">## [114] mgcv_1.9-1                                </span></span>
+<span id="cb494-145"><a href="session-information.html#cb494-145" tabindex="-1"></a><span class="do">## [115] nlme_3.1-166                              </span></span>
+<span id="cb494-146"><a href="session-information.html#cb494-146" tabindex="-1"></a><span class="do">## [116] metapod_1.12.0                            </span></span>
+<span id="cb494-147"><a href="session-information.html#cb494-147" tabindex="-1"></a><span class="do">## [117] memoise_2.0.1                             </span></span>
+<span id="cb494-148"><a href="session-information.html#cb494-148" tabindex="-1"></a><span class="do">## [118] locfit_1.5-9.10                           </span></span>
+<span id="cb494-149"><a href="session-information.html#cb494-149" tabindex="-1"></a><span class="do">## [119] lmtest_0.9-40                             </span></span>
+<span id="cb494-150"><a href="session-information.html#cb494-150" tabindex="-1"></a><span class="do">## [120] zoo_1.8-12                                </span></span>
+<span id="cb494-151"><a href="session-information.html#cb494-151" tabindex="-1"></a><span class="do">## [121] lme4_1.1-35.5                             </span></span>
+<span id="cb494-152"><a href="session-information.html#cb494-152" tabindex="-1"></a><span class="do">## [122] listenv_0.9.1                             </span></span>
+<span id="cb494-153"><a href="session-information.html#cb494-153" tabindex="-1"></a><span class="do">## [123] lifecycle_1.0.4                           </span></span>
+<span id="cb494-154"><a href="session-information.html#cb494-154" tabindex="-1"></a><span class="do">## [124] leidenbase_0.1.31                         </span></span>
+<span id="cb494-155"><a href="session-information.html#cb494-155" tabindex="-1"></a><span class="do">## [125] leiden_0.4.3.1                            </span></span>
+<span id="cb494-156"><a href="session-information.html#cb494-156" tabindex="-1"></a><span class="do">## [126] lazyeval_0.2.2                            </span></span>
+<span id="cb494-157"><a href="session-information.html#cb494-157" tabindex="-1"></a><span class="do">## [127] lattice_0.22-6                            </span></span>
+<span id="cb494-158"><a href="session-information.html#cb494-158" tabindex="-1"></a><span class="do">## [128] later_1.3.2                               </span></span>
+<span id="cb494-159"><a href="session-information.html#cb494-159" tabindex="-1"></a><span class="do">## [129] lambda.r_1.2.4                            </span></span>
+<span id="cb494-160"><a href="session-information.html#cb494-160" tabindex="-1"></a><span class="do">## [130] labeling_0.4.3                            </span></span>
+<span id="cb494-161"><a href="session-information.html#cb494-161" tabindex="-1"></a><span class="do">## [131] knitr_1.48                                </span></span>
+<span id="cb494-162"><a href="session-information.html#cb494-162" tabindex="-1"></a><span class="do">## [132] jsonlite_1.8.9                            </span></span>
+<span id="cb494-163"><a href="session-information.html#cb494-163" tabindex="-1"></a><span class="do">## [133] jquerylib_0.1.4                           </span></span>
+<span id="cb494-164"><a href="session-information.html#cb494-164" tabindex="-1"></a><span class="do">## [134] isoband_0.2.7                             </span></span>
+<span id="cb494-165"><a href="session-information.html#cb494-165" tabindex="-1"></a><span class="do">## [135] irlba_2.3.5.1                             </span></span>
+<span id="cb494-166"><a href="session-information.html#cb494-166" tabindex="-1"></a><span class="do">## [136] ini_0.3.1                                 </span></span>
+<span id="cb494-167"><a href="session-information.html#cb494-167" tabindex="-1"></a><span class="do">## [137] ica_1.0-3                                 </span></span>
+<span id="cb494-168"><a href="session-information.html#cb494-168" tabindex="-1"></a><span class="do">## [138] httr2_1.0.5                               </span></span>
+<span id="cb494-169"><a href="session-information.html#cb494-169" tabindex="-1"></a><span class="do">## [139] httr_1.4.7                                </span></span>
+<span id="cb494-170"><a href="session-information.html#cb494-170" tabindex="-1"></a><span class="do">## [140] httpuv_1.6.15                             </span></span>
+<span id="cb494-171"><a href="session-information.html#cb494-171" tabindex="-1"></a><span class="do">## [141] htmlwidgets_1.6.4                         </span></span>
+<span id="cb494-172"><a href="session-information.html#cb494-172" tabindex="-1"></a><span class="do">## [142] htmltools_0.5.8.1                         </span></span>
+<span id="cb494-173"><a href="session-information.html#cb494-173" tabindex="-1"></a><span class="do">## [143] hms_1.1.3                                 </span></span>
+<span id="cb494-174"><a href="session-information.html#cb494-174" tabindex="-1"></a><span class="do">## [144] highr_0.11                                </span></span>
+<span id="cb494-175"><a href="session-information.html#cb494-175" tabindex="-1"></a><span class="do">## [145] here_1.0.1                                </span></span>
+<span id="cb494-176"><a href="session-information.html#cb494-176" tabindex="-1"></a><span class="do">## [146] grr_0.9.5                                 </span></span>
+<span id="cb494-177"><a href="session-information.html#cb494-177" tabindex="-1"></a><span class="do">## [147] gplots_3.2.0                              </span></span>
+<span id="cb494-178"><a href="session-information.html#cb494-178" tabindex="-1"></a><span class="do">## [148] goftest_1.2-3                             </span></span>
+<span id="cb494-179"><a href="session-information.html#cb494-179" tabindex="-1"></a><span class="do">## [149] glue_1.8.0                                </span></span>
+<span id="cb494-180"><a href="session-information.html#cb494-180" tabindex="-1"></a><span class="do">## [150] globals_0.16.3                            </span></span>
+<span id="cb494-181"><a href="session-information.html#cb494-181" tabindex="-1"></a><span class="do">## [151] gitcreds_0.1.2                            </span></span>
+<span id="cb494-182"><a href="session-information.html#cb494-182" tabindex="-1"></a><span class="do">## [152] gh_1.4.1                                  </span></span>
+<span id="cb494-183"><a href="session-information.html#cb494-183" tabindex="-1"></a><span class="do">## [153] ggrastr_1.0.2                             </span></span>
+<span id="cb494-184"><a href="session-information.html#cb494-184" tabindex="-1"></a><span class="do">## [154] ggbeeswarm_0.7.2                          </span></span>
+<span id="cb494-185"><a href="session-information.html#cb494-185" tabindex="-1"></a><span class="do">## [155] gert_2.1.4                                </span></span>
+<span id="cb494-186"><a href="session-information.html#cb494-186" tabindex="-1"></a><span class="do">## [156] generics_0.1.3                            </span></span>
+<span id="cb494-187"><a href="session-information.html#cb494-187" tabindex="-1"></a><span class="do">## [157] future.apply_1.11.3                       </span></span>
+<span id="cb494-188"><a href="session-information.html#cb494-188" tabindex="-1"></a><span class="do">## [158] futile.options_1.0.1                      </span></span>
+<span id="cb494-189"><a href="session-information.html#cb494-189" tabindex="-1"></a><span class="do">## [159] futile.logger_1.4.3                       </span></span>
+<span id="cb494-190"><a href="session-information.html#cb494-190" tabindex="-1"></a><span class="do">## [160] furrr_0.3.1                               </span></span>
+<span id="cb494-191"><a href="session-information.html#cb494-191" tabindex="-1"></a><span class="do">## [161] future_1.34.0                             </span></span>
+<span id="cb494-192"><a href="session-information.html#cb494-192" tabindex="-1"></a><span class="do">## [162] fs_1.6.4                                  </span></span>
+<span id="cb494-193"><a href="session-information.html#cb494-193" tabindex="-1"></a><span class="do">## [163] formatR_1.14                              </span></span>
+<span id="cb494-194"><a href="session-information.html#cb494-194" tabindex="-1"></a><span class="do">## [164] foreign_0.8-86                            </span></span>
+<span id="cb494-195"><a href="session-information.html#cb494-195" tabindex="-1"></a><span class="do">## [165] fontawesome_0.5.2                         </span></span>
+<span id="cb494-196"><a href="session-information.html#cb494-196" tabindex="-1"></a><span class="do">## [166] fitdistrplus_1.2-1                        </span></span>
+<span id="cb494-197"><a href="session-information.html#cb494-197" tabindex="-1"></a><span class="do">## [167] survival_3.7-0                            </span></span>
+<span id="cb494-198"><a href="session-information.html#cb494-198" tabindex="-1"></a><span class="do">## [168] fastmap_1.2.0                             </span></span>
+<span id="cb494-199"><a href="session-information.html#cb494-199" tabindex="-1"></a><span class="do">## [169] fastDummies_1.7.4                         </span></span>
+<span id="cb494-200"><a href="session-information.html#cb494-200" tabindex="-1"></a><span class="do">## [170] farver_2.1.2                              </span></span>
+<span id="cb494-201"><a href="session-information.html#cb494-201" tabindex="-1"></a><span class="do">## [171] fansi_1.0.6                               </span></span>
+<span id="cb494-202"><a href="session-information.html#cb494-202" tabindex="-1"></a><span class="do">## [172] evaluate_1.0.1                            </span></span>
+<span id="cb494-203"><a href="session-information.html#cb494-203" tabindex="-1"></a><span class="do">## [173] ellipsis_0.3.2                            </span></span>
+<span id="cb494-204"><a href="session-information.html#cb494-204" tabindex="-1"></a><span class="do">## [174] edgeR_4.2.2                               </span></span>
+<span id="cb494-205"><a href="session-information.html#cb494-205" tabindex="-1"></a><span class="do">## [175] limma_3.60.6                              </span></span>
+<span id="cb494-206"><a href="session-information.html#cb494-206" tabindex="-1"></a><span class="do">## [176] e1071_1.7-16                              </span></span>
+<span id="cb494-207"><a href="session-information.html#cb494-207" tabindex="-1"></a><span class="do">## [177] dqrng_0.4.1                               </span></span>
+<span id="cb494-208"><a href="session-information.html#cb494-208" tabindex="-1"></a><span class="do">## [178] dplyr_1.1.4                               </span></span>
+<span id="cb494-209"><a href="session-information.html#cb494-209" tabindex="-1"></a><span class="do">## [179] downlit_0.4.4                             </span></span>
+<span id="cb494-210"><a href="session-information.html#cb494-210" tabindex="-1"></a><span class="do">## [180] dotCall64_1.2                             </span></span>
+<span id="cb494-211"><a href="session-information.html#cb494-211" tabindex="-1"></a><span class="do">## [181] doParallel_1.0.17                         </span></span>
+<span id="cb494-212"><a href="session-information.html#cb494-212" tabindex="-1"></a><span class="do">## [182] iterators_1.0.14                          </span></span>
+<span id="cb494-213"><a href="session-information.html#cb494-213" tabindex="-1"></a><span class="do">## [183] foreach_1.5.2                             </span></span>
+<span id="cb494-214"><a href="session-information.html#cb494-214" tabindex="-1"></a><span class="do">## [184] digest_0.6.37                             </span></span>
+<span id="cb494-215"><a href="session-information.html#cb494-215" tabindex="-1"></a><span class="do">## [185] diffobj_0.3.5                             </span></span>
+<span id="cb494-216"><a href="session-information.html#cb494-216" tabindex="-1"></a><span class="do">## [186] desc_1.4.3                                </span></span>
+<span id="cb494-217"><a href="session-information.html#cb494-217" tabindex="-1"></a><span class="do">## [187] deldir_2.0-4                              </span></span>
+<span id="cb494-218"><a href="session-information.html#cb494-218" tabindex="-1"></a><span class="do">## [188] curl_5.2.3                                </span></span>
+<span id="cb494-219"><a href="session-information.html#cb494-219" tabindex="-1"></a><span class="do">## [189] crosstalk_1.2.1                           </span></span>
+<span id="cb494-220"><a href="session-information.html#cb494-220" tabindex="-1"></a><span class="do">## [190] credentials_2.0.2                         </span></span>
+<span id="cb494-221"><a href="session-information.html#cb494-221" tabindex="-1"></a><span class="do">## [191] crayon_1.5.3                              </span></span>
+<span id="cb494-222"><a href="session-information.html#cb494-222" tabindex="-1"></a><span class="do">## [192] cpp11_0.5.0                               </span></span>
+<span id="cb494-223"><a href="session-information.html#cb494-223" tabindex="-1"></a><span class="do">## [193] cowplot_1.1.3                             </span></span>
+<span id="cb494-224"><a href="session-information.html#cb494-224" tabindex="-1"></a><span class="do">## [194] commonmark_1.9.2                          </span></span>
+<span id="cb494-225"><a href="session-information.html#cb494-225" tabindex="-1"></a><span class="do">## [195] colorspace_2.1-1                          </span></span>
+<span id="cb494-226"><a href="session-information.html#cb494-226" tabindex="-1"></a><span class="do">## [196] codetools_0.2-20                          </span></span>
+<span id="cb494-227"><a href="session-information.html#cb494-227" tabindex="-1"></a><span class="do">## [197] cluster_2.1.6                             </span></span>
+<span id="cb494-228"><a href="session-information.html#cb494-228" tabindex="-1"></a><span class="do">## [198] clue_0.3-65                               </span></span>
+<span id="cb494-229"><a href="session-information.html#cb494-229" tabindex="-1"></a><span class="do">## [199] clipr_0.8.0                               </span></span>
+<span id="cb494-230"><a href="session-information.html#cb494-230" tabindex="-1"></a><span class="do">## [200] cli_3.6.3                                 </span></span>
+<span id="cb494-231"><a href="session-information.html#cb494-231" tabindex="-1"></a><span class="do">## [201] classInt_0.4-10                           </span></span>
+<span id="cb494-232"><a href="session-information.html#cb494-232" tabindex="-1"></a><span class="do">## [202] class_7.3-22                              </span></span>
+<span id="cb494-233"><a href="session-information.html#cb494-233" tabindex="-1"></a><span class="do">## [203] callr_3.7.6                               </span></span>
+<span id="cb494-234"><a href="session-information.html#cb494-234" tabindex="-1"></a><span class="do">## [204] cachem_1.1.0                              </span></span>
+<span id="cb494-235"><a href="session-information.html#cb494-235" tabindex="-1"></a><span class="do">## [205] caTools_1.18.3                            </span></span>
+<span id="cb494-236"><a href="session-information.html#cb494-236" tabindex="-1"></a><span class="do">## [206] bslib_0.8.0                               </span></span>
+<span id="cb494-237"><a href="session-information.html#cb494-237" tabindex="-1"></a><span class="do">## [207] brio_1.1.5                                </span></span>
+<span id="cb494-238"><a href="session-information.html#cb494-238" tabindex="-1"></a><span class="do">## [208] brew_1.0-10                               </span></span>
+<span id="cb494-239"><a href="session-information.html#cb494-239" tabindex="-1"></a><span class="do">## [209] boot_1.3-30                               </span></span>
+<span id="cb494-240"><a href="session-information.html#cb494-240" tabindex="-1"></a><span class="do">## [210] bluster_1.14.0                            </span></span>
+<span id="cb494-241"><a href="session-information.html#cb494-241" tabindex="-1"></a><span class="do">## [211] blob_1.2.4                                </span></span>
+<span id="cb494-242"><a href="session-information.html#cb494-242" tabindex="-1"></a><span class="do">## [212] bitops_1.0-9                              </span></span>
+<span id="cb494-243"><a href="session-information.html#cb494-243" tabindex="-1"></a><span class="do">## [213] bit64_4.5.2                               </span></span>
+<span id="cb494-244"><a href="session-information.html#cb494-244" tabindex="-1"></a><span class="do">## [214] bit_4.5.0                                 </span></span>
+<span id="cb494-245"><a href="session-information.html#cb494-245" tabindex="-1"></a><span class="do">## [215] biglm_0.9-3                               </span></span>
+<span id="cb494-246"><a href="session-information.html#cb494-246" tabindex="-1"></a><span class="do">## [216] beeswarm_0.4.0                            </span></span>
+<span id="cb494-247"><a href="session-information.html#cb494-247" tabindex="-1"></a><span class="do">## [217] beachmat_2.20.0                           </span></span>
+<span id="cb494-248"><a href="session-information.html#cb494-248" tabindex="-1"></a><span class="do">## [218] batchelor_1.20.0                          </span></span>
+<span id="cb494-249"><a href="session-information.html#cb494-249" tabindex="-1"></a><span class="do">## [219] base64enc_0.1-3                           </span></span>
+<span id="cb494-250"><a href="session-information.html#cb494-250" tabindex="-1"></a><span class="do">## [220] assertthat_0.2.1                          </span></span>
+<span id="cb494-251"><a href="session-information.html#cb494-251" tabindex="-1"></a><span class="do">## [221] askpass_1.2.1                             </span></span>
+<span id="cb494-252"><a href="session-information.html#cb494-252" tabindex="-1"></a><span class="do">## [222] annotate_1.82.0                           </span></span>
+<span id="cb494-253"><a href="session-information.html#cb494-253" tabindex="-1"></a><span class="do">## [223] XML_3.99-0.17                             </span></span>
+<span id="cb494-254"><a href="session-information.html#cb494-254" tabindex="-1"></a><span class="do">## [224] UCSC.utils_1.0.0                          </span></span>
+<span id="cb494-255"><a href="session-information.html#cb494-255" tabindex="-1"></a><span class="do">## [225] TFMPvalue_0.0.9                           </span></span>
+<span id="cb494-256"><a href="session-information.html#cb494-256" tabindex="-1"></a><span class="do">## [226] TFBSTools_1.42.0                          </span></span>
+<span id="cb494-257"><a href="session-information.html#cb494-257" tabindex="-1"></a><span class="do">## [227] ScaledMatrix_1.12.0                       </span></span>
+<span id="cb494-258"><a href="session-information.html#cb494-258" tabindex="-1"></a><span class="do">## [228] Rhtslib_3.0.0                             </span></span>
+<span id="cb494-259"><a href="session-information.html#cb494-259" tabindex="-1"></a><span class="do">## [229] RhpcBLASctl_0.23-42                       </span></span>
+<span id="cb494-260"><a href="session-information.html#cb494-260" tabindex="-1"></a><span class="do">## [230] Rhdf5lib_1.26.0                           </span></span>
+<span id="cb494-261"><a href="session-information.html#cb494-261" tabindex="-1"></a><span class="do">## [231] ResidualMatrix_1.14.1                     </span></span>
+<span id="cb494-262"><a href="session-information.html#cb494-262" tabindex="-1"></a><span class="do">## [232] RcppTOML_0.2.2                            </span></span>
+<span id="cb494-263"><a href="session-information.html#cb494-263" tabindex="-1"></a><span class="do">## [233] RcppProgress_0.4.2                        </span></span>
+<span id="cb494-264"><a href="session-information.html#cb494-264" tabindex="-1"></a><span class="do">## [234] RcppHNSW_0.6.0                            </span></span>
+<span id="cb494-265"><a href="session-information.html#cb494-265" tabindex="-1"></a><span class="do">## [235] RcppEigen_0.3.4.0.2                       </span></span>
+<span id="cb494-266"><a href="session-information.html#cb494-266" tabindex="-1"></a><span class="do">## [236] RcppAnnoy_0.0.22                          </span></span>
+<span id="cb494-267"><a href="session-information.html#cb494-267" tabindex="-1"></a><span class="do">## [237] RSpectra_0.16-2                           </span></span>
+<span id="cb494-268"><a href="session-information.html#cb494-268" tabindex="-1"></a><span class="do">## [238] RSQLite_2.3.7                             </span></span>
+<span id="cb494-269"><a href="session-information.html#cb494-269" tabindex="-1"></a><span class="do">## [239] ROCR_1.0-11                               </span></span>
+<span id="cb494-270"><a href="session-information.html#cb494-270" tabindex="-1"></a><span class="do">## [240] RCurl_1.98-1.16                           </span></span>
+<span id="cb494-271"><a href="session-information.html#cb494-271" tabindex="-1"></a><span class="do">## [241] RColorBrewer_1.1-3                        </span></span>
+<span id="cb494-272"><a href="session-information.html#cb494-272" tabindex="-1"></a><span class="do">## [242] RANN_2.6.2                                </span></span>
+<span id="cb494-273"><a href="session-information.html#cb494-273" tabindex="-1"></a><span class="do">## [243] R6_2.5.1                                  </span></span>
+<span id="cb494-274"><a href="session-information.html#cb494-274" tabindex="-1"></a><span class="do">## [244] R.utils_2.12.3                            </span></span>
+<span id="cb494-275"><a href="session-information.html#cb494-275" tabindex="-1"></a><span class="do">## [245] R.oo_1.26.0                               </span></span>
+<span id="cb494-276"><a href="session-information.html#cb494-276" tabindex="-1"></a><span class="do">## [246] R.methodsS3_1.8.2                         </span></span>
+<span id="cb494-277"><a href="session-information.html#cb494-277" tabindex="-1"></a><span class="do">## [247] MASS_7.3-61                               </span></span>
+<span id="cb494-278"><a href="session-information.html#cb494-278" tabindex="-1"></a><span class="do">## [248] KernSmooth_2.23-24                        </span></span>
+<span id="cb494-279"><a href="session-information.html#cb494-279" tabindex="-1"></a><span class="do">## [249] KEGGREST_1.44.1                           </span></span>
+<span id="cb494-280"><a href="session-information.html#cb494-280" tabindex="-1"></a><span class="do">## [250] HDF5Array_1.32.1                          </span></span>
+<span id="cb494-281"><a href="session-information.html#cb494-281" tabindex="-1"></a><span class="do">## [251] GlobalOptions_0.1.2                       </span></span>
+<span id="cb494-282"><a href="session-information.html#cb494-282" tabindex="-1"></a><span class="do">## [252] GetoptLong_1.0.5                          </span></span>
+<span id="cb494-283"><a href="session-information.html#cb494-283" tabindex="-1"></a><span class="do">## [253] GenomicAlignments_1.40.0                  </span></span>
+<span id="cb494-284"><a href="session-information.html#cb494-284" tabindex="-1"></a><span class="do">## [254] Rsamtools_2.20.0                          </span></span>
+<span id="cb494-285"><a href="session-information.html#cb494-285" tabindex="-1"></a><span class="do">## [255] GenomeInfoDbData_1.2.12                   </span></span>
+<span id="cb494-286"><a href="session-information.html#cb494-286" tabindex="-1"></a><span class="do">## [256] GO.db_3.19.1                              </span></span>
+<span id="cb494-287"><a href="session-information.html#cb494-287" tabindex="-1"></a><span class="do">## [257] FNN_1.1.4.1                               </span></span>
+<span id="cb494-288"><a href="session-information.html#cb494-288" tabindex="-1"></a><span class="do">## [258] DirichletMultinomial_1.46.0               </span></span>
+<span id="cb494-289"><a href="session-information.html#cb494-289" tabindex="-1"></a><span class="do">## [259] DelayedMatrixStats_1.26.0                 </span></span>
+<span id="cb494-290"><a href="session-information.html#cb494-290" tabindex="-1"></a><span class="do">## [260] DelayedArray_0.30.1                       </span></span>
+<span id="cb494-291"><a href="session-information.html#cb494-291" tabindex="-1"></a><span class="do">## [261] SparseArray_1.4.8                         </span></span>
+<span id="cb494-292"><a href="session-information.html#cb494-292" tabindex="-1"></a><span class="do">## [262] S4Arrays_1.4.1                            </span></span>
+<span id="cb494-293"><a href="session-information.html#cb494-293" tabindex="-1"></a><span class="do">## [263] abind_1.4-8                               </span></span>
+<span id="cb494-294"><a href="session-information.html#cb494-294" tabindex="-1"></a><span class="do">## [264] DT_0.33                                   </span></span>
+<span id="cb494-295"><a href="session-information.html#cb494-295" tabindex="-1"></a><span class="do">## [265] DBI_1.2.3                                 </span></span>
+<span id="cb494-296"><a href="session-information.html#cb494-296" tabindex="-1"></a><span class="do">## [266] Cairo_1.6-2                               </span></span>
+<span id="cb494-297"><a href="session-information.html#cb494-297" tabindex="-1"></a><span class="do">## [267] CNEr_1.40.0                               </span></span>
+<span id="cb494-298"><a href="session-information.html#cb494-298" tabindex="-1"></a><span class="do">## [268] BiocVersion_3.19.1                        </span></span>
+<span id="cb494-299"><a href="session-information.html#cb494-299" tabindex="-1"></a><span class="do">## [269] BiocSingular_1.20.0                       </span></span>
+<span id="cb494-300"><a href="session-information.html#cb494-300" tabindex="-1"></a><span class="do">## [270] BiocParallel_1.38.0                       </span></span>
+<span id="cb494-301"><a href="session-information.html#cb494-301" tabindex="-1"></a><span class="do">## [271] BiocNeighbors_1.22.0                      </span></span>
+<span id="cb494-302"><a href="session-information.html#cb494-302" tabindex="-1"></a><span class="do">## [272] BiocManager_1.30.25                       </span></span>
+<span id="cb494-303"><a href="session-information.html#cb494-303" tabindex="-1"></a><span class="do">## [273] BH_1.84.0-0                               </span></span>
+<span id="cb494-304"><a href="session-information.html#cb494-304" tabindex="-1"></a><span class="do">## [274] EnsDb.Hsapiens.v86_2.99.0                 </span></span>
+<span id="cb494-305"><a href="session-information.html#cb494-305" tabindex="-1"></a><span class="do">## [275] ensembldb_2.28.1                          </span></span>
+<span id="cb494-306"><a href="session-information.html#cb494-306" tabindex="-1"></a><span class="do">## [276] AnnotationFilter_1.28.0                   </span></span>
+<span id="cb494-307"><a href="session-information.html#cb494-307" tabindex="-1"></a><span class="do">## [277] BSgenome.Hsapiens.UCSC.hg38_1.4.5         </span></span>
+<span id="cb494-308"><a href="session-information.html#cb494-308" tabindex="-1"></a><span class="do">## [278] slingshot_2.12.0                          </span></span>
+<span id="cb494-309"><a href="session-information.html#cb494-309" tabindex="-1"></a><span class="do">## [279] TrajectoryUtils_1.12.0                    </span></span>
+<span id="cb494-310"><a href="session-information.html#cb494-310" tabindex="-1"></a><span class="do">## [280] princurve_2.1.6                           </span></span>
+<span id="cb494-311"><a href="session-information.html#cb494-311" tabindex="-1"></a><span class="do">## [281] monocle3_1.3.7                            </span></span>
+<span id="cb494-312"><a href="session-information.html#cb494-312" tabindex="-1"></a><span class="do">## [282] chromVAR_1.26.0                           </span></span>
+<span id="cb494-313"><a href="session-information.html#cb494-313" tabindex="-1"></a><span class="do">## [283] ggseqlogo_0.2                             </span></span>
+<span id="cb494-314"><a href="session-information.html#cb494-314" tabindex="-1"></a><span class="do">## [284] chromVARmotifs_0.2.0                      </span></span>
+<span id="cb494-315"><a href="session-information.html#cb494-315" tabindex="-1"></a><span class="do">## [285] motifmatchr_1.26.0                        </span></span>
+<span id="cb494-316"><a href="session-information.html#cb494-316" tabindex="-1"></a><span class="do">## [286] presto_1.0.0                              </span></span>
+<span id="cb494-317"><a href="session-information.html#cb494-317" tabindex="-1"></a><span class="do">## [287] ggrepel_0.9.6                             </span></span>
+<span id="cb494-318"><a href="session-information.html#cb494-318" tabindex="-1"></a><span class="do">## [288] hexbin_1.28.4                             </span></span>
+<span id="cb494-319"><a href="session-information.html#cb494-319" tabindex="-1"></a><span class="do">## [289] circlize_0.4.16                           </span></span>
+<span id="cb494-320"><a href="session-information.html#cb494-320" tabindex="-1"></a><span class="do">## [290] ComplexHeatmap_2.20.0                     </span></span>
+<span id="cb494-321"><a href="session-information.html#cb494-321" tabindex="-1"></a><span class="do">## [291] Rtsne_0.17                                </span></span>
+<span id="cb494-322"><a href="session-information.html#cb494-322" tabindex="-1"></a><span class="do">## [292] igraph_2.1.1                              </span></span>
+<span id="cb494-323"><a href="session-information.html#cb494-323" tabindex="-1"></a><span class="do">## [293] scran_1.32.0                              </span></span>
+<span id="cb494-324"><a href="session-information.html#cb494-324" tabindex="-1"></a><span class="do">## [294] scuttle_1.14.0                            </span></span>
+<span id="cb494-325"><a href="session-information.html#cb494-325" tabindex="-1"></a><span class="do">## [295] SingleCellExperiment_1.26.0               </span></span>
+<span id="cb494-326"><a href="session-information.html#cb494-326" tabindex="-1"></a><span class="do">## [296] pheatmap_1.0.12                           </span></span>
+<span id="cb494-327"><a href="session-information.html#cb494-327" tabindex="-1"></a><span class="do">## [297] harmony_1.2.1                             </span></span>
+<span id="cb494-328"><a href="session-information.html#cb494-328" tabindex="-1"></a><span class="do">## [298] uwot_0.2.2                                </span></span>
+<span id="cb494-329"><a href="session-information.html#cb494-329" tabindex="-1"></a><span class="do">## [299] ggridges_0.5.6                            </span></span>
+<span id="cb494-330"><a href="session-information.html#cb494-330" tabindex="-1"></a><span class="do">## [300] BSgenome.Hsapiens.UCSC.hg19_1.4.3         </span></span>
+<span id="cb494-331"><a href="session-information.html#cb494-331" tabindex="-1"></a><span class="do">## [301] nabor_0.5.0                               </span></span>
+<span id="cb494-332"><a href="session-information.html#cb494-332" tabindex="-1"></a><span class="do">## [302] Seurat_5.1.0                              </span></span>
+<span id="cb494-333"><a href="session-information.html#cb494-333" tabindex="-1"></a><span class="do">## [303] SeuratObject_5.0.2                        </span></span>
+<span id="cb494-334"><a href="session-information.html#cb494-334" tabindex="-1"></a><span class="do">## [304] sp_2.1-4                                  </span></span>
+<span id="cb494-335"><a href="session-information.html#cb494-335" tabindex="-1"></a><span class="do">## [305] pdftools_3.4.1                            </span></span>
+<span id="cb494-336"><a href="session-information.html#cb494-336" tabindex="-1"></a><span class="do">## [306] org.Dm.eg.db_3.19.1                       </span></span>
+<span id="cb494-337"><a href="session-information.html#cb494-337" tabindex="-1"></a><span class="do">## [307] TxDb.Dmelanogaster.UCSC.dm6.ensGene_3.12.0</span></span>
+<span id="cb494-338"><a href="session-information.html#cb494-338" tabindex="-1"></a><span class="do">## [308] GenomicFeatures_1.56.0                    </span></span>
+<span id="cb494-339"><a href="session-information.html#cb494-339" tabindex="-1"></a><span class="do">## [309] AnnotationDbi_1.66.0                      </span></span>
+<span id="cb494-340"><a href="session-information.html#cb494-340" tabindex="-1"></a><span class="do">## [310] BSgenome.Dmelanogaster.UCSC.dm6_1.4.1     </span></span>
+<span id="cb494-341"><a href="session-information.html#cb494-341" tabindex="-1"></a><span class="do">## [311] BSgenome_1.72.0                           </span></span>
+<span id="cb494-342"><a href="session-information.html#cb494-342" tabindex="-1"></a><span class="do">## [312] rtracklayer_1.64.0                        </span></span>
+<span id="cb494-343"><a href="session-information.html#cb494-343" tabindex="-1"></a><span class="do">## [313] BiocIO_1.14.0                             </span></span>
+<span id="cb494-344"><a href="session-information.html#cb494-344" tabindex="-1"></a><span class="do">## [314] Biostrings_2.72.1                         </span></span>
+<span id="cb494-345"><a href="session-information.html#cb494-345" tabindex="-1"></a><span class="do">## [315] XVector_0.44.0                            </span></span>
+<span id="cb494-346"><a href="session-information.html#cb494-346" tabindex="-1"></a><span class="do">## [316] rhdf5_2.48.0                              </span></span>
+<span id="cb494-347"><a href="session-information.html#cb494-347" tabindex="-1"></a><span class="do">## [317] SummarizedExperiment_1.34.0               </span></span>
+<span id="cb494-348"><a href="session-information.html#cb494-348" tabindex="-1"></a><span class="do">## [318] Biobase_2.64.0                            </span></span>
+<span id="cb494-349"><a href="session-information.html#cb494-349" tabindex="-1"></a><span class="do">## [319] RcppArmadillo_14.0.2-1                    </span></span>
+<span id="cb494-350"><a href="session-information.html#cb494-350" tabindex="-1"></a><span class="do">## [320] Rcpp_1.0.13                               </span></span>
+<span id="cb494-351"><a href="session-information.html#cb494-351" tabindex="-1"></a><span class="do">## [321] Matrix_1.7-1                              </span></span>
+<span id="cb494-352"><a href="session-information.html#cb494-352" tabindex="-1"></a><span class="do">## [322] GenomicRanges_1.56.2                      </span></span>
+<span id="cb494-353"><a href="session-information.html#cb494-353" tabindex="-1"></a><span class="do">## [323] GenomeInfoDb_1.40.1                       </span></span>
+<span id="cb494-354"><a href="session-information.html#cb494-354" tabindex="-1"></a><span class="do">## [324] IRanges_2.38.1                            </span></span>
+<span id="cb494-355"><a href="session-information.html#cb494-355" tabindex="-1"></a><span class="do">## [325] S4Vectors_0.42.1                          </span></span>
+<span id="cb494-356"><a href="session-information.html#cb494-356" tabindex="-1"></a><span class="do">## [326] BiocGenerics_0.50.0                       </span></span>
+<span id="cb494-357"><a href="session-information.html#cb494-357" tabindex="-1"></a><span class="do">## [327] sparseMatrixStats_1.16.0                  </span></span>
+<span id="cb494-358"><a href="session-information.html#cb494-358" tabindex="-1"></a><span class="do">## [328] MatrixGenerics_1.16.0                     </span></span>
+<span id="cb494-359"><a href="session-information.html#cb494-359" tabindex="-1"></a><span class="do">## [329] matrixStats_1.4.1                         </span></span>
+<span id="cb494-360"><a href="session-information.html#cb494-360" tabindex="-1"></a><span class="do">## [330] data.table_1.16.2                         </span></span>
+<span id="cb494-361"><a href="session-information.html#cb494-361" tabindex="-1"></a><span class="do">## [331] stringr_1.5.1                             </span></span>
+<span id="cb494-362"><a href="session-information.html#cb494-362" tabindex="-1"></a><span class="do">## [332] plyr_1.8.9                                </span></span>
+<span id="cb494-363"><a href="session-information.html#cb494-363" tabindex="-1"></a><span class="do">## [333] magrittr_2.0.3                            </span></span>
+<span id="cb494-364"><a href="session-information.html#cb494-364" tabindex="-1"></a><span class="do">## [334] ggplot2_3.5.1                             </span></span>
+<span id="cb494-365"><a href="session-information.html#cb494-365" tabindex="-1"></a><span class="do">## [335] gtable_0.3.6                              </span></span>
+<span id="cb494-366"><a href="session-information.html#cb494-366" tabindex="-1"></a><span class="do">## [336] gtools_3.9.5                              </span></span>
+<span id="cb494-367"><a href="session-information.html#cb494-367" tabindex="-1"></a><span class="do">## [337] gridExtra_2.3                             </span></span>
+<span id="cb494-368"><a href="session-information.html#cb494-368" tabindex="-1"></a><span class="do">## [338] devtools_2.4.5                            </span></span>
+<span id="cb494-369"><a href="session-information.html#cb494-369" tabindex="-1"></a><span class="do">## [339] usethis_3.0.0                             </span></span>
+<span id="cb494-370"><a href="session-information.html#cb494-370" tabindex="-1"></a><span class="do">## [340] ArchR_1.0.3                               </span></span>
+<span id="cb494-371"><a href="session-information.html#cb494-371" tabindex="-1"></a><span class="do">## [341] testthat_3.2.1.1                          </span></span>
+<span id="cb494-372"><a href="session-information.html#cb494-372" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb494-373"><a href="session-information.html#cb494-373" tabindex="-1"></a><span class="do">## loaded via a namespace (and not attached):</span></span>
+<span id="cb494-374"><a href="session-information.html#cb494-374" tabindex="-1"></a><span class="do">## [1] ProtGenerics_1.36.0 tools_4.4.1         bookdown_0.41      </span></span>
+<span id="cb494-375"><a href="session-information.html#cb494-375" tabindex="-1"></a><span class="do">## [4] qpdf_1.3.4          splines_4.4.1       compiler_4.4.1     </span></span>
+<span id="cb494-376"><a href="session-information.html#cb494-376" tabindex="-1"></a><span class="do">## [7] svglite_2.1.3</span></span></code></pre></div>
 
 </div>
             </section>

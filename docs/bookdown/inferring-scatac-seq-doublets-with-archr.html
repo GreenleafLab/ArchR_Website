@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>4.2 Inferring scATAC-seq Doublets with ArchR | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
   <meta name="description" content="A guide to ArchR" />
-  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
   <meta property="og:title" content="4.2 Inferring scATAC-seq Doublets with ArchR | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2022-12-23" />
+<meta name="date" content="2025-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,13 +52,13 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -68,7 +68,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -94,7 +94,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -107,7 +107,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -121,6 +121,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -144,6 +148,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
 <li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+<li class="chapter" data-level="2.3" data-path="using-docker-for-pre-compiled-environment-setup.html"><a href="using-docker-for-pre-compiled-environment-setup.html"><i class="fa fa-check"></i><b>2.3</b> Using Docker for pre-compiled environment setup</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
 <ul>
@@ -304,28 +309,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">4.2</span> Inferring scATAC-seq Doublets with ArchR<a href="inferring-scatac-seq-doublets-with-archr.html#inferring-scatac-seq-doublets-with-archr" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>By default ArchR uses the doublet parameters described in the ArchR manuscript. This is likely a good place to start but we encourage all users to inspect the pre- and post-doublet removal data to understand how doublet removal is affecting the cells. We show some of the main adjustable features below to illustrate how this can be customized to a given application.</p>
 <p>In ArchR, doublet removal is performed in a single step using <code>addDoubletScores()</code>. This adds the infered doublet scores to each Arrow file and will take approximately 2-5 minutes per sample of the tutorial data. You can always try <code>?addDoubletScores</code> to see further documentation on parameters for doublet identification (or any ArchR function for that matter).</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-1" aria-hidden="true" tabindex="-1"></a>doubScores <span class="ot">&lt;-</span> <span class="fu">addDoubletScores</span>(</span>
-<span id="cb35-2"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">input =</span> ArrowFiles,</span>
-<span id="cb35-3"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">k =</span> <span class="dv">10</span>, <span class="co">#Refers to how many cells near a &quot;pseudo-doublet&quot; to count.</span></span>
-<span id="cb35-4"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">knnMethod =</span> <span class="st">&quot;UMAP&quot;</span>, <span class="co">#Refers to the embedding to use for nearest neighbor search with doublet projection.</span></span>
-<span id="cb35-5"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">LSIMethod =</span> <span class="dv">1</span></span>
-<span id="cb35-6"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb35-7"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addDoubletScores-371b04f76d5a3-Date-2022-12-23_Time-05-31-50.log</span></span>
-<span id="cb35-8"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb35-9"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 05:31:51 : Batch Execution w/ safelapply!, 0 mins elapsed.</span></span>
-<span id="cb35-10"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 05:31:51 : scATAC_BMMC_R1 (1 of 3) :  Computing Doublet Statistics, 0 mins elapsed.</span></span>
-<span id="cb35-11"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: The following arguments are not used: row.names</span></span>
-<span id="cb35-12"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-12" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1 (1 of 3) : UMAP Projection R^2 = 0.9864</span></span>
-<span id="cb35-13"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-13" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1 (1 of 3) : UMAP Projection R^2 = 0.9864</span></span>
-<span id="cb35-14"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 05:33:35 : scATAC_CD34_BMMC_R1 (2 of 3) :  Computing Doublet Statistics, 1.738 mins elapsed.</span></span>
-<span id="cb35-15"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: The following arguments are not used: row.names</span></span>
-<span id="cb35-16"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-16" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_CD34_BMMC_R1 (2 of 3) : UMAP Projection R^2 = 0.99047</span></span>
-<span id="cb35-17"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-17" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_CD34_BMMC_R1 (2 of 3) : UMAP Projection R^2 = 0.99047</span></span>
-<span id="cb35-18"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 05:35:05 : scATAC_PBMC_R1 (3 of 3) :  Computing Doublet Statistics, 3.223 mins elapsed.</span></span>
-<span id="cb35-19"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-19" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: The following arguments are not used: row.names</span></span>
-<span id="cb35-20"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-20" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1 (3 of 3) : UMAP Projection R^2 = 0.99383</span></span>
-<span id="cb35-21"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-21" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1 (3 of 3) : UMAP Projection R^2 = 0.99383</span></span>
-<span id="cb35-22"><a href="inferring-scatac-seq-doublets-with-archr.html#cb35-22" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-addDoubletScores-371b04f76d5a3-Date-2022-12-23_Time-05-31-50.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="inferring-scatac-seq-doublets-with-archr.html#cb40-1" tabindex="-1"></a>doubScores <span class="ot">&lt;-</span> <span class="fu">addDoubletScores</span>(</span>
+<span id="cb40-2"><a href="inferring-scatac-seq-doublets-with-archr.html#cb40-2" tabindex="-1"></a>    <span class="at">input =</span> ArrowFiles,</span>
+<span id="cb40-3"><a href="inferring-scatac-seq-doublets-with-archr.html#cb40-3" tabindex="-1"></a>    <span class="at">k =</span> <span class="dv">10</span>, <span class="co">#Refers to how many cells near a &quot;pseudo-doublet&quot; to count.</span></span>
+<span id="cb40-4"><a href="inferring-scatac-seq-doublets-with-archr.html#cb40-4" tabindex="-1"></a>    <span class="at">knnMethod =</span> <span class="st">&quot;UMAP&quot;</span>, <span class="co">#Refers to the embedding to use for nearest neighbor search with doublet projection.</span></span>
+<span id="cb40-5"><a href="inferring-scatac-seq-doublets-with-archr.html#cb40-5" tabindex="-1"></a>    <span class="at">LSIMethod =</span> <span class="dv">1</span></span>
+<span id="cb40-6"><a href="inferring-scatac-seq-doublets-with-archr.html#cb40-6" tabindex="-1"></a>)</span>
+<span id="cb40-7"><a href="inferring-scatac-seq-doublets-with-archr.html#cb40-7" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addDoubletScores-1a11f3079b4-Date-2025-01-23_Time-19-49-00.602906.log</span></span>
+<span id="cb40-8"><a href="inferring-scatac-seq-doublets-with-archr.html#cb40-8" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb40-9"><a href="inferring-scatac-seq-doublets-with-archr.html#cb40-9" tabindex="-1"></a><span class="do">## 2025-01-23 19:49:00.986367 : Batch Execution w/ safelapply!, 0 mins elapsed.</span></span>
+<span id="cb40-10"><a href="inferring-scatac-seq-doublets-with-archr.html#cb40-10" tabindex="-1"></a><span class="do">## 2025-01-23 19:49:01.017862 : scATAC_BMMC_R1 (1 of 3) :  Computing Doublet Statistics, 0.001 mins elapsed.</span></span>
+<span id="cb40-11"><a href="inferring-scatac-seq-doublets-with-archr.html#cb40-11" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1 (1 of 3) : UMAP Projection R^2 = 0.98913</span></span>
+<span id="cb40-12"><a href="inferring-scatac-seq-doublets-with-archr.html#cb40-12" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1 (1 of 3) : UMAP Projection R^2 = 0.98913</span></span>
+<span id="cb40-13"><a href="inferring-scatac-seq-doublets-with-archr.html#cb40-13" tabindex="-1"></a><span class="do">## 2025-01-23 19:50:46.996399 : scATAC_CD34_BMMC_R1 (2 of 3) :  Computing Doublet Statistics, 1.767 mins elapsed.</span></span>
+<span id="cb40-14"><a href="inferring-scatac-seq-doublets-with-archr.html#cb40-14" tabindex="-1"></a><span class="do">## scATAC_CD34_BMMC_R1 (2 of 3) : UMAP Projection R^2 = 0.99312</span></span>
+<span id="cb40-15"><a href="inferring-scatac-seq-doublets-with-archr.html#cb40-15" tabindex="-1"></a><span class="do">## scATAC_CD34_BMMC_R1 (2 of 3) : UMAP Projection R^2 = 0.99312</span></span>
+<span id="cb40-16"><a href="inferring-scatac-seq-doublets-with-archr.html#cb40-16" tabindex="-1"></a><span class="do">## 2025-01-23 19:52:17.30275 : scATAC_PBMC_R1 (3 of 3) :  Computing Doublet Statistics, 3.272 mins elapsed.</span></span>
+<span id="cb40-17"><a href="inferring-scatac-seq-doublets-with-archr.html#cb40-17" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1 (3 of 3) : UMAP Projection R^2 = 0.99346</span></span>
+<span id="cb40-18"><a href="inferring-scatac-seq-doublets-with-archr.html#cb40-18" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1 (3 of 3) : UMAP Projection R^2 = 0.99346</span></span>
+<span id="cb40-19"><a href="inferring-scatac-seq-doublets-with-archr.html#cb40-19" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-addDoubletScores-1a11f3079b4-Date-2025-01-23_Time-19-49-00.602906.log</span></span></code></pre></div>
 <p>In the above output, ArchR reports the R<sup>2</sup> value for the UMAP projection for each Arrow file. If these R<sup>2</sup> values are much lower (i.e. less than 0.9), this often indicates that the cells within the Arrow file have very little heterogeneity. This makes the accuracy of doublet calling worse because the majority of doublets would be “homotypic” - or a single droplet with two very similar cells. In these cases, ArchR will skip doublet prediction because it is not accurate. Alternatively, you can try setting <code>knnMethod = "LSI"</code> and <code>force = TRUE</code> to perform projection in the LSI subspace; however, you should manually assess the results and make sure this is performing as you would expect.</p>
 <p>Adding doublet scores will create plots in the “QualityControl” directory. There are 3 plots associated with each of your samples in this folder:</p>
 <ol style="list-style-type: decimal">

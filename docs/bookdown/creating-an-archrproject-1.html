@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>5.1 Creating An ArchRProject | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
   <meta name="description" content="A guide to ArchR" />
-  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
   <meta property="og:title" content="5.1 Creating An ArchRProject | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2022-12-23" />
+<meta name="date" content="2025-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,13 +52,13 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -68,7 +68,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -94,7 +94,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -107,7 +107,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -121,6 +121,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -144,6 +148,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
 <li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+<li class="chapter" data-level="2.3" data-path="using-docker-for-pre-compiled-environment-setup.html"><a href="using-docker-for-pre-compiled-environment-setup.html"><i class="fa fa-check"></i><b>2.3</b> Using Docker for pre-compiled environment setup</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
 <ul>
@@ -303,65 +308,65 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="creating-an-archrproject-1" class="section level2 hasAnchor" number="5.1">
 <h2><span class="header-section-number">5.1</span> Creating An ArchRProject<a href="creating-an-archrproject-1.html#creating-an-archrproject-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>First, we must create our <code>ArchRProject</code> by providing a list of Arrow files and a few other parameters. The <code>outputDirectory</code> here describes where all downstream analyses and plots will be saved. ArchR will automatically associate the previously provided <code>geneAnnotation</code> and <code>genomeAnnotation</code> with the new <code>ArchRProject</code>. These were stored when we ran <code>addArchRGenome("hg19")</code> in a previous chapter. Importantly, multiple <code>ArchRProject</code> objects <strong>cannot</strong> be combined later so any samples that you want to analyze must be included as Arrow files at this project creation step. You’ll note that we set the parameter <code>copyArrows = TRUE</code> which is recommended because we will modify the Arrow files in downstream operations and this preserves an original copy of the Arrow files for future usage as necessary.</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="creating-an-archrproject-1.html#cb37-1" aria-hidden="true" tabindex="-1"></a>projHeme1 <span class="ot">&lt;-</span> <span class="fu">ArchRProject</span>(</span>
-<span id="cb37-2"><a href="creating-an-archrproject-1.html#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">ArrowFiles =</span> ArrowFiles, </span>
-<span id="cb37-3"><a href="creating-an-archrproject-1.html#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">outputDirectory =</span> <span class="st">&quot;HemeTutorial&quot;</span>,</span>
-<span id="cb37-4"><a href="creating-an-archrproject-1.html#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">copyArrows =</span> <span class="cn">TRUE</span></span>
-<span id="cb37-5"><a href="creating-an-archrproject-1.html#cb37-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb37-6"><a href="creating-an-archrproject-1.html#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Using GeneAnnotation set by addArchRGenome(Hg19)!</span></span>
-<span id="cb37-7"><a href="creating-an-archrproject-1.html#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Using GeneAnnotation set by addArchRGenome(Hg19)!</span></span>
-<span id="cb37-8"><a href="creating-an-archrproject-1.html#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Validating Arrows...</span></span>
-<span id="cb37-9"><a href="creating-an-archrproject-1.html#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting SampleNames...</span></span>
-<span id="cb37-10"><a href="creating-an-archrproject-1.html#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb37-11"><a href="creating-an-archrproject-1.html#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Copying ArrowFiles to Ouptut Directory! If you want to save disk space set copyArrows = FALSE</span></span>
-<span id="cb37-12"><a href="creating-an-archrproject-1.html#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 2 3 </span></span>
-<span id="cb37-13"><a href="creating-an-archrproject-1.html#cb37-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting Cell Metadata...</span></span>
-<span id="cb37-14"><a href="creating-an-archrproject-1.html#cb37-14" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb37-15"><a href="creating-an-archrproject-1.html#cb37-15" aria-hidden="true" tabindex="-1"></a><span class="do">## Merging Cell Metadata...</span></span>
-<span id="cb37-16"><a href="creating-an-archrproject-1.html#cb37-16" aria-hidden="true" tabindex="-1"></a><span class="do">## Initializing ArchRProject...</span></span>
-<span id="cb37-17"><a href="creating-an-archrproject-1.html#cb37-17" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb37-18"><a href="creating-an-archrproject-1.html#cb37-18" aria-hidden="true" tabindex="-1"></a><span class="do">##                                                    / |</span></span>
-<span id="cb37-19"><a href="creating-an-archrproject-1.html#cb37-19" aria-hidden="true" tabindex="-1"></a><span class="do">##                                                  /    \</span></span>
-<span id="cb37-20"><a href="creating-an-archrproject-1.html#cb37-20" aria-hidden="true" tabindex="-1"></a><span class="do">##             .                                  /      |.</span></span>
-<span id="cb37-21"><a href="creating-an-archrproject-1.html#cb37-21" aria-hidden="true" tabindex="-1"></a><span class="do">##             \\\                              /        |.</span></span>
-<span id="cb37-22"><a href="creating-an-archrproject-1.html#cb37-22" aria-hidden="true" tabindex="-1"></a><span class="do">##               \\\                          /           `|.</span></span>
-<span id="cb37-23"><a href="creating-an-archrproject-1.html#cb37-23" aria-hidden="true" tabindex="-1"></a><span class="do">##                 \\\                      /              |.</span></span>
-<span id="cb37-24"><a href="creating-an-archrproject-1.html#cb37-24" aria-hidden="true" tabindex="-1"></a><span class="do">##                   \                    /                |\</span></span>
-<span id="cb37-25"><a href="creating-an-archrproject-1.html#cb37-25" aria-hidden="true" tabindex="-1"></a><span class="do">##                   \\#####\           /                  ||</span></span>
-<span id="cb37-26"><a href="creating-an-archrproject-1.html#cb37-26" aria-hidden="true" tabindex="-1"></a><span class="do">##                 ==###########&gt;      /                   ||</span></span>
-<span id="cb37-27"><a href="creating-an-archrproject-1.html#cb37-27" aria-hidden="true" tabindex="-1"></a><span class="do">##                  \\##==......\    /                     ||</span></span>
-<span id="cb37-28"><a href="creating-an-archrproject-1.html#cb37-28" aria-hidden="true" tabindex="-1"></a><span class="do">##             ______ =       =|__ /__                     ||      \\\</span></span>
-<span id="cb37-29"><a href="creating-an-archrproject-1.html#cb37-29" aria-hidden="true" tabindex="-1"></a><span class="do">##         ,--&#39; ,----`-,__ ___/&#39;  --,-`-===================##========&gt;</span></span>
-<span id="cb37-30"><a href="creating-an-archrproject-1.html#cb37-30" aria-hidden="true" tabindex="-1"></a><span class="do">##        \               &#39;        ##_______ _____ ,--,__,=##,__   ///</span></span>
-<span id="cb37-31"><a href="creating-an-archrproject-1.html#cb37-31" aria-hidden="true" tabindex="-1"></a><span class="do">##         ,    __==    ___,-,__,--&#39;#&#39;  ===&#39;      `-&#39;    | ##,-/</span></span>
-<span id="cb37-32"><a href="creating-an-archrproject-1.html#cb37-32" aria-hidden="true" tabindex="-1"></a><span class="do">##         -,____,---&#39;       \\####\\________________,--\\_##,/</span></span>
-<span id="cb37-33"><a href="creating-an-archrproject-1.html#cb37-33" aria-hidden="true" tabindex="-1"></a><span class="do">##            ___      .______        ______  __    __  .______      </span></span>
-<span id="cb37-34"><a href="creating-an-archrproject-1.html#cb37-34" aria-hidden="true" tabindex="-1"></a><span class="do">##           /   \     |   _  \      /      ||  |  |  | |   _  \     </span></span>
-<span id="cb37-35"><a href="creating-an-archrproject-1.html#cb37-35" aria-hidden="true" tabindex="-1"></a><span class="do">##          /  ^  \    |  |_)  |    |  ,----&#39;|  |__|  | |  |_)  |    </span></span>
-<span id="cb37-36"><a href="creating-an-archrproject-1.html#cb37-36" aria-hidden="true" tabindex="-1"></a><span class="do">##         /  /_\  \   |      /     |  |     |   __   | |      /     </span></span>
-<span id="cb37-37"><a href="creating-an-archrproject-1.html#cb37-37" aria-hidden="true" tabindex="-1"></a><span class="do">##        /  _____  \  |  |\  \\___ |  `----.|  |  |  | |  |\  \\___.</span></span>
-<span id="cb37-38"><a href="creating-an-archrproject-1.html#cb37-38" aria-hidden="true" tabindex="-1"></a><span class="do">##       /__/     \__\ | _| `._____| \______||__|  |__| | _| `._____|</span></span>
-<span id="cb37-39"><a href="creating-an-archrproject-1.html#cb37-39" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="creating-an-archrproject-1.html#cb42-1" tabindex="-1"></a>projHeme1 <span class="ot">&lt;-</span> <span class="fu">ArchRProject</span>(</span>
+<span id="cb42-2"><a href="creating-an-archrproject-1.html#cb42-2" tabindex="-1"></a>  <span class="at">ArrowFiles =</span> ArrowFiles, </span>
+<span id="cb42-3"><a href="creating-an-archrproject-1.html#cb42-3" tabindex="-1"></a>  <span class="at">outputDirectory =</span> <span class="st">&quot;HemeTutorial&quot;</span>,</span>
+<span id="cb42-4"><a href="creating-an-archrproject-1.html#cb42-4" tabindex="-1"></a>  <span class="at">copyArrows =</span> <span class="cn">TRUE</span></span>
+<span id="cb42-5"><a href="creating-an-archrproject-1.html#cb42-5" tabindex="-1"></a>)</span>
+<span id="cb42-6"><a href="creating-an-archrproject-1.html#cb42-6" tabindex="-1"></a><span class="do">## Using GeneAnnotation set by addArchRGenome(Hg19)!</span></span>
+<span id="cb42-7"><a href="creating-an-archrproject-1.html#cb42-7" tabindex="-1"></a><span class="do">## Using GeneAnnotation set by addArchRGenome(Hg19)!</span></span>
+<span id="cb42-8"><a href="creating-an-archrproject-1.html#cb42-8" tabindex="-1"></a><span class="do">## Validating Arrows...</span></span>
+<span id="cb42-9"><a href="creating-an-archrproject-1.html#cb42-9" tabindex="-1"></a><span class="do">## Getting SampleNames...</span></span>
+<span id="cb42-10"><a href="creating-an-archrproject-1.html#cb42-10" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb42-11"><a href="creating-an-archrproject-1.html#cb42-11" tabindex="-1"></a><span class="do">## Copying ArrowFiles to Ouptut Directory! If you want to save disk space set copyArrows = FALSE</span></span>
+<span id="cb42-12"><a href="creating-an-archrproject-1.html#cb42-12" tabindex="-1"></a><span class="do">## 1 2 3 </span></span>
+<span id="cb42-13"><a href="creating-an-archrproject-1.html#cb42-13" tabindex="-1"></a><span class="do">## Getting Cell Metadata...</span></span>
+<span id="cb42-14"><a href="creating-an-archrproject-1.html#cb42-14" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb42-15"><a href="creating-an-archrproject-1.html#cb42-15" tabindex="-1"></a><span class="do">## Merging Cell Metadata...</span></span>
+<span id="cb42-16"><a href="creating-an-archrproject-1.html#cb42-16" tabindex="-1"></a><span class="do">## Initializing ArchRProject...</span></span>
+<span id="cb42-17"><a href="creating-an-archrproject-1.html#cb42-17" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb42-18"><a href="creating-an-archrproject-1.html#cb42-18" tabindex="-1"></a><span class="do">##                                                    / |</span></span>
+<span id="cb42-19"><a href="creating-an-archrproject-1.html#cb42-19" tabindex="-1"></a><span class="do">##                                                  /    \</span></span>
+<span id="cb42-20"><a href="creating-an-archrproject-1.html#cb42-20" tabindex="-1"></a><span class="do">##             .                                  /      |.</span></span>
+<span id="cb42-21"><a href="creating-an-archrproject-1.html#cb42-21" tabindex="-1"></a><span class="do">##             \\\                              /        |.</span></span>
+<span id="cb42-22"><a href="creating-an-archrproject-1.html#cb42-22" tabindex="-1"></a><span class="do">##               \\\                          /           `|.</span></span>
+<span id="cb42-23"><a href="creating-an-archrproject-1.html#cb42-23" tabindex="-1"></a><span class="do">##                 \\\                      /              |.</span></span>
+<span id="cb42-24"><a href="creating-an-archrproject-1.html#cb42-24" tabindex="-1"></a><span class="do">##                   \                    /                |\</span></span>
+<span id="cb42-25"><a href="creating-an-archrproject-1.html#cb42-25" tabindex="-1"></a><span class="do">##                   \\#####\           /                  ||</span></span>
+<span id="cb42-26"><a href="creating-an-archrproject-1.html#cb42-26" tabindex="-1"></a><span class="do">##                 ==###########&gt;      /                   ||</span></span>
+<span id="cb42-27"><a href="creating-an-archrproject-1.html#cb42-27" tabindex="-1"></a><span class="do">##                  \\##==......\    /                     ||</span></span>
+<span id="cb42-28"><a href="creating-an-archrproject-1.html#cb42-28" tabindex="-1"></a><span class="do">##             ______ =       =|__ /__                     ||      \\\</span></span>
+<span id="cb42-29"><a href="creating-an-archrproject-1.html#cb42-29" tabindex="-1"></a><span class="do">##         ,--&#39; ,----`-,__ ___/&#39;  --,-`-===================##========&gt;</span></span>
+<span id="cb42-30"><a href="creating-an-archrproject-1.html#cb42-30" tabindex="-1"></a><span class="do">##        \               &#39;        ##_______ _____ ,--,__,=##,__   ///</span></span>
+<span id="cb42-31"><a href="creating-an-archrproject-1.html#cb42-31" tabindex="-1"></a><span class="do">##         ,    __==    ___,-,__,--&#39;#&#39;  ===&#39;      `-&#39;    | ##,-/</span></span>
+<span id="cb42-32"><a href="creating-an-archrproject-1.html#cb42-32" tabindex="-1"></a><span class="do">##         -,____,---&#39;       \\####\\________________,--\\_##,/</span></span>
+<span id="cb42-33"><a href="creating-an-archrproject-1.html#cb42-33" tabindex="-1"></a><span class="do">##            ___      .______        ______  __    __  .______      </span></span>
+<span id="cb42-34"><a href="creating-an-archrproject-1.html#cb42-34" tabindex="-1"></a><span class="do">##           /   \     |   _  \      /      ||  |  |  | |   _  \     </span></span>
+<span id="cb42-35"><a href="creating-an-archrproject-1.html#cb42-35" tabindex="-1"></a><span class="do">##          /  ^  \    |  |_)  |    |  ,----&#39;|  |__|  | |  |_)  |    </span></span>
+<span id="cb42-36"><a href="creating-an-archrproject-1.html#cb42-36" tabindex="-1"></a><span class="do">##         /  /_\  \   |      /     |  |     |   __   | |      /     </span></span>
+<span id="cb42-37"><a href="creating-an-archrproject-1.html#cb42-37" tabindex="-1"></a><span class="do">##        /  _____  \  |  |\  \\___ |  `----.|  |  |  | |  |\  \\___.</span></span>
+<span id="cb42-38"><a href="creating-an-archrproject-1.html#cb42-38" tabindex="-1"></a><span class="do">##       /__/     \__\ | _| `._____| \______||__|  |__| | _| `._____|</span></span>
+<span id="cb42-39"><a href="creating-an-archrproject-1.html#cb42-39" tabindex="-1"></a><span class="do">## </span></span></code></pre></div>
 <p>We call this <code>ArchRProject</code> “projHeme1” because it is the first iteration of our hematopoiesis project. Throughout this walkthrough we will modify and update this <code>ArchRProject</code> and keep track of which version of the project we are using by iterating the project number (i.e. “projHeme2”).</p>
 <p>We can examine the contents of our <code>ArchRProject</code>:</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="creating-an-archrproject-1.html#cb38-1" aria-hidden="true" tabindex="-1"></a>projHeme1</span>
-<span id="cb38-2"><a href="creating-an-archrproject-1.html#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb38-3"><a href="creating-an-archrproject-1.html#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="do">##            ___      .______        ______  __    __  .______      </span></span>
-<span id="cb38-4"><a href="creating-an-archrproject-1.html#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="do">##           /   \     |   _  \      /      ||  |  |  | |   _  \     </span></span>
-<span id="cb38-5"><a href="creating-an-archrproject-1.html#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="do">##          /  ^  \    |  |_)  |    |  ,----&#39;|  |__|  | |  |_)  |    </span></span>
-<span id="cb38-6"><a href="creating-an-archrproject-1.html#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="do">##         /  /_\  \   |      /     |  |     |   __   | |      /     </span></span>
-<span id="cb38-7"><a href="creating-an-archrproject-1.html#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="do">##        /  _____  \  |  |\  \\___ |  `----.|  |  |  | |  |\  \\___.</span></span>
-<span id="cb38-8"><a href="creating-an-archrproject-1.html#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="do">##       /__/     \__\ | _| `._____| \______||__|  |__| | _| `._____|</span></span>
-<span id="cb38-9"><a href="creating-an-archrproject-1.html#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb38-10"><a href="creating-an-archrproject-1.html#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="do">## class: ArchRProject </span></span>
-<span id="cb38-11"><a href="creating-an-archrproject-1.html#cb38-11" aria-hidden="true" tabindex="-1"></a><span class="do">## outputDirectory: /corces/home/rcorces/scripts/github/ArchR_Website_Testing/bookdown/HemeTutorial </span></span>
-<span id="cb38-12"><a href="creating-an-archrproject-1.html#cb38-12" aria-hidden="true" tabindex="-1"></a><span class="do">## samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1</span></span>
-<span id="cb38-13"><a href="creating-an-archrproject-1.html#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="do">## sampleColData names(1): ArrowFiles</span></span>
-<span id="cb38-14"><a href="creating-an-archrproject-1.html#cb38-14" aria-hidden="true" tabindex="-1"></a><span class="do">## cellColData names(15): Sample TSSEnrichment ... DoubletEnrichment</span></span>
-<span id="cb38-15"><a href="creating-an-archrproject-1.html#cb38-15" aria-hidden="true" tabindex="-1"></a><span class="do">##   BlacklistRatio</span></span>
-<span id="cb38-16"><a href="creating-an-archrproject-1.html#cb38-16" aria-hidden="true" tabindex="-1"></a><span class="do">## numberOfCells(1): 10660</span></span>
-<span id="cb38-17"><a href="creating-an-archrproject-1.html#cb38-17" aria-hidden="true" tabindex="-1"></a><span class="do">## medianTSS(1): 16.815</span></span>
-<span id="cb38-18"><a href="creating-an-archrproject-1.html#cb38-18" aria-hidden="true" tabindex="-1"></a><span class="do">## medianFrags(1): 3049.5</span></span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="creating-an-archrproject-1.html#cb43-1" tabindex="-1"></a>projHeme1</span>
+<span id="cb43-2"><a href="creating-an-archrproject-1.html#cb43-2" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb43-3"><a href="creating-an-archrproject-1.html#cb43-3" tabindex="-1"></a><span class="do">##            ___      .______        ______  __    __  .______      </span></span>
+<span id="cb43-4"><a href="creating-an-archrproject-1.html#cb43-4" tabindex="-1"></a><span class="do">##           /   \     |   _  \      /      ||  |  |  | |   _  \     </span></span>
+<span id="cb43-5"><a href="creating-an-archrproject-1.html#cb43-5" tabindex="-1"></a><span class="do">##          /  ^  \    |  |_)  |    |  ,----&#39;|  |__|  | |  |_)  |    </span></span>
+<span id="cb43-6"><a href="creating-an-archrproject-1.html#cb43-6" tabindex="-1"></a><span class="do">##         /  /_\  \   |      /     |  |     |   __   | |      /     </span></span>
+<span id="cb43-7"><a href="creating-an-archrproject-1.html#cb43-7" tabindex="-1"></a><span class="do">##        /  _____  \  |  |\  \\___ |  `----.|  |  |  | |  |\  \\___.</span></span>
+<span id="cb43-8"><a href="creating-an-archrproject-1.html#cb43-8" tabindex="-1"></a><span class="do">##       /__/     \__\ | _| `._____| \______||__|  |__| | _| `._____|</span></span>
+<span id="cb43-9"><a href="creating-an-archrproject-1.html#cb43-9" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb43-10"><a href="creating-an-archrproject-1.html#cb43-10" tabindex="-1"></a><span class="do">## class: ArchRProject </span></span>
+<span id="cb43-11"><a href="creating-an-archrproject-1.html#cb43-11" tabindex="-1"></a><span class="do">## outputDirectory: /workspace/ArchR/ArchR_Website_Testing/bookdown/HemeTutorial </span></span>
+<span id="cb43-12"><a href="creating-an-archrproject-1.html#cb43-12" tabindex="-1"></a><span class="do">## samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1</span></span>
+<span id="cb43-13"><a href="creating-an-archrproject-1.html#cb43-13" tabindex="-1"></a><span class="do">## sampleColData names(1): ArrowFiles</span></span>
+<span id="cb43-14"><a href="creating-an-archrproject-1.html#cb43-14" tabindex="-1"></a><span class="do">## cellColData names(15): Sample TSSEnrichment ... DoubletEnrichment</span></span>
+<span id="cb43-15"><a href="creating-an-archrproject-1.html#cb43-15" tabindex="-1"></a><span class="do">##   BlacklistRatio</span></span>
+<span id="cb43-16"><a href="creating-an-archrproject-1.html#cb43-16" tabindex="-1"></a><span class="do">## numberOfCells(1): 10660</span></span>
+<span id="cb43-17"><a href="creating-an-archrproject-1.html#cb43-17" tabindex="-1"></a><span class="do">## medianTSS(1): 16.815</span></span>
+<span id="cb43-18"><a href="creating-an-archrproject-1.html#cb43-18" tabindex="-1"></a><span class="do">## medianFrags(1): 3049.5</span></span></code></pre></div>
 <p>We can see from the above that our <code>ArchRProject</code> has been initialized with a few important attributes:</p>
 <ol style="list-style-type: decimal">
 <li>The specified <code>outputDirectory</code>.</li>
@@ -372,62 +377,62 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>The median TSS enrichment score and the median number of fragments across all cells and all samples.</li>
 </ol>
 <p>We can check how much memory is used to store the <code>ArchRProject</code> in memory within R:</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="creating-an-archrproject-1.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">&quot;Memory Size = &quot;</span>, <span class="fu">round</span>(<span class="fu">object.size</span>(projHeme1) <span class="sc">/</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">6</span>, <span class="dv">3</span>), <span class="st">&quot; MB&quot;</span>)</span>
-<span id="cb39-2"><a href="creating-an-archrproject-1.html#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;Memory Size = 37.477 MB&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="creating-an-archrproject-1.html#cb44-1" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">&quot;Memory Size = &quot;</span>, <span class="fu">round</span>(<span class="fu">object.size</span>(projHeme1) <span class="sc">/</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">6</span>, <span class="dv">3</span>), <span class="st">&quot; MB&quot;</span>)</span>
+<span id="cb44-2"><a href="creating-an-archrproject-1.html#cb44-2" tabindex="-1"></a><span class="do">## [1] &quot;Memory Size = 37.477 MB&quot;</span></span></code></pre></div>
 <p>We can also ask which data matrices are available within the <code>ArchRProject</code> which will be useful downstream once we start adding to this project:</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="creating-an-archrproject-1.html#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getAvailableMatrices</span>(projHeme1)</span>
-<span id="cb40-2"><a href="creating-an-archrproject-1.html#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;GeneScoreMatrix&quot; &quot;TileMatrix&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="creating-an-archrproject-1.html#cb45-1" tabindex="-1"></a><span class="fu">getAvailableMatrices</span>(projHeme1)</span>
+<span id="cb45-2"><a href="creating-an-archrproject-1.html#cb45-2" tabindex="-1"></a><span class="do">## [1] &quot;GeneScoreMatrix&quot; &quot;TileMatrix&quot;</span></span></code></pre></div>
 <p>Taking a closer look at <code>cellColData</code>, we can see all of the metadata that is stored here. As the name suggests, this is metadata that applies to each individual cell.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="creating-an-archrproject-1.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(projHeme1<span class="sc">@</span>cellColData)</span>
-<span id="cb41-2"><a href="creating-an-archrproject-1.html#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="do">## DataFrame with 6 rows and 15 columns</span></span>
-<span id="cb41-3"><a href="creating-an-archrproject-1.html#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="do">##                                           Sample TSSEnrichment ReadsInTSS</span></span>
-<span id="cb41-4"><a href="creating-an-archrproject-1.html#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="do">##                                            &lt;Rle&gt;       &lt;array&gt;    &lt;array&gt;</span></span>
-<span id="cb41-5"><a href="creating-an-archrproject-1.html#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TTATGTCAGTGATTAG-1 scATAC_BMMC_R1         7.204       1146</span></span>
-<span id="cb41-6"><a href="creating-an-archrproject-1.html#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AAGATAGTCACCGCGA-1 scATAC_BMMC_R1         7.949        831</span></span>
-<span id="cb41-7"><a href="creating-an-archrproject-1.html#cb41-7" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#GCATTGAAGATTCCGT-1 scATAC_BMMC_R1         4.447        384</span></span>
-<span id="cb41-8"><a href="creating-an-archrproject-1.html#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1 scATAC_BMMC_R1         6.941        659</span></span>
-<span id="cb41-9"><a href="creating-an-archrproject-1.html#cb41-9" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1 scATAC_BMMC_R1         4.771        412</span></span>
-<span id="cb41-10"><a href="creating-an-archrproject-1.html#cb41-10" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AGTTACGAGAACGTCG-1 scATAC_BMMC_R1         9.185       1104</span></span>
-<span id="cb41-11"><a href="creating-an-archrproject-1.html#cb41-11" aria-hidden="true" tabindex="-1"></a><span class="do">##                                   ReadsInPromoter ReadsInBlacklist</span></span>
-<span id="cb41-12"><a href="creating-an-archrproject-1.html#cb41-12" aria-hidden="true" tabindex="-1"></a><span class="do">##                                           &lt;array&gt;          &lt;array&gt;</span></span>
-<span id="cb41-13"><a href="creating-an-archrproject-1.html#cb41-13" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TTATGTCAGTGATTAG-1            4306              611</span></span>
-<span id="cb41-14"><a href="creating-an-archrproject-1.html#cb41-14" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AAGATAGTCACCGCGA-1            3542              502</span></span>
-<span id="cb41-15"><a href="creating-an-archrproject-1.html#cb41-15" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#GCATTGAAGATTCCGT-1            1686              311</span></span>
-<span id="cb41-16"><a href="creating-an-archrproject-1.html#cb41-16" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1            2811              475</span></span>
-<span id="cb41-17"><a href="creating-an-archrproject-1.html#cb41-17" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1            2108              331</span></span>
-<span id="cb41-18"><a href="creating-an-archrproject-1.html#cb41-18" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AGTTACGAGAACGTCG-1            4457              341</span></span>
-<span id="cb41-19"><a href="creating-an-archrproject-1.html#cb41-19" aria-hidden="true" tabindex="-1"></a><span class="do">##                                        PromoterRatio  PassQC  NucleosomeRatio</span></span>
-<span id="cb41-20"><a href="creating-an-archrproject-1.html#cb41-20" aria-hidden="true" tabindex="-1"></a><span class="do">##                                              &lt;array&gt; &lt;array&gt;          &lt;array&gt;</span></span>
-<span id="cb41-21"><a href="creating-an-archrproject-1.html#cb41-21" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TTATGTCAGTGATTAG-1 0.0822100882049716       1 3.22675919948354</span></span>
-<span id="cb41-22"><a href="creating-an-archrproject-1.html#cb41-22" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AAGATAGTCACCGCGA-1 0.0857710189848896       1 1.23149248892251</span></span>
-<span id="cb41-23"><a href="creating-an-archrproject-1.html#cb41-23" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#GCATTGAAGATTCCGT-1  0.044391785150079       1 3.69933184855234</span></span>
-<span id="cb41-24"><a href="creating-an-archrproject-1.html#cb41-24" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1 0.0768200699606471       1 4.27870744373918</span></span>
-<span id="cb41-25"><a href="creating-an-archrproject-1.html#cb41-25" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1 0.0603734677511742       1 4.03838383838384</span></span>
-<span id="cb41-26"><a href="creating-an-archrproject-1.html#cb41-26" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AGTTACGAGAACGTCG-1  0.130253083172599       1 2.58453802639849</span></span>
-<span id="cb41-27"><a href="creating-an-archrproject-1.html#cb41-27" aria-hidden="true" tabindex="-1"></a><span class="do">##                                   nMultiFrags nMonoFrags  nFrags nDiFrags</span></span>
-<span id="cb41-28"><a href="creating-an-archrproject-1.html#cb41-28" aria-hidden="true" tabindex="-1"></a><span class="do">##                                       &lt;array&gt;    &lt;array&gt; &lt;array&gt;  &lt;array&gt;</span></span>
-<span id="cb41-29"><a href="creating-an-archrproject-1.html#cb41-29" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TTATGTCAGTGATTAG-1        3801       6196   26189    16192</span></span>
-<span id="cb41-30"><a href="creating-an-archrproject-1.html#cb41-30" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AAGATAGTCACCGCGA-1        3448       9253   20648     7947</span></span>
-<span id="cb41-31"><a href="creating-an-archrproject-1.html#cb41-31" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#GCATTGAAGATTCCGT-1        3119       4041   18990    11830</span></span>
-<span id="cb41-32"><a href="creating-an-archrproject-1.html#cb41-32" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1        3853       3466   18296    10977</span></span>
-<span id="cb41-33"><a href="creating-an-archrproject-1.html#cb41-33" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1        3564       3465   17458    10429</span></span>
-<span id="cb41-34"><a href="creating-an-archrproject-1.html#cb41-34" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AGTTACGAGAACGTCG-1        3605       4773   17109     8731</span></span>
-<span id="cb41-35"><a href="creating-an-archrproject-1.html#cb41-35" aria-hidden="true" tabindex="-1"></a><span class="do">##                                       DoubletScore DoubletEnrichment</span></span>
-<span id="cb41-36"><a href="creating-an-archrproject-1.html#cb41-36" aria-hidden="true" tabindex="-1"></a><span class="do">##                                            &lt;array&gt;           &lt;array&gt;</span></span>
-<span id="cb41-37"><a href="creating-an-archrproject-1.html#cb41-37" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TTATGTCAGTGATTAG-1  3.5363477558501              1.95</span></span>
-<span id="cb41-38"><a href="creating-an-archrproject-1.html#cb41-38" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AAGATAGTCACCGCGA-1 100.438073596781              6.05</span></span>
-<span id="cb41-39"><a href="creating-an-archrproject-1.html#cb41-39" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#GCATTGAAGATTCCGT-1                0               1.1</span></span>
-<span id="cb41-40"><a href="creating-an-archrproject-1.html#cb41-40" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1 51.1024880399534              4.35</span></span>
-<span id="cb41-41"><a href="creating-an-archrproject-1.html#cb41-41" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1  156.52186409145               7.7</span></span>
-<span id="cb41-42"><a href="creating-an-archrproject-1.html#cb41-42" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AGTTACGAGAACGTCG-1 145.975125007649               7.4</span></span>
-<span id="cb41-43"><a href="creating-an-archrproject-1.html#cb41-43" aria-hidden="true" tabindex="-1"></a><span class="do">##                                        BlacklistRatio</span></span>
-<span id="cb41-44"><a href="creating-an-archrproject-1.html#cb41-44" aria-hidden="true" tabindex="-1"></a><span class="do">##                                               &lt;array&gt;</span></span>
-<span id="cb41-45"><a href="creating-an-archrproject-1.html#cb41-45" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TTATGTCAGTGATTAG-1  0.0116652029478025</span></span>
-<span id="cb41-46"><a href="creating-an-archrproject-1.html#cb41-46" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AAGATAGTCACCGCGA-1  0.0121561410306083</span></span>
-<span id="cb41-47"><a href="creating-an-archrproject-1.html#cb41-47" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#GCATTGAAGATTCCGT-1 0.00818852027382833</span></span>
-<span id="cb41-48"><a href="creating-an-archrproject-1.html#cb41-48" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1  0.0129809794490599</span></span>
-<span id="cb41-49"><a href="creating-an-archrproject-1.html#cb41-49" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1 0.00947989460419292</span></span>
-<span id="cb41-50"><a href="creating-an-archrproject-1.html#cb41-50" aria-hidden="true" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AGTTACGAGAACGTCG-1 0.00996551522590449</span></span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="creating-an-archrproject-1.html#cb46-1" tabindex="-1"></a><span class="fu">head</span>(projHeme1<span class="sc">@</span>cellColData)</span>
+<span id="cb46-2"><a href="creating-an-archrproject-1.html#cb46-2" tabindex="-1"></a><span class="do">## DataFrame with 6 rows and 15 columns</span></span>
+<span id="cb46-3"><a href="creating-an-archrproject-1.html#cb46-3" tabindex="-1"></a><span class="do">##                                           Sample TSSEnrichment ReadsInTSS</span></span>
+<span id="cb46-4"><a href="creating-an-archrproject-1.html#cb46-4" tabindex="-1"></a><span class="do">##                                            &lt;Rle&gt;       &lt;array&gt;    &lt;array&gt;</span></span>
+<span id="cb46-5"><a href="creating-an-archrproject-1.html#cb46-5" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TTATGTCAGTGATTAG-1 scATAC_BMMC_R1         7.204       1146</span></span>
+<span id="cb46-6"><a href="creating-an-archrproject-1.html#cb46-6" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AAGATAGTCACCGCGA-1 scATAC_BMMC_R1         7.949        831</span></span>
+<span id="cb46-7"><a href="creating-an-archrproject-1.html#cb46-7" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#GCATTGAAGATTCCGT-1 scATAC_BMMC_R1         4.447        384</span></span>
+<span id="cb46-8"><a href="creating-an-archrproject-1.html#cb46-8" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1 scATAC_BMMC_R1         6.941        659</span></span>
+<span id="cb46-9"><a href="creating-an-archrproject-1.html#cb46-9" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1 scATAC_BMMC_R1         4.771        412</span></span>
+<span id="cb46-10"><a href="creating-an-archrproject-1.html#cb46-10" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AGTTACGAGAACGTCG-1 scATAC_BMMC_R1         9.185       1104</span></span>
+<span id="cb46-11"><a href="creating-an-archrproject-1.html#cb46-11" tabindex="-1"></a><span class="do">##                                   ReadsInPromoter ReadsInBlacklist</span></span>
+<span id="cb46-12"><a href="creating-an-archrproject-1.html#cb46-12" tabindex="-1"></a><span class="do">##                                           &lt;array&gt;          &lt;array&gt;</span></span>
+<span id="cb46-13"><a href="creating-an-archrproject-1.html#cb46-13" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TTATGTCAGTGATTAG-1            4306              611</span></span>
+<span id="cb46-14"><a href="creating-an-archrproject-1.html#cb46-14" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AAGATAGTCACCGCGA-1            3542              502</span></span>
+<span id="cb46-15"><a href="creating-an-archrproject-1.html#cb46-15" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#GCATTGAAGATTCCGT-1            1686              311</span></span>
+<span id="cb46-16"><a href="creating-an-archrproject-1.html#cb46-16" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1            2811              475</span></span>
+<span id="cb46-17"><a href="creating-an-archrproject-1.html#cb46-17" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1            2108              331</span></span>
+<span id="cb46-18"><a href="creating-an-archrproject-1.html#cb46-18" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AGTTACGAGAACGTCG-1            4457              341</span></span>
+<span id="cb46-19"><a href="creating-an-archrproject-1.html#cb46-19" tabindex="-1"></a><span class="do">##                                        PromoterRatio  PassQC  NucleosomeRatio</span></span>
+<span id="cb46-20"><a href="creating-an-archrproject-1.html#cb46-20" tabindex="-1"></a><span class="do">##                                              &lt;array&gt; &lt;array&gt;          &lt;array&gt;</span></span>
+<span id="cb46-21"><a href="creating-an-archrproject-1.html#cb46-21" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TTATGTCAGTGATTAG-1 0.0822100882049716       1 3.22675919948354</span></span>
+<span id="cb46-22"><a href="creating-an-archrproject-1.html#cb46-22" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AAGATAGTCACCGCGA-1 0.0857710189848896       1 1.23149248892251</span></span>
+<span id="cb46-23"><a href="creating-an-archrproject-1.html#cb46-23" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#GCATTGAAGATTCCGT-1  0.044391785150079       1 3.69933184855234</span></span>
+<span id="cb46-24"><a href="creating-an-archrproject-1.html#cb46-24" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1 0.0768200699606471       1 4.27870744373918</span></span>
+<span id="cb46-25"><a href="creating-an-archrproject-1.html#cb46-25" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1 0.0603734677511742       1 4.03838383838384</span></span>
+<span id="cb46-26"><a href="creating-an-archrproject-1.html#cb46-26" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AGTTACGAGAACGTCG-1  0.130253083172599       1 2.58453802639849</span></span>
+<span id="cb46-27"><a href="creating-an-archrproject-1.html#cb46-27" tabindex="-1"></a><span class="do">##                                   nMultiFrags nMonoFrags  nFrags nDiFrags</span></span>
+<span id="cb46-28"><a href="creating-an-archrproject-1.html#cb46-28" tabindex="-1"></a><span class="do">##                                       &lt;array&gt;    &lt;array&gt; &lt;array&gt;  &lt;array&gt;</span></span>
+<span id="cb46-29"><a href="creating-an-archrproject-1.html#cb46-29" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TTATGTCAGTGATTAG-1        3801       6196   26189    16192</span></span>
+<span id="cb46-30"><a href="creating-an-archrproject-1.html#cb46-30" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AAGATAGTCACCGCGA-1        3448       9253   20648     7947</span></span>
+<span id="cb46-31"><a href="creating-an-archrproject-1.html#cb46-31" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#GCATTGAAGATTCCGT-1        3119       4041   18990    11830</span></span>
+<span id="cb46-32"><a href="creating-an-archrproject-1.html#cb46-32" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1        3853       3466   18296    10977</span></span>
+<span id="cb46-33"><a href="creating-an-archrproject-1.html#cb46-33" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1        3564       3465   17458    10429</span></span>
+<span id="cb46-34"><a href="creating-an-archrproject-1.html#cb46-34" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AGTTACGAGAACGTCG-1        3605       4773   17109     8731</span></span>
+<span id="cb46-35"><a href="creating-an-archrproject-1.html#cb46-35" tabindex="-1"></a><span class="do">##                                       DoubletScore DoubletEnrichment</span></span>
+<span id="cb46-36"><a href="creating-an-archrproject-1.html#cb46-36" tabindex="-1"></a><span class="do">##                                            &lt;array&gt;           &lt;array&gt;</span></span>
+<span id="cb46-37"><a href="creating-an-archrproject-1.html#cb46-37" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TTATGTCAGTGATTAG-1                0              1.55</span></span>
+<span id="cb46-38"><a href="creating-an-archrproject-1.html#cb46-38" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AAGATAGTCACCGCGA-1 91.1760813271055              5.75</span></span>
+<span id="cb46-39"><a href="creating-an-archrproject-1.html#cb46-39" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#GCATTGAAGATTCCGT-1                0               1.3</span></span>
+<span id="cb46-40"><a href="creating-an-archrproject-1.html#cb46-40" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1  70.630505425003              5.05</span></span>
+<span id="cb46-41"><a href="creating-an-archrproject-1.html#cb46-41" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1 163.664669675752               7.9</span></span>
+<span id="cb46-42"><a href="creating-an-archrproject-1.html#cb46-42" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AGTTACGAGAACGTCG-1 120.537764456854              6.65</span></span>
+<span id="cb46-43"><a href="creating-an-archrproject-1.html#cb46-43" tabindex="-1"></a><span class="do">##                                        BlacklistRatio</span></span>
+<span id="cb46-44"><a href="creating-an-archrproject-1.html#cb46-44" tabindex="-1"></a><span class="do">##                                               &lt;array&gt;</span></span>
+<span id="cb46-45"><a href="creating-an-archrproject-1.html#cb46-45" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TTATGTCAGTGATTAG-1  0.0116652029478025</span></span>
+<span id="cb46-46"><a href="creating-an-archrproject-1.html#cb46-46" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AAGATAGTCACCGCGA-1  0.0121561410306083</span></span>
+<span id="cb46-47"><a href="creating-an-archrproject-1.html#cb46-47" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#GCATTGAAGATTCCGT-1 0.00818852027382833</span></span>
+<span id="cb46-48"><a href="creating-an-archrproject-1.html#cb46-48" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1  0.0129809794490599</span></span>
+<span id="cb46-49"><a href="creating-an-archrproject-1.html#cb46-49" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1 0.00947989460419292</span></span>
+<span id="cb46-50"><a href="creating-an-archrproject-1.html#cb46-50" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AGTTACGAGAACGTCG-1 0.00996551522590449</span></span></code></pre></div>
 <p>You’ll notice that many of these columns correspond to per-cell quality control information that was calculated during Arrow file creation. These columns are:</p>
 <ol style="list-style-type: decimal">
 <li>TSSEnrichment - the per-cell TSS enrichment score</li>

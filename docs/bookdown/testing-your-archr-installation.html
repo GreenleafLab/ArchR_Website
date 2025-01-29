@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 23 Testing Your ArchR Installation | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
   <meta name="description" content="A guide to ArchR" />
-  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 23 Testing Your ArchR Installation | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2022-12-23" />
+<meta name="date" content="2025-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,13 +52,13 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -68,7 +68,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -94,7 +94,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -107,7 +107,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -121,6 +121,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -144,6 +148,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
 <li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+<li class="chapter" data-level="2.3" data-path="using-docker-for-pre-compiled-environment-setup.html"><a href="using-docker-for-pre-compiled-environment-setup.html"><i class="fa fa-check"></i><b>2.3</b> Using Docker for pre-compiled environment setup</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
 <ul>
@@ -305,23 +310,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>To provide a system for testing a wide array of ArchR’s functionalities, we use <a href="https://testthat.r-lib.org/"><code>testthat</code></a>. This essentially automates testing ArchR functions by running the code present in the <code>examples</code> section of each function. Below is an example workflow for how to do this. These tests are run at the time each new stable release is created, using the version of R and the provided <code>renv</code> lockfile that accompanies each stable release. We would not expect you to encounter errors during this testing process if you are using the suggested version of R and the provided <code>renv</code> environment for the given release.</p>
 <p>Note that we run these tests outside of RStudio, in the R terminal, because of issues that appear to be related to long file paths that are created during testing. So in our hands, these tests do not work when run in RStudio. Instead, if you navigate to the directory where your <code>renv</code> project was initiated and you launch <code>R</code>, it will automatically load your <code>renv</code> environment and you can run the tests from the terminal.</p>
 <p>First, we will load <code>ArchR</code> and <code>devtools</code>.</p>
-<div class="sourceCode" id="cb482"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb482-1"><a href="testing-your-archr-installation.html#cb482-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ArchR)</span>
-<span id="cb482-2"><a href="testing-your-archr-installation.html#cb482-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(devtools)</span></code></pre></div>
+<div class="sourceCode" id="cb487"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb487-1"><a href="testing-your-archr-installation.html#cb487-1" tabindex="-1"></a><span class="fu">library</span>(ArchR)</span>
+<span id="cb487-2"><a href="testing-your-archr-installation.html#cb487-2" tabindex="-1"></a><span class="fu">library</span>(devtools)</span></code></pre></div>
 <p>Because we will be creating Arrow Files during this process, we need to ensure that HDF5 file locking is handled correctly. On the system where this code is run to create this manual, we use <code>locking = TRUE</code> but this may be different on your system. See the chapter on <a href="getting-started-with-archr.html">Getting Started with ArchR</a> for more information. We will also set our seed here for reproducibility.</p>
-<div class="sourceCode" id="cb483"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb483-1"><a href="testing-your-archr-installation.html#cb483-1" aria-hidden="true" tabindex="-1"></a><span class="fu">addArchRLocking</span>(<span class="at">locking =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb483-2"><a href="testing-your-archr-installation.html#cb483-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb488"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb488-1"><a href="testing-your-archr-installation.html#cb488-1" tabindex="-1"></a><span class="fu">addArchRLocking</span>(<span class="at">locking =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb488-2"><a href="testing-your-archr-installation.html#cb488-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span></code></pre></div>
 <p>We will start by creating a directory in which to perform all testing.</p>
-<div class="sourceCode" id="cb484"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb484-1"><a href="testing-your-archr-installation.html#cb484-1" aria-hidden="true" tabindex="-1"></a>dir_test <span class="ot">&lt;-</span> <span class="st">&quot;ArchRTests&quot;</span></span>
-<span id="cb484-2"><a href="testing-your-archr-installation.html#cb484-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(dir_test, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb489"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb489-1"><a href="testing-your-archr-installation.html#cb489-1" tabindex="-1"></a>dir_test <span class="ot">&lt;-</span> <span class="st">&quot;ArchRTests&quot;</span></span>
+<span id="cb489-2"><a href="testing-your-archr-installation.html#cb489-2" tabindex="-1"></a><span class="fu">dir.create</span>(dir_test, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <p>Then we will download and unzip the full ArchR package code corresponding to the branch that we want to test. We increase the <code>timeout</code> option to give the system enough time to download the full package.</p>
-<div class="sourceCode" id="cb485"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb485-1"><a href="testing-your-archr-installation.html#cb485-1" aria-hidden="true" tabindex="-1"></a>branch <span class="ot">&lt;-</span> <span class="st">&quot;dev&quot;</span></span>
-<span id="cb485-2"><a href="testing-your-archr-installation.html#cb485-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">timeout =</span> <span class="dv">999</span>)</span>
-<span id="cb485-3"><a href="testing-your-archr-installation.html#cb485-3" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> <span class="fu">paste0</span>(<span class="st">&quot;https://github.com/GreenleafLab/ArchR/archive/refs/heads/&quot;</span>,branch,<span class="st">&quot;.zip&quot;</span>), <span class="at">destfile =</span> <span class="fu">file.path</span>(dir_test,<span class="fu">paste0</span>(<span class="st">&quot;ArchR-&quot;</span>,branch,<span class="st">&quot;.zip&quot;</span>)))</span>
-<span id="cb485-4"><a href="testing-your-archr-installation.html#cb485-4" aria-hidden="true" tabindex="-1"></a><span class="fu">unzip</span>(<span class="at">zipfile =</span> <span class="fu">file.path</span>(dir_test,<span class="fu">paste0</span>(<span class="st">&quot;ArchR-&quot;</span>,branch,<span class="st">&quot;.zip&quot;</span>)), <span class="at">exdir =</span> dir_test)</span></code></pre></div>
+<div class="sourceCode" id="cb490"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb490-1"><a href="testing-your-archr-installation.html#cb490-1" tabindex="-1"></a>branch <span class="ot">&lt;-</span> <span class="st">&quot;dev&quot;</span></span>
+<span id="cb490-2"><a href="testing-your-archr-installation.html#cb490-2" tabindex="-1"></a><span class="fu">options</span>(<span class="at">timeout =</span> <span class="dv">999</span>)</span>
+<span id="cb490-3"><a href="testing-your-archr-installation.html#cb490-3" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> <span class="fu">paste0</span>(<span class="st">&quot;https://github.com/GreenleafLab/ArchR/archive/refs/heads/&quot;</span>,branch,<span class="st">&quot;.zip&quot;</span>), <span class="at">destfile =</span> <span class="fu">file.path</span>(dir_test,<span class="fu">paste0</span>(<span class="st">&quot;ArchR-&quot;</span>,branch,<span class="st">&quot;.zip&quot;</span>)))</span>
+<span id="cb490-4"><a href="testing-your-archr-installation.html#cb490-4" tabindex="-1"></a><span class="fu">unzip</span>(<span class="at">zipfile =</span> <span class="fu">file.path</span>(dir_test,<span class="fu">paste0</span>(<span class="st">&quot;ArchR-&quot;</span>,branch,<span class="st">&quot;.zip&quot;</span>)), <span class="at">exdir =</span> dir_test)</span></code></pre></div>
 <p>For reasons that aren’t necessary to explain, we need to remove the <code>configure</code> file from the package directory before starting the tests.</p>
-<div class="sourceCode" id="cb486"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb486-1"><a href="testing-your-archr-installation.html#cb486-1" aria-hidden="true" tabindex="-1"></a><span class="fu">file.remove</span>(<span class="fu">file.path</span>(dir_test,<span class="fu">paste0</span>(<span class="st">&quot;ArchR-&quot;</span>,branch),<span class="st">&quot;configure&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb491"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb491-1"><a href="testing-your-archr-installation.html#cb491-1" tabindex="-1"></a><span class="fu">file.remove</span>(<span class="fu">file.path</span>(dir_test,<span class="fu">paste0</span>(<span class="st">&quot;ArchR-&quot;</span>,branch),<span class="st">&quot;configure&quot;</span>))</span></code></pre></div>
 <p>Lastly, we run <code>devtools::test()</code> to perform all tests.</p>
-<div class="sourceCode" id="cb487"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb487-1"><a href="testing-your-archr-installation.html#cb487-1" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">test</span>(<span class="at">pkg =</span> <span class="fu">file.path</span>(dir_test,<span class="fu">paste0</span>(<span class="st">&quot;ArchR-&quot;</span>,branch,<span class="st">&quot;/&quot;</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb492"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb492-1"><a href="testing-your-archr-installation.html#cb492-1" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">test</span>(<span class="at">pkg =</span> <span class="fu">file.path</span>(dir_test,<span class="fu">paste0</span>(<span class="st">&quot;ArchR-&quot;</span>,branch,<span class="st">&quot;/&quot;</span>)))</span></code></pre></div>
+<p>With a working installation of ArchR, one should not encounter any errors during this process. If errors are indeed encountered, please see the chapter on <a href="using-renv-to-manage-dependencies.html">Using renv to manage dependencies</a>
+for aid in establishing a working environment.</p>
 
 </div>
             </section>

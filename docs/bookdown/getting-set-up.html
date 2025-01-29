@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>3.5 Getting Set Up | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
   <meta name="description" content="A guide to ArchR" />
-  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
   <meta property="og:title" content="3.5 Getting Set Up | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2022-12-23" />
+<meta name="date" content="2025-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,13 +52,13 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -68,7 +68,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -94,7 +94,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -107,7 +107,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -121,6 +121,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -144,6 +148,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
 <li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+<li class="chapter" data-level="2.3" data-path="using-docker-for-pre-compiled-environment-setup.html"><a href="using-docker-for-pre-compiled-environment-setup.html"><i class="fa fa-check"></i><b>2.3</b> Using Docker for pre-compiled environment setup</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
 <ul>
@@ -305,32 +310,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The first thing we do is change to our desired our working directory, set the number of threads we would like to use, and load our gene and genome annotations. Depending on the configuration of your local environment, you may need to modify the number of <code>threads</code> used below in <code>addArchRThreads()</code>. By default ArchR uses half of the total number of <code>threads</code> available but you can adjust this manually as you see fit. As a reminder, ArchR is not supported on Windows.</p>
 <p>For the purposes of this tutorial, we are assuming that you followed the instructions in the chapter on handling ArchR’s dependencies using <code>renv</code> and that you have set up a working directory for running this tutorial.</p>
 <p>First, we load the ArchR library. If this fails, you have not properly installed ArchR and should <a href="https://www.archrproject.com/index.html">revisit the installation instructions</a>. We will also set our seed for randomized opperations for consistency. You can set your seed to whatever you would like (here we use <code>1</code>), but we encourage you to be consistent and always set the same seed.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="getting-set-up.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ArchR)</span>
-<span id="cb11-2"><a href="getting-set-up.html#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="getting-set-up.html#cb16-1" tabindex="-1"></a><span class="fu">library</span>(ArchR)</span>
+<span id="cb16-2"><a href="getting-set-up.html#cb16-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span></code></pre></div>
 <p>Next, we either enable or disable file locking for HDF5 files. File locking allows for processes to take advantage of subthreading but may not work on certain network-based file systems, such as network-based lustre file systems, that are often present on high-performance computing clusters. This has caused a lot of problems for specific users, in the past (perhaps best summarized <a href="https://github.com/GreenleafLab/ArchR/issues/248#issuecomment-789453997">here</a>). Thus, it is extremely important to consistently enable or disable file locking based on your particular computational environment. Enabling file locking will prevent subthreading, disabling file locking will permit it. Regardless, whatever you chose for file locking is controlled by environment variables and only persists during the current <code>R</code> session so you should include a call to <code>addArchRFileLocking()</code> in the beginning of each new R session (just like <code>set.seed()</code> or <code>addArchRThreads()</code> etc.). The filesystem used to generate this tutorial works best with <code>locking = TRUE</code> so that is what we set below but you should use whatever you think is best for your system. If you have trouble with Arrow File generation on the tutorial data or with various HDF5 file accessibility errors, try setting <code>locking = TRUE</code> at the beginning of your project (before Arrow File generation).</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="getting-set-up.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">addArchRLocking</span>(<span class="at">locking =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb12-2"><a href="getting-set-up.html#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Setting ArchRLocking to TRUE.</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="getting-set-up.html#cb17-1" tabindex="-1"></a><span class="fu">addArchRLocking</span>(<span class="at">locking =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-2"><a href="getting-set-up.html#cb17-2" tabindex="-1"></a><span class="do">## Setting ArchRLocking to TRUE.</span></span></code></pre></div>
 <p>Next, we set the default number of threads for ArchR functions. This is something you will have to do during each new R session. We recommend setting <code>threads</code> to 1/2 to 3/4 of the total available cores. The memory usage in ArchR will often scale with the number of threads used so allowing ArchR to use more threads will also lead to higher memory usage.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="getting-set-up.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">addArchRThreads</span>(<span class="at">threads =</span> <span class="dv">1</span>) </span>
-<span id="cb13-2"><a href="getting-set-up.html#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Setting default number of Parallel threads to 1.</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="getting-set-up.html#cb18-1" tabindex="-1"></a><span class="fu">addArchRThreads</span>(<span class="at">threads =</span> <span class="dv">1</span>) </span>
+<span id="cb18-2"><a href="getting-set-up.html#cb18-2" tabindex="-1"></a><span class="do">## Setting default number of Parallel threads to 1.</span></span></code></pre></div>
 <p>Then, we set the genome to be used for gene and genome annotations. As above, this is something you will have to do during each new R session. Of course, this genome version must match the genome version that was used for alignment. For the data used in this tutorial, we will use the hg19 reference genome but ArchR natively supports additional genome annotations and custome genome annotations as outlined in the next section.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="getting-set-up.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">addArchRGenome</span>(<span class="st">&quot;hg19&quot;</span>)</span>
-<span id="cb14-2"><a href="getting-set-up.html#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Setting default genome to Hg19.</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="getting-set-up.html#cb19-1" tabindex="-1"></a><span class="fu">addArchRGenome</span>(<span class="st">&quot;hg19&quot;</span>)</span>
+<span id="cb19-2"><a href="getting-set-up.html#cb19-2" tabindex="-1"></a><span class="do">## Setting default genome to Hg19.</span></span></code></pre></div>
 <p>ArchR requires gene and genome annotations to do things such as calculate TSS enrichment scores, nucleotide content, and gene activity scores. Because our tutorial dataset uses scATAC-seq data that has already been aligned to the hg19 reference genome, we have set “hg19” as the default genome in the previous section. However, ArchR supports “hg19”, “hg38”, “mm9”, and “mm10” natively and you can create your own genome and gene annotations using the <code>createGeneAnnotation()</code> and <code>createGenomeAnnotation()</code> functions.</p>
 <p>Providing this information to ArchR is streamlined through the <code>addArchRGenome()</code> function. This function tells ArchR that, for all analyses in the current session, it should use the <code>genomeAnnotation</code> and <code>geneAnnotation</code> associated with the defined <code>ArchRGenome</code>. Each of the natively supported genomes are composed of a <code>BSgenome</code> object that defines the genomic coordinates and sequence of each chromosome, a <code>GRanges</code> object containing a set of blacklisted regions, a <code>TxDb</code> object that defines the positions and structures of all genes, and an <code>OrgDb</code> object that provides a central gene identifier and contains mappings between this identifier and other kinds of identifiers.</p>
 <p>Below are examples of how to load gene and genome annotations for the natively supported genomes as well as information on their <code>BSgenome</code> and blacklist components.</p>
 <hr>
 <p>The precompiled version of the <strong>hg19</strong> genome in ArchR uses <code>BSgenome.Hsapiens.UCSC.hg19</code>, <code>TxDb.Hsapiens.UCSC.hg19.knownGene</code>, <code>org.Hs.eg.db</code>, and a blacklist that was merged using <code>ArchR::mergeGR()</code> from the <a href="https://github.com/Boyle-Lab/Blacklist/blob/master/lists/hg19-blacklist.v2.bed.gz">hg19 v2 blacklist regions</a> and from <a href="https://github.com/caleblareau/mitoblacklist/blob/master/peaks/hg19_peaks.narrowPeak">mitochondrial regions that show high mappability to the hg19 nuclear genome</a> from Caleb Lareau and Jason Buenrostro. To set a global genome default to the precompiled hg19 genome:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="getting-set-up.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">addArchRGenome</span>(<span class="st">&quot;hg19&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="getting-set-up.html#cb20-1" tabindex="-1"></a><span class="fu">addArchRGenome</span>(<span class="st">&quot;hg19&quot;</span>)</span></code></pre></div>
 <hr>
 <p>The precompiled version of the <strong>hg38</strong> genome in ArchR uses <code>BSgenome.Hsapiens.UCSC.hg38</code>, <code>TxDb.Hsapiens.UCSC.hg38.knownGene</code>, <code>org.Hs.eg.db</code>, and a blacklist that was merged using <code>ArchR::mergeGR()</code> from the <a href="https://github.com/Boyle-Lab/Blacklist/blob/master/lists/hg38-blacklist.v2.bed.gz">hg38 v2 blacklist regions</a> and from <a href="https://github.com/caleblareau/mitoblacklist/blob/master/peaks/hg38_peaks.narrowPeak">mitochondrial regions that show high mappability to the hg38 nuclear genome</a> from Caleb Lareau and Jason Buenrostro. To set a global genome default to the precompiled hg38 genome:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="getting-set-up.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">addArchRGenome</span>(<span class="st">&quot;hg38&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="getting-set-up.html#cb21-1" tabindex="-1"></a><span class="fu">addArchRGenome</span>(<span class="st">&quot;hg38&quot;</span>)</span></code></pre></div>
 <hr>
 <p>The precompiled version of the <strong>mm9</strong> genome in ArchR uses <code>BSgenome.Mmusculus.UCSC.mm9</code>, <code>TxDb.Mmusculus.UCSC.mm9.knownGene</code>, <code>org.Mm.eg.db</code>, and a blacklist that was merged using <code>ArchR::mergeGR()</code> from the <a href="http://mitra.stanford.edu/kundaje/akundaje/release/blacklists/mm9-mouse/mm9-blacklist.bed.gz">mm9 v1 blacklist regions</a> from Anshul Kundaje and from <a href="https://github.com/caleblareau/mitoblacklist/blob/master/peaks/mm9_peaks.narrowPeak">mitochondrial regions that show high mappability to the mm9 nuclear genome</a> from Caleb Lareau and Jason Buenrostro. To set a global genome default to the precompiled mm9 genome:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="getting-set-up.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">addArchRGenome</span>(<span class="st">&quot;mm9&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="getting-set-up.html#cb22-1" tabindex="-1"></a><span class="fu">addArchRGenome</span>(<span class="st">&quot;mm9&quot;</span>)</span></code></pre></div>
 <hr>
 <p>The precompiled version of the <strong>mm10</strong> genome in ArchR uses <code>BSgenome.Mmusculus.UCSC.mm10</code>, <code>TxDb.Mmusculus.UCSC.mm10.knownGene</code>, <code>org.Mm.eg.db</code>, and a blacklist that was merged using <code>ArchR::mergeGR()</code> from the <a href="https://github.com/Boyle-Lab/Blacklist/blob/master/lists/mm10-blacklist.v2.bed.gz">mm10 v2 blacklist regions</a> and from <a href="https://github.com/caleblareau/mitoblacklist/blob/master/peaks/mm10_peaks.narrowPeak">mitochondrial regions that show high mappability to the mm10 nuclear genome</a> from Caleb Lareau and Jason Buenrostro. To set a global genome default to the precompiled mm10 genome:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="getting-set-up.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">addArchRGenome</span>(<span class="st">&quot;mm10&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="getting-set-up.html#cb23-1" tabindex="-1"></a><span class="fu">addArchRGenome</span>(<span class="st">&quot;mm10&quot;</span>)</span></code></pre></div>
 <hr>
 <div id="creating-a-custom-archrgenome" class="section level3 hasAnchor" number="3.5.1">
 <h3><span class="header-section-number">3.5.1</span> Creating a Custom <code>ArchRGenome</code><a href="getting-set-up.html#creating-a-custom-archrgenome" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -341,49 +346,93 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>A <code>GRanges</code> genomic ranges object containing a set of blacklisted regions that will be used to filter out unwanted regions from downstream analysis. This is not required but is recommended. For information on how blacklists are created, see the <a href="https://www.ncbi.nlm.nih.gov/pubmed/31249361">publication on the ENCODE blacklists</a>.</li>
 </ol>
 <p>For example, if we wanted to create a custom genome annotation from Drosophila melanogaster, we would first identify and install and load the relevant <code>BSgenome</code> object.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="getting-set-up.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;BSgenome.Dmelanogaster.UCSC.dm6&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)){</span>
-<span id="cb19-2"><a href="getting-set-up.html#cb19-2" aria-hidden="true" tabindex="-1"></a>  BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">&quot;BSgenome.Dmelanogaster.UCSC.dm6&quot;</span>, <span class="at">update =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb19-3"><a href="getting-set-up.html#cb19-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb19-4"><a href="getting-set-up.html#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BSgenome.Dmelanogaster.UCSC.dm6)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="getting-set-up.html#cb24-1" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;BSgenome.Dmelanogaster.UCSC.dm6&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)){</span>
+<span id="cb24-2"><a href="getting-set-up.html#cb24-2" tabindex="-1"></a>  BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">&quot;BSgenome.Dmelanogaster.UCSC.dm6&quot;</span>, <span class="at">update =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb24-3"><a href="getting-set-up.html#cb24-3" tabindex="-1"></a>}</span>
+<span id="cb24-4"><a href="getting-set-up.html#cb24-4" tabindex="-1"></a><span class="do">## &#39;getOption(&quot;repos&quot;)&#39; replaces Bioconductor standard repositories, see</span></span>
+<span id="cb24-5"><a href="getting-set-up.html#cb24-5" tabindex="-1"></a><span class="do">## &#39;help(&quot;repositories&quot;, package = &quot;BiocManager&quot;)&#39; for details.</span></span>
+<span id="cb24-6"><a href="getting-set-up.html#cb24-6" tabindex="-1"></a><span class="do">## Replacement repositories:</span></span>
+<span id="cb24-7"><a href="getting-set-up.html#cb24-7" tabindex="-1"></a><span class="do">##     CRAN: https://p3m.dev/cran/__linux__/jammy/2024-10-30</span></span>
+<span id="cb24-8"><a href="getting-set-up.html#cb24-8" tabindex="-1"></a><span class="do">## Bioconductor version 3.19 (BiocManager 1.30.25), R 4.4.1 (2024-06-14)</span></span>
+<span id="cb24-9"><a href="getting-set-up.html#cb24-9" tabindex="-1"></a><span class="do">## Installing package(s) &#39;BSgenome.Dmelanogaster.UCSC.dm6&#39;</span></span>
+<span id="cb24-10"><a href="getting-set-up.html#cb24-10" tabindex="-1"></a><span class="fu">library</span>(BSgenome.Dmelanogaster.UCSC.dm6)</span>
+<span id="cb24-11"><a href="getting-set-up.html#cb24-11" tabindex="-1"></a><span class="do">## Loading required package: BSgenome</span></span>
+<span id="cb24-12"><a href="getting-set-up.html#cb24-12" tabindex="-1"></a><span class="do">## Loading required package: Biostrings</span></span>
+<span id="cb24-13"><a href="getting-set-up.html#cb24-13" tabindex="-1"></a><span class="do">## Loading required package: XVector</span></span>
+<span id="cb24-14"><a href="getting-set-up.html#cb24-14" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb24-15"><a href="getting-set-up.html#cb24-15" tabindex="-1"></a><span class="do">## Attaching package: &#39;XVector&#39;</span></span>
+<span id="cb24-16"><a href="getting-set-up.html#cb24-16" tabindex="-1"></a><span class="do">## The following object is masked from &#39;package:plyr&#39;:</span></span>
+<span id="cb24-17"><a href="getting-set-up.html#cb24-17" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb24-18"><a href="getting-set-up.html#cb24-18" tabindex="-1"></a><span class="do">##     compact</span></span>
+<span id="cb24-19"><a href="getting-set-up.html#cb24-19" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb24-20"><a href="getting-set-up.html#cb24-20" tabindex="-1"></a><span class="do">## Attaching package: &#39;Biostrings&#39;</span></span>
+<span id="cb24-21"><a href="getting-set-up.html#cb24-21" tabindex="-1"></a><span class="do">## The following object is masked from &#39;package:grid&#39;:</span></span>
+<span id="cb24-22"><a href="getting-set-up.html#cb24-22" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb24-23"><a href="getting-set-up.html#cb24-23" tabindex="-1"></a><span class="do">##     pattern</span></span>
+<span id="cb24-24"><a href="getting-set-up.html#cb24-24" tabindex="-1"></a><span class="do">## The following object is masked from &#39;package:base&#39;:</span></span>
+<span id="cb24-25"><a href="getting-set-up.html#cb24-25" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb24-26"><a href="getting-set-up.html#cb24-26" tabindex="-1"></a><span class="do">##     strsplit</span></span>
+<span id="cb24-27"><a href="getting-set-up.html#cb24-27" tabindex="-1"></a><span class="do">## Loading required package: BiocIO</span></span>
+<span id="cb24-28"><a href="getting-set-up.html#cb24-28" tabindex="-1"></a><span class="do">## Loading required package: rtracklayer</span></span>
+<span id="cb24-29"><a href="getting-set-up.html#cb24-29" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb24-30"><a href="getting-set-up.html#cb24-30" tabindex="-1"></a><span class="do">## Attaching package: &#39;rtracklayer&#39;</span></span>
+<span id="cb24-31"><a href="getting-set-up.html#cb24-31" tabindex="-1"></a><span class="do">## The following object is masked from &#39;package:BiocIO&#39;:</span></span>
+<span id="cb24-32"><a href="getting-set-up.html#cb24-32" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb24-33"><a href="getting-set-up.html#cb24-33" tabindex="-1"></a><span class="do">##     FileForFormat</span></span></code></pre></div>
 <p>Then we create a genome annotation from this <code>BSgenome</code> object.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="getting-set-up.html#cb20-1" aria-hidden="true" tabindex="-1"></a>genomeAnnotation <span class="ot">&lt;-</span> <span class="fu">createGenomeAnnotation</span>(<span class="at">genome =</span> BSgenome.Dmelanogaster.UCSC.dm6)</span>
-<span id="cb20-2"><a href="getting-set-up.html#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting genome..</span></span>
-<span id="cb20-3"><a href="getting-set-up.html#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Attempting to infer chromSizes..</span></span>
-<span id="cb20-4"><a href="getting-set-up.html#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Attempting to infer blacklist..</span></span>
-<span id="cb20-5"><a href="getting-set-up.html#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Blacklist not downloaded! Continuing without, be careful for downstream biases..</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="getting-set-up.html#cb25-1" tabindex="-1"></a>genomeAnnotation <span class="ot">&lt;-</span> <span class="fu">createGenomeAnnotation</span>(<span class="at">genome =</span> BSgenome.Dmelanogaster.UCSC.dm6)</span>
+<span id="cb25-2"><a href="getting-set-up.html#cb25-2" tabindex="-1"></a><span class="do">## Getting genome..</span></span>
+<span id="cb25-3"><a href="getting-set-up.html#cb25-3" tabindex="-1"></a><span class="do">## Attempting to infer chromSizes..</span></span>
+<span id="cb25-4"><a href="getting-set-up.html#cb25-4" tabindex="-1"></a><span class="do">## Attempting to infer blacklist..</span></span>
+<span id="cb25-5"><a href="getting-set-up.html#cb25-5" tabindex="-1"></a><span class="do">## Blacklist not downloaded! Continuing without, be careful for downstream biases..</span></span></code></pre></div>
 <p>Examining this object shows the constituent parts of an ArchR genome annotation.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="getting-set-up.html#cb21-1" aria-hidden="true" tabindex="-1"></a>genomeAnnotation</span>
-<span id="cb21-2"><a href="getting-set-up.html#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="do">## List of length 3</span></span>
-<span id="cb21-3"><a href="getting-set-up.html#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="do">## names(3): genome chromSizes blacklist</span></span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="getting-set-up.html#cb26-1" tabindex="-1"></a>genomeAnnotation</span>
+<span id="cb26-2"><a href="getting-set-up.html#cb26-2" tabindex="-1"></a><span class="do">## List of length 3</span></span>
+<span id="cb26-3"><a href="getting-set-up.html#cb26-3" tabindex="-1"></a><span class="do">## names(3): genome chromSizes blacklist</span></span></code></pre></div>
 <p>To create a <strong>custom gene annotation</strong>, we use <code>createGeneAnnotation()</code>. To do this, you will need the following information:</p>
 <ol style="list-style-type: decimal">
 <li>A <code>TxDb</code> object (transcript database) from Bioconductor which contains information for gene/transcript coordinates.</li>
 <li>An <code>OrgDb</code> object (organism database) from Bioconductor which provides a unified framework to map between gene names and various gene identifiers.</li>
 </ol>
 <p>Continuing with our example from Drosophila melanogaster, we first install and load the relevant <code>TxDb</code> and <code>OrgDb</code> objects.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="getting-set-up.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;TxDb.Dmelanogaster.UCSC.dm6.ensGene&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)){</span>
-<span id="cb22-2"><a href="getting-set-up.html#cb22-2" aria-hidden="true" tabindex="-1"></a>  BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">&quot;TxDb.Dmelanogaster.UCSC.dm6.ensGene&quot;</span>, <span class="at">update =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb22-3"><a href="getting-set-up.html#cb22-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb22-4"><a href="getting-set-up.html#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;org.Dm.eg.db&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)){</span>
-<span id="cb22-5"><a href="getting-set-up.html#cb22-5" aria-hidden="true" tabindex="-1"></a>  BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">&quot;org.Dm.eg.db&quot;</span>, <span class="at">update =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb22-6"><a href="getting-set-up.html#cb22-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb22-7"><a href="getting-set-up.html#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(TxDb.Dmelanogaster.UCSC.dm6.ensGene)</span>
-<span id="cb22-8"><a href="getting-set-up.html#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(org.Dm.eg.db)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="getting-set-up.html#cb27-1" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;TxDb.Dmelanogaster.UCSC.dm6.ensGene&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)){</span>
+<span id="cb27-2"><a href="getting-set-up.html#cb27-2" tabindex="-1"></a>  BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">&quot;TxDb.Dmelanogaster.UCSC.dm6.ensGene&quot;</span>, <span class="at">update =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb27-3"><a href="getting-set-up.html#cb27-3" tabindex="-1"></a>}</span>
+<span id="cb27-4"><a href="getting-set-up.html#cb27-4" tabindex="-1"></a><span class="do">## &#39;getOption(&quot;repos&quot;)&#39; replaces Bioconductor standard repositories, see</span></span>
+<span id="cb27-5"><a href="getting-set-up.html#cb27-5" tabindex="-1"></a><span class="do">## &#39;help(&quot;repositories&quot;, package = &quot;BiocManager&quot;)&#39; for details.</span></span>
+<span id="cb27-6"><a href="getting-set-up.html#cb27-6" tabindex="-1"></a><span class="do">## Replacement repositories:</span></span>
+<span id="cb27-7"><a href="getting-set-up.html#cb27-7" tabindex="-1"></a><span class="do">##     CRAN: https://p3m.dev/cran/__linux__/jammy/2024-10-30</span></span>
+<span id="cb27-8"><a href="getting-set-up.html#cb27-8" tabindex="-1"></a><span class="do">## Bioconductor version 3.19 (BiocManager 1.30.25), R 4.4.1 (2024-06-14)</span></span>
+<span id="cb27-9"><a href="getting-set-up.html#cb27-9" tabindex="-1"></a><span class="do">## Installing package(s) &#39;TxDb.Dmelanogaster.UCSC.dm6.ensGene&#39;</span></span>
+<span id="cb27-10"><a href="getting-set-up.html#cb27-10" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;org.Dm.eg.db&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)){</span>
+<span id="cb27-11"><a href="getting-set-up.html#cb27-11" tabindex="-1"></a>  BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">&quot;org.Dm.eg.db&quot;</span>, <span class="at">update =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb27-12"><a href="getting-set-up.html#cb27-12" tabindex="-1"></a>}</span>
+<span id="cb27-13"><a href="getting-set-up.html#cb27-13" tabindex="-1"></a><span class="do">## &#39;getOption(&quot;repos&quot;)&#39; replaces Bioconductor standard repositories, see</span></span>
+<span id="cb27-14"><a href="getting-set-up.html#cb27-14" tabindex="-1"></a><span class="do">## &#39;help(&quot;repositories&quot;, package = &quot;BiocManager&quot;)&#39; for details.</span></span>
+<span id="cb27-15"><a href="getting-set-up.html#cb27-15" tabindex="-1"></a><span class="do">## Replacement repositories:</span></span>
+<span id="cb27-16"><a href="getting-set-up.html#cb27-16" tabindex="-1"></a><span class="do">##     CRAN: https://p3m.dev/cran/__linux__/jammy/2024-10-30</span></span>
+<span id="cb27-17"><a href="getting-set-up.html#cb27-17" tabindex="-1"></a><span class="do">## Bioconductor version 3.19 (BiocManager 1.30.25), R 4.4.1 (2024-06-14)</span></span>
+<span id="cb27-18"><a href="getting-set-up.html#cb27-18" tabindex="-1"></a><span class="do">## Installing package(s) &#39;org.Dm.eg.db&#39;</span></span>
+<span id="cb27-19"><a href="getting-set-up.html#cb27-19" tabindex="-1"></a><span class="fu">library</span>(TxDb.Dmelanogaster.UCSC.dm6.ensGene)</span>
+<span id="cb27-20"><a href="getting-set-up.html#cb27-20" tabindex="-1"></a><span class="do">## Loading required package: GenomicFeatures</span></span>
+<span id="cb27-21"><a href="getting-set-up.html#cb27-21" tabindex="-1"></a><span class="do">## Loading required package: AnnotationDbi</span></span>
+<span id="cb27-22"><a href="getting-set-up.html#cb27-22" tabindex="-1"></a><span class="fu">library</span>(org.Dm.eg.db)</span>
+<span id="cb27-23"><a href="getting-set-up.html#cb27-23" tabindex="-1"></a><span class="do">## </span></span></code></pre></div>
 <p>Then we create the gene annotation object.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="getting-set-up.html#cb23-1" aria-hidden="true" tabindex="-1"></a>geneAnnotation <span class="ot">&lt;-</span> <span class="fu">createGeneAnnotation</span>(<span class="at">TxDb =</span> TxDb.Dmelanogaster.UCSC.dm6.ensGene, <span class="at">OrgDb =</span> org.Dm.eg.db)</span>
-<span id="cb23-2"><a href="getting-set-up.html#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting Genes..</span></span>
-<span id="cb23-3"><a href="getting-set-up.html#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="do">##   1 gene was dropped because it has exons located on both strands of the</span></span>
-<span id="cb23-4"><a href="getting-set-up.html#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="do">##   same reference sequence or on more than one reference sequence, so</span></span>
-<span id="cb23-5"><a href="getting-set-up.html#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="do">##   cannot be represented by a single genomic range.</span></span>
-<span id="cb23-6"><a href="getting-set-up.html#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="do">##   Use &#39;single.strand.genes.only=FALSE&#39; to get all the genes in a</span></span>
-<span id="cb23-7"><a href="getting-set-up.html#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="do">##   GRangesList object, or use suppressMessages() to suppress this message.</span></span>
-<span id="cb23-8"><a href="getting-set-up.html#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Determined Annotation Style = ENSEMBL</span></span>
-<span id="cb23-9"><a href="getting-set-up.html#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting Exons..</span></span>
-<span id="cb23-10"><a href="getting-set-up.html#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting TSS..</span></span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="getting-set-up.html#cb28-1" tabindex="-1"></a>geneAnnotation <span class="ot">&lt;-</span> <span class="fu">createGeneAnnotation</span>(<span class="at">TxDb =</span> TxDb.Dmelanogaster.UCSC.dm6.ensGene, <span class="at">OrgDb =</span> org.Dm.eg.db)</span>
+<span id="cb28-2"><a href="getting-set-up.html#cb28-2" tabindex="-1"></a><span class="do">## Getting Genes..</span></span>
+<span id="cb28-3"><a href="getting-set-up.html#cb28-3" tabindex="-1"></a><span class="do">##   1 gene was dropped because it has exons located on both strands of the</span></span>
+<span id="cb28-4"><a href="getting-set-up.html#cb28-4" tabindex="-1"></a><span class="do">##   same reference sequence or on more than one reference sequence, so</span></span>
+<span id="cb28-5"><a href="getting-set-up.html#cb28-5" tabindex="-1"></a><span class="do">##   cannot be represented by a single genomic range.</span></span>
+<span id="cb28-6"><a href="getting-set-up.html#cb28-6" tabindex="-1"></a><span class="do">##   Use &#39;single.strand.genes.only=FALSE&#39; to get all the genes in a</span></span>
+<span id="cb28-7"><a href="getting-set-up.html#cb28-7" tabindex="-1"></a><span class="do">##   GRangesList object, or use suppressMessages() to suppress this message.</span></span>
+<span id="cb28-8"><a href="getting-set-up.html#cb28-8" tabindex="-1"></a><span class="do">## Determined Annotation Style = ENSEMBL</span></span>
+<span id="cb28-9"><a href="getting-set-up.html#cb28-9" tabindex="-1"></a><span class="do">## Getting Exons..</span></span>
+<span id="cb28-10"><a href="getting-set-up.html#cb28-10" tabindex="-1"></a><span class="do">## Getting TSS..</span></span></code></pre></div>
 <p>Examining this object shows the constituent parts of an ArchR gene annotation.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="getting-set-up.html#cb24-1" aria-hidden="true" tabindex="-1"></a>geneAnnotation</span>
-<span id="cb24-2"><a href="getting-set-up.html#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="do">## List of length 3</span></span>
-<span id="cb24-3"><a href="getting-set-up.html#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="do">## names(3): genes exons TSS</span></span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="getting-set-up.html#cb29-1" tabindex="-1"></a>geneAnnotation</span>
+<span id="cb29-2"><a href="getting-set-up.html#cb29-2" tabindex="-1"></a><span class="do">## List of length 3</span></span>
+<span id="cb29-3"><a href="getting-set-up.html#cb29-3" tabindex="-1"></a><span class="do">## names(3): genes exons TSS</span></span></code></pre></div>
 <p>In some cases, information contained within the <code>OrgDb</code> object and the <code>TxDb</code> object might not match as expected. ArchR will attempt to default to an annotation style / keytype of “ENTREZID” or “ENSEMBL” to map between gene names within the <code>TxDb</code> object and various gene identifiers within the <code>OrgDb</code> object. For some organisms, (for ex. <a href="https://github.com/GreenleafLab/ArchR/issues/318#issuecomment-717786201">arabidopsis</a>), you may need to specify a particular annotation style to the <code>annoStyle</code> parameter of <code>createGeneAnnotation()</code> to tell ArchR what the keytype is of the gene names contained within your <code>TxDb</code> object.</p>
 <p>Alternatively, if you dont have a <code>TxDb</code> and <code>OrgDb</code> object, you can create a <code>geneAnnotation</code> object from the following information :</p>
 <ol style="list-style-type: decimal">
@@ -392,11 +441,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>A <code>GRanges</code> object containing standed transcription start site (<code>TSS</code>) coordinates.</li>
 </ol>
 <!-- #JJJ Is the TSS object used for anything other than TSS scores? If so, shouldnt it have a symbols column as well? Either way, we should add that info to point #3 -->
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="getting-set-up.html#cb25-1" aria-hidden="true" tabindex="-1"></a>geneAnnotation <span class="ot">&lt;-</span> <span class="fu">createGeneAnnotation</span>(</span>
-<span id="cb25-2"><a href="getting-set-up.html#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">TSS =</span> geneAnnotation<span class="sc">$</span>TSS, </span>
-<span id="cb25-3"><a href="getting-set-up.html#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">exons =</span> geneAnnotation<span class="sc">$</span>exons, </span>
-<span id="cb25-4"><a href="getting-set-up.html#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">genes =</span> geneAnnotation<span class="sc">$</span>genes</span>
-<span id="cb25-5"><a href="getting-set-up.html#cb25-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="getting-set-up.html#cb30-1" tabindex="-1"></a>geneAnnotation <span class="ot">&lt;-</span> <span class="fu">createGeneAnnotation</span>(</span>
+<span id="cb30-2"><a href="getting-set-up.html#cb30-2" tabindex="-1"></a>  <span class="at">TSS =</span> geneAnnotation<span class="sc">$</span>TSS, </span>
+<span id="cb30-3"><a href="getting-set-up.html#cb30-3" tabindex="-1"></a>  <span class="at">exons =</span> geneAnnotation<span class="sc">$</span>exons, </span>
+<span id="cb30-4"><a href="getting-set-up.html#cb30-4" tabindex="-1"></a>  <span class="at">genes =</span> geneAnnotation<span class="sc">$</span>genes</span>
+<span id="cb30-5"><a href="getting-set-up.html#cb30-5" tabindex="-1"></a>)</span></code></pre></div>
 <p>In general, we cannot provide much support for non-standard genomes. However, some ArchR users have created a repository to hold custom genome annotations for some popular model organisms. We encourage you to check out and contribute to that <a href="https://github.com/pfenninglab/custom_ArchR_genomes_and_annotations">user-developed custom genomes repository</a>. If you are looking for information on how to forge your own custom gene annotation, you should read through <a href="https://github.com/GreenleafLab/ArchR/issues/112">previous issue posts</a> for inspiration. For species with lots of small scaffolds, please make sure to remove genes within 2 kb of scaffold ends from the gene annotation, remove unassembled scaffolds from the genome annotation, and remove any scaffolds that lack genes as these will interfere with downstream analyses. When creating a custom genome for use with ArchR, it is imperative that all of the provided information matches. More explicitly, the chromosomes/<code>seqnames</code> present in your <code>genomeAnnotation</code> must match those present in your <code>geneAnnotation</code> and both must match the genome used for alignment. If you have contigs with no mapped reads, these may cause problems for ArchR and you should remove them entirely from your data and annotations.</p>
 </div>
 <div id="using-non-standard-genomes-in-archr" class="section level3 hasAnchor" number="3.5.2">

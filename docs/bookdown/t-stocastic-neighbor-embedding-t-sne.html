@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>8.2 t-Stocastic Neighbor Embedding (t-SNE) | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
   <meta name="description" content="A guide to ArchR" />
-  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
   <meta property="og:title" content="8.2 t-Stocastic Neighbor Embedding (t-SNE) | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2022-12-23" />
+<meta name="date" content="2025-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,13 +52,13 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -68,7 +68,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -94,7 +94,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -107,7 +107,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -121,6 +121,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -144,6 +148,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
 <li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+<li class="chapter" data-level="2.3" data-path="using-docker-for-pre-compiled-environment-setup.html"><a href="using-docker-for-pre-compiled-environment-setup.html"><i class="fa fa-check"></i><b>2.3</b> Using Docker for pre-compiled environment setup</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
 <ul>
@@ -303,86 +308,86 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="t-stocastic-neighbor-embedding-t-sne" class="section level2 hasAnchor" number="8.2">
 <h2><span class="header-section-number">8.2</span> t-Stocastic Neighbor Embedding (t-SNE)<a href="t-stocastic-neighbor-embedding-t-sne.html#t-stocastic-neighbor-embedding-t-sne" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>To run t-SNE in ArchR we use the <code>addTSNE()</code> function:</p>
-<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-1" aria-hidden="true" tabindex="-1"></a>projHeme2 <span class="ot">&lt;-</span> <span class="fu">addTSNE</span>(</span>
-<span id="cb94-2"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme2, </span>
-<span id="cb94-3"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>, </span>
-<span id="cb94-4"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;TSNE&quot;</span>, </span>
-<span id="cb94-5"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">perplexity =</span> <span class="dv">30</span></span>
-<span id="cb94-6"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb94-7"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Read the 10250 x 30 data matrix successfully!</span></span>
-<span id="cb94-8"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-8" aria-hidden="true" tabindex="-1"></a><span class="do">## OpenMP is working. 8 threads.</span></span>
-<span id="cb94-9"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Using no_dims = 2, perplexity = 30.000000, and theta = 0.500000</span></span>
-<span id="cb94-10"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Computing input similarities...</span></span>
-<span id="cb94-11"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Building tree...</span></span>
-<span id="cb94-12"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  - point 10000 of 10250</span></span>
-<span id="cb94-13"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Done in 3.98 seconds (sparsity = 0.013328)!</span></span>
-<span id="cb94-14"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Learning embedding...</span></span>
-<span id="cb94-15"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-15" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 50: error is 96.119537 (50 iterations in 4.88 seconds)</span></span>
-<span id="cb94-16"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-16" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 100: error is 84.283356 (50 iterations in 4.65 seconds)</span></span>
-<span id="cb94-17"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-17" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 150: error is 81.479100 (50 iterations in 4.41 seconds)</span></span>
-<span id="cb94-18"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-18" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 200: error is 80.908645 (50 iterations in 4.54 seconds)</span></span>
-<span id="cb94-19"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-19" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 250: error is 80.684604 (50 iterations in 4.66 seconds)</span></span>
-<span id="cb94-20"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 300: error is 3.272179 (50 iterations in 4.55 seconds)</span></span>
-<span id="cb94-21"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-21" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 350: error is 3.015959 (50 iterations in 4.28 seconds)</span></span>
-<span id="cb94-22"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 400: error is 2.872997 (50 iterations in 4.25 seconds)</span></span>
-<span id="cb94-23"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-23" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 450: error is 2.782066 (50 iterations in 4.22 seconds)</span></span>
-<span id="cb94-24"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 500: error is 2.717122 (50 iterations in 4.19 seconds)</span></span>
-<span id="cb94-25"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-25" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 550: error is 2.668713 (50 iterations in 4.21 seconds)</span></span>
-<span id="cb94-26"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-26" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 600: error is 2.631420 (50 iterations in 4.19 seconds)</span></span>
-<span id="cb94-27"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-27" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 650: error is 2.602676 (50 iterations in 4.19 seconds)</span></span>
-<span id="cb94-28"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-28" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 700: error is 2.580617 (50 iterations in 4.18 seconds)</span></span>
-<span id="cb94-29"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-29" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 750: error is 2.564394 (50 iterations in 4.21 seconds)</span></span>
-<span id="cb94-30"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-30" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 800: error is 2.551759 (50 iterations in 4.23 seconds)</span></span>
-<span id="cb94-31"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-31" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 850: error is 2.542569 (50 iterations in 4.24 seconds)</span></span>
-<span id="cb94-32"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-32" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 900: error is 2.536309 (50 iterations in 4.26 seconds)</span></span>
-<span id="cb94-33"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-33" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 950: error is 2.530784 (50 iterations in 4.27 seconds)</span></span>
-<span id="cb94-34"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-34" aria-hidden="true" tabindex="-1"></a><span class="do">## Iteration 1000: error is 2.526010 (50 iterations in 4.27 seconds)</span></span>
-<span id="cb94-35"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb94-35" aria-hidden="true" tabindex="-1"></a><span class="do">## Fitting performed in 86.86 seconds.</span></span></code></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-1" tabindex="-1"></a>projHeme2 <span class="ot">&lt;-</span> <span class="fu">addTSNE</span>(</span>
+<span id="cb99-2"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme2, </span>
+<span id="cb99-3"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-3" tabindex="-1"></a>    <span class="at">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>, </span>
+<span id="cb99-4"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-4" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;TSNE&quot;</span>, </span>
+<span id="cb99-5"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-5" tabindex="-1"></a>    <span class="at">perplexity =</span> <span class="dv">30</span></span>
+<span id="cb99-6"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-6" tabindex="-1"></a>)</span>
+<span id="cb99-7"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-7" tabindex="-1"></a><span class="do">## Read the 10250 x 30 data matrix successfully!</span></span>
+<span id="cb99-8"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-8" tabindex="-1"></a><span class="do">## OpenMP is working. 8 threads.</span></span>
+<span id="cb99-9"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-9" tabindex="-1"></a><span class="do">## Using no_dims = 2, perplexity = 30.000000, and theta = 0.500000</span></span>
+<span id="cb99-10"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-10" tabindex="-1"></a><span class="do">## Computing input similarities...</span></span>
+<span id="cb99-11"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-11" tabindex="-1"></a><span class="do">## Building tree...</span></span>
+<span id="cb99-12"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-12" tabindex="-1"></a><span class="do">##  - point 10000 of 10250</span></span>
+<span id="cb99-13"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-13" tabindex="-1"></a><span class="do">## Done in 3.05 seconds (sparsity = 0.013336)!</span></span>
+<span id="cb99-14"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-14" tabindex="-1"></a><span class="do">## Learning embedding...</span></span>
+<span id="cb99-15"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-15" tabindex="-1"></a><span class="do">## Iteration 50: error is 96.107250 (50 iterations in 2.22 seconds)</span></span>
+<span id="cb99-16"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-16" tabindex="-1"></a><span class="do">## Iteration 100: error is 84.311951 (50 iterations in 2.34 seconds)</span></span>
+<span id="cb99-17"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-17" tabindex="-1"></a><span class="do">## Iteration 150: error is 81.621430 (50 iterations in 2.23 seconds)</span></span>
+<span id="cb99-18"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-18" tabindex="-1"></a><span class="do">## Iteration 200: error is 81.006119 (50 iterations in 2.28 seconds)</span></span>
+<span id="cb99-19"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-19" tabindex="-1"></a><span class="do">## Iteration 250: error is 80.709628 (50 iterations in 2.34 seconds)</span></span>
+<span id="cb99-20"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-20" tabindex="-1"></a><span class="do">## Iteration 300: error is 3.240719 (50 iterations in 2.21 seconds)</span></span>
+<span id="cb99-21"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-21" tabindex="-1"></a><span class="do">## Iteration 350: error is 2.991369 (50 iterations in 2.10 seconds)</span></span>
+<span id="cb99-22"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-22" tabindex="-1"></a><span class="do">## Iteration 400: error is 2.856670 (50 iterations in 2.05 seconds)</span></span>
+<span id="cb99-23"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-23" tabindex="-1"></a><span class="do">## Iteration 450: error is 2.771442 (50 iterations in 2.05 seconds)</span></span>
+<span id="cb99-24"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-24" tabindex="-1"></a><span class="do">## Iteration 500: error is 2.710819 (50 iterations in 2.01 seconds)</span></span>
+<span id="cb99-25"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-25" tabindex="-1"></a><span class="do">## Iteration 550: error is 2.664889 (50 iterations in 2.06 seconds)</span></span>
+<span id="cb99-26"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-26" tabindex="-1"></a><span class="do">## Iteration 600: error is 2.628754 (50 iterations in 2.11 seconds)</span></span>
+<span id="cb99-27"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-27" tabindex="-1"></a><span class="do">## Iteration 650: error is 2.600625 (50 iterations in 2.05 seconds)</span></span>
+<span id="cb99-28"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-28" tabindex="-1"></a><span class="do">## Iteration 700: error is 2.577976 (50 iterations in 2.02 seconds)</span></span>
+<span id="cb99-29"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-29" tabindex="-1"></a><span class="do">## Iteration 750: error is 2.559499 (50 iterations in 2.02 seconds)</span></span>
+<span id="cb99-30"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-30" tabindex="-1"></a><span class="do">## Iteration 800: error is 2.544428 (50 iterations in 2.08 seconds)</span></span>
+<span id="cb99-31"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-31" tabindex="-1"></a><span class="do">## Iteration 850: error is 2.531595 (50 iterations in 2.06 seconds)</span></span>
+<span id="cb99-32"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-32" tabindex="-1"></a><span class="do">## Iteration 900: error is 2.521211 (50 iterations in 2.08 seconds)</span></span>
+<span id="cb99-33"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-33" tabindex="-1"></a><span class="do">## Iteration 950: error is 2.512387 (50 iterations in 2.07 seconds)</span></span>
+<span id="cb99-34"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-34" tabindex="-1"></a><span class="do">## Iteration 1000: error is 2.505024 (50 iterations in 2.08 seconds)</span></span>
+<span id="cb99-35"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-35" tabindex="-1"></a><span class="do">## Fitting performed in 42.46 seconds.</span></span></code></pre></div>
 <p>Similar to UMAP, we can plot the t-SNE embedding using <code>plotEmbedding()</code>. The same parameters apply to <code>colorBy</code> and <code>name</code> regardless of which type of embedding is being used.</p>
-<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb95-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">plotEmbedding</span>(<span class="at">ArchRProj =</span> projHeme2, <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Sample&quot;</span>, <span class="at">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span>
-<span id="cb95-2"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-371b01084d0e8-Date-2022-12-23_Time-06-21-57.log</span></span>
-<span id="cb95-3"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb95-3" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb95-4"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb95-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
-<span id="cb95-5"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb95-5" aria-hidden="true" tabindex="-1"></a><span class="do">## ColorBy = cellColData</span></span>
-<span id="cb95-6"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb95-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
-<span id="cb95-7"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb95-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 </span></span>
-<span id="cb95-8"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb95-8" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-371b01084d0e8-Date-2022-12-23_Time-06-21-57.log</span></span></code></pre></div>
-<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb96-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">plotEmbedding</span>(<span class="at">ArchRProj =</span> projHeme2, <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Clusters&quot;</span>, <span class="at">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span>
-<span id="cb96-2"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-371b0a01a2b6-Date-2022-12-23_Time-06-21-59.log</span></span>
-<span id="cb96-3"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb96-3" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb96-4"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb96-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
-<span id="cb96-5"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb96-5" aria-hidden="true" tabindex="-1"></a><span class="do">## ColorBy = cellColData</span></span>
-<span id="cb96-6"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb96-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
-<span id="cb96-7"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb96-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 </span></span>
-<span id="cb96-8"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb96-8" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-371b0a01a2b6-Date-2022-12-23_Time-06-21-59.log</span></span></code></pre></div>
-<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAlignPlots</span>(p1, p2, <span class="at">type =</span> <span class="st">&quot;h&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb100-1" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">plotEmbedding</span>(<span class="at">ArchRProj =</span> projHeme2, <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Sample&quot;</span>, <span class="at">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span>
+<span id="cb100-2"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb100-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-1a16f2060bf-Date-2025-01-23_Time-20-14-30.535888.log</span></span>
+<span id="cb100-3"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb100-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb100-4"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb100-4" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
+<span id="cb100-5"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb100-5" tabindex="-1"></a><span class="do">## ColorBy = cellColData</span></span>
+<span id="cb100-6"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb100-6" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
+<span id="cb100-7"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb100-7" tabindex="-1"></a><span class="do">## 1 </span></span>
+<span id="cb100-8"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb100-8" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-1a16f2060bf-Date-2025-01-23_Time-20-14-30.535888.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb101-1" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">plotEmbedding</span>(<span class="at">ArchRProj =</span> projHeme2, <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Clusters&quot;</span>, <span class="at">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span>
+<span id="cb101-2"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb101-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-1a13b2e8119-Date-2025-01-23_Time-20-14-31.883394.log</span></span>
+<span id="cb101-3"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb101-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb101-4"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb101-4" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
+<span id="cb101-5"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb101-5" tabindex="-1"></a><span class="do">## ColorBy = cellColData</span></span>
+<span id="cb101-6"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb101-6" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
+<span id="cb101-7"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb101-7" tabindex="-1"></a><span class="do">## 1 </span></span>
+<span id="cb101-8"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb101-8" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-1a13b2e8119-Date-2025-01-23_Time-20-14-31.883394.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb102-1" tabindex="-1"></a><span class="fu">ggAlignPlots</span>(p1, p2, <span class="at">type =</span> <span class="st">&quot;h&quot;</span>)</span></code></pre></div>
 <p>To save an editable vectorized version of this plot, we use <code>plotPDF()</code>.</p>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotPDF</span>(p1,p2, <span class="at">name =</span> <span class="st">&quot;Plot-TSNE-Sample-Clusters.pdf&quot;</span>, <span class="at">ArchRProj =</span> projHeme2, <span class="at">addDOC =</span> <span class="cn">FALSE</span>, <span class="at">width =</span> <span class="dv">5</span>, <span class="at">height =</span> <span class="dv">5</span>)</span>
-<span id="cb98-2"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb98-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
-<span id="cb98-3"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb98-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span></code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb103-1" tabindex="-1"></a><span class="fu">plotPDF</span>(p1,p2, <span class="at">name =</span> <span class="st">&quot;Plot-TSNE-Sample-Clusters.pdf&quot;</span>, <span class="at">ArchRProj =</span> projHeme2, <span class="at">addDOC =</span> <span class="cn">FALSE</span>, <span class="at">width =</span> <span class="dv">5</span>, <span class="at">height =</span> <span class="dv">5</span>)</span>
+<span id="cb103-2"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb103-2" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
+<span id="cb103-3"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb103-3" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span></code></pre></div>
 <p>As we did with UMAP, we can compare the clustering results from <code>Seurat::FindClusters()</code> with the results of clusering with <code>scran</code>:</p>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">plotEmbedding</span>(<span class="at">ArchRProj =</span> projHeme2, <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Sample&quot;</span>, <span class="at">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span>
-<span id="cb99-2"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-371b055e68ad-Date-2022-12-23_Time-06-22-06.log</span></span>
-<span id="cb99-3"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-3" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb99-4"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
-<span id="cb99-5"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-5" aria-hidden="true" tabindex="-1"></a><span class="do">## ColorBy = cellColData</span></span>
-<span id="cb99-6"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
-<span id="cb99-7"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 </span></span>
-<span id="cb99-8"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb99-8" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-371b055e68ad-Date-2022-12-23_Time-06-22-06.log</span></span></code></pre></div>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb100-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">plotEmbedding</span>(<span class="at">ArchRProj =</span> projHeme2, <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="at">name =</span> <span class="st">&quot;ScranClusters&quot;</span>, <span class="at">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span>
-<span id="cb100-2"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-371b053239033-Date-2022-12-23_Time-06-22-08.log</span></span>
-<span id="cb100-3"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb100-3" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb100-4"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb100-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
-<span id="cb100-5"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb100-5" aria-hidden="true" tabindex="-1"></a><span class="do">## ColorBy = cellColData</span></span>
-<span id="cb100-6"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb100-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
-<span id="cb100-7"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb100-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 </span></span>
-<span id="cb100-8"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb100-8" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-371b053239033-Date-2022-12-23_Time-06-22-08.log</span></span></code></pre></div>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAlignPlots</span>(p1, p2, <span class="at">type =</span> <span class="st">&quot;h&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb104-1" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">plotEmbedding</span>(<span class="at">ArchRProj =</span> projHeme2, <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Sample&quot;</span>, <span class="at">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span>
+<span id="cb104-2"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb104-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-1a1515b8ca1-Date-2025-01-23_Time-20-14-37.498119.log</span></span>
+<span id="cb104-3"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb104-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb104-4"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb104-4" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
+<span id="cb104-5"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb104-5" tabindex="-1"></a><span class="do">## ColorBy = cellColData</span></span>
+<span id="cb104-6"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb104-6" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
+<span id="cb104-7"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb104-7" tabindex="-1"></a><span class="do">## 1 </span></span>
+<span id="cb104-8"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb104-8" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-1a1515b8ca1-Date-2025-01-23_Time-20-14-37.498119.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb105-1" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">plotEmbedding</span>(<span class="at">ArchRProj =</span> projHeme2, <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="at">name =</span> <span class="st">&quot;ScranClusters&quot;</span>, <span class="at">embedding =</span> <span class="st">&quot;TSNE&quot;</span>)</span>
+<span id="cb105-2"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb105-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-1a16954fcf5-Date-2025-01-23_Time-20-14-38.851401.log</span></span>
+<span id="cb105-3"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb105-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb105-4"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb105-4" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
+<span id="cb105-5"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb105-5" tabindex="-1"></a><span class="do">## ColorBy = cellColData</span></span>
+<span id="cb105-6"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb105-6" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
+<span id="cb105-7"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb105-7" tabindex="-1"></a><span class="do">## 1 </span></span>
+<span id="cb105-8"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb105-8" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-1a16954fcf5-Date-2025-01-23_Time-20-14-38.851401.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb106-1" tabindex="-1"></a><span class="fu">ggAlignPlots</span>(p1, p2, <span class="at">type =</span> <span class="st">&quot;h&quot;</span>)</span></code></pre></div>
 <p><img src="ArchR_files/figure-html/unnamed-chunk-101-1.svg" width="672" /></p>
 <p>To save an editable vectorized version of this plot, we use <code>plotPDF()</code>.</p>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotPDF</span>(p1,p2, <span class="at">name =</span> <span class="st">&quot;Plot-tSNE-Sample-ScranClusters.pdf&quot;</span>, <span class="at">ArchRProj =</span> projHeme2, <span class="at">addDOC =</span> <span class="cn">FALSE</span>, <span class="at">width =</span> <span class="dv">5</span>, <span class="at">height =</span> <span class="dv">5</span>)</span>
-<span id="cb102-2"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb102-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
-<span id="cb102-3"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb102-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb107-1" tabindex="-1"></a><span class="fu">plotPDF</span>(p1,p2, <span class="at">name =</span> <span class="st">&quot;Plot-tSNE-Sample-ScranClusters.pdf&quot;</span>, <span class="at">ArchRProj =</span> projHeme2, <span class="at">addDOC =</span> <span class="cn">FALSE</span>, <span class="at">width =</span> <span class="dv">5</span>, <span class="at">height =</span> <span class="dv">5</span>)</span>
+<span id="cb107-2"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb107-2" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
+<span id="cb107-3"><a href="t-stocastic-neighbor-embedding-t-sne.html#cb107-3" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span></code></pre></div>
 </div>
             </section>
 

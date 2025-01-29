@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>14.1 Motif Enrichment | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
   <meta name="description" content="A guide to ArchR" />
-  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
   <meta property="og:title" content="14.1 Motif Enrichment | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2022-12-23" />
+<meta name="date" content="2025-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,13 +52,13 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -68,7 +68,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -94,7 +94,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -107,7 +107,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -121,6 +121,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -144,6 +148,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
 <li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+<li class="chapter" data-level="2.3" data-path="using-docker-for-pre-compiled-environment-setup.html"><a href="using-docker-for-pre-compiled-environment-setup.html"><i class="fa fa-check"></i><b>2.3</b> Using Docker for pre-compiled environment setup</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
 <ul>
@@ -303,201 +308,201 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="motif-enrichment" class="section level2 hasAnchor" number="14.1">
 <h2><span class="header-section-number">14.1</span> Motif Enrichment<a href="motif-enrichment.html#motif-enrichment" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Continuing our analysis of differential peaks from the previous chapter, we can look for motifs that are enriched in peaks that are up or down in various cell types. To do this, we must first add these motif annotations to our <code>ArchRProject</code>. This effectively creates a binary matrix where the presence of a motif in each peak is indicated numerically. We do this using the <code>addMotifAnnotations()</code> function which determines motif presence in the peak set stored in the <code>ArchRProject</code>. This function allows you to use motif sets that have been curated from repositories such as JASPAR or CIS-BP. For JASPAR, ArchR retrieves these motif sets using the <code>TFBSTools::getMatrixSet()</code> function. For CIS-BP, ArchR retrieves motifs using the <code>chromVARmotifs</code> package. Because of this, certain species may or may not be available for any given motif set and you should familiarize yourself with the <code>addMotifAnnotations()</code> function docs if you are using anything other than human or mouse. To provide maximal flexibility, we allow users to provide their own motif set as a <code>PWMatrixList</code> object to the <code>motifPWMs</code> parameter. If you need to construct your own <code>PWMatrixList</code> object, check out the <a href="https://bioconductor.org/packages/release/bioc/html/universalmotif.html"><code>universalmotif</code> package</a> which provides for simplified conversion between various motif file formats (e.g. meme) and the <code>PWMatrixList</code> format from the <code>TFBSTools</code> package.</p>
-<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="motif-enrichment.html#cb222-1" aria-hidden="true" tabindex="-1"></a>projHeme5 <span class="ot">&lt;-</span> <span class="fu">addMotifAnnotations</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">motifSet =</span> <span class="st">&quot;cisbp&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Motif&quot;</span>)</span>
-<span id="cb222-2"><a href="motif-enrichment.html#cb222-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addMotifAnnotations-371b065f9506e-Date-2022-12-23_Time-07-55-20.log</span></span>
-<span id="cb222-3"><a href="motif-enrichment.html#cb222-3" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb222-4"><a href="motif-enrichment.html#cb222-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:55:21 : Getting Motif Set, Species : Homo sapiens, 0.019 mins elapsed.</span></span>
-<span id="cb222-5"><a href="motif-enrichment.html#cb222-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Using version 2 motifs!</span></span>
-<span id="cb222-6"><a href="motif-enrichment.html#cb222-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:55:22 : Finding Motif Positions with motifmatchr!, 0.049 mins elapsed.</span></span>
-<span id="cb222-7"><a href="motif-enrichment.html#cb222-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:58:33 : All Motifs Overlap at least 1 peak!, 3.222 mins elapsed.</span></span>
-<span id="cb222-8"><a href="motif-enrichment.html#cb222-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:58:33 : Creating Motif Overlap Matrix, 3.222 mins elapsed.</span></span>
-<span id="cb222-9"><a href="motif-enrichment.html#cb222-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:58:35 : Finished Getting Motif Info!, 3.254 mins elapsed.</span></span>
-<span id="cb222-10"><a href="motif-enrichment.html#cb222-10" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-addMotifAnnotations-371b065f9506e-Date-2022-12-23_Time-07-55-20.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="motif-enrichment.html#cb227-1" tabindex="-1"></a>projHeme5 <span class="ot">&lt;-</span> <span class="fu">addMotifAnnotations</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">motifSet =</span> <span class="st">&quot;cisbp&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Motif&quot;</span>)</span>
+<span id="cb227-2"><a href="motif-enrichment.html#cb227-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addMotifAnnotations-1a170f75e2-Date-2025-01-23_Time-21-25-08.141252.log</span></span>
+<span id="cb227-3"><a href="motif-enrichment.html#cb227-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb227-4"><a href="motif-enrichment.html#cb227-4" tabindex="-1"></a><span class="do">## 2025-01-23 21:25:08.577197 : Getting Motif Set, Species : Homo sapiens, 0.007 mins elapsed.</span></span>
+<span id="cb227-5"><a href="motif-enrichment.html#cb227-5" tabindex="-1"></a><span class="do">## Using version 2 motifs!</span></span>
+<span id="cb227-6"><a href="motif-enrichment.html#cb227-6" tabindex="-1"></a><span class="do">## 2025-01-23 21:25:19.503005 : Finding Motif Positions with motifmatchr!, 0.189 mins elapsed.</span></span>
+<span id="cb227-7"><a href="motif-enrichment.html#cb227-7" tabindex="-1"></a><span class="do">## 2025-01-23 21:27:17.342835 : All Motifs Overlap at least 1 peak!, 2.153 mins elapsed.</span></span>
+<span id="cb227-8"><a href="motif-enrichment.html#cb227-8" tabindex="-1"></a><span class="do">## 2025-01-23 21:27:17.349028 : Creating Motif Overlap Matrix, 2.153 mins elapsed.</span></span>
+<span id="cb227-9"><a href="motif-enrichment.html#cb227-9" tabindex="-1"></a><span class="do">## 2025-01-23 21:27:19.050366 : Finished Getting Motif Info!, 2.181 mins elapsed.</span></span>
+<span id="cb227-10"><a href="motif-enrichment.html#cb227-10" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-addMotifAnnotations-1a170f75e2-Date-2025-01-23_Time-21-25-08.141252.log</span></span></code></pre></div>
 <p>The <code>motifSet</code> used should be chosen carefully because annotations may not be available for your species.</p>
 <div id="which-motifs-are-found-in-a-given-peak" class="section level3 hasAnchor" number="14.1.1">
 <h3><span class="header-section-number">14.1.1</span> Which motifs are found in a given peak?<a href="motif-enrichment.html#which-motifs-are-found-in-a-given-peak" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Before diving into how to perform various motif enrichment analyses, we’ll take a slight detour to discuss how to figure out which motifs are present in a given peak. Lets say we are interested in understanding which TF motifs are present within the promoter peak of the CEBPA gene, located at <code>chr19:33792929-33794030</code>. First, we extract the peak set from our <code>ArchRProject</code> and create names for each peak based on the chromosome, start, and end positions.</p>
-<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="motif-enrichment.html#cb223-1" aria-hidden="true" tabindex="-1"></a>pSet <span class="ot">&lt;-</span> <span class="fu">getPeakSet</span>(<span class="at">ArchRProj =</span> projHeme5)</span>
-<span id="cb223-2"><a href="motif-enrichment.html#cb223-2" aria-hidden="true" tabindex="-1"></a>pSet<span class="sc">$</span>name <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">seqnames</span>(pSet), <span class="fu">start</span>(pSet), <span class="fu">end</span>(pSet), <span class="at">sep =</span> <span class="st">&quot;_&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="motif-enrichment.html#cb228-1" tabindex="-1"></a>pSet <span class="ot">&lt;-</span> <span class="fu">getPeakSet</span>(<span class="at">ArchRProj =</span> projHeme5)</span>
+<span id="cb228-2"><a href="motif-enrichment.html#cb228-2" tabindex="-1"></a>pSet<span class="sc">$</span>name <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">seqnames</span>(pSet), <span class="fu">start</span>(pSet), <span class="fu">end</span>(pSet), <span class="at">sep =</span> <span class="st">&quot;_&quot;</span>)</span></code></pre></div>
 <p>Then, we extract a <code>RangedSummarizedExperiment</code> object containing the per-peak motif matches, create analogous names for that object, and then sort the matches object to ensure that the peaks are listed in the same order as the peaks from the peak set.</p>
-<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="motif-enrichment.html#cb224-1" aria-hidden="true" tabindex="-1"></a>matches <span class="ot">&lt;-</span> <span class="fu">getMatches</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">name =</span> <span class="st">&quot;Motif&quot;</span>)</span>
-<span id="cb224-2"><a href="motif-enrichment.html#cb224-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(matches) <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">seqnames</span>(matches), <span class="fu">start</span>(matches), <span class="fu">end</span>(matches), <span class="at">sep =</span> <span class="st">&quot;_&quot;</span>)</span>
-<span id="cb224-3"><a href="motif-enrichment.html#cb224-3" aria-hidden="true" tabindex="-1"></a>matches <span class="ot">&lt;-</span> matches[pSet<span class="sc">$</span>name]</span></code></pre></div>
+<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="motif-enrichment.html#cb229-1" tabindex="-1"></a>matches <span class="ot">&lt;-</span> <span class="fu">getMatches</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">name =</span> <span class="st">&quot;Motif&quot;</span>)</span>
+<span id="cb229-2"><a href="motif-enrichment.html#cb229-2" tabindex="-1"></a><span class="fu">rownames</span>(matches) <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">seqnames</span>(matches), <span class="fu">start</span>(matches), <span class="fu">end</span>(matches), <span class="at">sep =</span> <span class="st">&quot;_&quot;</span>)</span>
+<span id="cb229-3"><a href="motif-enrichment.html#cb229-3" tabindex="-1"></a>matches <span class="ot">&lt;-</span> matches[pSet<span class="sc">$</span>name]</span></code></pre></div>
 <p>Now, we just need to find the index of the CEBPA promoter peak of interest and find which motifs are present in that peak. Note that the below code only works when a single peak is being analyzed.</p>
 <p>First, we make a GRanges object corresponding to the CEBPA promoter.</p>
-<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="motif-enrichment.html#cb225-1" aria-hidden="true" tabindex="-1"></a>gr <span class="ot">&lt;-</span> <span class="fu">GRanges</span>(<span class="at">seqnames =</span> <span class="fu">c</span>(<span class="st">&quot;chr19&quot;</span>), <span class="at">ranges =</span> <span class="fu">IRanges</span>(<span class="at">start =</span> <span class="fu">c</span>(<span class="dv">33792929</span>), <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">33794030</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="motif-enrichment.html#cb230-1" tabindex="-1"></a>gr <span class="ot">&lt;-</span> <span class="fu">GRanges</span>(<span class="at">seqnames =</span> <span class="fu">c</span>(<span class="st">&quot;chr19&quot;</span>), <span class="at">ranges =</span> <span class="fu">IRanges</span>(<span class="at">start =</span> <span class="fu">c</span>(<span class="dv">33792929</span>), <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">33794030</span>)))</span></code></pre></div>
 <p>Then we find peaks from our peak set that overlap this region.</p>
-<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="motif-enrichment.html#cb226-1" aria-hidden="true" tabindex="-1"></a>queryHits <span class="ot">&lt;-</span> <span class="fu">queryHits</span>(<span class="fu">findOverlaps</span>(<span class="at">query =</span> pSet, <span class="at">subject =</span> gr, <span class="at">type =</span> <span class="st">&quot;within&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="motif-enrichment.html#cb231-1" tabindex="-1"></a>queryHits <span class="ot">&lt;-</span> <span class="fu">queryHits</span>(<span class="fu">findOverlaps</span>(<span class="at">query =</span> pSet, <span class="at">subject =</span> gr, <span class="at">type =</span> <span class="st">&quot;within&quot;</span>))</span></code></pre></div>
 <p>Then we get the TFs that have motif matches in that peak.</p>
-<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="motif-enrichment.html#cb227-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(matches)[<span class="fu">which</span>(<span class="fu">assay</span>(matches[queryHits,]))]</span>
-<span id="cb227-2"><a href="motif-enrichment.html#cb227-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] &quot;TFAP2D_2&quot;    &quot;HIF1A_24&quot;    &quot;TCFL5_25&quot;    &quot;HES1_34&quot;     &quot;TCF15_46&quot;   </span></span>
-<span id="cb227-3"><a href="motif-enrichment.html#cb227-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [6] &quot;ATOH8_71&quot;    &quot;SCXB_93&quot;     &quot;HES4_95&quot;     &quot;SCXA_96&quot;     &quot;ZFX_158&quot;    </span></span>
-<span id="cb227-4"><a href="motif-enrichment.html#cb227-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] &quot;KLF6_165&quot;    &quot;ZFY_166&quot;     &quot;KLF5_175&quot;    &quot;ZNF423_176&quot;  &quot;CTCF_177&quot;   </span></span>
-<span id="cb227-5"><a href="motif-enrichment.html#cb227-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [16] &quot;SP4_180&quot;     &quot;KLF7_189&quot;    &quot;PLAGL1_190&quot;  &quot;EGR1_195&quot;    &quot;CTCFL_198&quot;  </span></span>
-<span id="cb227-6"><a href="motif-enrichment.html#cb227-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [21] &quot;SNAI1_199&quot;   &quot;GLIS2_201&quot;   &quot;KLF16_205&quot;   &quot;EGR4_207&quot;    &quot;ZNF148_222&quot; </span></span>
-<span id="cb227-7"><a href="motif-enrichment.html#cb227-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [26] &quot;SP8_226&quot;     &quot;ZNF219_229&quot;  &quot;ZNF143_231&quot;  &quot;SP2_232&quot;     &quot;SP7_241&quot;    </span></span>
-<span id="cb227-8"><a href="motif-enrichment.html#cb227-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [31] &quot;SP3_247&quot;     &quot;GLIS1_250&quot;   &quot;ZBTB7A_258&quot;  &quot;ZBTB7C_265&quot;  &quot;WT1_266&quot;    </span></span>
-<span id="cb227-9"><a href="motif-enrichment.html#cb227-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [36] &quot;SP1_267&quot;     &quot;SP6_275&quot;     &quot;SP5_279&quot;     &quot;SP9_283&quot;     &quot;DNMT1_301&quot;  </span></span>
-<span id="cb227-10"><a href="motif-enrichment.html#cb227-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [41] &quot;ELF4_323&quot;    &quot;SPDEF_330&quot;   &quot;EHF_333&quot;     &quot;MBD2_644&quot;    &quot;MECP2_645&quot;  </span></span>
-<span id="cb227-11"><a href="motif-enrichment.html#cb227-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [46] &quot;TBP_793&quot;     &quot;EP300_804&quot;   &quot;NRF1_805&quot;    &quot;KLF2_846&quot;    &quot;ZFP161_850&quot; </span></span>
-<span id="cb227-12"><a href="motif-enrichment.html#cb227-12" aria-hidden="true" tabindex="-1"></a><span class="do">## [51] &quot;TFCP2L1_858&quot; &quot;SMAD5_866&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="motif-enrichment.html#cb232-1" tabindex="-1"></a><span class="fu">colnames</span>(matches)[<span class="fu">which</span>(<span class="fu">assay</span>(matches[queryHits,]))]</span>
+<span id="cb232-2"><a href="motif-enrichment.html#cb232-2" tabindex="-1"></a><span class="do">##  [1] &quot;TFAP2D_2&quot;    &quot;HIF1A_24&quot;    &quot;TCFL5_25&quot;    &quot;HES1_34&quot;     &quot;TCF15_46&quot;   </span></span>
+<span id="cb232-3"><a href="motif-enrichment.html#cb232-3" tabindex="-1"></a><span class="do">##  [6] &quot;ATOH8_71&quot;    &quot;SCXB_93&quot;     &quot;HES4_95&quot;     &quot;SCXA_96&quot;     &quot;ZFX_158&quot;    </span></span>
+<span id="cb232-4"><a href="motif-enrichment.html#cb232-4" tabindex="-1"></a><span class="do">## [11] &quot;KLF6_165&quot;    &quot;ZFY_166&quot;     &quot;KLF5_175&quot;    &quot;ZNF423_176&quot;  &quot;CTCF_177&quot;   </span></span>
+<span id="cb232-5"><a href="motif-enrichment.html#cb232-5" tabindex="-1"></a><span class="do">## [16] &quot;SP4_180&quot;     &quot;KLF7_189&quot;    &quot;PLAGL1_190&quot;  &quot;EGR1_195&quot;    &quot;EGR2_196&quot;   </span></span>
+<span id="cb232-6"><a href="motif-enrichment.html#cb232-6" tabindex="-1"></a><span class="do">## [21] &quot;CTCFL_198&quot;   &quot;SNAI1_199&quot;   &quot;GLIS2_201&quot;   &quot;KLF16_205&quot;   &quot;EGR4_207&quot;   </span></span>
+<span id="cb232-7"><a href="motif-enrichment.html#cb232-7" tabindex="-1"></a><span class="do">## [26] &quot;ZNF148_222&quot;  &quot;SP8_226&quot;     &quot;ZNF219_229&quot;  &quot;ZNF143_231&quot;  &quot;SP2_232&quot;    </span></span>
+<span id="cb232-8"><a href="motif-enrichment.html#cb232-8" tabindex="-1"></a><span class="do">## [31] &quot;SP7_241&quot;     &quot;SP3_247&quot;     &quot;GLIS1_250&quot;   &quot;ZBTB7A_258&quot;  &quot;ZBTB7C_265&quot; </span></span>
+<span id="cb232-9"><a href="motif-enrichment.html#cb232-9" tabindex="-1"></a><span class="do">## [36] &quot;WT1_266&quot;     &quot;SP1_267&quot;     &quot;SP6_275&quot;     &quot;SP5_279&quot;     &quot;SP9_283&quot;    </span></span>
+<span id="cb232-10"><a href="motif-enrichment.html#cb232-10" tabindex="-1"></a><span class="do">## [41] &quot;DNMT1_301&quot;   &quot;ELF4_323&quot;    &quot;SPDEF_330&quot;   &quot;EHF_333&quot;     &quot;MBD2_644&quot;   </span></span>
+<span id="cb232-11"><a href="motif-enrichment.html#cb232-11" tabindex="-1"></a><span class="do">## [46] &quot;MECP2_645&quot;   &quot;TBP_793&quot;     &quot;EP300_804&quot;   &quot;NRF1_805&quot;    &quot;KLF2_846&quot;   </span></span>
+<span id="cb232-12"><a href="motif-enrichment.html#cb232-12" tabindex="-1"></a><span class="do">## [51] &quot;ZFP161_850&quot;  &quot;TFCP2L1_858&quot; &quot;SMAD5_866&quot;</span></span></code></pre></div>
 <p>The same type of workflow could be used in conjunction with peak-to-gene links or co-accessibility, which will come up in later chapters, to identify TF motifs present in other sets of peaks. The key is matching peaks based on the chromosome, start and end positions as shown above.</p>
 </div>
 <div id="motif-enrichment-in-differential-peaks" class="section level3 hasAnchor" number="14.1.2">
 <h3><span class="header-section-number">14.1.2</span> Motif Enrichment in Differential Peaks<a href="motif-enrichment.html#motif-enrichment-in-differential-peaks" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>We can then use the differential testing <code>SummarizedExperiment</code> object <code>markerTest</code> which was generated in the previous chapter to define the set of significantly differential peaks that we are interested in testing for motif enrichment. In this case, we are looking for peaks that have an <code>FDR &lt;= 0.1</code> and a <code>Log2FC &gt;= 0.5</code>. In the context of the differential comparison made in <code>markerTest</code>, these represnt peaks that are more accessible in “Erythroid” cells than “Progenitor” cells. We can test these differentially accessible peaks for enrichment of various motifs using the <code>peakAnnoEnrichment()</code> function. This function is a generalizable function that can be used for many different enrichment tests as we will demonstrate throughout this chapter.</p>
-<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="motif-enrichment.html#cb228-1" aria-hidden="true" tabindex="-1"></a>motifsUp <span class="ot">&lt;-</span> <span class="fu">peakAnnoEnrichment</span>(</span>
-<span id="cb228-2"><a href="motif-enrichment.html#cb228-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">seMarker =</span> markerTest,</span>
-<span id="cb228-3"><a href="motif-enrichment.html#cb228-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb228-4"><a href="motif-enrichment.html#cb228-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">peakAnnotation =</span> <span class="st">&quot;Motif&quot;</span>,</span>
-<span id="cb228-5"><a href="motif-enrichment.html#cb228-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 0.5&quot;</span></span>
-<span id="cb228-6"><a href="motif-enrichment.html#cb228-6" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb228-7"><a href="motif-enrichment.html#cb228-7" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-peakAnnoEnrichment-371b01b4e03b9-Date-2022-12-23_Time-07-58-38.log</span></span>
-<span id="cb228-8"><a href="motif-enrichment.html#cb228-8" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb228-9"><a href="motif-enrichment.html#cb228-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:58:43 : Computing Enrichments 1 of 1, 0.09 mins elapsed.</span></span>
-<span id="cb228-10"><a href="motif-enrichment.html#cb228-10" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-peakAnnoEnrichment-371b01b4e03b9-Date-2022-12-23_Time-07-58-38.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb233-1"><a href="motif-enrichment.html#cb233-1" tabindex="-1"></a>motifsUp <span class="ot">&lt;-</span> <span class="fu">peakAnnoEnrichment</span>(</span>
+<span id="cb233-2"><a href="motif-enrichment.html#cb233-2" tabindex="-1"></a>    <span class="at">seMarker =</span> markerTest,</span>
+<span id="cb233-3"><a href="motif-enrichment.html#cb233-3" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb233-4"><a href="motif-enrichment.html#cb233-4" tabindex="-1"></a>    <span class="at">peakAnnotation =</span> <span class="st">&quot;Motif&quot;</span>,</span>
+<span id="cb233-5"><a href="motif-enrichment.html#cb233-5" tabindex="-1"></a>    <span class="at">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 0.5&quot;</span></span>
+<span id="cb233-6"><a href="motif-enrichment.html#cb233-6" tabindex="-1"></a>  )</span>
+<span id="cb233-7"><a href="motif-enrichment.html#cb233-7" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-peakAnnoEnrichment-1a12ba07ae-Date-2025-01-23_Time-21-27-29.724061.log</span></span>
+<span id="cb233-8"><a href="motif-enrichment.html#cb233-8" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb233-9"><a href="motif-enrichment.html#cb233-9" tabindex="-1"></a><span class="do">## 2025-01-23 21:27:35.076417 : Computing Enrichments 1 of 1, 0.089 mins elapsed.</span></span>
+<span id="cb233-10"><a href="motif-enrichment.html#cb233-10" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-peakAnnoEnrichment-1a12ba07ae-Date-2025-01-23_Time-21-27-29.724061.log</span></span></code></pre></div>
 <p>The output of <code>peakAnnoEnrichment()</code> is a <code>SummarizedExperiment</code> object containing multiple <code>assays</code> that store the results of enrichment testing with the hypergeometric test.</p>
-<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="motif-enrichment.html#cb229-1" aria-hidden="true" tabindex="-1"></a>motifsUp</span>
-<span id="cb229-2"><a href="motif-enrichment.html#cb229-2" aria-hidden="true" tabindex="-1"></a><span class="do">## class: SummarizedExperiment </span></span>
-<span id="cb229-3"><a href="motif-enrichment.html#cb229-3" aria-hidden="true" tabindex="-1"></a><span class="do">## dim: 870 1 </span></span>
-<span id="cb229-4"><a href="motif-enrichment.html#cb229-4" aria-hidden="true" tabindex="-1"></a><span class="do">## metadata(0):</span></span>
-<span id="cb229-5"><a href="motif-enrichment.html#cb229-5" aria-hidden="true" tabindex="-1"></a><span class="do">## assays(10): mlog10Padj mlog10p ... CompareFrequency feature</span></span>
-<span id="cb229-6"><a href="motif-enrichment.html#cb229-6" aria-hidden="true" tabindex="-1"></a><span class="do">## rownames(870): TFAP2B_1 TFAP2D_2 ... TBX18_869 TBX22_870</span></span>
-<span id="cb229-7"><a href="motif-enrichment.html#cb229-7" aria-hidden="true" tabindex="-1"></a><span class="do">## rowData names(0):</span></span>
-<span id="cb229-8"><a href="motif-enrichment.html#cb229-8" aria-hidden="true" tabindex="-1"></a><span class="do">## colnames(1): Erythroid</span></span>
-<span id="cb229-9"><a href="motif-enrichment.html#cb229-9" aria-hidden="true" tabindex="-1"></a><span class="do">## colData names(0):</span></span></code></pre></div>
+<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="motif-enrichment.html#cb234-1" tabindex="-1"></a>motifsUp</span>
+<span id="cb234-2"><a href="motif-enrichment.html#cb234-2" tabindex="-1"></a><span class="do">## class: SummarizedExperiment </span></span>
+<span id="cb234-3"><a href="motif-enrichment.html#cb234-3" tabindex="-1"></a><span class="do">## dim: 870 1 </span></span>
+<span id="cb234-4"><a href="motif-enrichment.html#cb234-4" tabindex="-1"></a><span class="do">## metadata(0):</span></span>
+<span id="cb234-5"><a href="motif-enrichment.html#cb234-5" tabindex="-1"></a><span class="do">## assays(10): mlog10Padj mlog10p ... CompareFrequency feature</span></span>
+<span id="cb234-6"><a href="motif-enrichment.html#cb234-6" tabindex="-1"></a><span class="do">## rownames(870): TFAP2B_1 TFAP2D_2 ... TBX18_869 TBX22_870</span></span>
+<span id="cb234-7"><a href="motif-enrichment.html#cb234-7" tabindex="-1"></a><span class="do">## rowData names(0):</span></span>
+<span id="cb234-8"><a href="motif-enrichment.html#cb234-8" tabindex="-1"></a><span class="do">## colnames(1): Erythroid</span></span>
+<span id="cb234-9"><a href="motif-enrichment.html#cb234-9" tabindex="-1"></a><span class="do">## colData names(0):</span></span></code></pre></div>
 <p>To prepare this data for plotting with <code>ggplot</code> we can create a simplified <code>data.frame</code> object containing the motif names, the corrected p-values, and the significance rank.</p>
-<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="motif-enrichment.html#cb230-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">TF =</span> <span class="fu">rownames</span>(motifsUp), <span class="at">mlog10Padj =</span> <span class="fu">assay</span>(motifsUp)[,<span class="dv">1</span>])</span>
-<span id="cb230-2"><a href="motif-enrichment.html#cb230-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df[<span class="fu">order</span>(df<span class="sc">$</span>mlog10Padj, <span class="at">decreasing =</span> <span class="cn">TRUE</span>),]</span>
-<span id="cb230-3"><a href="motif-enrichment.html#cb230-3" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>rank <span class="ot">&lt;-</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(df))</span></code></pre></div>
+<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb235-1"><a href="motif-enrichment.html#cb235-1" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">TF =</span> <span class="fu">rownames</span>(motifsUp), <span class="at">mlog10Padj =</span> <span class="fu">assay</span>(motifsUp)[,<span class="dv">1</span>])</span>
+<span id="cb235-2"><a href="motif-enrichment.html#cb235-2" tabindex="-1"></a>df <span class="ot">&lt;-</span> df[<span class="fu">order</span>(df<span class="sc">$</span>mlog10Padj, <span class="at">decreasing =</span> <span class="cn">TRUE</span>),]</span>
+<span id="cb235-3"><a href="motif-enrichment.html#cb235-3" tabindex="-1"></a>df<span class="sc">$</span>rank <span class="ot">&lt;-</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(df))</span></code></pre></div>
 <p>As expected, the most enriched motifs in the peaks that are more accessible in “Erythroid” cells correspond to GATA transcription factors, consistent with the well-studied role of GATA1 in erythroid differentiation.</p>
-<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="motif-enrichment.html#cb231-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span>
-<span id="cb231-2"><a href="motif-enrichment.html#cb231-2" aria-hidden="true" tabindex="-1"></a><span class="do">##            TF mlog10Padj rank</span></span>
-<span id="cb231-3"><a href="motif-enrichment.html#cb231-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 384 GATA3_384   600.5159    1</span></span>
-<span id="cb231-4"><a href="motif-enrichment.html#cb231-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 383 GATA1_383   597.0116    2</span></span>
-<span id="cb231-5"><a href="motif-enrichment.html#cb231-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 388 GATA2_388   591.7144    3</span></span>
-<span id="cb231-6"><a href="motif-enrichment.html#cb231-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 385 GATA5_385   464.4175    4</span></span>
-<span id="cb231-7"><a href="motif-enrichment.html#cb231-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 386 GATA4_386   346.8489    5</span></span>
-<span id="cb231-8"><a href="motif-enrichment.html#cb231-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 387 GATA6_387   253.4357    6</span></span></code></pre></div>
+<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb236-1"><a href="motif-enrichment.html#cb236-1" tabindex="-1"></a><span class="fu">head</span>(df)</span>
+<span id="cb236-2"><a href="motif-enrichment.html#cb236-2" tabindex="-1"></a><span class="do">##            TF mlog10Padj rank</span></span>
+<span id="cb236-3"><a href="motif-enrichment.html#cb236-3" tabindex="-1"></a><span class="do">## 384 GATA3_384   632.8126    1</span></span>
+<span id="cb236-4"><a href="motif-enrichment.html#cb236-4" tabindex="-1"></a><span class="do">## 383 GATA1_383   624.3005    2</span></span>
+<span id="cb236-5"><a href="motif-enrichment.html#cb236-5" tabindex="-1"></a><span class="do">## 388 GATA2_388   607.9140    3</span></span>
+<span id="cb236-6"><a href="motif-enrichment.html#cb236-6" tabindex="-1"></a><span class="do">## 385 GATA5_385   482.6431    4</span></span>
+<span id="cb236-7"><a href="motif-enrichment.html#cb236-7" tabindex="-1"></a><span class="do">## 386 GATA4_386   378.5250    5</span></span>
+<span id="cb236-8"><a href="motif-enrichment.html#cb236-8" tabindex="-1"></a><span class="do">## 387 GATA6_387   267.0503    6</span></span></code></pre></div>
 <p>Using <code>ggplot</code> we can plot the rank-sorted TF motifs and color them by the significance of their enrichment. Here we use <code>ggrepel</code> to label each TF motif.</p>
-<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="motif-enrichment.html#cb232-1" aria-hidden="true" tabindex="-1"></a>ggUp <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(rank, mlog10Padj, <span class="at">color =</span> mlog10Padj)) <span class="sc">+</span> </span>
-<span id="cb232-2"><a href="motif-enrichment.html#cb232-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb232-3"><a href="motif-enrichment.html#cb232-3" aria-hidden="true" tabindex="-1"></a>  ggrepel<span class="sc">::</span><span class="fu">geom_label_repel</span>(</span>
-<span id="cb232-4"><a href="motif-enrichment.html#cb232-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> df[<span class="fu">rev</span>(<span class="fu">seq_len</span>(<span class="dv">30</span>)), ], <span class="fu">aes</span>(<span class="at">x =</span> rank, <span class="at">y =</span> mlog10Padj, <span class="at">label =</span> TF), </span>
-<span id="cb232-5"><a href="motif-enrichment.html#cb232-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fl">1.5</span>,</span>
-<span id="cb232-6"><a href="motif-enrichment.html#cb232-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">nudge_x =</span> <span class="dv">2</span>,</span>
-<span id="cb232-7"><a href="motif-enrichment.html#cb232-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">&quot;black&quot;</span></span>
-<span id="cb232-8"><a href="motif-enrichment.html#cb232-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span> <span class="fu">theme_ArchR</span>() <span class="sc">+</span> </span>
-<span id="cb232-9"><a href="motif-enrichment.html#cb232-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;-log10(P-adj) Motif Enrichment&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb232-10"><a href="motif-enrichment.html#cb232-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Rank Sorted TFs Enriched&quot;</span>) <span class="sc">+</span></span>
-<span id="cb232-11"><a href="motif-enrichment.html#cb232-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_gradientn</span>(<span class="at">colors =</span> <span class="fu">paletteContinuous</span>(<span class="at">set =</span> <span class="st">&quot;comet&quot;</span>))</span>
-<span id="cb232-12"><a href="motif-enrichment.html#cb232-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb232-13"><a href="motif-enrichment.html#cb232-13" aria-hidden="true" tabindex="-1"></a>ggUp</span>
-<span id="cb232-14"><a href="motif-enrichment.html#cb232-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: ggrepel: 22 unlabeled data points (too many overlaps). Consider</span></span>
-<span id="cb232-15"><a href="motif-enrichment.html#cb232-15" aria-hidden="true" tabindex="-1"></a><span class="do">## increasing max.overlaps</span></span></code></pre></div>
+<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb237-1"><a href="motif-enrichment.html#cb237-1" tabindex="-1"></a>ggUp <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(rank, mlog10Padj, <span class="at">color =</span> mlog10Padj)) <span class="sc">+</span> </span>
+<span id="cb237-2"><a href="motif-enrichment.html#cb237-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb237-3"><a href="motif-enrichment.html#cb237-3" tabindex="-1"></a>  ggrepel<span class="sc">::</span><span class="fu">geom_label_repel</span>(</span>
+<span id="cb237-4"><a href="motif-enrichment.html#cb237-4" tabindex="-1"></a>        <span class="at">data =</span> df[<span class="fu">rev</span>(<span class="fu">seq_len</span>(<span class="dv">30</span>)), ], <span class="fu">aes</span>(<span class="at">x =</span> rank, <span class="at">y =</span> mlog10Padj, <span class="at">label =</span> TF), </span>
+<span id="cb237-5"><a href="motif-enrichment.html#cb237-5" tabindex="-1"></a>        <span class="at">size =</span> <span class="fl">1.5</span>,</span>
+<span id="cb237-6"><a href="motif-enrichment.html#cb237-6" tabindex="-1"></a>        <span class="at">nudge_x =</span> <span class="dv">2</span>,</span>
+<span id="cb237-7"><a href="motif-enrichment.html#cb237-7" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">&quot;black&quot;</span></span>
+<span id="cb237-8"><a href="motif-enrichment.html#cb237-8" tabindex="-1"></a>  ) <span class="sc">+</span> <span class="fu">theme_ArchR</span>() <span class="sc">+</span> </span>
+<span id="cb237-9"><a href="motif-enrichment.html#cb237-9" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;-log10(P-adj) Motif Enrichment&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb237-10"><a href="motif-enrichment.html#cb237-10" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Rank Sorted TFs Enriched&quot;</span>) <span class="sc">+</span></span>
+<span id="cb237-11"><a href="motif-enrichment.html#cb237-11" tabindex="-1"></a>  <span class="fu">scale_color_gradientn</span>(<span class="at">colors =</span> <span class="fu">paletteContinuous</span>(<span class="at">set =</span> <span class="st">&quot;comet&quot;</span>))</span>
+<span id="cb237-12"><a href="motif-enrichment.html#cb237-12" tabindex="-1"></a></span>
+<span id="cb237-13"><a href="motif-enrichment.html#cb237-13" tabindex="-1"></a>ggUp</span>
+<span id="cb237-14"><a href="motif-enrichment.html#cb237-14" tabindex="-1"></a><span class="do">## Warning: ggrepel: 23 unlabeled data points (too many overlaps). Consider</span></span>
+<span id="cb237-15"><a href="motif-enrichment.html#cb237-15" tabindex="-1"></a><span class="do">## increasing max.overlaps</span></span></code></pre></div>
 <p><img src="ArchR_files/figure-html/unnamed-chunk-235-1.svg" width="672" /></p>
 <p>We can perform the same analyses for the peaks that are more accessible in the “Progenitor” cells by using peaks with <code>Log2FC &lt;= -0.5</code>.</p>
-<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb233-1"><a href="motif-enrichment.html#cb233-1" aria-hidden="true" tabindex="-1"></a>motifsDo <span class="ot">&lt;-</span> <span class="fu">peakAnnoEnrichment</span>(</span>
-<span id="cb233-2"><a href="motif-enrichment.html#cb233-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">seMarker =</span> markerTest,</span>
-<span id="cb233-3"><a href="motif-enrichment.html#cb233-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb233-4"><a href="motif-enrichment.html#cb233-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">peakAnnotation =</span> <span class="st">&quot;Motif&quot;</span>,</span>
-<span id="cb233-5"><a href="motif-enrichment.html#cb233-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &lt;= -0.5&quot;</span></span>
-<span id="cb233-6"><a href="motif-enrichment.html#cb233-6" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb233-7"><a href="motif-enrichment.html#cb233-7" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-peakAnnoEnrichment-371b014d17609-Date-2022-12-23_Time-07-58-44.log</span></span>
-<span id="cb233-8"><a href="motif-enrichment.html#cb233-8" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb233-9"><a href="motif-enrichment.html#cb233-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:58:49 : Computing Enrichments 1 of 1, 0.091 mins elapsed.</span></span>
-<span id="cb233-10"><a href="motif-enrichment.html#cb233-10" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-peakAnnoEnrichment-371b014d17609-Date-2022-12-23_Time-07-58-44.log</span></span></code></pre></div>
-<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="motif-enrichment.html#cb234-1" aria-hidden="true" tabindex="-1"></a>motifsDo</span>
-<span id="cb234-2"><a href="motif-enrichment.html#cb234-2" aria-hidden="true" tabindex="-1"></a><span class="do">## class: SummarizedExperiment </span></span>
-<span id="cb234-3"><a href="motif-enrichment.html#cb234-3" aria-hidden="true" tabindex="-1"></a><span class="do">## dim: 870 1 </span></span>
-<span id="cb234-4"><a href="motif-enrichment.html#cb234-4" aria-hidden="true" tabindex="-1"></a><span class="do">## metadata(0):</span></span>
-<span id="cb234-5"><a href="motif-enrichment.html#cb234-5" aria-hidden="true" tabindex="-1"></a><span class="do">## assays(10): mlog10Padj mlog10p ... CompareFrequency feature</span></span>
-<span id="cb234-6"><a href="motif-enrichment.html#cb234-6" aria-hidden="true" tabindex="-1"></a><span class="do">## rownames(870): TFAP2B_1 TFAP2D_2 ... TBX18_869 TBX22_870</span></span>
-<span id="cb234-7"><a href="motif-enrichment.html#cb234-7" aria-hidden="true" tabindex="-1"></a><span class="do">## rowData names(0):</span></span>
-<span id="cb234-8"><a href="motif-enrichment.html#cb234-8" aria-hidden="true" tabindex="-1"></a><span class="do">## colnames(1): Erythroid</span></span>
-<span id="cb234-9"><a href="motif-enrichment.html#cb234-9" aria-hidden="true" tabindex="-1"></a><span class="do">## colData names(0):</span></span></code></pre></div>
-<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb235-1"><a href="motif-enrichment.html#cb235-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">TF =</span> <span class="fu">rownames</span>(motifsDo), <span class="at">mlog10Padj =</span> <span class="fu">assay</span>(motifsDo)[,<span class="dv">1</span>])</span>
-<span id="cb235-2"><a href="motif-enrichment.html#cb235-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df[<span class="fu">order</span>(df<span class="sc">$</span>mlog10Padj, <span class="at">decreasing =</span> <span class="cn">TRUE</span>),]</span>
-<span id="cb235-3"><a href="motif-enrichment.html#cb235-3" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>rank <span class="ot">&lt;-</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(df))</span></code></pre></div>
+<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="motif-enrichment.html#cb238-1" tabindex="-1"></a>motifsDo <span class="ot">&lt;-</span> <span class="fu">peakAnnoEnrichment</span>(</span>
+<span id="cb238-2"><a href="motif-enrichment.html#cb238-2" tabindex="-1"></a>    <span class="at">seMarker =</span> markerTest,</span>
+<span id="cb238-3"><a href="motif-enrichment.html#cb238-3" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb238-4"><a href="motif-enrichment.html#cb238-4" tabindex="-1"></a>    <span class="at">peakAnnotation =</span> <span class="st">&quot;Motif&quot;</span>,</span>
+<span id="cb238-5"><a href="motif-enrichment.html#cb238-5" tabindex="-1"></a>    <span class="at">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &lt;= -0.5&quot;</span></span>
+<span id="cb238-6"><a href="motif-enrichment.html#cb238-6" tabindex="-1"></a>  )</span>
+<span id="cb238-7"><a href="motif-enrichment.html#cb238-7" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-peakAnnoEnrichment-1a17de7a927-Date-2025-01-23_Time-21-27-35.655721.log</span></span>
+<span id="cb238-8"><a href="motif-enrichment.html#cb238-8" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb238-9"><a href="motif-enrichment.html#cb238-9" tabindex="-1"></a><span class="do">## 2025-01-23 21:27:41.258316 : Computing Enrichments 1 of 1, 0.093 mins elapsed.</span></span>
+<span id="cb238-10"><a href="motif-enrichment.html#cb238-10" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-peakAnnoEnrichment-1a17de7a927-Date-2025-01-23_Time-21-27-35.655721.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb239-1"><a href="motif-enrichment.html#cb239-1" tabindex="-1"></a>motifsDo</span>
+<span id="cb239-2"><a href="motif-enrichment.html#cb239-2" tabindex="-1"></a><span class="do">## class: SummarizedExperiment </span></span>
+<span id="cb239-3"><a href="motif-enrichment.html#cb239-3" tabindex="-1"></a><span class="do">## dim: 870 1 </span></span>
+<span id="cb239-4"><a href="motif-enrichment.html#cb239-4" tabindex="-1"></a><span class="do">## metadata(0):</span></span>
+<span id="cb239-5"><a href="motif-enrichment.html#cb239-5" tabindex="-1"></a><span class="do">## assays(10): mlog10Padj mlog10p ... CompareFrequency feature</span></span>
+<span id="cb239-6"><a href="motif-enrichment.html#cb239-6" tabindex="-1"></a><span class="do">## rownames(870): TFAP2B_1 TFAP2D_2 ... TBX18_869 TBX22_870</span></span>
+<span id="cb239-7"><a href="motif-enrichment.html#cb239-7" tabindex="-1"></a><span class="do">## rowData names(0):</span></span>
+<span id="cb239-8"><a href="motif-enrichment.html#cb239-8" tabindex="-1"></a><span class="do">## colnames(1): Erythroid</span></span>
+<span id="cb239-9"><a href="motif-enrichment.html#cb239-9" tabindex="-1"></a><span class="do">## colData names(0):</span></span></code></pre></div>
+<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="motif-enrichment.html#cb240-1" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">TF =</span> <span class="fu">rownames</span>(motifsDo), <span class="at">mlog10Padj =</span> <span class="fu">assay</span>(motifsDo)[,<span class="dv">1</span>])</span>
+<span id="cb240-2"><a href="motif-enrichment.html#cb240-2" tabindex="-1"></a>df <span class="ot">&lt;-</span> df[<span class="fu">order</span>(df<span class="sc">$</span>mlog10Padj, <span class="at">decreasing =</span> <span class="cn">TRUE</span>),]</span>
+<span id="cb240-3"><a href="motif-enrichment.html#cb240-3" tabindex="-1"></a>df<span class="sc">$</span>rank <span class="ot">&lt;-</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(df))</span></code></pre></div>
 <p>In this case, the most enriched motifs in the peaks that are more accessible in “Progenitor” cells correspond to RUNX, ELF, and CBFB motifs.</p>
-<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb236-1"><a href="motif-enrichment.html#cb236-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span>
-<span id="cb236-2"><a href="motif-enrichment.html#cb236-2" aria-hidden="true" tabindex="-1"></a><span class="do">##            TF mlog10Padj rank</span></span>
-<span id="cb236-3"><a href="motif-enrichment.html#cb236-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 326  ELF2_326  105.93806    1</span></span>
-<span id="cb236-4"><a href="motif-enrichment.html#cb236-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 56   TCF12_56   80.50256    2</span></span>
-<span id="cb236-5"><a href="motif-enrichment.html#cb236-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 733 RUNX1_733   73.70756    3</span></span>
-<span id="cb236-6"><a href="motif-enrichment.html#cb236-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 801  CBFB_801   65.90006    4</span></span>
-<span id="cb236-7"><a href="motif-enrichment.html#cb236-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 336  SPIB_336   62.57146    5</span></span>
-<span id="cb236-8"><a href="motif-enrichment.html#cb236-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 41    MYOG_41   56.55206    6</span></span></code></pre></div>
-<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb237-1"><a href="motif-enrichment.html#cb237-1" aria-hidden="true" tabindex="-1"></a>ggDo <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(rank, mlog10Padj, <span class="at">color =</span> mlog10Padj)) <span class="sc">+</span> </span>
-<span id="cb237-2"><a href="motif-enrichment.html#cb237-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb237-3"><a href="motif-enrichment.html#cb237-3" aria-hidden="true" tabindex="-1"></a>  ggrepel<span class="sc">::</span><span class="fu">geom_label_repel</span>(</span>
-<span id="cb237-4"><a href="motif-enrichment.html#cb237-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> df[<span class="fu">rev</span>(<span class="fu">seq_len</span>(<span class="dv">30</span>)), ], <span class="fu">aes</span>(<span class="at">x =</span> rank, <span class="at">y =</span> mlog10Padj, <span class="at">label =</span> TF), </span>
-<span id="cb237-5"><a href="motif-enrichment.html#cb237-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fl">1.5</span>,</span>
-<span id="cb237-6"><a href="motif-enrichment.html#cb237-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">nudge_x =</span> <span class="dv">2</span>,</span>
-<span id="cb237-7"><a href="motif-enrichment.html#cb237-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">&quot;black&quot;</span></span>
-<span id="cb237-8"><a href="motif-enrichment.html#cb237-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span> <span class="fu">theme_ArchR</span>() <span class="sc">+</span> </span>
-<span id="cb237-9"><a href="motif-enrichment.html#cb237-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;-log10(FDR) Motif Enrichment&quot;</span>) <span class="sc">+</span></span>
-<span id="cb237-10"><a href="motif-enrichment.html#cb237-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Rank Sorted TFs Enriched&quot;</span>) <span class="sc">+</span></span>
-<span id="cb237-11"><a href="motif-enrichment.html#cb237-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_gradientn</span>(<span class="at">colors =</span> <span class="fu">paletteContinuous</span>(<span class="at">set =</span> <span class="st">&quot;comet&quot;</span>))</span>
-<span id="cb237-12"><a href="motif-enrichment.html#cb237-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb237-13"><a href="motif-enrichment.html#cb237-13" aria-hidden="true" tabindex="-1"></a>ggDo</span>
-<span id="cb237-14"><a href="motif-enrichment.html#cb237-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: ggrepel: 18 unlabeled data points (too many overlaps). Consider</span></span>
-<span id="cb237-15"><a href="motif-enrichment.html#cb237-15" aria-hidden="true" tabindex="-1"></a><span class="do">## increasing max.overlaps</span></span></code></pre></div>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="motif-enrichment.html#cb241-1" tabindex="-1"></a><span class="fu">head</span>(df)</span>
+<span id="cb241-2"><a href="motif-enrichment.html#cb241-2" tabindex="-1"></a><span class="do">##            TF mlog10Padj rank</span></span>
+<span id="cb241-3"><a href="motif-enrichment.html#cb241-3" tabindex="-1"></a><span class="do">## 326  ELF2_326  105.93186    1</span></span>
+<span id="cb241-4"><a href="motif-enrichment.html#cb241-4" tabindex="-1"></a><span class="do">## 56   TCF12_56   83.78656    2</span></span>
+<span id="cb241-5"><a href="motif-enrichment.html#cb241-5" tabindex="-1"></a><span class="do">## 733 RUNX1_733   75.74706    3</span></span>
+<span id="cb241-6"><a href="motif-enrichment.html#cb241-6" tabindex="-1"></a><span class="do">## 336  SPIB_336   73.51366    4</span></span>
+<span id="cb241-7"><a href="motif-enrichment.html#cb241-7" tabindex="-1"></a><span class="do">## 801  CBFB_801   64.57766    5</span></span>
+<span id="cb241-8"><a href="motif-enrichment.html#cb241-8" tabindex="-1"></a><span class="do">## 322  SPI1_322   60.43296    6</span></span></code></pre></div>
+<div class="sourceCode" id="cb242"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb242-1"><a href="motif-enrichment.html#cb242-1" tabindex="-1"></a>ggDo <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(rank, mlog10Padj, <span class="at">color =</span> mlog10Padj)) <span class="sc">+</span> </span>
+<span id="cb242-2"><a href="motif-enrichment.html#cb242-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb242-3"><a href="motif-enrichment.html#cb242-3" tabindex="-1"></a>  ggrepel<span class="sc">::</span><span class="fu">geom_label_repel</span>(</span>
+<span id="cb242-4"><a href="motif-enrichment.html#cb242-4" tabindex="-1"></a>        <span class="at">data =</span> df[<span class="fu">rev</span>(<span class="fu">seq_len</span>(<span class="dv">30</span>)), ], <span class="fu">aes</span>(<span class="at">x =</span> rank, <span class="at">y =</span> mlog10Padj, <span class="at">label =</span> TF), </span>
+<span id="cb242-5"><a href="motif-enrichment.html#cb242-5" tabindex="-1"></a>        <span class="at">size =</span> <span class="fl">1.5</span>,</span>
+<span id="cb242-6"><a href="motif-enrichment.html#cb242-6" tabindex="-1"></a>        <span class="at">nudge_x =</span> <span class="dv">2</span>,</span>
+<span id="cb242-7"><a href="motif-enrichment.html#cb242-7" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">&quot;black&quot;</span></span>
+<span id="cb242-8"><a href="motif-enrichment.html#cb242-8" tabindex="-1"></a>  ) <span class="sc">+</span> <span class="fu">theme_ArchR</span>() <span class="sc">+</span> </span>
+<span id="cb242-9"><a href="motif-enrichment.html#cb242-9" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;-log10(FDR) Motif Enrichment&quot;</span>) <span class="sc">+</span></span>
+<span id="cb242-10"><a href="motif-enrichment.html#cb242-10" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Rank Sorted TFs Enriched&quot;</span>) <span class="sc">+</span></span>
+<span id="cb242-11"><a href="motif-enrichment.html#cb242-11" tabindex="-1"></a>  <span class="fu">scale_color_gradientn</span>(<span class="at">colors =</span> <span class="fu">paletteContinuous</span>(<span class="at">set =</span> <span class="st">&quot;comet&quot;</span>))</span>
+<span id="cb242-12"><a href="motif-enrichment.html#cb242-12" tabindex="-1"></a></span>
+<span id="cb242-13"><a href="motif-enrichment.html#cb242-13" tabindex="-1"></a>ggDo</span>
+<span id="cb242-14"><a href="motif-enrichment.html#cb242-14" tabindex="-1"></a><span class="do">## Warning: ggrepel: 21 unlabeled data points (too many overlaps). Consider</span></span>
+<span id="cb242-15"><a href="motif-enrichment.html#cb242-15" tabindex="-1"></a><span class="do">## increasing max.overlaps</span></span></code></pre></div>
 <p><img src="ArchR_files/figure-html/unnamed-chunk-240-1.svg" width="672" /></p>
 <p>To save an editable vectorized version of these plots, we use the <code>plotPDF()</code> function.</p>
-<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="motif-enrichment.html#cb238-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotPDF</span>(ggUp, ggDo, <span class="at">name =</span> <span class="st">&quot;Erythroid-vs-Progenitor-Markers-Motifs-Enriched&quot;</span>, <span class="at">width =</span> <span class="dv">5</span>, <span class="at">height =</span> <span class="dv">5</span>, <span class="at">ArchRProj =</span> projHeme5, <span class="at">addDOC =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb238-2"><a href="motif-enrichment.html#cb238-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
-<span id="cb238-3"><a href="motif-enrichment.html#cb238-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span></code></pre></div>
+<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb243-1"><a href="motif-enrichment.html#cb243-1" tabindex="-1"></a><span class="fu">plotPDF</span>(ggUp, ggDo, <span class="at">name =</span> <span class="st">&quot;Erythroid-vs-Progenitor-Markers-Motifs-Enriched&quot;</span>, <span class="at">width =</span> <span class="dv">5</span>, <span class="at">height =</span> <span class="dv">5</span>, <span class="at">ArchRProj =</span> projHeme5, <span class="at">addDOC =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb243-2"><a href="motif-enrichment.html#cb243-2" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
+<span id="cb243-3"><a href="motif-enrichment.html#cb243-3" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span></code></pre></div>
 </div>
 <div id="motif-enrichment-in-marker-peaks" class="section level3 hasAnchor" number="14.1.3">
 <h3><span class="header-section-number">14.1.3</span> Motif Enrichment in Marker Peaks<a href="motif-enrichment.html#motif-enrichment-in-marker-peaks" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Similar to the motif enrichment analyses performed on the differential peaks in the previous section, we can also perform motif enrichment on our marker peaks identified using <code>getMarkerFeatures()</code>.</p>
 <p>To do this, we pass our marker peak <code>SummarizedExperiment</code> (<code>markerPeaks</code>, <a href="identifying-marker-peaks-with-archr.html">created previously</a>) to the <code>peakAnnotationEnrichment()</code> function.</p>
-<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb239-1"><a href="motif-enrichment.html#cb239-1" aria-hidden="true" tabindex="-1"></a>enrichMotifs <span class="ot">&lt;-</span> <span class="fu">peakAnnoEnrichment</span>(</span>
-<span id="cb239-2"><a href="motif-enrichment.html#cb239-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">seMarker =</span> markerPeaks,</span>
-<span id="cb239-3"><a href="motif-enrichment.html#cb239-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb239-4"><a href="motif-enrichment.html#cb239-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">peakAnnotation =</span> <span class="st">&quot;Motif&quot;</span>,</span>
-<span id="cb239-5"><a href="motif-enrichment.html#cb239-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 0.5&quot;</span></span>
-<span id="cb239-6"><a href="motif-enrichment.html#cb239-6" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb239-7"><a href="motif-enrichment.html#cb239-7" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-peakAnnoEnrichment-371b02f9a82f8-Date-2022-12-23_Time-07-58-54.log</span></span>
-<span id="cb239-8"><a href="motif-enrichment.html#cb239-8" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb239-9"><a href="motif-enrichment.html#cb239-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:58:59 : Computing Enrichments 1 of 11, 0.09 mins elapsed.</span></span>
-<span id="cb239-10"><a href="motif-enrichment.html#cb239-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:59:00 : Computing Enrichments 2 of 11, 0.093 mins elapsed.</span></span>
-<span id="cb239-11"><a href="motif-enrichment.html#cb239-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:59:00 : Computing Enrichments 3 of 11, 0.097 mins elapsed.</span></span>
-<span id="cb239-12"><a href="motif-enrichment.html#cb239-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:59:00 : Computing Enrichments 4 of 11, 0.101 mins elapsed.</span></span>
-<span id="cb239-13"><a href="motif-enrichment.html#cb239-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:59:00 : Computing Enrichments 5 of 11, 0.104 mins elapsed.</span></span>
-<span id="cb239-14"><a href="motif-enrichment.html#cb239-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:59:00 : Computing Enrichments 6 of 11, 0.108 mins elapsed.</span></span>
-<span id="cb239-15"><a href="motif-enrichment.html#cb239-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:59:01 : Computing Enrichments 7 of 11, 0.112 mins elapsed.</span></span>
-<span id="cb239-16"><a href="motif-enrichment.html#cb239-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:59:01 : Computing Enrichments 8 of 11, 0.116 mins elapsed.</span></span>
-<span id="cb239-17"><a href="motif-enrichment.html#cb239-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:59:01 : Computing Enrichments 9 of 11, 0.12 mins elapsed.</span></span>
-<span id="cb239-18"><a href="motif-enrichment.html#cb239-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:59:01 : Computing Enrichments 10 of 11, 0.123 mins elapsed.</span></span>
-<span id="cb239-19"><a href="motif-enrichment.html#cb239-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:59:01 : Computing Enrichments 11 of 11, 0.126 mins elapsed.</span></span>
-<span id="cb239-20"><a href="motif-enrichment.html#cb239-20" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-peakAnnoEnrichment-371b02f9a82f8-Date-2022-12-23_Time-07-58-54.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="motif-enrichment.html#cb244-1" tabindex="-1"></a>enrichMotifs <span class="ot">&lt;-</span> <span class="fu">peakAnnoEnrichment</span>(</span>
+<span id="cb244-2"><a href="motif-enrichment.html#cb244-2" tabindex="-1"></a>    <span class="at">seMarker =</span> markerPeaks,</span>
+<span id="cb244-3"><a href="motif-enrichment.html#cb244-3" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb244-4"><a href="motif-enrichment.html#cb244-4" tabindex="-1"></a>    <span class="at">peakAnnotation =</span> <span class="st">&quot;Motif&quot;</span>,</span>
+<span id="cb244-5"><a href="motif-enrichment.html#cb244-5" tabindex="-1"></a>    <span class="at">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.1 &amp; Log2FC &gt;= 0.5&quot;</span></span>
+<span id="cb244-6"><a href="motif-enrichment.html#cb244-6" tabindex="-1"></a>  )</span>
+<span id="cb244-7"><a href="motif-enrichment.html#cb244-7" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-peakAnnoEnrichment-1a18a42d7f-Date-2025-01-23_Time-21-27-43.208471.log</span></span>
+<span id="cb244-8"><a href="motif-enrichment.html#cb244-8" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb244-9"><a href="motif-enrichment.html#cb244-9" tabindex="-1"></a><span class="do">## 2025-01-23 21:27:48.353849 : Computing Enrichments 1 of 11, 0.086 mins elapsed.</span></span>
+<span id="cb244-10"><a href="motif-enrichment.html#cb244-10" tabindex="-1"></a><span class="do">## 2025-01-23 21:27:48.4569 : Computing Enrichments 2 of 11, 0.087 mins elapsed.</span></span>
+<span id="cb244-11"><a href="motif-enrichment.html#cb244-11" tabindex="-1"></a><span class="do">## 2025-01-23 21:27:48.561073 : Computing Enrichments 3 of 11, 0.089 mins elapsed.</span></span>
+<span id="cb244-12"><a href="motif-enrichment.html#cb244-12" tabindex="-1"></a><span class="do">## 2025-01-23 21:27:48.670774 : Computing Enrichments 4 of 11, 0.091 mins elapsed.</span></span>
+<span id="cb244-13"><a href="motif-enrichment.html#cb244-13" tabindex="-1"></a><span class="do">## 2025-01-23 21:27:48.778218 : Computing Enrichments 5 of 11, 0.093 mins elapsed.</span></span>
+<span id="cb244-14"><a href="motif-enrichment.html#cb244-14" tabindex="-1"></a><span class="do">## 2025-01-23 21:27:48.883677 : Computing Enrichments 6 of 11, 0.095 mins elapsed.</span></span>
+<span id="cb244-15"><a href="motif-enrichment.html#cb244-15" tabindex="-1"></a><span class="do">## 2025-01-23 21:27:49.000506 : Computing Enrichments 7 of 11, 0.097 mins elapsed.</span></span>
+<span id="cb244-16"><a href="motif-enrichment.html#cb244-16" tabindex="-1"></a><span class="do">## 2025-01-23 21:27:49.133277 : Computing Enrichments 8 of 11, 0.099 mins elapsed.</span></span>
+<span id="cb244-17"><a href="motif-enrichment.html#cb244-17" tabindex="-1"></a><span class="do">## 2025-01-23 21:27:49.269016 : Computing Enrichments 9 of 11, 0.101 mins elapsed.</span></span>
+<span id="cb244-18"><a href="motif-enrichment.html#cb244-18" tabindex="-1"></a><span class="do">## 2025-01-23 21:27:49.405866 : Computing Enrichments 10 of 11, 0.103 mins elapsed.</span></span>
+<span id="cb244-19"><a href="motif-enrichment.html#cb244-19" tabindex="-1"></a><span class="do">## 2025-01-23 21:27:49.540011 : Computing Enrichments 11 of 11, 0.106 mins elapsed.</span></span>
+<span id="cb244-20"><a href="motif-enrichment.html#cb244-20" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-peakAnnoEnrichment-1a18a42d7f-Date-2025-01-23_Time-21-27-43.208471.log</span></span></code></pre></div>
 <p>The output of <code>peakAnnoEnrichment()</code> is a <code>SummarizedExperiment</code> object containing multiple <code>assays</code> that store the results of enrichment testing with the hypergeometric test.</p>
-<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="motif-enrichment.html#cb240-1" aria-hidden="true" tabindex="-1"></a>enrichMotifs</span>
-<span id="cb240-2"><a href="motif-enrichment.html#cb240-2" aria-hidden="true" tabindex="-1"></a><span class="do">## class: SummarizedExperiment </span></span>
-<span id="cb240-3"><a href="motif-enrichment.html#cb240-3" aria-hidden="true" tabindex="-1"></a><span class="do">## dim: 870 11 </span></span>
-<span id="cb240-4"><a href="motif-enrichment.html#cb240-4" aria-hidden="true" tabindex="-1"></a><span class="do">## metadata(0):</span></span>
-<span id="cb240-5"><a href="motif-enrichment.html#cb240-5" aria-hidden="true" tabindex="-1"></a><span class="do">## assays(10): mlog10Padj mlog10p ... CompareFrequency feature</span></span>
-<span id="cb240-6"><a href="motif-enrichment.html#cb240-6" aria-hidden="true" tabindex="-1"></a><span class="do">## rownames(870): TFAP2B_1 TFAP2D_2 ... TBX18_869 TBX22_870</span></span>
-<span id="cb240-7"><a href="motif-enrichment.html#cb240-7" aria-hidden="true" tabindex="-1"></a><span class="do">## rowData names(0):</span></span>
-<span id="cb240-8"><a href="motif-enrichment.html#cb240-8" aria-hidden="true" tabindex="-1"></a><span class="do">## colnames(11): B CD4.M ... PreB Progenitor</span></span>
-<span id="cb240-9"><a href="motif-enrichment.html#cb240-9" aria-hidden="true" tabindex="-1"></a><span class="do">## colData names(0):</span></span></code></pre></div>
+<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="motif-enrichment.html#cb245-1" tabindex="-1"></a>enrichMotifs</span>
+<span id="cb245-2"><a href="motif-enrichment.html#cb245-2" tabindex="-1"></a><span class="do">## class: SummarizedExperiment </span></span>
+<span id="cb245-3"><a href="motif-enrichment.html#cb245-3" tabindex="-1"></a><span class="do">## dim: 870 11 </span></span>
+<span id="cb245-4"><a href="motif-enrichment.html#cb245-4" tabindex="-1"></a><span class="do">## metadata(0):</span></span>
+<span id="cb245-5"><a href="motif-enrichment.html#cb245-5" tabindex="-1"></a><span class="do">## assays(10): mlog10Padj mlog10p ... CompareFrequency feature</span></span>
+<span id="cb245-6"><a href="motif-enrichment.html#cb245-6" tabindex="-1"></a><span class="do">## rownames(870): TFAP2B_1 TFAP2D_2 ... TBX18_869 TBX22_870</span></span>
+<span id="cb245-7"><a href="motif-enrichment.html#cb245-7" tabindex="-1"></a><span class="do">## rowData names(0):</span></span>
+<span id="cb245-8"><a href="motif-enrichment.html#cb245-8" tabindex="-1"></a><span class="do">## colnames(11): B CD4.M ... PreB Progenitor</span></span>
+<span id="cb245-9"><a href="motif-enrichment.html#cb245-9" tabindex="-1"></a><span class="do">## colData names(0):</span></span></code></pre></div>
 <p>We can directly plot these motif enrichments across all cell groups using the <code>plotEnrichHeatmap()</code> function. In this function, we limit the total number of motifs shown per cell group using the <code>n</code> parameter.</p>
-<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="motif-enrichment.html#cb241-1" aria-hidden="true" tabindex="-1"></a>heatmapEM <span class="ot">&lt;-</span> <span class="fu">plotEnrichHeatmap</span>(enrichMotifs, <span class="at">n =</span> <span class="dv">7</span>, <span class="at">transpose =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb241-2"><a href="motif-enrichment.html#cb241-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEnrichHeatmap-371b047877f48-Date-2022-12-23_Time-07-59-02.log</span></span>
-<span id="cb241-3"><a href="motif-enrichment.html#cb241-3" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb241-4"><a href="motif-enrichment.html#cb241-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Annotations..</span></span>
-<span id="cb241-5"><a href="motif-enrichment.html#cb241-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Preparing Main Heatmap..</span></span>
-<span id="cb241-6"><a href="motif-enrichment.html#cb241-6" aria-hidden="true" tabindex="-1"></a><span class="do">## &#39;magick&#39; package is suggested to install to give better rasterization.</span></span>
-<span id="cb241-7"><a href="motif-enrichment.html#cb241-7" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb241-8"><a href="motif-enrichment.html#cb241-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Set `ht_opt$message = FALSE` to turn off this message.</span></span></code></pre></div>
+<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="motif-enrichment.html#cb246-1" tabindex="-1"></a>heatmapEM <span class="ot">&lt;-</span> <span class="fu">plotEnrichHeatmap</span>(enrichMotifs, <span class="at">n =</span> <span class="dv">7</span>, <span class="at">transpose =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb246-2"><a href="motif-enrichment.html#cb246-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEnrichHeatmap-1a16616c89b-Date-2025-01-23_Time-21-27-49.851784.log</span></span>
+<span id="cb246-3"><a href="motif-enrichment.html#cb246-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb246-4"><a href="motif-enrichment.html#cb246-4" tabindex="-1"></a><span class="do">## Adding Annotations..</span></span>
+<span id="cb246-5"><a href="motif-enrichment.html#cb246-5" tabindex="-1"></a><span class="do">## Preparing Main Heatmap..</span></span>
+<span id="cb246-6"><a href="motif-enrichment.html#cb246-6" tabindex="-1"></a><span class="do">## &#39;magick&#39; package is suggested to install to give better rasterization.</span></span>
+<span id="cb246-7"><a href="motif-enrichment.html#cb246-7" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb246-8"><a href="motif-enrichment.html#cb246-8" tabindex="-1"></a><span class="do">## Set `ht_opt$message = FALSE` to turn off this message.</span></span></code></pre></div>
 <p>We can diplay this plot using <code>ComplexHeatmap::draw()</code>.</p>
-<div class="sourceCode" id="cb242"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb242-1"><a href="motif-enrichment.html#cb242-1" aria-hidden="true" tabindex="-1"></a>ComplexHeatmap<span class="sc">::</span><span class="fu">draw</span>(heatmapEM, <span class="at">heatmap_legend_side =</span> <span class="st">&quot;bot&quot;</span>, <span class="at">annotation_legend_side =</span> <span class="st">&quot;bot&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="motif-enrichment.html#cb247-1" tabindex="-1"></a>ComplexHeatmap<span class="sc">::</span><span class="fu">draw</span>(heatmapEM, <span class="at">heatmap_legend_side =</span> <span class="st">&quot;bot&quot;</span>, <span class="at">annotation_legend_side =</span> <span class="st">&quot;bot&quot;</span>)</span></code></pre></div>
 <p><img src="ArchR_files/figure-html/unnamed-chunk-245-1.svg" width="672" /></p>
 <p>To save an editable vectorized version of this plot, we use the <code>plotPDF()</code> function.</p>
-<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb243-1"><a href="motif-enrichment.html#cb243-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotPDF</span>(heatmapEM, <span class="at">name =</span> <span class="st">&quot;Motifs-Enriched-Marker-Heatmap&quot;</span>, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">6</span>, <span class="at">ArchRProj =</span> projHeme5, <span class="at">addDOC =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb243-2"><a href="motif-enrichment.html#cb243-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Plotting ComplexHeatmap!</span></span></code></pre></div>
+<div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb248-1"><a href="motif-enrichment.html#cb248-1" tabindex="-1"></a><span class="fu">plotPDF</span>(heatmapEM, <span class="at">name =</span> <span class="st">&quot;Motifs-Enriched-Marker-Heatmap&quot;</span>, <span class="at">width =</span> <span class="dv">8</span>, <span class="at">height =</span> <span class="dv">6</span>, <span class="at">ArchRProj =</span> projHeme5, <span class="at">addDOC =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb248-2"><a href="motif-enrichment.html#cb248-2" tabindex="-1"></a><span class="do">## Plotting ComplexHeatmap!</span></span></code></pre></div>
 </div>
 <div id="motif-enrichment-in-arbitrary-regions" class="section level3 hasAnchor" number="14.1.4">
 <h3><span class="header-section-number">14.1.4</span> Motif enrichment in arbitrary regions<a href="motif-enrichment.html#motif-enrichment-in-arbitrary-regions" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -507,65 +512,61 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">14.1.5</span> Plotting motif logos<a href="motif-enrichment.html#plotting-motif-logos" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Because different motif annotations will use different position weight matrices (PWMs), it’s often useful to plot the sequence logo of the exact motif being used. Multiple tools exist to do this but the one we prefer is <a href="https://omarwagih.github.io/ggseqlogo/">ggseqlogo</a></p>
 <p>To do this, we must first extract the relevant motif information as a <code>PWMatrix</code> object.</p>
-<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="motif-enrichment.html#cb244-1" aria-hidden="true" tabindex="-1"></a>pwm <span class="ot">&lt;-</span> <span class="fu">getPeakAnnotation</span>(projHeme5, <span class="st">&quot;Motif&quot;</span>)<span class="sc">$</span>motifs[[<span class="st">&quot;SOX6_868&quot;</span>]]</span>
-<span id="cb244-2"><a href="motif-enrichment.html#cb244-2" aria-hidden="true" tabindex="-1"></a>pwm</span>
-<span id="cb244-3"><a href="motif-enrichment.html#cb244-3" aria-hidden="true" tabindex="-1"></a><span class="do">## An object of class PWMatrix</span></span>
-<span id="cb244-4"><a href="motif-enrichment.html#cb244-4" aria-hidden="true" tabindex="-1"></a><span class="do">## ID: ENSG00000110693_LINE19574_SOX6_I_N7</span></span>
-<span id="cb244-5"><a href="motif-enrichment.html#cb244-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Name: SOX6</span></span>
-<span id="cb244-6"><a href="motif-enrichment.html#cb244-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Matrix Class: Unknown</span></span>
-<span id="cb244-7"><a href="motif-enrichment.html#cb244-7" aria-hidden="true" tabindex="-1"></a><span class="do">## strand: *</span></span>
-<span id="cb244-8"><a href="motif-enrichment.html#cb244-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Pseudocounts: </span></span>
-<span id="cb244-9"><a href="motif-enrichment.html#cb244-9" aria-hidden="true" tabindex="-1"></a><span class="do">## Tags: </span></span>
-<span id="cb244-10"><a href="motif-enrichment.html#cb244-10" aria-hidden="true" tabindex="-1"></a><span class="do">## $ensembl</span></span>
-<span id="cb244-11"><a href="motif-enrichment.html#cb244-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] &quot;ENSG00000110693&quot;</span></span>
-<span id="cb244-12"><a href="motif-enrichment.html#cb244-12" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb244-13"><a href="motif-enrichment.html#cb244-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Background: </span></span>
-<span id="cb244-14"><a href="motif-enrichment.html#cb244-14" aria-hidden="true" tabindex="-1"></a><span class="do">##    A    C    G    T </span></span>
-<span id="cb244-15"><a href="motif-enrichment.html#cb244-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 0.25 0.25 0.25 0.25 </span></span>
-<span id="cb244-16"><a href="motif-enrichment.html#cb244-16" aria-hidden="true" tabindex="-1"></a><span class="do">## Matrix: </span></span>
-<span id="cb244-17"><a href="motif-enrichment.html#cb244-17" aria-hidden="true" tabindex="-1"></a><span class="do">##         [,1]      [,2]      [,3]      [,4]      [,5]      [,6]      [,7]</span></span>
-<span id="cb244-18"><a href="motif-enrichment.html#cb244-18" aria-hidden="true" tabindex="-1"></a><span class="do">## A  0.2856363  1.236986  1.297203 -2.131381  1.340070  1.259222 -1.224160</span></span>
-<span id="cb244-19"><a href="motif-enrichment.html#cb244-19" aria-hidden="true" tabindex="-1"></a><span class="do">## C -0.6196693 -2.173286 -3.473518  1.257839 -3.473518 -1.259465 -1.366327</span></span>
-<span id="cb244-20"><a href="motif-enrichment.html#cb244-20" aria-hidden="true" tabindex="-1"></a><span class="do">## G -0.4525775 -1.628926 -1.447733 -1.817039 -2.592395 -1.817039 -3.473518</span></span>
-<span id="cb244-21"><a href="motif-enrichment.html#cb244-21" aria-hidden="true" tabindex="-1"></a><span class="do">## T  0.4023151 -1.407137 -2.592395 -1.604399 -2.592395 -3.473518  1.229625</span></span>
-<span id="cb244-22"><a href="motif-enrichment.html#cb244-22" aria-hidden="true" tabindex="-1"></a><span class="do">##         [,8]</span></span>
-<span id="cb244-23"><a href="motif-enrichment.html#cb244-23" aria-hidden="true" tabindex="-1"></a><span class="do">## A  0.4500618</span></span>
-<span id="cb244-24"><a href="motif-enrichment.html#cb244-24" aria-hidden="true" tabindex="-1"></a><span class="do">## C -0.4283456</span></span>
-<span id="cb244-25"><a href="motif-enrichment.html#cb244-25" aria-hidden="true" tabindex="-1"></a><span class="do">## G  0.2154626</span></span>
-<span id="cb244-26"><a href="motif-enrichment.html#cb244-26" aria-hidden="true" tabindex="-1"></a><span class="do">## T -0.6169845</span></span></code></pre></div>
+<div class="sourceCode" id="cb249"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb249-1"><a href="motif-enrichment.html#cb249-1" tabindex="-1"></a>pwm <span class="ot">&lt;-</span> <span class="fu">getPeakAnnotation</span>(projHeme5, <span class="st">&quot;Motif&quot;</span>)<span class="sc">$</span>motifs[[<span class="st">&quot;SOX6_868&quot;</span>]]</span>
+<span id="cb249-2"><a href="motif-enrichment.html#cb249-2" tabindex="-1"></a>pwm</span>
+<span id="cb249-3"><a href="motif-enrichment.html#cb249-3" tabindex="-1"></a><span class="do">## An object of class PWMatrix</span></span>
+<span id="cb249-4"><a href="motif-enrichment.html#cb249-4" tabindex="-1"></a><span class="do">## ID: ENSG00000110693_LINE19574_SOX6_I_N7</span></span>
+<span id="cb249-5"><a href="motif-enrichment.html#cb249-5" tabindex="-1"></a><span class="do">## Name: SOX6</span></span>
+<span id="cb249-6"><a href="motif-enrichment.html#cb249-6" tabindex="-1"></a><span class="do">## Matrix Class: Unknown</span></span>
+<span id="cb249-7"><a href="motif-enrichment.html#cb249-7" tabindex="-1"></a><span class="do">## strand: *</span></span>
+<span id="cb249-8"><a href="motif-enrichment.html#cb249-8" tabindex="-1"></a><span class="do">## Pseudocounts: </span></span>
+<span id="cb249-9"><a href="motif-enrichment.html#cb249-9" tabindex="-1"></a><span class="do">## Tags: </span></span>
+<span id="cb249-10"><a href="motif-enrichment.html#cb249-10" tabindex="-1"></a><span class="do">## $ensembl</span></span>
+<span id="cb249-11"><a href="motif-enrichment.html#cb249-11" tabindex="-1"></a><span class="do">## [1] &quot;ENSG00000110693&quot;</span></span>
+<span id="cb249-12"><a href="motif-enrichment.html#cb249-12" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb249-13"><a href="motif-enrichment.html#cb249-13" tabindex="-1"></a><span class="do">## Background: </span></span>
+<span id="cb249-14"><a href="motif-enrichment.html#cb249-14" tabindex="-1"></a><span class="do">##    A    C    G    T </span></span>
+<span id="cb249-15"><a href="motif-enrichment.html#cb249-15" tabindex="-1"></a><span class="do">## 0.25 0.25 0.25 0.25 </span></span>
+<span id="cb249-16"><a href="motif-enrichment.html#cb249-16" tabindex="-1"></a><span class="do">## Matrix: </span></span>
+<span id="cb249-17"><a href="motif-enrichment.html#cb249-17" tabindex="-1"></a><span class="do">##         [,1]      [,2]      [,3]      [,4]      [,5]      [,6]      [,7]</span></span>
+<span id="cb249-18"><a href="motif-enrichment.html#cb249-18" tabindex="-1"></a><span class="do">## A  0.2856363  1.236986  1.297203 -2.131381  1.340070  1.259222 -1.224160</span></span>
+<span id="cb249-19"><a href="motif-enrichment.html#cb249-19" tabindex="-1"></a><span class="do">## C -0.6196693 -2.173286 -3.473518  1.257839 -3.473518 -1.259465 -1.366327</span></span>
+<span id="cb249-20"><a href="motif-enrichment.html#cb249-20" tabindex="-1"></a><span class="do">## G -0.4525775 -1.628926 -1.447733 -1.817039 -2.592395 -1.817039 -3.473518</span></span>
+<span id="cb249-21"><a href="motif-enrichment.html#cb249-21" tabindex="-1"></a><span class="do">## T  0.4023151 -1.407137 -2.592395 -1.604399 -2.592395 -3.473518  1.229625</span></span>
+<span id="cb249-22"><a href="motif-enrichment.html#cb249-22" tabindex="-1"></a><span class="do">##         [,8]</span></span>
+<span id="cb249-23"><a href="motif-enrichment.html#cb249-23" tabindex="-1"></a><span class="do">## A  0.4500618</span></span>
+<span id="cb249-24"><a href="motif-enrichment.html#cb249-24" tabindex="-1"></a><span class="do">## C -0.4283456</span></span>
+<span id="cb249-25"><a href="motif-enrichment.html#cb249-25" tabindex="-1"></a><span class="do">## G  0.2154626</span></span>
+<span id="cb249-26"><a href="motif-enrichment.html#cb249-26" tabindex="-1"></a><span class="do">## T -0.6169845</span></span></code></pre></div>
 <p>Then, we convert that object to a position probability matrix. We do this with a function, which could be used in an <code>lapply</code> statement if you wanted to do this for many <code>PWMatrix</code> objects or a <code>PWMatrixList</code>.</p>
-<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="motif-enrichment.html#cb245-1" aria-hidden="true" tabindex="-1"></a>PWMatrixToProbMatrix <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
-<span id="cb245-2"><a href="motif-enrichment.html#cb245-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">class</span>(x) <span class="sc">!=</span> <span class="st">&quot;PWMatrix&quot;</span>) <span class="fu">stop</span>(<span class="st">&quot;x must be a TFBSTools::PWMatrix object&quot;</span>)</span>
-<span id="cb245-3"><a href="motif-enrichment.html#cb245-3" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> (<span class="fu">exp</span>(<span class="fu">as</span>(x, <span class="st">&quot;matrix&quot;</span>))) <span class="sc">*</span> TFBSTools<span class="sc">::</span><span class="fu">bg</span>(x)<span class="sc">/</span><span class="fu">sum</span>(TFBSTools<span class="sc">::</span><span class="fu">bg</span>(x))</span>
-<span id="cb245-4"><a href="motif-enrichment.html#cb245-4" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">t</span>(m)<span class="sc">/</span><span class="fu">colSums</span>(m))</span>
-<span id="cb245-5"><a href="motif-enrichment.html#cb245-5" aria-hidden="true" tabindex="-1"></a>  m</span>
-<span id="cb245-6"><a href="motif-enrichment.html#cb245-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb245-7"><a href="motif-enrichment.html#cb245-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb245-8"><a href="motif-enrichment.html#cb245-8" aria-hidden="true" tabindex="-1"></a>ppm <span class="ot">&lt;-</span> <span class="fu">PWMatrixToProbMatrix</span>(pwm)</span>
-<span id="cb245-9"><a href="motif-enrichment.html#cb245-9" aria-hidden="true" tabindex="-1"></a>ppm</span>
-<span id="cb245-10"><a href="motif-enrichment.html#cb245-10" aria-hidden="true" tabindex="-1"></a><span class="do">##        [,1]       [,2]        [,3]       [,4]        [,5]        [,6]</span></span>
-<span id="cb245-11"><a href="motif-enrichment.html#cb245-11" aria-hidden="true" tabindex="-1"></a><span class="do">## A 0.3326521 0.86130341 0.914762277 0.02966834 0.954827787 0.880670100</span></span>
-<span id="cb245-12"><a href="motif-enrichment.html#cb245-12" aria-hidden="true" tabindex="-1"></a><span class="do">## C 0.1345306 0.02845076 0.007751938 0.87945252 0.007751938 0.070951425</span></span>
-<span id="cb245-13"><a href="motif-enrichment.html#cb245-13" aria-hidden="true" tabindex="-1"></a><span class="do">## G 0.1589967 0.04903503 0.058775647 0.04062654 0.018710138 0.040626537</span></span>
-<span id="cb245-14"><a href="motif-enrichment.html#cb245-14" aria-hidden="true" tabindex="-1"></a><span class="do">## T 0.3738206 0.06121080 0.018710138 0.05025260 0.018710138 0.007751938</span></span>
-<span id="cb245-15"><a href="motif-enrichment.html#cb245-15" aria-hidden="true" tabindex="-1"></a><span class="do">##          [,7]      [,8]</span></span>
-<span id="cb245-16"><a href="motif-enrichment.html#cb245-16" aria-hidden="true" tabindex="-1"></a><span class="do">## A 0.073501136 0.3921023</span></span>
-<span id="cb245-17"><a href="motif-enrichment.html#cb245-17" aria-hidden="true" tabindex="-1"></a><span class="do">## C 0.063760514 0.1628965</span></span>
-<span id="cb245-18"><a href="motif-enrichment.html#cb245-18" aria-hidden="true" tabindex="-1"></a><span class="do">## G 0.007751938 0.3101089</span></span>
-<span id="cb245-19"><a href="motif-enrichment.html#cb245-19" aria-hidden="true" tabindex="-1"></a><span class="do">## T 0.854986412 0.1348923</span></span></code></pre></div>
+<div class="sourceCode" id="cb250"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb250-1"><a href="motif-enrichment.html#cb250-1" tabindex="-1"></a>PWMatrixToProbMatrix <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb250-2"><a href="motif-enrichment.html#cb250-2" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">class</span>(x) <span class="sc">!=</span> <span class="st">&quot;PWMatrix&quot;</span>) <span class="fu">stop</span>(<span class="st">&quot;x must be a TFBSTools::PWMatrix object&quot;</span>)</span>
+<span id="cb250-3"><a href="motif-enrichment.html#cb250-3" tabindex="-1"></a>  m <span class="ot">&lt;-</span> (<span class="fu">exp</span>(<span class="fu">as</span>(x, <span class="st">&quot;matrix&quot;</span>))) <span class="sc">*</span> TFBSTools<span class="sc">::</span><span class="fu">bg</span>(x)<span class="sc">/</span><span class="fu">sum</span>(TFBSTools<span class="sc">::</span><span class="fu">bg</span>(x))</span>
+<span id="cb250-4"><a href="motif-enrichment.html#cb250-4" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">t</span>(m)<span class="sc">/</span><span class="fu">colSums</span>(m))</span>
+<span id="cb250-5"><a href="motif-enrichment.html#cb250-5" tabindex="-1"></a>  m</span>
+<span id="cb250-6"><a href="motif-enrichment.html#cb250-6" tabindex="-1"></a>}</span>
+<span id="cb250-7"><a href="motif-enrichment.html#cb250-7" tabindex="-1"></a></span>
+<span id="cb250-8"><a href="motif-enrichment.html#cb250-8" tabindex="-1"></a>ppm <span class="ot">&lt;-</span> <span class="fu">PWMatrixToProbMatrix</span>(pwm)</span>
+<span id="cb250-9"><a href="motif-enrichment.html#cb250-9" tabindex="-1"></a>ppm</span>
+<span id="cb250-10"><a href="motif-enrichment.html#cb250-10" tabindex="-1"></a><span class="do">##        [,1]       [,2]        [,3]       [,4]        [,5]        [,6]</span></span>
+<span id="cb250-11"><a href="motif-enrichment.html#cb250-11" tabindex="-1"></a><span class="do">## A 0.3326521 0.86130341 0.914762277 0.02966834 0.954827787 0.880670100</span></span>
+<span id="cb250-12"><a href="motif-enrichment.html#cb250-12" tabindex="-1"></a><span class="do">## C 0.1345306 0.02845076 0.007751938 0.87945252 0.007751938 0.070951425</span></span>
+<span id="cb250-13"><a href="motif-enrichment.html#cb250-13" tabindex="-1"></a><span class="do">## G 0.1589967 0.04903503 0.058775647 0.04062654 0.018710138 0.040626537</span></span>
+<span id="cb250-14"><a href="motif-enrichment.html#cb250-14" tabindex="-1"></a><span class="do">## T 0.3738206 0.06121080 0.018710138 0.05025260 0.018710138 0.007751938</span></span>
+<span id="cb250-15"><a href="motif-enrichment.html#cb250-15" tabindex="-1"></a><span class="do">##          [,7]      [,8]</span></span>
+<span id="cb250-16"><a href="motif-enrichment.html#cb250-16" tabindex="-1"></a><span class="do">## A 0.073501136 0.3921023</span></span>
+<span id="cb250-17"><a href="motif-enrichment.html#cb250-17" tabindex="-1"></a><span class="do">## C 0.063760514 0.1628965</span></span>
+<span id="cb250-18"><a href="motif-enrichment.html#cb250-18" tabindex="-1"></a><span class="do">## G 0.007751938 0.3101089</span></span>
+<span id="cb250-19"><a href="motif-enrichment.html#cb250-19" tabindex="-1"></a><span class="do">## T 0.854986412 0.1348923</span></span></code></pre></div>
 <p>This Position Probability Matrix (PPM), has column sums that add to 1.</p>
-<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="motif-enrichment.html#cb246-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(ppm) <span class="sc">%&gt;%</span> range</span>
-<span id="cb246-2"><a href="motif-enrichment.html#cb246-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 1 1</span></span></code></pre></div>
+<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb251-1"><a href="motif-enrichment.html#cb251-1" tabindex="-1"></a><span class="fu">colSums</span>(ppm) <span class="sc">%&gt;%</span> range</span>
+<span id="cb251-2"><a href="motif-enrichment.html#cb251-2" tabindex="-1"></a><span class="do">## [1] 1 1</span></span></code></pre></div>
 <p>We can then pass this PPM to the <code>ggseqlogo()</code> function for plotting. We can plot as a PWM using <code>method = "bits"</code>. Note that you need to have the <code>ggseqlogo</code> package installed for this to work.</p>
-<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="motif-enrichment.html#cb247-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggseqlogo)</span>
-<span id="cb247-2"><a href="motif-enrichment.html#cb247-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggseqlogo</span>(ppm, <span class="at">method =</span> <span class="st">&quot;bits&quot;</span>)</span>
-<span id="cb247-3"><a href="motif-enrichment.html#cb247-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: `guides(&lt;scale&gt; = FALSE)` is deprecated. Please use `guides(&lt;scale&gt; =</span></span>
-<span id="cb247-4"><a href="motif-enrichment.html#cb247-4" aria-hidden="true" tabindex="-1"></a><span class="do">## &quot;none&quot;)` instead.</span></span></code></pre></div>
+<div class="sourceCode" id="cb252"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb252-1"><a href="motif-enrichment.html#cb252-1" tabindex="-1"></a><span class="fu">library</span>(ggseqlogo)</span>
+<span id="cb252-2"><a href="motif-enrichment.html#cb252-2" tabindex="-1"></a><span class="fu">ggseqlogo</span>(ppm, <span class="at">method =</span> <span class="st">&quot;bits&quot;</span>)</span></code></pre></div>
 <p><img src="ArchR_files/figure-html/unnamed-chunk-250-1.svg" width="672" /></p>
 <p>Or we can plot as a PPM using <code>method = "prob"</code>.</p>
-<div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb248-1"><a href="motif-enrichment.html#cb248-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggseqlogo</span>(ppm, <span class="at">method =</span> <span class="st">&quot;prob&quot;</span>)</span>
-<span id="cb248-2"><a href="motif-enrichment.html#cb248-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: `guides(&lt;scale&gt; = FALSE)` is deprecated. Please use `guides(&lt;scale&gt; =</span></span>
-<span id="cb248-3"><a href="motif-enrichment.html#cb248-3" aria-hidden="true" tabindex="-1"></a><span class="do">## &quot;none&quot;)` instead.</span></span></code></pre></div>
+<div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb253-1"><a href="motif-enrichment.html#cb253-1" tabindex="-1"></a><span class="fu">ggseqlogo</span>(ppm, <span class="at">method =</span> <span class="st">&quot;prob&quot;</span>)</span></code></pre></div>
 <p><img src="ArchR_files/figure-html/unnamed-chunk-251-1.svg" width="672" /></p>
 </div>
 </div>

@@ -35,7 +35,7 @@ Lets start by loading ArchR and setting up our genome (`hg38` in this case), our
 ```{r, collapse=TRUE}
 library(ArchR)
 addArchRGenome("hg38")
-addArchRThreads(32)
+addArchRThreads(8)
 addArchRLocking(locking = TRUE)
 set.seed(1)
 ```
@@ -105,6 +105,9 @@ In this tutorial data, there actually aren't any examples of this transcript-lev
 
 
 ```{r import10xFM2, collapse=TRUE}
+if (!requireNamespace("EnsDb.Hsapiens.v86", quietly = TRUE)) {
+  BiocManager::install("EnsDb.Hsapiens.v86", update = FALSE)
+}
 library(EnsDb.Hsapiens.v86)
 seRNA <- import10xFeatureMatrix(
   input = rnaFiles,
@@ -250,8 +253,10 @@ Nearly all of the operations that you will want to do downstream are equivalent 
 
 
 ```{r multiomeP2G, collapse=TRUE}
+pathToMacs2 <- findMacs2()
 projMulti2 <- addGroupCoverages(ArchRProj = projMulti2, groupBy = "Clusters_Combined", verbose = FALSE)
-projMulti2 <- addReproduciblePeakSet(ArchRProj = projMulti2, groupBy = "Clusters_Combined", pathToMacs2 = "/corces/home/rcorces/tools/python/p3.8.5/bin/macs2")
+# projMulti2 <- addReproduciblePeakSet(ArchRProj = projMulti2, groupBy = "Clusters_Combined", pathToMacs2 = "/corces/home/rcorces/tools/python/p3.8.5/bin/macs2")
+projMulti2 <- addReproduciblePeakSet(ArchRProj = projMulti2, groupBy = "Clusters_Combined", pathToMacs2 = pathToMacs2)
 projMulti2 <- addPeakMatrix(ArchRProj = projMulti2)
 projMulti2 <- addPeak2GeneLinks(ArchRProj = projMulti2, reducedDims = "LSI_Combined", useMatrix = "GeneExpressionMatrix")
 

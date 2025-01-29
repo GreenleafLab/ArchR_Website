@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>11.2 Making Pseudo-bulk Replicates | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
   <meta name="description" content="A guide to ArchR" />
-  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
   <meta property="og:title" content="11.2 Making Pseudo-bulk Replicates | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2022-12-23" />
+<meta name="date" content="2025-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,13 +52,13 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
-<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -68,7 +68,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -94,7 +94,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -107,7 +107,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -121,6 +121,10 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -144,6 +148,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
 <li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+<li class="chapter" data-level="2.3" data-path="using-docker-for-pre-compiled-environment-setup.html"><a href="using-docker-for-pre-compiled-environment-setup.html"><i class="fa fa-check"></i><b>2.3</b> Using Docker for pre-compiled environment setup</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
 <ul>
@@ -303,276 +308,276 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="making-pseudo-bulk-replicates" class="section level2 hasAnchor" number="11.2">
 <h2><span class="header-section-number">11.2</span> Making Pseudo-bulk Replicates<a href="making-pseudo-bulk-replicates.html#making-pseudo-bulk-replicates" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>In ArchR, pseudo-bulk replicates are made using the <code>addGroupCoverages()</code> function. The key parameter here is <code>groupBy</code> which defines the groups for which pseudo-bulk replicates should be made. Here, we are using <code>Clusters2</code> which was defined by labeling our clusters with cell types defined by scRNA-seq data in a previous chapter.</p>
-<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="making-pseudo-bulk-replicates.html#cb184-1" aria-hidden="true" tabindex="-1"></a>projHeme4 <span class="ot">&lt;-</span> <span class="fu">addGroupCoverages</span>(<span class="at">ArchRProj =</span> projHeme3, <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>)</span>
-<span id="cb184-2"><a href="making-pseudo-bulk-replicates.html#cb184-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addGroupCoverages-371b07c38aa5d-Date-2022-12-23_Time-07-05-17.log</span></span>
-<span id="cb184-3"><a href="making-pseudo-bulk-replicates.html#cb184-3" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb184-4"><a href="making-pseudo-bulk-replicates.html#cb184-4" aria-hidden="true" tabindex="-1"></a><span class="do">## B (1 of 11) : CellGroups N = 2</span></span>
-<span id="cb184-5"><a href="making-pseudo-bulk-replicates.html#cb184-5" aria-hidden="true" tabindex="-1"></a><span class="do">## CD4.M (2 of 11) : CellGroups N = 2</span></span>
-<span id="cb184-6"><a href="making-pseudo-bulk-replicates.html#cb184-6" aria-hidden="true" tabindex="-1"></a><span class="do">## CD4.N (3 of 11) : CellGroups N = 2</span></span>
-<span id="cb184-7"><a href="making-pseudo-bulk-replicates.html#cb184-7" aria-hidden="true" tabindex="-1"></a><span class="do">## CLP (4 of 11) : CellGroups N = 2</span></span>
-<span id="cb184-8"><a href="making-pseudo-bulk-replicates.html#cb184-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Erythroid (5 of 11) : CellGroups N = 2</span></span>
-<span id="cb184-9"><a href="making-pseudo-bulk-replicates.html#cb184-9" aria-hidden="true" tabindex="-1"></a><span class="do">## GMP (6 of 11) : CellGroups N = 2</span></span>
-<span id="cb184-10"><a href="making-pseudo-bulk-replicates.html#cb184-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Mono (7 of 11) : CellGroups N = 2</span></span>
-<span id="cb184-11"><a href="making-pseudo-bulk-replicates.html#cb184-11" aria-hidden="true" tabindex="-1"></a><span class="do">## NK (8 of 11) : CellGroups N = 2</span></span>
-<span id="cb184-12"><a href="making-pseudo-bulk-replicates.html#cb184-12" aria-hidden="true" tabindex="-1"></a><span class="do">## pDC (9 of 11) : CellGroups N = 2</span></span>
-<span id="cb184-13"><a href="making-pseudo-bulk-replicates.html#cb184-13" aria-hidden="true" tabindex="-1"></a><span class="do">## PreB (10 of 11) : CellGroups N = 2</span></span>
-<span id="cb184-14"><a href="making-pseudo-bulk-replicates.html#cb184-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Progenitor (11 of 11) : CellGroups N = 2</span></span>
-<span id="cb184-15"><a href="making-pseudo-bulk-replicates.html#cb184-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:05:36 : Creating Coverage Files!, 0.317 mins elapsed.</span></span>
-<span id="cb184-16"><a href="making-pseudo-bulk-replicates.html#cb184-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:05:36 : Batch Execution w/ safelapply!, 0.317 mins elapsed.</span></span>
-<span id="cb184-17"><a href="making-pseudo-bulk-replicates.html#cb184-17" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:05:36 : Group B._.scATAC_BMMC_R1 (1 of 22) : Creating Group Coverage File : B._.scATAC_BMMC_R1.insertions.coverage.h5, 0.317 mins elapsed.</span></span>
-<span id="cb184-18"><a href="making-pseudo-bulk-replicates.html#cb184-18" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 257</span></span>
-<span id="cb184-19"><a href="making-pseudo-bulk-replicates.html#cb184-19" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-20"><a href="making-pseudo-bulk-replicates.html#cb184-20" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-21"><a href="making-pseudo-bulk-replicates.html#cb184-21" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-22"><a href="making-pseudo-bulk-replicates.html#cb184-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-23"><a href="making-pseudo-bulk-replicates.html#cb184-23" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-24"><a href="making-pseudo-bulk-replicates.html#cb184-24" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-25"><a href="making-pseudo-bulk-replicates.html#cb184-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:06:18 : Group B._.scATAC_PBMC_R1 (2 of 22) : Creating Group Coverage File : B._.scATAC_PBMC_R1.insertions.coverage.h5, 1.02 mins elapsed.</span></span>
-<span id="cb184-26"><a href="making-pseudo-bulk-replicates.html#cb184-26" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 166</span></span>
-<span id="cb184-27"><a href="making-pseudo-bulk-replicates.html#cb184-27" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-28"><a href="making-pseudo-bulk-replicates.html#cb184-28" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-29"><a href="making-pseudo-bulk-replicates.html#cb184-29" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-30"><a href="making-pseudo-bulk-replicates.html#cb184-30" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-31"><a href="making-pseudo-bulk-replicates.html#cb184-31" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-32"><a href="making-pseudo-bulk-replicates.html#cb184-32" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-33"><a href="making-pseudo-bulk-replicates.html#cb184-33" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:06:59 : Group CD4.M._.scATAC_PBMC_R1 (3 of 22) : Creating Group Coverage File : CD4.M._.scATAC_PBMC_R1.insertions.coverage.h5, 1.703 mins elapsed.</span></span>
-<span id="cb184-34"><a href="making-pseudo-bulk-replicates.html#cb184-34" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
-<span id="cb184-35"><a href="making-pseudo-bulk-replicates.html#cb184-35" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-36"><a href="making-pseudo-bulk-replicates.html#cb184-36" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-37"><a href="making-pseudo-bulk-replicates.html#cb184-37" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-38"><a href="making-pseudo-bulk-replicates.html#cb184-38" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-39"><a href="making-pseudo-bulk-replicates.html#cb184-39" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-40"><a href="making-pseudo-bulk-replicates.html#cb184-40" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-41"><a href="making-pseudo-bulk-replicates.html#cb184-41" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:07:41 : Group CD4.M._.scATAC_BMMC_R1 (4 of 22) : Creating Group Coverage File : CD4.M._.scATAC_BMMC_R1.insertions.coverage.h5, 2.411 mins elapsed.</span></span>
-<span id="cb184-42"><a href="making-pseudo-bulk-replicates.html#cb184-42" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 84</span></span>
-<span id="cb184-43"><a href="making-pseudo-bulk-replicates.html#cb184-43" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-44"><a href="making-pseudo-bulk-replicates.html#cb184-44" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-45"><a href="making-pseudo-bulk-replicates.html#cb184-45" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-46"><a href="making-pseudo-bulk-replicates.html#cb184-46" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-47"><a href="making-pseudo-bulk-replicates.html#cb184-47" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-48"><a href="making-pseudo-bulk-replicates.html#cb184-48" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-49"><a href="making-pseudo-bulk-replicates.html#cb184-49" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:08:22 : Group CD4.N._.scATAC_BMMC_R1 (5 of 22) : Creating Group Coverage File : CD4.N._.scATAC_BMMC_R1.insertions.coverage.h5, 3.095 mins elapsed.</span></span>
-<span id="cb184-50"><a href="making-pseudo-bulk-replicates.html#cb184-50" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
-<span id="cb184-51"><a href="making-pseudo-bulk-replicates.html#cb184-51" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-52"><a href="making-pseudo-bulk-replicates.html#cb184-52" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-53"><a href="making-pseudo-bulk-replicates.html#cb184-53" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-54"><a href="making-pseudo-bulk-replicates.html#cb184-54" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-55"><a href="making-pseudo-bulk-replicates.html#cb184-55" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-56"><a href="making-pseudo-bulk-replicates.html#cb184-56" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-57"><a href="making-pseudo-bulk-replicates.html#cb184-57" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:09:04 : Group CD4.N._.Other (6 of 22) : Creating Group Coverage File : CD4.N._.Other.insertions.coverage.h5, 3.789 mins elapsed.</span></span>
-<span id="cb184-58"><a href="making-pseudo-bulk-replicates.html#cb184-58" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 40</span></span>
-<span id="cb184-59"><a href="making-pseudo-bulk-replicates.html#cb184-59" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-60"><a href="making-pseudo-bulk-replicates.html#cb184-60" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-61"><a href="making-pseudo-bulk-replicates.html#cb184-61" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-62"><a href="making-pseudo-bulk-replicates.html#cb184-62" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-63"><a href="making-pseudo-bulk-replicates.html#cb184-63" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-64"><a href="making-pseudo-bulk-replicates.html#cb184-64" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-65"><a href="making-pseudo-bulk-replicates.html#cb184-65" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:09:45 : Group CLP._.scATAC_CD34_BMMC_R1 (7 of 22) : Creating Group Coverage File : CLP._.scATAC_CD34_BMMC_R1.insertions.coverage.h5, 4.469 mins elapsed.</span></span>
-<span id="cb184-66"><a href="making-pseudo-bulk-replicates.html#cb184-66" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 296</span></span>
-<span id="cb184-67"><a href="making-pseudo-bulk-replicates.html#cb184-67" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-68"><a href="making-pseudo-bulk-replicates.html#cb184-68" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-69"><a href="making-pseudo-bulk-replicates.html#cb184-69" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-70"><a href="making-pseudo-bulk-replicates.html#cb184-70" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-71"><a href="making-pseudo-bulk-replicates.html#cb184-71" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-72"><a href="making-pseudo-bulk-replicates.html#cb184-72" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-73"><a href="making-pseudo-bulk-replicates.html#cb184-73" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:10:26 : Group CLP._.scATAC_BMMC_R1 (8 of 22) : Creating Group Coverage File : CLP._.scATAC_BMMC_R1.insertions.coverage.h5, 5.159 mins elapsed.</span></span>
-<span id="cb184-74"><a href="making-pseudo-bulk-replicates.html#cb184-74" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 87</span></span>
-<span id="cb184-75"><a href="making-pseudo-bulk-replicates.html#cb184-75" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-76"><a href="making-pseudo-bulk-replicates.html#cb184-76" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-77"><a href="making-pseudo-bulk-replicates.html#cb184-77" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-78"><a href="making-pseudo-bulk-replicates.html#cb184-78" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-79"><a href="making-pseudo-bulk-replicates.html#cb184-79" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-80"><a href="making-pseudo-bulk-replicates.html#cb184-80" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-81"><a href="making-pseudo-bulk-replicates.html#cb184-81" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:11:07 : Group Erythroid._.scATAC_CD34_BMMC_R1 (9 of 22) : Creating Group Coverage File : Erythroid._.scATAC_CD34_BMMC_R1.insertions.coverage.h5, 5.842 mins elapsed.</span></span>
-<span id="cb184-82"><a href="making-pseudo-bulk-replicates.html#cb184-82" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
-<span id="cb184-83"><a href="making-pseudo-bulk-replicates.html#cb184-83" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-84"><a href="making-pseudo-bulk-replicates.html#cb184-84" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-85"><a href="making-pseudo-bulk-replicates.html#cb184-85" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-86"><a href="making-pseudo-bulk-replicates.html#cb184-86" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-87"><a href="making-pseudo-bulk-replicates.html#cb184-87" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-88"><a href="making-pseudo-bulk-replicates.html#cb184-88" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-89"><a href="making-pseudo-bulk-replicates.html#cb184-89" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:11:49 : Group Erythroid._.scATAC_BMMC_R1 (10 of 22) : Creating Group Coverage File : Erythroid._.scATAC_BMMC_R1.insertions.coverage.h5, 6.546 mins elapsed.</span></span>
-<span id="cb184-90"><a href="making-pseudo-bulk-replicates.html#cb184-90" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 170</span></span>
-<span id="cb184-91"><a href="making-pseudo-bulk-replicates.html#cb184-91" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-92"><a href="making-pseudo-bulk-replicates.html#cb184-92" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-93"><a href="making-pseudo-bulk-replicates.html#cb184-93" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-94"><a href="making-pseudo-bulk-replicates.html#cb184-94" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-95"><a href="making-pseudo-bulk-replicates.html#cb184-95" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-96"><a href="making-pseudo-bulk-replicates.html#cb184-96" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-97"><a href="making-pseudo-bulk-replicates.html#cb184-97" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:12:31 : Group GMP._.scATAC_CD34_BMMC_R1 (11 of 22) : Creating Group Coverage File : GMP._.scATAC_CD34_BMMC_R1.insertions.coverage.h5, 7.232 mins elapsed.</span></span>
-<span id="cb184-98"><a href="making-pseudo-bulk-replicates.html#cb184-98" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
-<span id="cb184-99"><a href="making-pseudo-bulk-replicates.html#cb184-99" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-100"><a href="making-pseudo-bulk-replicates.html#cb184-100" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-101"><a href="making-pseudo-bulk-replicates.html#cb184-101" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-102"><a href="making-pseudo-bulk-replicates.html#cb184-102" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-103"><a href="making-pseudo-bulk-replicates.html#cb184-103" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-104"><a href="making-pseudo-bulk-replicates.html#cb184-104" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-105"><a href="making-pseudo-bulk-replicates.html#cb184-105" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:13:13 : Group GMP._.scATAC_BMMC_R1 (12 of 22) : Creating Group Coverage File : GMP._.scATAC_BMMC_R1.insertions.coverage.h5, 7.933 mins elapsed.</span></span>
-<span id="cb184-106"><a href="making-pseudo-bulk-replicates.html#cb184-106" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 296</span></span>
-<span id="cb184-107"><a href="making-pseudo-bulk-replicates.html#cb184-107" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-108"><a href="making-pseudo-bulk-replicates.html#cb184-108" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-109"><a href="making-pseudo-bulk-replicates.html#cb184-109" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-110"><a href="making-pseudo-bulk-replicates.html#cb184-110" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-111"><a href="making-pseudo-bulk-replicates.html#cb184-111" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-112"><a href="making-pseudo-bulk-replicates.html#cb184-112" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-113"><a href="making-pseudo-bulk-replicates.html#cb184-113" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:13:55 : Group Mono._.scATAC_PBMC_R1 (13 of 22) : Creating Group Coverage File : Mono._.scATAC_PBMC_R1.insertions.coverage.h5, 8.632 mins elapsed.</span></span>
-<span id="cb184-114"><a href="making-pseudo-bulk-replicates.html#cb184-114" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
-<span id="cb184-115"><a href="making-pseudo-bulk-replicates.html#cb184-115" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-116"><a href="making-pseudo-bulk-replicates.html#cb184-116" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-117"><a href="making-pseudo-bulk-replicates.html#cb184-117" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-118"><a href="making-pseudo-bulk-replicates.html#cb184-118" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-119"><a href="making-pseudo-bulk-replicates.html#cb184-119" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-120"><a href="making-pseudo-bulk-replicates.html#cb184-120" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-121"><a href="making-pseudo-bulk-replicates.html#cb184-121" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:14:36 : Group Mono._.scATAC_BMMC_R1 (14 of 22) : Creating Group Coverage File : Mono._.scATAC_BMMC_R1.insertions.coverage.h5, 9.328 mins elapsed.</span></span>
-<span id="cb184-122"><a href="making-pseudo-bulk-replicates.html#cb184-122" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
-<span id="cb184-123"><a href="making-pseudo-bulk-replicates.html#cb184-123" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-124"><a href="making-pseudo-bulk-replicates.html#cb184-124" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-125"><a href="making-pseudo-bulk-replicates.html#cb184-125" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-126"><a href="making-pseudo-bulk-replicates.html#cb184-126" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-127"><a href="making-pseudo-bulk-replicates.html#cb184-127" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-128"><a href="making-pseudo-bulk-replicates.html#cb184-128" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-129"><a href="making-pseudo-bulk-replicates.html#cb184-129" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:15:19 : Group NK._.scATAC_PBMC_R1 (15 of 22) : Creating Group Coverage File : NK._.scATAC_PBMC_R1.insertions.coverage.h5, 10.032 mins elapsed.</span></span>
-<span id="cb184-130"><a href="making-pseudo-bulk-replicates.html#cb184-130" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
-<span id="cb184-131"><a href="making-pseudo-bulk-replicates.html#cb184-131" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-132"><a href="making-pseudo-bulk-replicates.html#cb184-132" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-133"><a href="making-pseudo-bulk-replicates.html#cb184-133" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-134"><a href="making-pseudo-bulk-replicates.html#cb184-134" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-135"><a href="making-pseudo-bulk-replicates.html#cb184-135" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-136"><a href="making-pseudo-bulk-replicates.html#cb184-136" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-137"><a href="making-pseudo-bulk-replicates.html#cb184-137" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:16:02 : Group NK._.scATAC_BMMC_R1 (16 of 22) : Creating Group Coverage File : NK._.scATAC_BMMC_R1.insertions.coverage.h5, 10.747 mins elapsed.</span></span>
-<span id="cb184-138"><a href="making-pseudo-bulk-replicates.html#cb184-138" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 330</span></span>
-<span id="cb184-139"><a href="making-pseudo-bulk-replicates.html#cb184-139" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-140"><a href="making-pseudo-bulk-replicates.html#cb184-140" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-141"><a href="making-pseudo-bulk-replicates.html#cb184-141" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-142"><a href="making-pseudo-bulk-replicates.html#cb184-142" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-143"><a href="making-pseudo-bulk-replicates.html#cb184-143" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-144"><a href="making-pseudo-bulk-replicates.html#cb184-144" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-145"><a href="making-pseudo-bulk-replicates.html#cb184-145" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:16:43 : Group pDC._.scATAC_BMMC_R1 (17 of 22) : Creating Group Coverage File : pDC._.scATAC_BMMC_R1.insertions.coverage.h5, 11.441 mins elapsed.</span></span>
-<span id="cb184-146"><a href="making-pseudo-bulk-replicates.html#cb184-146" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 154</span></span>
-<span id="cb184-147"><a href="making-pseudo-bulk-replicates.html#cb184-147" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-148"><a href="making-pseudo-bulk-replicates.html#cb184-148" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-149"><a href="making-pseudo-bulk-replicates.html#cb184-149" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-150"><a href="making-pseudo-bulk-replicates.html#cb184-150" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-151"><a href="making-pseudo-bulk-replicates.html#cb184-151" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-152"><a href="making-pseudo-bulk-replicates.html#cb184-152" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-153"><a href="making-pseudo-bulk-replicates.html#cb184-153" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:17:24 : Group pDC._.scATAC_CD34_BMMC_R1 (18 of 22) : Creating Group Coverage File : pDC._.scATAC_CD34_BMMC_R1.insertions.coverage.h5, 12.127 mins elapsed.</span></span>
-<span id="cb184-154"><a href="making-pseudo-bulk-replicates.html#cb184-154" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 151</span></span>
-<span id="cb184-155"><a href="making-pseudo-bulk-replicates.html#cb184-155" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-156"><a href="making-pseudo-bulk-replicates.html#cb184-156" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-157"><a href="making-pseudo-bulk-replicates.html#cb184-157" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-158"><a href="making-pseudo-bulk-replicates.html#cb184-158" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-159"><a href="making-pseudo-bulk-replicates.html#cb184-159" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-160"><a href="making-pseudo-bulk-replicates.html#cb184-160" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-161"><a href="making-pseudo-bulk-replicates.html#cb184-161" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:18:05 : Group PreB._.Rep1 (19 of 22) : Creating Group Coverage File : PreB._.Rep1.insertions.coverage.h5, 12.809 mins elapsed.</span></span>
-<span id="cb184-162"><a href="making-pseudo-bulk-replicates.html#cb184-162" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 314</span></span>
-<span id="cb184-163"><a href="making-pseudo-bulk-replicates.html#cb184-163" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-164"><a href="making-pseudo-bulk-replicates.html#cb184-164" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-165"><a href="making-pseudo-bulk-replicates.html#cb184-165" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-166"><a href="making-pseudo-bulk-replicates.html#cb184-166" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-167"><a href="making-pseudo-bulk-replicates.html#cb184-167" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-168"><a href="making-pseudo-bulk-replicates.html#cb184-168" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-169"><a href="making-pseudo-bulk-replicates.html#cb184-169" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:18:47 : Group PreB._.Rep2 (20 of 22) : Creating Group Coverage File : PreB._.Rep2.insertions.coverage.h5, 13.498 mins elapsed.</span></span>
-<span id="cb184-170"><a href="making-pseudo-bulk-replicates.html#cb184-170" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 40</span></span>
-<span id="cb184-171"><a href="making-pseudo-bulk-replicates.html#cb184-171" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-172"><a href="making-pseudo-bulk-replicates.html#cb184-172" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-173"><a href="making-pseudo-bulk-replicates.html#cb184-173" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-174"><a href="making-pseudo-bulk-replicates.html#cb184-174" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-175"><a href="making-pseudo-bulk-replicates.html#cb184-175" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-176"><a href="making-pseudo-bulk-replicates.html#cb184-176" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-177"><a href="making-pseudo-bulk-replicates.html#cb184-177" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:19:27 : Group Progenitor._.scATAC_CD34_BMMC_R1 (21 of 22) : Creating Group Coverage File : Progenitor._.scATAC_CD34_BMMC_R1.insertions.coverage.h5, 14.178 mins elapsed.</span></span>
-<span id="cb184-178"><a href="making-pseudo-bulk-replicates.html#cb184-178" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
-<span id="cb184-179"><a href="making-pseudo-bulk-replicates.html#cb184-179" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-180"><a href="making-pseudo-bulk-replicates.html#cb184-180" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-181"><a href="making-pseudo-bulk-replicates.html#cb184-181" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-182"><a href="making-pseudo-bulk-replicates.html#cb184-182" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-183"><a href="making-pseudo-bulk-replicates.html#cb184-183" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-184"><a href="making-pseudo-bulk-replicates.html#cb184-184" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-185"><a href="making-pseudo-bulk-replicates.html#cb184-185" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:20:09 : Group Progenitor._.scATAC_BMMC_R1 (22 of 22) : Creating Group Coverage File : Progenitor._.scATAC_BMMC_R1.insertions.coverage.h5, 14.875 mins elapsed.</span></span>
-<span id="cb184-186"><a href="making-pseudo-bulk-replicates.html#cb184-186" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of Cells = 138</span></span>
-<span id="cb184-187"><a href="making-pseudo-bulk-replicates.html#cb184-187" aria-hidden="true" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
-<span id="cb184-188"><a href="making-pseudo-bulk-replicates.html#cb184-188" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
-<span id="cb184-189"><a href="making-pseudo-bulk-replicates.html#cb184-189" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
-<span id="cb184-190"><a href="making-pseudo-bulk-replicates.html#cb184-190" aria-hidden="true" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
-<span id="cb184-191"><a href="making-pseudo-bulk-replicates.html#cb184-191" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
-<span id="cb184-192"><a href="making-pseudo-bulk-replicates.html#cb184-192" aria-hidden="true" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
-<span id="cb184-193"><a href="making-pseudo-bulk-replicates.html#cb184-193" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:20:50 : Adding Kmer Bias to Coverage Files!, 15.556 mins elapsed.</span></span>
-<span id="cb184-194"><a href="making-pseudo-bulk-replicates.html#cb184-194" aria-hidden="true" tabindex="-1"></a><span class="do">## Completed Kmer Bias Calculation</span></span>
-<span id="cb184-195"><a href="making-pseudo-bulk-replicates.html#cb184-195" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (1 of 22)</span></span>
-<span id="cb184-196"><a href="making-pseudo-bulk-replicates.html#cb184-196" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (2 of 22)</span></span>
-<span id="cb184-197"><a href="making-pseudo-bulk-replicates.html#cb184-197" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (3 of 22)</span></span>
-<span id="cb184-198"><a href="making-pseudo-bulk-replicates.html#cb184-198" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (4 of 22)</span></span>
-<span id="cb184-199"><a href="making-pseudo-bulk-replicates.html#cb184-199" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (5 of 22)</span></span>
-<span id="cb184-200"><a href="making-pseudo-bulk-replicates.html#cb184-200" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (6 of 22)</span></span>
-<span id="cb184-201"><a href="making-pseudo-bulk-replicates.html#cb184-201" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (7 of 22)</span></span>
-<span id="cb184-202"><a href="making-pseudo-bulk-replicates.html#cb184-202" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (8 of 22)</span></span>
-<span id="cb184-203"><a href="making-pseudo-bulk-replicates.html#cb184-203" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (9 of 22)</span></span>
-<span id="cb184-204"><a href="making-pseudo-bulk-replicates.html#cb184-204" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (10 of 22)</span></span>
-<span id="cb184-205"><a href="making-pseudo-bulk-replicates.html#cb184-205" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (11 of 22)</span></span>
-<span id="cb184-206"><a href="making-pseudo-bulk-replicates.html#cb184-206" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (12 of 22)</span></span>
-<span id="cb184-207"><a href="making-pseudo-bulk-replicates.html#cb184-207" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (13 of 22)</span></span>
-<span id="cb184-208"><a href="making-pseudo-bulk-replicates.html#cb184-208" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (14 of 22)</span></span>
-<span id="cb184-209"><a href="making-pseudo-bulk-replicates.html#cb184-209" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (15 of 22)</span></span>
-<span id="cb184-210"><a href="making-pseudo-bulk-replicates.html#cb184-210" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (16 of 22)</span></span>
-<span id="cb184-211"><a href="making-pseudo-bulk-replicates.html#cb184-211" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (17 of 22)</span></span>
-<span id="cb184-212"><a href="making-pseudo-bulk-replicates.html#cb184-212" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (18 of 22)</span></span>
-<span id="cb184-213"><a href="making-pseudo-bulk-replicates.html#cb184-213" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (19 of 22)</span></span>
-<span id="cb184-214"><a href="making-pseudo-bulk-replicates.html#cb184-214" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (20 of 22)</span></span>
-<span id="cb184-215"><a href="making-pseudo-bulk-replicates.html#cb184-215" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (21 of 22)</span></span>
-<span id="cb184-216"><a href="making-pseudo-bulk-replicates.html#cb184-216" aria-hidden="true" tabindex="-1"></a><span class="do">## Adding Kmer Bias (22 of 22)</span></span>
-<span id="cb184-217"><a href="making-pseudo-bulk-replicates.html#cb184-217" aria-hidden="true" tabindex="-1"></a><span class="do">## 2022-12-23 07:22:29 : Finished Creation of Coverage Files!, 17.208 mins elapsed.</span></span>
-<span id="cb184-218"><a href="making-pseudo-bulk-replicates.html#cb184-218" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-addGroupCoverages-371b07c38aa5d-Date-2022-12-23_Time-07-05-17.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="making-pseudo-bulk-replicates.html#cb189-1" tabindex="-1"></a>projHeme4 <span class="ot">&lt;-</span> <span class="fu">addGroupCoverages</span>(<span class="at">ArchRProj =</span> projHeme3, <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>)</span>
+<span id="cb189-2"><a href="making-pseudo-bulk-replicates.html#cb189-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addGroupCoverages-1a16d412a8e-Date-2025-01-23_Time-20-44-54.267934.log</span></span>
+<span id="cb189-3"><a href="making-pseudo-bulk-replicates.html#cb189-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb189-4"><a href="making-pseudo-bulk-replicates.html#cb189-4" tabindex="-1"></a><span class="do">## B (1 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-5"><a href="making-pseudo-bulk-replicates.html#cb189-5" tabindex="-1"></a><span class="do">## CD4.M (2 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-6"><a href="making-pseudo-bulk-replicates.html#cb189-6" tabindex="-1"></a><span class="do">## CD4.N (3 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-7"><a href="making-pseudo-bulk-replicates.html#cb189-7" tabindex="-1"></a><span class="do">## CLP (4 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-8"><a href="making-pseudo-bulk-replicates.html#cb189-8" tabindex="-1"></a><span class="do">## Erythroid (5 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-9"><a href="making-pseudo-bulk-replicates.html#cb189-9" tabindex="-1"></a><span class="do">## GMP (6 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-10"><a href="making-pseudo-bulk-replicates.html#cb189-10" tabindex="-1"></a><span class="do">## Mono (7 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-11"><a href="making-pseudo-bulk-replicates.html#cb189-11" tabindex="-1"></a><span class="do">## NK (8 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-12"><a href="making-pseudo-bulk-replicates.html#cb189-12" tabindex="-1"></a><span class="do">## pDC (9 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-13"><a href="making-pseudo-bulk-replicates.html#cb189-13" tabindex="-1"></a><span class="do">## PreB (10 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-14"><a href="making-pseudo-bulk-replicates.html#cb189-14" tabindex="-1"></a><span class="do">## Progenitor (11 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-15"><a href="making-pseudo-bulk-replicates.html#cb189-15" tabindex="-1"></a><span class="do">## 2025-01-23 20:44:59.904269 : Creating Coverage Files!, 0.094 mins elapsed.</span></span>
+<span id="cb189-16"><a href="making-pseudo-bulk-replicates.html#cb189-16" tabindex="-1"></a><span class="do">## 2025-01-23 20:44:59.923471 : Batch Execution w/ safelapply!, 0.094 mins elapsed.</span></span>
+<span id="cb189-17"><a href="making-pseudo-bulk-replicates.html#cb189-17" tabindex="-1"></a><span class="do">## 2025-01-23 20:44:59.932538 : Group B._.scATAC_BMMC_R1 (1 of 22) : Creating Group Coverage File : B._.scATAC_BMMC_R1.insertions.coverage.h5, 0.094 mins elapsed.</span></span>
+<span id="cb189-18"><a href="making-pseudo-bulk-replicates.html#cb189-18" tabindex="-1"></a><span class="do">## Number of Cells = 254</span></span>
+<span id="cb189-19"><a href="making-pseudo-bulk-replicates.html#cb189-19" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-20"><a href="making-pseudo-bulk-replicates.html#cb189-20" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-21"><a href="making-pseudo-bulk-replicates.html#cb189-21" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-22"><a href="making-pseudo-bulk-replicates.html#cb189-22" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-23"><a href="making-pseudo-bulk-replicates.html#cb189-23" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-24"><a href="making-pseudo-bulk-replicates.html#cb189-24" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-25"><a href="making-pseudo-bulk-replicates.html#cb189-25" tabindex="-1"></a><span class="do">## 2025-01-23 20:46:01.153709 : Group B._.scATAC_PBMC_R1 (2 of 22) : Creating Group Coverage File : B._.scATAC_PBMC_R1.insertions.coverage.h5, 1.115 mins elapsed.</span></span>
+<span id="cb189-26"><a href="making-pseudo-bulk-replicates.html#cb189-26" tabindex="-1"></a><span class="do">## Number of Cells = 162</span></span>
+<span id="cb189-27"><a href="making-pseudo-bulk-replicates.html#cb189-27" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-28"><a href="making-pseudo-bulk-replicates.html#cb189-28" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-29"><a href="making-pseudo-bulk-replicates.html#cb189-29" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-30"><a href="making-pseudo-bulk-replicates.html#cb189-30" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-31"><a href="making-pseudo-bulk-replicates.html#cb189-31" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-32"><a href="making-pseudo-bulk-replicates.html#cb189-32" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-33"><a href="making-pseudo-bulk-replicates.html#cb189-33" tabindex="-1"></a><span class="do">## 2025-01-23 20:47:01.397172 : Group CD4.M._.scATAC_PBMC_R1 (3 of 22) : Creating Group Coverage File : CD4.M._.scATAC_PBMC_R1.insertions.coverage.h5, 2.119 mins elapsed.</span></span>
+<span id="cb189-34"><a href="making-pseudo-bulk-replicates.html#cb189-34" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
+<span id="cb189-35"><a href="making-pseudo-bulk-replicates.html#cb189-35" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-36"><a href="making-pseudo-bulk-replicates.html#cb189-36" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-37"><a href="making-pseudo-bulk-replicates.html#cb189-37" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-38"><a href="making-pseudo-bulk-replicates.html#cb189-38" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-39"><a href="making-pseudo-bulk-replicates.html#cb189-39" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-40"><a href="making-pseudo-bulk-replicates.html#cb189-40" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-41"><a href="making-pseudo-bulk-replicates.html#cb189-41" tabindex="-1"></a><span class="do">## 2025-01-23 20:48:00.919515 : Group CD4.M._.scATAC_BMMC_R1 (4 of 22) : Creating Group Coverage File : CD4.M._.scATAC_BMMC_R1.insertions.coverage.h5, 3.111 mins elapsed.</span></span>
+<span id="cb189-42"><a href="making-pseudo-bulk-replicates.html#cb189-42" tabindex="-1"></a><span class="do">## Number of Cells = 86</span></span>
+<span id="cb189-43"><a href="making-pseudo-bulk-replicates.html#cb189-43" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-44"><a href="making-pseudo-bulk-replicates.html#cb189-44" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-45"><a href="making-pseudo-bulk-replicates.html#cb189-45" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-46"><a href="making-pseudo-bulk-replicates.html#cb189-46" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-47"><a href="making-pseudo-bulk-replicates.html#cb189-47" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-48"><a href="making-pseudo-bulk-replicates.html#cb189-48" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-49"><a href="making-pseudo-bulk-replicates.html#cb189-49" tabindex="-1"></a><span class="do">## 2025-01-23 20:49:01.330863 : Group CD4.N._.scATAC_BMMC_R1 (5 of 22) : Creating Group Coverage File : CD4.N._.scATAC_BMMC_R1.insertions.coverage.h5, 4.118 mins elapsed.</span></span>
+<span id="cb189-50"><a href="making-pseudo-bulk-replicates.html#cb189-50" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
+<span id="cb189-51"><a href="making-pseudo-bulk-replicates.html#cb189-51" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-52"><a href="making-pseudo-bulk-replicates.html#cb189-52" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-53"><a href="making-pseudo-bulk-replicates.html#cb189-53" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-54"><a href="making-pseudo-bulk-replicates.html#cb189-54" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-55"><a href="making-pseudo-bulk-replicates.html#cb189-55" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-56"><a href="making-pseudo-bulk-replicates.html#cb189-56" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-57"><a href="making-pseudo-bulk-replicates.html#cb189-57" tabindex="-1"></a><span class="do">## 2025-01-23 20:50:02.154761 : Group CD4.N._.scATAC_PBMC_R1 (6 of 22) : Creating Group Coverage File : CD4.N._.scATAC_PBMC_R1.insertions.coverage.h5, 5.131 mins elapsed.</span></span>
+<span id="cb189-58"><a href="making-pseudo-bulk-replicates.html#cb189-58" tabindex="-1"></a><span class="do">## Number of Cells = 48</span></span>
+<span id="cb189-59"><a href="making-pseudo-bulk-replicates.html#cb189-59" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-60"><a href="making-pseudo-bulk-replicates.html#cb189-60" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-61"><a href="making-pseudo-bulk-replicates.html#cb189-61" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-62"><a href="making-pseudo-bulk-replicates.html#cb189-62" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-63"><a href="making-pseudo-bulk-replicates.html#cb189-63" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-64"><a href="making-pseudo-bulk-replicates.html#cb189-64" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-65"><a href="making-pseudo-bulk-replicates.html#cb189-65" tabindex="-1"></a><span class="do">## 2025-01-23 20:51:01.784686 : Group CLP._.scATAC_CD34_BMMC_R1 (7 of 22) : Creating Group Coverage File : CLP._.scATAC_CD34_BMMC_R1.insertions.coverage.h5, 6.125 mins elapsed.</span></span>
+<span id="cb189-66"><a href="making-pseudo-bulk-replicates.html#cb189-66" tabindex="-1"></a><span class="do">## Number of Cells = 298</span></span>
+<span id="cb189-67"><a href="making-pseudo-bulk-replicates.html#cb189-67" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-68"><a href="making-pseudo-bulk-replicates.html#cb189-68" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-69"><a href="making-pseudo-bulk-replicates.html#cb189-69" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-70"><a href="making-pseudo-bulk-replicates.html#cb189-70" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-71"><a href="making-pseudo-bulk-replicates.html#cb189-71" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-72"><a href="making-pseudo-bulk-replicates.html#cb189-72" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-73"><a href="making-pseudo-bulk-replicates.html#cb189-73" tabindex="-1"></a><span class="do">## 2025-01-23 20:52:01.583476 : Group CLP._.scATAC_BMMC_R1 (8 of 22) : Creating Group Coverage File : CLP._.scATAC_BMMC_R1.insertions.coverage.h5, 7.122 mins elapsed.</span></span>
+<span id="cb189-74"><a href="making-pseudo-bulk-replicates.html#cb189-74" tabindex="-1"></a><span class="do">## Number of Cells = 88</span></span>
+<span id="cb189-75"><a href="making-pseudo-bulk-replicates.html#cb189-75" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-76"><a href="making-pseudo-bulk-replicates.html#cb189-76" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-77"><a href="making-pseudo-bulk-replicates.html#cb189-77" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-78"><a href="making-pseudo-bulk-replicates.html#cb189-78" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-79"><a href="making-pseudo-bulk-replicates.html#cb189-79" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-80"><a href="making-pseudo-bulk-replicates.html#cb189-80" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-81"><a href="making-pseudo-bulk-replicates.html#cb189-81" tabindex="-1"></a><span class="do">## 2025-01-23 20:53:02.675602 : Group Erythroid._.scATAC_CD34_BMMC_R1 (9 of 22) : Creating Group Coverage File : Erythroid._.scATAC_CD34_BMMC_R1.insertions.coverage.h5, 8.14 mins elapsed.</span></span>
+<span id="cb189-82"><a href="making-pseudo-bulk-replicates.html#cb189-82" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
+<span id="cb189-83"><a href="making-pseudo-bulk-replicates.html#cb189-83" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-84"><a href="making-pseudo-bulk-replicates.html#cb189-84" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-85"><a href="making-pseudo-bulk-replicates.html#cb189-85" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-86"><a href="making-pseudo-bulk-replicates.html#cb189-86" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-87"><a href="making-pseudo-bulk-replicates.html#cb189-87" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-88"><a href="making-pseudo-bulk-replicates.html#cb189-88" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-89"><a href="making-pseudo-bulk-replicates.html#cb189-89" tabindex="-1"></a><span class="do">## 2025-01-23 20:54:03.767583 : Group Erythroid._.scATAC_BMMC_R1 (10 of 22) : Creating Group Coverage File : Erythroid._.scATAC_BMMC_R1.insertions.coverage.h5, 9.158 mins elapsed.</span></span>
+<span id="cb189-90"><a href="making-pseudo-bulk-replicates.html#cb189-90" tabindex="-1"></a><span class="do">## Number of Cells = 171</span></span>
+<span id="cb189-91"><a href="making-pseudo-bulk-replicates.html#cb189-91" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-92"><a href="making-pseudo-bulk-replicates.html#cb189-92" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-93"><a href="making-pseudo-bulk-replicates.html#cb189-93" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-94"><a href="making-pseudo-bulk-replicates.html#cb189-94" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-95"><a href="making-pseudo-bulk-replicates.html#cb189-95" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-96"><a href="making-pseudo-bulk-replicates.html#cb189-96" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-97"><a href="making-pseudo-bulk-replicates.html#cb189-97" tabindex="-1"></a><span class="do">## 2025-01-23 20:55:04.823766 : Group GMP._.scATAC_CD34_BMMC_R1 (11 of 22) : Creating Group Coverage File : GMP._.scATAC_CD34_BMMC_R1.insertions.coverage.h5, 10.176 mins elapsed.</span></span>
+<span id="cb189-98"><a href="making-pseudo-bulk-replicates.html#cb189-98" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
+<span id="cb189-99"><a href="making-pseudo-bulk-replicates.html#cb189-99" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-100"><a href="making-pseudo-bulk-replicates.html#cb189-100" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-101"><a href="making-pseudo-bulk-replicates.html#cb189-101" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-102"><a href="making-pseudo-bulk-replicates.html#cb189-102" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-103"><a href="making-pseudo-bulk-replicates.html#cb189-103" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-104"><a href="making-pseudo-bulk-replicates.html#cb189-104" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-105"><a href="making-pseudo-bulk-replicates.html#cb189-105" tabindex="-1"></a><span class="do">## 2025-01-23 20:56:05.881754 : Group GMP._.scATAC_BMMC_R1 (12 of 22) : Creating Group Coverage File : GMP._.scATAC_BMMC_R1.insertions.coverage.h5, 11.194 mins elapsed.</span></span>
+<span id="cb189-106"><a href="making-pseudo-bulk-replicates.html#cb189-106" tabindex="-1"></a><span class="do">## Number of Cells = 310</span></span>
+<span id="cb189-107"><a href="making-pseudo-bulk-replicates.html#cb189-107" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-108"><a href="making-pseudo-bulk-replicates.html#cb189-108" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-109"><a href="making-pseudo-bulk-replicates.html#cb189-109" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-110"><a href="making-pseudo-bulk-replicates.html#cb189-110" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-111"><a href="making-pseudo-bulk-replicates.html#cb189-111" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-112"><a href="making-pseudo-bulk-replicates.html#cb189-112" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-113"><a href="making-pseudo-bulk-replicates.html#cb189-113" tabindex="-1"></a><span class="do">## 2025-01-23 20:57:05.858128 : Group Mono._.scATAC_PBMC_R1 (13 of 22) : Creating Group Coverage File : Mono._.scATAC_PBMC_R1.insertions.coverage.h5, 12.193 mins elapsed.</span></span>
+<span id="cb189-114"><a href="making-pseudo-bulk-replicates.html#cb189-114" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
+<span id="cb189-115"><a href="making-pseudo-bulk-replicates.html#cb189-115" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-116"><a href="making-pseudo-bulk-replicates.html#cb189-116" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-117"><a href="making-pseudo-bulk-replicates.html#cb189-117" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-118"><a href="making-pseudo-bulk-replicates.html#cb189-118" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-119"><a href="making-pseudo-bulk-replicates.html#cb189-119" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-120"><a href="making-pseudo-bulk-replicates.html#cb189-120" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-121"><a href="making-pseudo-bulk-replicates.html#cb189-121" tabindex="-1"></a><span class="do">## 2025-01-23 20:58:06.971035 : Group Mono._.scATAC_BMMC_R1 (14 of 22) : Creating Group Coverage File : Mono._.scATAC_BMMC_R1.insertions.coverage.h5, 13.212 mins elapsed.</span></span>
+<span id="cb189-122"><a href="making-pseudo-bulk-replicates.html#cb189-122" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
+<span id="cb189-123"><a href="making-pseudo-bulk-replicates.html#cb189-123" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-124"><a href="making-pseudo-bulk-replicates.html#cb189-124" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-125"><a href="making-pseudo-bulk-replicates.html#cb189-125" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-126"><a href="making-pseudo-bulk-replicates.html#cb189-126" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-127"><a href="making-pseudo-bulk-replicates.html#cb189-127" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-128"><a href="making-pseudo-bulk-replicates.html#cb189-128" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-129"><a href="making-pseudo-bulk-replicates.html#cb189-129" tabindex="-1"></a><span class="do">## 2025-01-23 20:59:08.448268 : Group NK._.scATAC_PBMC_R1 (15 of 22) : Creating Group Coverage File : NK._.scATAC_PBMC_R1.insertions.coverage.h5, 14.236 mins elapsed.</span></span>
+<span id="cb189-130"><a href="making-pseudo-bulk-replicates.html#cb189-130" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
+<span id="cb189-131"><a href="making-pseudo-bulk-replicates.html#cb189-131" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-132"><a href="making-pseudo-bulk-replicates.html#cb189-132" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-133"><a href="making-pseudo-bulk-replicates.html#cb189-133" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-134"><a href="making-pseudo-bulk-replicates.html#cb189-134" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-135"><a href="making-pseudo-bulk-replicates.html#cb189-135" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-136"><a href="making-pseudo-bulk-replicates.html#cb189-136" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-137"><a href="making-pseudo-bulk-replicates.html#cb189-137" tabindex="-1"></a><span class="do">## 2025-01-23 21:00:12.190945 : Group NK._.scATAC_BMMC_R1 (16 of 22) : Creating Group Coverage File : NK._.scATAC_BMMC_R1.insertions.coverage.h5, 15.299 mins elapsed.</span></span>
+<span id="cb189-138"><a href="making-pseudo-bulk-replicates.html#cb189-138" tabindex="-1"></a><span class="do">## Number of Cells = 322</span></span>
+<span id="cb189-139"><a href="making-pseudo-bulk-replicates.html#cb189-139" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-140"><a href="making-pseudo-bulk-replicates.html#cb189-140" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-141"><a href="making-pseudo-bulk-replicates.html#cb189-141" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-142"><a href="making-pseudo-bulk-replicates.html#cb189-142" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-143"><a href="making-pseudo-bulk-replicates.html#cb189-143" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-144"><a href="making-pseudo-bulk-replicates.html#cb189-144" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-145"><a href="making-pseudo-bulk-replicates.html#cb189-145" tabindex="-1"></a><span class="do">## 2025-01-23 21:01:15.499623 : Group pDC._.scATAC_BMMC_R1 (17 of 22) : Creating Group Coverage File : pDC._.scATAC_BMMC_R1.insertions.coverage.h5, 16.354 mins elapsed.</span></span>
+<span id="cb189-146"><a href="making-pseudo-bulk-replicates.html#cb189-146" tabindex="-1"></a><span class="do">## Number of Cells = 160</span></span>
+<span id="cb189-147"><a href="making-pseudo-bulk-replicates.html#cb189-147" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-148"><a href="making-pseudo-bulk-replicates.html#cb189-148" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-149"><a href="making-pseudo-bulk-replicates.html#cb189-149" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-150"><a href="making-pseudo-bulk-replicates.html#cb189-150" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-151"><a href="making-pseudo-bulk-replicates.html#cb189-151" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-152"><a href="making-pseudo-bulk-replicates.html#cb189-152" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-153"><a href="making-pseudo-bulk-replicates.html#cb189-153" tabindex="-1"></a><span class="do">## 2025-01-23 21:02:16.721758 : Group pDC._.scATAC_CD34_BMMC_R1 (18 of 22) : Creating Group Coverage File : pDC._.scATAC_CD34_BMMC_R1.insertions.coverage.h5, 17.374 mins elapsed.</span></span>
+<span id="cb189-154"><a href="making-pseudo-bulk-replicates.html#cb189-154" tabindex="-1"></a><span class="do">## Number of Cells = 144</span></span>
+<span id="cb189-155"><a href="making-pseudo-bulk-replicates.html#cb189-155" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-156"><a href="making-pseudo-bulk-replicates.html#cb189-156" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-157"><a href="making-pseudo-bulk-replicates.html#cb189-157" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-158"><a href="making-pseudo-bulk-replicates.html#cb189-158" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-159"><a href="making-pseudo-bulk-replicates.html#cb189-159" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-160"><a href="making-pseudo-bulk-replicates.html#cb189-160" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-161"><a href="making-pseudo-bulk-replicates.html#cb189-161" tabindex="-1"></a><span class="do">## 2025-01-23 21:03:16.83568 : Group PreB._.Rep1 (19 of 22) : Creating Group Coverage File : PreB._.Rep1.insertions.coverage.h5, 18.376 mins elapsed.</span></span>
+<span id="cb189-162"><a href="making-pseudo-bulk-replicates.html#cb189-162" tabindex="-1"></a><span class="do">## Number of Cells = 311</span></span>
+<span id="cb189-163"><a href="making-pseudo-bulk-replicates.html#cb189-163" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-164"><a href="making-pseudo-bulk-replicates.html#cb189-164" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-165"><a href="making-pseudo-bulk-replicates.html#cb189-165" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-166"><a href="making-pseudo-bulk-replicates.html#cb189-166" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-167"><a href="making-pseudo-bulk-replicates.html#cb189-167" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-168"><a href="making-pseudo-bulk-replicates.html#cb189-168" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-169"><a href="making-pseudo-bulk-replicates.html#cb189-169" tabindex="-1"></a><span class="do">## 2025-01-23 21:04:18.413876 : Group PreB._.Rep2 (20 of 22) : Creating Group Coverage File : PreB._.Rep2.insertions.coverage.h5, 19.402 mins elapsed.</span></span>
+<span id="cb189-170"><a href="making-pseudo-bulk-replicates.html#cb189-170" tabindex="-1"></a><span class="do">## Number of Cells = 40</span></span>
+<span id="cb189-171"><a href="making-pseudo-bulk-replicates.html#cb189-171" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-172"><a href="making-pseudo-bulk-replicates.html#cb189-172" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-173"><a href="making-pseudo-bulk-replicates.html#cb189-173" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-174"><a href="making-pseudo-bulk-replicates.html#cb189-174" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-175"><a href="making-pseudo-bulk-replicates.html#cb189-175" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-176"><a href="making-pseudo-bulk-replicates.html#cb189-176" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-177"><a href="making-pseudo-bulk-replicates.html#cb189-177" tabindex="-1"></a><span class="do">## 2025-01-23 21:05:19.704107 : Group Progenitor._.scATAC_CD34_BMMC_R1 (21 of 22) : Creating Group Coverage File : Progenitor._.scATAC_CD34_BMMC_R1.insertions.coverage.h5, 20.424 mins elapsed.</span></span>
+<span id="cb189-178"><a href="making-pseudo-bulk-replicates.html#cb189-178" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
+<span id="cb189-179"><a href="making-pseudo-bulk-replicates.html#cb189-179" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-180"><a href="making-pseudo-bulk-replicates.html#cb189-180" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-181"><a href="making-pseudo-bulk-replicates.html#cb189-181" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-182"><a href="making-pseudo-bulk-replicates.html#cb189-182" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-183"><a href="making-pseudo-bulk-replicates.html#cb189-183" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-184"><a href="making-pseudo-bulk-replicates.html#cb189-184" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-185"><a href="making-pseudo-bulk-replicates.html#cb189-185" tabindex="-1"></a><span class="do">## 2025-01-23 21:06:22.315983 : Group Progenitor._.scATAC_BMMC_R1 (22 of 22) : Creating Group Coverage File : Progenitor._.scATAC_BMMC_R1.insertions.coverage.h5, 21.467 mins elapsed.</span></span>
+<span id="cb189-186"><a href="making-pseudo-bulk-replicates.html#cb189-186" tabindex="-1"></a><span class="do">## Number of Cells = 139</span></span>
+<span id="cb189-187"><a href="making-pseudo-bulk-replicates.html#cb189-187" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-188"><a href="making-pseudo-bulk-replicates.html#cb189-188" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-189"><a href="making-pseudo-bulk-replicates.html#cb189-189" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-190"><a href="making-pseudo-bulk-replicates.html#cb189-190" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-191"><a href="making-pseudo-bulk-replicates.html#cb189-191" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-192"><a href="making-pseudo-bulk-replicates.html#cb189-192" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-193"><a href="making-pseudo-bulk-replicates.html#cb189-193" tabindex="-1"></a><span class="do">## 2025-01-23 21:07:23.671412 : Adding Kmer Bias to Coverage Files!, 22.49 mins elapsed.</span></span>
+<span id="cb189-194"><a href="making-pseudo-bulk-replicates.html#cb189-194" tabindex="-1"></a><span class="do">## Completed Kmer Bias Calculation</span></span>
+<span id="cb189-195"><a href="making-pseudo-bulk-replicates.html#cb189-195" tabindex="-1"></a><span class="do">## Adding Kmer Bias (1 of 22)</span></span>
+<span id="cb189-196"><a href="making-pseudo-bulk-replicates.html#cb189-196" tabindex="-1"></a><span class="do">## Adding Kmer Bias (2 of 22)</span></span>
+<span id="cb189-197"><a href="making-pseudo-bulk-replicates.html#cb189-197" tabindex="-1"></a><span class="do">## Adding Kmer Bias (3 of 22)</span></span>
+<span id="cb189-198"><a href="making-pseudo-bulk-replicates.html#cb189-198" tabindex="-1"></a><span class="do">## Adding Kmer Bias (4 of 22)</span></span>
+<span id="cb189-199"><a href="making-pseudo-bulk-replicates.html#cb189-199" tabindex="-1"></a><span class="do">## Adding Kmer Bias (5 of 22)</span></span>
+<span id="cb189-200"><a href="making-pseudo-bulk-replicates.html#cb189-200" tabindex="-1"></a><span class="do">## Adding Kmer Bias (6 of 22)</span></span>
+<span id="cb189-201"><a href="making-pseudo-bulk-replicates.html#cb189-201" tabindex="-1"></a><span class="do">## Adding Kmer Bias (7 of 22)</span></span>
+<span id="cb189-202"><a href="making-pseudo-bulk-replicates.html#cb189-202" tabindex="-1"></a><span class="do">## Adding Kmer Bias (8 of 22)</span></span>
+<span id="cb189-203"><a href="making-pseudo-bulk-replicates.html#cb189-203" tabindex="-1"></a><span class="do">## Adding Kmer Bias (9 of 22)</span></span>
+<span id="cb189-204"><a href="making-pseudo-bulk-replicates.html#cb189-204" tabindex="-1"></a><span class="do">## Adding Kmer Bias (10 of 22)</span></span>
+<span id="cb189-205"><a href="making-pseudo-bulk-replicates.html#cb189-205" tabindex="-1"></a><span class="do">## Adding Kmer Bias (11 of 22)</span></span>
+<span id="cb189-206"><a href="making-pseudo-bulk-replicates.html#cb189-206" tabindex="-1"></a><span class="do">## Adding Kmer Bias (12 of 22)</span></span>
+<span id="cb189-207"><a href="making-pseudo-bulk-replicates.html#cb189-207" tabindex="-1"></a><span class="do">## Adding Kmer Bias (13 of 22)</span></span>
+<span id="cb189-208"><a href="making-pseudo-bulk-replicates.html#cb189-208" tabindex="-1"></a><span class="do">## Adding Kmer Bias (14 of 22)</span></span>
+<span id="cb189-209"><a href="making-pseudo-bulk-replicates.html#cb189-209" tabindex="-1"></a><span class="do">## Adding Kmer Bias (15 of 22)</span></span>
+<span id="cb189-210"><a href="making-pseudo-bulk-replicates.html#cb189-210" tabindex="-1"></a><span class="do">## Adding Kmer Bias (16 of 22)</span></span>
+<span id="cb189-211"><a href="making-pseudo-bulk-replicates.html#cb189-211" tabindex="-1"></a><span class="do">## Adding Kmer Bias (17 of 22)</span></span>
+<span id="cb189-212"><a href="making-pseudo-bulk-replicates.html#cb189-212" tabindex="-1"></a><span class="do">## Adding Kmer Bias (18 of 22)</span></span>
+<span id="cb189-213"><a href="making-pseudo-bulk-replicates.html#cb189-213" tabindex="-1"></a><span class="do">## Adding Kmer Bias (19 of 22)</span></span>
+<span id="cb189-214"><a href="making-pseudo-bulk-replicates.html#cb189-214" tabindex="-1"></a><span class="do">## Adding Kmer Bias (20 of 22)</span></span>
+<span id="cb189-215"><a href="making-pseudo-bulk-replicates.html#cb189-215" tabindex="-1"></a><span class="do">## Adding Kmer Bias (21 of 22)</span></span>
+<span id="cb189-216"><a href="making-pseudo-bulk-replicates.html#cb189-216" tabindex="-1"></a><span class="do">## Adding Kmer Bias (22 of 22)</span></span>
+<span id="cb189-217"><a href="making-pseudo-bulk-replicates.html#cb189-217" tabindex="-1"></a><span class="do">## 2025-01-23 21:10:11.332225 : Finished Creation of Coverage Files!, 25.284 mins elapsed.</span></span>
+<span id="cb189-218"><a href="making-pseudo-bulk-replicates.html#cb189-218" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-addGroupCoverages-1a16d412a8e-Date-2025-01-23_Time-20-44-54.267934.log</span></span></code></pre></div>
 <p>Once we have run <code>addGroupCoverages()</code>, this creates an entry in the project metadata of the <code>ArchRProject</code>, including a file path to the HDF5-format coverage object that is stored on disk.</p>
-<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="making-pseudo-bulk-replicates.html#cb185-1" aria-hidden="true" tabindex="-1"></a>projHeme4<span class="sc">@</span>projectMetadata<span class="sc">$</span>GroupCoverages<span class="sc">$</span>Clusters2<span class="sc">$</span>coverageMetadata</span>
-<span id="cb185-2"><a href="making-pseudo-bulk-replicates.html#cb185-2" aria-hidden="true" tabindex="-1"></a><span class="do">## DataFrame with 22 rows and 5 columns</span></span>
-<span id="cb185-3"><a href="making-pseudo-bulk-replicates.html#cb185-3" aria-hidden="true" tabindex="-1"></a><span class="do">##           Group                   Name                   File    nCells</span></span>
-<span id="cb185-4"><a href="making-pseudo-bulk-replicates.html#cb185-4" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;character&gt;            &lt;character&gt;            &lt;character&gt; &lt;integer&gt;</span></span>
-<span id="cb185-5"><a href="making-pseudo-bulk-replicates.html#cb185-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 1             B     B._.scATAC_BMMC_R1 /corces/home/rcorces..       257</span></span>
-<span id="cb185-6"><a href="making-pseudo-bulk-replicates.html#cb185-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 2             B     B._.scATAC_PBMC_R1 /corces/home/rcorces..       166</span></span>
-<span id="cb185-7"><a href="making-pseudo-bulk-replicates.html#cb185-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 3         CD4.M CD4.M._.scATAC_PBMC_R1 /corces/home/rcorces..       500</span></span>
-<span id="cb185-8"><a href="making-pseudo-bulk-replicates.html#cb185-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 4         CD4.M CD4.M._.scATAC_BMMC_R1 /corces/home/rcorces..        84</span></span>
-<span id="cb185-9"><a href="making-pseudo-bulk-replicates.html#cb185-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 5         CD4.N CD4.N._.scATAC_BMMC_R1 /corces/home/rcorces..       500</span></span>
-<span id="cb185-10"><a href="making-pseudo-bulk-replicates.html#cb185-10" aria-hidden="true" tabindex="-1"></a><span class="do">## ...         ...                    ...                    ...       ...</span></span>
-<span id="cb185-11"><a href="making-pseudo-bulk-replicates.html#cb185-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 18          pDC pDC._.scATAC_CD34_BM.. /corces/home/rcorces..       151</span></span>
-<span id="cb185-12"><a href="making-pseudo-bulk-replicates.html#cb185-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 19         PreB            PreB._.Rep1 /corces/home/rcorces..       314</span></span>
-<span id="cb185-13"><a href="making-pseudo-bulk-replicates.html#cb185-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 20         PreB            PreB._.Rep2 /corces/home/rcorces..        40</span></span>
-<span id="cb185-14"><a href="making-pseudo-bulk-replicates.html#cb185-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 21   Progenitor Progenitor._.scATAC_.. /corces/home/rcorces..       500</span></span>
-<span id="cb185-15"><a href="making-pseudo-bulk-replicates.html#cb185-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 22   Progenitor Progenitor._.scATAC_.. /corces/home/rcorces..       138</span></span>
-<span id="cb185-16"><a href="making-pseudo-bulk-replicates.html#cb185-16" aria-hidden="true" tabindex="-1"></a><span class="do">##     nInsertions</span></span>
-<span id="cb185-17"><a href="making-pseudo-bulk-replicates.html#cb185-17" aria-hidden="true" tabindex="-1"></a><span class="do">##       &lt;numeric&gt;</span></span>
-<span id="cb185-18"><a href="making-pseudo-bulk-replicates.html#cb185-18" aria-hidden="true" tabindex="-1"></a><span class="do">## 1       1291546</span></span>
-<span id="cb185-19"><a href="making-pseudo-bulk-replicates.html#cb185-19" aria-hidden="true" tabindex="-1"></a><span class="do">## 2       1130972</span></span>
-<span id="cb185-20"><a href="making-pseudo-bulk-replicates.html#cb185-20" aria-hidden="true" tabindex="-1"></a><span class="do">## 3       4757644</span></span>
-<span id="cb185-21"><a href="making-pseudo-bulk-replicates.html#cb185-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 4        511298</span></span>
-<span id="cb185-22"><a href="making-pseudo-bulk-replicates.html#cb185-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 5       2129280</span></span>
-<span id="cb185-23"><a href="making-pseudo-bulk-replicates.html#cb185-23" aria-hidden="true" tabindex="-1"></a><span class="do">## ...         ...</span></span>
-<span id="cb185-24"><a href="making-pseudo-bulk-replicates.html#cb185-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 18      1108616</span></span>
-<span id="cb185-25"><a href="making-pseudo-bulk-replicates.html#cb185-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 19      1995046</span></span>
-<span id="cb185-26"><a href="making-pseudo-bulk-replicates.html#cb185-26" aria-hidden="true" tabindex="-1"></a><span class="do">## 20       208888</span></span>
-<span id="cb185-27"><a href="making-pseudo-bulk-replicates.html#cb185-27" aria-hidden="true" tabindex="-1"></a><span class="do">## 21      3526630</span></span>
-<span id="cb185-28"><a href="making-pseudo-bulk-replicates.html#cb185-28" aria-hidden="true" tabindex="-1"></a><span class="do">## 22       618374</span></span></code></pre></div>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="making-pseudo-bulk-replicates.html#cb190-1" tabindex="-1"></a>projHeme4<span class="sc">@</span>projectMetadata<span class="sc">$</span>GroupCoverages<span class="sc">$</span>Clusters2<span class="sc">$</span>coverageMetadata</span>
+<span id="cb190-2"><a href="making-pseudo-bulk-replicates.html#cb190-2" tabindex="-1"></a><span class="do">## DataFrame with 22 rows and 5 columns</span></span>
+<span id="cb190-3"><a href="making-pseudo-bulk-replicates.html#cb190-3" tabindex="-1"></a><span class="do">##           Group                   Name                   File    nCells</span></span>
+<span id="cb190-4"><a href="making-pseudo-bulk-replicates.html#cb190-4" tabindex="-1"></a><span class="do">##     &lt;character&gt;            &lt;character&gt;            &lt;character&gt; &lt;integer&gt;</span></span>
+<span id="cb190-5"><a href="making-pseudo-bulk-replicates.html#cb190-5" tabindex="-1"></a><span class="do">## 1             B     B._.scATAC_BMMC_R1 /workspace/ArchR/Arc..       254</span></span>
+<span id="cb190-6"><a href="making-pseudo-bulk-replicates.html#cb190-6" tabindex="-1"></a><span class="do">## 2             B     B._.scATAC_PBMC_R1 /workspace/ArchR/Arc..       162</span></span>
+<span id="cb190-7"><a href="making-pseudo-bulk-replicates.html#cb190-7" tabindex="-1"></a><span class="do">## 3         CD4.M CD4.M._.scATAC_PBMC_R1 /workspace/ArchR/Arc..       500</span></span>
+<span id="cb190-8"><a href="making-pseudo-bulk-replicates.html#cb190-8" tabindex="-1"></a><span class="do">## 4         CD4.M CD4.M._.scATAC_BMMC_R1 /workspace/ArchR/Arc..        86</span></span>
+<span id="cb190-9"><a href="making-pseudo-bulk-replicates.html#cb190-9" tabindex="-1"></a><span class="do">## 5         CD4.N CD4.N._.scATAC_BMMC_R1 /workspace/ArchR/Arc..       500</span></span>
+<span id="cb190-10"><a href="making-pseudo-bulk-replicates.html#cb190-10" tabindex="-1"></a><span class="do">## ...         ...                    ...                    ...       ...</span></span>
+<span id="cb190-11"><a href="making-pseudo-bulk-replicates.html#cb190-11" tabindex="-1"></a><span class="do">## 18          pDC pDC._.scATAC_CD34_BM.. /workspace/ArchR/Arc..       144</span></span>
+<span id="cb190-12"><a href="making-pseudo-bulk-replicates.html#cb190-12" tabindex="-1"></a><span class="do">## 19         PreB            PreB._.Rep1 /workspace/ArchR/Arc..       311</span></span>
+<span id="cb190-13"><a href="making-pseudo-bulk-replicates.html#cb190-13" tabindex="-1"></a><span class="do">## 20         PreB            PreB._.Rep2 /workspace/ArchR/Arc..        40</span></span>
+<span id="cb190-14"><a href="making-pseudo-bulk-replicates.html#cb190-14" tabindex="-1"></a><span class="do">## 21   Progenitor Progenitor._.scATAC_.. /workspace/ArchR/Arc..       500</span></span>
+<span id="cb190-15"><a href="making-pseudo-bulk-replicates.html#cb190-15" tabindex="-1"></a><span class="do">## 22   Progenitor Progenitor._.scATAC_.. /workspace/ArchR/Arc..       139</span></span>
+<span id="cb190-16"><a href="making-pseudo-bulk-replicates.html#cb190-16" tabindex="-1"></a><span class="do">##     nInsertions</span></span>
+<span id="cb190-17"><a href="making-pseudo-bulk-replicates.html#cb190-17" tabindex="-1"></a><span class="do">##       &lt;numeric&gt;</span></span>
+<span id="cb190-18"><a href="making-pseudo-bulk-replicates.html#cb190-18" tabindex="-1"></a><span class="do">## 1       1265606</span></span>
+<span id="cb190-19"><a href="making-pseudo-bulk-replicates.html#cb190-19" tabindex="-1"></a><span class="do">## 2       1054330</span></span>
+<span id="cb190-20"><a href="making-pseudo-bulk-replicates.html#cb190-20" tabindex="-1"></a><span class="do">## 3       4913052</span></span>
+<span id="cb190-21"><a href="making-pseudo-bulk-replicates.html#cb190-21" tabindex="-1"></a><span class="do">## 4        499060</span></span>
+<span id="cb190-22"><a href="making-pseudo-bulk-replicates.html#cb190-22" tabindex="-1"></a><span class="do">## 5       2156364</span></span>
+<span id="cb190-23"><a href="making-pseudo-bulk-replicates.html#cb190-23" tabindex="-1"></a><span class="do">## ...         ...</span></span>
+<span id="cb190-24"><a href="making-pseudo-bulk-replicates.html#cb190-24" tabindex="-1"></a><span class="do">## 18      1078804</span></span>
+<span id="cb190-25"><a href="making-pseudo-bulk-replicates.html#cb190-25" tabindex="-1"></a><span class="do">## 19      1985798</span></span>
+<span id="cb190-26"><a href="making-pseudo-bulk-replicates.html#cb190-26" tabindex="-1"></a><span class="do">## 20       203070</span></span>
+<span id="cb190-27"><a href="making-pseudo-bulk-replicates.html#cb190-27" tabindex="-1"></a><span class="do">## 21      3467572</span></span>
+<span id="cb190-28"><a href="making-pseudo-bulk-replicates.html#cb190-28" tabindex="-1"></a><span class="do">## 22       648132</span></span></code></pre></div>
 <p>We can also obtain the actual cell assignments for the pseudo-bulk replicates by calling <code>addGroupCoverages()</code> a second time using the <code>returnGroups = TRUE</code>. The returned object is a list of lists where each sub-list contains the replicates for a given cell group.</p>
-<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="making-pseudo-bulk-replicates.html#cb186-1" aria-hidden="true" tabindex="-1"></a>groups <span class="ot">&lt;-</span> <span class="fu">addGroupCoverages</span>(<span class="at">ArchRProj =</span> projHeme3, <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>, <span class="at">returnGroups =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb186-2"><a href="making-pseudo-bulk-replicates.html#cb186-2" aria-hidden="true" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addGroupCoverages-371b0d3396f1-Date-2022-12-23_Time-07-22-29.log</span></span>
-<span id="cb186-3"><a href="making-pseudo-bulk-replicates.html#cb186-3" aria-hidden="true" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb186-4"><a href="making-pseudo-bulk-replicates.html#cb186-4" aria-hidden="true" tabindex="-1"></a><span class="do">## B (1 of 11) : CellGroups N = 2</span></span>
-<span id="cb186-5"><a href="making-pseudo-bulk-replicates.html#cb186-5" aria-hidden="true" tabindex="-1"></a><span class="do">## CD4.M (2 of 11) : CellGroups N = 2</span></span>
-<span id="cb186-6"><a href="making-pseudo-bulk-replicates.html#cb186-6" aria-hidden="true" tabindex="-1"></a><span class="do">## CD4.N (3 of 11) : CellGroups N = 2</span></span>
-<span id="cb186-7"><a href="making-pseudo-bulk-replicates.html#cb186-7" aria-hidden="true" tabindex="-1"></a><span class="do">## CLP (4 of 11) : CellGroups N = 2</span></span>
-<span id="cb186-8"><a href="making-pseudo-bulk-replicates.html#cb186-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Erythroid (5 of 11) : CellGroups N = 2</span></span>
-<span id="cb186-9"><a href="making-pseudo-bulk-replicates.html#cb186-9" aria-hidden="true" tabindex="-1"></a><span class="do">## GMP (6 of 11) : CellGroups N = 2</span></span>
-<span id="cb186-10"><a href="making-pseudo-bulk-replicates.html#cb186-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Mono (7 of 11) : CellGroups N = 2</span></span>
-<span id="cb186-11"><a href="making-pseudo-bulk-replicates.html#cb186-11" aria-hidden="true" tabindex="-1"></a><span class="do">## NK (8 of 11) : CellGroups N = 2</span></span>
-<span id="cb186-12"><a href="making-pseudo-bulk-replicates.html#cb186-12" aria-hidden="true" tabindex="-1"></a><span class="do">## pDC (9 of 11) : CellGroups N = 2</span></span>
-<span id="cb186-13"><a href="making-pseudo-bulk-replicates.html#cb186-13" aria-hidden="true" tabindex="-1"></a><span class="do">## PreB (10 of 11) : CellGroups N = 2</span></span>
-<span id="cb186-14"><a href="making-pseudo-bulk-replicates.html#cb186-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Progenitor (11 of 11) : CellGroups N = 2</span></span>
-<span id="cb186-15"><a href="making-pseudo-bulk-replicates.html#cb186-15" aria-hidden="true" tabindex="-1"></a>groups</span>
-<span id="cb186-16"><a href="making-pseudo-bulk-replicates.html#cb186-16" aria-hidden="true" tabindex="-1"></a><span class="do">## List of length 11</span></span>
-<span id="cb186-17"><a href="making-pseudo-bulk-replicates.html#cb186-17" aria-hidden="true" tabindex="-1"></a><span class="do">## names(11): B CD4.M CD4.N CLP Erythroid GMP Mono NK pDC PreB Progenitor</span></span></code></pre></div>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="making-pseudo-bulk-replicates.html#cb191-1" tabindex="-1"></a>groups <span class="ot">&lt;-</span> <span class="fu">addGroupCoverages</span>(<span class="at">ArchRProj =</span> projHeme3, <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>, <span class="at">returnGroups =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb191-2"><a href="making-pseudo-bulk-replicates.html#cb191-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addGroupCoverages-1a14c5bdce2-Date-2025-01-23_Time-21-10-11.494271.log</span></span>
+<span id="cb191-3"><a href="making-pseudo-bulk-replicates.html#cb191-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb191-4"><a href="making-pseudo-bulk-replicates.html#cb191-4" tabindex="-1"></a><span class="do">## B (1 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-5"><a href="making-pseudo-bulk-replicates.html#cb191-5" tabindex="-1"></a><span class="do">## CD4.M (2 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-6"><a href="making-pseudo-bulk-replicates.html#cb191-6" tabindex="-1"></a><span class="do">## CD4.N (3 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-7"><a href="making-pseudo-bulk-replicates.html#cb191-7" tabindex="-1"></a><span class="do">## CLP (4 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-8"><a href="making-pseudo-bulk-replicates.html#cb191-8" tabindex="-1"></a><span class="do">## Erythroid (5 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-9"><a href="making-pseudo-bulk-replicates.html#cb191-9" tabindex="-1"></a><span class="do">## GMP (6 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-10"><a href="making-pseudo-bulk-replicates.html#cb191-10" tabindex="-1"></a><span class="do">## Mono (7 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-11"><a href="making-pseudo-bulk-replicates.html#cb191-11" tabindex="-1"></a><span class="do">## NK (8 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-12"><a href="making-pseudo-bulk-replicates.html#cb191-12" tabindex="-1"></a><span class="do">## pDC (9 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-13"><a href="making-pseudo-bulk-replicates.html#cb191-13" tabindex="-1"></a><span class="do">## PreB (10 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-14"><a href="making-pseudo-bulk-replicates.html#cb191-14" tabindex="-1"></a><span class="do">## Progenitor (11 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-15"><a href="making-pseudo-bulk-replicates.html#cb191-15" tabindex="-1"></a>groups</span>
+<span id="cb191-16"><a href="making-pseudo-bulk-replicates.html#cb191-16" tabindex="-1"></a><span class="do">## List of length 11</span></span>
+<span id="cb191-17"><a href="making-pseudo-bulk-replicates.html#cb191-17" tabindex="-1"></a><span class="do">## names(11): B CD4.M CD4.N CLP Erythroid GMP Mono NK pDC PreB Progenitor</span></span></code></pre></div>
 <p>If we looked at one of the sub-lists, we would see the cell names for each cell that was used to make up the given pseudo-bulk replicate.</p>
-<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="making-pseudo-bulk-replicates.html#cb187-1" aria-hidden="true" tabindex="-1"></a>groups<span class="sc">$</span>B</span>
-<span id="cb187-2"><a href="making-pseudo-bulk-replicates.html#cb187-2" aria-hidden="true" tabindex="-1"></a><span class="do">## CharacterList of length 2</span></span>
-<span id="cb187-3"><a href="making-pseudo-bulk-replicates.html#cb187-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [[&quot;scATAC_BMMC_R1&quot;]] scATAC_BMMC_R1#TTATGTCAGTGATTAG-1 ...</span></span>
-<span id="cb187-4"><a href="making-pseudo-bulk-replicates.html#cb187-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [[&quot;scATAC_PBMC_R1&quot;]] scATAC_PBMC_R1#TGAGTCAGTACTTGAC-1 ...</span></span></code></pre></div>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="making-pseudo-bulk-replicates.html#cb192-1" tabindex="-1"></a>groups<span class="sc">$</span>B</span>
+<span id="cb192-2"><a href="making-pseudo-bulk-replicates.html#cb192-2" tabindex="-1"></a><span class="do">## CharacterList of length 2</span></span>
+<span id="cb192-3"><a href="making-pseudo-bulk-replicates.html#cb192-3" tabindex="-1"></a><span class="do">## [[&quot;scATAC_BMMC_R1&quot;]] scATAC_BMMC_R1#TTATGTCAGTGATTAG-1 ...</span></span>
+<span id="cb192-4"><a href="making-pseudo-bulk-replicates.html#cb192-4" tabindex="-1"></a><span class="do">## [[&quot;scATAC_PBMC_R1&quot;]] scATAC_PBMC_R1#GCCCAGACATCGACCG-1 ...</span></span></code></pre></div>
 <p>With these pseudo-bulk replicates generated, we can now call peaks in our data. As mentioned previously, we do not want to call peaks on the merged set of all single cells so having these more granular cell groups defined, either through clustering or otherwise, provides the ideal starting point for peak calling.</p>
 
 </div>
