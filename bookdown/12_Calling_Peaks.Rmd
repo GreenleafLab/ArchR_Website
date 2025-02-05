@@ -80,7 +80,7 @@ As mentioned above, we generate a reproducible peak set in ArchR using the `addR
 
 To call peaks using MACS2, ArchR must be able to find the MACS2 executable. First, ArchR looks in your `PATH` environment variable. If this is unsuccessful, ArchR attempts to determine if you have installed MACS2 with either `pip` or `pip3`. If neither of these is successful, ArchR gives up and provides an error message. If you have MACS2 installed and ArchR cannot find it, you should provide the path to the `addReproduciblePeakSet()` function via the `pathToMacs2` parameter. It is important to make sure that the MACS2 executable that ArchR is using is what you expect it to use. Some users have multiple instances of MACS2 installed and ArchR may not automatically select the one that you expect.
 
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 pathToMacs2 <- findMacs2()
 ```
 
@@ -88,7 +88,6 @@ You could, of course, manually designate the path to the MACS2 executable instea
 
 <!-- We must manually define the path to macs2 because findMacs2() fails given the RStudioServer setup on our server -->
 ```{r, include=FALSE}
-pathToMacs2 <- findMacs2()
 # pathToMacs2 <- "/corces/home/rcorces/tools/python/p3.8.5/bin/macs2"
 ```
 
