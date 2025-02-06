@@ -23,14 +23,14 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2025-01-23" />
+<meta name="date" content="2025-02-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
-<link rel="prev" href="lymphoid-trajectory---b-cell-cifferentiation.html"/>
+<link rel="prev" href="lymphoid-trajectory---b-cell-differentiation.html"/>
 <link rel="next" href="slingshot-trajectories.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -258,7 +258,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
 <ul>
 <li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
-<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-cifferentiation.html"><a href="lymphoid-trajectory---b-cell-cifferentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Cifferentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-differentiation.html"><a href="lymphoid-trajectory---b-cell-differentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Differentiation</a></li>
 <li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
 <li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
 <li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
@@ -310,104 +310,104 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>ArchR can also handle trajectories derived in <a href="https://cole-trapnell-lab.github.io/monocle3/">Monocle3</a>. This is handled by the <code>getMonocleTrajectories()</code> and <code>addMonocleTrajectory()</code> functions. Before diving in, it is worth noting that much of the infrastructure that ArchR uses for storing and visualizing trajectories is based on the assumption that the trajectory is linear and the trajectories determined by Monocle3 are not necessarily linear. Because of this, we either have to (i) force Monocle3 to create a linear trajectory by limiting the cell groups that it uses, or (ii) to treat the resulting Monocle3 trajectory as a collection of individual trajectories coming from a single cellular group. We illustrate these two workflows below.</p>
 <p>Though this is slightly counter to the typical ArchR workflow, we first run <code>getMonocleTrajectories()</code> to retrieve the trajectory from Monocle3. In this function call, <code>principalGroup</code> indicates the apex group from which the trajectory will emanate and <code>useGroups</code> tells Monocle3 all of the groups that should be mapped on the trajectory.</p>
 <p>First, we will create a linear trajectory of the lymphoid lineage. The same workflow would apply for the myeloid lineage but we are just going to create the lymphoid trajectory here to enable downstream comparison of ArchR, Monocle3, and Slingshot trajectories in a subsequent secion of this book.</p>
-<div class="sourceCode" id="cb416"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb416-1"><a href="monocle3-trajectories.html#cb416-1" tabindex="-1"></a>monocle_lymphoid_solo <span class="ot">&lt;-</span> <span class="fu">getMonocleTrajectories</span>(</span>
-<span id="cb416-2"><a href="monocle3-trajectories.html#cb416-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5, </span>
-<span id="cb416-3"><a href="monocle3-trajectories.html#cb416-3" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Monocle_Lymphoid_solo&quot;</span>,</span>
-<span id="cb416-4"><a href="monocle3-trajectories.html#cb416-4" tabindex="-1"></a>    <span class="at">useGroups =</span> <span class="fu">c</span>(<span class="st">&quot;Progenitor&quot;</span>,<span class="st">&quot;CLP&quot;</span>,<span class="st">&quot;PreB&quot;</span>,<span class="st">&quot;B&quot;</span>),</span>
-<span id="cb416-5"><a href="monocle3-trajectories.html#cb416-5" tabindex="-1"></a>    <span class="at">principalGroup =</span> <span class="st">&quot;Progenitor&quot;</span>,</span>
-<span id="cb416-6"><a href="monocle3-trajectories.html#cb416-6" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
-<span id="cb416-7"><a href="monocle3-trajectories.html#cb416-7" tabindex="-1"></a>    <span class="at">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
-<span id="cb416-8"><a href="monocle3-trajectories.html#cb416-8" tabindex="-1"></a>    <span class="at">clusterParams =</span> <span class="fu">list</span>(<span class="at">k =</span> <span class="dv">50</span>),</span>
-<span id="cb416-9"><a href="monocle3-trajectories.html#cb416-9" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">1</span></span>
-<span id="cb416-10"><a href="monocle3-trajectories.html#cb416-10" tabindex="-1"></a>)</span>
-<span id="cb416-11"><a href="monocle3-trajectories.html#cb416-11" tabindex="-1"></a><span class="do">## Running Monocole3 Trajectory Infrastructure!</span></span>
-<span id="cb416-12"><a href="monocle3-trajectories.html#cb416-12" tabindex="-1"></a><span class="do">## Adding Embedding</span></span>
-<span id="cb416-13"><a href="monocle3-trajectories.html#cb416-13" tabindex="-1"></a><span class="do">## Clustering Embedding</span></span>
-<span id="cb416-14"><a href="monocle3-trajectories.html#cb416-14" tabindex="-1"></a><span class="do">## Learning Graphs</span></span>
-<span id="cb416-15"><a href="monocle3-trajectories.html#cb416-15" tabindex="-1"></a><span class="do">##   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%</span></span>
-<span id="cb416-16"><a href="monocle3-trajectories.html#cb416-16" tabindex="-1"></a><span class="do">## Getting Principal Node</span></span>
-<span id="cb416-17"><a href="monocle3-trajectories.html#cb416-17" tabindex="-1"></a><span class="do">## Ordering Cells</span></span>
-<span id="cb416-18"><a href="monocle3-trajectories.html#cb416-18" tabindex="-1"></a><span class="do">## Plotting Results - /workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme4/Monocole3/Plot-Results-Monocle_Lymphoid_solo.pdf</span></span></code></pre></div>
+<div class="sourceCode" id="cb418"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb418-1"><a href="monocle3-trajectories.html#cb418-1" tabindex="-1"></a>monocle_lymphoid_solo <span class="ot">&lt;-</span> <span class="fu">getMonocleTrajectories</span>(</span>
+<span id="cb418-2"><a href="monocle3-trajectories.html#cb418-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5, </span>
+<span id="cb418-3"><a href="monocle3-trajectories.html#cb418-3" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Monocle_Lymphoid_solo&quot;</span>,</span>
+<span id="cb418-4"><a href="monocle3-trajectories.html#cb418-4" tabindex="-1"></a>    <span class="at">useGroups =</span> <span class="fu">c</span>(<span class="st">&quot;Progenitor&quot;</span>,<span class="st">&quot;CLP&quot;</span>,<span class="st">&quot;PreB&quot;</span>,<span class="st">&quot;B&quot;</span>),</span>
+<span id="cb418-5"><a href="monocle3-trajectories.html#cb418-5" tabindex="-1"></a>    <span class="at">principalGroup =</span> <span class="st">&quot;Progenitor&quot;</span>,</span>
+<span id="cb418-6"><a href="monocle3-trajectories.html#cb418-6" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
+<span id="cb418-7"><a href="monocle3-trajectories.html#cb418-7" tabindex="-1"></a>    <span class="at">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
+<span id="cb418-8"><a href="monocle3-trajectories.html#cb418-8" tabindex="-1"></a>    <span class="at">clusterParams =</span> <span class="fu">list</span>(<span class="at">k =</span> <span class="dv">50</span>),</span>
+<span id="cb418-9"><a href="monocle3-trajectories.html#cb418-9" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">1</span></span>
+<span id="cb418-10"><a href="monocle3-trajectories.html#cb418-10" tabindex="-1"></a>)</span>
+<span id="cb418-11"><a href="monocle3-trajectories.html#cb418-11" tabindex="-1"></a><span class="do">## Running Monocole3 Trajectory Infrastructure!</span></span>
+<span id="cb418-12"><a href="monocle3-trajectories.html#cb418-12" tabindex="-1"></a><span class="do">## Adding Embedding</span></span>
+<span id="cb418-13"><a href="monocle3-trajectories.html#cb418-13" tabindex="-1"></a><span class="do">## Clustering Embedding</span></span>
+<span id="cb418-14"><a href="monocle3-trajectories.html#cb418-14" tabindex="-1"></a><span class="do">## Learning Graphs</span></span>
+<span id="cb418-15"><a href="monocle3-trajectories.html#cb418-15" tabindex="-1"></a><span class="do">##   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%</span></span>
+<span id="cb418-16"><a href="monocle3-trajectories.html#cb418-16" tabindex="-1"></a><span class="do">## Getting Principal Node</span></span>
+<span id="cb418-17"><a href="monocle3-trajectories.html#cb418-17" tabindex="-1"></a><span class="do">## Ordering Cells</span></span>
+<span id="cb418-18"><a href="monocle3-trajectories.html#cb418-18" tabindex="-1"></a><span class="do">## Plotting Results - /workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme4/Monocole3/Plot-Results-Monocle_Lymphoid_solo.pdf</span></span></code></pre></div>
 <p>You’ll notice that during the above function call, ArchR tells you that the trajectory results were plotted to a PDF called <code>Monocole3/Plot-Results-Monocle_Lymphoid_solo.pdf</code> which you can reference to see the trajectory results.</p>
 <p>After we have retrieved this trajectory object from Monocle3 (called a “cell data set” or CDS), we need to add this information to our <code>ArchRProject</code> object. To do this, we use <code>addMonocleTrajectory()</code> and pass it the output of <code>getMonocleTrajectories()</code> to the <code>monocleCDS</code> parameter.</p>
-<div class="sourceCode" id="cb417"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb417-1"><a href="monocle3-trajectories.html#cb417-1" tabindex="-1"></a>projHeme5 <span class="ot">&lt;-</span> <span class="fu">addMonocleTrajectory</span>(</span>
-<span id="cb417-2"><a href="monocle3-trajectories.html#cb417-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb417-3"><a href="monocle3-trajectories.html#cb417-3" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Monocle_Lymphoid_solo&quot;</span>,</span>
-<span id="cb417-4"><a href="monocle3-trajectories.html#cb417-4" tabindex="-1"></a>    <span class="at">useGroups =</span> <span class="fu">c</span>(<span class="st">&quot;Progenitor&quot;</span>,<span class="st">&quot;CLP&quot;</span>,<span class="st">&quot;PreB&quot;</span>,<span class="st">&quot;B&quot;</span>),</span>
-<span id="cb417-5"><a href="monocle3-trajectories.html#cb417-5" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
-<span id="cb417-6"><a href="monocle3-trajectories.html#cb417-6" tabindex="-1"></a>    <span class="at">monocleCDS =</span> monocle_lymphoid_solo,</span>
-<span id="cb417-7"><a href="monocle3-trajectories.html#cb417-7" tabindex="-1"></a>    <span class="at">force =</span> <span class="cn">TRUE</span></span>
-<span id="cb417-8"><a href="monocle3-trajectories.html#cb417-8" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb419"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb419-1"><a href="monocle3-trajectories.html#cb419-1" tabindex="-1"></a>projHeme5 <span class="ot">&lt;-</span> <span class="fu">addMonocleTrajectory</span>(</span>
+<span id="cb419-2"><a href="monocle3-trajectories.html#cb419-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb419-3"><a href="monocle3-trajectories.html#cb419-3" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Monocle_Lymphoid_solo&quot;</span>,</span>
+<span id="cb419-4"><a href="monocle3-trajectories.html#cb419-4" tabindex="-1"></a>    <span class="at">useGroups =</span> <span class="fu">c</span>(<span class="st">&quot;Progenitor&quot;</span>,<span class="st">&quot;CLP&quot;</span>,<span class="st">&quot;PreB&quot;</span>,<span class="st">&quot;B&quot;</span>),</span>
+<span id="cb419-5"><a href="monocle3-trajectories.html#cb419-5" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
+<span id="cb419-6"><a href="monocle3-trajectories.html#cb419-6" tabindex="-1"></a>    <span class="at">monocleCDS =</span> monocle_lymphoid_solo,</span>
+<span id="cb419-7"><a href="monocle3-trajectories.html#cb419-7" tabindex="-1"></a>    <span class="at">force =</span> <span class="cn">TRUE</span></span>
+<span id="cb419-8"><a href="monocle3-trajectories.html#cb419-8" tabindex="-1"></a>)</span></code></pre></div>
 <p>Now, we can use <code>plotTrajectory()</code> to plot as before. You’ll notice that we’ve set the parameter <code>addArrow = FALSE</code> because the fitted lines often look a little off for these non-ArchR trajectories.</p>
-<div class="sourceCode" id="cb418"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb418-1"><a href="monocle3-trajectories.html#cb418-1" tabindex="-1"></a>p_lymphoid_solo <span class="ot">&lt;-</span> <span class="fu">plotTrajectory</span>(projHeme5, <span class="at">trajectory =</span> <span class="st">&quot;Monocle_Lymphoid_solo&quot;</span>, <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Monocle_Lymphoid_solo&quot;</span>, <span class="at">addArrow =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb418-2"><a href="monocle3-trajectories.html#cb418-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotTrajectory-1a140888767-Date-2025-01-23_Time-23-06-28.428608.log</span></span>
-<span id="cb418-3"><a href="monocle3-trajectories.html#cb418-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb418-4"><a href="monocle3-trajectories.html#cb418-4" tabindex="-1"></a><span class="do">## Plotting</span></span>
-<span id="cb418-5"><a href="monocle3-trajectories.html#cb418-5" tabindex="-1"></a><span class="do">## Plotting Trajectory</span></span>
-<span id="cb418-6"><a href="monocle3-trajectories.html#cb418-6" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectory-1a140888767-Date-2025-01-23_Time-23-06-28.428608.log</span></span>
-<span id="cb418-7"><a href="monocle3-trajectories.html#cb418-7" tabindex="-1"></a>p_lymphoid_solo[[<span class="dv">1</span>]]</span>
-<span id="cb418-8"><a href="monocle3-trajectories.html#cb418-8" tabindex="-1"></a><span class="do">## Warning: Removed 7715 rows containing non-finite outside the scale range</span></span>
-<span id="cb418-9"><a href="monocle3-trajectories.html#cb418-9" tabindex="-1"></a><span class="do">## (`stat_summary_hex()`).</span></span></code></pre></div>
+<div class="sourceCode" id="cb420"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb420-1"><a href="monocle3-trajectories.html#cb420-1" tabindex="-1"></a>p_lymphoid_solo <span class="ot">&lt;-</span> <span class="fu">plotTrajectory</span>(projHeme5, <span class="at">trajectory =</span> <span class="st">&quot;Monocle_Lymphoid_solo&quot;</span>, <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Monocle_Lymphoid_solo&quot;</span>, <span class="at">addArrow =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb420-2"><a href="monocle3-trajectories.html#cb420-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotTrajectory-9b2acd76-Date-2025-02-06_Time-03-02-14.241264.log</span></span>
+<span id="cb420-3"><a href="monocle3-trajectories.html#cb420-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb420-4"><a href="monocle3-trajectories.html#cb420-4" tabindex="-1"></a><span class="do">## Plotting</span></span>
+<span id="cb420-5"><a href="monocle3-trajectories.html#cb420-5" tabindex="-1"></a><span class="do">## Plotting Trajectory</span></span>
+<span id="cb420-6"><a href="monocle3-trajectories.html#cb420-6" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectory-9b2acd76-Date-2025-02-06_Time-03-02-14.241264.log</span></span>
+<span id="cb420-7"><a href="monocle3-trajectories.html#cb420-7" tabindex="-1"></a>p_lymphoid_solo[[<span class="dv">1</span>]]</span>
+<span id="cb420-8"><a href="monocle3-trajectories.html#cb420-8" tabindex="-1"></a><span class="do">## Warning: Removed 7715 rows containing non-finite outside the scale range</span></span>
+<span id="cb420-9"><a href="monocle3-trajectories.html#cb420-9" tabindex="-1"></a><span class="do">## (`stat_summary_hex()`).</span></span></code></pre></div>
 <p><img src="ArchR_files/figure-html/unnamed-chunk-412-1.svg" width="672" /></p>
 <p>Alternatively, we could create a single trajectory encompassing both the myeloid and lymphoid branches with a single call to <code>getMonocleTrajectories()</code>, providing all of the relevant groups to <code>useGroups</code>. For certain applications, this may be a useful implementation so it is worth thinking about the best way to do this for your particular biological question.</p>
 <p>First, we create a new <code>monocleCDS</code> object using <code>getMonocleTrajectories()</code>, but passing the cell groups corresponding to both the lymphoid and myeloid cell types to <code>useGroups</code>.</p>
-<div class="sourceCode" id="cb419"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb419-1"><a href="monocle3-trajectories.html#cb419-1" tabindex="-1"></a>monocle_progenitor <span class="ot">&lt;-</span> <span class="fu">getMonocleTrajectories</span>(</span>
-<span id="cb419-2"><a href="monocle3-trajectories.html#cb419-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5, </span>
-<span id="cb419-3"><a href="monocle3-trajectories.html#cb419-3" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Monocle_Progenitor&quot;</span>,</span>
-<span id="cb419-4"><a href="monocle3-trajectories.html#cb419-4" tabindex="-1"></a>    <span class="at">useGroups =</span> <span class="fu">c</span>(<span class="st">&quot;Progenitor&quot;</span>, <span class="st">&quot;GMP&quot;</span>,<span class="st">&quot;Mono&quot;</span>,<span class="st">&quot;CLP&quot;</span>,<span class="st">&quot;PreB&quot;</span>,<span class="st">&quot;B&quot;</span>),</span>
-<span id="cb419-5"><a href="monocle3-trajectories.html#cb419-5" tabindex="-1"></a>    <span class="at">principalGroup =</span> <span class="st">&quot;Progenitor&quot;</span>,</span>
-<span id="cb419-6"><a href="monocle3-trajectories.html#cb419-6" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
-<span id="cb419-7"><a href="monocle3-trajectories.html#cb419-7" tabindex="-1"></a>    <span class="at">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
-<span id="cb419-8"><a href="monocle3-trajectories.html#cb419-8" tabindex="-1"></a>    <span class="at">clusterParams =</span> <span class="fu">list</span>(<span class="at">k =</span> <span class="dv">50</span>),</span>
-<span id="cb419-9"><a href="monocle3-trajectories.html#cb419-9" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">1</span></span>
-<span id="cb419-10"><a href="monocle3-trajectories.html#cb419-10" tabindex="-1"></a>)</span>
-<span id="cb419-11"><a href="monocle3-trajectories.html#cb419-11" tabindex="-1"></a><span class="do">## Running Monocole3 Trajectory Infrastructure!</span></span>
-<span id="cb419-12"><a href="monocle3-trajectories.html#cb419-12" tabindex="-1"></a><span class="do">## Adding Embedding</span></span>
-<span id="cb419-13"><a href="monocle3-trajectories.html#cb419-13" tabindex="-1"></a><span class="do">## Clustering Embedding</span></span>
-<span id="cb419-14"><a href="monocle3-trajectories.html#cb419-14" tabindex="-1"></a><span class="do">## Learning Graphs</span></span>
-<span id="cb419-15"><a href="monocle3-trajectories.html#cb419-15" tabindex="-1"></a><span class="do">##   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%</span></span>
-<span id="cb419-16"><a href="monocle3-trajectories.html#cb419-16" tabindex="-1"></a><span class="do">## Getting Principal Node</span></span>
-<span id="cb419-17"><a href="monocle3-trajectories.html#cb419-17" tabindex="-1"></a><span class="do">## Ordering Cells</span></span>
-<span id="cb419-18"><a href="monocle3-trajectories.html#cb419-18" tabindex="-1"></a><span class="do">## Plotting Results - /workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme4/Monocole3/Plot-Results-Monocle_Progenitor.pdf</span></span></code></pre></div>
+<div class="sourceCode" id="cb421"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb421-1"><a href="monocle3-trajectories.html#cb421-1" tabindex="-1"></a>monocle_progenitor <span class="ot">&lt;-</span> <span class="fu">getMonocleTrajectories</span>(</span>
+<span id="cb421-2"><a href="monocle3-trajectories.html#cb421-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5, </span>
+<span id="cb421-3"><a href="monocle3-trajectories.html#cb421-3" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Monocle_Progenitor&quot;</span>,</span>
+<span id="cb421-4"><a href="monocle3-trajectories.html#cb421-4" tabindex="-1"></a>    <span class="at">useGroups =</span> <span class="fu">c</span>(<span class="st">&quot;Progenitor&quot;</span>, <span class="st">&quot;GMP&quot;</span>,<span class="st">&quot;Mono&quot;</span>,<span class="st">&quot;CLP&quot;</span>,<span class="st">&quot;PreB&quot;</span>,<span class="st">&quot;B&quot;</span>),</span>
+<span id="cb421-5"><a href="monocle3-trajectories.html#cb421-5" tabindex="-1"></a>    <span class="at">principalGroup =</span> <span class="st">&quot;Progenitor&quot;</span>,</span>
+<span id="cb421-6"><a href="monocle3-trajectories.html#cb421-6" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
+<span id="cb421-7"><a href="monocle3-trajectories.html#cb421-7" tabindex="-1"></a>    <span class="at">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
+<span id="cb421-8"><a href="monocle3-trajectories.html#cb421-8" tabindex="-1"></a>    <span class="at">clusterParams =</span> <span class="fu">list</span>(<span class="at">k =</span> <span class="dv">50</span>),</span>
+<span id="cb421-9"><a href="monocle3-trajectories.html#cb421-9" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">1</span></span>
+<span id="cb421-10"><a href="monocle3-trajectories.html#cb421-10" tabindex="-1"></a>)</span>
+<span id="cb421-11"><a href="monocle3-trajectories.html#cb421-11" tabindex="-1"></a><span class="do">## Running Monocole3 Trajectory Infrastructure!</span></span>
+<span id="cb421-12"><a href="monocle3-trajectories.html#cb421-12" tabindex="-1"></a><span class="do">## Adding Embedding</span></span>
+<span id="cb421-13"><a href="monocle3-trajectories.html#cb421-13" tabindex="-1"></a><span class="do">## Clustering Embedding</span></span>
+<span id="cb421-14"><a href="monocle3-trajectories.html#cb421-14" tabindex="-1"></a><span class="do">## Learning Graphs</span></span>
+<span id="cb421-15"><a href="monocle3-trajectories.html#cb421-15" tabindex="-1"></a><span class="do">##   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%</span></span>
+<span id="cb421-16"><a href="monocle3-trajectories.html#cb421-16" tabindex="-1"></a><span class="do">## Getting Principal Node</span></span>
+<span id="cb421-17"><a href="monocle3-trajectories.html#cb421-17" tabindex="-1"></a><span class="do">## Ordering Cells</span></span>
+<span id="cb421-18"><a href="monocle3-trajectories.html#cb421-18" tabindex="-1"></a><span class="do">## Plotting Results - /workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme4/Monocole3/Plot-Results-Monocle_Progenitor.pdf</span></span></code></pre></div>
 <p>As mentioned above, the resulting Monocle trajectory contains multiple branches so we need to add each branch individually as its own trajectory. First, we will add the myeloid trajectory, by specifying the myeloid cell groupings to <code>useGroups</code>.</p>
-<div class="sourceCode" id="cb420"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb420-1"><a href="monocle3-trajectories.html#cb420-1" tabindex="-1"></a>projHeme5 <span class="ot">&lt;-</span> <span class="fu">addMonocleTrajectory</span>(</span>
-<span id="cb420-2"><a href="monocle3-trajectories.html#cb420-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb420-3"><a href="monocle3-trajectories.html#cb420-3" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Monocle_Myeloid&quot;</span>,</span>
-<span id="cb420-4"><a href="monocle3-trajectories.html#cb420-4" tabindex="-1"></a>    <span class="at">useGroups =</span> <span class="fu">c</span>(<span class="st">&quot;Progenitor&quot;</span>,<span class="st">&quot;GMP&quot;</span>,<span class="st">&quot;Mono&quot;</span>),</span>
-<span id="cb420-5"><a href="monocle3-trajectories.html#cb420-5" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
-<span id="cb420-6"><a href="monocle3-trajectories.html#cb420-6" tabindex="-1"></a>    <span class="at">monocleCDS =</span> monocle_progenitor,</span>
-<span id="cb420-7"><a href="monocle3-trajectories.html#cb420-7" tabindex="-1"></a>    <span class="at">force =</span> <span class="cn">TRUE</span></span>
-<span id="cb420-8"><a href="monocle3-trajectories.html#cb420-8" tabindex="-1"></a>)</span></code></pre></div>
-<p>Plotting this trajectory is the same as above.</p>
-<div class="sourceCode" id="cb421"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb421-1"><a href="monocle3-trajectories.html#cb421-1" tabindex="-1"></a>p_myeloid <span class="ot">&lt;-</span> <span class="fu">plotTrajectory</span>(projHeme5, <span class="at">trajectory =</span> <span class="st">&quot;Monocle_Myeloid&quot;</span>, <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Monocle_Myeloid&quot;</span>, <span class="at">addArrow =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb421-2"><a href="monocle3-trajectories.html#cb421-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotTrajectory-1a12e8201d2-Date-2025-01-23_Time-23-07-02.007601.log</span></span>
-<span id="cb421-3"><a href="monocle3-trajectories.html#cb421-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb421-4"><a href="monocle3-trajectories.html#cb421-4" tabindex="-1"></a><span class="do">## Plotting</span></span>
-<span id="cb421-5"><a href="monocle3-trajectories.html#cb421-5" tabindex="-1"></a><span class="do">## Plotting Trajectory</span></span>
-<span id="cb421-6"><a href="monocle3-trajectories.html#cb421-6" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectory-1a12e8201d2-Date-2025-01-23_Time-23-07-02.007601.log</span></span>
-<span id="cb421-7"><a href="monocle3-trajectories.html#cb421-7" tabindex="-1"></a>p_myeloid[[<span class="dv">1</span>]]</span>
-<span id="cb421-8"><a href="monocle3-trajectories.html#cb421-8" tabindex="-1"></a><span class="do">## Warning: Removed 4960 rows containing non-finite outside the scale range</span></span>
-<span id="cb421-9"><a href="monocle3-trajectories.html#cb421-9" tabindex="-1"></a><span class="do">## (`stat_summary_hex()`).</span></span></code></pre></div>
-<p><img src="ArchR_files/figure-html/unnamed-chunk-415-1.svg" width="672" /></p>
-<p>Similarly, we can add the lymphoid trajectory.</p>
 <div class="sourceCode" id="cb422"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb422-1"><a href="monocle3-trajectories.html#cb422-1" tabindex="-1"></a>projHeme5 <span class="ot">&lt;-</span> <span class="fu">addMonocleTrajectory</span>(</span>
 <span id="cb422-2"><a href="monocle3-trajectories.html#cb422-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb422-3"><a href="monocle3-trajectories.html#cb422-3" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Monocle_Lymphoid&quot;</span>,</span>
-<span id="cb422-4"><a href="monocle3-trajectories.html#cb422-4" tabindex="-1"></a>    <span class="at">useGroups =</span> <span class="fu">c</span>(<span class="st">&quot;Progenitor&quot;</span>,<span class="st">&quot;CLP&quot;</span>,<span class="st">&quot;PreB&quot;</span>,<span class="st">&quot;B&quot;</span>),</span>
+<span id="cb422-3"><a href="monocle3-trajectories.html#cb422-3" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Monocle_Myeloid&quot;</span>,</span>
+<span id="cb422-4"><a href="monocle3-trajectories.html#cb422-4" tabindex="-1"></a>    <span class="at">useGroups =</span> <span class="fu">c</span>(<span class="st">&quot;Progenitor&quot;</span>,<span class="st">&quot;GMP&quot;</span>,<span class="st">&quot;Mono&quot;</span>),</span>
 <span id="cb422-5"><a href="monocle3-trajectories.html#cb422-5" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
 <span id="cb422-6"><a href="monocle3-trajectories.html#cb422-6" tabindex="-1"></a>    <span class="at">monocleCDS =</span> monocle_progenitor,</span>
 <span id="cb422-7"><a href="monocle3-trajectories.html#cb422-7" tabindex="-1"></a>    <span class="at">force =</span> <span class="cn">TRUE</span></span>
 <span id="cb422-8"><a href="monocle3-trajectories.html#cb422-8" tabindex="-1"></a>)</span></code></pre></div>
-<p>And then plot that lymphoid trajectory.</p>
-<div class="sourceCode" id="cb423"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb423-1"><a href="monocle3-trajectories.html#cb423-1" tabindex="-1"></a>p_lymphoid <span class="ot">&lt;-</span> <span class="fu">plotTrajectory</span>(projHeme5, <span class="at">trajectory =</span> <span class="st">&quot;Monocle_Lymphoid&quot;</span>, <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Monocle_Lymphoid&quot;</span>, <span class="at">addArrow =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb423-2"><a href="monocle3-trajectories.html#cb423-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotTrajectory-1a15e3f703-Date-2025-01-23_Time-23-07-04.417621.log</span></span>
+<p>Plotting this trajectory is the same as above.</p>
+<div class="sourceCode" id="cb423"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb423-1"><a href="monocle3-trajectories.html#cb423-1" tabindex="-1"></a>p_myeloid <span class="ot">&lt;-</span> <span class="fu">plotTrajectory</span>(projHeme5, <span class="at">trajectory =</span> <span class="st">&quot;Monocle_Myeloid&quot;</span>, <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Monocle_Myeloid&quot;</span>, <span class="at">addArrow =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb423-2"><a href="monocle3-trajectories.html#cb423-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotTrajectory-94313c934-Date-2025-02-06_Time-03-02-44.682402.log</span></span>
 <span id="cb423-3"><a href="monocle3-trajectories.html#cb423-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
 <span id="cb423-4"><a href="monocle3-trajectories.html#cb423-4" tabindex="-1"></a><span class="do">## Plotting</span></span>
 <span id="cb423-5"><a href="monocle3-trajectories.html#cb423-5" tabindex="-1"></a><span class="do">## Plotting Trajectory</span></span>
-<span id="cb423-6"><a href="monocle3-trajectories.html#cb423-6" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectory-1a15e3f703-Date-2025-01-23_Time-23-07-04.417621.log</span></span>
-<span id="cb423-7"><a href="monocle3-trajectories.html#cb423-7" tabindex="-1"></a>p_lymphoid[[<span class="dv">1</span>]]</span>
-<span id="cb423-8"><a href="monocle3-trajectories.html#cb423-8" tabindex="-1"></a><span class="do">## Warning: Removed 7715 rows containing non-finite outside the scale range</span></span>
+<span id="cb423-6"><a href="monocle3-trajectories.html#cb423-6" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectory-94313c934-Date-2025-02-06_Time-03-02-44.682402.log</span></span>
+<span id="cb423-7"><a href="monocle3-trajectories.html#cb423-7" tabindex="-1"></a>p_myeloid[[<span class="dv">1</span>]]</span>
+<span id="cb423-8"><a href="monocle3-trajectories.html#cb423-8" tabindex="-1"></a><span class="do">## Warning: Removed 4960 rows containing non-finite outside the scale range</span></span>
 <span id="cb423-9"><a href="monocle3-trajectories.html#cb423-9" tabindex="-1"></a><span class="do">## (`stat_summary_hex()`).</span></span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-415-1.svg" width="672" /></p>
+<p>Similarly, we can add the lymphoid trajectory.</p>
+<div class="sourceCode" id="cb424"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb424-1"><a href="monocle3-trajectories.html#cb424-1" tabindex="-1"></a>projHeme5 <span class="ot">&lt;-</span> <span class="fu">addMonocleTrajectory</span>(</span>
+<span id="cb424-2"><a href="monocle3-trajectories.html#cb424-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb424-3"><a href="monocle3-trajectories.html#cb424-3" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Monocle_Lymphoid&quot;</span>,</span>
+<span id="cb424-4"><a href="monocle3-trajectories.html#cb424-4" tabindex="-1"></a>    <span class="at">useGroups =</span> <span class="fu">c</span>(<span class="st">&quot;Progenitor&quot;</span>,<span class="st">&quot;CLP&quot;</span>,<span class="st">&quot;PreB&quot;</span>,<span class="st">&quot;B&quot;</span>),</span>
+<span id="cb424-5"><a href="monocle3-trajectories.html#cb424-5" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
+<span id="cb424-6"><a href="monocle3-trajectories.html#cb424-6" tabindex="-1"></a>    <span class="at">monocleCDS =</span> monocle_progenitor,</span>
+<span id="cb424-7"><a href="monocle3-trajectories.html#cb424-7" tabindex="-1"></a>    <span class="at">force =</span> <span class="cn">TRUE</span></span>
+<span id="cb424-8"><a href="monocle3-trajectories.html#cb424-8" tabindex="-1"></a>)</span></code></pre></div>
+<p>And then plot that lymphoid trajectory.</p>
+<div class="sourceCode" id="cb425"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb425-1"><a href="monocle3-trajectories.html#cb425-1" tabindex="-1"></a>p_lymphoid <span class="ot">&lt;-</span> <span class="fu">plotTrajectory</span>(projHeme5, <span class="at">trajectory =</span> <span class="st">&quot;Monocle_Lymphoid&quot;</span>, <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Monocle_Lymphoid&quot;</span>, <span class="at">addArrow =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb425-2"><a href="monocle3-trajectories.html#cb425-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotTrajectory-95de1d685-Date-2025-02-06_Time-03-02-49.110668.log</span></span>
+<span id="cb425-3"><a href="monocle3-trajectories.html#cb425-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb425-4"><a href="monocle3-trajectories.html#cb425-4" tabindex="-1"></a><span class="do">## Plotting</span></span>
+<span id="cb425-5"><a href="monocle3-trajectories.html#cb425-5" tabindex="-1"></a><span class="do">## Plotting Trajectory</span></span>
+<span id="cb425-6"><a href="monocle3-trajectories.html#cb425-6" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectory-95de1d685-Date-2025-02-06_Time-03-02-49.110668.log</span></span>
+<span id="cb425-7"><a href="monocle3-trajectories.html#cb425-7" tabindex="-1"></a>p_lymphoid[[<span class="dv">1</span>]]</span>
+<span id="cb425-8"><a href="monocle3-trajectories.html#cb425-8" tabindex="-1"></a><span class="do">## Warning: Removed 7715 rows containing non-finite outside the scale range</span></span>
+<span id="cb425-9"><a href="monocle3-trajectories.html#cb425-9" tabindex="-1"></a><span class="do">## (`stat_summary_hex()`).</span></span></code></pre></div>
 <p><img src="ArchR_files/figure-html/unnamed-chunk-417-1.svg" width="672" /></p>
 <p>If you look closely, you’ll notice slight differences between this lymphoid trajectory identified in isolation compared to the lymphoid branch of the larger joint monocle trajectory calculated at the beginning of this section. In particular, the “Progenitor” cells have a different pattern.</p>
 </div>
@@ -416,7 +416,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="lymphoid-trajectory---b-cell-cifferentiation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="lymphoid-trajectory---b-cell-differentiation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="slingshot-trajectories.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

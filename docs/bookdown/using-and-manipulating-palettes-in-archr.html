@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2025-01-23" />
+<meta name="date" content="2025-02-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -258,7 +258,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
 <ul>
 <li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
-<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-cifferentiation.html"><a href="lymphoid-trajectory---b-cell-cifferentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Cifferentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-differentiation.html"><a href="lymphoid-trajectory---b-cell-differentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Differentiation</a></li>
 <li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
 <li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
 <li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
@@ -308,118 +308,118 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="using-and-manipulating-palettes-in-archr" class="section level2 hasAnchor" number="22.1">
 <h2><span class="header-section-number">22.1</span> Using and manipulating palettes in ArchR<a href="using-and-manipulating-palettes-in-archr.html#using-and-manipulating-palettes-in-archr" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>ArchR provides a list of color palettes that we have used in the past and find aesthetically pleasing. These are stored in an object called <code>ArchRPalettes</code>. If we inspect the first few entries of this object, you can see the general structure of a palette in ArchR.</p>
-<div class="sourceCode" id="cb478"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb478-1"><a href="using-and-manipulating-palettes-in-archr.html#cb478-1" tabindex="-1"></a>ArchRPalettes[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]</span>
-<span id="cb478-2"><a href="using-and-manipulating-palettes-in-archr.html#cb478-2" tabindex="-1"></a><span class="do">## $stallion</span></span>
-<span id="cb478-3"><a href="using-and-manipulating-palettes-in-archr.html#cb478-3" tabindex="-1"></a><span class="do">##         1         2         3         4         5         6         7         8 </span></span>
-<span id="cb478-4"><a href="using-and-manipulating-palettes-in-archr.html#cb478-4" tabindex="-1"></a><span class="do">## &quot;#D51F26&quot; &quot;#272E6A&quot; &quot;#208A42&quot; &quot;#89288F&quot; &quot;#F47D2B&quot; &quot;#FEE500&quot; &quot;#8A9FD1&quot; &quot;#C06CAB&quot; </span></span>
-<span id="cb478-5"><a href="using-and-manipulating-palettes-in-archr.html#cb478-5" tabindex="-1"></a><span class="do">##        19        10        11        12        13        14        15        16 </span></span>
-<span id="cb478-6"><a href="using-and-manipulating-palettes-in-archr.html#cb478-6" tabindex="-1"></a><span class="do">## &quot;#E6C2DC&quot; &quot;#90D5E4&quot; &quot;#89C75F&quot; &quot;#F37B7D&quot; &quot;#9983BD&quot; &quot;#D24B27&quot; &quot;#3BBCA8&quot; &quot;#6E4B9E&quot; </span></span>
-<span id="cb478-7"><a href="using-and-manipulating-palettes-in-archr.html#cb478-7" tabindex="-1"></a><span class="do">##        17        18         9        20 </span></span>
-<span id="cb478-8"><a href="using-and-manipulating-palettes-in-archr.html#cb478-8" tabindex="-1"></a><span class="do">## &quot;#0C727C&quot; &quot;#7E1416&quot; &quot;#D8A767&quot; &quot;#3D3D3D&quot; </span></span>
-<span id="cb478-9"><a href="using-and-manipulating-palettes-in-archr.html#cb478-9" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb478-10"><a href="using-and-manipulating-palettes-in-archr.html#cb478-10" tabindex="-1"></a><span class="do">## $stallion2</span></span>
-<span id="cb478-11"><a href="using-and-manipulating-palettes-in-archr.html#cb478-11" tabindex="-1"></a><span class="do">##         1         2         3         4         5         6         7         8 </span></span>
-<span id="cb478-12"><a href="using-and-manipulating-palettes-in-archr.html#cb478-12" tabindex="-1"></a><span class="do">## &quot;#D51F26&quot; &quot;#272E6A&quot; &quot;#208A42&quot; &quot;#89288F&quot; &quot;#F47D2B&quot; &quot;#FEE500&quot; &quot;#8A9FD1&quot; &quot;#C06CAB&quot; </span></span>
-<span id="cb478-13"><a href="using-and-manipulating-palettes-in-archr.html#cb478-13" tabindex="-1"></a><span class="do">##        19        10        11        12        13        14        15        16 </span></span>
-<span id="cb478-14"><a href="using-and-manipulating-palettes-in-archr.html#cb478-14" tabindex="-1"></a><span class="do">## &quot;#E6C2DC&quot; &quot;#90D5E4&quot; &quot;#89C75F&quot; &quot;#F37B7D&quot; &quot;#9983BD&quot; &quot;#D24B27&quot; &quot;#3BBCA8&quot; &quot;#6E4B9E&quot; </span></span>
-<span id="cb478-15"><a href="using-and-manipulating-palettes-in-archr.html#cb478-15" tabindex="-1"></a><span class="do">##        17        18         9 </span></span>
-<span id="cb478-16"><a href="using-and-manipulating-palettes-in-archr.html#cb478-16" tabindex="-1"></a><span class="do">## &quot;#0C727C&quot; &quot;#7E1416&quot; &quot;#D8A767&quot; </span></span>
-<span id="cb478-17"><a href="using-and-manipulating-palettes-in-archr.html#cb478-17" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb478-18"><a href="using-and-manipulating-palettes-in-archr.html#cb478-18" tabindex="-1"></a><span class="do">## $calm</span></span>
-<span id="cb478-19"><a href="using-and-manipulating-palettes-in-archr.html#cb478-19" tabindex="-1"></a><span class="do">##         1         2         3         4         5         6         7         8 </span></span>
-<span id="cb478-20"><a href="using-and-manipulating-palettes-in-archr.html#cb478-20" tabindex="-1"></a><span class="do">## &quot;#7DD06F&quot; &quot;#844081&quot; &quot;#688EC1&quot; &quot;#C17E73&quot; &quot;#484125&quot; &quot;#6CD3A7&quot; &quot;#597873&quot; &quot;#7B6FD0&quot; </span></span>
-<span id="cb478-21"><a href="using-and-manipulating-palettes-in-archr.html#cb478-21" tabindex="-1"></a><span class="do">##         9        10        11        12        13        14        15        16 </span></span>
-<span id="cb478-22"><a href="using-and-manipulating-palettes-in-archr.html#cb478-22" tabindex="-1"></a><span class="do">## &quot;#CF4A31&quot; &quot;#D0CD47&quot; &quot;#722A2D&quot; &quot;#CBC594&quot; &quot;#D19EC4&quot; &quot;#5A7E36&quot; &quot;#D4477D&quot; &quot;#403552&quot; </span></span>
-<span id="cb478-23"><a href="using-and-manipulating-palettes-in-archr.html#cb478-23" tabindex="-1"></a><span class="do">##        17        18        19        20 </span></span>
-<span id="cb478-24"><a href="using-and-manipulating-palettes-in-archr.html#cb478-24" tabindex="-1"></a><span class="do">## &quot;#76D73C&quot; &quot;#96CED5&quot; &quot;#CE54D1&quot; &quot;#C48736&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb480"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb480-1"><a href="using-and-manipulating-palettes-in-archr.html#cb480-1" tabindex="-1"></a>ArchRPalettes[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]</span>
+<span id="cb480-2"><a href="using-and-manipulating-palettes-in-archr.html#cb480-2" tabindex="-1"></a><span class="do">## $stallion</span></span>
+<span id="cb480-3"><a href="using-and-manipulating-palettes-in-archr.html#cb480-3" tabindex="-1"></a><span class="do">##         1         2         3         4         5         6         7         8 </span></span>
+<span id="cb480-4"><a href="using-and-manipulating-palettes-in-archr.html#cb480-4" tabindex="-1"></a><span class="do">## &quot;#D51F26&quot; &quot;#272E6A&quot; &quot;#208A42&quot; &quot;#89288F&quot; &quot;#F47D2B&quot; &quot;#FEE500&quot; &quot;#8A9FD1&quot; &quot;#C06CAB&quot; </span></span>
+<span id="cb480-5"><a href="using-and-manipulating-palettes-in-archr.html#cb480-5" tabindex="-1"></a><span class="do">##        19        10        11        12        13        14        15        16 </span></span>
+<span id="cb480-6"><a href="using-and-manipulating-palettes-in-archr.html#cb480-6" tabindex="-1"></a><span class="do">## &quot;#E6C2DC&quot; &quot;#90D5E4&quot; &quot;#89C75F&quot; &quot;#F37B7D&quot; &quot;#9983BD&quot; &quot;#D24B27&quot; &quot;#3BBCA8&quot; &quot;#6E4B9E&quot; </span></span>
+<span id="cb480-7"><a href="using-and-manipulating-palettes-in-archr.html#cb480-7" tabindex="-1"></a><span class="do">##        17        18         9        20 </span></span>
+<span id="cb480-8"><a href="using-and-manipulating-palettes-in-archr.html#cb480-8" tabindex="-1"></a><span class="do">## &quot;#0C727C&quot; &quot;#7E1416&quot; &quot;#D8A767&quot; &quot;#3D3D3D&quot; </span></span>
+<span id="cb480-9"><a href="using-and-manipulating-palettes-in-archr.html#cb480-9" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb480-10"><a href="using-and-manipulating-palettes-in-archr.html#cb480-10" tabindex="-1"></a><span class="do">## $stallion2</span></span>
+<span id="cb480-11"><a href="using-and-manipulating-palettes-in-archr.html#cb480-11" tabindex="-1"></a><span class="do">##         1         2         3         4         5         6         7         8 </span></span>
+<span id="cb480-12"><a href="using-and-manipulating-palettes-in-archr.html#cb480-12" tabindex="-1"></a><span class="do">## &quot;#D51F26&quot; &quot;#272E6A&quot; &quot;#208A42&quot; &quot;#89288F&quot; &quot;#F47D2B&quot; &quot;#FEE500&quot; &quot;#8A9FD1&quot; &quot;#C06CAB&quot; </span></span>
+<span id="cb480-13"><a href="using-and-manipulating-palettes-in-archr.html#cb480-13" tabindex="-1"></a><span class="do">##        19        10        11        12        13        14        15        16 </span></span>
+<span id="cb480-14"><a href="using-and-manipulating-palettes-in-archr.html#cb480-14" tabindex="-1"></a><span class="do">## &quot;#E6C2DC&quot; &quot;#90D5E4&quot; &quot;#89C75F&quot; &quot;#F37B7D&quot; &quot;#9983BD&quot; &quot;#D24B27&quot; &quot;#3BBCA8&quot; &quot;#6E4B9E&quot; </span></span>
+<span id="cb480-15"><a href="using-and-manipulating-palettes-in-archr.html#cb480-15" tabindex="-1"></a><span class="do">##        17        18         9 </span></span>
+<span id="cb480-16"><a href="using-and-manipulating-palettes-in-archr.html#cb480-16" tabindex="-1"></a><span class="do">## &quot;#0C727C&quot; &quot;#7E1416&quot; &quot;#D8A767&quot; </span></span>
+<span id="cb480-17"><a href="using-and-manipulating-palettes-in-archr.html#cb480-17" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb480-18"><a href="using-and-manipulating-palettes-in-archr.html#cb480-18" tabindex="-1"></a><span class="do">## $calm</span></span>
+<span id="cb480-19"><a href="using-and-manipulating-palettes-in-archr.html#cb480-19" tabindex="-1"></a><span class="do">##         1         2         3         4         5         6         7         8 </span></span>
+<span id="cb480-20"><a href="using-and-manipulating-palettes-in-archr.html#cb480-20" tabindex="-1"></a><span class="do">## &quot;#7DD06F&quot; &quot;#844081&quot; &quot;#688EC1&quot; &quot;#C17E73&quot; &quot;#484125&quot; &quot;#6CD3A7&quot; &quot;#597873&quot; &quot;#7B6FD0&quot; </span></span>
+<span id="cb480-21"><a href="using-and-manipulating-palettes-in-archr.html#cb480-21" tabindex="-1"></a><span class="do">##         9        10        11        12        13        14        15        16 </span></span>
+<span id="cb480-22"><a href="using-and-manipulating-palettes-in-archr.html#cb480-22" tabindex="-1"></a><span class="do">## &quot;#CF4A31&quot; &quot;#D0CD47&quot; &quot;#722A2D&quot; &quot;#CBC594&quot; &quot;#D19EC4&quot; &quot;#5A7E36&quot; &quot;#D4477D&quot; &quot;#403552&quot; </span></span>
+<span id="cb480-23"><a href="using-and-manipulating-palettes-in-archr.html#cb480-23" tabindex="-1"></a><span class="do">##        17        18        19        20 </span></span>
+<span id="cb480-24"><a href="using-and-manipulating-palettes-in-archr.html#cb480-24" tabindex="-1"></a><span class="do">## &quot;#76D73C&quot; &quot;#96CED5&quot; &quot;#CE54D1&quot; &quot;#C48736&quot;</span></span></code></pre></div>
 <p>From this, you can see that a palette is a named vector where the names are numbers, starting at 1. The rationale for this is that we have tried to optimize these color palettes to optimally distinguish discrete variables. For example, if you have 5 clusters that you want to color, you would want to use the 5 most easily distinguished colors from the color palette rather than using the 5 random colors which may not be optimally distinguished. In this way, the first <code>N</code> entries in each ArchR palette represent the 5 colors that we find to be best for representing <code>N</code> groups. Note that (i) we have not necessarily optimized the color palettes in ArchR to be color blind-friendly though we do provide some options which are in this class of palettes and (ii) if you have more groups than the number of colors in the designated palette, R will be forced to interpolate colors (the largest palette that we provide is 20 colors).</p>
 <p>In the below examples, we use <code>plotEmbedding()</code> as the example function but the same principles apply to other plotting functions as well.</p>
 <div id="using-pre-defined-archr-palettes" class="section level3 hasAnchor" number="22.1.1">
 <h3><span class="header-section-number">22.1.1</span> Using pre-defined ArchR palettes<a href="using-and-manipulating-palettes-in-archr.html#using-pre-defined-archr-palettes" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Probably the most confusing aspect of using palettes in ArchR is that some functions that ask for a color palette (for ex. <code>plotEmbedding()</code> or <code>plotTrajectory()</code>) have three parameters that can be manipulated: <code>discreteSet</code>, <code>continuousSet</code>, and <code>pal</code>. Here, <code>discreteSet</code> and <code>continuousSet</code> are used to select pre-defined palettes from <code>ArchRPalettes</code> which are discussed in this section. <code>pal</code>, on the other hand, accepts custom palettes that override the default ArchR palette for a given plot.</p>
 <p>Certain types of matrices in ArchR have been assigned a default color scheme. For example, if we do not specify a color palette for <code>continuousSet</code>, the default for <code>GeneScoreMatrix</code> will be “horizonExtra” and the default for other types of matrices will be “solarExtra”:</p>
-<div class="sourceCode" id="cb479"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb479-1"><a href="using-and-manipulating-palettes-in-archr.html#cb479-1" tabindex="-1"></a><span class="fu">plotEmbedding</span>(</span>
-<span id="cb479-2"><a href="using-and-manipulating-palettes-in-archr.html#cb479-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb479-3"><a href="using-and-manipulating-palettes-in-archr.html#cb479-3" tabindex="-1"></a>    <span class="at">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
-<span id="cb479-4"><a href="using-and-manipulating-palettes-in-archr.html#cb479-4" tabindex="-1"></a>    <span class="at">colorBy =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>,</span>
-<span id="cb479-5"><a href="using-and-manipulating-palettes-in-archr.html#cb479-5" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;CD14&quot;</span>,</span>
-<span id="cb479-6"><a href="using-and-manipulating-palettes-in-archr.html#cb479-6" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">1</span>,</span>
-<span id="cb479-7"><a href="using-and-manipulating-palettes-in-archr.html#cb479-7" tabindex="-1"></a>    <span class="at">sampleCells =</span> <span class="cn">NULL</span>,</span>
-<span id="cb479-8"><a href="using-and-manipulating-palettes-in-archr.html#cb479-8" tabindex="-1"></a>    <span class="at">baseSize =</span> <span class="dv">10</span>,</span>
-<span id="cb479-9"><a href="using-and-manipulating-palettes-in-archr.html#cb479-9" tabindex="-1"></a>    <span class="at">plotAs =</span> <span class="st">&quot;points&quot;</span>)</span>
-<span id="cb479-10"><a href="using-and-manipulating-palettes-in-archr.html#cb479-10" tabindex="-1"></a><span class="do">## Getting ImputeWeights</span></span>
-<span id="cb479-11"><a href="using-and-manipulating-palettes-in-archr.html#cb479-11" tabindex="-1"></a><span class="do">## No imputeWeights found, returning NULL</span></span>
-<span id="cb479-12"><a href="using-and-manipulating-palettes-in-archr.html#cb479-12" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-1a175248ed4-Date-2025-01-24_Time-01-07-52.656183.log</span></span>
-<span id="cb479-13"><a href="using-and-manipulating-palettes-in-archr.html#cb479-13" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb479-14"><a href="using-and-manipulating-palettes-in-archr.html#cb479-14" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
-<span id="cb479-15"><a href="using-and-manipulating-palettes-in-archr.html#cb479-15" tabindex="-1"></a><span class="do">## ColorBy = GeneScoreMatrix</span></span>
-<span id="cb479-16"><a href="using-and-manipulating-palettes-in-archr.html#cb479-16" tabindex="-1"></a><span class="do">## Getting Matrix Values...</span></span>
-<span id="cb479-17"><a href="using-and-manipulating-palettes-in-archr.html#cb479-17" tabindex="-1"></a><span class="do">## 2025-01-24 01:07:54.648738 :</span></span>
-<span id="cb479-18"><a href="using-and-manipulating-palettes-in-archr.html#cb479-18" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb479-19"><a href="using-and-manipulating-palettes-in-archr.html#cb479-19" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
-<span id="cb479-20"><a href="using-and-manipulating-palettes-in-archr.html#cb479-20" tabindex="-1"></a><span class="do">## 1 </span></span>
-<span id="cb479-21"><a href="using-and-manipulating-palettes-in-archr.html#cb479-21" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-1a175248ed4-Date-2025-01-24_Time-01-07-52.656183.log</span></span></code></pre></div>
-<p><img src="ArchR_files/figure-html/unnamed-chunk-465-1.svg" width="672" /></p>
-<p>However, we can change the color palette to another pre-defined palette in <code>ArchRPalettes</code> by passing the name of that palette to <code>continuousSet</code> (e.g. “whitePurple”). Note that because this data is continuous data, we must use <code>continuousSet</code> and manipulating <code>discreteSet</code> would have no effect.</p>
-<div class="sourceCode" id="cb480"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb480-1"><a href="using-and-manipulating-palettes-in-archr.html#cb480-1" tabindex="-1"></a><span class="fu">plotEmbedding</span>(</span>
-<span id="cb480-2"><a href="using-and-manipulating-palettes-in-archr.html#cb480-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb480-3"><a href="using-and-manipulating-palettes-in-archr.html#cb480-3" tabindex="-1"></a>    <span class="at">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
-<span id="cb480-4"><a href="using-and-manipulating-palettes-in-archr.html#cb480-4" tabindex="-1"></a>    <span class="at">colorBy =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>,</span>
-<span id="cb480-5"><a href="using-and-manipulating-palettes-in-archr.html#cb480-5" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;CD14&quot;</span>,</span>
-<span id="cb480-6"><a href="using-and-manipulating-palettes-in-archr.html#cb480-6" tabindex="-1"></a>    <span class="at">continuousSet =</span> <span class="st">&quot;whitePurple&quot;</span>,</span>
-<span id="cb480-7"><a href="using-and-manipulating-palettes-in-archr.html#cb480-7" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">1</span>,</span>
-<span id="cb480-8"><a href="using-and-manipulating-palettes-in-archr.html#cb480-8" tabindex="-1"></a>    <span class="at">sampleCells =</span> <span class="cn">NULL</span>,</span>
-<span id="cb480-9"><a href="using-and-manipulating-palettes-in-archr.html#cb480-9" tabindex="-1"></a>    <span class="at">baseSize =</span> <span class="dv">10</span>,</span>
-<span id="cb480-10"><a href="using-and-manipulating-palettes-in-archr.html#cb480-10" tabindex="-1"></a>    <span class="at">plotAs =</span> <span class="st">&quot;points&quot;</span>)</span>
-<span id="cb480-11"><a href="using-and-manipulating-palettes-in-archr.html#cb480-11" tabindex="-1"></a><span class="do">## Getting ImputeWeights</span></span>
-<span id="cb480-12"><a href="using-and-manipulating-palettes-in-archr.html#cb480-12" tabindex="-1"></a><span class="do">## No imputeWeights found, returning NULL</span></span>
-<span id="cb480-13"><a href="using-and-manipulating-palettes-in-archr.html#cb480-13" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-1a14e784e0b-Date-2025-01-24_Time-01-08-01.836067.log</span></span>
-<span id="cb480-14"><a href="using-and-manipulating-palettes-in-archr.html#cb480-14" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb480-15"><a href="using-and-manipulating-palettes-in-archr.html#cb480-15" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
-<span id="cb480-16"><a href="using-and-manipulating-palettes-in-archr.html#cb480-16" tabindex="-1"></a><span class="do">## ColorBy = GeneScoreMatrix</span></span>
-<span id="cb480-17"><a href="using-and-manipulating-palettes-in-archr.html#cb480-17" tabindex="-1"></a><span class="do">## Getting Matrix Values...</span></span>
-<span id="cb480-18"><a href="using-and-manipulating-palettes-in-archr.html#cb480-18" tabindex="-1"></a><span class="do">## 2025-01-24 01:08:03.978976 :</span></span>
-<span id="cb480-19"><a href="using-and-manipulating-palettes-in-archr.html#cb480-19" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb480-20"><a href="using-and-manipulating-palettes-in-archr.html#cb480-20" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
-<span id="cb480-21"><a href="using-and-manipulating-palettes-in-archr.html#cb480-21" tabindex="-1"></a><span class="do">## 1 </span></span>
-<span id="cb480-22"><a href="using-and-manipulating-palettes-in-archr.html#cb480-22" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-1a14e784e0b-Date-2025-01-24_Time-01-08-01.836067.log</span></span></code></pre></div>
-<p><img src="ArchR_files/figure-html/unnamed-chunk-466-1.svg" width="672" /></p>
-<p>If instead we are plotting discrete data, for example “Clusters”, the default color scheme will be “stallion”.</p>
 <div class="sourceCode" id="cb481"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb481-1"><a href="using-and-manipulating-palettes-in-archr.html#cb481-1" tabindex="-1"></a><span class="fu">plotEmbedding</span>(</span>
 <span id="cb481-2"><a href="using-and-manipulating-palettes-in-archr.html#cb481-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
 <span id="cb481-3"><a href="using-and-manipulating-palettes-in-archr.html#cb481-3" tabindex="-1"></a>    <span class="at">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
-<span id="cb481-4"><a href="using-and-manipulating-palettes-in-archr.html#cb481-4" tabindex="-1"></a>    <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>,</span>
-<span id="cb481-5"><a href="using-and-manipulating-palettes-in-archr.html#cb481-5" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Clusters&quot;</span>,</span>
+<span id="cb481-4"><a href="using-and-manipulating-palettes-in-archr.html#cb481-4" tabindex="-1"></a>    <span class="at">colorBy =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>,</span>
+<span id="cb481-5"><a href="using-and-manipulating-palettes-in-archr.html#cb481-5" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;CD14&quot;</span>,</span>
 <span id="cb481-6"><a href="using-and-manipulating-palettes-in-archr.html#cb481-6" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">1</span>,</span>
 <span id="cb481-7"><a href="using-and-manipulating-palettes-in-archr.html#cb481-7" tabindex="-1"></a>    <span class="at">sampleCells =</span> <span class="cn">NULL</span>,</span>
 <span id="cb481-8"><a href="using-and-manipulating-palettes-in-archr.html#cb481-8" tabindex="-1"></a>    <span class="at">baseSize =</span> <span class="dv">10</span>,</span>
 <span id="cb481-9"><a href="using-and-manipulating-palettes-in-archr.html#cb481-9" tabindex="-1"></a>    <span class="at">plotAs =</span> <span class="st">&quot;points&quot;</span>)</span>
-<span id="cb481-10"><a href="using-and-manipulating-palettes-in-archr.html#cb481-10" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-1a14f58ffd1-Date-2025-01-24_Time-01-08-11.912802.log</span></span>
-<span id="cb481-11"><a href="using-and-manipulating-palettes-in-archr.html#cb481-11" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb481-12"><a href="using-and-manipulating-palettes-in-archr.html#cb481-12" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
-<span id="cb481-13"><a href="using-and-manipulating-palettes-in-archr.html#cb481-13" tabindex="-1"></a><span class="do">## ColorBy = cellColData</span></span>
-<span id="cb481-14"><a href="using-and-manipulating-palettes-in-archr.html#cb481-14" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
-<span id="cb481-15"><a href="using-and-manipulating-palettes-in-archr.html#cb481-15" tabindex="-1"></a><span class="do">## 1 </span></span>
-<span id="cb481-16"><a href="using-and-manipulating-palettes-in-archr.html#cb481-16" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-1a14f58ffd1-Date-2025-01-24_Time-01-08-11.912802.log</span></span></code></pre></div>
-<p><img src="ArchR_files/figure-html/unnamed-chunk-467-1.svg" width="672" /></p>
-<p>As above, we can change the color scheme used for this discrete data by passing the name of one of the pre-defined color palettes in <code>ArchRPalettes</code> to <code>discreteSet</code>:</p>
+<span id="cb481-10"><a href="using-and-manipulating-palettes-in-archr.html#cb481-10" tabindex="-1"></a><span class="do">## Getting ImputeWeights</span></span>
+<span id="cb481-11"><a href="using-and-manipulating-palettes-in-archr.html#cb481-11" tabindex="-1"></a><span class="do">## No imputeWeights found, returning NULL</span></span>
+<span id="cb481-12"><a href="using-and-manipulating-palettes-in-archr.html#cb481-12" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-9fe860a5-Date-2025-02-06_Time-04-55-47.562718.log</span></span>
+<span id="cb481-13"><a href="using-and-manipulating-palettes-in-archr.html#cb481-13" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb481-14"><a href="using-and-manipulating-palettes-in-archr.html#cb481-14" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
+<span id="cb481-15"><a href="using-and-manipulating-palettes-in-archr.html#cb481-15" tabindex="-1"></a><span class="do">## ColorBy = GeneScoreMatrix</span></span>
+<span id="cb481-16"><a href="using-and-manipulating-palettes-in-archr.html#cb481-16" tabindex="-1"></a><span class="do">## Getting Matrix Values...</span></span>
+<span id="cb481-17"><a href="using-and-manipulating-palettes-in-archr.html#cb481-17" tabindex="-1"></a><span class="do">## 2025-02-06 04:55:49.685178 :</span></span>
+<span id="cb481-18"><a href="using-and-manipulating-palettes-in-archr.html#cb481-18" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb481-19"><a href="using-and-manipulating-palettes-in-archr.html#cb481-19" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
+<span id="cb481-20"><a href="using-and-manipulating-palettes-in-archr.html#cb481-20" tabindex="-1"></a><span class="do">## 1 </span></span>
+<span id="cb481-21"><a href="using-and-manipulating-palettes-in-archr.html#cb481-21" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-9fe860a5-Date-2025-02-06_Time-04-55-47.562718.log</span></span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-465-1.svg" width="672" /></p>
+<p>However, we can change the color palette to another pre-defined palette in <code>ArchRPalettes</code> by passing the name of that palette to <code>continuousSet</code> (e.g. “whitePurple”). Note that because this data is continuous data, we must use <code>continuousSet</code> and manipulating <code>discreteSet</code> would have no effect.</p>
 <div class="sourceCode" id="cb482"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb482-1"><a href="using-and-manipulating-palettes-in-archr.html#cb482-1" tabindex="-1"></a><span class="fu">plotEmbedding</span>(</span>
 <span id="cb482-2"><a href="using-and-manipulating-palettes-in-archr.html#cb482-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
 <span id="cb482-3"><a href="using-and-manipulating-palettes-in-archr.html#cb482-3" tabindex="-1"></a>    <span class="at">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
-<span id="cb482-4"><a href="using-and-manipulating-palettes-in-archr.html#cb482-4" tabindex="-1"></a>    <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>,</span>
-<span id="cb482-5"><a href="using-and-manipulating-palettes-in-archr.html#cb482-5" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Clusters&quot;</span>,</span>
-<span id="cb482-6"><a href="using-and-manipulating-palettes-in-archr.html#cb482-6" tabindex="-1"></a>    <span class="at">discreteSet =</span> <span class="st">&quot;kelly&quot;</span>,</span>
+<span id="cb482-4"><a href="using-and-manipulating-palettes-in-archr.html#cb482-4" tabindex="-1"></a>    <span class="at">colorBy =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>,</span>
+<span id="cb482-5"><a href="using-and-manipulating-palettes-in-archr.html#cb482-5" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;CD14&quot;</span>,</span>
+<span id="cb482-6"><a href="using-and-manipulating-palettes-in-archr.html#cb482-6" tabindex="-1"></a>    <span class="at">continuousSet =</span> <span class="st">&quot;whitePurple&quot;</span>,</span>
 <span id="cb482-7"><a href="using-and-manipulating-palettes-in-archr.html#cb482-7" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">1</span>,</span>
 <span id="cb482-8"><a href="using-and-manipulating-palettes-in-archr.html#cb482-8" tabindex="-1"></a>    <span class="at">sampleCells =</span> <span class="cn">NULL</span>,</span>
 <span id="cb482-9"><a href="using-and-manipulating-palettes-in-archr.html#cb482-9" tabindex="-1"></a>    <span class="at">baseSize =</span> <span class="dv">10</span>,</span>
 <span id="cb482-10"><a href="using-and-manipulating-palettes-in-archr.html#cb482-10" tabindex="-1"></a>    <span class="at">plotAs =</span> <span class="st">&quot;points&quot;</span>)</span>
-<span id="cb482-11"><a href="using-and-manipulating-palettes-in-archr.html#cb482-11" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-1a1561bf0cc-Date-2025-01-24_Time-01-08-15.468546.log</span></span>
-<span id="cb482-12"><a href="using-and-manipulating-palettes-in-archr.html#cb482-12" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb482-13"><a href="using-and-manipulating-palettes-in-archr.html#cb482-13" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
-<span id="cb482-14"><a href="using-and-manipulating-palettes-in-archr.html#cb482-14" tabindex="-1"></a><span class="do">## ColorBy = cellColData</span></span>
-<span id="cb482-15"><a href="using-and-manipulating-palettes-in-archr.html#cb482-15" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
-<span id="cb482-16"><a href="using-and-manipulating-palettes-in-archr.html#cb482-16" tabindex="-1"></a><span class="do">## 1 </span></span>
-<span id="cb482-17"><a href="using-and-manipulating-palettes-in-archr.html#cb482-17" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-1a1561bf0cc-Date-2025-01-24_Time-01-08-15.468546.log</span></span></code></pre></div>
+<span id="cb482-11"><a href="using-and-manipulating-palettes-in-archr.html#cb482-11" tabindex="-1"></a><span class="do">## Getting ImputeWeights</span></span>
+<span id="cb482-12"><a href="using-and-manipulating-palettes-in-archr.html#cb482-12" tabindex="-1"></a><span class="do">## No imputeWeights found, returning NULL</span></span>
+<span id="cb482-13"><a href="using-and-manipulating-palettes-in-archr.html#cb482-13" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-915690d0b-Date-2025-02-06_Time-04-55-59.484704.log</span></span>
+<span id="cb482-14"><a href="using-and-manipulating-palettes-in-archr.html#cb482-14" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb482-15"><a href="using-and-manipulating-palettes-in-archr.html#cb482-15" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
+<span id="cb482-16"><a href="using-and-manipulating-palettes-in-archr.html#cb482-16" tabindex="-1"></a><span class="do">## ColorBy = GeneScoreMatrix</span></span>
+<span id="cb482-17"><a href="using-and-manipulating-palettes-in-archr.html#cb482-17" tabindex="-1"></a><span class="do">## Getting Matrix Values...</span></span>
+<span id="cb482-18"><a href="using-and-manipulating-palettes-in-archr.html#cb482-18" tabindex="-1"></a><span class="do">## 2025-02-06 04:55:58.982311 :</span></span>
+<span id="cb482-19"><a href="using-and-manipulating-palettes-in-archr.html#cb482-19" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb482-20"><a href="using-and-manipulating-palettes-in-archr.html#cb482-20" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
+<span id="cb482-21"><a href="using-and-manipulating-palettes-in-archr.html#cb482-21" tabindex="-1"></a><span class="do">## 1 </span></span>
+<span id="cb482-22"><a href="using-and-manipulating-palettes-in-archr.html#cb482-22" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-915690d0b-Date-2025-02-06_Time-04-55-59.484704.log</span></span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-466-1.svg" width="672" /></p>
+<p>If instead we are plotting discrete data, for example “Clusters”, the default color scheme will be “stallion”.</p>
+<div class="sourceCode" id="cb483"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb483-1"><a href="using-and-manipulating-palettes-in-archr.html#cb483-1" tabindex="-1"></a><span class="fu">plotEmbedding</span>(</span>
+<span id="cb483-2"><a href="using-and-manipulating-palettes-in-archr.html#cb483-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb483-3"><a href="using-and-manipulating-palettes-in-archr.html#cb483-3" tabindex="-1"></a>    <span class="at">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
+<span id="cb483-4"><a href="using-and-manipulating-palettes-in-archr.html#cb483-4" tabindex="-1"></a>    <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>,</span>
+<span id="cb483-5"><a href="using-and-manipulating-palettes-in-archr.html#cb483-5" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Clusters&quot;</span>,</span>
+<span id="cb483-6"><a href="using-and-manipulating-palettes-in-archr.html#cb483-6" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">1</span>,</span>
+<span id="cb483-7"><a href="using-and-manipulating-palettes-in-archr.html#cb483-7" tabindex="-1"></a>    <span class="at">sampleCells =</span> <span class="cn">NULL</span>,</span>
+<span id="cb483-8"><a href="using-and-manipulating-palettes-in-archr.html#cb483-8" tabindex="-1"></a>    <span class="at">baseSize =</span> <span class="dv">10</span>,</span>
+<span id="cb483-9"><a href="using-and-manipulating-palettes-in-archr.html#cb483-9" tabindex="-1"></a>    <span class="at">plotAs =</span> <span class="st">&quot;points&quot;</span>)</span>
+<span id="cb483-10"><a href="using-and-manipulating-palettes-in-archr.html#cb483-10" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-97e8f20cf-Date-2025-02-06_Time-04-56-06.135397.log</span></span>
+<span id="cb483-11"><a href="using-and-manipulating-palettes-in-archr.html#cb483-11" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb483-12"><a href="using-and-manipulating-palettes-in-archr.html#cb483-12" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
+<span id="cb483-13"><a href="using-and-manipulating-palettes-in-archr.html#cb483-13" tabindex="-1"></a><span class="do">## ColorBy = cellColData</span></span>
+<span id="cb483-14"><a href="using-and-manipulating-palettes-in-archr.html#cb483-14" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
+<span id="cb483-15"><a href="using-and-manipulating-palettes-in-archr.html#cb483-15" tabindex="-1"></a><span class="do">## 1 </span></span>
+<span id="cb483-16"><a href="using-and-manipulating-palettes-in-archr.html#cb483-16" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-97e8f20cf-Date-2025-02-06_Time-04-56-06.135397.log</span></span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-467-1.svg" width="672" /></p>
+<p>As above, we can change the color scheme used for this discrete data by passing the name of one of the pre-defined color palettes in <code>ArchRPalettes</code> to <code>discreteSet</code>:</p>
+<div class="sourceCode" id="cb484"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb484-1"><a href="using-and-manipulating-palettes-in-archr.html#cb484-1" tabindex="-1"></a><span class="fu">plotEmbedding</span>(</span>
+<span id="cb484-2"><a href="using-and-manipulating-palettes-in-archr.html#cb484-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb484-3"><a href="using-and-manipulating-palettes-in-archr.html#cb484-3" tabindex="-1"></a>    <span class="at">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
+<span id="cb484-4"><a href="using-and-manipulating-palettes-in-archr.html#cb484-4" tabindex="-1"></a>    <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>,</span>
+<span id="cb484-5"><a href="using-and-manipulating-palettes-in-archr.html#cb484-5" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Clusters&quot;</span>,</span>
+<span id="cb484-6"><a href="using-and-manipulating-palettes-in-archr.html#cb484-6" tabindex="-1"></a>    <span class="at">discreteSet =</span> <span class="st">&quot;kelly&quot;</span>,</span>
+<span id="cb484-7"><a href="using-and-manipulating-palettes-in-archr.html#cb484-7" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">1</span>,</span>
+<span id="cb484-8"><a href="using-and-manipulating-palettes-in-archr.html#cb484-8" tabindex="-1"></a>    <span class="at">sampleCells =</span> <span class="cn">NULL</span>,</span>
+<span id="cb484-9"><a href="using-and-manipulating-palettes-in-archr.html#cb484-9" tabindex="-1"></a>    <span class="at">baseSize =</span> <span class="dv">10</span>,</span>
+<span id="cb484-10"><a href="using-and-manipulating-palettes-in-archr.html#cb484-10" tabindex="-1"></a>    <span class="at">plotAs =</span> <span class="st">&quot;points&quot;</span>)</span>
+<span id="cb484-11"><a href="using-and-manipulating-palettes-in-archr.html#cb484-11" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-94ddeb18b-Date-2025-02-06_Time-04-56-09.338492.log</span></span>
+<span id="cb484-12"><a href="using-and-manipulating-palettes-in-archr.html#cb484-12" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb484-13"><a href="using-and-manipulating-palettes-in-archr.html#cb484-13" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
+<span id="cb484-14"><a href="using-and-manipulating-palettes-in-archr.html#cb484-14" tabindex="-1"></a><span class="do">## ColorBy = cellColData</span></span>
+<span id="cb484-15"><a href="using-and-manipulating-palettes-in-archr.html#cb484-15" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
+<span id="cb484-16"><a href="using-and-manipulating-palettes-in-archr.html#cb484-16" tabindex="-1"></a><span class="do">## 1 </span></span>
+<span id="cb484-17"><a href="using-and-manipulating-palettes-in-archr.html#cb484-17" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-94ddeb18b-Date-2025-02-06_Time-04-56-09.338492.log</span></span></code></pre></div>
 <p><img src="ArchR_files/figure-html/unnamed-chunk-468-1.svg" width="672" /></p>
 </div>
 <div id="using-custom-palettes-in-archr" class="section level3 hasAnchor" number="22.1.2">
@@ -427,74 +427,76 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The <code>pal</code> argument allows for the use of custom palettes in most plotting functions. The format of a custom palette is very specific and if you fail to follow this format, it will not work. Effectively, the input to <code>pal</code> must look exactly like the output of <code>paletteDiscrete()</code> for discrete data or <code>paletteContinuous()</code> for continuous data.</p>
 <div id="for-discrete-data" class="section level4 hasAnchor" number="22.1.2.1">
 <h4><span class="header-section-number">22.1.2.1</span> For discrete data<a href="using-and-manipulating-palettes-in-archr.html#for-discrete-data" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<div class="sourceCode" id="cb483"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb483-1"><a href="using-and-manipulating-palettes-in-archr.html#cb483-1" tabindex="-1"></a><span class="fu">paletteDiscrete</span>(<span class="at">values =</span> projHeme5<span class="sc">$</span>Clusters, <span class="at">set =</span> <span class="st">&quot;kelly&quot;</span>)</span>
-<span id="cb483-2"><a href="using-and-manipulating-palettes-in-archr.html#cb483-2" tabindex="-1"></a><span class="do">##        C1        C2        C3        C4        C5        C6        C7        C8 </span></span>
-<span id="cb483-3"><a href="using-and-manipulating-palettes-in-archr.html#cb483-3" tabindex="-1"></a><span class="do">## &quot;#FFB300&quot; &quot;#803E75&quot; &quot;#FF6800&quot; &quot;#A6BDD7&quot; &quot;#C10020&quot; &quot;#CEA262&quot; &quot;#817066&quot; &quot;#007D34&quot; </span></span>
-<span id="cb483-4"><a href="using-and-manipulating-palettes-in-archr.html#cb483-4" tabindex="-1"></a><span class="do">##        C9       C10       C11       C12 </span></span>
-<span id="cb483-5"><a href="using-and-manipulating-palettes-in-archr.html#cb483-5" tabindex="-1"></a><span class="do">## &quot;#F6768E&quot; &quot;#00538A&quot; &quot;#FF7A5C&quot; &quot;#53377A&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb485"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb485-1"><a href="using-and-manipulating-palettes-in-archr.html#cb485-1" tabindex="-1"></a><span class="fu">paletteDiscrete</span>(<span class="at">values =</span> projHeme5<span class="sc">$</span>Clusters, <span class="at">set =</span> <span class="st">&quot;kelly&quot;</span>)</span>
+<span id="cb485-2"><a href="using-and-manipulating-palettes-in-archr.html#cb485-2" tabindex="-1"></a><span class="do">##        C1        C2        C3        C4        C5        C6        C7        C8 </span></span>
+<span id="cb485-3"><a href="using-and-manipulating-palettes-in-archr.html#cb485-3" tabindex="-1"></a><span class="do">## &quot;#FFB300&quot; &quot;#803E75&quot; &quot;#FF6800&quot; &quot;#A6BDD7&quot; &quot;#C10020&quot; &quot;#CEA262&quot; &quot;#817066&quot; &quot;#007D34&quot; </span></span>
+<span id="cb485-4"><a href="using-and-manipulating-palettes-in-archr.html#cb485-4" tabindex="-1"></a><span class="do">##        C9       C10       C11       C12 </span></span>
+<span id="cb485-5"><a href="using-and-manipulating-palettes-in-archr.html#cb485-5" tabindex="-1"></a><span class="do">## &quot;#F6768E&quot; &quot;#00538A&quot; &quot;#FF7A5C&quot; &quot;#53377A&quot;</span></span></code></pre></div>
 <p>Thus for discrete data, you can see that <code>pal</code> needs to be a named vector of colors where each color is named for the corresponding group (e.g. <code>"C1" = "#F97070"</code>). We can create our own custom palette and pass it to <code>plotEmbedding()</code> to customize the coloration of our clusters:</p>
-<div class="sourceCode" id="cb484"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb484-1"><a href="using-and-manipulating-palettes-in-archr.html#cb484-1" tabindex="-1"></a>disc_pal <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb484-2"><a href="using-and-manipulating-palettes-in-archr.html#cb484-2" tabindex="-1"></a>  <span class="st">&quot;C1&quot;</span> <span class="ot">=</span> <span class="st">&quot;#F97070&quot;</span>,</span>
-<span id="cb484-3"><a href="using-and-manipulating-palettes-in-archr.html#cb484-3" tabindex="-1"></a>  <span class="st">&quot;C2&quot;</span> <span class="ot">=</span> <span class="st">&quot;#D60000&quot;</span>,</span>
-<span id="cb484-4"><a href="using-and-manipulating-palettes-in-archr.html#cb484-4" tabindex="-1"></a>  <span class="st">&quot;C3&quot;</span> <span class="ot">=</span> <span class="st">&quot;#7F0303&quot;</span>,</span>
-<span id="cb484-5"><a href="using-and-manipulating-palettes-in-archr.html#cb484-5" tabindex="-1"></a>  <span class="st">&quot;C4&quot;</span> <span class="ot">=</span> <span class="st">&quot;#F97E2B&quot;</span>,</span>
-<span id="cb484-6"><a href="using-and-manipulating-palettes-in-archr.html#cb484-6" tabindex="-1"></a>  <span class="st">&quot;C5&quot;</span> <span class="ot">=</span> <span class="st">&quot;#FFE600&quot;</span>,</span>
-<span id="cb484-7"><a href="using-and-manipulating-palettes-in-archr.html#cb484-7" tabindex="-1"></a>  <span class="st">&quot;C6&quot;</span> <span class="ot">=</span> <span class="st">&quot;#7BE561&quot;</span>,</span>
-<span id="cb484-8"><a href="using-and-manipulating-palettes-in-archr.html#cb484-8" tabindex="-1"></a>  <span class="st">&quot;C7&quot;</span> <span class="ot">=</span> <span class="st">&quot;#19891E&quot;</span>,</span>
-<span id="cb484-9"><a href="using-and-manipulating-palettes-in-archr.html#cb484-9" tabindex="-1"></a>  <span class="st">&quot;C8&quot;</span> <span class="ot">=</span> <span class="st">&quot;#20C4AC&quot;</span>,</span>
-<span id="cb484-10"><a href="using-and-manipulating-palettes-in-archr.html#cb484-10" tabindex="-1"></a>  <span class="st">&quot;C9&quot;</span> <span class="ot">=</span> <span class="st">&quot;#83A4FF&quot;</span>,</span>
-<span id="cb484-11"><a href="using-and-manipulating-palettes-in-archr.html#cb484-11" tabindex="-1"></a>  <span class="st">&quot;C10&quot;</span> <span class="ot">=</span> <span class="st">&quot;#262C6B&quot;</span>,</span>
-<span id="cb484-12"><a href="using-and-manipulating-palettes-in-archr.html#cb484-12" tabindex="-1"></a>  <span class="st">&quot;C11&quot;</span> <span class="ot">=</span> <span class="st">&quot;#7C0EDD&quot;</span>,</span>
-<span id="cb484-13"><a href="using-and-manipulating-palettes-in-archr.html#cb484-13" tabindex="-1"></a>  <span class="st">&quot;C12&quot;</span> <span class="ot">=</span> <span class="st">&quot;#DB65D2&quot;</span>)</span>
-<span id="cb484-14"><a href="using-and-manipulating-palettes-in-archr.html#cb484-14" tabindex="-1"></a></span>
-<span id="cb484-15"><a href="using-and-manipulating-palettes-in-archr.html#cb484-15" tabindex="-1"></a><span class="fu">plotEmbedding</span>(</span>
-<span id="cb484-16"><a href="using-and-manipulating-palettes-in-archr.html#cb484-16" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb484-17"><a href="using-and-manipulating-palettes-in-archr.html#cb484-17" tabindex="-1"></a>    <span class="at">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
-<span id="cb484-18"><a href="using-and-manipulating-palettes-in-archr.html#cb484-18" tabindex="-1"></a>    <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>,</span>
-<span id="cb484-19"><a href="using-and-manipulating-palettes-in-archr.html#cb484-19" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Clusters&quot;</span>,</span>
-<span id="cb484-20"><a href="using-and-manipulating-palettes-in-archr.html#cb484-20" tabindex="-1"></a>    <span class="at">pal =</span> disc_pal,</span>
-<span id="cb484-21"><a href="using-and-manipulating-palettes-in-archr.html#cb484-21" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">1</span>,</span>
-<span id="cb484-22"><a href="using-and-manipulating-palettes-in-archr.html#cb484-22" tabindex="-1"></a>    <span class="at">sampleCells =</span> <span class="cn">NULL</span>,</span>
-<span id="cb484-23"><a href="using-and-manipulating-palettes-in-archr.html#cb484-23" tabindex="-1"></a>    <span class="at">baseSize =</span> <span class="dv">10</span>,</span>
-<span id="cb484-24"><a href="using-and-manipulating-palettes-in-archr.html#cb484-24" tabindex="-1"></a>    <span class="at">plotAs =</span> <span class="st">&quot;points&quot;</span>)</span>
-<span id="cb484-25"><a href="using-and-manipulating-palettes-in-archr.html#cb484-25" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-1a15013d43b-Date-2025-01-24_Time-01-08-19.05681.log</span></span>
-<span id="cb484-26"><a href="using-and-manipulating-palettes-in-archr.html#cb484-26" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb484-27"><a href="using-and-manipulating-palettes-in-archr.html#cb484-27" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
-<span id="cb484-28"><a href="using-and-manipulating-palettes-in-archr.html#cb484-28" tabindex="-1"></a><span class="do">## ColorBy = cellColData</span></span>
-<span id="cb484-29"><a href="using-and-manipulating-palettes-in-archr.html#cb484-29" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
-<span id="cb484-30"><a href="using-and-manipulating-palettes-in-archr.html#cb484-30" tabindex="-1"></a><span class="do">## 1 </span></span>
-<span id="cb484-31"><a href="using-and-manipulating-palettes-in-archr.html#cb484-31" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-1a15013d43b-Date-2025-01-24_Time-01-08-19.05681.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb486"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb486-1"><a href="using-and-manipulating-palettes-in-archr.html#cb486-1" tabindex="-1"></a>disc_pal <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb486-2"><a href="using-and-manipulating-palettes-in-archr.html#cb486-2" tabindex="-1"></a>  <span class="st">&quot;C1&quot;</span> <span class="ot">=</span> <span class="st">&quot;#F97070&quot;</span>,</span>
+<span id="cb486-3"><a href="using-and-manipulating-palettes-in-archr.html#cb486-3" tabindex="-1"></a>  <span class="st">&quot;C2&quot;</span> <span class="ot">=</span> <span class="st">&quot;#D60000&quot;</span>,</span>
+<span id="cb486-4"><a href="using-and-manipulating-palettes-in-archr.html#cb486-4" tabindex="-1"></a>  <span class="st">&quot;C3&quot;</span> <span class="ot">=</span> <span class="st">&quot;#7F0303&quot;</span>,</span>
+<span id="cb486-5"><a href="using-and-manipulating-palettes-in-archr.html#cb486-5" tabindex="-1"></a>  <span class="st">&quot;C4&quot;</span> <span class="ot">=</span> <span class="st">&quot;#F97E2B&quot;</span>,</span>
+<span id="cb486-6"><a href="using-and-manipulating-palettes-in-archr.html#cb486-6" tabindex="-1"></a>  <span class="st">&quot;C5&quot;</span> <span class="ot">=</span> <span class="st">&quot;#FFE600&quot;</span>,</span>
+<span id="cb486-7"><a href="using-and-manipulating-palettes-in-archr.html#cb486-7" tabindex="-1"></a>  <span class="st">&quot;C6&quot;</span> <span class="ot">=</span> <span class="st">&quot;#7BE561&quot;</span>,</span>
+<span id="cb486-8"><a href="using-and-manipulating-palettes-in-archr.html#cb486-8" tabindex="-1"></a>  <span class="st">&quot;C7&quot;</span> <span class="ot">=</span> <span class="st">&quot;#19891E&quot;</span>,</span>
+<span id="cb486-9"><a href="using-and-manipulating-palettes-in-archr.html#cb486-9" tabindex="-1"></a>  <span class="st">&quot;C8&quot;</span> <span class="ot">=</span> <span class="st">&quot;#20C4AC&quot;</span>,</span>
+<span id="cb486-10"><a href="using-and-manipulating-palettes-in-archr.html#cb486-10" tabindex="-1"></a>  <span class="st">&quot;C9&quot;</span> <span class="ot">=</span> <span class="st">&quot;#83A4FF&quot;</span>,</span>
+<span id="cb486-11"><a href="using-and-manipulating-palettes-in-archr.html#cb486-11" tabindex="-1"></a>  <span class="st">&quot;C10&quot;</span> <span class="ot">=</span> <span class="st">&quot;#262C6B&quot;</span>,</span>
+<span id="cb486-12"><a href="using-and-manipulating-palettes-in-archr.html#cb486-12" tabindex="-1"></a>  <span class="st">&quot;C11&quot;</span> <span class="ot">=</span> <span class="st">&quot;#7C0EDD&quot;</span>,</span>
+<span id="cb486-13"><a href="using-and-manipulating-palettes-in-archr.html#cb486-13" tabindex="-1"></a>  <span class="st">&quot;C12&quot;</span> <span class="ot">=</span> <span class="st">&quot;#DB65D2&quot;</span>)</span>
+<span id="cb486-14"><a href="using-and-manipulating-palettes-in-archr.html#cb486-14" tabindex="-1"></a></span>
+<span id="cb486-15"><a href="using-and-manipulating-palettes-in-archr.html#cb486-15" tabindex="-1"></a><span class="fu">plotEmbedding</span>(</span>
+<span id="cb486-16"><a href="using-and-manipulating-palettes-in-archr.html#cb486-16" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb486-17"><a href="using-and-manipulating-palettes-in-archr.html#cb486-17" tabindex="-1"></a>    <span class="at">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
+<span id="cb486-18"><a href="using-and-manipulating-palettes-in-archr.html#cb486-18" tabindex="-1"></a>    <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>,</span>
+<span id="cb486-19"><a href="using-and-manipulating-palettes-in-archr.html#cb486-19" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Clusters&quot;</span>,</span>
+<span id="cb486-20"><a href="using-and-manipulating-palettes-in-archr.html#cb486-20" tabindex="-1"></a>    <span class="at">pal =</span> disc_pal,</span>
+<span id="cb486-21"><a href="using-and-manipulating-palettes-in-archr.html#cb486-21" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">1</span>,</span>
+<span id="cb486-22"><a href="using-and-manipulating-palettes-in-archr.html#cb486-22" tabindex="-1"></a>    <span class="at">sampleCells =</span> <span class="cn">NULL</span>,</span>
+<span id="cb486-23"><a href="using-and-manipulating-palettes-in-archr.html#cb486-23" tabindex="-1"></a>    <span class="at">baseSize =</span> <span class="dv">10</span>,</span>
+<span id="cb486-24"><a href="using-and-manipulating-palettes-in-archr.html#cb486-24" tabindex="-1"></a>    <span class="at">plotAs =</span> <span class="st">&quot;points&quot;</span>)</span>
+<span id="cb486-25"><a href="using-and-manipulating-palettes-in-archr.html#cb486-25" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-9760e128b-Date-2025-02-06_Time-04-56-12.65299.log</span></span>
+<span id="cb486-26"><a href="using-and-manipulating-palettes-in-archr.html#cb486-26" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb486-27"><a href="using-and-manipulating-palettes-in-archr.html#cb486-27" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
+<span id="cb486-28"><a href="using-and-manipulating-palettes-in-archr.html#cb486-28" tabindex="-1"></a><span class="do">## ColorBy = cellColData</span></span>
+<span id="cb486-29"><a href="using-and-manipulating-palettes-in-archr.html#cb486-29" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
+<span id="cb486-30"><a href="using-and-manipulating-palettes-in-archr.html#cb486-30" tabindex="-1"></a><span class="do">## 1 </span></span>
+<span id="cb486-31"><a href="using-and-manipulating-palettes-in-archr.html#cb486-31" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-9760e128b-Date-2025-02-06_Time-04-56-12.65299.log</span></span></code></pre></div>
 <p><img src="ArchR_files/figure-html/unnamed-chunk-470-1.svg" width="672" /></p>
 </div>
 <div id="for-continuous-data" class="section level4 hasAnchor" number="22.1.2.2">
 <h4><span class="header-section-number">22.1.2.2</span> For continuous data<a href="using-and-manipulating-palettes-in-archr.html#for-continuous-data" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<pre><code>paletteContinuous(set = &quot;comet&quot;, n = 10)</code></pre>
+<div class="sourceCode" id="cb487"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb487-1"><a href="using-and-manipulating-palettes-in-archr.html#cb487-1" tabindex="-1"></a><span class="fu">paletteContinuous</span>(<span class="at">set =</span> <span class="st">&quot;comet&quot;</span>, <span class="at">n =</span> <span class="dv">10</span>)</span>
+<span id="cb487-2"><a href="using-and-manipulating-palettes-in-archr.html#cb487-2" tabindex="-1"></a><span class="do">##  [1] &quot;#E6E7E8&quot; &quot;#ACCCEF&quot; &quot;#73B1F7&quot; &quot;#3A97FF&quot; &quot;#546CE1&quot; &quot;#6E40C4&quot; &quot;#8816A7&quot;</span></span>
+<span id="cb487-3"><a href="using-and-manipulating-palettes-in-archr.html#cb487-3" tabindex="-1"></a><span class="do">##  [8] &quot;#5A0E6F&quot; &quot;#2D0737&quot; &quot;#000000&quot;</span></span></code></pre></div>
 <p>Thus for continuous data, you can see that <code>pal</code> is just a vector of colors. You can create this vector however you wish but here is an example:</p>
-<div class="sourceCode" id="cb486"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb486-1"><a href="using-and-manipulating-palettes-in-archr.html#cb486-1" tabindex="-1"></a>cont_pal <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">&quot;blue&quot;</span>,<span class="st">&quot;white&quot;</span>,<span class="st">&quot;red&quot;</span>))</span>
-<span id="cb486-2"><a href="using-and-manipulating-palettes-in-archr.html#cb486-2" tabindex="-1"></a></span>
-<span id="cb486-3"><a href="using-and-manipulating-palettes-in-archr.html#cb486-3" tabindex="-1"></a><span class="fu">plotEmbedding</span>(</span>
-<span id="cb486-4"><a href="using-and-manipulating-palettes-in-archr.html#cb486-4" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb486-5"><a href="using-and-manipulating-palettes-in-archr.html#cb486-5" tabindex="-1"></a>    <span class="at">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
-<span id="cb486-6"><a href="using-and-manipulating-palettes-in-archr.html#cb486-6" tabindex="-1"></a>    <span class="at">colorBy =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>,</span>
-<span id="cb486-7"><a href="using-and-manipulating-palettes-in-archr.html#cb486-7" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;CD14&quot;</span>,</span>
-<span id="cb486-8"><a href="using-and-manipulating-palettes-in-archr.html#cb486-8" tabindex="-1"></a>    <span class="at">pal =</span> <span class="fu">cont_pal</span>(<span class="dv">256</span>),</span>
-<span id="cb486-9"><a href="using-and-manipulating-palettes-in-archr.html#cb486-9" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">1</span>,</span>
-<span id="cb486-10"><a href="using-and-manipulating-palettes-in-archr.html#cb486-10" tabindex="-1"></a>    <span class="at">sampleCells =</span> <span class="cn">NULL</span>,</span>
-<span id="cb486-11"><a href="using-and-manipulating-palettes-in-archr.html#cb486-11" tabindex="-1"></a>    <span class="at">baseSize =</span> <span class="dv">10</span>,</span>
-<span id="cb486-12"><a href="using-and-manipulating-palettes-in-archr.html#cb486-12" tabindex="-1"></a>    <span class="at">plotAs =</span> <span class="st">&quot;points&quot;</span>)</span>
-<span id="cb486-13"><a href="using-and-manipulating-palettes-in-archr.html#cb486-13" tabindex="-1"></a><span class="do">## Getting ImputeWeights</span></span>
-<span id="cb486-14"><a href="using-and-manipulating-palettes-in-archr.html#cb486-14" tabindex="-1"></a><span class="do">## No imputeWeights found, returning NULL</span></span>
-<span id="cb486-15"><a href="using-and-manipulating-palettes-in-archr.html#cb486-15" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-1a13421b68b-Date-2025-01-24_Time-01-08-22.598743.log</span></span>
-<span id="cb486-16"><a href="using-and-manipulating-palettes-in-archr.html#cb486-16" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb486-17"><a href="using-and-manipulating-palettes-in-archr.html#cb486-17" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
-<span id="cb486-18"><a href="using-and-manipulating-palettes-in-archr.html#cb486-18" tabindex="-1"></a><span class="do">## ColorBy = GeneScoreMatrix</span></span>
-<span id="cb486-19"><a href="using-and-manipulating-palettes-in-archr.html#cb486-19" tabindex="-1"></a><span class="do">## Getting Matrix Values...</span></span>
-<span id="cb486-20"><a href="using-and-manipulating-palettes-in-archr.html#cb486-20" tabindex="-1"></a><span class="do">## 2025-01-24 01:08:24.58572 :</span></span>
-<span id="cb486-21"><a href="using-and-manipulating-palettes-in-archr.html#cb486-21" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb486-22"><a href="using-and-manipulating-palettes-in-archr.html#cb486-22" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
-<span id="cb486-23"><a href="using-and-manipulating-palettes-in-archr.html#cb486-23" tabindex="-1"></a><span class="do">## 1 </span></span>
-<span id="cb486-24"><a href="using-and-manipulating-palettes-in-archr.html#cb486-24" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-1a13421b68b-Date-2025-01-24_Time-01-08-22.598743.log</span></span></code></pre></div>
-<p><img src="ArchR_files/figure-html/unnamed-chunk-471-1.svg" width="672" /></p>
+<div class="sourceCode" id="cb488"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb488-1"><a href="using-and-manipulating-palettes-in-archr.html#cb488-1" tabindex="-1"></a>cont_pal <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">&quot;blue&quot;</span>,<span class="st">&quot;white&quot;</span>,<span class="st">&quot;red&quot;</span>))</span>
+<span id="cb488-2"><a href="using-and-manipulating-palettes-in-archr.html#cb488-2" tabindex="-1"></a></span>
+<span id="cb488-3"><a href="using-and-manipulating-palettes-in-archr.html#cb488-3" tabindex="-1"></a><span class="fu">plotEmbedding</span>(</span>
+<span id="cb488-4"><a href="using-and-manipulating-palettes-in-archr.html#cb488-4" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb488-5"><a href="using-and-manipulating-palettes-in-archr.html#cb488-5" tabindex="-1"></a>    <span class="at">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
+<span id="cb488-6"><a href="using-and-manipulating-palettes-in-archr.html#cb488-6" tabindex="-1"></a>    <span class="at">colorBy =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>,</span>
+<span id="cb488-7"><a href="using-and-manipulating-palettes-in-archr.html#cb488-7" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;CD14&quot;</span>,</span>
+<span id="cb488-8"><a href="using-and-manipulating-palettes-in-archr.html#cb488-8" tabindex="-1"></a>    <span class="at">pal =</span> <span class="fu">cont_pal</span>(<span class="dv">256</span>),</span>
+<span id="cb488-9"><a href="using-and-manipulating-palettes-in-archr.html#cb488-9" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">1</span>,</span>
+<span id="cb488-10"><a href="using-and-manipulating-palettes-in-archr.html#cb488-10" tabindex="-1"></a>    <span class="at">sampleCells =</span> <span class="cn">NULL</span>,</span>
+<span id="cb488-11"><a href="using-and-manipulating-palettes-in-archr.html#cb488-11" tabindex="-1"></a>    <span class="at">baseSize =</span> <span class="dv">10</span>,</span>
+<span id="cb488-12"><a href="using-and-manipulating-palettes-in-archr.html#cb488-12" tabindex="-1"></a>    <span class="at">plotAs =</span> <span class="st">&quot;points&quot;</span>)</span>
+<span id="cb488-13"><a href="using-and-manipulating-palettes-in-archr.html#cb488-13" tabindex="-1"></a><span class="do">## Getting ImputeWeights</span></span>
+<span id="cb488-14"><a href="using-and-manipulating-palettes-in-archr.html#cb488-14" tabindex="-1"></a><span class="do">## No imputeWeights found, returning NULL</span></span>
+<span id="cb488-15"><a href="using-and-manipulating-palettes-in-archr.html#cb488-15" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-9dff6b20-Date-2025-02-06_Time-04-56-16.053137.log</span></span>
+<span id="cb488-16"><a href="using-and-manipulating-palettes-in-archr.html#cb488-16" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb488-17"><a href="using-and-manipulating-palettes-in-archr.html#cb488-17" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
+<span id="cb488-18"><a href="using-and-manipulating-palettes-in-archr.html#cb488-18" tabindex="-1"></a><span class="do">## ColorBy = GeneScoreMatrix</span></span>
+<span id="cb488-19"><a href="using-and-manipulating-palettes-in-archr.html#cb488-19" tabindex="-1"></a><span class="do">## Getting Matrix Values...</span></span>
+<span id="cb488-20"><a href="using-and-manipulating-palettes-in-archr.html#cb488-20" tabindex="-1"></a><span class="do">## 2025-02-06 04:56:17.87527 :</span></span>
+<span id="cb488-21"><a href="using-and-manipulating-palettes-in-archr.html#cb488-21" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb488-22"><a href="using-and-manipulating-palettes-in-archr.html#cb488-22" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
+<span id="cb488-23"><a href="using-and-manipulating-palettes-in-archr.html#cb488-23" tabindex="-1"></a><span class="do">## 1 </span></span>
+<span id="cb488-24"><a href="using-and-manipulating-palettes-in-archr.html#cb488-24" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-9dff6b20-Date-2025-02-06_Time-04-56-16.053137.log</span></span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-472-1.svg" width="672" /></p>
 
 </div>
 </div>

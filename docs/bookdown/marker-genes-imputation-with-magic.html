@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2025-01-23" />
+<meta name="date" content="2025-02-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -258,7 +258,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
 <ul>
 <li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
-<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-cifferentiation.html"><a href="lymphoid-trajectory---b-cell-cifferentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Cifferentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-differentiation.html"><a href="lymphoid-trajectory---b-cell-differentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Differentiation</a></li>
 <li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
 <li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
 <li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
@@ -309,9 +309,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">9.5</span> Marker Genes Imputation with MAGIC<a href="marker-genes-imputation-with-magic.html#marker-genes-imputation-with-magic" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>In the previous section, you may have noticed that some of the gene score plots appear quite variable. This is because of the sparsity of scATAC-seq data. We can use <a href="https://github.com/KrishnaswamyLab/MAGIC">MAGIC</a> to impute gene scores by smoothing signal across nearby cells. In our hands, this greatly improves the visual interpretation of gene scores. ArchR doesnt actually use the code in MAGIC to do this (you do not need to install the <code>Rmagic</code> package) but instead we have reimplemented the workflow within ArchR. We use the <code>addImputeWeights()</code> function to add impute weights to our <code>ArchRProject</code>.</p>
 <div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="marker-genes-imputation-with-magic.html#cb133-1" tabindex="-1"></a>projHeme2 <span class="ot">&lt;-</span> <span class="fu">addImputeWeights</span>(projHeme2)</span>
-<span id="cb133-2"><a href="marker-genes-imputation-with-magic.html#cb133-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addImputeWeights-1a133161fd8-Date-2025-01-23_Time-20-18-19.182141.log</span></span>
+<span id="cb133-2"><a href="marker-genes-imputation-with-magic.html#cb133-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addImputeWeights-9791fa7e5-Date-2025-02-06_Time-01-10-50.001361.log</span></span>
 <span id="cb133-3"><a href="marker-genes-imputation-with-magic.html#cb133-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb133-4"><a href="marker-genes-imputation-with-magic.html#cb133-4" tabindex="-1"></a><span class="do">## 2025-01-23 20:18:19.655386 : Computing Impute Weights Using Magic (Cell 2018), 0 mins elapsed.</span></span></code></pre></div>
+<span id="cb133-4"><a href="marker-genes-imputation-with-magic.html#cb133-4" tabindex="-1"></a><span class="do">## 2025-02-06 01:10:50.402409 : Computing Impute Weights Using Magic (Cell 2018), 0 mins elapsed.</span></span></code></pre></div>
 <p>These impute weights can then be passed to <code>plotEmbedding()</code> when plotting gene scores overlayed on the UMAP embedding.</p>
 <div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="marker-genes-imputation-with-magic.html#cb134-1" tabindex="-1"></a>markerGenes  <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb134-2"><a href="marker-genes-imputation-with-magic.html#cb134-2" tabindex="-1"></a>    <span class="st">&quot;CD34&quot;</span>,  <span class="co">#Early Progenitor</span></span>
@@ -329,19 +329,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb134-14"><a href="marker-genes-imputation-with-magic.html#cb134-14" tabindex="-1"></a>    <span class="at">imputeWeights =</span> <span class="fu">getImputeWeights</span>(projHeme2)</span>
 <span id="cb134-15"><a href="marker-genes-imputation-with-magic.html#cb134-15" tabindex="-1"></a>)</span>
 <span id="cb134-16"><a href="marker-genes-imputation-with-magic.html#cb134-16" tabindex="-1"></a><span class="do">## Getting ImputeWeights</span></span>
-<span id="cb134-17"><a href="marker-genes-imputation-with-magic.html#cb134-17" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-1a1143f83cf-Date-2025-01-23_Time-20-18-29.201692.log</span></span>
+<span id="cb134-17"><a href="marker-genes-imputation-with-magic.html#cb134-17" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-96160df2b-Date-2025-02-06_Time-01-11-01.366962.log</span></span>
 <span id="cb134-18"><a href="marker-genes-imputation-with-magic.html#cb134-18" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
 <span id="cb134-19"><a href="marker-genes-imputation-with-magic.html#cb134-19" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
 <span id="cb134-20"><a href="marker-genes-imputation-with-magic.html#cb134-20" tabindex="-1"></a><span class="do">## ColorBy = GeneScoreMatrix</span></span>
 <span id="cb134-21"><a href="marker-genes-imputation-with-magic.html#cb134-21" tabindex="-1"></a><span class="do">## Getting Matrix Values...</span></span>
-<span id="cb134-22"><a href="marker-genes-imputation-with-magic.html#cb134-22" tabindex="-1"></a><span class="do">## 2025-01-23 20:18:30.167284 :</span></span>
+<span id="cb134-22"><a href="marker-genes-imputation-with-magic.html#cb134-22" tabindex="-1"></a><span class="do">## 2025-02-06 01:11:02.279902 :</span></span>
 <span id="cb134-23"><a href="marker-genes-imputation-with-magic.html#cb134-23" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb134-24"><a href="marker-genes-imputation-with-magic.html#cb134-24" tabindex="-1"></a><span class="do">## Imputing Matrix</span></span>
 <span id="cb134-25"><a href="marker-genes-imputation-with-magic.html#cb134-25" tabindex="-1"></a><span class="do">## Using weights on disk</span></span>
 <span id="cb134-26"><a href="marker-genes-imputation-with-magic.html#cb134-26" tabindex="-1"></a><span class="do">## Using weights on disk</span></span>
 <span id="cb134-27"><a href="marker-genes-imputation-with-magic.html#cb134-27" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
 <span id="cb134-28"><a href="marker-genes-imputation-with-magic.html#cb134-28" tabindex="-1"></a><span class="do">## 1 2 3 4 5 6 7 8 9 </span></span>
-<span id="cb134-29"><a href="marker-genes-imputation-with-magic.html#cb134-29" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-1a1143f83cf-Date-2025-01-23_Time-20-18-29.201692.log</span></span></code></pre></div>
+<span id="cb134-29"><a href="marker-genes-imputation-with-magic.html#cb134-29" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-96160df2b-Date-2025-02-06_Time-01-11-01.366962.log</span></span></code></pre></div>
 <p>As before, we can subset this plot list to select a specific gene.</p>
 <div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="marker-genes-imputation-with-magic.html#cb135-1" tabindex="-1"></a>p<span class="sc">$</span>CD14</span></code></pre></div>
 <p><img src="ArchR_files/figure-html/unnamed-chunk-132-1.svg" width="672" /></p>

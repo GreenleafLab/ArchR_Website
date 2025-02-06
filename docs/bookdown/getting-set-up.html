@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2025-01-23" />
+<meta name="date" content="2025-02-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -258,7 +258,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
 <ul>
 <li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
-<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-cifferentiation.html"><a href="lymphoid-trajectory---b-cell-cifferentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Cifferentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-differentiation.html"><a href="lymphoid-trajectory---b-cell-differentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Differentiation</a></li>
 <li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
 <li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
 <li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
@@ -349,36 +349,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="getting-set-up.html#cb24-1" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;BSgenome.Dmelanogaster.UCSC.dm6&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)){</span>
 <span id="cb24-2"><a href="getting-set-up.html#cb24-2" tabindex="-1"></a>  BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">&quot;BSgenome.Dmelanogaster.UCSC.dm6&quot;</span>, <span class="at">update =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb24-3"><a href="getting-set-up.html#cb24-3" tabindex="-1"></a>}</span>
-<span id="cb24-4"><a href="getting-set-up.html#cb24-4" tabindex="-1"></a><span class="do">## &#39;getOption(&quot;repos&quot;)&#39; replaces Bioconductor standard repositories, see</span></span>
-<span id="cb24-5"><a href="getting-set-up.html#cb24-5" tabindex="-1"></a><span class="do">## &#39;help(&quot;repositories&quot;, package = &quot;BiocManager&quot;)&#39; for details.</span></span>
-<span id="cb24-6"><a href="getting-set-up.html#cb24-6" tabindex="-1"></a><span class="do">## Replacement repositories:</span></span>
-<span id="cb24-7"><a href="getting-set-up.html#cb24-7" tabindex="-1"></a><span class="do">##     CRAN: https://p3m.dev/cran/__linux__/jammy/2024-10-30</span></span>
-<span id="cb24-8"><a href="getting-set-up.html#cb24-8" tabindex="-1"></a><span class="do">## Bioconductor version 3.19 (BiocManager 1.30.25), R 4.4.1 (2024-06-14)</span></span>
-<span id="cb24-9"><a href="getting-set-up.html#cb24-9" tabindex="-1"></a><span class="do">## Installing package(s) &#39;BSgenome.Dmelanogaster.UCSC.dm6&#39;</span></span>
-<span id="cb24-10"><a href="getting-set-up.html#cb24-10" tabindex="-1"></a><span class="fu">library</span>(BSgenome.Dmelanogaster.UCSC.dm6)</span>
-<span id="cb24-11"><a href="getting-set-up.html#cb24-11" tabindex="-1"></a><span class="do">## Loading required package: BSgenome</span></span>
-<span id="cb24-12"><a href="getting-set-up.html#cb24-12" tabindex="-1"></a><span class="do">## Loading required package: Biostrings</span></span>
-<span id="cb24-13"><a href="getting-set-up.html#cb24-13" tabindex="-1"></a><span class="do">## Loading required package: XVector</span></span>
-<span id="cb24-14"><a href="getting-set-up.html#cb24-14" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb24-15"><a href="getting-set-up.html#cb24-15" tabindex="-1"></a><span class="do">## Attaching package: &#39;XVector&#39;</span></span>
-<span id="cb24-16"><a href="getting-set-up.html#cb24-16" tabindex="-1"></a><span class="do">## The following object is masked from &#39;package:plyr&#39;:</span></span>
-<span id="cb24-17"><a href="getting-set-up.html#cb24-17" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb24-18"><a href="getting-set-up.html#cb24-18" tabindex="-1"></a><span class="do">##     compact</span></span>
+<span id="cb24-4"><a href="getting-set-up.html#cb24-4" tabindex="-1"></a><span class="fu">library</span>(BSgenome.Dmelanogaster.UCSC.dm6)</span>
+<span id="cb24-5"><a href="getting-set-up.html#cb24-5" tabindex="-1"></a><span class="do">## Loading required package: BSgenome</span></span>
+<span id="cb24-6"><a href="getting-set-up.html#cb24-6" tabindex="-1"></a><span class="do">## Loading required package: Biostrings</span></span>
+<span id="cb24-7"><a href="getting-set-up.html#cb24-7" tabindex="-1"></a><span class="do">## Loading required package: XVector</span></span>
+<span id="cb24-8"><a href="getting-set-up.html#cb24-8" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb24-9"><a href="getting-set-up.html#cb24-9" tabindex="-1"></a><span class="do">## Attaching package: &#39;XVector&#39;</span></span>
+<span id="cb24-10"><a href="getting-set-up.html#cb24-10" tabindex="-1"></a><span class="do">## The following object is masked from &#39;package:plyr&#39;:</span></span>
+<span id="cb24-11"><a href="getting-set-up.html#cb24-11" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb24-12"><a href="getting-set-up.html#cb24-12" tabindex="-1"></a><span class="do">##     compact</span></span>
+<span id="cb24-13"><a href="getting-set-up.html#cb24-13" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb24-14"><a href="getting-set-up.html#cb24-14" tabindex="-1"></a><span class="do">## Attaching package: &#39;Biostrings&#39;</span></span>
+<span id="cb24-15"><a href="getting-set-up.html#cb24-15" tabindex="-1"></a><span class="do">## The following object is masked from &#39;package:grid&#39;:</span></span>
+<span id="cb24-16"><a href="getting-set-up.html#cb24-16" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb24-17"><a href="getting-set-up.html#cb24-17" tabindex="-1"></a><span class="do">##     pattern</span></span>
+<span id="cb24-18"><a href="getting-set-up.html#cb24-18" tabindex="-1"></a><span class="do">## The following object is masked from &#39;package:base&#39;:</span></span>
 <span id="cb24-19"><a href="getting-set-up.html#cb24-19" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb24-20"><a href="getting-set-up.html#cb24-20" tabindex="-1"></a><span class="do">## Attaching package: &#39;Biostrings&#39;</span></span>
-<span id="cb24-21"><a href="getting-set-up.html#cb24-21" tabindex="-1"></a><span class="do">## The following object is masked from &#39;package:grid&#39;:</span></span>
-<span id="cb24-22"><a href="getting-set-up.html#cb24-22" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb24-23"><a href="getting-set-up.html#cb24-23" tabindex="-1"></a><span class="do">##     pattern</span></span>
-<span id="cb24-24"><a href="getting-set-up.html#cb24-24" tabindex="-1"></a><span class="do">## The following object is masked from &#39;package:base&#39;:</span></span>
-<span id="cb24-25"><a href="getting-set-up.html#cb24-25" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb24-26"><a href="getting-set-up.html#cb24-26" tabindex="-1"></a><span class="do">##     strsplit</span></span>
-<span id="cb24-27"><a href="getting-set-up.html#cb24-27" tabindex="-1"></a><span class="do">## Loading required package: BiocIO</span></span>
-<span id="cb24-28"><a href="getting-set-up.html#cb24-28" tabindex="-1"></a><span class="do">## Loading required package: rtracklayer</span></span>
-<span id="cb24-29"><a href="getting-set-up.html#cb24-29" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb24-30"><a href="getting-set-up.html#cb24-30" tabindex="-1"></a><span class="do">## Attaching package: &#39;rtracklayer&#39;</span></span>
-<span id="cb24-31"><a href="getting-set-up.html#cb24-31" tabindex="-1"></a><span class="do">## The following object is masked from &#39;package:BiocIO&#39;:</span></span>
-<span id="cb24-32"><a href="getting-set-up.html#cb24-32" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb24-33"><a href="getting-set-up.html#cb24-33" tabindex="-1"></a><span class="do">##     FileForFormat</span></span></code></pre></div>
+<span id="cb24-20"><a href="getting-set-up.html#cb24-20" tabindex="-1"></a><span class="do">##     strsplit</span></span>
+<span id="cb24-21"><a href="getting-set-up.html#cb24-21" tabindex="-1"></a><span class="do">## Loading required package: BiocIO</span></span>
+<span id="cb24-22"><a href="getting-set-up.html#cb24-22" tabindex="-1"></a><span class="do">## Loading required package: rtracklayer</span></span>
+<span id="cb24-23"><a href="getting-set-up.html#cb24-23" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb24-24"><a href="getting-set-up.html#cb24-24" tabindex="-1"></a><span class="do">## Attaching package: &#39;rtracklayer&#39;</span></span>
+<span id="cb24-25"><a href="getting-set-up.html#cb24-25" tabindex="-1"></a><span class="do">## The following object is masked from &#39;package:BiocIO&#39;:</span></span>
+<span id="cb24-26"><a href="getting-set-up.html#cb24-26" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb24-27"><a href="getting-set-up.html#cb24-27" tabindex="-1"></a><span class="do">##     FileForFormat</span></span></code></pre></div>
 <p>Then we create a genome annotation from this <code>BSgenome</code> object.</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="getting-set-up.html#cb25-1" tabindex="-1"></a>genomeAnnotation <span class="ot">&lt;-</span> <span class="fu">createGenomeAnnotation</span>(<span class="at">genome =</span> BSgenome.Dmelanogaster.UCSC.dm6)</span>
 <span id="cb25-2"><a href="getting-set-up.html#cb25-2" tabindex="-1"></a><span class="do">## Getting genome..</span></span>
@@ -398,26 +392,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="getting-set-up.html#cb27-1" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;TxDb.Dmelanogaster.UCSC.dm6.ensGene&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)){</span>
 <span id="cb27-2"><a href="getting-set-up.html#cb27-2" tabindex="-1"></a>  BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">&quot;TxDb.Dmelanogaster.UCSC.dm6.ensGene&quot;</span>, <span class="at">update =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb27-3"><a href="getting-set-up.html#cb27-3" tabindex="-1"></a>}</span>
-<span id="cb27-4"><a href="getting-set-up.html#cb27-4" tabindex="-1"></a><span class="do">## &#39;getOption(&quot;repos&quot;)&#39; replaces Bioconductor standard repositories, see</span></span>
-<span id="cb27-5"><a href="getting-set-up.html#cb27-5" tabindex="-1"></a><span class="do">## &#39;help(&quot;repositories&quot;, package = &quot;BiocManager&quot;)&#39; for details.</span></span>
-<span id="cb27-6"><a href="getting-set-up.html#cb27-6" tabindex="-1"></a><span class="do">## Replacement repositories:</span></span>
-<span id="cb27-7"><a href="getting-set-up.html#cb27-7" tabindex="-1"></a><span class="do">##     CRAN: https://p3m.dev/cran/__linux__/jammy/2024-10-30</span></span>
-<span id="cb27-8"><a href="getting-set-up.html#cb27-8" tabindex="-1"></a><span class="do">## Bioconductor version 3.19 (BiocManager 1.30.25), R 4.4.1 (2024-06-14)</span></span>
-<span id="cb27-9"><a href="getting-set-up.html#cb27-9" tabindex="-1"></a><span class="do">## Installing package(s) &#39;TxDb.Dmelanogaster.UCSC.dm6.ensGene&#39;</span></span>
-<span id="cb27-10"><a href="getting-set-up.html#cb27-10" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;org.Dm.eg.db&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)){</span>
-<span id="cb27-11"><a href="getting-set-up.html#cb27-11" tabindex="-1"></a>  BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">&quot;org.Dm.eg.db&quot;</span>, <span class="at">update =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb27-12"><a href="getting-set-up.html#cb27-12" tabindex="-1"></a>}</span>
-<span id="cb27-13"><a href="getting-set-up.html#cb27-13" tabindex="-1"></a><span class="do">## &#39;getOption(&quot;repos&quot;)&#39; replaces Bioconductor standard repositories, see</span></span>
-<span id="cb27-14"><a href="getting-set-up.html#cb27-14" tabindex="-1"></a><span class="do">## &#39;help(&quot;repositories&quot;, package = &quot;BiocManager&quot;)&#39; for details.</span></span>
-<span id="cb27-15"><a href="getting-set-up.html#cb27-15" tabindex="-1"></a><span class="do">## Replacement repositories:</span></span>
-<span id="cb27-16"><a href="getting-set-up.html#cb27-16" tabindex="-1"></a><span class="do">##     CRAN: https://p3m.dev/cran/__linux__/jammy/2024-10-30</span></span>
-<span id="cb27-17"><a href="getting-set-up.html#cb27-17" tabindex="-1"></a><span class="do">## Bioconductor version 3.19 (BiocManager 1.30.25), R 4.4.1 (2024-06-14)</span></span>
-<span id="cb27-18"><a href="getting-set-up.html#cb27-18" tabindex="-1"></a><span class="do">## Installing package(s) &#39;org.Dm.eg.db&#39;</span></span>
-<span id="cb27-19"><a href="getting-set-up.html#cb27-19" tabindex="-1"></a><span class="fu">library</span>(TxDb.Dmelanogaster.UCSC.dm6.ensGene)</span>
-<span id="cb27-20"><a href="getting-set-up.html#cb27-20" tabindex="-1"></a><span class="do">## Loading required package: GenomicFeatures</span></span>
-<span id="cb27-21"><a href="getting-set-up.html#cb27-21" tabindex="-1"></a><span class="do">## Loading required package: AnnotationDbi</span></span>
-<span id="cb27-22"><a href="getting-set-up.html#cb27-22" tabindex="-1"></a><span class="fu">library</span>(org.Dm.eg.db)</span>
-<span id="cb27-23"><a href="getting-set-up.html#cb27-23" tabindex="-1"></a><span class="do">## </span></span></code></pre></div>
+<span id="cb27-4"><a href="getting-set-up.html#cb27-4" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">&quot;org.Dm.eg.db&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)){</span>
+<span id="cb27-5"><a href="getting-set-up.html#cb27-5" tabindex="-1"></a>  BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">&quot;org.Dm.eg.db&quot;</span>, <span class="at">update =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb27-6"><a href="getting-set-up.html#cb27-6" tabindex="-1"></a>}</span>
+<span id="cb27-7"><a href="getting-set-up.html#cb27-7" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb27-8"><a href="getting-set-up.html#cb27-8" tabindex="-1"></a><span class="fu">library</span>(TxDb.Dmelanogaster.UCSC.dm6.ensGene)</span>
+<span id="cb27-9"><a href="getting-set-up.html#cb27-9" tabindex="-1"></a><span class="do">## Loading required package: GenomicFeatures</span></span>
+<span id="cb27-10"><a href="getting-set-up.html#cb27-10" tabindex="-1"></a><span class="do">## Loading required package: AnnotationDbi</span></span>
+<span id="cb27-11"><a href="getting-set-up.html#cb27-11" tabindex="-1"></a><span class="fu">library</span>(org.Dm.eg.db)</span></code></pre></div>
 <p>Then we create the gene annotation object.</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="getting-set-up.html#cb28-1" tabindex="-1"></a>geneAnnotation <span class="ot">&lt;-</span> <span class="fu">createGeneAnnotation</span>(<span class="at">TxDb =</span> TxDb.Dmelanogaster.UCSC.dm6.ensGene, <span class="at">OrgDb =</span> org.Dm.eg.db)</span>
 <span id="cb28-2"><a href="getting-set-up.html#cb28-2" tabindex="-1"></a><span class="do">## Getting Genes..</span></span>

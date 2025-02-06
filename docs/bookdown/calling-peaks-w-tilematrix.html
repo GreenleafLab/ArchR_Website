@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2025-01-23" />
+<meta name="date" content="2025-02-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -258,7 +258,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
 <ul>
 <li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
-<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-cifferentiation.html"><a href="lymphoid-trajectory---b-cell-cifferentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Cifferentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-differentiation.html"><a href="lymphoid-trajectory---b-cell-differentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Differentiation</a></li>
 <li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
 <li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
 <li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
@@ -309,105 +309,105 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">12.3</span> Calling Peaks w/ TileMatrix<a href="calling-peaks-w-tilematrix.html#calling-peaks-w-tilematrix" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>As mentioned previously, ArchR also implements its own native peak caller but <em>we do not recommend using it</em>. While we have benchmarked this peak caller against MACS2 and note very similar performances, we do not recommend using this native peak caller unless absolutely necessary. It is no longer actively supported in the ArchR code base.</p>
 <p>The ArchR native peak caller calls peaks on the 500-bp <code>TileMatrix</code> and we indicate to <code>addReproduciblePeakSet()</code> that we want to use this peak caller via the <code>peakMethod</code> parameter. Note that we are not storing the output into the <code>projHeme4</code> object because we do not intend to keep this peak set and this analysis is only for illustrative purposes. Storage into the <code>ArchRProject</code> object would overwrite the previous reproducible peak set already stored in <code>projHeme4</code>.</p>
-<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="calling-peaks-w-tilematrix.html#cb197-1" tabindex="-1"></a>projHemeTmp <span class="ot">&lt;-</span> <span class="fu">addReproduciblePeakSet</span>(</span>
-<span id="cb197-2"><a href="calling-peaks-w-tilematrix.html#cb197-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme4, </span>
-<span id="cb197-3"><a href="calling-peaks-w-tilematrix.html#cb197-3" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
-<span id="cb197-4"><a href="calling-peaks-w-tilematrix.html#cb197-4" tabindex="-1"></a>    <span class="at">peakMethod =</span> <span class="st">&quot;Tiles&quot;</span>,</span>
-<span id="cb197-5"><a href="calling-peaks-w-tilematrix.html#cb197-5" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;p&quot;</span></span>
-<span id="cb197-6"><a href="calling-peaks-w-tilematrix.html#cb197-6" tabindex="-1"></a>)</span>
-<span id="cb197-7"><a href="calling-peaks-w-tilematrix.html#cb197-7" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addReproduciblePeakSet-1a11eb3b3cb-Date-2025-01-23_Time-21-12-41.5348.log</span></span>
-<span id="cb197-8"><a href="calling-peaks-w-tilematrix.html#cb197-8" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb197-9"><a href="calling-peaks-w-tilematrix.html#cb197-9" tabindex="-1"></a><span class="do">## Calling Peaks with TileMatrix. We recommend using the Macs2 Version.</span></span>
-<span id="cb197-10"><a href="calling-peaks-w-tilematrix.html#cb197-10" tabindex="-1"></a><span class="do">## This method is still under development.</span></span>
-<span id="cb197-11"><a href="calling-peaks-w-tilematrix.html#cb197-11" tabindex="-1"></a><span class="do">## Group Coverages Already Computed Returning Groups, Set force = TRUE to Recompute!</span></span>
-<span id="cb197-12"><a href="calling-peaks-w-tilematrix.html#cb197-12" tabindex="-1"></a><span class="do">## List of length 11</span></span>
-<span id="cb197-13"><a href="calling-peaks-w-tilematrix.html#cb197-13" tabindex="-1"></a><span class="do">## names(11): B CD4.M CD4.N CLP Erythroid GMP Mono NK pDC PreB Progenitor</span></span>
-<span id="cb197-14"><a href="calling-peaks-w-tilematrix.html#cb197-14" tabindex="-1"></a><span class="do">## 2025-01-23 21:12:42.369672 : Peak Calling Parameters!, 0.014 mins elapsed.</span></span>
-<span id="cb197-15"><a href="calling-peaks-w-tilematrix.html#cb197-15" tabindex="-1"></a><span class="do">##                 Group nCells nCellsUsed nReplicates nMin nMax maxPeaks</span></span>
-<span id="cb197-16"><a href="calling-peaks-w-tilematrix.html#cb197-16" tabindex="-1"></a><span class="do">## B                   B    421        416           2  162  254   150000</span></span>
-<span id="cb197-17"><a href="calling-peaks-w-tilematrix.html#cb197-17" tabindex="-1"></a><span class="do">## CD4.M           CD4.M    633        586           2   86  500   150000</span></span>
-<span id="cb197-18"><a href="calling-peaks-w-tilematrix.html#cb197-18" tabindex="-1"></a><span class="do">## CD4.N           CD4.N   1250        548           2   48  500   150000</span></span>
-<span id="cb197-19"><a href="calling-peaks-w-tilematrix.html#cb197-19" tabindex="-1"></a><span class="do">## CLP               CLP    386        386           2   88  298   150000</span></span>
-<span id="cb197-20"><a href="calling-peaks-w-tilematrix.html#cb197-20" tabindex="-1"></a><span class="do">## Erythroid   Erythroid    702        671           2  171  500   150000</span></span>
-<span id="cb197-21"><a href="calling-peaks-w-tilematrix.html#cb197-21" tabindex="-1"></a><span class="do">## GMP               GMP   1261        810           2  310  500   150000</span></span>
-<span id="cb197-22"><a href="calling-peaks-w-tilematrix.html#cb197-22" tabindex="-1"></a><span class="do">## Mono             Mono   2652       1000           2  500  500   150000</span></span>
-<span id="cb197-23"><a href="calling-peaks-w-tilematrix.html#cb197-23" tabindex="-1"></a><span class="do">## NK                 NK    903        822           2  322  500   150000</span></span>
-<span id="cb197-24"><a href="calling-peaks-w-tilematrix.html#cb197-24" tabindex="-1"></a><span class="do">## pDC               pDC    314        304           2  144  160   150000</span></span>
-<span id="cb197-25"><a href="calling-peaks-w-tilematrix.html#cb197-25" tabindex="-1"></a><span class="do">## PreB             PreB    351        351           2   40  311   150000</span></span>
-<span id="cb197-26"><a href="calling-peaks-w-tilematrix.html#cb197-26" tabindex="-1"></a><span class="do">## Progenitor Progenitor   1377        639           2  139  500   150000</span></span>
-<span id="cb197-27"><a href="calling-peaks-w-tilematrix.html#cb197-27" tabindex="-1"></a><span class="do">## 2025-01-23 21:12:46.438469 : Computing Total Accessibility Across All Features, 0.082 mins elapsed.</span></span>
-<span id="cb197-28"><a href="calling-peaks-w-tilematrix.html#cb197-28" tabindex="-1"></a><span class="do">## 2025-01-23 21:12:52.14894 : Computing Pseudo-Grouped Tile Matrix, 0.177 mins elapsed.</span></span>
-<span id="cb197-29"><a href="calling-peaks-w-tilematrix.html#cb197-29" tabindex="-1"></a><span class="do">## 2025-01-23 21:13:25.364346 : Created Pseudo-Grouped Tile Matrix (0.471 GB), 0.73 mins elapsed.</span></span>
-<span id="cb197-30"><a href="calling-peaks-w-tilematrix.html#cb197-30" tabindex="-1"></a><span class="do">## colSums = 825382colSums = 660560colSums = 3022271colSums = 323151colSums = 1406092colSums = 153415colSums = 1096638colSums = 276220colSums = 2290759colSums = 670817colSums = 2221092colSums = 2253776colSums = 2111952colSums = 2471475colSums = 3602112colSums = 1148728colSums = 772246colSums = 640088colSums = 1295679colSums = 131806colSums = 2058797colSums = 430702</span></span>
-<span id="cb197-31"><a href="calling-peaks-w-tilematrix.html#cb197-31" tabindex="-1"></a><span class="do">## nTiles = 6072620</span></span>
-<span id="cb197-32"><a href="calling-peaks-w-tilematrix.html#cb197-32" tabindex="-1"></a><span class="do">## Expectation = 0.13591859856207Expectation = 0.10877677180525Expectation = 0.497688147784646Expectation = 0.0532144280392977Expectation = 0.231546185995501Expectation = 0.0252633953713554Expectation = 0.180587291811442Expectation = 0.0454861328388735Expectation = 0.377227457011965Expectation = 0.11046582858799Expectation = 0.365755143578884Expectation = 0.371137334461896Expectation = 0.347782670412441Expectation = 0.406986605452012Expectation = 0.593172633887844Expectation = 0.189165137947048Expectation = 0.127168503874769Expectation = 0.10540557452961Expectation = 0.213364083377521Expectation = 0.0217049642493685Expectation = 0.339029446927356Expectation = 0.0709252349068442</span></span>
-<span id="cb197-33"><a href="calling-peaks-w-tilematrix.html#cb197-33" tabindex="-1"></a><span class="do">## 2025-01-23 21:13:45.516656 : Creating Group Peak Sets with Annotations!, 1.066 mins elapsed.</span></span>
-<span id="cb197-34"><a href="calling-peaks-w-tilematrix.html#cb197-34" tabindex="-1"></a><span class="do">## 2025-01-23 21:13:54.124754 : Creating Union Peak Set with Annotations!, 1.21 mins elapsed.</span></span>
-<span id="cb197-35"><a href="calling-peaks-w-tilematrix.html#cb197-35" tabindex="-1"></a><span class="do">## Annotating Peaks : Nearest Gene</span></span>
-<span id="cb197-36"><a href="calling-peaks-w-tilematrix.html#cb197-36" tabindex="-1"></a><span class="do">## Annotating Peaks : Gene</span></span>
-<span id="cb197-37"><a href="calling-peaks-w-tilematrix.html#cb197-37" tabindex="-1"></a><span class="do">## Annotating Peaks : TSS</span></span>
-<span id="cb197-38"><a href="calling-peaks-w-tilematrix.html#cb197-38" tabindex="-1"></a><span class="do">## Annotating Peaks : GC</span></span>
-<span id="cb197-39"><a href="calling-peaks-w-tilematrix.html#cb197-39" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
-<span id="cb197-40"><a href="calling-peaks-w-tilematrix.html#cb197-40" tabindex="-1"></a><span class="do">## 2025-01-23 21:14:10.530438 : Finished Creating Union Peak Set (263147)!, 1.483 mins elapsed.</span></span></code></pre></div>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="calling-peaks-w-tilematrix.html#cb199-1" tabindex="-1"></a>projHemeTmp <span class="ot">&lt;-</span> <span class="fu">addReproduciblePeakSet</span>(</span>
+<span id="cb199-2"><a href="calling-peaks-w-tilematrix.html#cb199-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme4, </span>
+<span id="cb199-3"><a href="calling-peaks-w-tilematrix.html#cb199-3" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
+<span id="cb199-4"><a href="calling-peaks-w-tilematrix.html#cb199-4" tabindex="-1"></a>    <span class="at">peakMethod =</span> <span class="st">&quot;Tiles&quot;</span>,</span>
+<span id="cb199-5"><a href="calling-peaks-w-tilematrix.html#cb199-5" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;p&quot;</span></span>
+<span id="cb199-6"><a href="calling-peaks-w-tilematrix.html#cb199-6" tabindex="-1"></a>)</span>
+<span id="cb199-7"><a href="calling-peaks-w-tilematrix.html#cb199-7" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addReproduciblePeakSet-9286e8c5f-Date-2025-02-06_Time-01-58-48.55566.log</span></span>
+<span id="cb199-8"><a href="calling-peaks-w-tilematrix.html#cb199-8" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb199-9"><a href="calling-peaks-w-tilematrix.html#cb199-9" tabindex="-1"></a><span class="do">## Calling Peaks with TileMatrix. We recommend using the Macs2 Version.</span></span>
+<span id="cb199-10"><a href="calling-peaks-w-tilematrix.html#cb199-10" tabindex="-1"></a><span class="do">## This method is still under development.</span></span>
+<span id="cb199-11"><a href="calling-peaks-w-tilematrix.html#cb199-11" tabindex="-1"></a><span class="do">## Group Coverages Already Computed Returning Groups, Set force = TRUE to Recompute!</span></span>
+<span id="cb199-12"><a href="calling-peaks-w-tilematrix.html#cb199-12" tabindex="-1"></a><span class="do">## List of length 11</span></span>
+<span id="cb199-13"><a href="calling-peaks-w-tilematrix.html#cb199-13" tabindex="-1"></a><span class="do">## names(11): B CD4.M CD4.N CLP Erythroid GMP Mono NK pDC PreB Progenitor</span></span>
+<span id="cb199-14"><a href="calling-peaks-w-tilematrix.html#cb199-14" tabindex="-1"></a><span class="do">## 2025-02-06 01:58:49.348169 : Peak Calling Parameters!, 0.013 mins elapsed.</span></span>
+<span id="cb199-15"><a href="calling-peaks-w-tilematrix.html#cb199-15" tabindex="-1"></a><span class="do">##                 Group nCells nCellsUsed nReplicates nMin nMax maxPeaks</span></span>
+<span id="cb199-16"><a href="calling-peaks-w-tilematrix.html#cb199-16" tabindex="-1"></a><span class="do">## B                   B    421        416           2  162  254   150000</span></span>
+<span id="cb199-17"><a href="calling-peaks-w-tilematrix.html#cb199-17" tabindex="-1"></a><span class="do">## CD4.M           CD4.M    633        586           2   86  500   150000</span></span>
+<span id="cb199-18"><a href="calling-peaks-w-tilematrix.html#cb199-18" tabindex="-1"></a><span class="do">## CD4.N           CD4.N   1250        548           2   48  500   150000</span></span>
+<span id="cb199-19"><a href="calling-peaks-w-tilematrix.html#cb199-19" tabindex="-1"></a><span class="do">## CLP               CLP    386        386           2   88  298   150000</span></span>
+<span id="cb199-20"><a href="calling-peaks-w-tilematrix.html#cb199-20" tabindex="-1"></a><span class="do">## Erythroid   Erythroid    702        671           2  171  500   150000</span></span>
+<span id="cb199-21"><a href="calling-peaks-w-tilematrix.html#cb199-21" tabindex="-1"></a><span class="do">## GMP               GMP   1261        810           2  310  500   150000</span></span>
+<span id="cb199-22"><a href="calling-peaks-w-tilematrix.html#cb199-22" tabindex="-1"></a><span class="do">## Mono             Mono   2652       1000           2  500  500   150000</span></span>
+<span id="cb199-23"><a href="calling-peaks-w-tilematrix.html#cb199-23" tabindex="-1"></a><span class="do">## NK                 NK    903        822           2  322  500   150000</span></span>
+<span id="cb199-24"><a href="calling-peaks-w-tilematrix.html#cb199-24" tabindex="-1"></a><span class="do">## pDC               pDC    314        304           2  144  160   150000</span></span>
+<span id="cb199-25"><a href="calling-peaks-w-tilematrix.html#cb199-25" tabindex="-1"></a><span class="do">## PreB             PreB    351        351           2   40  311   150000</span></span>
+<span id="cb199-26"><a href="calling-peaks-w-tilematrix.html#cb199-26" tabindex="-1"></a><span class="do">## Progenitor Progenitor   1377        639           2  139  500   150000</span></span>
+<span id="cb199-27"><a href="calling-peaks-w-tilematrix.html#cb199-27" tabindex="-1"></a><span class="do">## 2025-02-06 01:58:53.23755 : Computing Total Accessibility Across All Features, 0.078 mins elapsed.</span></span>
+<span id="cb199-28"><a href="calling-peaks-w-tilematrix.html#cb199-28" tabindex="-1"></a><span class="do">## 2025-02-06 01:58:56.607124 : Computing Pseudo-Grouped Tile Matrix, 0.134 mins elapsed.</span></span>
+<span id="cb199-29"><a href="calling-peaks-w-tilematrix.html#cb199-29" tabindex="-1"></a><span class="do">## 2025-02-06 01:59:26.047958 : Created Pseudo-Grouped Tile Matrix (0.471 GB), 0.625 mins elapsed.</span></span>
+<span id="cb199-30"><a href="calling-peaks-w-tilematrix.html#cb199-30" tabindex="-1"></a><span class="do">## colSums = 825382colSums = 660560colSums = 3022271colSums = 323151colSums = 1406092colSums = 153415colSums = 1096638colSums = 276220colSums = 2290759colSums = 670817colSums = 2221092colSums = 2253776colSums = 2111952colSums = 2471475colSums = 3602112colSums = 1148728colSums = 772246colSums = 640088colSums = 1295679colSums = 131806colSums = 2058797colSums = 430702</span></span>
+<span id="cb199-31"><a href="calling-peaks-w-tilematrix.html#cb199-31" tabindex="-1"></a><span class="do">## nTiles = 6072620</span></span>
+<span id="cb199-32"><a href="calling-peaks-w-tilematrix.html#cb199-32" tabindex="-1"></a><span class="do">## Expectation = 0.13591859856207Expectation = 0.10877677180525Expectation = 0.497688147784646Expectation = 0.0532144280392977Expectation = 0.231546185995501Expectation = 0.0252633953713554Expectation = 0.180587291811442Expectation = 0.0454861328388735Expectation = 0.377227457011965Expectation = 0.11046582858799Expectation = 0.365755143578884Expectation = 0.371137334461896Expectation = 0.347782670412441Expectation = 0.406986605452012Expectation = 0.593172633887844Expectation = 0.189165137947048Expectation = 0.127168503874769Expectation = 0.10540557452961Expectation = 0.213364083377521Expectation = 0.0217049642493685Expectation = 0.339029446927356Expectation = 0.0709252349068442</span></span>
+<span id="cb199-33"><a href="calling-peaks-w-tilematrix.html#cb199-33" tabindex="-1"></a><span class="do">## 2025-02-06 01:59:47.694666 : Creating Group Peak Sets with Annotations!, 0.986 mins elapsed.</span></span>
+<span id="cb199-34"><a href="calling-peaks-w-tilematrix.html#cb199-34" tabindex="-1"></a><span class="do">## 2025-02-06 01:59:55.344699 : Creating Union Peak Set with Annotations!, 1.113 mins elapsed.</span></span>
+<span id="cb199-35"><a href="calling-peaks-w-tilematrix.html#cb199-35" tabindex="-1"></a><span class="do">## Annotating Peaks : Nearest Gene</span></span>
+<span id="cb199-36"><a href="calling-peaks-w-tilematrix.html#cb199-36" tabindex="-1"></a><span class="do">## Annotating Peaks : Gene</span></span>
+<span id="cb199-37"><a href="calling-peaks-w-tilematrix.html#cb199-37" tabindex="-1"></a><span class="do">## Annotating Peaks : TSS</span></span>
+<span id="cb199-38"><a href="calling-peaks-w-tilematrix.html#cb199-38" tabindex="-1"></a><span class="do">## Annotating Peaks : GC</span></span>
+<span id="cb199-39"><a href="calling-peaks-w-tilematrix.html#cb199-39" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
+<span id="cb199-40"><a href="calling-peaks-w-tilematrix.html#cb199-40" tabindex="-1"></a><span class="do">## 2025-02-06 02:00:09.962552 : Finished Creating Union Peak Set (263147)!, 1.357 mins elapsed.</span></span></code></pre></div>
 <p>We can similarly examine this merged peak set.</p>
-<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="calling-peaks-w-tilematrix.html#cb198-1" tabindex="-1"></a><span class="fu">getPeakSet</span>(projHemeTmp)</span>
-<span id="cb198-2"><a href="calling-peaks-w-tilematrix.html#cb198-2" tabindex="-1"></a><span class="do">## GRanges object with 263147 ranges and 10 metadata columns:</span></span>
-<span id="cb198-3"><a href="calling-peaks-w-tilematrix.html#cb198-3" tabindex="-1"></a><span class="do">##            seqnames              ranges strand |   mlog10p      Group</span></span>
-<span id="cb198-4"><a href="calling-peaks-w-tilematrix.html#cb198-4" tabindex="-1"></a><span class="do">##               &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;      &lt;Rle&gt;</span></span>
-<span id="cb198-5"><a href="calling-peaks-w-tilematrix.html#cb198-5" tabindex="-1"></a><span class="do">##        [1]     chr1       752500-752999      * |     6.311       Mono</span></span>
-<span id="cb198-6"><a href="calling-peaks-w-tilematrix.html#cb198-6" tabindex="-1"></a><span class="do">##        [2]     chr1       757500-757999      * |     3.426      CD4.N</span></span>
-<span id="cb198-7"><a href="calling-peaks-w-tilematrix.html#cb198-7" tabindex="-1"></a><span class="do">##        [3]     chr1       758500-758999      * |     1.177         NK</span></span>
-<span id="cb198-8"><a href="calling-peaks-w-tilematrix.html#cb198-8" tabindex="-1"></a><span class="do">##        [4]     chr1       762000-762499      * |     1.479         NK</span></span>
-<span id="cb198-9"><a href="calling-peaks-w-tilematrix.html#cb198-9" tabindex="-1"></a><span class="do">##        [5]     chr1       762500-762999      * |    25.802         NK</span></span>
-<span id="cb198-10"><a href="calling-peaks-w-tilematrix.html#cb198-10" tabindex="-1"></a><span class="do">##        ...      ...                 ...    ... .       ...        ...</span></span>
-<span id="cb198-11"><a href="calling-peaks-w-tilematrix.html#cb198-11" tabindex="-1"></a><span class="do">##   [263143]     chrX 154842000-154842499      * |     6.554        CLP</span></span>
-<span id="cb198-12"><a href="calling-peaks-w-tilematrix.html#cb198-12" tabindex="-1"></a><span class="do">##   [263144]     chrX 154842500-154842999      * |     5.993       PreB</span></span>
-<span id="cb198-13"><a href="calling-peaks-w-tilematrix.html#cb198-13" tabindex="-1"></a><span class="do">##   [263145]     chrX 154862000-154862499      * |     3.312 Progenitor</span></span>
-<span id="cb198-14"><a href="calling-peaks-w-tilematrix.html#cb198-14" tabindex="-1"></a><span class="do">##   [263146]     chrX 154862500-154862999      * |     1.262         NK</span></span>
-<span id="cb198-15"><a href="calling-peaks-w-tilematrix.html#cb198-15" tabindex="-1"></a><span class="do">##   [263147]     chrX 154997000-154997499      * |     2.034 Progenitor</span></span>
-<span id="cb198-16"><a href="calling-peaks-w-tilematrix.html#cb198-16" tabindex="-1"></a><span class="do">##            distToGeneStart nearestGene    peakType distToTSS  nearestTSS</span></span>
-<span id="cb198-17"><a href="calling-peaks-w-tilematrix.html#cb198-17" tabindex="-1"></a><span class="do">##                  &lt;integer&gt; &lt;character&gt; &lt;character&gt; &lt;integer&gt; &lt;character&gt;</span></span>
-<span id="cb198-18"><a href="calling-peaks-w-tilematrix.html#cb198-18" tabindex="-1"></a><span class="do">##        [1]           10152   LINC00115      Distal     10152  uc010nxx.2</span></span>
-<span id="cb198-19"><a href="calling-peaks-w-tilematrix.html#cb198-19" tabindex="-1"></a><span class="do">##        [2]            5152   LINC00115      Distal      5152  uc010nxx.2</span></span>
-<span id="cb198-20"><a href="calling-peaks-w-tilematrix.html#cb198-20" tabindex="-1"></a><span class="do">##        [3]            4152   LINC00115      Distal      4152  uc010nxx.2</span></span>
-<span id="cb198-21"><a href="calling-peaks-w-tilematrix.html#cb198-21" tabindex="-1"></a><span class="do">##        [4]             652   LINC00115    Promoter       652  uc010nxx.2</span></span>
-<span id="cb198-22"><a href="calling-peaks-w-tilematrix.html#cb198-22" tabindex="-1"></a><span class="do">##        [5]             152   LINC00115    Promoter       152  uc010nxx.2</span></span>
-<span id="cb198-23"><a href="calling-peaks-w-tilematrix.html#cb198-23" tabindex="-1"></a><span class="do">##        ...             ...         ...         ...       ...         ...</span></span>
-<span id="cb198-24"><a href="calling-peaks-w-tilematrix.html#cb198-24" tabindex="-1"></a><span class="do">##   [263143]             372       TMLHE    Intronic       372  uc004fnn.3</span></span>
-<span id="cb198-25"><a href="calling-peaks-w-tilematrix.html#cb198-25" tabindex="-1"></a><span class="do">##   [263144]             126       TMLHE    Promoter       126  uc004fnn.3</span></span>
-<span id="cb198-26"><a href="calling-peaks-w-tilematrix.html#cb198-26" tabindex="-1"></a><span class="do">##   [263145]           19626       TMLHE      Distal     19626  uc004fnn.3</span></span>
-<span id="cb198-27"><a href="calling-peaks-w-tilematrix.html#cb198-27" tabindex="-1"></a><span class="do">##   [263146]           20126       TMLHE      Distal     20126  uc004fnn.3</span></span>
-<span id="cb198-28"><a href="calling-peaks-w-tilematrix.html#cb198-28" tabindex="-1"></a><span class="do">##   [263147]          154626       TMLHE      Distal       201  uc004fnq.1</span></span>
-<span id="cb198-29"><a href="calling-peaks-w-tilematrix.html#cb198-29" tabindex="-1"></a><span class="do">##                   GC       idx         N</span></span>
-<span id="cb198-30"><a href="calling-peaks-w-tilematrix.html#cb198-30" tabindex="-1"></a><span class="do">##            &lt;numeric&gt; &lt;integer&gt; &lt;numeric&gt;</span></span>
-<span id="cb198-31"><a href="calling-peaks-w-tilematrix.html#cb198-31" tabindex="-1"></a><span class="do">##        [1]     0.484         1         0</span></span>
-<span id="cb198-32"><a href="calling-peaks-w-tilematrix.html#cb198-32" tabindex="-1"></a><span class="do">##        [2]     0.552         2         0</span></span>
-<span id="cb198-33"><a href="calling-peaks-w-tilematrix.html#cb198-33" tabindex="-1"></a><span class="do">##        [3]     0.560         3         0</span></span>
-<span id="cb198-34"><a href="calling-peaks-w-tilematrix.html#cb198-34" tabindex="-1"></a><span class="do">##        [4]     0.574         4         0</span></span>
-<span id="cb198-35"><a href="calling-peaks-w-tilematrix.html#cb198-35" tabindex="-1"></a><span class="do">##        [5]     0.684         5         0</span></span>
-<span id="cb198-36"><a href="calling-peaks-w-tilematrix.html#cb198-36" tabindex="-1"></a><span class="do">##        ...       ...       ...       ...</span></span>
-<span id="cb198-37"><a href="calling-peaks-w-tilematrix.html#cb198-37" tabindex="-1"></a><span class="do">##   [263143]     0.612      6175         0</span></span>
-<span id="cb198-38"><a href="calling-peaks-w-tilematrix.html#cb198-38" tabindex="-1"></a><span class="do">##   [263144]     0.554      6176         0</span></span>
-<span id="cb198-39"><a href="calling-peaks-w-tilematrix.html#cb198-39" tabindex="-1"></a><span class="do">##   [263145]     0.430      6177         0</span></span>
-<span id="cb198-40"><a href="calling-peaks-w-tilematrix.html#cb198-40" tabindex="-1"></a><span class="do">##   [263146]     0.420      6178         0</span></span>
-<span id="cb198-41"><a href="calling-peaks-w-tilematrix.html#cb198-41" tabindex="-1"></a><span class="do">##   [263147]     0.542      6179         0</span></span>
-<span id="cb198-42"><a href="calling-peaks-w-tilematrix.html#cb198-42" tabindex="-1"></a><span class="do">##   -------</span></span>
-<span id="cb198-43"><a href="calling-peaks-w-tilematrix.html#cb198-43" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="calling-peaks-w-tilematrix.html#cb200-1" tabindex="-1"></a><span class="fu">getPeakSet</span>(projHemeTmp)</span>
+<span id="cb200-2"><a href="calling-peaks-w-tilematrix.html#cb200-2" tabindex="-1"></a><span class="do">## GRanges object with 263147 ranges and 10 metadata columns:</span></span>
+<span id="cb200-3"><a href="calling-peaks-w-tilematrix.html#cb200-3" tabindex="-1"></a><span class="do">##            seqnames              ranges strand |   mlog10p      Group</span></span>
+<span id="cb200-4"><a href="calling-peaks-w-tilematrix.html#cb200-4" tabindex="-1"></a><span class="do">##               &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;      &lt;Rle&gt;</span></span>
+<span id="cb200-5"><a href="calling-peaks-w-tilematrix.html#cb200-5" tabindex="-1"></a><span class="do">##        [1]     chr1       752500-752999      * |     6.311       Mono</span></span>
+<span id="cb200-6"><a href="calling-peaks-w-tilematrix.html#cb200-6" tabindex="-1"></a><span class="do">##        [2]     chr1       757500-757999      * |     3.426      CD4.N</span></span>
+<span id="cb200-7"><a href="calling-peaks-w-tilematrix.html#cb200-7" tabindex="-1"></a><span class="do">##        [3]     chr1       758500-758999      * |     1.177         NK</span></span>
+<span id="cb200-8"><a href="calling-peaks-w-tilematrix.html#cb200-8" tabindex="-1"></a><span class="do">##        [4]     chr1       762000-762499      * |     1.479         NK</span></span>
+<span id="cb200-9"><a href="calling-peaks-w-tilematrix.html#cb200-9" tabindex="-1"></a><span class="do">##        [5]     chr1       762500-762999      * |    25.802         NK</span></span>
+<span id="cb200-10"><a href="calling-peaks-w-tilematrix.html#cb200-10" tabindex="-1"></a><span class="do">##        ...      ...                 ...    ... .       ...        ...</span></span>
+<span id="cb200-11"><a href="calling-peaks-w-tilematrix.html#cb200-11" tabindex="-1"></a><span class="do">##   [263143]     chrX 154842000-154842499      * |     6.554        CLP</span></span>
+<span id="cb200-12"><a href="calling-peaks-w-tilematrix.html#cb200-12" tabindex="-1"></a><span class="do">##   [263144]     chrX 154842500-154842999      * |     5.993       PreB</span></span>
+<span id="cb200-13"><a href="calling-peaks-w-tilematrix.html#cb200-13" tabindex="-1"></a><span class="do">##   [263145]     chrX 154862000-154862499      * |     3.312 Progenitor</span></span>
+<span id="cb200-14"><a href="calling-peaks-w-tilematrix.html#cb200-14" tabindex="-1"></a><span class="do">##   [263146]     chrX 154862500-154862999      * |     1.262         NK</span></span>
+<span id="cb200-15"><a href="calling-peaks-w-tilematrix.html#cb200-15" tabindex="-1"></a><span class="do">##   [263147]     chrX 154997000-154997499      * |     2.034 Progenitor</span></span>
+<span id="cb200-16"><a href="calling-peaks-w-tilematrix.html#cb200-16" tabindex="-1"></a><span class="do">##            distToGeneStart nearestGene    peakType distToTSS  nearestTSS</span></span>
+<span id="cb200-17"><a href="calling-peaks-w-tilematrix.html#cb200-17" tabindex="-1"></a><span class="do">##                  &lt;integer&gt; &lt;character&gt; &lt;character&gt; &lt;integer&gt; &lt;character&gt;</span></span>
+<span id="cb200-18"><a href="calling-peaks-w-tilematrix.html#cb200-18" tabindex="-1"></a><span class="do">##        [1]           10152   LINC00115      Distal     10152  uc010nxx.2</span></span>
+<span id="cb200-19"><a href="calling-peaks-w-tilematrix.html#cb200-19" tabindex="-1"></a><span class="do">##        [2]            5152   LINC00115      Distal      5152  uc010nxx.2</span></span>
+<span id="cb200-20"><a href="calling-peaks-w-tilematrix.html#cb200-20" tabindex="-1"></a><span class="do">##        [3]            4152   LINC00115      Distal      4152  uc010nxx.2</span></span>
+<span id="cb200-21"><a href="calling-peaks-w-tilematrix.html#cb200-21" tabindex="-1"></a><span class="do">##        [4]             652   LINC00115    Promoter       652  uc010nxx.2</span></span>
+<span id="cb200-22"><a href="calling-peaks-w-tilematrix.html#cb200-22" tabindex="-1"></a><span class="do">##        [5]             152   LINC00115    Promoter       152  uc010nxx.2</span></span>
+<span id="cb200-23"><a href="calling-peaks-w-tilematrix.html#cb200-23" tabindex="-1"></a><span class="do">##        ...             ...         ...         ...       ...         ...</span></span>
+<span id="cb200-24"><a href="calling-peaks-w-tilematrix.html#cb200-24" tabindex="-1"></a><span class="do">##   [263143]             372       TMLHE    Intronic       372  uc004fnn.3</span></span>
+<span id="cb200-25"><a href="calling-peaks-w-tilematrix.html#cb200-25" tabindex="-1"></a><span class="do">##   [263144]             126       TMLHE    Promoter       126  uc004fnn.3</span></span>
+<span id="cb200-26"><a href="calling-peaks-w-tilematrix.html#cb200-26" tabindex="-1"></a><span class="do">##   [263145]           19626       TMLHE      Distal     19626  uc004fnn.3</span></span>
+<span id="cb200-27"><a href="calling-peaks-w-tilematrix.html#cb200-27" tabindex="-1"></a><span class="do">##   [263146]           20126       TMLHE      Distal     20126  uc004fnn.3</span></span>
+<span id="cb200-28"><a href="calling-peaks-w-tilematrix.html#cb200-28" tabindex="-1"></a><span class="do">##   [263147]          154626       TMLHE      Distal       201  uc004fnq.1</span></span>
+<span id="cb200-29"><a href="calling-peaks-w-tilematrix.html#cb200-29" tabindex="-1"></a><span class="do">##                   GC       idx         N</span></span>
+<span id="cb200-30"><a href="calling-peaks-w-tilematrix.html#cb200-30" tabindex="-1"></a><span class="do">##            &lt;numeric&gt; &lt;integer&gt; &lt;numeric&gt;</span></span>
+<span id="cb200-31"><a href="calling-peaks-w-tilematrix.html#cb200-31" tabindex="-1"></a><span class="do">##        [1]     0.484         1         0</span></span>
+<span id="cb200-32"><a href="calling-peaks-w-tilematrix.html#cb200-32" tabindex="-1"></a><span class="do">##        [2]     0.552         2         0</span></span>
+<span id="cb200-33"><a href="calling-peaks-w-tilematrix.html#cb200-33" tabindex="-1"></a><span class="do">##        [3]     0.560         3         0</span></span>
+<span id="cb200-34"><a href="calling-peaks-w-tilematrix.html#cb200-34" tabindex="-1"></a><span class="do">##        [4]     0.574         4         0</span></span>
+<span id="cb200-35"><a href="calling-peaks-w-tilematrix.html#cb200-35" tabindex="-1"></a><span class="do">##        [5]     0.684         5         0</span></span>
+<span id="cb200-36"><a href="calling-peaks-w-tilematrix.html#cb200-36" tabindex="-1"></a><span class="do">##        ...       ...       ...       ...</span></span>
+<span id="cb200-37"><a href="calling-peaks-w-tilematrix.html#cb200-37" tabindex="-1"></a><span class="do">##   [263143]     0.612      6175         0</span></span>
+<span id="cb200-38"><a href="calling-peaks-w-tilematrix.html#cb200-38" tabindex="-1"></a><span class="do">##   [263144]     0.554      6176         0</span></span>
+<span id="cb200-39"><a href="calling-peaks-w-tilematrix.html#cb200-39" tabindex="-1"></a><span class="do">##   [263145]     0.430      6177         0</span></span>
+<span id="cb200-40"><a href="calling-peaks-w-tilematrix.html#cb200-40" tabindex="-1"></a><span class="do">##   [263146]     0.420      6178         0</span></span>
+<span id="cb200-41"><a href="calling-peaks-w-tilematrix.html#cb200-41" tabindex="-1"></a><span class="do">##   [263147]     0.542      6179         0</span></span>
+<span id="cb200-42"><a href="calling-peaks-w-tilematrix.html#cb200-42" tabindex="-1"></a><span class="do">##   -------</span></span>
+<span id="cb200-43"><a href="calling-peaks-w-tilematrix.html#cb200-43" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
 <div id="comparing-the-two-peak-calling-methods" class="section level3 hasAnchor" number="12.3.1">
 <h3><span class="header-section-number">12.3.1</span> Comparing the two peak calling methods<a href="calling-peaks-w-tilematrix.html#comparing-the-two-peak-calling-methods" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>To compare the merged peak set generated using MACS2 vs the merged peak set generated using the ArchR native <code>TileMatrix</code> peak caller, we can check the perfecent of overlapping peaks etc.</p>
 <p>First, we check the percent of MACS2-called peaks that are overlapped by the <code>TileMatrix</code>-called peaks.</p>
-<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="calling-peaks-w-tilematrix.html#cb199-1" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">subsetByOverlaps</span>(<span class="fu">getPeakSet</span>(projHeme4), <span class="fu">getPeakSet</span>(projHemeTmp))) <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">getPeakSet</span>(projHeme4))</span>
-<span id="cb199-2"><a href="calling-peaks-w-tilematrix.html#cb199-2" tabindex="-1"></a><span class="do">## [1] 0.9565828</span></span></code></pre></div>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="calling-peaks-w-tilematrix.html#cb201-1" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">subsetByOverlaps</span>(<span class="fu">getPeakSet</span>(projHeme4), <span class="fu">getPeakSet</span>(projHemeTmp))) <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">getPeakSet</span>(projHeme4))</span>
+<span id="cb201-2"><a href="calling-peaks-w-tilematrix.html#cb201-2" tabindex="-1"></a><span class="do">## [1] 0.9565828</span></span></code></pre></div>
 <p>Then, we check the converse - the percent of <code>TileMatrix</code>-called peaks that are overlapped by MACS2-called peaks. You can see that this overlap is not as strong.</p>
-<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="calling-peaks-w-tilematrix.html#cb200-1" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">subsetByOverlaps</span>(<span class="fu">getPeakSet</span>(projHemeTmp), <span class="fu">getPeakSet</span>(projHeme4))) <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">getPeakSet</span>(projHemeTmp))</span>
-<span id="cb200-2"><a href="calling-peaks-w-tilematrix.html#cb200-2" tabindex="-1"></a><span class="do">## [1] 0.7852683</span></span></code></pre></div>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="calling-peaks-w-tilematrix.html#cb202-1" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">subsetByOverlaps</span>(<span class="fu">getPeakSet</span>(projHemeTmp), <span class="fu">getPeakSet</span>(projHeme4))) <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">getPeakSet</span>(projHemeTmp))</span>
+<span id="cb202-2"><a href="calling-peaks-w-tilematrix.html#cb202-2" tabindex="-1"></a><span class="do">## [1] 0.7852683</span></span></code></pre></div>
 <p>If we increase the margins of the peaks to be wider (1000-bp peaks instead of 500-bp peaks), the percent of MACS2-called peaks that are overlapped does not change much.</p>
-<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="calling-peaks-w-tilematrix.html#cb201-1" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">subsetByOverlaps</span>(<span class="fu">resize</span>(<span class="fu">getPeakSet</span>(projHeme4), <span class="dv">1000</span>, <span class="st">&quot;center&quot;</span>), <span class="fu">getPeakSet</span>(projHemeTmp))) <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">getPeakSet</span>(projHeme4))</span>
-<span id="cb201-2"><a href="calling-peaks-w-tilematrix.html#cb201-2" tabindex="-1"></a><span class="do">## [1] 0.9619421</span></span></code></pre></div>
+<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="calling-peaks-w-tilematrix.html#cb203-1" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">subsetByOverlaps</span>(<span class="fu">resize</span>(<span class="fu">getPeakSet</span>(projHeme4), <span class="dv">1000</span>, <span class="st">&quot;center&quot;</span>), <span class="fu">getPeakSet</span>(projHemeTmp))) <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">getPeakSet</span>(projHeme4))</span>
+<span id="cb203-2"><a href="calling-peaks-w-tilematrix.html#cb203-2" tabindex="-1"></a><span class="do">## [1] 0.9619421</span></span></code></pre></div>
 <p>But the percent of <code>TileMatrix</code>-called peaks overlapped by MACS2 does increase.</p>
-<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="calling-peaks-w-tilematrix.html#cb202-1" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">subsetByOverlaps</span>(<span class="fu">getPeakSet</span>(projHemeTmp), <span class="fu">resize</span>(<span class="fu">getPeakSet</span>(projHeme4), <span class="dv">1000</span>, <span class="st">&quot;center&quot;</span>))) <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">getPeakSet</span>(projHemeTmp))</span>
-<span id="cb202-2"><a href="calling-peaks-w-tilematrix.html#cb202-2" tabindex="-1"></a><span class="do">## [1] 0.8581781</span></span></code></pre></div>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="calling-peaks-w-tilematrix.html#cb204-1" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">subsetByOverlaps</span>(<span class="fu">getPeakSet</span>(projHemeTmp), <span class="fu">resize</span>(<span class="fu">getPeakSet</span>(projHeme4), <span class="dv">1000</span>, <span class="st">&quot;center&quot;</span>))) <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">getPeakSet</span>(projHemeTmp))</span>
+<span id="cb204-2"><a href="calling-peaks-w-tilematrix.html#cb204-2" tabindex="-1"></a><span class="do">## [1] 0.8581781</span></span></code></pre></div>
 </div>
 </div>
             </section>
