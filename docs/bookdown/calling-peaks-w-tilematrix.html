@@ -4,19 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>10.3 Calling Peaks w/ TileMatrix | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
+  <title>12.3 Calling Peaks w/ TileMatrix | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
   <meta name="description" content="A guide to ArchR" />
-  <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="10.3 Calling Peaks w/ TileMatrix | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
+  <meta property="og:title" content="12.3 Calling Peaks w/ TileMatrix | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="A guide to ArchR" />
   <meta name="github-repo" content="GreenleafLab/ArchR" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="10.3 Calling Peaks w/ TileMatrix | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
+  <meta name="twitter:title" content="12.3 Calling Peaks w/ TileMatrix | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   
   <meta name="twitter:description" content="A guide to ArchR" />
   
@@ -24,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-05-01" />
+<meta name="date" content="2025-02-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,8 +31,9 @@
   
   <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
 <link rel="prev" href="calling-peaks-w-macs2.html"/>
-<link rel="next" href="add-peak-matrix.html"/>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link rel="next" href="adding-a-peak-matrix.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -49,15 +49,18 @@
 
 
 
-
-<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
@@ -65,7 +68,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -91,7 +94,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -104,7 +107,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -116,6 +119,11 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -134,114 +142,149 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="../index.html">Back to ArchR Home</a></li>
 
 <li class="divider"></li>
-<li><a href="index.html#section"><img src="images/ArchR_Logo_Integrated.png" alt="" width="200"></a></li>
-<li class="chapter" data-level="1" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>1</b> Getting Started with ArchR</a>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><img src="images/ArchR_Logo_Integrated.png" alt="" width="200"></a></li>
+<li class="chapter" data-level="1" data-path="debugging-and-troubleshooting-in-archr.html"><a href="debugging-and-troubleshooting-in-archr.html"><i class="fa fa-check"></i><b>1</b> Debugging and Troubleshooting in ArchR</a></li>
+<li class="chapter" data-level="2" data-path="manage-archrs-dependencies.html"><a href="manage-archrs-dependencies.html"><i class="fa fa-check"></i><b>2</b> Manage ArchR’s Dependencies</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="a-brief-primer-on-atac-seq-terminology.html"><a href="a-brief-primer-on-atac-seq-terminology.html"><i class="fa fa-check"></i><b>1.1</b> A Brief Primer on ATAC-seq Terminology</a></li>
-<li class="chapter" data-level="1.2" data-path="why-use-archr.html"><a href="why-use-archr.html"><i class="fa fa-check"></i><b>1.2</b> Why use ArchR?</a></li>
-<li class="chapter" data-level="1.3" data-path="what-is-an-arrow-file-archrproject.html"><a href="what-is-an-arrow-file-archrproject.html"><i class="fa fa-check"></i><b>1.3</b> What is an Arrow file / <code>ArchRProject</code>?</a></li>
-<li class="chapter" data-level="1.4" data-path="input-file-types-in-archr.html"><a href="input-file-types-in-archr.html"><i class="fa fa-check"></i><b>1.4</b> Input File Types in ArchR</a></li>
-<li class="chapter" data-level="1.5" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>1.5</b> Getting Set Up</a></li>
-<li class="chapter" data-level="1.6" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>1.6</b> Creating Arrow Files</a></li>
-<li class="chapter" data-level="1.7" data-path="per-cell-quality-control.html"><a href="per-cell-quality-control.html"><i class="fa fa-check"></i><b>1.7</b> Per-cell Quality Control</a></li>
+<li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
+<li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+<li class="chapter" data-level="2.3" data-path="using-docker-for-pre-compiled-environment-setup.html"><a href="using-docker-for-pre-compiled-environment-setup.html"><i class="fa fa-check"></i><b>2.3</b> Using Docker for pre-compiled environment setup</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="doublet-inference-with-archr.html"><a href="doublet-inference-with-archr.html"><i class="fa fa-check"></i><b>2</b> Doublet Inference with ArchR</a>
+<li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="how-does-doublet-identification-work-in-archr.html"><a href="how-does-doublet-identification-work-in-archr.html"><i class="fa fa-check"></i><b>2.1</b> How does doublet identification work in ArchR?</a></li>
-<li class="chapter" data-level="2.2" data-path="inferring-scatac-seq-doublets-with-archr.html"><a href="inferring-scatac-seq-doublets-with-archr.html"><i class="fa fa-check"></i><b>2.2</b> Inferring scATAC-seq Doublets with ArchR</a></li>
+<li class="chapter" data-level="3.1" data-path="a-brief-primer-on-atac-seq-terminology.html"><a href="a-brief-primer-on-atac-seq-terminology.html"><i class="fa fa-check"></i><b>3.1</b> A Brief Primer on ATAC-seq Terminology</a></li>
+<li class="chapter" data-level="3.2" data-path="why-use-archr.html"><a href="why-use-archr.html"><i class="fa fa-check"></i><b>3.2</b> Why use ArchR?</a></li>
+<li class="chapter" data-level="3.3" data-path="what-is-an-arrow-file-archrproject.html"><a href="what-is-an-arrow-file-archrproject.html"><i class="fa fa-check"></i><b>3.3</b> What is an Arrow file / <code>ArchRProject</code>?</a></li>
+<li class="chapter" data-level="3.4" data-path="input-file-types-in-archr.html"><a href="input-file-types-in-archr.html"><i class="fa fa-check"></i><b>3.4</b> Input File Types in ArchR</a></li>
+<li class="chapter" data-level="3.5" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>3.5</b> Getting Set Up</a></li>
+<li class="chapter" data-level="3.6" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>3.6</b> Creating Arrow Files</a></li>
+<li class="chapter" data-level="3.7" data-path="per-cell-quality-control.html"><a href="per-cell-quality-control.html"><i class="fa fa-check"></i><b>3.7</b> Per-cell Quality Control</a></li>
+<li class="chapter" data-level="3.8" data-path="using-bam-files-for-arrow-file-creation.html"><a href="using-bam-files-for-arrow-file-creation.html"><i class="fa fa-check"></i><b>3.8</b> Using BAM files for Arrow File creation</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="creating-an-archrproject.html"><a href="creating-an-archrproject.html"><i class="fa fa-check"></i><b>3</b> Creating an ArchRProject</a>
+<li class="chapter" data-level="4" data-path="doublet-inference-with-archr.html"><a href="doublet-inference-with-archr.html"><i class="fa fa-check"></i><b>4</b> Doublet Inference with ArchR</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="creating-an-archrproject-1.html"><a href="creating-an-archrproject-1.html"><i class="fa fa-check"></i><b>3.1</b> Creating An ArchRProject</a></li>
-<li class="chapter" data-level="3.2" data-path="manipulating-an-archrproject.html"><a href="manipulating-an-archrproject.html"><i class="fa fa-check"></i><b>3.2</b> Manipulating An ArchRProject</a></li>
-<li class="chapter" data-level="3.3" data-path="plotting-sample-statistics-from-an-archrproject.html"><a href="plotting-sample-statistics-from-an-archrproject.html"><i class="fa fa-check"></i><b>3.3</b> Plotting Sample Statistics from an ArchRProject</a></li>
-<li class="chapter" data-level="3.4" data-path="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles-.html"><a href="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles-.html"><i class="fa fa-check"></i><b>3.4</b> Plotting Sample Fragment Size Distribution and TSS Enrichment Profiles.</a></li>
-<li class="chapter" data-level="3.5" data-path="saving-and-loading-an-archrproject.html"><a href="saving-and-loading-an-archrproject.html"><i class="fa fa-check"></i><b>3.5</b> Saving and Loading an <code>ArchRProject</code></a></li>
-<li class="chapter" data-level="3.6" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>3.6</b> Filtering Doublets from an ArchRProject</a></li>
+<li class="chapter" data-level="4.1" data-path="how-does-doublet-identification-work-in-archr.html"><a href="how-does-doublet-identification-work-in-archr.html"><i class="fa fa-check"></i><b>4.1</b> How does doublet identification work in ArchR?</a></li>
+<li class="chapter" data-level="4.2" data-path="inferring-scatac-seq-doublets-with-archr.html"><a href="inferring-scatac-seq-doublets-with-archr.html"><i class="fa fa-check"></i><b>4.2</b> Inferring scATAC-seq Doublets with ArchR</a></li>
+<li class="chapter" data-level="4.3" data-path="using-demuxlet-with-archr.html"><a href="using-demuxlet-with-archr.html"><i class="fa fa-check"></i><b>4.3</b> Using <em>demuxlet</em> with ArchR</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="dimensionality-reduction-with-archr.html"><a href="dimensionality-reduction-with-archr.html"><i class="fa fa-check"></i><b>4</b> Dimensionality Reduction with ArchR</a>
+<li class="chapter" data-level="5" data-path="creating-an-archrproject.html"><a href="creating-an-archrproject.html"><i class="fa fa-check"></i><b>5</b> Creating an ArchRProject</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>4.1</b> ArchR’s LSI Implementation</a></li>
-<li class="chapter" data-level="4.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>4.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
-<li class="chapter" data-level="4.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>4.3</b> Estimated LSI</a></li>
-<li class="chapter" data-level="4.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.4</b> Batch Effect Correction wtih Harmony</a></li>
+<li class="chapter" data-level="5.1" data-path="creating-an-archrproject-1.html"><a href="creating-an-archrproject-1.html"><i class="fa fa-check"></i><b>5.1</b> Creating An ArchRProject</a></li>
+<li class="chapter" data-level="5.2" data-path="manipulating-an-archrproject.html"><a href="manipulating-an-archrproject.html"><i class="fa fa-check"></i><b>5.2</b> Manipulating An ArchRProject</a></li>
+<li class="chapter" data-level="5.3" data-path="plotting-sample-statistics-from-an-archrproject.html"><a href="plotting-sample-statistics-from-an-archrproject.html"><i class="fa fa-check"></i><b>5.3</b> Plotting Sample Statistics from an ArchRProject</a></li>
+<li class="chapter" data-level="5.4" data-path="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles..html"><a href="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles..html"><i class="fa fa-check"></i><b>5.4</b> Plotting Sample Fragment Size Distribution and TSS Enrichment Profiles.</a></li>
+<li class="chapter" data-level="5.5" data-path="saving-and-loading-an-archrproject.html"><a href="saving-and-loading-an-archrproject.html"><i class="fa fa-check"></i><b>5.5</b> Saving and Loading an <code>ArchRProject</code></a></li>
+<li class="chapter" data-level="5.6" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>5.6</b> Filtering Doublets from an ArchRProject</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>5</b> Clustering with ArchR</a>
+<li class="chapter" data-level="6" data-path="dimensionality-reduction-with-archr.html"><a href="dimensionality-reduction-with-archr.html"><i class="fa fa-check"></i><b>6</b> Dimensionality Reduction with ArchR</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="6.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>6.1</b> ArchR’s LSI Implementation</a></li>
+<li class="chapter" data-level="6.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>6.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
+<li class="chapter" data-level="6.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>6.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="6.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>6.4</b> Batch Effect Correction wtih Harmony</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single-cell Embeddings</a>
+<li class="chapter" data-level="7" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>7</b> Clustering with ArchR</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>6.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
-<li class="chapter" data-level="6.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>6.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
-<li class="chapter" data-level="6.3" data-path="dimensionality-reduction-after-harmony.html"><a href="dimensionality-reduction-after-harmony.html"><i class="fa fa-check"></i><b>6.3</b> Dimensionality Reduction After Harmony</a></li>
+<li class="chapter" data-level="7.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>7.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="7.2" data-path="clustering-using-scran.html"><a href="clustering-using-scran.html"><i class="fa fa-check"></i><b>7.2</b> Clustering using <code>scran</code></a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="gene-scores-and-marker-genes-with-archr.html"><a href="gene-scores-and-marker-genes-with-archr.html"><i class="fa fa-check"></i><b>7</b> Gene Scores and Marker Genes with ArchR</a>
+<li class="chapter" data-level="8" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>8</b> Single-cell Embeddings</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="calculating-gene-scores-in-archr.html"><a href="calculating-gene-scores-in-archr.html"><i class="fa fa-check"></i><b>7.1</b> Calculating Gene Scores in ArchR</a></li>
-<li class="chapter" data-level="7.2" data-path="identification-of-marker-features.html"><a href="identification-of-marker-features.html"><i class="fa fa-check"></i><b>7.2</b> Identification of Marker Features</a></li>
-<li class="chapter" data-level="7.3" data-path="identifying-marker-genes.html"><a href="identifying-marker-genes.html"><i class="fa fa-check"></i><b>7.3</b> Identifying Marker Genes</a></li>
-<li class="chapter" data-level="7.4" data-path="visualizing-marker-genes-on-an-embedding.html"><a href="visualizing-marker-genes-on-an-embedding.html"><i class="fa fa-check"></i><b>7.4</b> Visualizing Marker Genes on an Embedding</a></li>
-<li class="chapter" data-level="7.5" data-path="marker-genes-imputation-with-magic.html"><a href="marker-genes-imputation-with-magic.html"><i class="fa fa-check"></i><b>7.5</b> Marker Genes Imputation with MAGIC</a></li>
-<li class="chapter" data-level="7.6" data-path="track-plotting-with-archrbrowser.html"><a href="track-plotting-with-archrbrowser.html"><i class="fa fa-check"></i><b>7.6</b> Track Plotting with ArchRBrowser</a></li>
-<li class="chapter" data-level="7.7" data-path="launching-the-archrbrowser.html"><a href="launching-the-archrbrowser.html"><i class="fa fa-check"></i><b>7.7</b> Launching the ArchRBrowser</a></li>
+<li class="chapter" data-level="8.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>8.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
+<li class="chapter" data-level="8.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>8.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
+<li class="chapter" data-level="8.3" data-path="dimensionality-reduction-after-harmony.html"><a href="dimensionality-reduction-after-harmony.html"><i class="fa fa-check"></i><b>8.3</b> Dimensionality Reduction After Harmony</a></li>
+<li class="chapter" data-level="8.4" data-path="highlighting-specific-cells-on-an-embedding.html"><a href="highlighting-specific-cells-on-an-embedding.html"><i class="fa fa-check"></i><b>8.4</b> Highlighting specific cells on an embedding</a></li>
+<li class="chapter" data-level="8.5" data-path="importing-an-embedding-from-external-software.html"><a href="importing-an-embedding-from-external-software.html"><i class="fa fa-check"></i><b>8.5</b> Importing an embedding from external software</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="defining-cluster-identity-with-scrna-seq.html"><a href="defining-cluster-identity-with-scrna-seq.html"><i class="fa fa-check"></i><b>8</b> Defining Cluster Identity with scRNA-seq</a>
+<li class="chapter" data-level="9" data-path="gene-scores-and-marker-genes-with-archr.html"><a href="gene-scores-and-marker-genes-with-archr.html"><i class="fa fa-check"></i><b>9</b> Gene Scores and Marker Genes with ArchR</a>
 <ul>
-<li class="chapter" data-level="8.1" data-path="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><i class="fa fa-check"></i><b>8.1</b> Cross-platform linkage of scATAC-seq cells with scRNA-seq cells</a></li>
-<li class="chapter" data-level="8.2" data-path="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><i class="fa fa-check"></i><b>8.2</b> Adding Pseudo-scRNA-seq profiles for each scATAC-seq cell</a></li>
-<li class="chapter" data-level="8.3" data-path="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><a href="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><i class="fa fa-check"></i><b>8.3</b> Labeling scATAC-seq clusters with scRNA-seq information</a></li>
+<li class="chapter" data-level="9.1" data-path="calculating-gene-scores-in-archr.html"><a href="calculating-gene-scores-in-archr.html"><i class="fa fa-check"></i><b>9.1</b> Calculating Gene Scores in ArchR</a></li>
+<li class="chapter" data-level="9.2" data-path="identification-of-marker-features.html"><a href="identification-of-marker-features.html"><i class="fa fa-check"></i><b>9.2</b> Identification of Marker Features</a></li>
+<li class="chapter" data-level="9.3" data-path="identifying-marker-genes.html"><a href="identifying-marker-genes.html"><i class="fa fa-check"></i><b>9.3</b> Identifying Marker Genes</a></li>
+<li class="chapter" data-level="9.4" data-path="visualizing-marker-genes-on-an-embedding.html"><a href="visualizing-marker-genes-on-an-embedding.html"><i class="fa fa-check"></i><b>9.4</b> Visualizing Marker Genes on an Embedding</a></li>
+<li class="chapter" data-level="9.5" data-path="marker-genes-imputation-with-magic.html"><a href="marker-genes-imputation-with-magic.html"><i class="fa fa-check"></i><b>9.5</b> Marker Genes Imputation with MAGIC</a></li>
+<li class="chapter" data-level="9.6" data-path="module-scores.html"><a href="module-scores.html"><i class="fa fa-check"></i><b>9.6</b> Module Scores</a></li>
+<li class="chapter" data-level="9.7" data-path="track-plotting-with-archrbrowser.html"><a href="track-plotting-with-archrbrowser.html"><i class="fa fa-check"></i><b>9.7</b> Track Plotting with ArchRBrowser</a></li>
+<li class="chapter" data-level="9.8" data-path="launching-the-interactive-archrbrowser.html"><a href="launching-the-interactive-archrbrowser.html"><i class="fa fa-check"></i><b>9.8</b> Launching the Interactive ArchRBrowser</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="pseudo-bulk-replicates-in-archr.html"><a href="pseudo-bulk-replicates-in-archr.html"><i class="fa fa-check"></i><b>9</b> Pseudo-bulk Replicates in ArchR</a>
+<li class="chapter" data-level="10" data-path="defining-cluster-identity-with-scrna-seq.html"><a href="defining-cluster-identity-with-scrna-seq.html"><i class="fa fa-check"></i><b>10</b> Defining Cluster Identity with scRNA-seq</a>
 <ul>
-<li class="chapter" data-level="9.1" data-path="how-does-archr-make-pseudo-bulk-replicates.html"><a href="how-does-archr-make-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>9.1</b> How Does ArchR Make Pseudo-bulk Replicates?</a></li>
-<li class="chapter" data-level="9.2" data-path="making-pseudo-bulk-replicates.html"><a href="making-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>9.2</b> Making Pseudo-bulk Replicates</a></li>
+<li class="chapter" data-level="10.1" data-path="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><i class="fa fa-check"></i><b>10.1</b> Cross-platform linkage of scATAC-seq cells with scRNA-seq cells</a></li>
+<li class="chapter" data-level="10.2" data-path="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><i class="fa fa-check"></i><b>10.2</b> Adding Pseudo-scRNA-seq profiles for each scATAC-seq cell</a></li>
+<li class="chapter" data-level="10.3" data-path="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><a href="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><i class="fa fa-check"></i><b>10.3</b> Labeling scATAC-seq clusters with scRNA-seq information</a></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="calling-peaks-with-archr.html"><a href="calling-peaks-with-archr.html"><i class="fa fa-check"></i><b>10</b> Calling Peaks with ArchR</a>
+<li class="chapter" data-level="11" data-path="pseudo-bulk-replicates-in-archr.html"><a href="pseudo-bulk-replicates-in-archr.html"><i class="fa fa-check"></i><b>11</b> Pseudo-bulk Replicates in ArchR</a>
 <ul>
-<li class="chapter" data-level="10.1" data-path="the-iterative-overlap-peak-merging-procedure.html"><a href="the-iterative-overlap-peak-merging-procedure.html"><i class="fa fa-check"></i><b>10.1</b> The Iterative Overlap Peak Merging Procedure</a></li>
-<li class="chapter" data-level="10.2" data-path="calling-peaks-w-macs2.html"><a href="calling-peaks-w-macs2.html"><i class="fa fa-check"></i><b>10.2</b> Calling Peaks w/ Macs2</a></li>
-<li class="chapter" data-level="10.3" data-path="calling-peaks-w-tilematrix.html"><a href="calling-peaks-w-tilematrix.html"><i class="fa fa-check"></i><b>10.3</b> Calling Peaks w/ TileMatrix</a></li>
-<li class="chapter" data-level="10.4" data-path="add-peak-matrix.html"><a href="add-peak-matrix.html"><i class="fa fa-check"></i><b>10.4</b> Add Peak Matrix</a></li>
+<li class="chapter" data-level="11.1" data-path="how-does-archr-make-pseudo-bulk-replicates.html"><a href="how-does-archr-make-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>11.1</b> How Does ArchR Make Pseudo-bulk Replicates?</a></li>
+<li class="chapter" data-level="11.2" data-path="making-pseudo-bulk-replicates.html"><a href="making-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>11.2</b> Making Pseudo-bulk Replicates</a></li>
 </ul></li>
-<li class="chapter" data-level="11" data-path="identifying-marker-peaks-with-archr.html"><a href="identifying-marker-peaks-with-archr.html"><i class="fa fa-check"></i><b>11</b> Identifying Marker Peaks with ArchR</a>
+<li class="chapter" data-level="12" data-path="calling-peaks-with-archr.html"><a href="calling-peaks-with-archr.html"><i class="fa fa-check"></i><b>12</b> Calling Peaks with ArchR</a>
 <ul>
-<li class="chapter" data-level="11.1" data-path="identifying-marker-peaks-with-archr-1.html"><a href="identifying-marker-peaks-with-archr-1.html"><i class="fa fa-check"></i><b>11.1</b> Identifying Marker Peaks with ArchR</a></li>
-<li class="chapter" data-level="11.2" data-path="plotting-marker-peaks-in-archr.html"><a href="plotting-marker-peaks-in-archr.html"><i class="fa fa-check"></i><b>11.2</b> Plotting Marker Peaks in ArchR</a></li>
-<li class="chapter" data-level="11.3" data-path="pairwise-testing-between-groups.html"><a href="pairwise-testing-between-groups.html"><i class="fa fa-check"></i><b>11.3</b> Pairwise Testing Between Groups</a></li>
+<li class="chapter" data-level="12.1" data-path="the-iterative-overlap-peak-merging-procedure.html"><a href="the-iterative-overlap-peak-merging-procedure.html"><i class="fa fa-check"></i><b>12.1</b> The Iterative Overlap Peak Merging Procedure</a></li>
+<li class="chapter" data-level="12.2" data-path="calling-peaks-w-macs2.html"><a href="calling-peaks-w-macs2.html"><i class="fa fa-check"></i><b>12.2</b> Calling Peaks w/ Macs2</a></li>
+<li class="chapter" data-level="12.3" data-path="calling-peaks-w-tilematrix.html"><a href="calling-peaks-w-tilematrix.html"><i class="fa fa-check"></i><b>12.3</b> Calling Peaks w/ TileMatrix</a></li>
+<li class="chapter" data-level="12.4" data-path="adding-a-peak-matrix.html"><a href="adding-a-peak-matrix.html"><i class="fa fa-check"></i><b>12.4</b> Adding a Peak Matrix</a></li>
 </ul></li>
-<li class="chapter" data-level="12" data-path="motif-and-feature-enrichment-with-archr.html"><a href="motif-and-feature-enrichment-with-archr.html"><i class="fa fa-check"></i><b>12</b> Motif and Feature Enrichment with ArchR</a>
+<li class="chapter" data-level="13" data-path="identifying-marker-peaks.html"><a href="identifying-marker-peaks.html"><i class="fa fa-check"></i><b>13</b> Identifying Marker Peaks</a>
 <ul>
-<li class="chapter" data-level="12.1" data-path="motif-enrichment-in-differential-peaks.html"><a href="motif-enrichment-in-differential-peaks.html"><i class="fa fa-check"></i><b>12.1</b> Motif Enrichment in Differential Peaks</a></li>
-<li class="chapter" data-level="12.2" data-path="motif-enrichment-in-marker-peaks.html"><a href="motif-enrichment-in-marker-peaks.html"><i class="fa fa-check"></i><b>12.2</b> Motif Enrichment in Marker Peaks</a></li>
-<li class="chapter" data-level="12.3" data-path="archr-enrichment.html"><a href="archr-enrichment.html"><i class="fa fa-check"></i><b>12.3</b> ArchR Enrichment</a></li>
-<li class="chapter" data-level="12.4" data-path="custom-enrichment.html"><a href="custom-enrichment.html"><i class="fa fa-check"></i><b>12.4</b> Custom Enrichment</a></li>
+<li class="chapter" data-level="13.1" data-path="identifying-marker-peaks-with-archr.html"><a href="identifying-marker-peaks-with-archr.html"><i class="fa fa-check"></i><b>13.1</b> Identifying Marker Peaks with ArchR</a></li>
+<li class="chapter" data-level="13.2" data-path="plotting-marker-peaks-in-archr.html"><a href="plotting-marker-peaks-in-archr.html"><i class="fa fa-check"></i><b>13.2</b> Plotting Marker Peaks in ArchR</a></li>
+<li class="chapter" data-level="13.3" data-path="pairwise-testing-between-groups.html"><a href="pairwise-testing-between-groups.html"><i class="fa fa-check"></i><b>13.3</b> Pairwise Testing Between Groups</a></li>
 </ul></li>
-<li class="chapter" data-level="13" data-path="chromvar-deviatons-enrichment-with-archr.html"><a href="chromvar-deviatons-enrichment-with-archr.html"><i class="fa fa-check"></i><b>13</b> ChromVAR Deviatons Enrichment with ArchR</a>
+<li class="chapter" data-level="14" data-path="motif-and-feature-enrichment-with-archr.html"><a href="motif-and-feature-enrichment-with-archr.html"><i class="fa fa-check"></i><b>14</b> Motif and Feature Enrichment with ArchR</a>
 <ul>
-<li class="chapter" data-level="13.1" data-path="motif-deviations.html"><a href="motif-deviations.html"><i class="fa fa-check"></i><b>13.1</b> Motif Deviations</a></li>
-<li class="chapter" data-level="13.2" data-path="archr-and-custom-deviations.html"><a href="archr-and-custom-deviations.html"><i class="fa fa-check"></i><b>13.2</b> ArchR and Custom Deviations</a></li>
+<li class="chapter" data-level="14.1" data-path="motif-enrichment.html"><a href="motif-enrichment.html"><i class="fa fa-check"></i><b>14.1</b> Motif Enrichment</a></li>
+<li class="chapter" data-level="14.2" data-path="archr-enrichment.html"><a href="archr-enrichment.html"><i class="fa fa-check"></i><b>14.2</b> ArchR Enrichment</a></li>
+<li class="chapter" data-level="14.3" data-path="custom-enrichment.html"><a href="custom-enrichment.html"><i class="fa fa-check"></i><b>14.3</b> Custom Enrichment</a></li>
 </ul></li>
-<li class="chapter" data-level="14" data-path="footprinting-with-archr.html"><a href="footprinting-with-archr.html"><i class="fa fa-check"></i><b>14</b> Footprinting with ArchR</a>
+<li class="chapter" data-level="15" data-path="chromvar-deviatons-enrichment-with-archr.html"><a href="chromvar-deviatons-enrichment-with-archr.html"><i class="fa fa-check"></i><b>15</b> ChromVAR Deviatons Enrichment with ArchR</a>
 <ul>
-<li class="chapter" data-level="14.1" data-path="motif-footprinting.html"><a href="motif-footprinting.html"><i class="fa fa-check"></i><b>14.1</b> Motif Footprinting</a></li>
-<li class="chapter" data-level="14.2" data-path="normalization-of-footprints-for-tn5-bias.html"><a href="normalization-of-footprints-for-tn5-bias.html"><i class="fa fa-check"></i><b>14.2</b> Normalization of Footprints for Tn5 Bias</a></li>
-<li class="chapter" data-level="14.3" data-path="feature-footprinting.html"><a href="feature-footprinting.html"><i class="fa fa-check"></i><b>14.3</b> Feature Footprinting</a></li>
+<li class="chapter" data-level="15.1" data-path="motif-deviations.html"><a href="motif-deviations.html"><i class="fa fa-check"></i><b>15.1</b> Motif Deviations</a></li>
+<li class="chapter" data-level="15.2" data-path="archr-and-custom-deviations.html"><a href="archr-and-custom-deviations.html"><i class="fa fa-check"></i><b>15.2</b> ArchR and Custom Deviations</a></li>
 </ul></li>
-<li class="chapter" data-level="15" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>15</b> Integrative Analysis with ArchR</a>
+<li class="chapter" data-level="16" data-path="footprinting-with-archr.html"><a href="footprinting-with-archr.html"><i class="fa fa-check"></i><b>16</b> Footprinting with ArchR</a>
 <ul>
-<li class="chapter" data-level="15.1" data-path="creating-low-overlapping-aggregates-of-cells.html"><a href="creating-low-overlapping-aggregates-of-cells.html"><i class="fa fa-check"></i><b>15.1</b> Creating Low-Overlapping Aggregates of Cells</a></li>
-<li class="chapter" data-level="15.2" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>15.2</b> Co-accessibility with ArchR</a></li>
-<li class="chapter" data-level="15.3" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>15.3</b> Peak2GeneLinkage with ArchR</a></li>
-<li class="chapter" data-level="15.4" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>15.4</b> Identification of Positive TF-Regulators</a></li>
+<li class="chapter" data-level="16.1" data-path="motif-footprinting.html"><a href="motif-footprinting.html"><i class="fa fa-check"></i><b>16.1</b> Motif Footprinting</a></li>
+<li class="chapter" data-level="16.2" data-path="normalization-of-footprints-for-tn5-bias.html"><a href="normalization-of-footprints-for-tn5-bias.html"><i class="fa fa-check"></i><b>16.2</b> Normalization of Footprints for Tn5 Bias</a></li>
+<li class="chapter" data-level="16.3" data-path="feature-footprinting.html"><a href="feature-footprinting.html"><i class="fa fa-check"></i><b>16.3</b> Feature Footprinting</a></li>
 </ul></li>
-<li class="chapter" data-level="16" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>16</b> Trajectory Analysis with ArchR</a>
+<li class="chapter" data-level="17" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>17</b> Integrative Analysis with ArchR</a>
 <ul>
-<li class="chapter" data-level="16.1" data-path="myeloid-trajectory-monocyte-differentiation.html"><a href="myeloid-trajectory-monocyte-differentiation.html"><i class="fa fa-check"></i><b>16.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
-<li class="chapter" data-level="16.2" data-path="lymphoid-trajectory-b-cell-cifferentiation.html"><a href="lymphoid-trajectory-b-cell-cifferentiation.html"><i class="fa fa-check"></i><b>16.2</b> Lymphoid Trajectory - B Cell Cifferentiation</a></li>
+<li class="chapter" data-level="17.1" data-path="creating-low-overlapping-aggregates-of-cells.html"><a href="creating-low-overlapping-aggregates-of-cells.html"><i class="fa fa-check"></i><b>17.1</b> Creating Low-Overlapping Aggregates of Cells</a></li>
+<li class="chapter" data-level="17.2" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>17.2</b> Co-accessibility with ArchR</a></li>
+<li class="chapter" data-level="17.3" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>17.3</b> Peak2GeneLinkage with ArchR</a></li>
+<li class="chapter" data-level="17.4" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>17.4</b> Identification of Positive TF-Regulators</a></li>
 </ul></li>
-<li class="chapter" data-level="17" data-path="plot-aesthetics-in-archr.html"><a href="plot-aesthetics-in-archr.html"><i class="fa fa-check"></i><b>17</b> Plot aesthetics in ArchR</a></li>
-<li class="chapter" data-level="18" data-path="session-information.html"><a href="session-information.html"><i class="fa fa-check"></i><b>18</b> Session Information</a></li>
+<li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-differentiation.html"><a href="lymphoid-trajectory---b-cell-differentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Differentiation</a></li>
+<li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
+<li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
+<li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="handling-archr-output.html"><a href="handling-archr-output.html"><i class="fa fa-check"></i><b>19</b> Handling ArchR Output</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="exporting-fragment-level-data.html"><a href="exporting-fragment-level-data.html"><i class="fa fa-check"></i><b>19.1</b> Exporting fragment-level data</a></li>
+<li class="chapter" data-level="19.2" data-path="exporting-matrix-level-data.html"><a href="exporting-matrix-level-data.html"><i class="fa fa-check"></i><b>19.2</b> Exporting matrix-level data</a></li>
+<li class="chapter" data-level="19.3" data-path="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html"><i class="fa fa-check"></i><b>19.3</b> Exporting pseudo-bulked data to a <code>SummarizedExperiment</code></a></li>
+<li class="chapter" data-level="19.4" data-path="exporting-pseudo-bulked-data-to-a-bigwig-file.html"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html"><i class="fa fa-check"></i><b>19.4</b> Exporting pseudo-bulked data to a bigWig file</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="integration-with-bulk-atac-seq.html"><a href="integration-with-bulk-atac-seq.html"><i class="fa fa-check"></i><b>20</b> Integration with bulk ATAC-seq</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="projecting-bulk-atac-seq-data.html"><a href="projecting-bulk-atac-seq-data.html"><i class="fa fa-check"></i><b>20.1</b> Projecting bulk ATAC-seq data</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="multiomic-data-analysis-in-archr.html"><a href="multiomic-data-analysis-in-archr.html"><i class="fa fa-check"></i><b>21</b> Multiomic data analysis in ArchR</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="importing-data-and-setting-up-a-multiome-project.html"><a href="importing-data-and-setting-up-a-multiome-project.html"><i class="fa fa-check"></i><b>21.1</b> Importing data and setting up a Multiome project</a></li>
+<li class="chapter" data-level="21.2" data-path="analysis-of-multiome-data-in-archr.html"><a href="analysis-of-multiome-data-in-archr.html"><i class="fa fa-check"></i><b>21.2</b> Analysis of multiome data in ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="plot-aesthetics-in-archr.html"><a href="plot-aesthetics-in-archr.html"><i class="fa fa-check"></i><b>22</b> Plot aesthetics in ArchR</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="using-and-manipulating-palettes-in-archr.html"><a href="using-and-manipulating-palettes-in-archr.html"><i class="fa fa-check"></i><b>22.1</b> Using and manipulating palettes in ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="testing-your-archr-installation.html"><a href="testing-your-archr-installation.html"><i class="fa fa-check"></i><b>23</b> Testing Your ArchR Installation</a></li>
+<li class="chapter" data-level="24" data-path="session-information.html"><a href="session-information.html"><i class="fa fa-check"></i><b>24</b> Session Information</a></li>
 <li class="divider"></li>
 <li><a href="https://bookdown.org" target="_blank">Published with bookdown</a></li>
 
@@ -262,118 +305,109 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="calling-peaks-w-tilematrix" class="section level2" number="10.3">
-<h2><span class="header-section-number">10.3</span> Calling Peaks w/ TileMatrix</h2>
-<p>As mentioned previously, ArchR also implements its own native peak caller. While we have benchmarked this peak caller against MACS2 and note very similar performances, we do not recommend using this native peak caller unless absolutely necessary.</p>
+<div id="calling-peaks-w-tilematrix" class="section level2 hasAnchor" number="12.3">
+<h2><span class="header-section-number">12.3</span> Calling Peaks w/ TileMatrix<a href="calling-peaks-w-tilematrix.html#calling-peaks-w-tilematrix" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>As mentioned previously, ArchR also implements its own native peak caller but <em>we do not recommend using it</em>. While we have benchmarked this peak caller against MACS2 and note very similar performances, we do not recommend using this native peak caller unless absolutely necessary. It is no longer actively supported in the ArchR code base.</p>
 <p>The ArchR native peak caller calls peaks on the 500-bp <code>TileMatrix</code> and we indicate to <code>addReproduciblePeakSet()</code> that we want to use this peak caller via the <code>peakMethod</code> parameter. Note that we are not storing the output into the <code>projHeme4</code> object because we do not intend to keep this peak set and this analysis is only for illustrative purposes. Storage into the <code>ArchRProject</code> object would overwrite the previous reproducible peak set already stored in <code>projHeme4</code>.</p>
-<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="calling-peaks-w-tilematrix.html#cb161-1"></a>projHemeTmp &lt;-<span class="st"> </span><span class="kw">addReproduciblePeakSet</span>(</span>
-<span id="cb161-2"><a href="calling-peaks-w-tilematrix.html#cb161-2"></a>    <span class="dt">ArchRProj =</span> projHeme4, </span>
-<span id="cb161-3"><a href="calling-peaks-w-tilematrix.html#cb161-3"></a>    <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
-<span id="cb161-4"><a href="calling-peaks-w-tilematrix.html#cb161-4"></a>    <span class="dt">peakMethod =</span> <span class="st">&quot;Tiles&quot;</span>,</span>
-<span id="cb161-5"><a href="calling-peaks-w-tilematrix.html#cb161-5"></a>    <span class="dt">method =</span> <span class="st">&quot;p&quot;</span></span>
-<span id="cb161-6"><a href="calling-peaks-w-tilematrix.html#cb161-6"></a>)</span></code></pre></div>
-<blockquote>
-<p>## ArchR logging to : ArchRLogs/ArchR-addReproduciblePeakSet-faba49485623-Date-2020-04-15_Time-10-27-15.log<br />
-## If there is an issue, please report to github with logFile!<br />
-## Calling Peaks with TileMatrix<br />
-## Group Coverages Already Computed Returning Groups, Set force = TRUE to Recompute!<br />
-## List of length 11<br />
-## names(11): B CD4.M CD4.N CLP Erythroid GMP Mono NK pDC PreB Progenitor<br />
-## 2020-04-15 10:27:16 : Peak Calling Parameters!, 0.012 mins elapsed.<br />
-## Group nCells nCellsUsed nReplicates nMin nMax maxPeaks<br />
-## B B 439 433 2 182 251 150000<br />
-## CD4.M CD4.M 678 617 2 117 500 150000<br />
-## CD4.N CD4.N 1271 552 2 52 500 150000<br />
-## CLP CLP 387 387 2 82 305 150000<br />
-## Erythroid Erythroid 879 694 2 194 500 150000<br />
-## GMP GMP 793 751 2 251 500 150000<br />
-## Mono Mono 2632 1000 2 500 500 150000<br />
-## NK NK 851 801 2 301 500 150000<br />
-## pDC pDC 320 311 2 150 161 150000<br />
-## PreB PreB 351 351 2 40 311 150000<br />
-## Progenitor Progenitor 1650 672 2 172 500 150000<br />
-## 2020-04-15 10:27:24 : Computing Total Accessibility Across All Features, 0.138 mins elapsed.<br />
-## 2020-04-15 10:27:27 : Computing Pseudo-Grouped Tile Matrix, 0.19 mins elapsed.<br />
-## 2020-04-15 10:28:07 : Created Pseudo-Grouped Tile Matrix (0.474 GB), 0.866 mins elapsed.<br />
-## Expectation = 0.137769200114613Expectation = 0.170233276575844Expectation = 0.502430087836881Expectation = 0.0743484690298421Expectation = 0.231170400914268Expectation = 0.0293481232153502Expectation = 0.188425424281447Expectation = 0.0412872862125409Expectation = 0.369108556109225Expectation = 0.120760726012825Expectation = 0.33554874172927Expectation = 0.330837760307742Expectation = 0.41068352704434Expectation = 0.343789007051322Expectation = 0.571660173038985Expectation = 0.180700422552374Expectation = 0.126306931769154Expectation = 0.107652051338631Expectation = 0.200607316117261Expectation = 0.0248573103536859Expectation = 0.38762741617292Expectation = 0.0990605372969163<br />
-## 2020-04-15 10:28:51 : Creating Group Peak Sets with Annotations!, 1.59 mins elapsed.<br />
-## 2020-04-15 10:29:03 : Creating Union Peak Set with Annotations!, 1.789 mins elapsed.<br />
-## Annotating Peaks : Nearest Gene<br />
-## Annotating Peaks : Gene<br />
-## Annotating Peaks : TSS<br />
-## Annotating Peaks : GC<br />
-## [1] “plotting ggplot!”<br />
-## 2020-04-15 10:29:22 : Finished Creating Union Peak Set (271917)!, 2.104 mins elapsed.</p>
-</blockquote>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="calling-peaks-w-tilematrix.html#cb199-1" tabindex="-1"></a>projHemeTmp <span class="ot">&lt;-</span> <span class="fu">addReproduciblePeakSet</span>(</span>
+<span id="cb199-2"><a href="calling-peaks-w-tilematrix.html#cb199-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme4, </span>
+<span id="cb199-3"><a href="calling-peaks-w-tilematrix.html#cb199-3" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
+<span id="cb199-4"><a href="calling-peaks-w-tilematrix.html#cb199-4" tabindex="-1"></a>    <span class="at">peakMethod =</span> <span class="st">&quot;Tiles&quot;</span>,</span>
+<span id="cb199-5"><a href="calling-peaks-w-tilematrix.html#cb199-5" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;p&quot;</span></span>
+<span id="cb199-6"><a href="calling-peaks-w-tilematrix.html#cb199-6" tabindex="-1"></a>)</span>
+<span id="cb199-7"><a href="calling-peaks-w-tilematrix.html#cb199-7" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addReproduciblePeakSet-9286e8c5f-Date-2025-02-06_Time-01-58-48.55566.log</span></span>
+<span id="cb199-8"><a href="calling-peaks-w-tilematrix.html#cb199-8" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb199-9"><a href="calling-peaks-w-tilematrix.html#cb199-9" tabindex="-1"></a><span class="do">## Calling Peaks with TileMatrix. We recommend using the Macs2 Version.</span></span>
+<span id="cb199-10"><a href="calling-peaks-w-tilematrix.html#cb199-10" tabindex="-1"></a><span class="do">## This method is still under development.</span></span>
+<span id="cb199-11"><a href="calling-peaks-w-tilematrix.html#cb199-11" tabindex="-1"></a><span class="do">## Group Coverages Already Computed Returning Groups, Set force = TRUE to Recompute!</span></span>
+<span id="cb199-12"><a href="calling-peaks-w-tilematrix.html#cb199-12" tabindex="-1"></a><span class="do">## List of length 11</span></span>
+<span id="cb199-13"><a href="calling-peaks-w-tilematrix.html#cb199-13" tabindex="-1"></a><span class="do">## names(11): B CD4.M CD4.N CLP Erythroid GMP Mono NK pDC PreB Progenitor</span></span>
+<span id="cb199-14"><a href="calling-peaks-w-tilematrix.html#cb199-14" tabindex="-1"></a><span class="do">## 2025-02-06 01:58:49.348169 : Peak Calling Parameters!, 0.013 mins elapsed.</span></span>
+<span id="cb199-15"><a href="calling-peaks-w-tilematrix.html#cb199-15" tabindex="-1"></a><span class="do">##                 Group nCells nCellsUsed nReplicates nMin nMax maxPeaks</span></span>
+<span id="cb199-16"><a href="calling-peaks-w-tilematrix.html#cb199-16" tabindex="-1"></a><span class="do">## B                   B    421        416           2  162  254   150000</span></span>
+<span id="cb199-17"><a href="calling-peaks-w-tilematrix.html#cb199-17" tabindex="-1"></a><span class="do">## CD4.M           CD4.M    633        586           2   86  500   150000</span></span>
+<span id="cb199-18"><a href="calling-peaks-w-tilematrix.html#cb199-18" tabindex="-1"></a><span class="do">## CD4.N           CD4.N   1250        548           2   48  500   150000</span></span>
+<span id="cb199-19"><a href="calling-peaks-w-tilematrix.html#cb199-19" tabindex="-1"></a><span class="do">## CLP               CLP    386        386           2   88  298   150000</span></span>
+<span id="cb199-20"><a href="calling-peaks-w-tilematrix.html#cb199-20" tabindex="-1"></a><span class="do">## Erythroid   Erythroid    702        671           2  171  500   150000</span></span>
+<span id="cb199-21"><a href="calling-peaks-w-tilematrix.html#cb199-21" tabindex="-1"></a><span class="do">## GMP               GMP   1261        810           2  310  500   150000</span></span>
+<span id="cb199-22"><a href="calling-peaks-w-tilematrix.html#cb199-22" tabindex="-1"></a><span class="do">## Mono             Mono   2652       1000           2  500  500   150000</span></span>
+<span id="cb199-23"><a href="calling-peaks-w-tilematrix.html#cb199-23" tabindex="-1"></a><span class="do">## NK                 NK    903        822           2  322  500   150000</span></span>
+<span id="cb199-24"><a href="calling-peaks-w-tilematrix.html#cb199-24" tabindex="-1"></a><span class="do">## pDC               pDC    314        304           2  144  160   150000</span></span>
+<span id="cb199-25"><a href="calling-peaks-w-tilematrix.html#cb199-25" tabindex="-1"></a><span class="do">## PreB             PreB    351        351           2   40  311   150000</span></span>
+<span id="cb199-26"><a href="calling-peaks-w-tilematrix.html#cb199-26" tabindex="-1"></a><span class="do">## Progenitor Progenitor   1377        639           2  139  500   150000</span></span>
+<span id="cb199-27"><a href="calling-peaks-w-tilematrix.html#cb199-27" tabindex="-1"></a><span class="do">## 2025-02-06 01:58:53.23755 : Computing Total Accessibility Across All Features, 0.078 mins elapsed.</span></span>
+<span id="cb199-28"><a href="calling-peaks-w-tilematrix.html#cb199-28" tabindex="-1"></a><span class="do">## 2025-02-06 01:58:56.607124 : Computing Pseudo-Grouped Tile Matrix, 0.134 mins elapsed.</span></span>
+<span id="cb199-29"><a href="calling-peaks-w-tilematrix.html#cb199-29" tabindex="-1"></a><span class="do">## 2025-02-06 01:59:26.047958 : Created Pseudo-Grouped Tile Matrix (0.471 GB), 0.625 mins elapsed.</span></span>
+<span id="cb199-30"><a href="calling-peaks-w-tilematrix.html#cb199-30" tabindex="-1"></a><span class="do">## colSums = 825382colSums = 660560colSums = 3022271colSums = 323151colSums = 1406092colSums = 153415colSums = 1096638colSums = 276220colSums = 2290759colSums = 670817colSums = 2221092colSums = 2253776colSums = 2111952colSums = 2471475colSums = 3602112colSums = 1148728colSums = 772246colSums = 640088colSums = 1295679colSums = 131806colSums = 2058797colSums = 430702</span></span>
+<span id="cb199-31"><a href="calling-peaks-w-tilematrix.html#cb199-31" tabindex="-1"></a><span class="do">## nTiles = 6072620</span></span>
+<span id="cb199-32"><a href="calling-peaks-w-tilematrix.html#cb199-32" tabindex="-1"></a><span class="do">## Expectation = 0.13591859856207Expectation = 0.10877677180525Expectation = 0.497688147784646Expectation = 0.0532144280392977Expectation = 0.231546185995501Expectation = 0.0252633953713554Expectation = 0.180587291811442Expectation = 0.0454861328388735Expectation = 0.377227457011965Expectation = 0.11046582858799Expectation = 0.365755143578884Expectation = 0.371137334461896Expectation = 0.347782670412441Expectation = 0.406986605452012Expectation = 0.593172633887844Expectation = 0.189165137947048Expectation = 0.127168503874769Expectation = 0.10540557452961Expectation = 0.213364083377521Expectation = 0.0217049642493685Expectation = 0.339029446927356Expectation = 0.0709252349068442</span></span>
+<span id="cb199-33"><a href="calling-peaks-w-tilematrix.html#cb199-33" tabindex="-1"></a><span class="do">## 2025-02-06 01:59:47.694666 : Creating Group Peak Sets with Annotations!, 0.986 mins elapsed.</span></span>
+<span id="cb199-34"><a href="calling-peaks-w-tilematrix.html#cb199-34" tabindex="-1"></a><span class="do">## 2025-02-06 01:59:55.344699 : Creating Union Peak Set with Annotations!, 1.113 mins elapsed.</span></span>
+<span id="cb199-35"><a href="calling-peaks-w-tilematrix.html#cb199-35" tabindex="-1"></a><span class="do">## Annotating Peaks : Nearest Gene</span></span>
+<span id="cb199-36"><a href="calling-peaks-w-tilematrix.html#cb199-36" tabindex="-1"></a><span class="do">## Annotating Peaks : Gene</span></span>
+<span id="cb199-37"><a href="calling-peaks-w-tilematrix.html#cb199-37" tabindex="-1"></a><span class="do">## Annotating Peaks : TSS</span></span>
+<span id="cb199-38"><a href="calling-peaks-w-tilematrix.html#cb199-38" tabindex="-1"></a><span class="do">## Annotating Peaks : GC</span></span>
+<span id="cb199-39"><a href="calling-peaks-w-tilematrix.html#cb199-39" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
+<span id="cb199-40"><a href="calling-peaks-w-tilematrix.html#cb199-40" tabindex="-1"></a><span class="do">## 2025-02-06 02:00:09.962552 : Finished Creating Union Peak Set (263147)!, 1.357 mins elapsed.</span></span></code></pre></div>
 <p>We can similarly examine this merged peak set.</p>
-<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="calling-peaks-w-tilematrix.html#cb162-1"></a><span class="kw">getPeakSet</span>(projHemeTmp)</span></code></pre></div>
-<blockquote>
-<p>## GRanges object with 271917 ranges and 9 metadata columns:<br />
-## seqnames ranges strand | mlog10p Group<br />
-## <Rle> <IRanges> <Rle> | <numeric> <Rle><br />
-## [1] chr1 752000-752499 * | 0.742 Mono<br />
-## [2] chr1 752500-752999 * | 6.561 Mono<br />
-## [3] chr1 758500-758999 * | 1.11 NK<br />
-## [4] chr1 762000-762499 * | 2.461 NK<br />
-## [5] chr1 762500-762999 * | 22.536 NK<br />
-## … … … … . … …<br />
-## [271913] chrX 154862000-154862499 * | 1.966 NK<br />
-## [271914] chrX 154862500-154862999 * | 1.334 NK<br />
-## [271915] chrX 154912500-154912999 * | 2.01 Erythroid<br />
-## [271916] chrX 154997000-154997499 * | 1.349 Progenitor<br />
-## [271917] chrX 154998000-154998499 * | 1.227 Mono<br />
-## distToGeneStart nearestGene peakType distToTSS nearestTSS<br />
-## <integer> <character> <character> <integer> <character><br />
-## [1] 10652 LINC00115 Distal 10652 uc001aau.3<br />
-## [2] 10152 LINC00115 Distal 10152 uc001aau.3<br />
-## [3] 4152 LINC00115 Distal 4152 uc001aau.3<br />
-## [4] 652 LINC00115 Promoter 652 uc001aau.3<br />
-## [5] 152 LINC00115 Promoter 152 uc001aau.3<br />
-## … … … … … …<br />
-## [271913] 19626 TMLHE Distal 19626 uc004cin.3<br />
-## [271914] 20126 TMLHE Distal 20126 uc004cin.3<br />
-## [271915] 70126 TMLHE Distal 70126 uc004cin.3<br />
-## [271916] 154626 TMLHE Distal 201 uc004cin.3<br />
-## [271917] 155626 TMLHE Distal 797 uc004cin.3<br />
-## GC idx<br />
-## <numeric> <integer><br />
-## [1] 0.376 1<br />
-## [2] 0.484 2<br />
-## [3] 0.56 3<br />
-## [4] 0.574 4<br />
-## [5] 0.684 5<br />
-## … … …<br />
-## [271913] 0.43 6212<br />
-## [271914] 0.42 6213<br />
-## [271915] 0.368 6214<br />
-## [271916] 0.542 6215<br />
-## [271917] 0.476 6216<br />
-## ——-<br />
-## seqinfo: 23 sequences from an unspecified genome; no seqlengths</p>
-</blockquote>
-<div id="comparing-the-two-peak-calling-methods" class="section level3" number="10.3.1">
-<h3><span class="header-section-number">10.3.1</span> Comparing the two peak calling methods</h3>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="calling-peaks-w-tilematrix.html#cb200-1" tabindex="-1"></a><span class="fu">getPeakSet</span>(projHemeTmp)</span>
+<span id="cb200-2"><a href="calling-peaks-w-tilematrix.html#cb200-2" tabindex="-1"></a><span class="do">## GRanges object with 263147 ranges and 10 metadata columns:</span></span>
+<span id="cb200-3"><a href="calling-peaks-w-tilematrix.html#cb200-3" tabindex="-1"></a><span class="do">##            seqnames              ranges strand |   mlog10p      Group</span></span>
+<span id="cb200-4"><a href="calling-peaks-w-tilematrix.html#cb200-4" tabindex="-1"></a><span class="do">##               &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;      &lt;Rle&gt;</span></span>
+<span id="cb200-5"><a href="calling-peaks-w-tilematrix.html#cb200-5" tabindex="-1"></a><span class="do">##        [1]     chr1       752500-752999      * |     6.311       Mono</span></span>
+<span id="cb200-6"><a href="calling-peaks-w-tilematrix.html#cb200-6" tabindex="-1"></a><span class="do">##        [2]     chr1       757500-757999      * |     3.426      CD4.N</span></span>
+<span id="cb200-7"><a href="calling-peaks-w-tilematrix.html#cb200-7" tabindex="-1"></a><span class="do">##        [3]     chr1       758500-758999      * |     1.177         NK</span></span>
+<span id="cb200-8"><a href="calling-peaks-w-tilematrix.html#cb200-8" tabindex="-1"></a><span class="do">##        [4]     chr1       762000-762499      * |     1.479         NK</span></span>
+<span id="cb200-9"><a href="calling-peaks-w-tilematrix.html#cb200-9" tabindex="-1"></a><span class="do">##        [5]     chr1       762500-762999      * |    25.802         NK</span></span>
+<span id="cb200-10"><a href="calling-peaks-w-tilematrix.html#cb200-10" tabindex="-1"></a><span class="do">##        ...      ...                 ...    ... .       ...        ...</span></span>
+<span id="cb200-11"><a href="calling-peaks-w-tilematrix.html#cb200-11" tabindex="-1"></a><span class="do">##   [263143]     chrX 154842000-154842499      * |     6.554        CLP</span></span>
+<span id="cb200-12"><a href="calling-peaks-w-tilematrix.html#cb200-12" tabindex="-1"></a><span class="do">##   [263144]     chrX 154842500-154842999      * |     5.993       PreB</span></span>
+<span id="cb200-13"><a href="calling-peaks-w-tilematrix.html#cb200-13" tabindex="-1"></a><span class="do">##   [263145]     chrX 154862000-154862499      * |     3.312 Progenitor</span></span>
+<span id="cb200-14"><a href="calling-peaks-w-tilematrix.html#cb200-14" tabindex="-1"></a><span class="do">##   [263146]     chrX 154862500-154862999      * |     1.262         NK</span></span>
+<span id="cb200-15"><a href="calling-peaks-w-tilematrix.html#cb200-15" tabindex="-1"></a><span class="do">##   [263147]     chrX 154997000-154997499      * |     2.034 Progenitor</span></span>
+<span id="cb200-16"><a href="calling-peaks-w-tilematrix.html#cb200-16" tabindex="-1"></a><span class="do">##            distToGeneStart nearestGene    peakType distToTSS  nearestTSS</span></span>
+<span id="cb200-17"><a href="calling-peaks-w-tilematrix.html#cb200-17" tabindex="-1"></a><span class="do">##                  &lt;integer&gt; &lt;character&gt; &lt;character&gt; &lt;integer&gt; &lt;character&gt;</span></span>
+<span id="cb200-18"><a href="calling-peaks-w-tilematrix.html#cb200-18" tabindex="-1"></a><span class="do">##        [1]           10152   LINC00115      Distal     10152  uc010nxx.2</span></span>
+<span id="cb200-19"><a href="calling-peaks-w-tilematrix.html#cb200-19" tabindex="-1"></a><span class="do">##        [2]            5152   LINC00115      Distal      5152  uc010nxx.2</span></span>
+<span id="cb200-20"><a href="calling-peaks-w-tilematrix.html#cb200-20" tabindex="-1"></a><span class="do">##        [3]            4152   LINC00115      Distal      4152  uc010nxx.2</span></span>
+<span id="cb200-21"><a href="calling-peaks-w-tilematrix.html#cb200-21" tabindex="-1"></a><span class="do">##        [4]             652   LINC00115    Promoter       652  uc010nxx.2</span></span>
+<span id="cb200-22"><a href="calling-peaks-w-tilematrix.html#cb200-22" tabindex="-1"></a><span class="do">##        [5]             152   LINC00115    Promoter       152  uc010nxx.2</span></span>
+<span id="cb200-23"><a href="calling-peaks-w-tilematrix.html#cb200-23" tabindex="-1"></a><span class="do">##        ...             ...         ...         ...       ...         ...</span></span>
+<span id="cb200-24"><a href="calling-peaks-w-tilematrix.html#cb200-24" tabindex="-1"></a><span class="do">##   [263143]             372       TMLHE    Intronic       372  uc004fnn.3</span></span>
+<span id="cb200-25"><a href="calling-peaks-w-tilematrix.html#cb200-25" tabindex="-1"></a><span class="do">##   [263144]             126       TMLHE    Promoter       126  uc004fnn.3</span></span>
+<span id="cb200-26"><a href="calling-peaks-w-tilematrix.html#cb200-26" tabindex="-1"></a><span class="do">##   [263145]           19626       TMLHE      Distal     19626  uc004fnn.3</span></span>
+<span id="cb200-27"><a href="calling-peaks-w-tilematrix.html#cb200-27" tabindex="-1"></a><span class="do">##   [263146]           20126       TMLHE      Distal     20126  uc004fnn.3</span></span>
+<span id="cb200-28"><a href="calling-peaks-w-tilematrix.html#cb200-28" tabindex="-1"></a><span class="do">##   [263147]          154626       TMLHE      Distal       201  uc004fnq.1</span></span>
+<span id="cb200-29"><a href="calling-peaks-w-tilematrix.html#cb200-29" tabindex="-1"></a><span class="do">##                   GC       idx         N</span></span>
+<span id="cb200-30"><a href="calling-peaks-w-tilematrix.html#cb200-30" tabindex="-1"></a><span class="do">##            &lt;numeric&gt; &lt;integer&gt; &lt;numeric&gt;</span></span>
+<span id="cb200-31"><a href="calling-peaks-w-tilematrix.html#cb200-31" tabindex="-1"></a><span class="do">##        [1]     0.484         1         0</span></span>
+<span id="cb200-32"><a href="calling-peaks-w-tilematrix.html#cb200-32" tabindex="-1"></a><span class="do">##        [2]     0.552         2         0</span></span>
+<span id="cb200-33"><a href="calling-peaks-w-tilematrix.html#cb200-33" tabindex="-1"></a><span class="do">##        [3]     0.560         3         0</span></span>
+<span id="cb200-34"><a href="calling-peaks-w-tilematrix.html#cb200-34" tabindex="-1"></a><span class="do">##        [4]     0.574         4         0</span></span>
+<span id="cb200-35"><a href="calling-peaks-w-tilematrix.html#cb200-35" tabindex="-1"></a><span class="do">##        [5]     0.684         5         0</span></span>
+<span id="cb200-36"><a href="calling-peaks-w-tilematrix.html#cb200-36" tabindex="-1"></a><span class="do">##        ...       ...       ...       ...</span></span>
+<span id="cb200-37"><a href="calling-peaks-w-tilematrix.html#cb200-37" tabindex="-1"></a><span class="do">##   [263143]     0.612      6175         0</span></span>
+<span id="cb200-38"><a href="calling-peaks-w-tilematrix.html#cb200-38" tabindex="-1"></a><span class="do">##   [263144]     0.554      6176         0</span></span>
+<span id="cb200-39"><a href="calling-peaks-w-tilematrix.html#cb200-39" tabindex="-1"></a><span class="do">##   [263145]     0.430      6177         0</span></span>
+<span id="cb200-40"><a href="calling-peaks-w-tilematrix.html#cb200-40" tabindex="-1"></a><span class="do">##   [263146]     0.420      6178         0</span></span>
+<span id="cb200-41"><a href="calling-peaks-w-tilematrix.html#cb200-41" tabindex="-1"></a><span class="do">##   [263147]     0.542      6179         0</span></span>
+<span id="cb200-42"><a href="calling-peaks-w-tilematrix.html#cb200-42" tabindex="-1"></a><span class="do">##   -------</span></span>
+<span id="cb200-43"><a href="calling-peaks-w-tilematrix.html#cb200-43" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
+<div id="comparing-the-two-peak-calling-methods" class="section level3 hasAnchor" number="12.3.1">
+<h3><span class="header-section-number">12.3.1</span> Comparing the two peak calling methods<a href="calling-peaks-w-tilematrix.html#comparing-the-two-peak-calling-methods" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>To compare the merged peak set generated using MACS2 vs the merged peak set generated using the ArchR native <code>TileMatrix</code> peak caller, we can check the perfecent of overlapping peaks etc.</p>
-<p>First, we check the percent of MACS2-called peaks that are overlapped by the <code>TileMatrix</code>-called peaks</p>
-<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="calling-peaks-w-tilematrix.html#cb163-1"></a><span class="kw">length</span>(<span class="kw">subsetByOverlaps</span>(<span class="kw">getPeakSet</span>(projHeme4), <span class="kw">getPeakSet</span>(projHemeTmp))) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(<span class="kw">getPeakSet</span>(projHeme4))</span></code></pre></div>
-<blockquote>
-<p>## [1] 0.9627246</p>
-</blockquote>
+<p>First, we check the percent of MACS2-called peaks that are overlapped by the <code>TileMatrix</code>-called peaks.</p>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="calling-peaks-w-tilematrix.html#cb201-1" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">subsetByOverlaps</span>(<span class="fu">getPeakSet</span>(projHeme4), <span class="fu">getPeakSet</span>(projHemeTmp))) <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">getPeakSet</span>(projHeme4))</span>
+<span id="cb201-2"><a href="calling-peaks-w-tilematrix.html#cb201-2" tabindex="-1"></a><span class="do">## [1] 0.9565828</span></span></code></pre></div>
 <p>Then, we check the converse - the percent of <code>TileMatrix</code>-called peaks that are overlapped by MACS2-called peaks. You can see that this overlap is not as strong.</p>
-<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="calling-peaks-w-tilematrix.html#cb164-1"></a><span class="kw">length</span>(<span class="kw">subsetByOverlaps</span>(<span class="kw">getPeakSet</span>(projHemeTmp), <span class="kw">getPeakSet</span>(projHeme4))) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(<span class="kw">getPeakSet</span>(projHemeTmp))</span></code></pre></div>
-<blockquote>
-<p>## [1] 0.7533365</p>
-</blockquote>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="calling-peaks-w-tilematrix.html#cb202-1" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">subsetByOverlaps</span>(<span class="fu">getPeakSet</span>(projHemeTmp), <span class="fu">getPeakSet</span>(projHeme4))) <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">getPeakSet</span>(projHemeTmp))</span>
+<span id="cb202-2"><a href="calling-peaks-w-tilematrix.html#cb202-2" tabindex="-1"></a><span class="do">## [1] 0.7852683</span></span></code></pre></div>
 <p>If we increase the margins of the peaks to be wider (1000-bp peaks instead of 500-bp peaks), the percent of MACS2-called peaks that are overlapped does not change much.</p>
-<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="calling-peaks-w-tilematrix.html#cb165-1"></a><span class="kw">length</span>(<span class="kw">subsetByOverlaps</span>(<span class="kw">resize</span>(<span class="kw">getPeakSet</span>(projHeme4), <span class="dv">1000</span>, <span class="st">&quot;center&quot;</span>), <span class="kw">getPeakSet</span>(projHemeTmp))) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(<span class="kw">getPeakSet</span>(projHeme4))</span></code></pre></div>
-<blockquote>
-<p>## [1] 0.9676687</p>
-</blockquote>
+<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="calling-peaks-w-tilematrix.html#cb203-1" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">subsetByOverlaps</span>(<span class="fu">resize</span>(<span class="fu">getPeakSet</span>(projHeme4), <span class="dv">1000</span>, <span class="st">&quot;center&quot;</span>), <span class="fu">getPeakSet</span>(projHemeTmp))) <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">getPeakSet</span>(projHeme4))</span>
+<span id="cb203-2"><a href="calling-peaks-w-tilematrix.html#cb203-2" tabindex="-1"></a><span class="do">## [1] 0.9619421</span></span></code></pre></div>
 <p>But the percent of <code>TileMatrix</code>-called peaks overlapped by MACS2 does increase.</p>
-<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="calling-peaks-w-tilematrix.html#cb166-1"></a><span class="kw">length</span>(<span class="kw">subsetByOverlaps</span>(<span class="kw">getPeakSet</span>(projHemeTmp), <span class="kw">resize</span>(<span class="kw">getPeakSet</span>(projHeme4), <span class="dv">1000</span>, <span class="st">&quot;center&quot;</span>))) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(<span class="kw">getPeakSet</span>(projHemeTmp))</span></code></pre></div>
-<blockquote>
-<p>## [1] 0.8287639</p>
-</blockquote>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="calling-peaks-w-tilematrix.html#cb204-1" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">subsetByOverlaps</span>(<span class="fu">getPeakSet</span>(projHemeTmp), <span class="fu">resize</span>(<span class="fu">getPeakSet</span>(projHeme4), <span class="dv">1000</span>, <span class="st">&quot;center&quot;</span>))) <span class="sc">/</span> <span class="fu">length</span>(<span class="fu">getPeakSet</span>(projHemeTmp))</span>
+<span id="cb204-2"><a href="calling-peaks-w-tilematrix.html#cb204-2" tabindex="-1"></a><span class="do">## [1] 0.8581781</span></span></code></pre></div>
 </div>
 </div>
             </section>
@@ -382,11 +416,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
         </div>
       </div>
 <a href="calling-peaks-w-macs2.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="add-peak-matrix.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="adding-a-peak-matrix.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -405,23 +438,27 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": null
 },
 "fontsettings": null,
 "edit": null,
 "history": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/commits/dev/10_Calling_Peaks.Rmd",
-"text": "Chapter edit history"
+"link": null,
+"text": null
 },
 "view": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/view/dev/10_Calling_Peaks.Rmd",
-"text": "View source on GitHub"
+"link": null,
+"text": null
 },
-"download": ["ArchR.pdf"],
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "none"
 },
-"search": true,
 "info": false
 });
 });

@@ -1,5 +1,5 @@
 title: ArchR
-url: https://greenleaflab.github.io/ArchR_Website/
+url: https://www.ArchRProject.com
 template:
   params:
     bootswatch: yeti
@@ -9,11 +9,20 @@ template:
       index_name: archr
 
 authors:
+  sidebar:
+    roles: [aut, ctb]
   Jeffrey Granja:
     href: https://twitter.com/JeffreyGranja
   Ryan Corces:
     href: https://twitter.com/doctorcorces
+  Paulina Paiz:
+    href: https://twitter.com/paulinapaiz02
+  Immanuel Abdi:
+    href: https://github.com/immanuelazn
 
+home:
+  sidebar:
+    structure: [links, license, community, authors, dev]
 
 navbar:
   left:
@@ -25,9 +34,6 @@ navbar:
   - text: Full Manual
     icon: fa-file-text-o
     href: bookdown/index.html
-  - text: FAQ
-    icon: fa-question-circle-o
-    href: articles/Articles/faq.html
   - text: Functions
     icon: fa-code
     href: reference/index.html
@@ -44,11 +50,12 @@ reference:
     desc: Functions that help create / set up an ArrowFile
     contents:
     - createArrowFiles
-    - createGeneAnnnotation
+    - createGeneAnnotation
     - createGenomeAnnotation
     - filterDoublets
     - nCells
     - reformatFragmentFiles
+    - setArchRLocking
   - title: Add-ers
     desc: Functions that add information to ArrowFiles or an ArchRProject
     contents:
@@ -70,6 +77,7 @@ reference:
     desc: Functions for plotting in ArchR
     contents:
     - ArchRBrowser
+    - ArchRHeatmap
     - ArchRPalettes
     - starts_with("gg")
     - starts_with("palette")
@@ -91,13 +99,27 @@ reference:
     - extendGR
     - filterChrGR
     - nonOverlappingGR
+  - title: Multiome functions
+    desc: Functions specifically related to handling multiomic data
+    contents:
+    - import10xFeatureMatrix
   - title: Other ArchR Functions
     desc: Functions that didnt fit into one of the above categories
     contents:
     - confusionMatrix
     - correlateMatrices
     - correlateTrajectories
+    - customEnrichment
+    - exportPeakMatrixForSTREAM
     - imputeMatrix
     - mapLabels
     - peakAnnoEnrichment
     - projectBulkATAC
+  - title: internal
+    desc: Internal functions not to be displayed on the ref page
+    contents:
+    - $.ArchRProject
+    - $<-.ArchRProject
+    - .DollarNames.ArchRProject
+    - matches("\\[.ArchRProject")
+    - .suppressSpecificWarnings

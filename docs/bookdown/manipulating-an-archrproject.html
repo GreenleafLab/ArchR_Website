@@ -4,19 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>3.2 Manipulating An ArchRProject | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
+  <title>5.2 Manipulating An ArchRProject | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
   <meta name="description" content="A guide to ArchR" />
-  <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="3.2 Manipulating An ArchRProject | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
+  <meta property="og:title" content="5.2 Manipulating An ArchRProject | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="A guide to ArchR" />
   <meta name="github-repo" content="GreenleafLab/ArchR" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="3.2 Manipulating An ArchRProject | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
+  <meta name="twitter:title" content="5.2 Manipulating An ArchRProject | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   
   <meta name="twitter:description" content="A guide to ArchR" />
   
@@ -24,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-05-01" />
+<meta name="date" content="2025-02-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +32,8 @@
   <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
 <link rel="prev" href="creating-an-archrproject-1.html"/>
 <link rel="next" href="plotting-sample-statistics-from-an-archrproject.html"/>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -49,15 +49,18 @@
 
 
 
-
-<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
@@ -65,7 +68,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -91,7 +94,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -104,7 +107,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -116,6 +119,11 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -134,114 +142,149 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="../index.html">Back to ArchR Home</a></li>
 
 <li class="divider"></li>
-<li><a href="index.html#section"><img src="images/ArchR_Logo_Integrated.png" alt="" width="200"></a></li>
-<li class="chapter" data-level="1" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>1</b> Getting Started with ArchR</a>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><img src="images/ArchR_Logo_Integrated.png" alt="" width="200"></a></li>
+<li class="chapter" data-level="1" data-path="debugging-and-troubleshooting-in-archr.html"><a href="debugging-and-troubleshooting-in-archr.html"><i class="fa fa-check"></i><b>1</b> Debugging and Troubleshooting in ArchR</a></li>
+<li class="chapter" data-level="2" data-path="manage-archrs-dependencies.html"><a href="manage-archrs-dependencies.html"><i class="fa fa-check"></i><b>2</b> Manage ArchR’s Dependencies</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="a-brief-primer-on-atac-seq-terminology.html"><a href="a-brief-primer-on-atac-seq-terminology.html"><i class="fa fa-check"></i><b>1.1</b> A Brief Primer on ATAC-seq Terminology</a></li>
-<li class="chapter" data-level="1.2" data-path="why-use-archr.html"><a href="why-use-archr.html"><i class="fa fa-check"></i><b>1.2</b> Why use ArchR?</a></li>
-<li class="chapter" data-level="1.3" data-path="what-is-an-arrow-file-archrproject.html"><a href="what-is-an-arrow-file-archrproject.html"><i class="fa fa-check"></i><b>1.3</b> What is an Arrow file / <code>ArchRProject</code>?</a></li>
-<li class="chapter" data-level="1.4" data-path="input-file-types-in-archr.html"><a href="input-file-types-in-archr.html"><i class="fa fa-check"></i><b>1.4</b> Input File Types in ArchR</a></li>
-<li class="chapter" data-level="1.5" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>1.5</b> Getting Set Up</a></li>
-<li class="chapter" data-level="1.6" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>1.6</b> Creating Arrow Files</a></li>
-<li class="chapter" data-level="1.7" data-path="per-cell-quality-control.html"><a href="per-cell-quality-control.html"><i class="fa fa-check"></i><b>1.7</b> Per-cell Quality Control</a></li>
+<li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
+<li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+<li class="chapter" data-level="2.3" data-path="using-docker-for-pre-compiled-environment-setup.html"><a href="using-docker-for-pre-compiled-environment-setup.html"><i class="fa fa-check"></i><b>2.3</b> Using Docker for pre-compiled environment setup</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="doublet-inference-with-archr.html"><a href="doublet-inference-with-archr.html"><i class="fa fa-check"></i><b>2</b> Doublet Inference with ArchR</a>
+<li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="how-does-doublet-identification-work-in-archr.html"><a href="how-does-doublet-identification-work-in-archr.html"><i class="fa fa-check"></i><b>2.1</b> How does doublet identification work in ArchR?</a></li>
-<li class="chapter" data-level="2.2" data-path="inferring-scatac-seq-doublets-with-archr.html"><a href="inferring-scatac-seq-doublets-with-archr.html"><i class="fa fa-check"></i><b>2.2</b> Inferring scATAC-seq Doublets with ArchR</a></li>
+<li class="chapter" data-level="3.1" data-path="a-brief-primer-on-atac-seq-terminology.html"><a href="a-brief-primer-on-atac-seq-terminology.html"><i class="fa fa-check"></i><b>3.1</b> A Brief Primer on ATAC-seq Terminology</a></li>
+<li class="chapter" data-level="3.2" data-path="why-use-archr.html"><a href="why-use-archr.html"><i class="fa fa-check"></i><b>3.2</b> Why use ArchR?</a></li>
+<li class="chapter" data-level="3.3" data-path="what-is-an-arrow-file-archrproject.html"><a href="what-is-an-arrow-file-archrproject.html"><i class="fa fa-check"></i><b>3.3</b> What is an Arrow file / <code>ArchRProject</code>?</a></li>
+<li class="chapter" data-level="3.4" data-path="input-file-types-in-archr.html"><a href="input-file-types-in-archr.html"><i class="fa fa-check"></i><b>3.4</b> Input File Types in ArchR</a></li>
+<li class="chapter" data-level="3.5" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>3.5</b> Getting Set Up</a></li>
+<li class="chapter" data-level="3.6" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>3.6</b> Creating Arrow Files</a></li>
+<li class="chapter" data-level="3.7" data-path="per-cell-quality-control.html"><a href="per-cell-quality-control.html"><i class="fa fa-check"></i><b>3.7</b> Per-cell Quality Control</a></li>
+<li class="chapter" data-level="3.8" data-path="using-bam-files-for-arrow-file-creation.html"><a href="using-bam-files-for-arrow-file-creation.html"><i class="fa fa-check"></i><b>3.8</b> Using BAM files for Arrow File creation</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="creating-an-archrproject.html"><a href="creating-an-archrproject.html"><i class="fa fa-check"></i><b>3</b> Creating an ArchRProject</a>
+<li class="chapter" data-level="4" data-path="doublet-inference-with-archr.html"><a href="doublet-inference-with-archr.html"><i class="fa fa-check"></i><b>4</b> Doublet Inference with ArchR</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="creating-an-archrproject-1.html"><a href="creating-an-archrproject-1.html"><i class="fa fa-check"></i><b>3.1</b> Creating An ArchRProject</a></li>
-<li class="chapter" data-level="3.2" data-path="manipulating-an-archrproject.html"><a href="manipulating-an-archrproject.html"><i class="fa fa-check"></i><b>3.2</b> Manipulating An ArchRProject</a></li>
-<li class="chapter" data-level="3.3" data-path="plotting-sample-statistics-from-an-archrproject.html"><a href="plotting-sample-statistics-from-an-archrproject.html"><i class="fa fa-check"></i><b>3.3</b> Plotting Sample Statistics from an ArchRProject</a></li>
-<li class="chapter" data-level="3.4" data-path="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles-.html"><a href="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles-.html"><i class="fa fa-check"></i><b>3.4</b> Plotting Sample Fragment Size Distribution and TSS Enrichment Profiles.</a></li>
-<li class="chapter" data-level="3.5" data-path="saving-and-loading-an-archrproject.html"><a href="saving-and-loading-an-archrproject.html"><i class="fa fa-check"></i><b>3.5</b> Saving and Loading an <code>ArchRProject</code></a></li>
-<li class="chapter" data-level="3.6" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>3.6</b> Filtering Doublets from an ArchRProject</a></li>
+<li class="chapter" data-level="4.1" data-path="how-does-doublet-identification-work-in-archr.html"><a href="how-does-doublet-identification-work-in-archr.html"><i class="fa fa-check"></i><b>4.1</b> How does doublet identification work in ArchR?</a></li>
+<li class="chapter" data-level="4.2" data-path="inferring-scatac-seq-doublets-with-archr.html"><a href="inferring-scatac-seq-doublets-with-archr.html"><i class="fa fa-check"></i><b>4.2</b> Inferring scATAC-seq Doublets with ArchR</a></li>
+<li class="chapter" data-level="4.3" data-path="using-demuxlet-with-archr.html"><a href="using-demuxlet-with-archr.html"><i class="fa fa-check"></i><b>4.3</b> Using <em>demuxlet</em> with ArchR</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="dimensionality-reduction-with-archr.html"><a href="dimensionality-reduction-with-archr.html"><i class="fa fa-check"></i><b>4</b> Dimensionality Reduction with ArchR</a>
+<li class="chapter" data-level="5" data-path="creating-an-archrproject.html"><a href="creating-an-archrproject.html"><i class="fa fa-check"></i><b>5</b> Creating an ArchRProject</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>4.1</b> ArchR’s LSI Implementation</a></li>
-<li class="chapter" data-level="4.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>4.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
-<li class="chapter" data-level="4.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>4.3</b> Estimated LSI</a></li>
-<li class="chapter" data-level="4.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.4</b> Batch Effect Correction wtih Harmony</a></li>
+<li class="chapter" data-level="5.1" data-path="creating-an-archrproject-1.html"><a href="creating-an-archrproject-1.html"><i class="fa fa-check"></i><b>5.1</b> Creating An ArchRProject</a></li>
+<li class="chapter" data-level="5.2" data-path="manipulating-an-archrproject.html"><a href="manipulating-an-archrproject.html"><i class="fa fa-check"></i><b>5.2</b> Manipulating An ArchRProject</a></li>
+<li class="chapter" data-level="5.3" data-path="plotting-sample-statistics-from-an-archrproject.html"><a href="plotting-sample-statistics-from-an-archrproject.html"><i class="fa fa-check"></i><b>5.3</b> Plotting Sample Statistics from an ArchRProject</a></li>
+<li class="chapter" data-level="5.4" data-path="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles..html"><a href="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles..html"><i class="fa fa-check"></i><b>5.4</b> Plotting Sample Fragment Size Distribution and TSS Enrichment Profiles.</a></li>
+<li class="chapter" data-level="5.5" data-path="saving-and-loading-an-archrproject.html"><a href="saving-and-loading-an-archrproject.html"><i class="fa fa-check"></i><b>5.5</b> Saving and Loading an <code>ArchRProject</code></a></li>
+<li class="chapter" data-level="5.6" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>5.6</b> Filtering Doublets from an ArchRProject</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>5</b> Clustering with ArchR</a>
+<li class="chapter" data-level="6" data-path="dimensionality-reduction-with-archr.html"><a href="dimensionality-reduction-with-archr.html"><i class="fa fa-check"></i><b>6</b> Dimensionality Reduction with ArchR</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="6.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>6.1</b> ArchR’s LSI Implementation</a></li>
+<li class="chapter" data-level="6.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>6.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
+<li class="chapter" data-level="6.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>6.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="6.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>6.4</b> Batch Effect Correction wtih Harmony</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single-cell Embeddings</a>
+<li class="chapter" data-level="7" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>7</b> Clustering with ArchR</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>6.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
-<li class="chapter" data-level="6.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>6.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
-<li class="chapter" data-level="6.3" data-path="dimensionality-reduction-after-harmony.html"><a href="dimensionality-reduction-after-harmony.html"><i class="fa fa-check"></i><b>6.3</b> Dimensionality Reduction After Harmony</a></li>
+<li class="chapter" data-level="7.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>7.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="7.2" data-path="clustering-using-scran.html"><a href="clustering-using-scran.html"><i class="fa fa-check"></i><b>7.2</b> Clustering using <code>scran</code></a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="gene-scores-and-marker-genes-with-archr.html"><a href="gene-scores-and-marker-genes-with-archr.html"><i class="fa fa-check"></i><b>7</b> Gene Scores and Marker Genes with ArchR</a>
+<li class="chapter" data-level="8" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>8</b> Single-cell Embeddings</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="calculating-gene-scores-in-archr.html"><a href="calculating-gene-scores-in-archr.html"><i class="fa fa-check"></i><b>7.1</b> Calculating Gene Scores in ArchR</a></li>
-<li class="chapter" data-level="7.2" data-path="identification-of-marker-features.html"><a href="identification-of-marker-features.html"><i class="fa fa-check"></i><b>7.2</b> Identification of Marker Features</a></li>
-<li class="chapter" data-level="7.3" data-path="identifying-marker-genes.html"><a href="identifying-marker-genes.html"><i class="fa fa-check"></i><b>7.3</b> Identifying Marker Genes</a></li>
-<li class="chapter" data-level="7.4" data-path="visualizing-marker-genes-on-an-embedding.html"><a href="visualizing-marker-genes-on-an-embedding.html"><i class="fa fa-check"></i><b>7.4</b> Visualizing Marker Genes on an Embedding</a></li>
-<li class="chapter" data-level="7.5" data-path="marker-genes-imputation-with-magic.html"><a href="marker-genes-imputation-with-magic.html"><i class="fa fa-check"></i><b>7.5</b> Marker Genes Imputation with MAGIC</a></li>
-<li class="chapter" data-level="7.6" data-path="track-plotting-with-archrbrowser.html"><a href="track-plotting-with-archrbrowser.html"><i class="fa fa-check"></i><b>7.6</b> Track Plotting with ArchRBrowser</a></li>
-<li class="chapter" data-level="7.7" data-path="launching-the-archrbrowser.html"><a href="launching-the-archrbrowser.html"><i class="fa fa-check"></i><b>7.7</b> Launching the ArchRBrowser</a></li>
+<li class="chapter" data-level="8.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>8.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
+<li class="chapter" data-level="8.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>8.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
+<li class="chapter" data-level="8.3" data-path="dimensionality-reduction-after-harmony.html"><a href="dimensionality-reduction-after-harmony.html"><i class="fa fa-check"></i><b>8.3</b> Dimensionality Reduction After Harmony</a></li>
+<li class="chapter" data-level="8.4" data-path="highlighting-specific-cells-on-an-embedding.html"><a href="highlighting-specific-cells-on-an-embedding.html"><i class="fa fa-check"></i><b>8.4</b> Highlighting specific cells on an embedding</a></li>
+<li class="chapter" data-level="8.5" data-path="importing-an-embedding-from-external-software.html"><a href="importing-an-embedding-from-external-software.html"><i class="fa fa-check"></i><b>8.5</b> Importing an embedding from external software</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="defining-cluster-identity-with-scrna-seq.html"><a href="defining-cluster-identity-with-scrna-seq.html"><i class="fa fa-check"></i><b>8</b> Defining Cluster Identity with scRNA-seq</a>
+<li class="chapter" data-level="9" data-path="gene-scores-and-marker-genes-with-archr.html"><a href="gene-scores-and-marker-genes-with-archr.html"><i class="fa fa-check"></i><b>9</b> Gene Scores and Marker Genes with ArchR</a>
 <ul>
-<li class="chapter" data-level="8.1" data-path="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><i class="fa fa-check"></i><b>8.1</b> Cross-platform linkage of scATAC-seq cells with scRNA-seq cells</a></li>
-<li class="chapter" data-level="8.2" data-path="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><i class="fa fa-check"></i><b>8.2</b> Adding Pseudo-scRNA-seq profiles for each scATAC-seq cell</a></li>
-<li class="chapter" data-level="8.3" data-path="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><a href="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><i class="fa fa-check"></i><b>8.3</b> Labeling scATAC-seq clusters with scRNA-seq information</a></li>
+<li class="chapter" data-level="9.1" data-path="calculating-gene-scores-in-archr.html"><a href="calculating-gene-scores-in-archr.html"><i class="fa fa-check"></i><b>9.1</b> Calculating Gene Scores in ArchR</a></li>
+<li class="chapter" data-level="9.2" data-path="identification-of-marker-features.html"><a href="identification-of-marker-features.html"><i class="fa fa-check"></i><b>9.2</b> Identification of Marker Features</a></li>
+<li class="chapter" data-level="9.3" data-path="identifying-marker-genes.html"><a href="identifying-marker-genes.html"><i class="fa fa-check"></i><b>9.3</b> Identifying Marker Genes</a></li>
+<li class="chapter" data-level="9.4" data-path="visualizing-marker-genes-on-an-embedding.html"><a href="visualizing-marker-genes-on-an-embedding.html"><i class="fa fa-check"></i><b>9.4</b> Visualizing Marker Genes on an Embedding</a></li>
+<li class="chapter" data-level="9.5" data-path="marker-genes-imputation-with-magic.html"><a href="marker-genes-imputation-with-magic.html"><i class="fa fa-check"></i><b>9.5</b> Marker Genes Imputation with MAGIC</a></li>
+<li class="chapter" data-level="9.6" data-path="module-scores.html"><a href="module-scores.html"><i class="fa fa-check"></i><b>9.6</b> Module Scores</a></li>
+<li class="chapter" data-level="9.7" data-path="track-plotting-with-archrbrowser.html"><a href="track-plotting-with-archrbrowser.html"><i class="fa fa-check"></i><b>9.7</b> Track Plotting with ArchRBrowser</a></li>
+<li class="chapter" data-level="9.8" data-path="launching-the-interactive-archrbrowser.html"><a href="launching-the-interactive-archrbrowser.html"><i class="fa fa-check"></i><b>9.8</b> Launching the Interactive ArchRBrowser</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="pseudo-bulk-replicates-in-archr.html"><a href="pseudo-bulk-replicates-in-archr.html"><i class="fa fa-check"></i><b>9</b> Pseudo-bulk Replicates in ArchR</a>
+<li class="chapter" data-level="10" data-path="defining-cluster-identity-with-scrna-seq.html"><a href="defining-cluster-identity-with-scrna-seq.html"><i class="fa fa-check"></i><b>10</b> Defining Cluster Identity with scRNA-seq</a>
 <ul>
-<li class="chapter" data-level="9.1" data-path="how-does-archr-make-pseudo-bulk-replicates.html"><a href="how-does-archr-make-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>9.1</b> How Does ArchR Make Pseudo-bulk Replicates?</a></li>
-<li class="chapter" data-level="9.2" data-path="making-pseudo-bulk-replicates.html"><a href="making-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>9.2</b> Making Pseudo-bulk Replicates</a></li>
+<li class="chapter" data-level="10.1" data-path="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><i class="fa fa-check"></i><b>10.1</b> Cross-platform linkage of scATAC-seq cells with scRNA-seq cells</a></li>
+<li class="chapter" data-level="10.2" data-path="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><i class="fa fa-check"></i><b>10.2</b> Adding Pseudo-scRNA-seq profiles for each scATAC-seq cell</a></li>
+<li class="chapter" data-level="10.3" data-path="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><a href="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><i class="fa fa-check"></i><b>10.3</b> Labeling scATAC-seq clusters with scRNA-seq information</a></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="calling-peaks-with-archr.html"><a href="calling-peaks-with-archr.html"><i class="fa fa-check"></i><b>10</b> Calling Peaks with ArchR</a>
+<li class="chapter" data-level="11" data-path="pseudo-bulk-replicates-in-archr.html"><a href="pseudo-bulk-replicates-in-archr.html"><i class="fa fa-check"></i><b>11</b> Pseudo-bulk Replicates in ArchR</a>
 <ul>
-<li class="chapter" data-level="10.1" data-path="the-iterative-overlap-peak-merging-procedure.html"><a href="the-iterative-overlap-peak-merging-procedure.html"><i class="fa fa-check"></i><b>10.1</b> The Iterative Overlap Peak Merging Procedure</a></li>
-<li class="chapter" data-level="10.2" data-path="calling-peaks-w-macs2.html"><a href="calling-peaks-w-macs2.html"><i class="fa fa-check"></i><b>10.2</b> Calling Peaks w/ Macs2</a></li>
-<li class="chapter" data-level="10.3" data-path="calling-peaks-w-tilematrix.html"><a href="calling-peaks-w-tilematrix.html"><i class="fa fa-check"></i><b>10.3</b> Calling Peaks w/ TileMatrix</a></li>
-<li class="chapter" data-level="10.4" data-path="add-peak-matrix.html"><a href="add-peak-matrix.html"><i class="fa fa-check"></i><b>10.4</b> Add Peak Matrix</a></li>
+<li class="chapter" data-level="11.1" data-path="how-does-archr-make-pseudo-bulk-replicates.html"><a href="how-does-archr-make-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>11.1</b> How Does ArchR Make Pseudo-bulk Replicates?</a></li>
+<li class="chapter" data-level="11.2" data-path="making-pseudo-bulk-replicates.html"><a href="making-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>11.2</b> Making Pseudo-bulk Replicates</a></li>
 </ul></li>
-<li class="chapter" data-level="11" data-path="identifying-marker-peaks-with-archr.html"><a href="identifying-marker-peaks-with-archr.html"><i class="fa fa-check"></i><b>11</b> Identifying Marker Peaks with ArchR</a>
+<li class="chapter" data-level="12" data-path="calling-peaks-with-archr.html"><a href="calling-peaks-with-archr.html"><i class="fa fa-check"></i><b>12</b> Calling Peaks with ArchR</a>
 <ul>
-<li class="chapter" data-level="11.1" data-path="identifying-marker-peaks-with-archr-1.html"><a href="identifying-marker-peaks-with-archr-1.html"><i class="fa fa-check"></i><b>11.1</b> Identifying Marker Peaks with ArchR</a></li>
-<li class="chapter" data-level="11.2" data-path="plotting-marker-peaks-in-archr.html"><a href="plotting-marker-peaks-in-archr.html"><i class="fa fa-check"></i><b>11.2</b> Plotting Marker Peaks in ArchR</a></li>
-<li class="chapter" data-level="11.3" data-path="pairwise-testing-between-groups.html"><a href="pairwise-testing-between-groups.html"><i class="fa fa-check"></i><b>11.3</b> Pairwise Testing Between Groups</a></li>
+<li class="chapter" data-level="12.1" data-path="the-iterative-overlap-peak-merging-procedure.html"><a href="the-iterative-overlap-peak-merging-procedure.html"><i class="fa fa-check"></i><b>12.1</b> The Iterative Overlap Peak Merging Procedure</a></li>
+<li class="chapter" data-level="12.2" data-path="calling-peaks-w-macs2.html"><a href="calling-peaks-w-macs2.html"><i class="fa fa-check"></i><b>12.2</b> Calling Peaks w/ Macs2</a></li>
+<li class="chapter" data-level="12.3" data-path="calling-peaks-w-tilematrix.html"><a href="calling-peaks-w-tilematrix.html"><i class="fa fa-check"></i><b>12.3</b> Calling Peaks w/ TileMatrix</a></li>
+<li class="chapter" data-level="12.4" data-path="adding-a-peak-matrix.html"><a href="adding-a-peak-matrix.html"><i class="fa fa-check"></i><b>12.4</b> Adding a Peak Matrix</a></li>
 </ul></li>
-<li class="chapter" data-level="12" data-path="motif-and-feature-enrichment-with-archr.html"><a href="motif-and-feature-enrichment-with-archr.html"><i class="fa fa-check"></i><b>12</b> Motif and Feature Enrichment with ArchR</a>
+<li class="chapter" data-level="13" data-path="identifying-marker-peaks.html"><a href="identifying-marker-peaks.html"><i class="fa fa-check"></i><b>13</b> Identifying Marker Peaks</a>
 <ul>
-<li class="chapter" data-level="12.1" data-path="motif-enrichment-in-differential-peaks.html"><a href="motif-enrichment-in-differential-peaks.html"><i class="fa fa-check"></i><b>12.1</b> Motif Enrichment in Differential Peaks</a></li>
-<li class="chapter" data-level="12.2" data-path="motif-enrichment-in-marker-peaks.html"><a href="motif-enrichment-in-marker-peaks.html"><i class="fa fa-check"></i><b>12.2</b> Motif Enrichment in Marker Peaks</a></li>
-<li class="chapter" data-level="12.3" data-path="archr-enrichment.html"><a href="archr-enrichment.html"><i class="fa fa-check"></i><b>12.3</b> ArchR Enrichment</a></li>
-<li class="chapter" data-level="12.4" data-path="custom-enrichment.html"><a href="custom-enrichment.html"><i class="fa fa-check"></i><b>12.4</b> Custom Enrichment</a></li>
+<li class="chapter" data-level="13.1" data-path="identifying-marker-peaks-with-archr.html"><a href="identifying-marker-peaks-with-archr.html"><i class="fa fa-check"></i><b>13.1</b> Identifying Marker Peaks with ArchR</a></li>
+<li class="chapter" data-level="13.2" data-path="plotting-marker-peaks-in-archr.html"><a href="plotting-marker-peaks-in-archr.html"><i class="fa fa-check"></i><b>13.2</b> Plotting Marker Peaks in ArchR</a></li>
+<li class="chapter" data-level="13.3" data-path="pairwise-testing-between-groups.html"><a href="pairwise-testing-between-groups.html"><i class="fa fa-check"></i><b>13.3</b> Pairwise Testing Between Groups</a></li>
 </ul></li>
-<li class="chapter" data-level="13" data-path="chromvar-deviatons-enrichment-with-archr.html"><a href="chromvar-deviatons-enrichment-with-archr.html"><i class="fa fa-check"></i><b>13</b> ChromVAR Deviatons Enrichment with ArchR</a>
+<li class="chapter" data-level="14" data-path="motif-and-feature-enrichment-with-archr.html"><a href="motif-and-feature-enrichment-with-archr.html"><i class="fa fa-check"></i><b>14</b> Motif and Feature Enrichment with ArchR</a>
 <ul>
-<li class="chapter" data-level="13.1" data-path="motif-deviations.html"><a href="motif-deviations.html"><i class="fa fa-check"></i><b>13.1</b> Motif Deviations</a></li>
-<li class="chapter" data-level="13.2" data-path="archr-and-custom-deviations.html"><a href="archr-and-custom-deviations.html"><i class="fa fa-check"></i><b>13.2</b> ArchR and Custom Deviations</a></li>
+<li class="chapter" data-level="14.1" data-path="motif-enrichment.html"><a href="motif-enrichment.html"><i class="fa fa-check"></i><b>14.1</b> Motif Enrichment</a></li>
+<li class="chapter" data-level="14.2" data-path="archr-enrichment.html"><a href="archr-enrichment.html"><i class="fa fa-check"></i><b>14.2</b> ArchR Enrichment</a></li>
+<li class="chapter" data-level="14.3" data-path="custom-enrichment.html"><a href="custom-enrichment.html"><i class="fa fa-check"></i><b>14.3</b> Custom Enrichment</a></li>
 </ul></li>
-<li class="chapter" data-level="14" data-path="footprinting-with-archr.html"><a href="footprinting-with-archr.html"><i class="fa fa-check"></i><b>14</b> Footprinting with ArchR</a>
+<li class="chapter" data-level="15" data-path="chromvar-deviatons-enrichment-with-archr.html"><a href="chromvar-deviatons-enrichment-with-archr.html"><i class="fa fa-check"></i><b>15</b> ChromVAR Deviatons Enrichment with ArchR</a>
 <ul>
-<li class="chapter" data-level="14.1" data-path="motif-footprinting.html"><a href="motif-footprinting.html"><i class="fa fa-check"></i><b>14.1</b> Motif Footprinting</a></li>
-<li class="chapter" data-level="14.2" data-path="normalization-of-footprints-for-tn5-bias.html"><a href="normalization-of-footprints-for-tn5-bias.html"><i class="fa fa-check"></i><b>14.2</b> Normalization of Footprints for Tn5 Bias</a></li>
-<li class="chapter" data-level="14.3" data-path="feature-footprinting.html"><a href="feature-footprinting.html"><i class="fa fa-check"></i><b>14.3</b> Feature Footprinting</a></li>
+<li class="chapter" data-level="15.1" data-path="motif-deviations.html"><a href="motif-deviations.html"><i class="fa fa-check"></i><b>15.1</b> Motif Deviations</a></li>
+<li class="chapter" data-level="15.2" data-path="archr-and-custom-deviations.html"><a href="archr-and-custom-deviations.html"><i class="fa fa-check"></i><b>15.2</b> ArchR and Custom Deviations</a></li>
 </ul></li>
-<li class="chapter" data-level="15" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>15</b> Integrative Analysis with ArchR</a>
+<li class="chapter" data-level="16" data-path="footprinting-with-archr.html"><a href="footprinting-with-archr.html"><i class="fa fa-check"></i><b>16</b> Footprinting with ArchR</a>
 <ul>
-<li class="chapter" data-level="15.1" data-path="creating-low-overlapping-aggregates-of-cells.html"><a href="creating-low-overlapping-aggregates-of-cells.html"><i class="fa fa-check"></i><b>15.1</b> Creating Low-Overlapping Aggregates of Cells</a></li>
-<li class="chapter" data-level="15.2" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>15.2</b> Co-accessibility with ArchR</a></li>
-<li class="chapter" data-level="15.3" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>15.3</b> Peak2GeneLinkage with ArchR</a></li>
-<li class="chapter" data-level="15.4" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>15.4</b> Identification of Positive TF-Regulators</a></li>
+<li class="chapter" data-level="16.1" data-path="motif-footprinting.html"><a href="motif-footprinting.html"><i class="fa fa-check"></i><b>16.1</b> Motif Footprinting</a></li>
+<li class="chapter" data-level="16.2" data-path="normalization-of-footprints-for-tn5-bias.html"><a href="normalization-of-footprints-for-tn5-bias.html"><i class="fa fa-check"></i><b>16.2</b> Normalization of Footprints for Tn5 Bias</a></li>
+<li class="chapter" data-level="16.3" data-path="feature-footprinting.html"><a href="feature-footprinting.html"><i class="fa fa-check"></i><b>16.3</b> Feature Footprinting</a></li>
 </ul></li>
-<li class="chapter" data-level="16" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>16</b> Trajectory Analysis with ArchR</a>
+<li class="chapter" data-level="17" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>17</b> Integrative Analysis with ArchR</a>
 <ul>
-<li class="chapter" data-level="16.1" data-path="myeloid-trajectory-monocyte-differentiation.html"><a href="myeloid-trajectory-monocyte-differentiation.html"><i class="fa fa-check"></i><b>16.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
-<li class="chapter" data-level="16.2" data-path="lymphoid-trajectory-b-cell-cifferentiation.html"><a href="lymphoid-trajectory-b-cell-cifferentiation.html"><i class="fa fa-check"></i><b>16.2</b> Lymphoid Trajectory - B Cell Cifferentiation</a></li>
+<li class="chapter" data-level="17.1" data-path="creating-low-overlapping-aggregates-of-cells.html"><a href="creating-low-overlapping-aggregates-of-cells.html"><i class="fa fa-check"></i><b>17.1</b> Creating Low-Overlapping Aggregates of Cells</a></li>
+<li class="chapter" data-level="17.2" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>17.2</b> Co-accessibility with ArchR</a></li>
+<li class="chapter" data-level="17.3" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>17.3</b> Peak2GeneLinkage with ArchR</a></li>
+<li class="chapter" data-level="17.4" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>17.4</b> Identification of Positive TF-Regulators</a></li>
 </ul></li>
-<li class="chapter" data-level="17" data-path="plot-aesthetics-in-archr.html"><a href="plot-aesthetics-in-archr.html"><i class="fa fa-check"></i><b>17</b> Plot aesthetics in ArchR</a></li>
-<li class="chapter" data-level="18" data-path="session-information.html"><a href="session-information.html"><i class="fa fa-check"></i><b>18</b> Session Information</a></li>
+<li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-differentiation.html"><a href="lymphoid-trajectory---b-cell-differentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Differentiation</a></li>
+<li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
+<li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
+<li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="handling-archr-output.html"><a href="handling-archr-output.html"><i class="fa fa-check"></i><b>19</b> Handling ArchR Output</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="exporting-fragment-level-data.html"><a href="exporting-fragment-level-data.html"><i class="fa fa-check"></i><b>19.1</b> Exporting fragment-level data</a></li>
+<li class="chapter" data-level="19.2" data-path="exporting-matrix-level-data.html"><a href="exporting-matrix-level-data.html"><i class="fa fa-check"></i><b>19.2</b> Exporting matrix-level data</a></li>
+<li class="chapter" data-level="19.3" data-path="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html"><i class="fa fa-check"></i><b>19.3</b> Exporting pseudo-bulked data to a <code>SummarizedExperiment</code></a></li>
+<li class="chapter" data-level="19.4" data-path="exporting-pseudo-bulked-data-to-a-bigwig-file.html"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html"><i class="fa fa-check"></i><b>19.4</b> Exporting pseudo-bulked data to a bigWig file</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="integration-with-bulk-atac-seq.html"><a href="integration-with-bulk-atac-seq.html"><i class="fa fa-check"></i><b>20</b> Integration with bulk ATAC-seq</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="projecting-bulk-atac-seq-data.html"><a href="projecting-bulk-atac-seq-data.html"><i class="fa fa-check"></i><b>20.1</b> Projecting bulk ATAC-seq data</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="multiomic-data-analysis-in-archr.html"><a href="multiomic-data-analysis-in-archr.html"><i class="fa fa-check"></i><b>21</b> Multiomic data analysis in ArchR</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="importing-data-and-setting-up-a-multiome-project.html"><a href="importing-data-and-setting-up-a-multiome-project.html"><i class="fa fa-check"></i><b>21.1</b> Importing data and setting up a Multiome project</a></li>
+<li class="chapter" data-level="21.2" data-path="analysis-of-multiome-data-in-archr.html"><a href="analysis-of-multiome-data-in-archr.html"><i class="fa fa-check"></i><b>21.2</b> Analysis of multiome data in ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="plot-aesthetics-in-archr.html"><a href="plot-aesthetics-in-archr.html"><i class="fa fa-check"></i><b>22</b> Plot aesthetics in ArchR</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="using-and-manipulating-palettes-in-archr.html"><a href="using-and-manipulating-palettes-in-archr.html"><i class="fa fa-check"></i><b>22.1</b> Using and manipulating palettes in ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="testing-your-archr-installation.html"><a href="testing-your-archr-installation.html"><i class="fa fa-check"></i><b>23</b> Testing Your ArchR Installation</a></li>
+<li class="chapter" data-level="24" data-path="session-information.html"><a href="session-information.html"><i class="fa fa-check"></i><b>24</b> Session Information</a></li>
 <li class="divider"></li>
 <li><a href="https://bookdown.org" target="_blank">Published with bookdown</a></li>
 
@@ -262,203 +305,253 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="manipulating-an-archrproject" class="section level2" number="3.2">
-<h2><span class="header-section-number">3.2</span> Manipulating An ArchRProject</h2>
+<div id="manipulating-an-archrproject" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Manipulating An ArchRProject<a href="manipulating-an-archrproject.html#manipulating-an-archrproject" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Now that we have created an <code>ArchRProject</code>, there are many things that we can do to easily access or manipulate the associated data.</p>
 <p><span style="font-size:20px;font-weight:bold">Example 1. The <code>$</code> accessor allows direct access to <code>cellColData</code></span></p>
 <p>We can access the cell names associated with each cell:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="manipulating-an-archrproject.html#cb26-1"></a><span class="kw">head</span>(projHeme1<span class="op">$</span>cellNames)</span></code></pre></div>
-<blockquote>
-<p>## [1] “scATAC_BMMC_R1#TTATGTCAGTGATTAG-1” “scATAC_BMMC_R1#AAGATAGTCACCGCGA-1”<br />
-## [3] “scATAC_BMMC_R1#GCATTGAAGATTCCGT-1” “scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1”<br />
-## [5] “scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1” “scATAC_BMMC_R1#AGTTACGAGAACGTCG-1”</p>
-</blockquote>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="manipulating-an-archrproject.html#cb47-1" tabindex="-1"></a><span class="fu">head</span>(projHeme1<span class="sc">$</span>cellNames)</span>
+<span id="cb47-2"><a href="manipulating-an-archrproject.html#cb47-2" tabindex="-1"></a><span class="do">## [1] &quot;scATAC_BMMC_R1#TTATGTCAGTGATTAG-1&quot; &quot;scATAC_BMMC_R1#AAGATAGTCACCGCGA-1&quot;</span></span>
+<span id="cb47-3"><a href="manipulating-an-archrproject.html#cb47-3" tabindex="-1"></a><span class="do">## [3] &quot;scATAC_BMMC_R1#GCATTGAAGATTCCGT-1&quot; &quot;scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1&quot;</span></span>
+<span id="cb47-4"><a href="manipulating-an-archrproject.html#cb47-4" tabindex="-1"></a><span class="do">## [5] &quot;scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1&quot; &quot;scATAC_BMMC_R1#AGTTACGAGAACGTCG-1&quot;</span></span></code></pre></div>
 <p>We can access the sample names associated with each cell:</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="manipulating-an-archrproject.html#cb27-1"></a><span class="kw">head</span>(projHeme1<span class="op">$</span>Sample)</span></code></pre></div>
-<blockquote>
-<p>## [1] “scATAC_BMMC_R1” “scATAC_BMMC_R1” “scATAC_BMMC_R1” “scATAC_BMMC_R1”<br />
-## [5] “scATAC_BMMC_R1” “scATAC_BMMC_R1”</p>
-</blockquote>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="manipulating-an-archrproject.html#cb48-1" tabindex="-1"></a><span class="fu">head</span>(projHeme1<span class="sc">$</span>Sample)</span>
+<span id="cb48-2"><a href="manipulating-an-archrproject.html#cb48-2" tabindex="-1"></a><span class="do">## [1] &quot;scATAC_BMMC_R1&quot; &quot;scATAC_BMMC_R1&quot; &quot;scATAC_BMMC_R1&quot; &quot;scATAC_BMMC_R1&quot;</span></span>
+<span id="cb48-3"><a href="manipulating-an-archrproject.html#cb48-3" tabindex="-1"></a><span class="do">## [5] &quot;scATAC_BMMC_R1&quot; &quot;scATAC_BMMC_R1&quot;</span></span></code></pre></div>
 <p>We can access the TSS Enrichment Scores for each cell:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="manipulating-an-archrproject.html#cb28-1"></a><span class="kw">quantile</span>(projHeme1<span class="op">$</span>TSSEnrichment)</span></code></pre></div>
-<blockquote>
-<p>## 0% 25% 50% 75% 100%<br />
-## 4.027 13.922 16.832 19.937 41.782</p>
-</blockquote>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="manipulating-an-archrproject.html#cb49-1" tabindex="-1"></a><span class="fu">quantile</span>(projHeme1<span class="sc">$</span>TSSEnrichment)</span>
+<span id="cb49-2"><a href="manipulating-an-archrproject.html#cb49-2" tabindex="-1"></a><span class="do">##       0%      25%      50%      75%     100% </span></span>
+<span id="cb49-3"><a href="manipulating-an-archrproject.html#cb49-3" tabindex="-1"></a><span class="do">##  4.10900 13.92550 16.81500 19.93025 41.98000</span></span></code></pre></div>
 <p><span style="font-size:20px;font-weight:bold">Example 2. Subsetting an <code>ArchRProject</code> by cells</span></p>
-<p>There are many ways that we can subset an <code>ArchRProject</code> to obtain only a select set of cells.</p>
-<p>We can subset the project numerically, for example taking the first 100 cells in the project:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="manipulating-an-archrproject.html#cb29-1"></a>projHeme1[<span class="dv">1</span><span class="op">:</span><span class="dv">100</span>, ]</span></code></pre></div>
-<blockquote>
-<p>## class: ArchRProject<br />
-## outputDirectory: /oak/stanford/groups/howchang/users/jgranja/ArchRTutorial/ArchRBook/BookOutput4/HemeTutorial<br />
-## samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1<br />
-## sampleColData names(1): ArrowFiles<br />
-## cellColData names(11): Sample TSSEnrichment … DoubletScore<br />
-## DoubletEnrichment<br />
-## numberOfCells(1): 100<br />
-## medianTSS(1): 10.7725<br />
-## medianFrags(1): 10200.5</p>
-</blockquote>
-<p>We can subset the project based on certain cell names:</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="manipulating-an-archrproject.html#cb30-1"></a>projHeme1[projHeme1<span class="op">$</span>cellNames[<span class="dv">1</span><span class="op">:</span><span class="dv">100</span>], ]</span></code></pre></div>
-<blockquote>
-<p>## class: ArchRProject<br />
-## outputDirectory: /oak/stanford/groups/howchang/users/jgranja/ArchRTutorial/ArchRBook/BookOutput4/HemeTutorial<br />
-## samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1<br />
-## sampleColData names(1): ArrowFiles<br />
-## cellColData names(11): Sample TSSEnrichment … DoubletScore<br />
-## DoubletEnrichment<br />
-## numberOfCells(1): 100<br />
-## medianTSS(1): 10.7725<br />
-## medianFrags(1): 10200.5</p>
-</blockquote>
+<p>There are many ways that we can subset an <code>ArchRProject</code> to obtain only a select set of cells. However, the different ways to subset an <code>ArchRProject</code> have very different effects and should not be considered equivalent.</p>
+<p>The only robust way to subset an <code>ArchRProject</code> is to use the <code>subsetArchRProject()</code> function. This function takes a list of <code>cells</code> and an <code>outputDirectory</code> and creates a new full copy of the <code>ArchRProject</code> and corresponding Arrow files in the designated directory. This is the ideal way to subset an <code>ArchRProject</code> because it ensures that only one <code>ArchRProject</code> object is referring to the specified Arrow files (more details on this below). Additionally, by using the <code>dropCells</code> argument, you can remove unnecessary cells from downstream analyses. Setting <code>dropCells = TRUE</code> is almost always the correct choice and setting <code>dropCells = FALSE</code> can lead to some unexpected downstream issues depending on your workflow.</p>
+<p>For example, we could use <code>subsetArchRProject()</code> to keep only the cells from a specific sample (shown below) or cluster to perform a subsetted downstream analysis. All you need to do is pass the <code>cellNames</code> of the cells that you would like to retain to the <code>cells</code> parameter.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="manipulating-an-archrproject.html#cb50-1" tabindex="-1"></a>idxSample <span class="ot">&lt;-</span> BiocGenerics<span class="sc">::</span><span class="fu">which</span>(projHeme1<span class="sc">$</span>Sample <span class="sc">%in%</span> <span class="st">&quot;scATAC_BMMC_R1&quot;</span>)</span>
+<span id="cb50-2"><a href="manipulating-an-archrproject.html#cb50-2" tabindex="-1"></a>projSubset <span class="ot">&lt;-</span> <span class="fu">subsetArchRProject</span>(</span>
+<span id="cb50-3"><a href="manipulating-an-archrproject.html#cb50-3" tabindex="-1"></a>  <span class="at">ArchRProj =</span> projHeme1,</span>
+<span id="cb50-4"><a href="manipulating-an-archrproject.html#cb50-4" tabindex="-1"></a>  <span class="at">cells =</span> projHeme1<span class="sc">$</span>cellNames[idxSample],</span>
+<span id="cb50-5"><a href="manipulating-an-archrproject.html#cb50-5" tabindex="-1"></a>  <span class="at">outputDirectory =</span> <span class="st">&quot;ArchRSubset&quot;</span>,</span>
+<span id="cb50-6"><a href="manipulating-an-archrproject.html#cb50-6" tabindex="-1"></a>  <span class="at">dropCells =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb50-7"><a href="manipulating-an-archrproject.html#cb50-7" tabindex="-1"></a>  <span class="at">force =</span> <span class="cn">TRUE</span></span>
+<span id="cb50-8"><a href="manipulating-an-archrproject.html#cb50-8" tabindex="-1"></a>  )</span>
+<span id="cb50-9"><a href="manipulating-an-archrproject.html#cb50-9" tabindex="-1"></a><span class="do">## Copying ArchRProject to new outputDirectory : /workspace/ArchR/ArchR_Website_Testing/bookdown/ArchRSubset</span></span>
+<span id="cb50-10"><a href="manipulating-an-archrproject.html#cb50-10" tabindex="-1"></a><span class="do">## Copying Arrow Files...</span></span>
+<span id="cb50-11"><a href="manipulating-an-archrproject.html#cb50-11" tabindex="-1"></a><span class="do">## .copyArrow : Initializing Out ArrowFile</span></span>
+<span id="cb50-12"><a href="manipulating-an-archrproject.html#cb50-12" tabindex="-1"></a><span class="do">## .copyArrow : Adding Metadata to Out ArrowFile</span></span>
+<span id="cb50-13"><a href="manipulating-an-archrproject.html#cb50-13" tabindex="-1"></a><span class="do">## .copyArrow : Adding SubMatrices to Out ArrowFile</span></span>
+<span id="cb50-14"><a href="manipulating-an-archrproject.html#cb50-14" tabindex="-1"></a><span class="do">## Getting ImputeWeights</span></span>
+<span id="cb50-15"><a href="manipulating-an-archrproject.html#cb50-15" tabindex="-1"></a><span class="do">## No imputeWeights found, returning NULL</span></span>
+<span id="cb50-16"><a href="manipulating-an-archrproject.html#cb50-16" tabindex="-1"></a><span class="do">## Copying Other Files...</span></span>
+<span id="cb50-17"><a href="manipulating-an-archrproject.html#cb50-17" tabindex="-1"></a><span class="do">## Copying Other Files (1 of 1): Plots</span></span>
+<span id="cb50-18"><a href="manipulating-an-archrproject.html#cb50-18" tabindex="-1"></a><span class="do">## Saving ArchRProject...</span></span>
+<span id="cb50-19"><a href="manipulating-an-archrproject.html#cb50-19" tabindex="-1"></a><span class="do">## Loading ArchRProject...</span></span>
+<span id="cb50-20"><a href="manipulating-an-archrproject.html#cb50-20" tabindex="-1"></a><span class="do">## Successfully loaded ArchRProject!</span></span>
+<span id="cb50-21"><a href="manipulating-an-archrproject.html#cb50-21" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb50-22"><a href="manipulating-an-archrproject.html#cb50-22" tabindex="-1"></a><span class="do">##                                                    / |</span></span>
+<span id="cb50-23"><a href="manipulating-an-archrproject.html#cb50-23" tabindex="-1"></a><span class="do">##                                                  /    \</span></span>
+<span id="cb50-24"><a href="manipulating-an-archrproject.html#cb50-24" tabindex="-1"></a><span class="do">##             .                                  /      |.</span></span>
+<span id="cb50-25"><a href="manipulating-an-archrproject.html#cb50-25" tabindex="-1"></a><span class="do">##             \\\                              /        |.</span></span>
+<span id="cb50-26"><a href="manipulating-an-archrproject.html#cb50-26" tabindex="-1"></a><span class="do">##               \\\                          /           `|.</span></span>
+<span id="cb50-27"><a href="manipulating-an-archrproject.html#cb50-27" tabindex="-1"></a><span class="do">##                 \\\                      /              |.</span></span>
+<span id="cb50-28"><a href="manipulating-an-archrproject.html#cb50-28" tabindex="-1"></a><span class="do">##                   \                    /                |\</span></span>
+<span id="cb50-29"><a href="manipulating-an-archrproject.html#cb50-29" tabindex="-1"></a><span class="do">##                   \\#####\           /                  ||</span></span>
+<span id="cb50-30"><a href="manipulating-an-archrproject.html#cb50-30" tabindex="-1"></a><span class="do">##                 ==###########&gt;      /                   ||</span></span>
+<span id="cb50-31"><a href="manipulating-an-archrproject.html#cb50-31" tabindex="-1"></a><span class="do">##                  \\##==......\    /                     ||</span></span>
+<span id="cb50-32"><a href="manipulating-an-archrproject.html#cb50-32" tabindex="-1"></a><span class="do">##             ______ =       =|__ /__                     ||      \\\</span></span>
+<span id="cb50-33"><a href="manipulating-an-archrproject.html#cb50-33" tabindex="-1"></a><span class="do">##         ,--&#39; ,----`-,__ ___/&#39;  --,-`-===================##========&gt;</span></span>
+<span id="cb50-34"><a href="manipulating-an-archrproject.html#cb50-34" tabindex="-1"></a><span class="do">##        \               &#39;        ##_______ _____ ,--,__,=##,__   ///</span></span>
+<span id="cb50-35"><a href="manipulating-an-archrproject.html#cb50-35" tabindex="-1"></a><span class="do">##         ,    __==    ___,-,__,--&#39;#&#39;  ===&#39;      `-&#39;    | ##,-/</span></span>
+<span id="cb50-36"><a href="manipulating-an-archrproject.html#cb50-36" tabindex="-1"></a><span class="do">##         -,____,---&#39;       \\####\\________________,--\\_##,/</span></span>
+<span id="cb50-37"><a href="manipulating-an-archrproject.html#cb50-37" tabindex="-1"></a><span class="do">##            ___      .______        ______  __    __  .______      </span></span>
+<span id="cb50-38"><a href="manipulating-an-archrproject.html#cb50-38" tabindex="-1"></a><span class="do">##           /   \     |   _  \      /      ||  |  |  | |   _  \     </span></span>
+<span id="cb50-39"><a href="manipulating-an-archrproject.html#cb50-39" tabindex="-1"></a><span class="do">##          /  ^  \    |  |_)  |    |  ,----&#39;|  |__|  | |  |_)  |    </span></span>
+<span id="cb50-40"><a href="manipulating-an-archrproject.html#cb50-40" tabindex="-1"></a><span class="do">##         /  /_\  \   |      /     |  |     |   __   | |      /     </span></span>
+<span id="cb50-41"><a href="manipulating-an-archrproject.html#cb50-41" tabindex="-1"></a><span class="do">##        /  _____  \  |  |\  \\___ |  `----.|  |  |  | |  |\  \\___.</span></span>
+<span id="cb50-42"><a href="manipulating-an-archrproject.html#cb50-42" tabindex="-1"></a><span class="do">##       /__/     \__\ | _| `._____| \______||__|  |__| | _| `._____|</span></span>
+<span id="cb50-43"><a href="manipulating-an-archrproject.html#cb50-43" tabindex="-1"></a><span class="do">## </span></span></code></pre></div>
+<p>It is important to note that some operations will need to be re-run after project subsetting. Much of this is dictated by common sense. For example, if you want to look at only the subsetted cells on a new UMAP embedding, you need to create that new embedding first. Similarly, if you want to perform sub-clustering, you should almost certainly re-run dimensionality reduction (LSI) first.</p>
+<p>The primary disadvantage of <code>subsetArchRProject()</code> is that it makes copies of the Arrow files which can be quite large for bigger data sets. Nevertheless, this is the absolute most stable way to subset a project and is the only way that we recommend.</p>
+<p>If your data set size is so massive that copying the Arrow files is not reasonable, you can try subsetting the project manually as illustrated below. However, it is important to note if you do this, you can run into the situation where you have multiple ArchRProject objects pointing to the same Arrow files. You may alter those Arrow files in one project, causing something to unexpectedly break in the other project. <strong>We do not consider this type of project subsetting to be stable and strongly recommend against using this strategy.</strong></p>
+<p>For example, we can subset the project numerically, for example taking the first 100 cells in the project:</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="manipulating-an-archrproject.html#cb51-1" tabindex="-1"></a>projHeme1[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, ]</span>
+<span id="cb51-2"><a href="manipulating-an-archrproject.html#cb51-2" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb51-3"><a href="manipulating-an-archrproject.html#cb51-3" tabindex="-1"></a><span class="do">##            ___      .______        ______  __    __  .______      </span></span>
+<span id="cb51-4"><a href="manipulating-an-archrproject.html#cb51-4" tabindex="-1"></a><span class="do">##           /   \     |   _  \      /      ||  |  |  | |   _  \     </span></span>
+<span id="cb51-5"><a href="manipulating-an-archrproject.html#cb51-5" tabindex="-1"></a><span class="do">##          /  ^  \    |  |_)  |    |  ,----&#39;|  |__|  | |  |_)  |    </span></span>
+<span id="cb51-6"><a href="manipulating-an-archrproject.html#cb51-6" tabindex="-1"></a><span class="do">##         /  /_\  \   |      /     |  |     |   __   | |      /     </span></span>
+<span id="cb51-7"><a href="manipulating-an-archrproject.html#cb51-7" tabindex="-1"></a><span class="do">##        /  _____  \  |  |\  \\___ |  `----.|  |  |  | |  |\  \\___.</span></span>
+<span id="cb51-8"><a href="manipulating-an-archrproject.html#cb51-8" tabindex="-1"></a><span class="do">##       /__/     \__\ | _| `._____| \______||__|  |__| | _| `._____|</span></span>
+<span id="cb51-9"><a href="manipulating-an-archrproject.html#cb51-9" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb51-10"><a href="manipulating-an-archrproject.html#cb51-10" tabindex="-1"></a><span class="do">## class: ArchRProject </span></span>
+<span id="cb51-11"><a href="manipulating-an-archrproject.html#cb51-11" tabindex="-1"></a><span class="do">## outputDirectory: /workspace/ArchR/ArchR_Website_Testing/bookdown/HemeTutorial </span></span>
+<span id="cb51-12"><a href="manipulating-an-archrproject.html#cb51-12" tabindex="-1"></a><span class="do">## samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1</span></span>
+<span id="cb51-13"><a href="manipulating-an-archrproject.html#cb51-13" tabindex="-1"></a><span class="do">## sampleColData names(1): ArrowFiles</span></span>
+<span id="cb51-14"><a href="manipulating-an-archrproject.html#cb51-14" tabindex="-1"></a><span class="do">## cellColData names(15): Sample TSSEnrichment ... DoubletEnrichment</span></span>
+<span id="cb51-15"><a href="manipulating-an-archrproject.html#cb51-15" tabindex="-1"></a><span class="do">##   BlacklistRatio</span></span>
+<span id="cb51-16"><a href="manipulating-an-archrproject.html#cb51-16" tabindex="-1"></a><span class="do">## numberOfCells(1): 100</span></span>
+<span id="cb51-17"><a href="manipulating-an-archrproject.html#cb51-17" tabindex="-1"></a><span class="do">## medianTSS(1): 10.794</span></span>
+<span id="cb51-18"><a href="manipulating-an-archrproject.html#cb51-18" tabindex="-1"></a><span class="do">## medianFrags(1): 10200.5</span></span></code></pre></div>
+<p>And we can subset the project based on certain cell names:</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="manipulating-an-archrproject.html#cb52-1" tabindex="-1"></a>projHeme1[projHeme1<span class="sc">$</span>cellNames[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>], ]</span>
+<span id="cb52-2"><a href="manipulating-an-archrproject.html#cb52-2" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb52-3"><a href="manipulating-an-archrproject.html#cb52-3" tabindex="-1"></a><span class="do">##            ___      .______        ______  __    __  .______      </span></span>
+<span id="cb52-4"><a href="manipulating-an-archrproject.html#cb52-4" tabindex="-1"></a><span class="do">##           /   \     |   _  \      /      ||  |  |  | |   _  \     </span></span>
+<span id="cb52-5"><a href="manipulating-an-archrproject.html#cb52-5" tabindex="-1"></a><span class="do">##          /  ^  \    |  |_)  |    |  ,----&#39;|  |__|  | |  |_)  |    </span></span>
+<span id="cb52-6"><a href="manipulating-an-archrproject.html#cb52-6" tabindex="-1"></a><span class="do">##         /  /_\  \   |      /     |  |     |   __   | |      /     </span></span>
+<span id="cb52-7"><a href="manipulating-an-archrproject.html#cb52-7" tabindex="-1"></a><span class="do">##        /  _____  \  |  |\  \\___ |  `----.|  |  |  | |  |\  \\___.</span></span>
+<span id="cb52-8"><a href="manipulating-an-archrproject.html#cb52-8" tabindex="-1"></a><span class="do">##       /__/     \__\ | _| `._____| \______||__|  |__| | _| `._____|</span></span>
+<span id="cb52-9"><a href="manipulating-an-archrproject.html#cb52-9" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb52-10"><a href="manipulating-an-archrproject.html#cb52-10" tabindex="-1"></a><span class="do">## class: ArchRProject </span></span>
+<span id="cb52-11"><a href="manipulating-an-archrproject.html#cb52-11" tabindex="-1"></a><span class="do">## outputDirectory: /workspace/ArchR/ArchR_Website_Testing/bookdown/HemeTutorial </span></span>
+<span id="cb52-12"><a href="manipulating-an-archrproject.html#cb52-12" tabindex="-1"></a><span class="do">## samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1</span></span>
+<span id="cb52-13"><a href="manipulating-an-archrproject.html#cb52-13" tabindex="-1"></a><span class="do">## sampleColData names(1): ArrowFiles</span></span>
+<span id="cb52-14"><a href="manipulating-an-archrproject.html#cb52-14" tabindex="-1"></a><span class="do">## cellColData names(15): Sample TSSEnrichment ... DoubletEnrichment</span></span>
+<span id="cb52-15"><a href="manipulating-an-archrproject.html#cb52-15" tabindex="-1"></a><span class="do">##   BlacklistRatio</span></span>
+<span id="cb52-16"><a href="manipulating-an-archrproject.html#cb52-16" tabindex="-1"></a><span class="do">## numberOfCells(1): 100</span></span>
+<span id="cb52-17"><a href="manipulating-an-archrproject.html#cb52-17" tabindex="-1"></a><span class="do">## medianTSS(1): 10.794</span></span>
+<span id="cb52-18"><a href="manipulating-an-archrproject.html#cb52-18" tabindex="-1"></a><span class="do">## medianFrags(1): 10200.5</span></span></code></pre></div>
 <p>We can subset the project to keep all cells corresponding to a specific sample:</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="manipulating-an-archrproject.html#cb31-1"></a>idxSample &lt;-<span class="st"> </span>BiocGenerics<span class="op">::</span><span class="kw">which</span>(projHeme1<span class="op">$</span>Sample <span class="op">%in%</span><span class="st"> &quot;scATAC_BMMC_R1&quot;</span>)</span>
-<span id="cb31-2"><a href="manipulating-an-archrproject.html#cb31-2"></a>cellsSample &lt;-<span class="st"> </span>projHeme1<span class="op">$</span>cellNames[idxSample]</span>
-<span id="cb31-3"><a href="manipulating-an-archrproject.html#cb31-3"></a>projHeme1[cellsSample, ]</span></code></pre></div>
-<blockquote>
-<p>## class: ArchRProject<br />
-## outputDirectory: /oak/stanford/groups/howchang/users/jgranja/ArchRTutorial/ArchRBook/BookOutput4/HemeTutorial<br />
-## samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1<br />
-## sampleColData names(1): ArrowFiles<br />
-## cellColData names(11): Sample TSSEnrichment … DoubletScore<br />
-## DoubletEnrichment<br />
-## numberOfCells(1): 4932<br />
-## medianTSS(1): 15.254<br />
-## medianFrags(1): 2771</p>
-</blockquote>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="manipulating-an-archrproject.html#cb53-1" tabindex="-1"></a>idxSample <span class="ot">&lt;-</span> BiocGenerics<span class="sc">::</span><span class="fu">which</span>(projHeme1<span class="sc">$</span>Sample <span class="sc">%in%</span> <span class="st">&quot;scATAC_BMMC_R1&quot;</span>)</span>
+<span id="cb53-2"><a href="manipulating-an-archrproject.html#cb53-2" tabindex="-1"></a>cellsSample <span class="ot">&lt;-</span> projHeme1<span class="sc">$</span>cellNames[idxSample]</span>
+<span id="cb53-3"><a href="manipulating-an-archrproject.html#cb53-3" tabindex="-1"></a>projHeme1[cellsSample, ]</span>
+<span id="cb53-4"><a href="manipulating-an-archrproject.html#cb53-4" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb53-5"><a href="manipulating-an-archrproject.html#cb53-5" tabindex="-1"></a><span class="do">##            ___      .______        ______  __    __  .______      </span></span>
+<span id="cb53-6"><a href="manipulating-an-archrproject.html#cb53-6" tabindex="-1"></a><span class="do">##           /   \     |   _  \      /      ||  |  |  | |   _  \     </span></span>
+<span id="cb53-7"><a href="manipulating-an-archrproject.html#cb53-7" tabindex="-1"></a><span class="do">##          /  ^  \    |  |_)  |    |  ,----&#39;|  |__|  | |  |_)  |    </span></span>
+<span id="cb53-8"><a href="manipulating-an-archrproject.html#cb53-8" tabindex="-1"></a><span class="do">##         /  /_\  \   |      /     |  |     |   __   | |      /     </span></span>
+<span id="cb53-9"><a href="manipulating-an-archrproject.html#cb53-9" tabindex="-1"></a><span class="do">##        /  _____  \  |  |\  \\___ |  `----.|  |  |  | |  |\  \\___.</span></span>
+<span id="cb53-10"><a href="manipulating-an-archrproject.html#cb53-10" tabindex="-1"></a><span class="do">##       /__/     \__\ | _| `._____| \______||__|  |__| | _| `._____|</span></span>
+<span id="cb53-11"><a href="manipulating-an-archrproject.html#cb53-11" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb53-12"><a href="manipulating-an-archrproject.html#cb53-12" tabindex="-1"></a><span class="do">## class: ArchRProject </span></span>
+<span id="cb53-13"><a href="manipulating-an-archrproject.html#cb53-13" tabindex="-1"></a><span class="do">## outputDirectory: /workspace/ArchR/ArchR_Website_Testing/bookdown/HemeTutorial </span></span>
+<span id="cb53-14"><a href="manipulating-an-archrproject.html#cb53-14" tabindex="-1"></a><span class="do">## samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1</span></span>
+<span id="cb53-15"><a href="manipulating-an-archrproject.html#cb53-15" tabindex="-1"></a><span class="do">## sampleColData names(1): ArrowFiles</span></span>
+<span id="cb53-16"><a href="manipulating-an-archrproject.html#cb53-16" tabindex="-1"></a><span class="do">## cellColData names(15): Sample TSSEnrichment ... DoubletEnrichment</span></span>
+<span id="cb53-17"><a href="manipulating-an-archrproject.html#cb53-17" tabindex="-1"></a><span class="do">##   BlacklistRatio</span></span>
+<span id="cb53-18"><a href="manipulating-an-archrproject.html#cb53-18" tabindex="-1"></a><span class="do">## numberOfCells(1): 4932</span></span>
+<span id="cb53-19"><a href="manipulating-an-archrproject.html#cb53-19" tabindex="-1"></a><span class="do">## medianTSS(1): 15.2575</span></span>
+<span id="cb53-20"><a href="manipulating-an-archrproject.html#cb53-20" tabindex="-1"></a><span class="do">## medianFrags(1): 2771</span></span></code></pre></div>
 <p>We can subset the project to only keep cells that meet a specific cutoff for the TSS enrichment score:</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="manipulating-an-archrproject.html#cb32-1"></a>idxPass &lt;-<span class="st"> </span><span class="kw">which</span>(projHeme1<span class="op">$</span>TSSEnrichment <span class="op">&gt;=</span><span class="st"> </span><span class="dv">8</span>)</span>
-<span id="cb32-2"><a href="manipulating-an-archrproject.html#cb32-2"></a>cellsPass &lt;-<span class="st"> </span>projHeme1<span class="op">$</span>cellNames[idxPass]</span>
-<span id="cb32-3"><a href="manipulating-an-archrproject.html#cb32-3"></a>projHeme1[cellsPass, ]</span></code></pre></div>
-<blockquote>
-<p>## class: ArchRProject
-## outputDirectory: /oak/stanford/groups/howchang/users/jgranja/ArchRTutorial/ArchRBook/BookOutput4/HemeTutorial<br />
-## samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1<br />
-## sampleColData names(1): ArrowFiles<br />
-## cellColData names(11): Sample TSSEnrichment … DoubletScore<br />
-## DoubletEnrichment<br />
-## numberOfCells(1): 10500<br />
-## medianTSS(1): 16.9275<br />
-## medianFrags(1): 3042</p>
-</blockquote>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="manipulating-an-archrproject.html#cb54-1" tabindex="-1"></a>idxPass <span class="ot">&lt;-</span> <span class="fu">which</span>(projHeme1<span class="sc">$</span>TSSEnrichment <span class="sc">&gt;=</span> <span class="dv">8</span>)</span>
+<span id="cb54-2"><a href="manipulating-an-archrproject.html#cb54-2" tabindex="-1"></a>cellsPass <span class="ot">&lt;-</span> projHeme1<span class="sc">$</span>cellNames[idxPass]</span>
+<span id="cb54-3"><a href="manipulating-an-archrproject.html#cb54-3" tabindex="-1"></a>projHeme1[cellsPass, ]</span>
+<span id="cb54-4"><a href="manipulating-an-archrproject.html#cb54-4" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb54-5"><a href="manipulating-an-archrproject.html#cb54-5" tabindex="-1"></a><span class="do">##            ___      .______        ______  __    __  .______      </span></span>
+<span id="cb54-6"><a href="manipulating-an-archrproject.html#cb54-6" tabindex="-1"></a><span class="do">##           /   \     |   _  \      /      ||  |  |  | |   _  \     </span></span>
+<span id="cb54-7"><a href="manipulating-an-archrproject.html#cb54-7" tabindex="-1"></a><span class="do">##          /  ^  \    |  |_)  |    |  ,----&#39;|  |__|  | |  |_)  |    </span></span>
+<span id="cb54-8"><a href="manipulating-an-archrproject.html#cb54-8" tabindex="-1"></a><span class="do">##         /  /_\  \   |      /     |  |     |   __   | |      /     </span></span>
+<span id="cb54-9"><a href="manipulating-an-archrproject.html#cb54-9" tabindex="-1"></a><span class="do">##        /  _____  \  |  |\  \\___ |  `----.|  |  |  | |  |\  \\___.</span></span>
+<span id="cb54-10"><a href="manipulating-an-archrproject.html#cb54-10" tabindex="-1"></a><span class="do">##       /__/     \__\ | _| `._____| \______||__|  |__| | _| `._____|</span></span>
+<span id="cb54-11"><a href="manipulating-an-archrproject.html#cb54-11" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb54-12"><a href="manipulating-an-archrproject.html#cb54-12" tabindex="-1"></a><span class="do">## class: ArchRProject </span></span>
+<span id="cb54-13"><a href="manipulating-an-archrproject.html#cb54-13" tabindex="-1"></a><span class="do">## outputDirectory: /workspace/ArchR/ArchR_Website_Testing/bookdown/HemeTutorial </span></span>
+<span id="cb54-14"><a href="manipulating-an-archrproject.html#cb54-14" tabindex="-1"></a><span class="do">## samples(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1</span></span>
+<span id="cb54-15"><a href="manipulating-an-archrproject.html#cb54-15" tabindex="-1"></a><span class="do">## sampleColData names(1): ArrowFiles</span></span>
+<span id="cb54-16"><a href="manipulating-an-archrproject.html#cb54-16" tabindex="-1"></a><span class="do">## cellColData names(15): Sample TSSEnrichment ... DoubletEnrichment</span></span>
+<span id="cb54-17"><a href="manipulating-an-archrproject.html#cb54-17" tabindex="-1"></a><span class="do">##   BlacklistRatio</span></span>
+<span id="cb54-18"><a href="manipulating-an-archrproject.html#cb54-18" tabindex="-1"></a><span class="do">## numberOfCells(1): 10499</span></span>
+<span id="cb54-19"><a href="manipulating-an-archrproject.html#cb54-19" tabindex="-1"></a><span class="do">## medianTSS(1): 16.899</span></span>
+<span id="cb54-20"><a href="manipulating-an-archrproject.html#cb54-20" tabindex="-1"></a><span class="do">## medianFrags(1): 3042</span></span></code></pre></div>
 <p><span style="font-size:20px;font-weight:bold">Example 3. Adding data to an <code>ArchRProject</code></span></p>
 <p>We can add columns to <code>cellColData</code> to store any type of cell-specific metadata relevant to our project.</p>
 <p>For example, we can add a column to <code>cellColData</code> that contains more legible sample names by removing excess info from the original sample names:</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="manipulating-an-archrproject.html#cb33-1"></a>bioNames &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;_R2|_R1|scATAC_&quot;</span>,<span class="st">&quot;&quot;</span>,projHeme1<span class="op">$</span>Sample)</span>
-<span id="cb33-2"><a href="manipulating-an-archrproject.html#cb33-2"></a><span class="kw">head</span>(bioNames)</span></code></pre></div>
-<blockquote>
-<p>## [1] “BMMC” “BMMC” “BMMC” “BMMC” “BMMC” “BMMC”<br />
-## [7] “BMMC” “BMMC” “BMMC” “BMMC” “BMMC” “BMMC”</p>
-</blockquote>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="manipulating-an-archrproject.html#cb55-1" tabindex="-1"></a>bioNames <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">&quot;_R2|_R1|scATAC_&quot;</span>,<span class="st">&quot;&quot;</span>,projHeme1<span class="sc">$</span>Sample)</span>
+<span id="cb55-2"><a href="manipulating-an-archrproject.html#cb55-2" tabindex="-1"></a><span class="fu">head</span>(bioNames)</span>
+<span id="cb55-3"><a href="manipulating-an-archrproject.html#cb55-3" tabindex="-1"></a><span class="do">## [1] &quot;BMMC&quot; &quot;BMMC&quot; &quot;BMMC&quot; &quot;BMMC&quot; &quot;BMMC&quot; &quot;BMMC&quot;</span></span></code></pre></div>
 <p>One way to add a column called to <code>cellColData</code> is by directly using the <code>$</code> accessor.</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="manipulating-an-archrproject.html#cb34-1"></a>projHeme1<span class="op">$</span>bioNames &lt;-<span class="st"> </span>bioNames</span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="manipulating-an-archrproject.html#cb56-1" tabindex="-1"></a>projHeme1<span class="sc">$</span>bioNames <span class="ot">&lt;-</span> bioNames</span></code></pre></div>
 <p>Alternatively, we can add a column to <code>cellColData</code> using the <code>addCellColData()</code> function. ArchR allows for the addition of columns that only contain information for a subset of cells.</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="manipulating-an-archrproject.html#cb35-1"></a>bioNames &lt;-<span class="st"> </span>bioNames[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]</span>
-<span id="cb35-2"><a href="manipulating-an-archrproject.html#cb35-2"></a>cellNames &lt;-<span class="st"> </span>projHeme1<span class="op">$</span>cellNames[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]</span>
-<span id="cb35-3"><a href="manipulating-an-archrproject.html#cb35-3"></a>projHeme1 &lt;-<span class="st"> </span><span class="kw">addCellColData</span>(<span class="dt">ArchRProj =</span> projHeme1, <span class="dt">data =</span> <span class="kw">paste0</span>(bioNames),</span>
-<span id="cb35-4"><a href="manipulating-an-archrproject.html#cb35-4"></a>    <span class="dt">cells =</span> cellNames, <span class="dt">name =</span> <span class="st">&quot;bioNames2&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="manipulating-an-archrproject.html#cb57-1" tabindex="-1"></a>bioNames <span class="ot">&lt;-</span> bioNames[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb57-2"><a href="manipulating-an-archrproject.html#cb57-2" tabindex="-1"></a>cellNames <span class="ot">&lt;-</span> projHeme1<span class="sc">$</span>cellNames[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb57-3"><a href="manipulating-an-archrproject.html#cb57-3" tabindex="-1"></a>projHeme1 <span class="ot">&lt;-</span> <span class="fu">addCellColData</span>(<span class="at">ArchRProj =</span> projHeme1, <span class="at">data =</span> <span class="fu">paste0</span>(bioNames),</span>
+<span id="cb57-4"><a href="manipulating-an-archrproject.html#cb57-4" tabindex="-1"></a>    <span class="at">cells =</span> cellNames, <span class="at">name =</span> <span class="st">&quot;bioNames2&quot;</span>)</span></code></pre></div>
 <p>By default, ArchR will fill in missing entries with <code>NA</code>. Because of this, when we can compare these two columns, we see <code>NA</code> filled in where data wasnt available for <code>bioNames2</code>:</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="manipulating-an-archrproject.html#cb36-1"></a><span class="kw">getCellColData</span>(projHeme1, <span class="dt">select =</span> <span class="kw">c</span>(<span class="st">&quot;bioNames&quot;</span>, <span class="st">&quot;bioNames2&quot;</span>))</span></code></pre></div>
-<blockquote>
-<p>## DataFrame with 10661 rows and 2 columns<br />
-## bioNames bioNames2<br />
-## <character> <character><br />
-## scATAC_BMMC_R1#TTATGTCAGTGATTAG-1 BMMC BMMC<br />
-## scATAC_BMMC_R1#AAGATAGTCACCGCGA-1 BMMC BMMC<br />
-## scATAC_BMMC_R1#GCATTGAAGATTCCGT-1 BMMC BMMC<br />
-## scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1 BMMC BMMC<br />
-## scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1 BMMC BMMC<br />
-## … … …<br />
-## scATAC_PBMC_R1#GCTGCGAAGATCCGAG-1 PBMC NA<br />
-## scATAC_PBMC_R1#GCAGCTGGTGGCCTTG-1 PBMC NA<br />
-## scATAC_PBMC_R1#GCAGATTGTACGCAAG-1 PBMC NA<br />
-## scATAC_PBMC_R1#TTCGTTACATTGAACC-1 PBMC NA<br />
-## scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1 PBMC NA</p>
-</blockquote>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="manipulating-an-archrproject.html#cb58-1" tabindex="-1"></a><span class="fu">getCellColData</span>(projHeme1, <span class="at">select =</span> <span class="fu">c</span>(<span class="st">&quot;bioNames&quot;</span>, <span class="st">&quot;bioNames2&quot;</span>))</span>
+<span id="cb58-2"><a href="manipulating-an-archrproject.html#cb58-2" tabindex="-1"></a><span class="do">## DataFrame with 10660 rows and 2 columns</span></span>
+<span id="cb58-3"><a href="manipulating-an-archrproject.html#cb58-3" tabindex="-1"></a><span class="do">##                                      bioNames   bioNames2</span></span>
+<span id="cb58-4"><a href="manipulating-an-archrproject.html#cb58-4" tabindex="-1"></a><span class="do">##                                   &lt;character&gt; &lt;character&gt;</span></span>
+<span id="cb58-5"><a href="manipulating-an-archrproject.html#cb58-5" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TTATGTCAGTGATTAG-1        BMMC        BMMC</span></span>
+<span id="cb58-6"><a href="manipulating-an-archrproject.html#cb58-6" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AAGATAGTCACCGCGA-1        BMMC        BMMC</span></span>
+<span id="cb58-7"><a href="manipulating-an-archrproject.html#cb58-7" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#GCATTGAAGATTCCGT-1        BMMC        BMMC</span></span>
+<span id="cb58-8"><a href="manipulating-an-archrproject.html#cb58-8" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1        BMMC        BMMC</span></span>
+<span id="cb58-9"><a href="manipulating-an-archrproject.html#cb58-9" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1        BMMC        BMMC</span></span>
+<span id="cb58-10"><a href="manipulating-an-archrproject.html#cb58-10" tabindex="-1"></a><span class="do">## ...                                       ...         ...</span></span>
+<span id="cb58-11"><a href="manipulating-an-archrproject.html#cb58-11" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1#GCTGCGAAGATCCGAG-1        PBMC          NA</span></span>
+<span id="cb58-12"><a href="manipulating-an-archrproject.html#cb58-12" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1#GCAGCTGGTGGCCTTG-1        PBMC          NA</span></span>
+<span id="cb58-13"><a href="manipulating-an-archrproject.html#cb58-13" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1#GCAGATTGTACGCAAG-1        PBMC          NA</span></span>
+<span id="cb58-14"><a href="manipulating-an-archrproject.html#cb58-14" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1#TTCGTTACATTGAACC-1        PBMC          NA</span></span>
+<span id="cb58-15"><a href="manipulating-an-archrproject.html#cb58-15" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1        PBMC          NA</span></span></code></pre></div>
 <p><span style="font-size:20px;font-weight:bold">Example 4. Obtaining columns from <code>cellColData</code></span></p>
 <p>ArchR provides the <code>getCellColData()</code> function to enable easy retreival of metadata columns from an <code>ArchRProject</code>.</p>
 <p>For example, we can retrieve a column by name, such as the number of unique nuclear (i.e. non-mitochondrial) fragments per cell:</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="manipulating-an-archrproject.html#cb37-1"></a>df &lt;-<span class="st"> </span><span class="kw">getCellColData</span>(projHeme1, <span class="dt">select =</span> <span class="st">&quot;nFrags&quot;</span>)</span>
-<span id="cb37-2"><a href="manipulating-an-archrproject.html#cb37-2"></a>df</span></code></pre></div>
-<blockquote>
-<p>## DataFrame with 10661 rows and 1 column<br />
-## nFrags<br />
-## <numeric><br />
-## scATAC_BMMC_R1#TTATGTCAGTGATTAG-1 26189<br />
-## scATAC_BMMC_R1#AAGATAGTCACCGCGA-1 20648<br />
-## scATAC_BMMC_R1#GCATTGAAGATTCCGT-1 18991<br />
-## scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1 18296<br />
-## scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1 17458<br />
-## … …<br />
-## scATAC_PBMC_R1#GCTGCGAAGATCCGAG-1 1038<br />
-## scATAC_PBMC_R1#GCAGCTGGTGGCCTTG-1 1037<br />
-## scATAC_PBMC_R1#GCAGATTGTACGCAAG-1 1033<br />
-## scATAC_PBMC_R1#TTCGTTACATTGAACC-1 1033<br />
-## scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1 1002</p>
-</blockquote>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="manipulating-an-archrproject.html#cb59-1" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">getCellColData</span>(projHeme1, <span class="at">select =</span> <span class="st">&quot;nFrags&quot;</span>)</span>
+<span id="cb59-2"><a href="manipulating-an-archrproject.html#cb59-2" tabindex="-1"></a>df</span>
+<span id="cb59-3"><a href="manipulating-an-archrproject.html#cb59-3" tabindex="-1"></a><span class="do">## DataFrame with 10660 rows and 1 column</span></span>
+<span id="cb59-4"><a href="manipulating-an-archrproject.html#cb59-4" tabindex="-1"></a><span class="do">##                                      nFrags</span></span>
+<span id="cb59-5"><a href="manipulating-an-archrproject.html#cb59-5" tabindex="-1"></a><span class="do">##                                   &lt;numeric&gt;</span></span>
+<span id="cb59-6"><a href="manipulating-an-archrproject.html#cb59-6" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TTATGTCAGTGATTAG-1     26189</span></span>
+<span id="cb59-7"><a href="manipulating-an-archrproject.html#cb59-7" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AAGATAGTCACCGCGA-1     20648</span></span>
+<span id="cb59-8"><a href="manipulating-an-archrproject.html#cb59-8" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#GCATTGAAGATTCCGT-1     18990</span></span>
+<span id="cb59-9"><a href="manipulating-an-archrproject.html#cb59-9" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1     18296</span></span>
+<span id="cb59-10"><a href="manipulating-an-archrproject.html#cb59-10" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1     17458</span></span>
+<span id="cb59-11"><a href="manipulating-an-archrproject.html#cb59-11" tabindex="-1"></a><span class="do">## ...                                     ...</span></span>
+<span id="cb59-12"><a href="manipulating-an-archrproject.html#cb59-12" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1#GCTGCGAAGATCCGAG-1      1038</span></span>
+<span id="cb59-13"><a href="manipulating-an-archrproject.html#cb59-13" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1#GCAGCTGGTGGCCTTG-1      1037</span></span>
+<span id="cb59-14"><a href="manipulating-an-archrproject.html#cb59-14" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1#GCAGATTGTACGCAAG-1      1033</span></span>
+<span id="cb59-15"><a href="manipulating-an-archrproject.html#cb59-15" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1#TTCGTTACATTGAACC-1      1033</span></span>
+<span id="cb59-16"><a href="manipulating-an-archrproject.html#cb59-16" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1      1002</span></span></code></pre></div>
 <p>Instead of selecting a column by name, we can actually perform operations on a given column using its column name:</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="manipulating-an-archrproject.html#cb38-1"></a>df &lt;-<span class="st"> </span><span class="kw">getCellColData</span>(projHeme1, <span class="dt">select =</span> <span class="kw">c</span>(<span class="st">&quot;log10(nFrags)&quot;</span>, <span class="st">&quot;nFrags - 1&quot;</span>))</span>
-<span id="cb38-2"><a href="manipulating-an-archrproject.html#cb38-2"></a>df</span></code></pre></div>
-<blockquote>
-<p>## DataFrame with 10661 rows and 2 columns<br />
-## log10(nFrags) nFrags - 1<br />
-## <numeric> <numeric><br />
-## scATAC_BMMC_R1#TTATGTCAGTGATTAG-1 4.4181189156542 26188<br />
-## scATAC_BMMC_R1#AAGATAGTCACCGCGA-1 4.31487799153581 20647<br />
-## scATAC_BMMC_R1#GCATTGAAGATTCCGT-1 4.27854783377585 18990<br />
-## scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1 4.26235615159869 18295<br />
-## scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1 4.24199448915678 17457<br />
-## … … …<br />
-## scATAC_PBMC_R1#GCTGCGAAGATCCGAG-1 3.01619735351244 1037<br />
-## scATAC_PBMC_R1#GCAGCTGGTGGCCTTG-1 3.01577875638904 1036<br />
-## scATAC_PBMC_R1#GCAGATTGTACGCAAG-1 3.01410032151962 1032<br />
-## scATAC_PBMC_R1#TTCGTTACATTGAACC-1 3.01410032151962 1032<br />
-## scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1 3.00086772153123 1001</p>
-</blockquote>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="manipulating-an-archrproject.html#cb60-1" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">getCellColData</span>(projHeme1, <span class="at">select =</span> <span class="fu">c</span>(<span class="st">&quot;log10(nFrags)&quot;</span>, <span class="st">&quot;nFrags - 1&quot;</span>))</span>
+<span id="cb60-2"><a href="manipulating-an-archrproject.html#cb60-2" tabindex="-1"></a>df</span>
+<span id="cb60-3"><a href="manipulating-an-archrproject.html#cb60-3" tabindex="-1"></a><span class="do">## DataFrame with 10660 rows and 2 columns</span></span>
+<span id="cb60-4"><a href="manipulating-an-archrproject.html#cb60-4" tabindex="-1"></a><span class="do">##                                   log10(nFrags) nFrags - 1</span></span>
+<span id="cb60-5"><a href="manipulating-an-archrproject.html#cb60-5" tabindex="-1"></a><span class="do">##                                       &lt;numeric&gt;  &lt;numeric&gt;</span></span>
+<span id="cb60-6"><a href="manipulating-an-archrproject.html#cb60-6" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TTATGTCAGTGATTAG-1       4.41812      26188</span></span>
+<span id="cb60-7"><a href="manipulating-an-archrproject.html#cb60-7" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AAGATAGTCACCGCGA-1       4.31488      20647</span></span>
+<span id="cb60-8"><a href="manipulating-an-archrproject.html#cb60-8" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#GCATTGAAGATTCCGT-1       4.27852      18989</span></span>
+<span id="cb60-9"><a href="manipulating-an-archrproject.html#cb60-9" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1       4.26236      18295</span></span>
+<span id="cb60-10"><a href="manipulating-an-archrproject.html#cb60-10" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1       4.24199      17457</span></span>
+<span id="cb60-11"><a href="manipulating-an-archrproject.html#cb60-11" tabindex="-1"></a><span class="do">## ...                                         ...        ...</span></span>
+<span id="cb60-12"><a href="manipulating-an-archrproject.html#cb60-12" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1#GCTGCGAAGATCCGAG-1       3.01620       1037</span></span>
+<span id="cb60-13"><a href="manipulating-an-archrproject.html#cb60-13" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1#GCAGCTGGTGGCCTTG-1       3.01578       1036</span></span>
+<span id="cb60-14"><a href="manipulating-an-archrproject.html#cb60-14" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1#GCAGATTGTACGCAAG-1       3.01410       1032</span></span>
+<span id="cb60-15"><a href="manipulating-an-archrproject.html#cb60-15" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1#TTCGTTACATTGAACC-1       3.01410       1032</span></span>
+<span id="cb60-16"><a href="manipulating-an-archrproject.html#cb60-16" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1       3.00087       1001</span></span></code></pre></div>
 <p><span style="font-size:20px;font-weight:bold">Example 5. Plotting QC metrics - log10(Unique Fragments) vs TSS enrichment score</span></p>
 <p>Repeating the example shown above, we can easily obtain standard scATAC-seq metrics for quality control of individual cells. We have found that the most robust metrics for quality control are the TSS enrichment score (a measure of signal-to-background in ATAC-seq data) and the number of unique nuclear fragments (because cells with very few fragments do not have enough data to confidently analyze).</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="manipulating-an-archrproject.html#cb39-1"></a>df &lt;-<span class="st"> </span><span class="kw">getCellColData</span>(projHeme1, <span class="dt">select =</span> <span class="kw">c</span>(<span class="st">&quot;log10(nFrags)&quot;</span>, <span class="st">&quot;TSSEnrichment&quot;</span>))</span>
-<span id="cb39-2"><a href="manipulating-an-archrproject.html#cb39-2"></a>df</span></code></pre></div>
-<blockquote>
-<p>## DataFrame with 10661 rows and 2 columns<br />
-## log10(nFrags) TSSEnrichment<br />
-## <numeric> <numeric><br />
-## scATAC_BMMC_R1#TTATGTCAGTGATTAG-1 4.4181189156542 7.149<br />
-## scATAC_BMMC_R1#AAGATAGTCACCGCGA-1 4.31487799153581 7.911<br />
-## scATAC_BMMC_R1#GCATTGAAGATTCCGT-1 4.27854783377585 4.505<br />
-## scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1 4.26235615159869 6.946<br />
-## scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1 4.24199448915678 4.799<br />
-## … … …<br />
-## scATAC_PBMC_R1#GCTGCGAAGATCCGAG-1 3.01619735351244 24.356<br />
-## scATAC_PBMC_R1#GCAGCTGGTGGCCTTG-1 3.01577875638904 22.537<br />
-## scATAC_PBMC_R1#GCAGATTGTACGCAAG-1 3.01410032151962 20.146<br />
-## scATAC_PBMC_R1#TTCGTTACATTGAACC-1 3.01410032151962 30.198<br />
-## scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1 3.00086772153123 21.485</p>
-</blockquote>
-<p>Now lets plot the number of unique nuclear fragments (log10) by the TSS enrichment score. This type of plot is
-key for identifying high quality cells. You’ll notice that the cutoffs that we previously specified when creating the Arrow files (via <code>filterTSS</code> and <code>filterFrags</code>) have already removed low quality cells. However, if we noticed that the previously applied QC filters were not adequate for this sample, we could further adjust our cutoffs based on this plot or re-generate the Arrow files if needed.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="manipulating-an-archrproject.html#cb40-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggPoint</span>(</span>
-<span id="cb40-2"><a href="manipulating-an-archrproject.html#cb40-2"></a>    <span class="dt">x =</span> df[,<span class="dv">1</span>], </span>
-<span id="cb40-3"><a href="manipulating-an-archrproject.html#cb40-3"></a>    <span class="dt">y =</span> df[,<span class="dv">2</span>], </span>
-<span id="cb40-4"><a href="manipulating-an-archrproject.html#cb40-4"></a>    <span class="dt">colorDensity =</span> <span class="ot">TRUE</span>,</span>
-<span id="cb40-5"><a href="manipulating-an-archrproject.html#cb40-5"></a>    <span class="dt">continuousSet =</span> <span class="st">&quot;sambaNight&quot;</span>,</span>
-<span id="cb40-6"><a href="manipulating-an-archrproject.html#cb40-6"></a>    <span class="dt">xlabel =</span> <span class="st">&quot;Log10 Unique Fragments&quot;</span>,</span>
-<span id="cb40-7"><a href="manipulating-an-archrproject.html#cb40-7"></a>    <span class="dt">ylabel =</span> <span class="st">&quot;TSS Enrichment&quot;</span>,</span>
-<span id="cb40-8"><a href="manipulating-an-archrproject.html#cb40-8"></a>    <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="kw">log10</span>(<span class="dv">500</span>), <span class="kw">quantile</span>(df[,<span class="dv">1</span>], <span class="dt">probs =</span> <span class="fl">0.99</span>)),</span>
-<span id="cb40-9"><a href="manipulating-an-archrproject.html#cb40-9"></a>    <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">quantile</span>(df[,<span class="dv">2</span>], <span class="dt">probs =</span> <span class="fl">0.99</span>))</span>
-<span id="cb40-10"><a href="manipulating-an-archrproject.html#cb40-10"></a>) <span class="op">+</span><span class="st"> </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">4</span>, <span class="dt">lty =</span> <span class="st">&quot;dashed&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">3</span>, <span class="dt">lty =</span> <span class="st">&quot;dashed&quot;</span>)</span>
-<span id="cb40-11"><a href="manipulating-an-archrproject.html#cb40-11"></a></span>
-<span id="cb40-12"><a href="manipulating-an-archrproject.html#cb40-12"></a>p</span></code></pre></div>
-<p><img src="images/HemeWalkthrough/PNG/TSS-vs-Frags_1.png" width="500" height="500" /></p>
-<p>To save an editable vectorized version of this plot, we use <code>plotPDF()</code>.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="manipulating-an-archrproject.html#cb41-1"></a><span class="kw">plotPDF</span>(p, <span class="dt">name =</span> <span class="st">&quot;TSS-vs-Frags.pdf&quot;</span>, <span class="dt">ArchRProj =</span> projHeme1, <span class="dt">addDOC =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
-<blockquote>
-<p>## [1] “plotting ggplot!”<br />
-## [1] 0</p>
-</blockquote>
-<p><a href="images/HemeWalkthrough/PDF/TSS-vs-Frags.pdf">Download PDF : TSS-vs-Frags.pdf</a></p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="manipulating-an-archrproject.html#cb61-1" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">getCellColData</span>(projHeme1, <span class="at">select =</span> <span class="fu">c</span>(<span class="st">&quot;log10(nFrags)&quot;</span>, <span class="st">&quot;TSSEnrichment&quot;</span>))</span>
+<span id="cb61-2"><a href="manipulating-an-archrproject.html#cb61-2" tabindex="-1"></a>df</span>
+<span id="cb61-3"><a href="manipulating-an-archrproject.html#cb61-3" tabindex="-1"></a><span class="do">## DataFrame with 10660 rows and 2 columns</span></span>
+<span id="cb61-4"><a href="manipulating-an-archrproject.html#cb61-4" tabindex="-1"></a><span class="do">##                                   log10(nFrags) TSSEnrichment</span></span>
+<span id="cb61-5"><a href="manipulating-an-archrproject.html#cb61-5" tabindex="-1"></a><span class="do">##                                       &lt;numeric&gt;     &lt;numeric&gt;</span></span>
+<span id="cb61-6"><a href="manipulating-an-archrproject.html#cb61-6" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TTATGTCAGTGATTAG-1       4.41812         7.204</span></span>
+<span id="cb61-7"><a href="manipulating-an-archrproject.html#cb61-7" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#AAGATAGTCACCGCGA-1       4.31488         7.949</span></span>
+<span id="cb61-8"><a href="manipulating-an-archrproject.html#cb61-8" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#GCATTGAAGATTCCGT-1       4.27852         4.447</span></span>
+<span id="cb61-9"><a href="manipulating-an-archrproject.html#cb61-9" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TATGTTCAGGGTTCCC-1       4.26236         6.941</span></span>
+<span id="cb61-10"><a href="manipulating-an-archrproject.html#cb61-10" tabindex="-1"></a><span class="do">## scATAC_BMMC_R1#TCCATCGGTCCCGTGA-1       4.24199         4.771</span></span>
+<span id="cb61-11"><a href="manipulating-an-archrproject.html#cb61-11" tabindex="-1"></a><span class="do">## ...                                         ...           ...</span></span>
+<span id="cb61-12"><a href="manipulating-an-archrproject.html#cb61-12" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1#GCTGCGAAGATCCGAG-1       3.01620        24.257</span></span>
+<span id="cb61-13"><a href="manipulating-an-archrproject.html#cb61-13" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1#GCAGCTGGTGGCCTTG-1       3.01578        22.537</span></span>
+<span id="cb61-14"><a href="manipulating-an-archrproject.html#cb61-14" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1#GCAGATTGTACGCAAG-1       3.01410        19.888</span></span>
+<span id="cb61-15"><a href="manipulating-an-archrproject.html#cb61-15" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1#TTCGTTACATTGAACC-1       3.01410        30.000</span></span>
+<span id="cb61-16"><a href="manipulating-an-archrproject.html#cb61-16" tabindex="-1"></a><span class="do">## scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1       3.00087        21.287</span></span></code></pre></div>
+<p>Now lets plot the number of unique nuclear fragments (log10) by the TSS enrichment score. This type of plot is key for identifying high quality cells. You’ll notice that the cutoffs that we previously specified when creating the Arrow files (via <code>filterTSS</code> and <code>filterFrags</code>) have already removed low quality cells. However, if we noticed that the previously applied QC filters were not adequate for this sample, we could further adjust our cutoffs based on this plot or re-generate the Arrow files if needed.</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="manipulating-an-archrproject.html#cb62-1" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggPoint</span>(</span>
+<span id="cb62-2"><a href="manipulating-an-archrproject.html#cb62-2" tabindex="-1"></a>    <span class="at">x =</span> df[,<span class="dv">1</span>], </span>
+<span id="cb62-3"><a href="manipulating-an-archrproject.html#cb62-3" tabindex="-1"></a>    <span class="at">y =</span> df[,<span class="dv">2</span>], </span>
+<span id="cb62-4"><a href="manipulating-an-archrproject.html#cb62-4" tabindex="-1"></a>    <span class="at">colorDensity =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb62-5"><a href="manipulating-an-archrproject.html#cb62-5" tabindex="-1"></a>    <span class="at">continuousSet =</span> <span class="st">&quot;sambaNight&quot;</span>,</span>
+<span id="cb62-6"><a href="manipulating-an-archrproject.html#cb62-6" tabindex="-1"></a>    <span class="at">xlabel =</span> <span class="st">&quot;Log10 Unique Fragments&quot;</span>,</span>
+<span id="cb62-7"><a href="manipulating-an-archrproject.html#cb62-7" tabindex="-1"></a>    <span class="at">ylabel =</span> <span class="st">&quot;TSS Enrichment&quot;</span>,</span>
+<span id="cb62-8"><a href="manipulating-an-archrproject.html#cb62-8" tabindex="-1"></a>    <span class="at">xlim =</span> <span class="fu">c</span>(<span class="fu">log10</span>(<span class="dv">500</span>), <span class="fu">quantile</span>(df[,<span class="dv">1</span>], <span class="at">probs =</span> <span class="fl">0.99</span>)),</span>
+<span id="cb62-9"><a href="manipulating-an-archrproject.html#cb62-9" tabindex="-1"></a>    <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">quantile</span>(df[,<span class="dv">2</span>], <span class="at">probs =</span> <span class="fl">0.99</span>))</span>
+<span id="cb62-10"><a href="manipulating-an-archrproject.html#cb62-10" tabindex="-1"></a>) <span class="sc">+</span> <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">4</span>, <span class="at">lty =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">3</span>, <span class="at">lty =</span> <span class="st">&quot;dashed&quot;</span>)</span>
+<span id="cb62-11"><a href="manipulating-an-archrproject.html#cb62-11" tabindex="-1"></a></span>
+<span id="cb62-12"><a href="manipulating-an-archrproject.html#cb62-12" tabindex="-1"></a>p</span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-55-1.svg" width="672" /></p>
+<p>To save an editable vectorized version of this plot, we use <code>plotPDF()</code>. This saves the plot within the “Plots” sub-directory of our <code>ArchRProject</code> directory (defined by <code>getOutputDirectory(projHeme1)</code>).</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="manipulating-an-archrproject.html#cb63-1" tabindex="-1"></a><span class="fu">plotPDF</span>(p, <span class="at">name =</span> <span class="st">&quot;TSS-vs-Frags.pdf&quot;</span>, <span class="at">ArchRProj =</span> projHeme1, <span class="at">addDOC =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb63-2"><a href="manipulating-an-archrproject.html#cb63-2" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span></code></pre></div>
 </div>
             </section>
 
@@ -470,7 +563,6 @@ key for identifying high quality cells. You’ll notice that the cutoffs that we
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -489,23 +581,27 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": null
 },
 "fontsettings": null,
 "edit": null,
 "history": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/commits/dev/03_ArchRProject.Rmd",
-"text": "Chapter edit history"
+"link": null,
+"text": null
 },
 "view": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/view/dev/03_ArchRProject.Rmd",
-"text": "View source on GitHub"
+"link": null,
+"text": null
 },
-"download": ["ArchR.pdf"],
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "none"
 },
-"search": true,
 "info": false
 });
 });

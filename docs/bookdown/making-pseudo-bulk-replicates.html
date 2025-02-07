@@ -4,19 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>9.2 Making Pseudo-bulk Replicates | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
+  <title>11.2 Making Pseudo-bulk Replicates | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
   <meta name="description" content="A guide to ArchR" />
-  <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="9.2 Making Pseudo-bulk Replicates | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
+  <meta property="og:title" content="11.2 Making Pseudo-bulk Replicates | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="A guide to ArchR" />
   <meta name="github-repo" content="GreenleafLab/ArchR" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="9.2 Making Pseudo-bulk Replicates | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
+  <meta name="twitter:title" content="11.2 Making Pseudo-bulk Replicates | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   
   <meta name="twitter:description" content="A guide to ArchR" />
   
@@ -24,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-05-01" />
+<meta name="date" content="2025-02-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +32,8 @@
   <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
 <link rel="prev" href="how-does-archr-make-pseudo-bulk-replicates.html"/>
 <link rel="next" href="calling-peaks-with-archr.html"/>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -49,15 +49,18 @@
 
 
 
-
-<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
@@ -65,7 +68,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -91,7 +94,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -104,7 +107,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -116,6 +119,11 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -134,114 +142,149 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="../index.html">Back to ArchR Home</a></li>
 
 <li class="divider"></li>
-<li><a href="index.html#section"><img src="images/ArchR_Logo_Integrated.png" alt="" width="200"></a></li>
-<li class="chapter" data-level="1" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>1</b> Getting Started with ArchR</a>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><img src="images/ArchR_Logo_Integrated.png" alt="" width="200"></a></li>
+<li class="chapter" data-level="1" data-path="debugging-and-troubleshooting-in-archr.html"><a href="debugging-and-troubleshooting-in-archr.html"><i class="fa fa-check"></i><b>1</b> Debugging and Troubleshooting in ArchR</a></li>
+<li class="chapter" data-level="2" data-path="manage-archrs-dependencies.html"><a href="manage-archrs-dependencies.html"><i class="fa fa-check"></i><b>2</b> Manage ArchR’s Dependencies</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="a-brief-primer-on-atac-seq-terminology.html"><a href="a-brief-primer-on-atac-seq-terminology.html"><i class="fa fa-check"></i><b>1.1</b> A Brief Primer on ATAC-seq Terminology</a></li>
-<li class="chapter" data-level="1.2" data-path="why-use-archr.html"><a href="why-use-archr.html"><i class="fa fa-check"></i><b>1.2</b> Why use ArchR?</a></li>
-<li class="chapter" data-level="1.3" data-path="what-is-an-arrow-file-archrproject.html"><a href="what-is-an-arrow-file-archrproject.html"><i class="fa fa-check"></i><b>1.3</b> What is an Arrow file / <code>ArchRProject</code>?</a></li>
-<li class="chapter" data-level="1.4" data-path="input-file-types-in-archr.html"><a href="input-file-types-in-archr.html"><i class="fa fa-check"></i><b>1.4</b> Input File Types in ArchR</a></li>
-<li class="chapter" data-level="1.5" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>1.5</b> Getting Set Up</a></li>
-<li class="chapter" data-level="1.6" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>1.6</b> Creating Arrow Files</a></li>
-<li class="chapter" data-level="1.7" data-path="per-cell-quality-control.html"><a href="per-cell-quality-control.html"><i class="fa fa-check"></i><b>1.7</b> Per-cell Quality Control</a></li>
+<li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
+<li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+<li class="chapter" data-level="2.3" data-path="using-docker-for-pre-compiled-environment-setup.html"><a href="using-docker-for-pre-compiled-environment-setup.html"><i class="fa fa-check"></i><b>2.3</b> Using Docker for pre-compiled environment setup</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="doublet-inference-with-archr.html"><a href="doublet-inference-with-archr.html"><i class="fa fa-check"></i><b>2</b> Doublet Inference with ArchR</a>
+<li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="how-does-doublet-identification-work-in-archr.html"><a href="how-does-doublet-identification-work-in-archr.html"><i class="fa fa-check"></i><b>2.1</b> How does doublet identification work in ArchR?</a></li>
-<li class="chapter" data-level="2.2" data-path="inferring-scatac-seq-doublets-with-archr.html"><a href="inferring-scatac-seq-doublets-with-archr.html"><i class="fa fa-check"></i><b>2.2</b> Inferring scATAC-seq Doublets with ArchR</a></li>
+<li class="chapter" data-level="3.1" data-path="a-brief-primer-on-atac-seq-terminology.html"><a href="a-brief-primer-on-atac-seq-terminology.html"><i class="fa fa-check"></i><b>3.1</b> A Brief Primer on ATAC-seq Terminology</a></li>
+<li class="chapter" data-level="3.2" data-path="why-use-archr.html"><a href="why-use-archr.html"><i class="fa fa-check"></i><b>3.2</b> Why use ArchR?</a></li>
+<li class="chapter" data-level="3.3" data-path="what-is-an-arrow-file-archrproject.html"><a href="what-is-an-arrow-file-archrproject.html"><i class="fa fa-check"></i><b>3.3</b> What is an Arrow file / <code>ArchRProject</code>?</a></li>
+<li class="chapter" data-level="3.4" data-path="input-file-types-in-archr.html"><a href="input-file-types-in-archr.html"><i class="fa fa-check"></i><b>3.4</b> Input File Types in ArchR</a></li>
+<li class="chapter" data-level="3.5" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>3.5</b> Getting Set Up</a></li>
+<li class="chapter" data-level="3.6" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>3.6</b> Creating Arrow Files</a></li>
+<li class="chapter" data-level="3.7" data-path="per-cell-quality-control.html"><a href="per-cell-quality-control.html"><i class="fa fa-check"></i><b>3.7</b> Per-cell Quality Control</a></li>
+<li class="chapter" data-level="3.8" data-path="using-bam-files-for-arrow-file-creation.html"><a href="using-bam-files-for-arrow-file-creation.html"><i class="fa fa-check"></i><b>3.8</b> Using BAM files for Arrow File creation</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="creating-an-archrproject.html"><a href="creating-an-archrproject.html"><i class="fa fa-check"></i><b>3</b> Creating an ArchRProject</a>
+<li class="chapter" data-level="4" data-path="doublet-inference-with-archr.html"><a href="doublet-inference-with-archr.html"><i class="fa fa-check"></i><b>4</b> Doublet Inference with ArchR</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="creating-an-archrproject-1.html"><a href="creating-an-archrproject-1.html"><i class="fa fa-check"></i><b>3.1</b> Creating An ArchRProject</a></li>
-<li class="chapter" data-level="3.2" data-path="manipulating-an-archrproject.html"><a href="manipulating-an-archrproject.html"><i class="fa fa-check"></i><b>3.2</b> Manipulating An ArchRProject</a></li>
-<li class="chapter" data-level="3.3" data-path="plotting-sample-statistics-from-an-archrproject.html"><a href="plotting-sample-statistics-from-an-archrproject.html"><i class="fa fa-check"></i><b>3.3</b> Plotting Sample Statistics from an ArchRProject</a></li>
-<li class="chapter" data-level="3.4" data-path="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles-.html"><a href="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles-.html"><i class="fa fa-check"></i><b>3.4</b> Plotting Sample Fragment Size Distribution and TSS Enrichment Profiles.</a></li>
-<li class="chapter" data-level="3.5" data-path="saving-and-loading-an-archrproject.html"><a href="saving-and-loading-an-archrproject.html"><i class="fa fa-check"></i><b>3.5</b> Saving and Loading an <code>ArchRProject</code></a></li>
-<li class="chapter" data-level="3.6" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>3.6</b> Filtering Doublets from an ArchRProject</a></li>
+<li class="chapter" data-level="4.1" data-path="how-does-doublet-identification-work-in-archr.html"><a href="how-does-doublet-identification-work-in-archr.html"><i class="fa fa-check"></i><b>4.1</b> How does doublet identification work in ArchR?</a></li>
+<li class="chapter" data-level="4.2" data-path="inferring-scatac-seq-doublets-with-archr.html"><a href="inferring-scatac-seq-doublets-with-archr.html"><i class="fa fa-check"></i><b>4.2</b> Inferring scATAC-seq Doublets with ArchR</a></li>
+<li class="chapter" data-level="4.3" data-path="using-demuxlet-with-archr.html"><a href="using-demuxlet-with-archr.html"><i class="fa fa-check"></i><b>4.3</b> Using <em>demuxlet</em> with ArchR</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="dimensionality-reduction-with-archr.html"><a href="dimensionality-reduction-with-archr.html"><i class="fa fa-check"></i><b>4</b> Dimensionality Reduction with ArchR</a>
+<li class="chapter" data-level="5" data-path="creating-an-archrproject.html"><a href="creating-an-archrproject.html"><i class="fa fa-check"></i><b>5</b> Creating an ArchRProject</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>4.1</b> ArchR’s LSI Implementation</a></li>
-<li class="chapter" data-level="4.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>4.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
-<li class="chapter" data-level="4.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>4.3</b> Estimated LSI</a></li>
-<li class="chapter" data-level="4.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.4</b> Batch Effect Correction wtih Harmony</a></li>
+<li class="chapter" data-level="5.1" data-path="creating-an-archrproject-1.html"><a href="creating-an-archrproject-1.html"><i class="fa fa-check"></i><b>5.1</b> Creating An ArchRProject</a></li>
+<li class="chapter" data-level="5.2" data-path="manipulating-an-archrproject.html"><a href="manipulating-an-archrproject.html"><i class="fa fa-check"></i><b>5.2</b> Manipulating An ArchRProject</a></li>
+<li class="chapter" data-level="5.3" data-path="plotting-sample-statistics-from-an-archrproject.html"><a href="plotting-sample-statistics-from-an-archrproject.html"><i class="fa fa-check"></i><b>5.3</b> Plotting Sample Statistics from an ArchRProject</a></li>
+<li class="chapter" data-level="5.4" data-path="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles..html"><a href="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles..html"><i class="fa fa-check"></i><b>5.4</b> Plotting Sample Fragment Size Distribution and TSS Enrichment Profiles.</a></li>
+<li class="chapter" data-level="5.5" data-path="saving-and-loading-an-archrproject.html"><a href="saving-and-loading-an-archrproject.html"><i class="fa fa-check"></i><b>5.5</b> Saving and Loading an <code>ArchRProject</code></a></li>
+<li class="chapter" data-level="5.6" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>5.6</b> Filtering Doublets from an ArchRProject</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>5</b> Clustering with ArchR</a>
+<li class="chapter" data-level="6" data-path="dimensionality-reduction-with-archr.html"><a href="dimensionality-reduction-with-archr.html"><i class="fa fa-check"></i><b>6</b> Dimensionality Reduction with ArchR</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="6.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>6.1</b> ArchR’s LSI Implementation</a></li>
+<li class="chapter" data-level="6.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>6.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
+<li class="chapter" data-level="6.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>6.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="6.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>6.4</b> Batch Effect Correction wtih Harmony</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single-cell Embeddings</a>
+<li class="chapter" data-level="7" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>7</b> Clustering with ArchR</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>6.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
-<li class="chapter" data-level="6.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>6.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
-<li class="chapter" data-level="6.3" data-path="dimensionality-reduction-after-harmony.html"><a href="dimensionality-reduction-after-harmony.html"><i class="fa fa-check"></i><b>6.3</b> Dimensionality Reduction After Harmony</a></li>
+<li class="chapter" data-level="7.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>7.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="7.2" data-path="clustering-using-scran.html"><a href="clustering-using-scran.html"><i class="fa fa-check"></i><b>7.2</b> Clustering using <code>scran</code></a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="gene-scores-and-marker-genes-with-archr.html"><a href="gene-scores-and-marker-genes-with-archr.html"><i class="fa fa-check"></i><b>7</b> Gene Scores and Marker Genes with ArchR</a>
+<li class="chapter" data-level="8" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>8</b> Single-cell Embeddings</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="calculating-gene-scores-in-archr.html"><a href="calculating-gene-scores-in-archr.html"><i class="fa fa-check"></i><b>7.1</b> Calculating Gene Scores in ArchR</a></li>
-<li class="chapter" data-level="7.2" data-path="identification-of-marker-features.html"><a href="identification-of-marker-features.html"><i class="fa fa-check"></i><b>7.2</b> Identification of Marker Features</a></li>
-<li class="chapter" data-level="7.3" data-path="identifying-marker-genes.html"><a href="identifying-marker-genes.html"><i class="fa fa-check"></i><b>7.3</b> Identifying Marker Genes</a></li>
-<li class="chapter" data-level="7.4" data-path="visualizing-marker-genes-on-an-embedding.html"><a href="visualizing-marker-genes-on-an-embedding.html"><i class="fa fa-check"></i><b>7.4</b> Visualizing Marker Genes on an Embedding</a></li>
-<li class="chapter" data-level="7.5" data-path="marker-genes-imputation-with-magic.html"><a href="marker-genes-imputation-with-magic.html"><i class="fa fa-check"></i><b>7.5</b> Marker Genes Imputation with MAGIC</a></li>
-<li class="chapter" data-level="7.6" data-path="track-plotting-with-archrbrowser.html"><a href="track-plotting-with-archrbrowser.html"><i class="fa fa-check"></i><b>7.6</b> Track Plotting with ArchRBrowser</a></li>
-<li class="chapter" data-level="7.7" data-path="launching-the-archrbrowser.html"><a href="launching-the-archrbrowser.html"><i class="fa fa-check"></i><b>7.7</b> Launching the ArchRBrowser</a></li>
+<li class="chapter" data-level="8.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>8.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
+<li class="chapter" data-level="8.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>8.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
+<li class="chapter" data-level="8.3" data-path="dimensionality-reduction-after-harmony.html"><a href="dimensionality-reduction-after-harmony.html"><i class="fa fa-check"></i><b>8.3</b> Dimensionality Reduction After Harmony</a></li>
+<li class="chapter" data-level="8.4" data-path="highlighting-specific-cells-on-an-embedding.html"><a href="highlighting-specific-cells-on-an-embedding.html"><i class="fa fa-check"></i><b>8.4</b> Highlighting specific cells on an embedding</a></li>
+<li class="chapter" data-level="8.5" data-path="importing-an-embedding-from-external-software.html"><a href="importing-an-embedding-from-external-software.html"><i class="fa fa-check"></i><b>8.5</b> Importing an embedding from external software</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="defining-cluster-identity-with-scrna-seq.html"><a href="defining-cluster-identity-with-scrna-seq.html"><i class="fa fa-check"></i><b>8</b> Defining Cluster Identity with scRNA-seq</a>
+<li class="chapter" data-level="9" data-path="gene-scores-and-marker-genes-with-archr.html"><a href="gene-scores-and-marker-genes-with-archr.html"><i class="fa fa-check"></i><b>9</b> Gene Scores and Marker Genes with ArchR</a>
 <ul>
-<li class="chapter" data-level="8.1" data-path="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><i class="fa fa-check"></i><b>8.1</b> Cross-platform linkage of scATAC-seq cells with scRNA-seq cells</a></li>
-<li class="chapter" data-level="8.2" data-path="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><i class="fa fa-check"></i><b>8.2</b> Adding Pseudo-scRNA-seq profiles for each scATAC-seq cell</a></li>
-<li class="chapter" data-level="8.3" data-path="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><a href="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><i class="fa fa-check"></i><b>8.3</b> Labeling scATAC-seq clusters with scRNA-seq information</a></li>
+<li class="chapter" data-level="9.1" data-path="calculating-gene-scores-in-archr.html"><a href="calculating-gene-scores-in-archr.html"><i class="fa fa-check"></i><b>9.1</b> Calculating Gene Scores in ArchR</a></li>
+<li class="chapter" data-level="9.2" data-path="identification-of-marker-features.html"><a href="identification-of-marker-features.html"><i class="fa fa-check"></i><b>9.2</b> Identification of Marker Features</a></li>
+<li class="chapter" data-level="9.3" data-path="identifying-marker-genes.html"><a href="identifying-marker-genes.html"><i class="fa fa-check"></i><b>9.3</b> Identifying Marker Genes</a></li>
+<li class="chapter" data-level="9.4" data-path="visualizing-marker-genes-on-an-embedding.html"><a href="visualizing-marker-genes-on-an-embedding.html"><i class="fa fa-check"></i><b>9.4</b> Visualizing Marker Genes on an Embedding</a></li>
+<li class="chapter" data-level="9.5" data-path="marker-genes-imputation-with-magic.html"><a href="marker-genes-imputation-with-magic.html"><i class="fa fa-check"></i><b>9.5</b> Marker Genes Imputation with MAGIC</a></li>
+<li class="chapter" data-level="9.6" data-path="module-scores.html"><a href="module-scores.html"><i class="fa fa-check"></i><b>9.6</b> Module Scores</a></li>
+<li class="chapter" data-level="9.7" data-path="track-plotting-with-archrbrowser.html"><a href="track-plotting-with-archrbrowser.html"><i class="fa fa-check"></i><b>9.7</b> Track Plotting with ArchRBrowser</a></li>
+<li class="chapter" data-level="9.8" data-path="launching-the-interactive-archrbrowser.html"><a href="launching-the-interactive-archrbrowser.html"><i class="fa fa-check"></i><b>9.8</b> Launching the Interactive ArchRBrowser</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="pseudo-bulk-replicates-in-archr.html"><a href="pseudo-bulk-replicates-in-archr.html"><i class="fa fa-check"></i><b>9</b> Pseudo-bulk Replicates in ArchR</a>
+<li class="chapter" data-level="10" data-path="defining-cluster-identity-with-scrna-seq.html"><a href="defining-cluster-identity-with-scrna-seq.html"><i class="fa fa-check"></i><b>10</b> Defining Cluster Identity with scRNA-seq</a>
 <ul>
-<li class="chapter" data-level="9.1" data-path="how-does-archr-make-pseudo-bulk-replicates.html"><a href="how-does-archr-make-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>9.1</b> How Does ArchR Make Pseudo-bulk Replicates?</a></li>
-<li class="chapter" data-level="9.2" data-path="making-pseudo-bulk-replicates.html"><a href="making-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>9.2</b> Making Pseudo-bulk Replicates</a></li>
+<li class="chapter" data-level="10.1" data-path="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><i class="fa fa-check"></i><b>10.1</b> Cross-platform linkage of scATAC-seq cells with scRNA-seq cells</a></li>
+<li class="chapter" data-level="10.2" data-path="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><i class="fa fa-check"></i><b>10.2</b> Adding Pseudo-scRNA-seq profiles for each scATAC-seq cell</a></li>
+<li class="chapter" data-level="10.3" data-path="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><a href="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><i class="fa fa-check"></i><b>10.3</b> Labeling scATAC-seq clusters with scRNA-seq information</a></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="calling-peaks-with-archr.html"><a href="calling-peaks-with-archr.html"><i class="fa fa-check"></i><b>10</b> Calling Peaks with ArchR</a>
+<li class="chapter" data-level="11" data-path="pseudo-bulk-replicates-in-archr.html"><a href="pseudo-bulk-replicates-in-archr.html"><i class="fa fa-check"></i><b>11</b> Pseudo-bulk Replicates in ArchR</a>
 <ul>
-<li class="chapter" data-level="10.1" data-path="the-iterative-overlap-peak-merging-procedure.html"><a href="the-iterative-overlap-peak-merging-procedure.html"><i class="fa fa-check"></i><b>10.1</b> The Iterative Overlap Peak Merging Procedure</a></li>
-<li class="chapter" data-level="10.2" data-path="calling-peaks-w-macs2.html"><a href="calling-peaks-w-macs2.html"><i class="fa fa-check"></i><b>10.2</b> Calling Peaks w/ Macs2</a></li>
-<li class="chapter" data-level="10.3" data-path="calling-peaks-w-tilematrix.html"><a href="calling-peaks-w-tilematrix.html"><i class="fa fa-check"></i><b>10.3</b> Calling Peaks w/ TileMatrix</a></li>
-<li class="chapter" data-level="10.4" data-path="add-peak-matrix.html"><a href="add-peak-matrix.html"><i class="fa fa-check"></i><b>10.4</b> Add Peak Matrix</a></li>
+<li class="chapter" data-level="11.1" data-path="how-does-archr-make-pseudo-bulk-replicates.html"><a href="how-does-archr-make-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>11.1</b> How Does ArchR Make Pseudo-bulk Replicates?</a></li>
+<li class="chapter" data-level="11.2" data-path="making-pseudo-bulk-replicates.html"><a href="making-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>11.2</b> Making Pseudo-bulk Replicates</a></li>
 </ul></li>
-<li class="chapter" data-level="11" data-path="identifying-marker-peaks-with-archr.html"><a href="identifying-marker-peaks-with-archr.html"><i class="fa fa-check"></i><b>11</b> Identifying Marker Peaks with ArchR</a>
+<li class="chapter" data-level="12" data-path="calling-peaks-with-archr.html"><a href="calling-peaks-with-archr.html"><i class="fa fa-check"></i><b>12</b> Calling Peaks with ArchR</a>
 <ul>
-<li class="chapter" data-level="11.1" data-path="identifying-marker-peaks-with-archr-1.html"><a href="identifying-marker-peaks-with-archr-1.html"><i class="fa fa-check"></i><b>11.1</b> Identifying Marker Peaks with ArchR</a></li>
-<li class="chapter" data-level="11.2" data-path="plotting-marker-peaks-in-archr.html"><a href="plotting-marker-peaks-in-archr.html"><i class="fa fa-check"></i><b>11.2</b> Plotting Marker Peaks in ArchR</a></li>
-<li class="chapter" data-level="11.3" data-path="pairwise-testing-between-groups.html"><a href="pairwise-testing-between-groups.html"><i class="fa fa-check"></i><b>11.3</b> Pairwise Testing Between Groups</a></li>
+<li class="chapter" data-level="12.1" data-path="the-iterative-overlap-peak-merging-procedure.html"><a href="the-iterative-overlap-peak-merging-procedure.html"><i class="fa fa-check"></i><b>12.1</b> The Iterative Overlap Peak Merging Procedure</a></li>
+<li class="chapter" data-level="12.2" data-path="calling-peaks-w-macs2.html"><a href="calling-peaks-w-macs2.html"><i class="fa fa-check"></i><b>12.2</b> Calling Peaks w/ Macs2</a></li>
+<li class="chapter" data-level="12.3" data-path="calling-peaks-w-tilematrix.html"><a href="calling-peaks-w-tilematrix.html"><i class="fa fa-check"></i><b>12.3</b> Calling Peaks w/ TileMatrix</a></li>
+<li class="chapter" data-level="12.4" data-path="adding-a-peak-matrix.html"><a href="adding-a-peak-matrix.html"><i class="fa fa-check"></i><b>12.4</b> Adding a Peak Matrix</a></li>
 </ul></li>
-<li class="chapter" data-level="12" data-path="motif-and-feature-enrichment-with-archr.html"><a href="motif-and-feature-enrichment-with-archr.html"><i class="fa fa-check"></i><b>12</b> Motif and Feature Enrichment with ArchR</a>
+<li class="chapter" data-level="13" data-path="identifying-marker-peaks.html"><a href="identifying-marker-peaks.html"><i class="fa fa-check"></i><b>13</b> Identifying Marker Peaks</a>
 <ul>
-<li class="chapter" data-level="12.1" data-path="motif-enrichment-in-differential-peaks.html"><a href="motif-enrichment-in-differential-peaks.html"><i class="fa fa-check"></i><b>12.1</b> Motif Enrichment in Differential Peaks</a></li>
-<li class="chapter" data-level="12.2" data-path="motif-enrichment-in-marker-peaks.html"><a href="motif-enrichment-in-marker-peaks.html"><i class="fa fa-check"></i><b>12.2</b> Motif Enrichment in Marker Peaks</a></li>
-<li class="chapter" data-level="12.3" data-path="archr-enrichment.html"><a href="archr-enrichment.html"><i class="fa fa-check"></i><b>12.3</b> ArchR Enrichment</a></li>
-<li class="chapter" data-level="12.4" data-path="custom-enrichment.html"><a href="custom-enrichment.html"><i class="fa fa-check"></i><b>12.4</b> Custom Enrichment</a></li>
+<li class="chapter" data-level="13.1" data-path="identifying-marker-peaks-with-archr.html"><a href="identifying-marker-peaks-with-archr.html"><i class="fa fa-check"></i><b>13.1</b> Identifying Marker Peaks with ArchR</a></li>
+<li class="chapter" data-level="13.2" data-path="plotting-marker-peaks-in-archr.html"><a href="plotting-marker-peaks-in-archr.html"><i class="fa fa-check"></i><b>13.2</b> Plotting Marker Peaks in ArchR</a></li>
+<li class="chapter" data-level="13.3" data-path="pairwise-testing-between-groups.html"><a href="pairwise-testing-between-groups.html"><i class="fa fa-check"></i><b>13.3</b> Pairwise Testing Between Groups</a></li>
 </ul></li>
-<li class="chapter" data-level="13" data-path="chromvar-deviatons-enrichment-with-archr.html"><a href="chromvar-deviatons-enrichment-with-archr.html"><i class="fa fa-check"></i><b>13</b> ChromVAR Deviatons Enrichment with ArchR</a>
+<li class="chapter" data-level="14" data-path="motif-and-feature-enrichment-with-archr.html"><a href="motif-and-feature-enrichment-with-archr.html"><i class="fa fa-check"></i><b>14</b> Motif and Feature Enrichment with ArchR</a>
 <ul>
-<li class="chapter" data-level="13.1" data-path="motif-deviations.html"><a href="motif-deviations.html"><i class="fa fa-check"></i><b>13.1</b> Motif Deviations</a></li>
-<li class="chapter" data-level="13.2" data-path="archr-and-custom-deviations.html"><a href="archr-and-custom-deviations.html"><i class="fa fa-check"></i><b>13.2</b> ArchR and Custom Deviations</a></li>
+<li class="chapter" data-level="14.1" data-path="motif-enrichment.html"><a href="motif-enrichment.html"><i class="fa fa-check"></i><b>14.1</b> Motif Enrichment</a></li>
+<li class="chapter" data-level="14.2" data-path="archr-enrichment.html"><a href="archr-enrichment.html"><i class="fa fa-check"></i><b>14.2</b> ArchR Enrichment</a></li>
+<li class="chapter" data-level="14.3" data-path="custom-enrichment.html"><a href="custom-enrichment.html"><i class="fa fa-check"></i><b>14.3</b> Custom Enrichment</a></li>
 </ul></li>
-<li class="chapter" data-level="14" data-path="footprinting-with-archr.html"><a href="footprinting-with-archr.html"><i class="fa fa-check"></i><b>14</b> Footprinting with ArchR</a>
+<li class="chapter" data-level="15" data-path="chromvar-deviatons-enrichment-with-archr.html"><a href="chromvar-deviatons-enrichment-with-archr.html"><i class="fa fa-check"></i><b>15</b> ChromVAR Deviatons Enrichment with ArchR</a>
 <ul>
-<li class="chapter" data-level="14.1" data-path="motif-footprinting.html"><a href="motif-footprinting.html"><i class="fa fa-check"></i><b>14.1</b> Motif Footprinting</a></li>
-<li class="chapter" data-level="14.2" data-path="normalization-of-footprints-for-tn5-bias.html"><a href="normalization-of-footprints-for-tn5-bias.html"><i class="fa fa-check"></i><b>14.2</b> Normalization of Footprints for Tn5 Bias</a></li>
-<li class="chapter" data-level="14.3" data-path="feature-footprinting.html"><a href="feature-footprinting.html"><i class="fa fa-check"></i><b>14.3</b> Feature Footprinting</a></li>
+<li class="chapter" data-level="15.1" data-path="motif-deviations.html"><a href="motif-deviations.html"><i class="fa fa-check"></i><b>15.1</b> Motif Deviations</a></li>
+<li class="chapter" data-level="15.2" data-path="archr-and-custom-deviations.html"><a href="archr-and-custom-deviations.html"><i class="fa fa-check"></i><b>15.2</b> ArchR and Custom Deviations</a></li>
 </ul></li>
-<li class="chapter" data-level="15" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>15</b> Integrative Analysis with ArchR</a>
+<li class="chapter" data-level="16" data-path="footprinting-with-archr.html"><a href="footprinting-with-archr.html"><i class="fa fa-check"></i><b>16</b> Footprinting with ArchR</a>
 <ul>
-<li class="chapter" data-level="15.1" data-path="creating-low-overlapping-aggregates-of-cells.html"><a href="creating-low-overlapping-aggregates-of-cells.html"><i class="fa fa-check"></i><b>15.1</b> Creating Low-Overlapping Aggregates of Cells</a></li>
-<li class="chapter" data-level="15.2" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>15.2</b> Co-accessibility with ArchR</a></li>
-<li class="chapter" data-level="15.3" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>15.3</b> Peak2GeneLinkage with ArchR</a></li>
-<li class="chapter" data-level="15.4" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>15.4</b> Identification of Positive TF-Regulators</a></li>
+<li class="chapter" data-level="16.1" data-path="motif-footprinting.html"><a href="motif-footprinting.html"><i class="fa fa-check"></i><b>16.1</b> Motif Footprinting</a></li>
+<li class="chapter" data-level="16.2" data-path="normalization-of-footprints-for-tn5-bias.html"><a href="normalization-of-footprints-for-tn5-bias.html"><i class="fa fa-check"></i><b>16.2</b> Normalization of Footprints for Tn5 Bias</a></li>
+<li class="chapter" data-level="16.3" data-path="feature-footprinting.html"><a href="feature-footprinting.html"><i class="fa fa-check"></i><b>16.3</b> Feature Footprinting</a></li>
 </ul></li>
-<li class="chapter" data-level="16" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>16</b> Trajectory Analysis with ArchR</a>
+<li class="chapter" data-level="17" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>17</b> Integrative Analysis with ArchR</a>
 <ul>
-<li class="chapter" data-level="16.1" data-path="myeloid-trajectory-monocyte-differentiation.html"><a href="myeloid-trajectory-monocyte-differentiation.html"><i class="fa fa-check"></i><b>16.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
-<li class="chapter" data-level="16.2" data-path="lymphoid-trajectory-b-cell-cifferentiation.html"><a href="lymphoid-trajectory-b-cell-cifferentiation.html"><i class="fa fa-check"></i><b>16.2</b> Lymphoid Trajectory - B Cell Cifferentiation</a></li>
+<li class="chapter" data-level="17.1" data-path="creating-low-overlapping-aggregates-of-cells.html"><a href="creating-low-overlapping-aggregates-of-cells.html"><i class="fa fa-check"></i><b>17.1</b> Creating Low-Overlapping Aggregates of Cells</a></li>
+<li class="chapter" data-level="17.2" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>17.2</b> Co-accessibility with ArchR</a></li>
+<li class="chapter" data-level="17.3" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>17.3</b> Peak2GeneLinkage with ArchR</a></li>
+<li class="chapter" data-level="17.4" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>17.4</b> Identification of Positive TF-Regulators</a></li>
 </ul></li>
-<li class="chapter" data-level="17" data-path="plot-aesthetics-in-archr.html"><a href="plot-aesthetics-in-archr.html"><i class="fa fa-check"></i><b>17</b> Plot aesthetics in ArchR</a></li>
-<li class="chapter" data-level="18" data-path="session-information.html"><a href="session-information.html"><i class="fa fa-check"></i><b>18</b> Session Information</a></li>
+<li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-differentiation.html"><a href="lymphoid-trajectory---b-cell-differentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Differentiation</a></li>
+<li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
+<li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
+<li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="handling-archr-output.html"><a href="handling-archr-output.html"><i class="fa fa-check"></i><b>19</b> Handling ArchR Output</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="exporting-fragment-level-data.html"><a href="exporting-fragment-level-data.html"><i class="fa fa-check"></i><b>19.1</b> Exporting fragment-level data</a></li>
+<li class="chapter" data-level="19.2" data-path="exporting-matrix-level-data.html"><a href="exporting-matrix-level-data.html"><i class="fa fa-check"></i><b>19.2</b> Exporting matrix-level data</a></li>
+<li class="chapter" data-level="19.3" data-path="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html"><i class="fa fa-check"></i><b>19.3</b> Exporting pseudo-bulked data to a <code>SummarizedExperiment</code></a></li>
+<li class="chapter" data-level="19.4" data-path="exporting-pseudo-bulked-data-to-a-bigwig-file.html"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html"><i class="fa fa-check"></i><b>19.4</b> Exporting pseudo-bulked data to a bigWig file</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="integration-with-bulk-atac-seq.html"><a href="integration-with-bulk-atac-seq.html"><i class="fa fa-check"></i><b>20</b> Integration with bulk ATAC-seq</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="projecting-bulk-atac-seq-data.html"><a href="projecting-bulk-atac-seq-data.html"><i class="fa fa-check"></i><b>20.1</b> Projecting bulk ATAC-seq data</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="multiomic-data-analysis-in-archr.html"><a href="multiomic-data-analysis-in-archr.html"><i class="fa fa-check"></i><b>21</b> Multiomic data analysis in ArchR</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="importing-data-and-setting-up-a-multiome-project.html"><a href="importing-data-and-setting-up-a-multiome-project.html"><i class="fa fa-check"></i><b>21.1</b> Importing data and setting up a Multiome project</a></li>
+<li class="chapter" data-level="21.2" data-path="analysis-of-multiome-data-in-archr.html"><a href="analysis-of-multiome-data-in-archr.html"><i class="fa fa-check"></i><b>21.2</b> Analysis of multiome data in ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="plot-aesthetics-in-archr.html"><a href="plot-aesthetics-in-archr.html"><i class="fa fa-check"></i><b>22</b> Plot aesthetics in ArchR</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="using-and-manipulating-palettes-in-archr.html"><a href="using-and-manipulating-palettes-in-archr.html"><i class="fa fa-check"></i><b>22.1</b> Using and manipulating palettes in ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="testing-your-archr-installation.html"><a href="testing-your-archr-installation.html"><i class="fa fa-check"></i><b>23</b> Testing Your ArchR Installation</a></li>
+<li class="chapter" data-level="24" data-path="session-information.html"><a href="session-information.html"><i class="fa fa-check"></i><b>24</b> Session Information</a></li>
 <li class="divider"></li>
 <li><a href="https://bookdown.org" target="_blank">Published with bookdown</a></li>
 
@@ -262,54 +305,279 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="making-pseudo-bulk-replicates" class="section level2" number="9.2">
-<h2><span class="header-section-number">9.2</span> Making Pseudo-bulk Replicates</h2>
+<div id="making-pseudo-bulk-replicates" class="section level2 hasAnchor" number="11.2">
+<h2><span class="header-section-number">11.2</span> Making Pseudo-bulk Replicates<a href="making-pseudo-bulk-replicates.html#making-pseudo-bulk-replicates" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>In ArchR, pseudo-bulk replicates are made using the <code>addGroupCoverages()</code> function. The key parameter here is <code>groupBy</code> which defines the groups for which pseudo-bulk replicates should be made. Here, we are using <code>Clusters2</code> which was defined by labeling our clusters with cell types defined by scRNA-seq data in a previous chapter.</p>
-<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="making-pseudo-bulk-replicates.html#cb157-1"></a>projHeme4 &lt;-<span class="st"> </span><span class="kw">addGroupCoverages</span>(<span class="dt">ArchRProj =</span> projHeme3, <span class="dt">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>)</span></code></pre></div>
-<blockquote>
-<p>## ArchR logging to : ArchRLogs/ArchR-addGroupCoverages-faba40cd6ba1-Date-2020-04-15_Time-10-23-14.log<br />
-## If there is an issue, please report to github with logFile!<br />
-## B CellGroups N = 2CD4.M CellGroups N = 2CD4.N CellGroups N = 2CLP CellGroups N = 2Erythroid CellGroups N = 2GMP CellGroups N = 2Mono CellGroups N = 2NK CellGroups N = 2pDC CellGroups N = 2PreB CellGroups N = 2Progenitor CellGroups N = 2<br />
-## B CellGroups N = 2CD4.M CellGroups N = 2CD4.N CellGroups N = 2CLP CellGroups N = 2Erythroid CellGroups N = 2GMP CellGroups N = 2Mono CellGroups N = 2NK CellGroups N = 2pDC CellGroups N = 2PreB CellGroups N = 2Progenitor CellGroups N = 2<br />
-## B CellGroups N = 2CD4.M CellGroups N = 2CD4.N CellGroups N = 2CLP CellGroups N = 2Erythroid CellGroups N = 2GMP CellGroups N = 2Mono CellGroups N = 2NK CellGroups N = 2pDC CellGroups N = 2PreB CellGroups N = 2Progenitor CellGroups N = 2<br />
-## B CellGroups N = 2CD4.M CellGroups N = 2CD4.N CellGroups N = 2CLP CellGroups N = 2Erythroid CellGroups N = 2GMP CellGroups N = 2Mono CellGroups N = 2NK CellGroups N = 2pDC CellGroups N = 2PreB CellGroups N = 2Progenitor CellGroups N = 2<br />
-## B CellGroups N = 2CD4.M CellGroups N = 2CD4.N CellGroups N = 2CLP CellGroups N = 2Erythroid CellGroups N = 2GMP CellGroups N = 2Mono CellGroups N = 2NK CellGroups N = 2pDC CellGroups N = 2PreB CellGroups N = 2Progenitor CellGroups N = 2<br />
-## B CellGroups N = 2CD4.M CellGroups N = 2CD4.N CellGroups N = 2CLP CellGroups N = 2Erythroid CellGroups N = 2GMP CellGroups N = 2Mono CellGroups N = 2NK CellGroups N = 2pDC CellGroups N = 2PreB CellGroups N = 2Progenitor CellGroups N = 2<br />
-## B CellGroups N = 2CD4.M CellGroups N = 2CD4.N CellGroups N = 2CLP CellGroups N = 2Erythroid CellGroups N = 2GMP CellGroups N = 2Mono CellGroups N = 2NK CellGroups N = 2pDC CellGroups N = 2PreB CellGroups N = 2Progenitor CellGroups N = 2<br />
-## B CellGroups N = 2CD4.M CellGroups N = 2CD4.N CellGroups N = 2CLP CellGroups N = 2Erythroid CellGroups N = 2GMP CellGroups N = 2Mono CellGroups N = 2NK CellGroups N = 2pDC CellGroups N = 2PreB CellGroups N = 2Progenitor CellGroups N = 2<br />
-## B CellGroups N = 2CD4.M CellGroups N = 2CD4.N CellGroups N = 2CLP CellGroups N = 2Erythroid CellGroups N = 2GMP CellGroups N = 2Mono CellGroups N = 2NK CellGroups N = 2pDC CellGroups N = 2PreB CellGroups N = 2Progenitor CellGroups N = 2<br />
-## B CellGroups N = 2CD4.M CellGroups N = 2CD4.N CellGroups N = 2CLP CellGroups N = 2Erythroid CellGroups N = 2GMP CellGroups N = 2Mono CellGroups N = 2NK CellGroups N = 2pDC CellGroups N = 2PreB CellGroups N = 2Progenitor CellGroups N = 2<br />
-## B CellGroups N = 2CD4.M CellGroups N = 2CD4.N CellGroups N = 2CLP CellGroups N = 2Erythroid CellGroups N = 2GMP CellGroups N = 2Mono CellGroups N = 2NK CellGroups N = 2pDC CellGroups N = 2PreB CellGroups N = 2Progenitor CellGroups N = 2<br />
-## 2020-04-15 10:23:17 : Creating Coverage Files!, 0.046 mins elapsed.<br />
-## 2020-04-15 10:23:17 : Batch Execution w/ safelapply!, 0.046 mins elapsed.<br />
-## 2020-04-15 10:24:14 : Adding Kmer Bias to Coverage Files!, 0.996 mins elapsed.<br />
-##<br />
-## Completed Kmer Bias Calculation<br />
-## Adding Kmer Bias (1 of 22)<br />
-## Adding Kmer Bias (2 of 22)<br />
-## Adding Kmer Bias (3 of 22)<br />
-## Adding Kmer Bias (4 of 22)<br />
-## Adding Kmer Bias (5 of 22)<br />
-## Adding Kmer Bias (6 of 22)<br />
-## Adding Kmer Bias (7 of 22)<br />
-## Adding Kmer Bias (8 of 22)<br />
-## Adding Kmer Bias (9 of 22)<br />
-## Adding Kmer Bias (10 of 22)<br />
-## Adding Kmer Bias (11 of 22)<br />
-## Adding Kmer Bias (12 of 22)<br />
-## Adding Kmer Bias (13 of 22)<br />
-## Adding Kmer Bias (14 of 22)<br />
-## Adding Kmer Bias (15 of 22)<br />
-## Adding Kmer Bias (16 of 22)<br />
-## Adding Kmer Bias (17 of 22)<br />
-## Adding Kmer Bias (18 of 22)<br />
-## Adding Kmer Bias (19 of 22)<br />
-## Adding Kmer Bias (20 of 22)<br />
-## Adding Kmer Bias (21 of 22)<br />
-## Adding Kmer Bias (22 of 22)<br />
-## 2020-04-15 10:25:16 : Finished Creation of Coverage Files!, 2.022 mins elapsed.<br />
-## ArchR logging successful to : ArchRLogs/ArchR-addGroupCoverages-faba40cd6ba1-Date-2020-04-15_Time-10-23-14.log</p>
-</blockquote>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="making-pseudo-bulk-replicates.html#cb189-1" tabindex="-1"></a>projHeme4 <span class="ot">&lt;-</span> <span class="fu">addGroupCoverages</span>(<span class="at">ArchRProj =</span> projHeme3, <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>)</span>
+<span id="cb189-2"><a href="making-pseudo-bulk-replicates.html#cb189-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addGroupCoverages-964f05836-Date-2025-02-06_Time-01-33-51.280901.log</span></span>
+<span id="cb189-3"><a href="making-pseudo-bulk-replicates.html#cb189-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb189-4"><a href="making-pseudo-bulk-replicates.html#cb189-4" tabindex="-1"></a><span class="do">## B (1 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-5"><a href="making-pseudo-bulk-replicates.html#cb189-5" tabindex="-1"></a><span class="do">## CD4.M (2 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-6"><a href="making-pseudo-bulk-replicates.html#cb189-6" tabindex="-1"></a><span class="do">## CD4.N (3 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-7"><a href="making-pseudo-bulk-replicates.html#cb189-7" tabindex="-1"></a><span class="do">## CLP (4 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-8"><a href="making-pseudo-bulk-replicates.html#cb189-8" tabindex="-1"></a><span class="do">## Erythroid (5 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-9"><a href="making-pseudo-bulk-replicates.html#cb189-9" tabindex="-1"></a><span class="do">## GMP (6 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-10"><a href="making-pseudo-bulk-replicates.html#cb189-10" tabindex="-1"></a><span class="do">## Mono (7 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-11"><a href="making-pseudo-bulk-replicates.html#cb189-11" tabindex="-1"></a><span class="do">## NK (8 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-12"><a href="making-pseudo-bulk-replicates.html#cb189-12" tabindex="-1"></a><span class="do">## pDC (9 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-13"><a href="making-pseudo-bulk-replicates.html#cb189-13" tabindex="-1"></a><span class="do">## PreB (10 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-14"><a href="making-pseudo-bulk-replicates.html#cb189-14" tabindex="-1"></a><span class="do">## Progenitor (11 of 11) : CellGroups N = 2</span></span>
+<span id="cb189-15"><a href="making-pseudo-bulk-replicates.html#cb189-15" tabindex="-1"></a><span class="do">## 2025-02-06 01:33:55.148851 : Creating Coverage Files!, 0.064 mins elapsed.</span></span>
+<span id="cb189-16"><a href="making-pseudo-bulk-replicates.html#cb189-16" tabindex="-1"></a><span class="do">## 2025-02-06 01:33:55.149982 : Batch Execution w/ safelapply!, 0.064 mins elapsed.</span></span>
+<span id="cb189-17"><a href="making-pseudo-bulk-replicates.html#cb189-17" tabindex="-1"></a><span class="do">## 2025-02-06 01:33:55.158597 : Group B._.scATAC_BMMC_R1 (1 of 22) : Creating Group Coverage File : B._.scATAC_BMMC_R1.insertions.coverage.h5, 0.065 mins elapsed.</span></span>
+<span id="cb189-18"><a href="making-pseudo-bulk-replicates.html#cb189-18" tabindex="-1"></a><span class="do">## Number of Cells = 254</span></span>
+<span id="cb189-19"><a href="making-pseudo-bulk-replicates.html#cb189-19" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-20"><a href="making-pseudo-bulk-replicates.html#cb189-20" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-21"><a href="making-pseudo-bulk-replicates.html#cb189-21" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-22"><a href="making-pseudo-bulk-replicates.html#cb189-22" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-23"><a href="making-pseudo-bulk-replicates.html#cb189-23" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-24"><a href="making-pseudo-bulk-replicates.html#cb189-24" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-25"><a href="making-pseudo-bulk-replicates.html#cb189-25" tabindex="-1"></a><span class="do">## 2025-02-06 01:34:50.760775 : Group B._.scATAC_PBMC_R1 (2 of 22) : Creating Group Coverage File : B._.scATAC_PBMC_R1.insertions.coverage.h5, 0.991 mins elapsed.</span></span>
+<span id="cb189-26"><a href="making-pseudo-bulk-replicates.html#cb189-26" tabindex="-1"></a><span class="do">## Number of Cells = 162</span></span>
+<span id="cb189-27"><a href="making-pseudo-bulk-replicates.html#cb189-27" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-28"><a href="making-pseudo-bulk-replicates.html#cb189-28" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-29"><a href="making-pseudo-bulk-replicates.html#cb189-29" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-30"><a href="making-pseudo-bulk-replicates.html#cb189-30" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-31"><a href="making-pseudo-bulk-replicates.html#cb189-31" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-32"><a href="making-pseudo-bulk-replicates.html#cb189-32" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-33"><a href="making-pseudo-bulk-replicates.html#cb189-33" tabindex="-1"></a><span class="do">## 2025-02-06 01:35:43.707182 : Group CD4.M._.scATAC_PBMC_R1 (3 of 22) : Creating Group Coverage File : CD4.M._.scATAC_PBMC_R1.insertions.coverage.h5, 1.874 mins elapsed.</span></span>
+<span id="cb189-34"><a href="making-pseudo-bulk-replicates.html#cb189-34" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
+<span id="cb189-35"><a href="making-pseudo-bulk-replicates.html#cb189-35" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-36"><a href="making-pseudo-bulk-replicates.html#cb189-36" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-37"><a href="making-pseudo-bulk-replicates.html#cb189-37" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-38"><a href="making-pseudo-bulk-replicates.html#cb189-38" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-39"><a href="making-pseudo-bulk-replicates.html#cb189-39" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-40"><a href="making-pseudo-bulk-replicates.html#cb189-40" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-41"><a href="making-pseudo-bulk-replicates.html#cb189-41" tabindex="-1"></a><span class="do">## 2025-02-06 01:36:41.606504 : Group CD4.M._.scATAC_BMMC_R1 (4 of 22) : Creating Group Coverage File : CD4.M._.scATAC_BMMC_R1.insertions.coverage.h5, 2.839 mins elapsed.</span></span>
+<span id="cb189-42"><a href="making-pseudo-bulk-replicates.html#cb189-42" tabindex="-1"></a><span class="do">## Number of Cells = 86</span></span>
+<span id="cb189-43"><a href="making-pseudo-bulk-replicates.html#cb189-43" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-44"><a href="making-pseudo-bulk-replicates.html#cb189-44" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-45"><a href="making-pseudo-bulk-replicates.html#cb189-45" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-46"><a href="making-pseudo-bulk-replicates.html#cb189-46" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-47"><a href="making-pseudo-bulk-replicates.html#cb189-47" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-48"><a href="making-pseudo-bulk-replicates.html#cb189-48" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-49"><a href="making-pseudo-bulk-replicates.html#cb189-49" tabindex="-1"></a><span class="do">## 2025-02-06 01:37:34.757879 : Group CD4.N._.scATAC_BMMC_R1 (5 of 22) : Creating Group Coverage File : CD4.N._.scATAC_BMMC_R1.insertions.coverage.h5, 3.725 mins elapsed.</span></span>
+<span id="cb189-50"><a href="making-pseudo-bulk-replicates.html#cb189-50" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
+<span id="cb189-51"><a href="making-pseudo-bulk-replicates.html#cb189-51" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-52"><a href="making-pseudo-bulk-replicates.html#cb189-52" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-53"><a href="making-pseudo-bulk-replicates.html#cb189-53" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-54"><a href="making-pseudo-bulk-replicates.html#cb189-54" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-55"><a href="making-pseudo-bulk-replicates.html#cb189-55" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-56"><a href="making-pseudo-bulk-replicates.html#cb189-56" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-57"><a href="making-pseudo-bulk-replicates.html#cb189-57" tabindex="-1"></a><span class="do">## 2025-02-06 01:38:29.43672 : Group CD4.N._.scATAC_PBMC_R1 (6 of 22) : Creating Group Coverage File : CD4.N._.scATAC_PBMC_R1.insertions.coverage.h5, 4.636 mins elapsed.</span></span>
+<span id="cb189-58"><a href="making-pseudo-bulk-replicates.html#cb189-58" tabindex="-1"></a><span class="do">## Number of Cells = 48</span></span>
+<span id="cb189-59"><a href="making-pseudo-bulk-replicates.html#cb189-59" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-60"><a href="making-pseudo-bulk-replicates.html#cb189-60" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-61"><a href="making-pseudo-bulk-replicates.html#cb189-61" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-62"><a href="making-pseudo-bulk-replicates.html#cb189-62" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-63"><a href="making-pseudo-bulk-replicates.html#cb189-63" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-64"><a href="making-pseudo-bulk-replicates.html#cb189-64" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-65"><a href="making-pseudo-bulk-replicates.html#cb189-65" tabindex="-1"></a><span class="do">## 2025-02-06 01:39:22.12135 : Group CLP._.scATAC_CD34_BMMC_R1 (7 of 22) : Creating Group Coverage File : CLP._.scATAC_CD34_BMMC_R1.insertions.coverage.h5, 5.514 mins elapsed.</span></span>
+<span id="cb189-66"><a href="making-pseudo-bulk-replicates.html#cb189-66" tabindex="-1"></a><span class="do">## Number of Cells = 298</span></span>
+<span id="cb189-67"><a href="making-pseudo-bulk-replicates.html#cb189-67" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-68"><a href="making-pseudo-bulk-replicates.html#cb189-68" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-69"><a href="making-pseudo-bulk-replicates.html#cb189-69" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-70"><a href="making-pseudo-bulk-replicates.html#cb189-70" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-71"><a href="making-pseudo-bulk-replicates.html#cb189-71" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-72"><a href="making-pseudo-bulk-replicates.html#cb189-72" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-73"><a href="making-pseudo-bulk-replicates.html#cb189-73" tabindex="-1"></a><span class="do">## 2025-02-06 01:40:16.300021 : Group CLP._.scATAC_BMMC_R1 (8 of 22) : Creating Group Coverage File : CLP._.scATAC_BMMC_R1.insertions.coverage.h5, 6.417 mins elapsed.</span></span>
+<span id="cb189-74"><a href="making-pseudo-bulk-replicates.html#cb189-74" tabindex="-1"></a><span class="do">## Number of Cells = 88</span></span>
+<span id="cb189-75"><a href="making-pseudo-bulk-replicates.html#cb189-75" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-76"><a href="making-pseudo-bulk-replicates.html#cb189-76" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-77"><a href="making-pseudo-bulk-replicates.html#cb189-77" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-78"><a href="making-pseudo-bulk-replicates.html#cb189-78" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-79"><a href="making-pseudo-bulk-replicates.html#cb189-79" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-80"><a href="making-pseudo-bulk-replicates.html#cb189-80" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-81"><a href="making-pseudo-bulk-replicates.html#cb189-81" tabindex="-1"></a><span class="do">## 2025-02-06 01:41:09.215727 : Group Erythroid._.scATAC_CD34_BMMC_R1 (9 of 22) : Creating Group Coverage File : Erythroid._.scATAC_CD34_BMMC_R1.insertions.coverage.h5, 7.299 mins elapsed.</span></span>
+<span id="cb189-82"><a href="making-pseudo-bulk-replicates.html#cb189-82" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
+<span id="cb189-83"><a href="making-pseudo-bulk-replicates.html#cb189-83" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-84"><a href="making-pseudo-bulk-replicates.html#cb189-84" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-85"><a href="making-pseudo-bulk-replicates.html#cb189-85" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-86"><a href="making-pseudo-bulk-replicates.html#cb189-86" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-87"><a href="making-pseudo-bulk-replicates.html#cb189-87" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-88"><a href="making-pseudo-bulk-replicates.html#cb189-88" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-89"><a href="making-pseudo-bulk-replicates.html#cb189-89" tabindex="-1"></a><span class="do">## 2025-02-06 01:42:06.339707 : Group Erythroid._.scATAC_BMMC_R1 (10 of 22) : Creating Group Coverage File : Erythroid._.scATAC_BMMC_R1.insertions.coverage.h5, 8.251 mins elapsed.</span></span>
+<span id="cb189-90"><a href="making-pseudo-bulk-replicates.html#cb189-90" tabindex="-1"></a><span class="do">## Number of Cells = 171</span></span>
+<span id="cb189-91"><a href="making-pseudo-bulk-replicates.html#cb189-91" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-92"><a href="making-pseudo-bulk-replicates.html#cb189-92" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-93"><a href="making-pseudo-bulk-replicates.html#cb189-93" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-94"><a href="making-pseudo-bulk-replicates.html#cb189-94" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-95"><a href="making-pseudo-bulk-replicates.html#cb189-95" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-96"><a href="making-pseudo-bulk-replicates.html#cb189-96" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-97"><a href="making-pseudo-bulk-replicates.html#cb189-97" tabindex="-1"></a><span class="do">## 2025-02-06 01:42:59.546889 : Group GMP._.scATAC_CD34_BMMC_R1 (11 of 22) : Creating Group Coverage File : GMP._.scATAC_CD34_BMMC_R1.insertions.coverage.h5, 9.138 mins elapsed.</span></span>
+<span id="cb189-98"><a href="making-pseudo-bulk-replicates.html#cb189-98" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
+<span id="cb189-99"><a href="making-pseudo-bulk-replicates.html#cb189-99" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-100"><a href="making-pseudo-bulk-replicates.html#cb189-100" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-101"><a href="making-pseudo-bulk-replicates.html#cb189-101" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-102"><a href="making-pseudo-bulk-replicates.html#cb189-102" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-103"><a href="making-pseudo-bulk-replicates.html#cb189-103" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-104"><a href="making-pseudo-bulk-replicates.html#cb189-104" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-105"><a href="making-pseudo-bulk-replicates.html#cb189-105" tabindex="-1"></a><span class="do">## 2025-02-06 01:43:56.516692 : Group GMP._.scATAC_BMMC_R1 (12 of 22) : Creating Group Coverage File : GMP._.scATAC_BMMC_R1.insertions.coverage.h5, 10.087 mins elapsed.</span></span>
+<span id="cb189-106"><a href="making-pseudo-bulk-replicates.html#cb189-106" tabindex="-1"></a><span class="do">## Number of Cells = 310</span></span>
+<span id="cb189-107"><a href="making-pseudo-bulk-replicates.html#cb189-107" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-108"><a href="making-pseudo-bulk-replicates.html#cb189-108" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-109"><a href="making-pseudo-bulk-replicates.html#cb189-109" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-110"><a href="making-pseudo-bulk-replicates.html#cb189-110" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-111"><a href="making-pseudo-bulk-replicates.html#cb189-111" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-112"><a href="making-pseudo-bulk-replicates.html#cb189-112" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-113"><a href="making-pseudo-bulk-replicates.html#cb189-113" tabindex="-1"></a><span class="do">## 2025-02-06 01:44:53.315333 : Group Mono._.scATAC_PBMC_R1 (13 of 22) : Creating Group Coverage File : Mono._.scATAC_PBMC_R1.insertions.coverage.h5, 11.034 mins elapsed.</span></span>
+<span id="cb189-114"><a href="making-pseudo-bulk-replicates.html#cb189-114" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
+<span id="cb189-115"><a href="making-pseudo-bulk-replicates.html#cb189-115" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-116"><a href="making-pseudo-bulk-replicates.html#cb189-116" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-117"><a href="making-pseudo-bulk-replicates.html#cb189-117" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-118"><a href="making-pseudo-bulk-replicates.html#cb189-118" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-119"><a href="making-pseudo-bulk-replicates.html#cb189-119" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-120"><a href="making-pseudo-bulk-replicates.html#cb189-120" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-121"><a href="making-pseudo-bulk-replicates.html#cb189-121" tabindex="-1"></a><span class="do">## 2025-02-06 01:45:49.298475 : Group Mono._.scATAC_BMMC_R1 (14 of 22) : Creating Group Coverage File : Mono._.scATAC_BMMC_R1.insertions.coverage.h5, 11.967 mins elapsed.</span></span>
+<span id="cb189-122"><a href="making-pseudo-bulk-replicates.html#cb189-122" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
+<span id="cb189-123"><a href="making-pseudo-bulk-replicates.html#cb189-123" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-124"><a href="making-pseudo-bulk-replicates.html#cb189-124" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-125"><a href="making-pseudo-bulk-replicates.html#cb189-125" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-126"><a href="making-pseudo-bulk-replicates.html#cb189-126" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-127"><a href="making-pseudo-bulk-replicates.html#cb189-127" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-128"><a href="making-pseudo-bulk-replicates.html#cb189-128" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-129"><a href="making-pseudo-bulk-replicates.html#cb189-129" tabindex="-1"></a><span class="do">## 2025-02-06 01:46:46.450558 : Group NK._.scATAC_PBMC_R1 (15 of 22) : Creating Group Coverage File : NK._.scATAC_PBMC_R1.insertions.coverage.h5, 12.919 mins elapsed.</span></span>
+<span id="cb189-130"><a href="making-pseudo-bulk-replicates.html#cb189-130" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
+<span id="cb189-131"><a href="making-pseudo-bulk-replicates.html#cb189-131" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-132"><a href="making-pseudo-bulk-replicates.html#cb189-132" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-133"><a href="making-pseudo-bulk-replicates.html#cb189-133" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-134"><a href="making-pseudo-bulk-replicates.html#cb189-134" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-135"><a href="making-pseudo-bulk-replicates.html#cb189-135" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-136"><a href="making-pseudo-bulk-replicates.html#cb189-136" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-137"><a href="making-pseudo-bulk-replicates.html#cb189-137" tabindex="-1"></a><span class="do">## 2025-02-06 01:47:45.631898 : Group NK._.scATAC_BMMC_R1 (16 of 22) : Creating Group Coverage File : NK._.scATAC_BMMC_R1.insertions.coverage.h5, 13.906 mins elapsed.</span></span>
+<span id="cb189-138"><a href="making-pseudo-bulk-replicates.html#cb189-138" tabindex="-1"></a><span class="do">## Number of Cells = 322</span></span>
+<span id="cb189-139"><a href="making-pseudo-bulk-replicates.html#cb189-139" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-140"><a href="making-pseudo-bulk-replicates.html#cb189-140" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-141"><a href="making-pseudo-bulk-replicates.html#cb189-141" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-142"><a href="making-pseudo-bulk-replicates.html#cb189-142" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-143"><a href="making-pseudo-bulk-replicates.html#cb189-143" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-144"><a href="making-pseudo-bulk-replicates.html#cb189-144" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-145"><a href="making-pseudo-bulk-replicates.html#cb189-145" tabindex="-1"></a><span class="do">## 2025-02-06 01:48:39.863301 : Group pDC._.scATAC_BMMC_R1 (17 of 22) : Creating Group Coverage File : pDC._.scATAC_BMMC_R1.insertions.coverage.h5, 14.81 mins elapsed.</span></span>
+<span id="cb189-146"><a href="making-pseudo-bulk-replicates.html#cb189-146" tabindex="-1"></a><span class="do">## Number of Cells = 160</span></span>
+<span id="cb189-147"><a href="making-pseudo-bulk-replicates.html#cb189-147" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-148"><a href="making-pseudo-bulk-replicates.html#cb189-148" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-149"><a href="making-pseudo-bulk-replicates.html#cb189-149" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-150"><a href="making-pseudo-bulk-replicates.html#cb189-150" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-151"><a href="making-pseudo-bulk-replicates.html#cb189-151" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-152"><a href="making-pseudo-bulk-replicates.html#cb189-152" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-153"><a href="making-pseudo-bulk-replicates.html#cb189-153" tabindex="-1"></a><span class="do">## 2025-02-06 01:49:33.140777 : Group pDC._.scATAC_CD34_BMMC_R1 (18 of 22) : Creating Group Coverage File : pDC._.scATAC_CD34_BMMC_R1.insertions.coverage.h5, 15.698 mins elapsed.</span></span>
+<span id="cb189-154"><a href="making-pseudo-bulk-replicates.html#cb189-154" tabindex="-1"></a><span class="do">## Number of Cells = 144</span></span>
+<span id="cb189-155"><a href="making-pseudo-bulk-replicates.html#cb189-155" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-156"><a href="making-pseudo-bulk-replicates.html#cb189-156" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-157"><a href="making-pseudo-bulk-replicates.html#cb189-157" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-158"><a href="making-pseudo-bulk-replicates.html#cb189-158" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-159"><a href="making-pseudo-bulk-replicates.html#cb189-159" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-160"><a href="making-pseudo-bulk-replicates.html#cb189-160" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-161"><a href="making-pseudo-bulk-replicates.html#cb189-161" tabindex="-1"></a><span class="do">## 2025-02-06 01:50:26.192653 : Group PreB._.Rep1 (19 of 22) : Creating Group Coverage File : PreB._.Rep1.insertions.coverage.h5, 16.582 mins elapsed.</span></span>
+<span id="cb189-162"><a href="making-pseudo-bulk-replicates.html#cb189-162" tabindex="-1"></a><span class="do">## Number of Cells = 311</span></span>
+<span id="cb189-163"><a href="making-pseudo-bulk-replicates.html#cb189-163" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-164"><a href="making-pseudo-bulk-replicates.html#cb189-164" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-165"><a href="making-pseudo-bulk-replicates.html#cb189-165" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-166"><a href="making-pseudo-bulk-replicates.html#cb189-166" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-167"><a href="making-pseudo-bulk-replicates.html#cb189-167" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-168"><a href="making-pseudo-bulk-replicates.html#cb189-168" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-169"><a href="making-pseudo-bulk-replicates.html#cb189-169" tabindex="-1"></a><span class="do">## 2025-02-06 01:51:20.686608 : Group PreB._.Rep2 (20 of 22) : Creating Group Coverage File : PreB._.Rep2.insertions.coverage.h5, 17.49 mins elapsed.</span></span>
+<span id="cb189-170"><a href="making-pseudo-bulk-replicates.html#cb189-170" tabindex="-1"></a><span class="do">## Number of Cells = 40</span></span>
+<span id="cb189-171"><a href="making-pseudo-bulk-replicates.html#cb189-171" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-172"><a href="making-pseudo-bulk-replicates.html#cb189-172" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-173"><a href="making-pseudo-bulk-replicates.html#cb189-173" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-174"><a href="making-pseudo-bulk-replicates.html#cb189-174" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-175"><a href="making-pseudo-bulk-replicates.html#cb189-175" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-176"><a href="making-pseudo-bulk-replicates.html#cb189-176" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-177"><a href="making-pseudo-bulk-replicates.html#cb189-177" tabindex="-1"></a><span class="do">## 2025-02-06 01:52:15.22009 : Group Progenitor._.scATAC_CD34_BMMC_R1 (21 of 22) : Creating Group Coverage File : Progenitor._.scATAC_CD34_BMMC_R1.insertions.coverage.h5, 18.399 mins elapsed.</span></span>
+<span id="cb189-178"><a href="making-pseudo-bulk-replicates.html#cb189-178" tabindex="-1"></a><span class="do">## Number of Cells = 500</span></span>
+<span id="cb189-179"><a href="making-pseudo-bulk-replicates.html#cb189-179" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-180"><a href="making-pseudo-bulk-replicates.html#cb189-180" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-181"><a href="making-pseudo-bulk-replicates.html#cb189-181" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-182"><a href="making-pseudo-bulk-replicates.html#cb189-182" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-183"><a href="making-pseudo-bulk-replicates.html#cb189-183" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-184"><a href="making-pseudo-bulk-replicates.html#cb189-184" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-185"><a href="making-pseudo-bulk-replicates.html#cb189-185" tabindex="-1"></a><span class="do">## 2025-02-06 01:53:11.720643 : Group Progenitor._.scATAC_BMMC_R1 (22 of 22) : Creating Group Coverage File : Progenitor._.scATAC_BMMC_R1.insertions.coverage.h5, 19.341 mins elapsed.</span></span>
+<span id="cb189-186"><a href="making-pseudo-bulk-replicates.html#cb189-186" tabindex="-1"></a><span class="do">## Number of Cells = 139</span></span>
+<span id="cb189-187"><a href="making-pseudo-bulk-replicates.html#cb189-187" tabindex="-1"></a><span class="do">## Coverage File Exists!</span></span>
+<span id="cb189-188"><a href="making-pseudo-bulk-replicates.html#cb189-188" tabindex="-1"></a><span class="do">## Added Coverage Group</span></span>
+<span id="cb189-189"><a href="making-pseudo-bulk-replicates.html#cb189-189" tabindex="-1"></a><span class="do">## Added Metadata Group</span></span>
+<span id="cb189-190"><a href="making-pseudo-bulk-replicates.html#cb189-190" tabindex="-1"></a><span class="do">## Added ArrowCoverage Class</span></span>
+<span id="cb189-191"><a href="making-pseudo-bulk-replicates.html#cb189-191" tabindex="-1"></a><span class="do">## Added Coverage/Info</span></span>
+<span id="cb189-192"><a href="making-pseudo-bulk-replicates.html#cb189-192" tabindex="-1"></a><span class="do">## Added Coverage/Info/CellNames</span></span>
+<span id="cb189-193"><a href="making-pseudo-bulk-replicates.html#cb189-193" tabindex="-1"></a><span class="do">## 2025-02-06 01:54:04.6391 : Adding Kmer Bias to Coverage Files!, 20.223 mins elapsed.</span></span>
+<span id="cb189-194"><a href="making-pseudo-bulk-replicates.html#cb189-194" tabindex="-1"></a><span class="do">## Completed Kmer Bias Calculation</span></span>
+<span id="cb189-195"><a href="making-pseudo-bulk-replicates.html#cb189-195" tabindex="-1"></a><span class="do">## Adding Kmer Bias (1 of 22)</span></span>
+<span id="cb189-196"><a href="making-pseudo-bulk-replicates.html#cb189-196" tabindex="-1"></a><span class="do">## Adding Kmer Bias (2 of 22)</span></span>
+<span id="cb189-197"><a href="making-pseudo-bulk-replicates.html#cb189-197" tabindex="-1"></a><span class="do">## Adding Kmer Bias (3 of 22)</span></span>
+<span id="cb189-198"><a href="making-pseudo-bulk-replicates.html#cb189-198" tabindex="-1"></a><span class="do">## Adding Kmer Bias (4 of 22)</span></span>
+<span id="cb189-199"><a href="making-pseudo-bulk-replicates.html#cb189-199" tabindex="-1"></a><span class="do">## Adding Kmer Bias (5 of 22)</span></span>
+<span id="cb189-200"><a href="making-pseudo-bulk-replicates.html#cb189-200" tabindex="-1"></a><span class="do">## Adding Kmer Bias (6 of 22)</span></span>
+<span id="cb189-201"><a href="making-pseudo-bulk-replicates.html#cb189-201" tabindex="-1"></a><span class="do">## Adding Kmer Bias (7 of 22)</span></span>
+<span id="cb189-202"><a href="making-pseudo-bulk-replicates.html#cb189-202" tabindex="-1"></a><span class="do">## Adding Kmer Bias (8 of 22)</span></span>
+<span id="cb189-203"><a href="making-pseudo-bulk-replicates.html#cb189-203" tabindex="-1"></a><span class="do">## Adding Kmer Bias (9 of 22)</span></span>
+<span id="cb189-204"><a href="making-pseudo-bulk-replicates.html#cb189-204" tabindex="-1"></a><span class="do">## Adding Kmer Bias (10 of 22)</span></span>
+<span id="cb189-205"><a href="making-pseudo-bulk-replicates.html#cb189-205" tabindex="-1"></a><span class="do">## Adding Kmer Bias (11 of 22)</span></span>
+<span id="cb189-206"><a href="making-pseudo-bulk-replicates.html#cb189-206" tabindex="-1"></a><span class="do">## Adding Kmer Bias (12 of 22)</span></span>
+<span id="cb189-207"><a href="making-pseudo-bulk-replicates.html#cb189-207" tabindex="-1"></a><span class="do">## Adding Kmer Bias (13 of 22)</span></span>
+<span id="cb189-208"><a href="making-pseudo-bulk-replicates.html#cb189-208" tabindex="-1"></a><span class="do">## Adding Kmer Bias (14 of 22)</span></span>
+<span id="cb189-209"><a href="making-pseudo-bulk-replicates.html#cb189-209" tabindex="-1"></a><span class="do">## Adding Kmer Bias (15 of 22)</span></span>
+<span id="cb189-210"><a href="making-pseudo-bulk-replicates.html#cb189-210" tabindex="-1"></a><span class="do">## Adding Kmer Bias (16 of 22)</span></span>
+<span id="cb189-211"><a href="making-pseudo-bulk-replicates.html#cb189-211" tabindex="-1"></a><span class="do">## Adding Kmer Bias (17 of 22)</span></span>
+<span id="cb189-212"><a href="making-pseudo-bulk-replicates.html#cb189-212" tabindex="-1"></a><span class="do">## Adding Kmer Bias (18 of 22)</span></span>
+<span id="cb189-213"><a href="making-pseudo-bulk-replicates.html#cb189-213" tabindex="-1"></a><span class="do">## Adding Kmer Bias (19 of 22)</span></span>
+<span id="cb189-214"><a href="making-pseudo-bulk-replicates.html#cb189-214" tabindex="-1"></a><span class="do">## Adding Kmer Bias (20 of 22)</span></span>
+<span id="cb189-215"><a href="making-pseudo-bulk-replicates.html#cb189-215" tabindex="-1"></a><span class="do">## Adding Kmer Bias (21 of 22)</span></span>
+<span id="cb189-216"><a href="making-pseudo-bulk-replicates.html#cb189-216" tabindex="-1"></a><span class="do">## Adding Kmer Bias (22 of 22)</span></span>
+<span id="cb189-217"><a href="making-pseudo-bulk-replicates.html#cb189-217" tabindex="-1"></a><span class="do">## 2025-02-06 01:56:27.555455 : Finished Creation of Coverage Files!, 22.605 mins elapsed.</span></span>
+<span id="cb189-218"><a href="making-pseudo-bulk-replicates.html#cb189-218" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-addGroupCoverages-964f05836-Date-2025-02-06_Time-01-33-51.280901.log</span></span></code></pre></div>
+<p>Once we have run <code>addGroupCoverages()</code>, this creates an entry in the project metadata of the <code>ArchRProject</code>, including a file path to the HDF5-format coverage object that is stored on disk.</p>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="making-pseudo-bulk-replicates.html#cb190-1" tabindex="-1"></a>projHeme4<span class="sc">@</span>projectMetadata<span class="sc">$</span>GroupCoverages<span class="sc">$</span>Clusters2<span class="sc">$</span>coverageMetadata</span>
+<span id="cb190-2"><a href="making-pseudo-bulk-replicates.html#cb190-2" tabindex="-1"></a><span class="do">## DataFrame with 22 rows and 5 columns</span></span>
+<span id="cb190-3"><a href="making-pseudo-bulk-replicates.html#cb190-3" tabindex="-1"></a><span class="do">##           Group                   Name                   File    nCells</span></span>
+<span id="cb190-4"><a href="making-pseudo-bulk-replicates.html#cb190-4" tabindex="-1"></a><span class="do">##     &lt;character&gt;            &lt;character&gt;            &lt;character&gt; &lt;integer&gt;</span></span>
+<span id="cb190-5"><a href="making-pseudo-bulk-replicates.html#cb190-5" tabindex="-1"></a><span class="do">## 1             B     B._.scATAC_BMMC_R1 /workspace/ArchR/Arc..       254</span></span>
+<span id="cb190-6"><a href="making-pseudo-bulk-replicates.html#cb190-6" tabindex="-1"></a><span class="do">## 2             B     B._.scATAC_PBMC_R1 /workspace/ArchR/Arc..       162</span></span>
+<span id="cb190-7"><a href="making-pseudo-bulk-replicates.html#cb190-7" tabindex="-1"></a><span class="do">## 3         CD4.M CD4.M._.scATAC_PBMC_R1 /workspace/ArchR/Arc..       500</span></span>
+<span id="cb190-8"><a href="making-pseudo-bulk-replicates.html#cb190-8" tabindex="-1"></a><span class="do">## 4         CD4.M CD4.M._.scATAC_BMMC_R1 /workspace/ArchR/Arc..        86</span></span>
+<span id="cb190-9"><a href="making-pseudo-bulk-replicates.html#cb190-9" tabindex="-1"></a><span class="do">## 5         CD4.N CD4.N._.scATAC_BMMC_R1 /workspace/ArchR/Arc..       500</span></span>
+<span id="cb190-10"><a href="making-pseudo-bulk-replicates.html#cb190-10" tabindex="-1"></a><span class="do">## ...         ...                    ...                    ...       ...</span></span>
+<span id="cb190-11"><a href="making-pseudo-bulk-replicates.html#cb190-11" tabindex="-1"></a><span class="do">## 18          pDC pDC._.scATAC_CD34_BM.. /workspace/ArchR/Arc..       144</span></span>
+<span id="cb190-12"><a href="making-pseudo-bulk-replicates.html#cb190-12" tabindex="-1"></a><span class="do">## 19         PreB            PreB._.Rep1 /workspace/ArchR/Arc..       311</span></span>
+<span id="cb190-13"><a href="making-pseudo-bulk-replicates.html#cb190-13" tabindex="-1"></a><span class="do">## 20         PreB            PreB._.Rep2 /workspace/ArchR/Arc..        40</span></span>
+<span id="cb190-14"><a href="making-pseudo-bulk-replicates.html#cb190-14" tabindex="-1"></a><span class="do">## 21   Progenitor Progenitor._.scATAC_.. /workspace/ArchR/Arc..       500</span></span>
+<span id="cb190-15"><a href="making-pseudo-bulk-replicates.html#cb190-15" tabindex="-1"></a><span class="do">## 22   Progenitor Progenitor._.scATAC_.. /workspace/ArchR/Arc..       139</span></span>
+<span id="cb190-16"><a href="making-pseudo-bulk-replicates.html#cb190-16" tabindex="-1"></a><span class="do">##     nInsertions</span></span>
+<span id="cb190-17"><a href="making-pseudo-bulk-replicates.html#cb190-17" tabindex="-1"></a><span class="do">##       &lt;numeric&gt;</span></span>
+<span id="cb190-18"><a href="making-pseudo-bulk-replicates.html#cb190-18" tabindex="-1"></a><span class="do">## 1       1265606</span></span>
+<span id="cb190-19"><a href="making-pseudo-bulk-replicates.html#cb190-19" tabindex="-1"></a><span class="do">## 2       1054330</span></span>
+<span id="cb190-20"><a href="making-pseudo-bulk-replicates.html#cb190-20" tabindex="-1"></a><span class="do">## 3       4913052</span></span>
+<span id="cb190-21"><a href="making-pseudo-bulk-replicates.html#cb190-21" tabindex="-1"></a><span class="do">## 4        499060</span></span>
+<span id="cb190-22"><a href="making-pseudo-bulk-replicates.html#cb190-22" tabindex="-1"></a><span class="do">## 5       2156364</span></span>
+<span id="cb190-23"><a href="making-pseudo-bulk-replicates.html#cb190-23" tabindex="-1"></a><span class="do">## ...         ...</span></span>
+<span id="cb190-24"><a href="making-pseudo-bulk-replicates.html#cb190-24" tabindex="-1"></a><span class="do">## 18      1078804</span></span>
+<span id="cb190-25"><a href="making-pseudo-bulk-replicates.html#cb190-25" tabindex="-1"></a><span class="do">## 19      1985798</span></span>
+<span id="cb190-26"><a href="making-pseudo-bulk-replicates.html#cb190-26" tabindex="-1"></a><span class="do">## 20       203070</span></span>
+<span id="cb190-27"><a href="making-pseudo-bulk-replicates.html#cb190-27" tabindex="-1"></a><span class="do">## 21      3467572</span></span>
+<span id="cb190-28"><a href="making-pseudo-bulk-replicates.html#cb190-28" tabindex="-1"></a><span class="do">## 22       648132</span></span></code></pre></div>
+<p>We can also obtain the actual cell assignments for the pseudo-bulk replicates by calling <code>addGroupCoverages()</code> a second time using the <code>returnGroups = TRUE</code>. The returned object is a list of lists where each sub-list contains the replicates for a given cell group.</p>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="making-pseudo-bulk-replicates.html#cb191-1" tabindex="-1"></a>groups <span class="ot">&lt;-</span> <span class="fu">addGroupCoverages</span>(<span class="at">ArchRProj =</span> projHeme3, <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>, <span class="at">returnGroups =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb191-2"><a href="making-pseudo-bulk-replicates.html#cb191-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addGroupCoverages-94018beea-Date-2025-02-06_Time-01-56-27.633734.log</span></span>
+<span id="cb191-3"><a href="making-pseudo-bulk-replicates.html#cb191-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb191-4"><a href="making-pseudo-bulk-replicates.html#cb191-4" tabindex="-1"></a><span class="do">## B (1 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-5"><a href="making-pseudo-bulk-replicates.html#cb191-5" tabindex="-1"></a><span class="do">## CD4.M (2 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-6"><a href="making-pseudo-bulk-replicates.html#cb191-6" tabindex="-1"></a><span class="do">## CD4.N (3 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-7"><a href="making-pseudo-bulk-replicates.html#cb191-7" tabindex="-1"></a><span class="do">## CLP (4 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-8"><a href="making-pseudo-bulk-replicates.html#cb191-8" tabindex="-1"></a><span class="do">## Erythroid (5 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-9"><a href="making-pseudo-bulk-replicates.html#cb191-9" tabindex="-1"></a><span class="do">## GMP (6 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-10"><a href="making-pseudo-bulk-replicates.html#cb191-10" tabindex="-1"></a><span class="do">## Mono (7 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-11"><a href="making-pseudo-bulk-replicates.html#cb191-11" tabindex="-1"></a><span class="do">## NK (8 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-12"><a href="making-pseudo-bulk-replicates.html#cb191-12" tabindex="-1"></a><span class="do">## pDC (9 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-13"><a href="making-pseudo-bulk-replicates.html#cb191-13" tabindex="-1"></a><span class="do">## PreB (10 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-14"><a href="making-pseudo-bulk-replicates.html#cb191-14" tabindex="-1"></a><span class="do">## Progenitor (11 of 11) : CellGroups N = 2</span></span>
+<span id="cb191-15"><a href="making-pseudo-bulk-replicates.html#cb191-15" tabindex="-1"></a>groups</span>
+<span id="cb191-16"><a href="making-pseudo-bulk-replicates.html#cb191-16" tabindex="-1"></a><span class="do">## List of length 11</span></span>
+<span id="cb191-17"><a href="making-pseudo-bulk-replicates.html#cb191-17" tabindex="-1"></a><span class="do">## names(11): B CD4.M CD4.N CLP Erythroid GMP Mono NK pDC PreB Progenitor</span></span></code></pre></div>
+<p>If we looked at one of the sub-lists, we would see the cell names for each cell that was used to make up the given pseudo-bulk replicate.</p>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="making-pseudo-bulk-replicates.html#cb192-1" tabindex="-1"></a>groups<span class="sc">$</span>B</span>
+<span id="cb192-2"><a href="making-pseudo-bulk-replicates.html#cb192-2" tabindex="-1"></a><span class="do">## CharacterList of length 2</span></span>
+<span id="cb192-3"><a href="making-pseudo-bulk-replicates.html#cb192-3" tabindex="-1"></a><span class="do">## [[&quot;scATAC_BMMC_R1&quot;]] scATAC_BMMC_R1#TTATGTCAGTGATTAG-1 ...</span></span>
+<span id="cb192-4"><a href="making-pseudo-bulk-replicates.html#cb192-4" tabindex="-1"></a><span class="do">## [[&quot;scATAC_PBMC_R1&quot;]] scATAC_PBMC_R1#GCCCAGACATCGACCG-1 ...</span></span></code></pre></div>
 <p>With these pseudo-bulk replicates generated, we can now call peaks in our data. As mentioned previously, we do not want to call peaks on the merged set of all single cells so having these more granular cell groups defined, either through clustering or otherwise, provides the ideal starting point for peak calling.</p>
 
 </div>
@@ -324,7 +592,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -343,23 +610,27 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": null
 },
 "fontsettings": null,
 "edit": null,
 "history": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/commits/dev/09_Pseudobulks.Rmd",
-"text": "Chapter edit history"
+"link": null,
+"text": null
 },
 "view": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/view/dev/09_Pseudobulks.Rmd",
-"text": "View source on GitHub"
+"link": null,
+"text": null
 },
-"download": ["ArchR.pdf"],
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "none"
 },
-"search": true,
 "info": false
 });
 });

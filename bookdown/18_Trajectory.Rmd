@@ -1,0 +1,563 @@
+---
+output:
+  html_document:
+    theme: yeti  # many options for theme, this one is my favorite.
+params:
+  threads: 20
+  rdata: ""
+  token: ""
+  ref: ""
+  out: ""
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, include=FALSE}
+#load the data from the previous chapter as needed
+current_chapter = 18
+previous_chapter = current_chapter-1
+load(file = paste0("./chapter_images/chapter",previous_chapter,".RData"))
+```
+
+# Trajectory Analysis with ArchR
+
+To order cells in pseudo-time, ArchR creates cellular trajectories that order cells across a lower N-dimensional subspace within an ArchRProject. Previously, we have performed this ordering in the 2-dimensional UMAP subspace but ArchR has improved upon this methodology to enable alignment within an N-dimensional subspace (i.e. LSI). First, ArchR requires a user-defined trajectory backbone that provides a rough ordering of cell groups/clusters. For example, given user-determined cluster identities, one might provide the cluster IDs for a stem cell cluster, then a progenitor cell cluster, and then a differentiated cell cluster that correspond to a known or presumed biologically relevant cellular trajectory (i.e. providing the cluster IDs for HSC, to GMP, to Monocyte). Next, for each cluster, ArchR calculates the mean coordinates for each cell group/cluster in N-dimensions and retains cells whose Euclidean distance to those mean coordinates is in the top 5% of all cells. Next, ArchR computes the distance for each cell from cluster i to the mean coordinates of cluster i+1 along the trajectory and computes a pseudo-time vector based on these distances for each iteration of i. This allows ArchR to determine an N-dimensional coordinate and a pseudo-time value for each of the cells retained as part of the trajectory based on the Euclidean distance to the cell group/cluster mean coordinates. Next, ArchR fits a continuous trajectory to each N-dimensional coordinate based on the pseudo-time value using the `smooth.spline` function. Then, ArchR aligns all cells to the trajectory based on their Euclidean distance to the nearest point along the manifold. ArchR then scales this alignment to 100 and stores this pseudo-time in the ArchRProject for downstream analyses.
+
+ArchR can create matrices that convey pseudo-time trends across features stored within the Arrow files. For example, ArchR can analyze changes in TF deviations, gene scores, or integrated gene expression across pseudo-time to identify regulators or regulatory elements that are dynamic throughout the cellular trajectory. First, ArchR groups cells in small user-defined quantile increments (default = 1/100) across the cellular trajectory. ArchR then smooths this matrix per feature using a user-defined smoothing window (default = 9/100) using the `data.table::frollmean` function. ArchR then returns this smoothed pseudo-time x feature matrix as a `SummarizedExperiment` for downstream analyses. ArchR additionally can correlate two of these smoothed pseudo-time x feature matrices using name matching (i.e. positive regulators with chromVAR TF deviations and gene score/integration profiles) or by genomic position overlap methods (i.e. peak-to-gene linkages) using low-overlapping cellular aggregates as described in previous sections. Thus, ArchR facilitates integrative analyses across cellular trajectories, revealing correlated regulatory dynamics across multi-modal data.
+
+
+## Myeloid Trajectory - Monocyte Differentiation
+
+In this section, we will create a cellular trajectory that approximates the differentiation of HSCs into fully differentiated monocytes. To start, lets review the clusters and cell types that we defined previously, stored in `cellColData` in columns named "Clusters" and "Clusters2". Overlaying these cell groupings on our UMAP embedding shows the different cell types that we are interested in.
+
+```{r, collapse=TRUE}
+p1 <- plotEmbedding(ArchRProj = projHeme5, colorBy = "cellColData", name = "Clusters", embedding = "UMAP")
+```
+
+```{r, collapse=TRUE}
+p2 <- plotEmbedding(ArchRProj = projHeme5, colorBy = "cellColData", name = "Clusters2", embedding = "UMAP")
+```
+
+```{r, collapse=TRUE}
+ggAlignPlots(p1, p2, type = "h")
+```
+
+
+### Pseudo-time UMAPs and individual feature plots
+
+We will use the cell type definitions that are stored in "Clusters2". As mentioned above, we are creating a trajectory from stem cells ("Progenitor"), through the committed myeloid progenitor ("GMP"), to monocytes ("Mono"). The first step in creating a trajectory is to create a trajectory backbone in the form of an ordered vector of cell group labels.
+
+```{r, collapse=TRUE}
+trajectory <- c("Progenitor", "GMP", "Mono")
+trajectory
+```
+
+We use the `addTrajectory()` function to create a trajectory and we add this to our `ArchRProject`. We will call this trajectory "MyeloidU". What this does is it creates a new column in `cellColData` called "MyeloidU" that stores the pseudo-time value for each cell in the trajectory. Cells that are not part of the trajectory are labeled with `NA`.
+
+```{r, collapse=TRUE}
+projHeme5 <- addTrajectory(
+    ArchRProj = projHeme5, 
+    name = "MyeloidU", 
+    groupBy = "Clusters2",
+    trajectory = trajectory, 
+    embedding = "UMAP", 
+    force = TRUE
+)
+```
+
+We can look at this information and see that each cell has a unique pseudotime value between 0 and 100. We exclude cells with `NA` values because these are not part of the trajectory.
+
+```{r, collapse=TRUE}
+head(projHeme5$MyeloidU[!is.na(projHeme5$MyeloidU)])
+```
+
+
+To plot this trajectory, we use the `plotTrajectory()` function which overlays the pseudo-time values on our UMAP embedding and displays an arrow approximating the trajectory path from the spline-fit. Cells that are not part of the trajectory are colored gray. In this example, we use `colorBy = "cellColData"`  to tell ArchR to look within `cellColData` for the column specified by `name` - in this case, the "MyeloidU" pseudo-time trajectory. While it may seem conterintuitive to list "MyeloidU" for both `trajectory` and `name`, this is done because `trajectory` tells ArchR which subset of cells we are interested in and `name` tells ArchR how to color that subset of cells.
+
+```{r, collapse=TRUE}
+p <- plotTrajectory(projHeme5, trajectory = "MyeloidU", colorBy = "cellColData", name = "MyeloidU")
+p[[1]]
+```
+
+To save an editable vectorized version of this plot, we use `plotPDF()`.
+
+```{r, collapse=TRUE}
+plotPDF(p, name = "Plot-MyeloidU-Traj-UMAP.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 5, height = 5)
+```
+
+We can also overlay other features on the trajectory within our UMAP embedding. This allows us to display specific features only within the cells that are relevant to our trajectory.
+
+If you have not already added impute weights to your `projHeme5` project, lets do that now.
+
+```{r, collapse=TRUE}
+projHeme5 <- addImputeWeights(projHeme5)
+```
+
+Then, we can plot the "MyeloidU" trajectory but color the cells by the gene score value of the CEBPB gene, a known regulator of monocyte function that becomes active during the differentiation process. We indicate the matrix to use via the `colorBy` parameter and the feature to use via the `name` parameter.
+
+```{r, collapse=TRUE}
+p1 <- plotTrajectory(projHeme5, trajectory = "MyeloidU", colorBy = "GeneScoreMatrix", name = "CEBPB", continuousSet = "horizonExtra")
+```
+
+We can repeat this process but color the cells by their linked gene expression via the `GeneIntegrationMatrix`.
+```{r, collapse=TRUE}
+p2 <- plotTrajectory(projHeme5, trajectory = "MyeloidU", colorBy = "GeneIntegrationMatrix", name = "CEBPB", continuousSet = "blueYellow")
+```
+
+The `plotTrajectory()` function actually returns a list of relevant plots. The first plot in the list is a UMAP embedding, colorized as specified in the function call.
+
+Comparing these UMAP plots side-by-side for the gene score and gene expression, we see that the activity of the CEBPB gene is highly specific to monocyte cells in the later part of the pseudo-time trajectory.
+
+```{r, collapse=TRUE}
+ggAlignPlots(p1[[1]], p2[[1]], type = "h")
+```
+
+The second plot in the list that is returned by `plotTrajectory()` is a dot plot of pseudo-time versus the value of the relevant feature, in this case, the gene score or gene expression of CEBPB. In this case, the cells are colored by their pseudo-time.
+```{r, collapse=TRUE}
+ggAlignPlots(p1[[2]], p2[[2]], type = "h")
+```
+
+
+### Pseudo-time heatmaps
+
+We can visualize changes in many features across pseudo-time using heatmaps. To do this, we first retrieve the trajectory of interest from the `ArchRProject` using the `getTrajectory()` function which returns the trajectory as a `SummarizedExperiment` object. We will create these pseudo-time heatmaps for motifs, gene scores, gene expression, and peak accessibility by passing the corresponding matrix to the `useMatrix` parameter. When calling `getTrajectory()` we can provide as argument to the `trajectoryLabel` parameter which allows for labeling of the heatmap pseudo-time bins based on the group (eg. stem cell, progenitor cell, differentiated cell). Typically, the value passed to `trajectoryLabel` should be the same as the column in `cellColData` used in the `groupBy` parameter when `addTrajectory()` was called.
+
+```{r, collapse=TRUE}
+trajMM  <- getTrajectory(ArchRProj = projHeme5, name = "MyeloidU", useMatrix = "MotifMatrix", log2Norm = FALSE, trajectoryLabel = "Clusters2")
+trajMM
+```
+
+`getTrajectory()` returns a `Summarized Experiment` where the rows are the features of interest and the columns are pseudo-time bins. The size of the pseudo-time bins can be controlled by the `groupEvery` parameter.
+
+We then pass this `SummarizedExperiment` to the `plotTrajectoryHeatmap()` function. To include a color label across the top of the heatmap that represents the groups of the pseudo-time bins, we additionally use the `colorColumns` and `columnPal` arguments. 
+```{r, collapse=TRUE}
+p1 <- plotTrajectoryHeatmap(trajMM, pal = paletteContinuous(set = "solarExtra"), colorColumns = TRUE, columnPal = paletteDiscrete(values = unique(colData(trajMM)$label)))
+p1
+```
+
+
+We can perform the same steps to obtain a pseudo-time heatmap of gene scores by setting `useMatrix = "GeneScoreMatrix"`.
+
+```{r, collapse=TRUE}
+trajGSM <- getTrajectory(ArchRProj = projHeme5, name = "MyeloidU", useMatrix = "GeneScoreMatrix", log2Norm = TRUE, trajectoryLabel = "Clusters2")
+p2 <- plotTrajectoryHeatmap(trajGSM,  pal = paletteContinuous(set = "horizonExtra"), colorColumns = TRUE, columnPal = paletteDiscrete(values = unique(colData(trajGSM)$label)))
+p2
+```
+
+Similarly, we can obtain a pseudo-time heatmap of gene expression by setting `useMatrix = "GeneIntegrationMatrix"`.
+
+```{r, collapse=TRUE}
+trajGIM <- getTrajectory(ArchRProj = projHeme5, name = "MyeloidU", useMatrix = "GeneIntegrationMatrix", log2Norm = FALSE, trajectoryLabel = "Clusters2")
+p3 <- plotTrajectoryHeatmap(trajGIM,  pal = paletteContinuous(set = "blueYellow"), colorColumns = TRUE, columnPal = paletteDiscrete(values = unique(colData(trajGIM)$label)))
+p3
+```
+
+
+Lastly, we can obtain a pseudo-time heatmap of peak accessibility by setting `useMatrix = "PeakMatrix"`.
+```{r, collapse=TRUE}
+trajPM  <- getTrajectory(ArchRProj = projHeme5, name = "MyeloidU", useMatrix = "PeakMatrix", log2Norm = TRUE, trajectoryLabel = "Clusters2")
+p4 <- plotTrajectoryHeatmap(trajPM, pal = paletteContinuous(set = "solarExtra"), colorColumns = TRUE, columnPal = paletteDiscrete(values = unique(colData(trajPM)$label)))
+p4
+```
+
+
+To save an editable vectorized version of these plots, we use `plotPDF()`.
+
+```{r, collapse=TRUE}
+plotPDF(p1, p2, p3, p4, name = "Plot-MyeloidU-Traj-Heatmaps.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 6, height = 8)
+```
+
+### Integrative pseudo-time analyses
+
+We can also perform integrative analyses, such as identification of positive TF regulators by integration of gene scores / gene expression with motif accessibility across pseudo-time. This can be very powerful, for example in identifying drivers of differentiation. To do this, we use the `correlateTrajectories()` function which takes two `SummarizedExperiment` objects retrived from the `getTrajectories()` function.
+
+First, lets find motifs whose accessibility across pseudo-time is correlated with the gene score of the TF gene. Since we are ultimately going to only correlate with the deviation z-scores, we filter out any entries that correlate based on raw deviations.
+```{r, collapse=TRUE}
+corGSM_MM <- correlateTrajectories(trajGSM, trajMM)
+idxToRemove <- grep(pattern = "deviations", x = corGSM_MM[["correlatedMappings"]]$name2)
+if(length(idxToRemove > 1)){
+  corGSM_MM[["correlatedMappings"]] <- corGSM_MM[["correlatedMappings"]][-idxToRemove,]
+}
+```
+
+The primary output of `correlateTrajectories()` is a list object containing a `DataFrame` object as the first entry in the list. This `DataFrame` has columns named `idx1`, `matchname1`, `name1`, and `VarAssay1` which correspond to the index, match name, unaltered name, and the variance quantile of the features from the first trajectory (gene scores) passed to the `correlateTrajectories()` function. A "variance quantile" is a normalized measure of the given feature which allows us to derive a correlation across disparate assays. This `DataFrame` contains all of the features that met the cutoffs specified in the `correlateTrajectories()` function.
+
+```{r, collapse=TRUE}
+corGSM_MM[["correlatedMappings"]]
+```
+
+We can then subset our corresponding trajectory `SummarizedExperiment` objects to only contain the elements that passed significance above.
+```{r, collapse=TRUE}
+trajGSM2 <- trajGSM[corGSM_MM[["correlatedMappings"]]$name1, ]
+trajMM2 <- trajMM[corGSM_MM[["correlatedMappings"]]$name2, ]
+```
+
+To best order these features, we can create a new trajectory where the values of these two trajectories are multiplied. This will allow us to create side-by-side heatmaps that are identically ordered by row.
+
+```{r, collapse=TRUE}
+trajCombined <- trajGSM2
+assay(trajCombined, withDimnames=FALSE) <- t(apply(assay(trajGSM2), 1, scale)) + t(apply(assay(trajMM2), 1, scale))
+```
+
+We can extract the optimal row order from the return of the `plotTrajectoryHeatmap()` function.
+
+```{r, collapse=TRUE}
+combinedMat <- plotTrajectoryHeatmap(trajCombined, returnMat = TRUE, varCutOff = 0)
+rowOrder <- match(rownames(combinedMat), rownames(trajGSM2))
+```
+
+With this, we are now ready to create our paired heatmaps. First, we will create the heatmap for the gene score trajectory. We specify the desired row order via the `rowOrder` parameter.
+
+```{r, collapse=TRUE}
+ht1 <- plotTrajectoryHeatmap(trajGSM2,  pal = paletteContinuous(set = "horizonExtra"),  varCutOff = 0, rowOrder = rowOrder)
+```
+
+Then, we will create the heatmap for the motif trajectory, again specifying the row order via the `rowOrder` parameter. Here, we've used `force = TRUE`. In the context of the MotifMatrix trajectory, this would allow correlations to both "z" and "deviations". In this example, we've removed the raw deviations above but if we had not done this, `force = TRUE` would be essential here.
+
+```{r, collapse=TRUE}
+ht2 <- plotTrajectoryHeatmap(trajMM2, pal = paletteContinuous(set = "solarExtra"), varCutOff = 0, rowOrder = rowOrder, force = TRUE)
+```
+
+Plotting these two heatmaps side-by-side, we see that the rows are matched across the two heatmaps. You may notice that the analysis captures both GATA3 and GATA3-AS1 (an anti-sense transcript of GATA3). This is due to how feature matching is performed and the anti-sense transcript entry could be removed manually in post-processing or programatically if desired.
+
+```{r, collapse=TRUE}
+ComplexHeatmap::draw(ht1 + ht2)
+```
+
+We can repeat this same exact process but use gene expression from the `GeneIntegrationMatrix` instead of gene scores. Because this is the same analytical workflow, we do not repeat our explanations for each step.
+
+```{r, collapse=TRUE}
+corGIM_MM <- correlateTrajectories(trajGIM, trajMM)
+idxToRemove2 <- grep(pattern = "deviations", x = corGIM_MM[["correlatedMappings"]]$name2)
+if(length(idxToRemove2 > 1)){
+  corGIM_MM[["correlatedMappings"]] <- corGIM_MM[["correlatedMappings"]][-idxToRemove2,]
+}
+corGIM_MM[[1]]
+trajGIM2 <- trajGIM[corGIM_MM[[1]]$name1, ]
+trajMM2 <- trajMM[corGIM_MM[[1]]$name2, ]
+trajCombined <- trajGIM2
+assay(trajCombined, withDimnames=FALSE) <- t(apply(assay(trajGIM2), 1, scale)) + t(apply(assay(trajMM2), 1, scale))
+combinedMat <- plotTrajectoryHeatmap(trajCombined, returnMat = TRUE, varCutOff = 0)
+rowOrder <- match(rownames(combinedMat), rownames(trajGIM2))
+ht1 <- plotTrajectoryHeatmap(trajGIM2,  pal = paletteContinuous(set = "blueYellow"),  varCutOff = 0, rowOrder = rowOrder)
+ht2 <- plotTrajectoryHeatmap(trajMM2, pal = paletteContinuous(set = "solarExtra"), varCutOff = 0, rowOrder = rowOrder)
+ComplexHeatmap::draw(ht1 + ht2)
+```
+
+
+## Lymphoid Trajectory - B Cell Differentiation
+
+As a second example of a trajectory, we will create a B cell trajectory from progenitor cells, through the common lymphoid progenitor and pre-B cell all the way to fully differentiated B cells. Because this analysis is essentially repeated from the monocyte trajectory in the previous section, we do not provide explanations for the code snippets. If you are trying to learn how to perform trajectory analysis, check out the monocyte trajectory section in this chapter instead.
+
+For reference, this is what our clusters look like:
+```{r, collapse=TRUE}
+p1 <- plotEmbedding(ArchRProj = projHeme5, colorBy = "cellColData", name = "Clusters", embedding = "UMAP")
+p2 <- plotEmbedding(ArchRProj = projHeme5, colorBy = "cellColData", name = "Clusters2", embedding = "UMAP")
+ggAlignPlots(p1, p2, type = "h")
+```
+
+
+### Pseudo-time UMAPs and individual feature plots
+
+The trajectory we will use will span from "Progenitor" to a lymphoid progenitor cell ("CLP") to a "PreB" cell, and finally to a mature "B" cell.
+```{r, collapse=TRUE}
+trajectory <- c("Progenitor", "CLP", "PreB", "B")
+trajectory
+```
+
+```{r, collapse=TRUE}
+projHeme5 <- addTrajectory(
+    ArchRProj = projHeme5, 
+    name = "LymphoidU", 
+    groupBy = "Clusters2",
+    trajectory = trajectory, 
+    embedding = "UMAP", 
+    force = TRUE
+)
+```
+
+```{r, collapse=TRUE}
+head(projHeme5$LymphoidU[!is.na(projHeme5$LymphoidU)])
+```
+
+
+```{r, collapse=TRUE}
+p <- plotTrajectory(projHeme5, trajectory = "LymphoidU", colorBy = "cellColData", name = "LymphoidU")
+p[[1]]
+```
+
+```{r, collapse=TRUE}
+p1 <- plotTrajectory(projHeme5, trajectory = "LymphoidU", colorBy = "GeneScoreMatrix", name = "PAX5", continuousSet = "horizonExtra")
+p2 <- plotTrajectory(projHeme5, trajectory = "LymphoidU", colorBy = "GeneIntegrationMatrix", name = "PAX5", continuousSet = "blueYellow")
+ggAlignPlots(p1[[1]], p2[[1]], type = "h")
+```
+
+```{r, collapse=TRUE}
+ggAlignPlots(p1[[2]], p2[[2]], type = "h")
+```
+
+### Pseudo-time heatmaps
+
+```{r, collapse=TRUE}
+trajMM  <- getTrajectory(ArchRProj = projHeme5, name = "LymphoidU", useMatrix = "MotifMatrix", log2Norm = FALSE)
+p1 <- plotTrajectoryHeatmap(trajMM, pal = paletteContinuous(set = "solarExtra"))
+p1
+```
+
+```{r, collapse=TRUE}
+trajGSM <- getTrajectory(ArchRProj = projHeme5, name = "LymphoidU", useMatrix = "GeneScoreMatrix", log2Norm = TRUE)
+p2 <- plotTrajectoryHeatmap(trajGSM,  pal = paletteContinuous(set = "horizonExtra"))
+p2
+```
+
+
+```{r, collapse=TRUE}
+trajGIM <- getTrajectory(ArchRProj = projHeme5, name = "LymphoidU", useMatrix = "GeneIntegrationMatrix", log2Norm = FALSE)
+p3 <- plotTrajectoryHeatmap(trajGIM,  pal = paletteContinuous(set = "blueYellow"))
+p3
+```
+ 
+
+```{r, collapse=TRUE}
+trajPM  <- getTrajectory(ArchRProj = projHeme5, name = "LymphoidU", useMatrix = "PeakMatrix", log2Norm = TRUE)
+p4 <- plotTrajectoryHeatmap(trajPM, pal = paletteContinuous(set = "solarExtra"))
+p4
+```
+
+
+To save editable vectorized versions of these plots, we use `plotPDF()`.
+
+```{r, collapse=TRUE}
+plotPDF(p1, p2, p3, p4, name = "Plot-LymphoidU-Traj-Heatmaps.pdf", ArchRProj = projHeme5, addDOC = FALSE, width = 6, height = 8)
+```
+
+
+### Integrative pseudo-time analyses
+
+```{r, collapse=TRUE}
+corGSM_MM <- correlateTrajectories(trajGSM, trajMM)
+corGSM_MM[[1]]$matchname1
+corGSM_MM[[1]]
+```
+
+
+```{r, collapse=TRUE}
+trajGSM2 <- trajGSM[corGSM_MM[[1]]$name1, ]
+trajMM2 <- trajMM[corGSM_MM[[1]]$name2, ]
+
+trajCombined <- trajGSM2
+assay(trajCombined, withDimnames=FALSE) <- t(apply(assay(trajGSM2), 1, scale)) + t(apply(assay(trajMM2), 1, scale))
+
+combinedMat <- plotTrajectoryHeatmap(trajCombined, returnMat = TRUE, varCutOff = 0)
+```
+
+
+```{r, collapse=TRUE}
+rowOrder <- match(rownames(combinedMat), rownames(trajGSM2))
+
+ht1 <- plotTrajectoryHeatmap(trajGSM2,  pal = paletteContinuous(set = "horizonExtra"),  varCutOff = 0, rowOrder = rowOrder)
+ht2 <- plotTrajectoryHeatmap(trajMM2,  pal = paletteContinuous(set = "solarExtra"), varCutOff = 0, rowOrder = rowOrder)
+
+ComplexHeatmap::draw(ht1 + ht2)
+```
+
+
+```{r, collapse=TRUE}
+corGIM_MM <- correlateTrajectories(trajGIM, trajMM)
+corGIM_MM[[1]]$matchname1
+corGIM_MM[[1]]
+```
+
+```{r, collapse=TRUE}
+trajGIM2 <- trajGIM[corGIM_MM[[1]]$name1, ]
+trajMM2 <- trajMM[corGIM_MM[[1]]$name2, ]
+
+trajCombined <- trajGIM2
+assay(trajCombined, withDimnames=FALSE) <- t(apply(assay(trajGIM2), 1, scale)) + t(apply(assay(trajMM2), 1, scale))
+
+combinedMat <- plotTrajectoryHeatmap(trajCombined, returnMat = TRUE, varCutOff = 0)
+```
+ 
+
+```{r, collapse=TRUE}
+rowOrder <- match(rownames(combinedMat), rownames(trajGIM2))
+
+ht1 <- plotTrajectoryHeatmap(trajGIM2,  pal = paletteContinuous(set = "blueYellow"),  varCutOff = 0, rowOrder = rowOrder)
+
+ht2 <- plotTrajectoryHeatmap(trajMM2, pal = paletteContinuous(set = "solarExtra"), varCutOff = 0, rowOrder = rowOrder)
+
+ComplexHeatmap::draw(ht1 + ht2)
+```
+
+
+## Monocle3 Trajectories
+
+ArchR can also handle trajectories derived in [Monocle3](https://cole-trapnell-lab.github.io/monocle3/). This is handled by the `getMonocleTrajectories()` and `addMonocleTrajectory()` functions. Before diving in, it is worth noting that much of the infrastructure that ArchR uses for storing and visualizing trajectories is based on the assumption that the trajectory is linear and the trajectories determined by Monocle3 are not necessarily linear. Because of this, we either have to (i) force Monocle3 to create a linear trajectory by limiting the cell groups that it uses, or (ii) to treat the resulting Monocle3 trajectory as a collection of individual trajectories coming from a single cellular group. We illustrate these two workflows below.
+
+Though this is slightly counter to the typical ArchR workflow, we first run `getMonocleTrajectories()` to retrieve the trajectory from Monocle3. In this function call, `principalGroup` indicates the apex group from which the trajectory will emanate and `useGroups` tells Monocle3 all of the groups that should be mapped on the trajectory.
+
+First, we will create a linear trajectory of the lymphoid lineage. The same workflow would apply for the myeloid lineage but we are just going to create the lymphoid trajectory here to enable downstream comparison of ArchR, Monocle3, and Slingshot trajectories in a subsequent secion of this book.
+
+```{r, collapse=TRUE}
+monocle_lymphoid_solo <- getMonocleTrajectories(
+    ArchRProj = projHeme5, 
+    name = "Monocle_Lymphoid_solo",
+    useGroups = c("Progenitor","CLP","PreB","B"),
+    principalGroup = "Progenitor",
+    groupBy = "Clusters2",
+    embedding = "UMAP",
+    clusterParams = list(k = 50),
+    seed = 1
+)
+```
+
+You'll notice that during the above function call, ArchR tells you that the trajectory results were plotted to a PDF called `Monocole3/Plot-Results-Monocle_Lymphoid_solo.pdf` which you can reference to see the trajectory results.
+
+After we have retrieved this trajectory object from Monocle3 (called a "cell data set" or CDS), we need to add this information to our `ArchRProject` object. To do this, we use `addMonocleTrajectory()` and pass it the output of `getMonocleTrajectories()` to the `monocleCDS` parameter. 
+
+```{r, collapse=TRUE}
+projHeme5 <- addMonocleTrajectory(
+    ArchRProj = projHeme5,
+    name = "Monocle_Lymphoid_solo",
+    useGroups = c("Progenitor","CLP","PreB","B"),
+    groupBy = "Clusters2",
+    monocleCDS = monocle_lymphoid_solo,
+    force = TRUE
+)
+```
+
+Now, we can use `plotTrajectory()` to plot as before. You'll notice that we've set the parameter `addArrow = FALSE` because the fitted lines often look a little off for these non-ArchR trajectories.
+
+```{r, collapse=TRUE}
+p_lymphoid_solo <- plotTrajectory(projHeme5, trajectory = "Monocle_Lymphoid_solo", colorBy = "cellColData", name = "Monocle_Lymphoid_solo", addArrow = FALSE)
+p_lymphoid_solo[[1]]
+```
+
+Alternatively, we could create a single trajectory encompassing both the myeloid and lymphoid branches with a single call to `getMonocleTrajectories()`, providing all of the relevant groups to `useGroups`. For certain applications, this may be a useful implementation so it is worth thinking about the best way to do this for your particular biological question.
+
+First, we create a new `monocleCDS` object using `getMonocleTrajectories()`, but passing the cell groups corresponding to both the lymphoid and myeloid cell types to `useGroups`.
+
+```{r, collapse=TRUE}
+monocle_progenitor <- getMonocleTrajectories(
+    ArchRProj = projHeme5, 
+    name = "Monocle_Progenitor",
+    useGroups = c("Progenitor", "GMP","Mono","CLP","PreB","B"),
+    principalGroup = "Progenitor",
+    groupBy = "Clusters2",
+    embedding = "UMAP",
+    clusterParams = list(k = 50),
+    seed = 1
+)
+```
+
+As mentioned above, the resulting Monocle trajectory contains multiple branches so we need to add each branch individually as its own trajectory. First, we will add the myeloid trajectory, by specifying the myeloid cell groupings to `useGroups`.
+
+```{r, collapse=TRUE}
+projHeme5 <- addMonocleTrajectory(
+    ArchRProj = projHeme5,
+    name = "Monocle_Myeloid",
+    useGroups = c("Progenitor","GMP","Mono"),
+    groupBy = "Clusters2",
+    monocleCDS = monocle_progenitor,
+    force = TRUE
+)
+```
+
+Plotting this trajectory is the same as above.
+
+```{r, collapse=TRUE}
+p_myeloid <- plotTrajectory(projHeme5, trajectory = "Monocle_Myeloid", colorBy = "cellColData", name = "Monocle_Myeloid", addArrow = FALSE)
+p_myeloid[[1]]
+```
+
+Similarly, we can add the lymphoid trajectory.
+
+```{r, collapse=TRUE}
+projHeme5 <- addMonocleTrajectory(
+    ArchRProj = projHeme5,
+    name = "Monocle_Lymphoid",
+    useGroups = c("Progenitor","CLP","PreB","B"),
+    groupBy = "Clusters2",
+    monocleCDS = monocle_progenitor,
+    force = TRUE
+)
+```
+
+And then plot that lymphoid trajectory.
+
+```{r, collapse=TRUE}
+p_lymphoid <- plotTrajectory(projHeme5, trajectory = "Monocle_Lymphoid", colorBy = "cellColData", name = "Monocle_Lymphoid", addArrow = FALSE)
+p_lymphoid[[1]]
+```
+
+If you look closely, you'll notice slight differences between this lymphoid trajectory identified in isolation compared to the lymphoid branch of the larger joint monocle trajectory calculated at the beginning of this section. In particular, the "Progenitor" cells have a different pattern.
+
+## Slingshot Trajectories
+
+The same general workflow also works for trajectories determined by [Slingshot](https://www.bioconductor.org/packages/release/bioc/html/slingshot.html). The only difference is that the workflow for Slingshot is more similar to the workflow for ArchR trajectories. Slingshot only utilizes the `addSlingShotTrajectories()` function and in doing so directly adds this trajectory to `cellColData`.
+
+Given how Slingshot works in ArchR, we will add a separate trajectory for each branch. Since this is primarily for illustrative purposes, we will only calculate the lymphoid trajectory here.
+
+```{r, collapse=TRUE}
+projHeme5 <- addSlingShotTrajectories(
+    ArchRProj = projHeme5,
+    name = "Slingshot_Lymphoid",
+    useGroups = c("Progenitor","CLP","PreB","B"),
+    principalGroup = "Progenitor",
+    groupBy = "Clusters2",
+    embedding = "UMAP",
+    seed = 1,
+    force = TRUE
+)
+```
+
+This trajectory gets stored into `cellColData` in a column called "Slingshot_Lymphoid.Curve1".
+
+Now, we can use `plotTrajectory()` to show the trajectory on our embedding.
+
+```{r, collapse=TRUE}
+p_slingshot <- plotTrajectory(projHeme5, trajectory = "Slingshot_Lymphoid.Curve1", colorBy = "cellColData", name = "Slingshot_Lymphoid.Curve1", addArrow = FALSE)
+p_slingshot[[1]]
+```
+
+## Comparing the different trajectories
+
+All of these trajectories show very similar results. We can quantify the overlap by looking at the correlation of the pseudo-time positions of the cells.
+
+First, we will make a `data.frame` containing the corresponding information
+```{r, collapse=TRUE}
+dL <- data.frame(
+    ArchR = projHeme5$LymphoidU, 
+    SlingShot = projHeme5$Slingshot_Lymphoid.Curve1, 
+    Monocle = projHeme5$Monocle_Lymphoid_solo, 
+    Groups = projHeme5$Clusters2
+)
+```
+
+Then, we can look at the correlation across these different approaches.
+
+```{r, collapse=TRUE}
+corL <- cor(dL[, 1:3], use="complete.obs")
+corL
+```
+
+We can also plot one-to-one correlation plots to show the pairwise comparisons.
+
+```{r, collapse=TRUE}
+lymphoid_cells <- c("Progenitor","CLP","PreB","B")
+dL <- dL[!is.na(rowSums(dL[,1:3])), ,drop=FALSE] #Remove NA rows for cells not in trajectory
+p1 <- ggPoint(dL[,1], dL[,2], paste0(dL[,"Groups"]), pal = paletteDiscrete(projHeme5$Clusters2)[lymphoid_cells], xlabel="ArchR", ylabel="Sling", labelAsFactors=F, labelMeans=F)
+p2 <- ggPoint(dL[,1], dL[,3], paste0(dL[,"Groups"]), pal = paletteDiscrete(projHeme5$Clusters2)[lymphoid_cells], xlabel="ArchR", ylabel="Mon",labelAsFactors=F, labelMeans=F)
+p3 <- ggPoint(dL[,2], dL[,3], paste0(dL[,"Groups"]), pal = paletteDiscrete(projHeme5$Clusters2)[lymphoid_cells], xlabel="Sling", ylabel="Mon",labelAsFactors=F, labelMeans=F)
+ggAlignPlots(p1,p2,p3,type="h")
+```
+
+In most cases, ArchR and Slingshot agree more closely than either does with Monocle3, but this is not altogether surprising given the different methodologies. This, of course, does not mean that one is correct and the others are not but serves to accent that they are slightly different.
+
+```{r, include=FALSE}
+filename <- paste0("./chapter_images/chapter",current_chapter,".RData")
+remove(current_chapter)
+remove(previous_chapter)
+save.image(file =  filename)
+```

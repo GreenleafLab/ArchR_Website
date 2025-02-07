@@ -1,0 +1,155 @@
+---
+output:
+  html_document:
+    theme: yeti  # many options for theme, this one is my favorite.
+params:
+  threads: 20
+  rdata: ""
+  token: ""
+  ref: ""
+  out: ""
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, include=FALSE}
+#make sure that the "chapter_images" folder already exists
+dir.create(path = "./chapter_images", showWarnings = FALSE)
+dir.create(path = "./images/bookdown", showWarnings = FALSE)
+#no data to load from chapter 1 in this case
+current_chapter = 2
+previous_chapter = current_chapter-1
+```
+
+# Manage ArchR's Dependencies
+
+We recommend installing ArchR using [renv](https://rstudio.github.io/renv/index.html), a tool for dependency management that will make it easier for you to get going with analysis without having to worry about package installation and versions issues. For each stable release of ArchR, we provide an `renv` environment that specifies exactly which versions of each ArchR dependency have been tested to work with the ArchR codebase. We find this solution to be quite flexible and this is the only approved way to interact with ArchR. If you run into an issue and you are not using the approved `renv` environment, we will not be able to help you troubleshoot. Please take the time to familiarize yourself with how `renv` works by reading this chapter.
+
+## Using renv to manage dependencies
+
+Before you are ready to use `renv`, you must ensure that you are working on the same R version that we used for the provided `renv` environment. The R version used for the current master branch is:
+
+```{r, collapse=TRUE}
+as.character(R.version["version.string"])
+```
+
+The basis of an `renv` environment is called a lock file. With this file, you will be able to quickly establish an environment that mimics the precise package versions that we know work with ArchR. The `renv` environment does **not** control for other aspects of your environment. If you are used to working with virtual environments in Python, it is important to note that `renv` environments are **not** the same. For `renv`, an environment is meant to be specific to a single project or dataset. Each project that you are working on is meant to be stored in its own directory and each of those directories/projects would have its own `renv` environment that you load specifically when working on that project. One of the best parts of `renv` is that it effectively creates a cache of many different versions of the various packages you have used, making it very easy to switch between different projects very easily without having to constantly install new packages.
+
+First, lets make sure that the `renv` package is installed and loaded.
+
+
+<!-- #Note that none of the code in this chapter can be actually run/evaluated because it requires changing directories and loading the renv which is impossible from within bookdown/knitr -->
+```{r, eval=FALSE}
+install.packages("renv")
+library(renv)
+```
+
+Then, lets create a directory for the start of this tutorial and set it as our working directory.
+
+```{r, eval=FALSE}
+dir.create(path = "./ArchRTutorial", showWarnings = FALSE)
+setwd("./ArchRTutorial")
+```
+
+Then, lets download the lock file for the current `master` branch of ArchR.
+
+```{r, eval=FALSE}
+download.file(url = "https://pub-9ae435458ecc412abbbc9420a502ec38.r2.dev/renv.lock", destfile = "./renv.lock")
+```
+
+Now, we can initiate our `renv` project environment. If you've never installed ArchR before, this should take care of installing all of the dependencies. Because of that, it may take quite some time to complete so go get a coffee if thats the case. When you run the below `renv::init()` command, it will ask you how you want to load the project and you should select the option that says to initialize the environment from the provided lock file.
+
+```{r, eval=FALSE}
+#output of this has been hidden for display purposes
+renv::init()
+```
+
+After running `renv::init()`, you'll notice that `renv` created some new files in your working directory. These files correspond to the particular environment that has just been set up. As mentioned before, `renv` environments are **project specific** and the `renv` environment here is only meant to be used for the analysis that will be done within this `./ArchRTutorial` directory. You'll notice that within the subdirectories is essentially an entire R library but this is established through symbolic linking to your central R library (or to an `renv` cache if you've set that up).
+
+If all went well, ArchR and all of its dependencies should be availble to you and you can go ahead and load ArchR.
+
+```{r, collapse=TRUE}
+library(ArchR)
+```
+
+### Managing your renv environment
+
+Full documentation on `renv` can be found [here](https://rstudio.github.io/renv/articles/renv.html) and we encourage you to read the `renv` documentation for more advanced usage. Below, we outline a few things that will make working with `renv` easier for you.
+
+#### Installing new packages or upgrading existing packages
+
+While we, of course, want you to use the approved `renv` environment, you may find that this environment lacks certain packages or there is an updated version of a package that you would like to use. For example, if there are new ArchR features or bug fixes that have been incorporated into the `dev` (development) branch on GitHub but have not been incorporated into a stable release, you might want to upgrade your ArchR installation within your `renv` environment.
+
+To do this, we would specify the `dev` branch as the desired `ref` in `devtools::install_github()`. Importantly, any time you install a new package, R will give you the option of upgrading existing packages that have newer versions. While using `renv`, you should always select "none" (option 3) to avoid unintentionally altering packages that are part of the expected `renv` environment. The whole point of the `renv` environment is to keep ArchR's dependencies as stable as possible so you should upgrade with caution.
+
+Before upgrading, check the currently installed ArchR version.
+
+```{r, collapse=TRUE}
+packageVersion("ArchR")
+```
+
+Then run `devtools::install_github()`. Note that this command and those that follow in this section are not meant to be run in the context of the tutorial. They are only here for reference. The tutorial is run using the `master` branch, not the `dev` branch.
+
+```{r, eval=FALSE}
+devtools::install_github("GreenleafLab/ArchR", ref="dev", repos = BiocManager::repositories(), upgrade = "never")
+```
+
+After installing, we need to make sure to detach the old version of ArchR and reload the newly installed version.
+
+```{r, eval=FALSE}
+detach("package:ArchR", unload=TRUE)
+library(ArchR)
+```
+
+After we do this, we could use the `packageVersion()` command above to see that the version of ArchR has changed. This updated package version is stored within your `renv` environment. If you were to use `renv::deactivate()` to deactivate your current `renv` environment, work on a different project, and then come back to this `renv` environment using `renv::activate()`, `renv` would remember the version of ArchR you were using when you last worked on this project. It will do this for any packages you install.
+
+One note of caution with switching between `renv` environments when using RStudio - because of how `renv` environments are set up, they also remember which files you had open and any unsaved changes. However, if you are not careful and you tell RStudio not to save your environment during the `renv::deactivate()` process, you could lose unsaved information.
+
+
+## Other environment managers
+
+We strongly encourage the use of `renv` as it allows you to precisely manage package versions. Package dependency issues are always cropping up and we can only guarantee that ArchR works given the precise R version and `renv` environment provided with each release. Though we do not provide support for this, some users prefer to use `Conda` and you can find an example ArchR user-generated recipe [here](https://github.com/GreenleafLab/ArchR/discussions/1553#discussioncomment-3702383).
+
+```{r, include=FALSE}
+filename <- paste0("./chapter_images/chapter",current_chapter,".RData")
+remove(current_chapter)
+remove(previous_chapter)
+save.image(file =  filename)
+```
+
+
+## Using Docker for pre-compiled environment setup
+
+Some users may choose to use pre-compiled containers to run ArchR instead.  Containers allow for the creation of pre-compiled environments
+that already have all of the necessary dependencies pre-installed.  This is a great option for users who may not have the time or resources to set up their own environment.
+
+
+We also provide Docker images, built off of `rocker/rstudio`, that already have ArchR and all dependencies pre-loaded.
+
+The latest version can be found at:
+```
+greenleaflab/archr:latest
+```
+and other versions, including images built with differing R versions, can be found at:
+```
+https://hub.docker.com/r/greenleaflab/archr/tags
+```
+
+To utilize these images, the user can first install Docker as mentioned in their [documentation](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)
+
+Following, create a container using the following command:
+```
+docker image pull immanuelazn/archr:latest
+docker run -it --rm -v <your_workspace>:/workspace -p <your_port_of_interest>:8787
+```
+This will spin up a container that has Rstudio turned on by default. Rstudio can be accessed through:
+
+```
+localhost:<your_port_of_interest>
+```
+If you would like an interactive bash console instead, the following command can instead be called:
+
+```
+docker run -it --rm -v <your_workspace>:/workspace -p <your_port_of_interest>:8787 bash
+```

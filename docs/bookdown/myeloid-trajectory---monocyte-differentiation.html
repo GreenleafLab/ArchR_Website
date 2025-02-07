@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>18.1 Myeloid Trajectory - Monocyte Differentiation | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
+  <meta name="description" content="A guide to ArchR" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="18.1 Myeloid Trajectory - Monocyte Differentiation | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="A guide to ArchR" />
+  <meta name="github-repo" content="GreenleafLab/ArchR" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="18.1 Myeloid Trajectory - Monocyte Differentiation | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
+  
+  <meta name="twitter:description" content="A guide to ArchR" />
+  
+
+<meta name="author" content="Jeffrey Granja and Ryan Corces" />
+
+
+<meta name="date" content="2025-02-06" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+<link rel="prev" href="trajectory-analysis-with-archr.html"/>
+<link rel="next" href="lymphoid-trajectory---b-cell-differentiation.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="../index.html">Back to ArchR Home</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><img src="images/ArchR_Logo_Integrated.png" alt="" width="200"></a></li>
+<li class="chapter" data-level="1" data-path="debugging-and-troubleshooting-in-archr.html"><a href="debugging-and-troubleshooting-in-archr.html"><i class="fa fa-check"></i><b>1</b> Debugging and Troubleshooting in ArchR</a></li>
+<li class="chapter" data-level="2" data-path="manage-archrs-dependencies.html"><a href="manage-archrs-dependencies.html"><i class="fa fa-check"></i><b>2</b> Manage ArchR’s Dependencies</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
+<li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+<li class="chapter" data-level="2.3" data-path="using-docker-for-pre-compiled-environment-setup.html"><a href="using-docker-for-pre-compiled-environment-setup.html"><i class="fa fa-check"></i><b>2.3</b> Using Docker for pre-compiled environment setup</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="a-brief-primer-on-atac-seq-terminology.html"><a href="a-brief-primer-on-atac-seq-terminology.html"><i class="fa fa-check"></i><b>3.1</b> A Brief Primer on ATAC-seq Terminology</a></li>
+<li class="chapter" data-level="3.2" data-path="why-use-archr.html"><a href="why-use-archr.html"><i class="fa fa-check"></i><b>3.2</b> Why use ArchR?</a></li>
+<li class="chapter" data-level="3.3" data-path="what-is-an-arrow-file-archrproject.html"><a href="what-is-an-arrow-file-archrproject.html"><i class="fa fa-check"></i><b>3.3</b> What is an Arrow file / <code>ArchRProject</code>?</a></li>
+<li class="chapter" data-level="3.4" data-path="input-file-types-in-archr.html"><a href="input-file-types-in-archr.html"><i class="fa fa-check"></i><b>3.4</b> Input File Types in ArchR</a></li>
+<li class="chapter" data-level="3.5" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>3.5</b> Getting Set Up</a></li>
+<li class="chapter" data-level="3.6" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>3.6</b> Creating Arrow Files</a></li>
+<li class="chapter" data-level="3.7" data-path="per-cell-quality-control.html"><a href="per-cell-quality-control.html"><i class="fa fa-check"></i><b>3.7</b> Per-cell Quality Control</a></li>
+<li class="chapter" data-level="3.8" data-path="using-bam-files-for-arrow-file-creation.html"><a href="using-bam-files-for-arrow-file-creation.html"><i class="fa fa-check"></i><b>3.8</b> Using BAM files for Arrow File creation</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="doublet-inference-with-archr.html"><a href="doublet-inference-with-archr.html"><i class="fa fa-check"></i><b>4</b> Doublet Inference with ArchR</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="how-does-doublet-identification-work-in-archr.html"><a href="how-does-doublet-identification-work-in-archr.html"><i class="fa fa-check"></i><b>4.1</b> How does doublet identification work in ArchR?</a></li>
+<li class="chapter" data-level="4.2" data-path="inferring-scatac-seq-doublets-with-archr.html"><a href="inferring-scatac-seq-doublets-with-archr.html"><i class="fa fa-check"></i><b>4.2</b> Inferring scATAC-seq Doublets with ArchR</a></li>
+<li class="chapter" data-level="4.3" data-path="using-demuxlet-with-archr.html"><a href="using-demuxlet-with-archr.html"><i class="fa fa-check"></i><b>4.3</b> Using <em>demuxlet</em> with ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="creating-an-archrproject.html"><a href="creating-an-archrproject.html"><i class="fa fa-check"></i><b>5</b> Creating an ArchRProject</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="creating-an-archrproject-1.html"><a href="creating-an-archrproject-1.html"><i class="fa fa-check"></i><b>5.1</b> Creating An ArchRProject</a></li>
+<li class="chapter" data-level="5.2" data-path="manipulating-an-archrproject.html"><a href="manipulating-an-archrproject.html"><i class="fa fa-check"></i><b>5.2</b> Manipulating An ArchRProject</a></li>
+<li class="chapter" data-level="5.3" data-path="plotting-sample-statistics-from-an-archrproject.html"><a href="plotting-sample-statistics-from-an-archrproject.html"><i class="fa fa-check"></i><b>5.3</b> Plotting Sample Statistics from an ArchRProject</a></li>
+<li class="chapter" data-level="5.4" data-path="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles..html"><a href="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles..html"><i class="fa fa-check"></i><b>5.4</b> Plotting Sample Fragment Size Distribution and TSS Enrichment Profiles.</a></li>
+<li class="chapter" data-level="5.5" data-path="saving-and-loading-an-archrproject.html"><a href="saving-and-loading-an-archrproject.html"><i class="fa fa-check"></i><b>5.5</b> Saving and Loading an <code>ArchRProject</code></a></li>
+<li class="chapter" data-level="5.6" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>5.6</b> Filtering Doublets from an ArchRProject</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="dimensionality-reduction-with-archr.html"><a href="dimensionality-reduction-with-archr.html"><i class="fa fa-check"></i><b>6</b> Dimensionality Reduction with ArchR</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>6.1</b> ArchR’s LSI Implementation</a></li>
+<li class="chapter" data-level="6.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>6.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
+<li class="chapter" data-level="6.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>6.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="6.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>6.4</b> Batch Effect Correction wtih Harmony</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>7</b> Clustering with ArchR</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>7.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="7.2" data-path="clustering-using-scran.html"><a href="clustering-using-scran.html"><i class="fa fa-check"></i><b>7.2</b> Clustering using <code>scran</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>8</b> Single-cell Embeddings</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>8.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
+<li class="chapter" data-level="8.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>8.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
+<li class="chapter" data-level="8.3" data-path="dimensionality-reduction-after-harmony.html"><a href="dimensionality-reduction-after-harmony.html"><i class="fa fa-check"></i><b>8.3</b> Dimensionality Reduction After Harmony</a></li>
+<li class="chapter" data-level="8.4" data-path="highlighting-specific-cells-on-an-embedding.html"><a href="highlighting-specific-cells-on-an-embedding.html"><i class="fa fa-check"></i><b>8.4</b> Highlighting specific cells on an embedding</a></li>
+<li class="chapter" data-level="8.5" data-path="importing-an-embedding-from-external-software.html"><a href="importing-an-embedding-from-external-software.html"><i class="fa fa-check"></i><b>8.5</b> Importing an embedding from external software</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="gene-scores-and-marker-genes-with-archr.html"><a href="gene-scores-and-marker-genes-with-archr.html"><i class="fa fa-check"></i><b>9</b> Gene Scores and Marker Genes with ArchR</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="calculating-gene-scores-in-archr.html"><a href="calculating-gene-scores-in-archr.html"><i class="fa fa-check"></i><b>9.1</b> Calculating Gene Scores in ArchR</a></li>
+<li class="chapter" data-level="9.2" data-path="identification-of-marker-features.html"><a href="identification-of-marker-features.html"><i class="fa fa-check"></i><b>9.2</b> Identification of Marker Features</a></li>
+<li class="chapter" data-level="9.3" data-path="identifying-marker-genes.html"><a href="identifying-marker-genes.html"><i class="fa fa-check"></i><b>9.3</b> Identifying Marker Genes</a></li>
+<li class="chapter" data-level="9.4" data-path="visualizing-marker-genes-on-an-embedding.html"><a href="visualizing-marker-genes-on-an-embedding.html"><i class="fa fa-check"></i><b>9.4</b> Visualizing Marker Genes on an Embedding</a></li>
+<li class="chapter" data-level="9.5" data-path="marker-genes-imputation-with-magic.html"><a href="marker-genes-imputation-with-magic.html"><i class="fa fa-check"></i><b>9.5</b> Marker Genes Imputation with MAGIC</a></li>
+<li class="chapter" data-level="9.6" data-path="module-scores.html"><a href="module-scores.html"><i class="fa fa-check"></i><b>9.6</b> Module Scores</a></li>
+<li class="chapter" data-level="9.7" data-path="track-plotting-with-archrbrowser.html"><a href="track-plotting-with-archrbrowser.html"><i class="fa fa-check"></i><b>9.7</b> Track Plotting with ArchRBrowser</a></li>
+<li class="chapter" data-level="9.8" data-path="launching-the-interactive-archrbrowser.html"><a href="launching-the-interactive-archrbrowser.html"><i class="fa fa-check"></i><b>9.8</b> Launching the Interactive ArchRBrowser</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="defining-cluster-identity-with-scrna-seq.html"><a href="defining-cluster-identity-with-scrna-seq.html"><i class="fa fa-check"></i><b>10</b> Defining Cluster Identity with scRNA-seq</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><i class="fa fa-check"></i><b>10.1</b> Cross-platform linkage of scATAC-seq cells with scRNA-seq cells</a></li>
+<li class="chapter" data-level="10.2" data-path="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><i class="fa fa-check"></i><b>10.2</b> Adding Pseudo-scRNA-seq profiles for each scATAC-seq cell</a></li>
+<li class="chapter" data-level="10.3" data-path="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><a href="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><i class="fa fa-check"></i><b>10.3</b> Labeling scATAC-seq clusters with scRNA-seq information</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="pseudo-bulk-replicates-in-archr.html"><a href="pseudo-bulk-replicates-in-archr.html"><i class="fa fa-check"></i><b>11</b> Pseudo-bulk Replicates in ArchR</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="how-does-archr-make-pseudo-bulk-replicates.html"><a href="how-does-archr-make-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>11.1</b> How Does ArchR Make Pseudo-bulk Replicates?</a></li>
+<li class="chapter" data-level="11.2" data-path="making-pseudo-bulk-replicates.html"><a href="making-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>11.2</b> Making Pseudo-bulk Replicates</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="calling-peaks-with-archr.html"><a href="calling-peaks-with-archr.html"><i class="fa fa-check"></i><b>12</b> Calling Peaks with ArchR</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="the-iterative-overlap-peak-merging-procedure.html"><a href="the-iterative-overlap-peak-merging-procedure.html"><i class="fa fa-check"></i><b>12.1</b> The Iterative Overlap Peak Merging Procedure</a></li>
+<li class="chapter" data-level="12.2" data-path="calling-peaks-w-macs2.html"><a href="calling-peaks-w-macs2.html"><i class="fa fa-check"></i><b>12.2</b> Calling Peaks w/ Macs2</a></li>
+<li class="chapter" data-level="12.3" data-path="calling-peaks-w-tilematrix.html"><a href="calling-peaks-w-tilematrix.html"><i class="fa fa-check"></i><b>12.3</b> Calling Peaks w/ TileMatrix</a></li>
+<li class="chapter" data-level="12.4" data-path="adding-a-peak-matrix.html"><a href="adding-a-peak-matrix.html"><i class="fa fa-check"></i><b>12.4</b> Adding a Peak Matrix</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="identifying-marker-peaks.html"><a href="identifying-marker-peaks.html"><i class="fa fa-check"></i><b>13</b> Identifying Marker Peaks</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="identifying-marker-peaks-with-archr.html"><a href="identifying-marker-peaks-with-archr.html"><i class="fa fa-check"></i><b>13.1</b> Identifying Marker Peaks with ArchR</a></li>
+<li class="chapter" data-level="13.2" data-path="plotting-marker-peaks-in-archr.html"><a href="plotting-marker-peaks-in-archr.html"><i class="fa fa-check"></i><b>13.2</b> Plotting Marker Peaks in ArchR</a></li>
+<li class="chapter" data-level="13.3" data-path="pairwise-testing-between-groups.html"><a href="pairwise-testing-between-groups.html"><i class="fa fa-check"></i><b>13.3</b> Pairwise Testing Between Groups</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="motif-and-feature-enrichment-with-archr.html"><a href="motif-and-feature-enrichment-with-archr.html"><i class="fa fa-check"></i><b>14</b> Motif and Feature Enrichment with ArchR</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="motif-enrichment.html"><a href="motif-enrichment.html"><i class="fa fa-check"></i><b>14.1</b> Motif Enrichment</a></li>
+<li class="chapter" data-level="14.2" data-path="archr-enrichment.html"><a href="archr-enrichment.html"><i class="fa fa-check"></i><b>14.2</b> ArchR Enrichment</a></li>
+<li class="chapter" data-level="14.3" data-path="custom-enrichment.html"><a href="custom-enrichment.html"><i class="fa fa-check"></i><b>14.3</b> Custom Enrichment</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="chromvar-deviatons-enrichment-with-archr.html"><a href="chromvar-deviatons-enrichment-with-archr.html"><i class="fa fa-check"></i><b>15</b> ChromVAR Deviatons Enrichment with ArchR</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="motif-deviations.html"><a href="motif-deviations.html"><i class="fa fa-check"></i><b>15.1</b> Motif Deviations</a></li>
+<li class="chapter" data-level="15.2" data-path="archr-and-custom-deviations.html"><a href="archr-and-custom-deviations.html"><i class="fa fa-check"></i><b>15.2</b> ArchR and Custom Deviations</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="footprinting-with-archr.html"><a href="footprinting-with-archr.html"><i class="fa fa-check"></i><b>16</b> Footprinting with ArchR</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="motif-footprinting.html"><a href="motif-footprinting.html"><i class="fa fa-check"></i><b>16.1</b> Motif Footprinting</a></li>
+<li class="chapter" data-level="16.2" data-path="normalization-of-footprints-for-tn5-bias.html"><a href="normalization-of-footprints-for-tn5-bias.html"><i class="fa fa-check"></i><b>16.2</b> Normalization of Footprints for Tn5 Bias</a></li>
+<li class="chapter" data-level="16.3" data-path="feature-footprinting.html"><a href="feature-footprinting.html"><i class="fa fa-check"></i><b>16.3</b> Feature Footprinting</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>17</b> Integrative Analysis with ArchR</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="creating-low-overlapping-aggregates-of-cells.html"><a href="creating-low-overlapping-aggregates-of-cells.html"><i class="fa fa-check"></i><b>17.1</b> Creating Low-Overlapping Aggregates of Cells</a></li>
+<li class="chapter" data-level="17.2" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>17.2</b> Co-accessibility with ArchR</a></li>
+<li class="chapter" data-level="17.3" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>17.3</b> Peak2GeneLinkage with ArchR</a></li>
+<li class="chapter" data-level="17.4" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>17.4</b> Identification of Positive TF-Regulators</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-differentiation.html"><a href="lymphoid-trajectory---b-cell-differentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Differentiation</a></li>
+<li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
+<li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
+<li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="handling-archr-output.html"><a href="handling-archr-output.html"><i class="fa fa-check"></i><b>19</b> Handling ArchR Output</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="exporting-fragment-level-data.html"><a href="exporting-fragment-level-data.html"><i class="fa fa-check"></i><b>19.1</b> Exporting fragment-level data</a></li>
+<li class="chapter" data-level="19.2" data-path="exporting-matrix-level-data.html"><a href="exporting-matrix-level-data.html"><i class="fa fa-check"></i><b>19.2</b> Exporting matrix-level data</a></li>
+<li class="chapter" data-level="19.3" data-path="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html"><i class="fa fa-check"></i><b>19.3</b> Exporting pseudo-bulked data to a <code>SummarizedExperiment</code></a></li>
+<li class="chapter" data-level="19.4" data-path="exporting-pseudo-bulked-data-to-a-bigwig-file.html"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html"><i class="fa fa-check"></i><b>19.4</b> Exporting pseudo-bulked data to a bigWig file</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="integration-with-bulk-atac-seq.html"><a href="integration-with-bulk-atac-seq.html"><i class="fa fa-check"></i><b>20</b> Integration with bulk ATAC-seq</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="projecting-bulk-atac-seq-data.html"><a href="projecting-bulk-atac-seq-data.html"><i class="fa fa-check"></i><b>20.1</b> Projecting bulk ATAC-seq data</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="multiomic-data-analysis-in-archr.html"><a href="multiomic-data-analysis-in-archr.html"><i class="fa fa-check"></i><b>21</b> Multiomic data analysis in ArchR</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="importing-data-and-setting-up-a-multiome-project.html"><a href="importing-data-and-setting-up-a-multiome-project.html"><i class="fa fa-check"></i><b>21.1</b> Importing data and setting up a Multiome project</a></li>
+<li class="chapter" data-level="21.2" data-path="analysis-of-multiome-data-in-archr.html"><a href="analysis-of-multiome-data-in-archr.html"><i class="fa fa-check"></i><b>21.2</b> Analysis of multiome data in ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="plot-aesthetics-in-archr.html"><a href="plot-aesthetics-in-archr.html"><i class="fa fa-check"></i><b>22</b> Plot aesthetics in ArchR</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="using-and-manipulating-palettes-in-archr.html"><a href="using-and-manipulating-palettes-in-archr.html"><i class="fa fa-check"></i><b>22.1</b> Using and manipulating palettes in ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="testing-your-archr-installation.html"><a href="testing-your-archr-installation.html"><i class="fa fa-check"></i><b>23</b> Testing Your ArchR Installation</a></li>
+<li class="chapter" data-level="24" data-path="session-information.html"><a href="session-information.html"><i class="fa fa-check"></i><b>24</b> Session Information</a></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="_blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="myeloid-trajectory---monocyte-differentiation" class="section level2 hasAnchor" number="18.1">
+<h2><span class="header-section-number">18.1</span> Myeloid Trajectory - Monocyte Differentiation<a href="myeloid-trajectory---monocyte-differentiation.html#myeloid-trajectory---monocyte-differentiation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In this section, we will create a cellular trajectory that approximates the differentiation of HSCs into fully differentiated monocytes. To start, lets review the clusters and cell types that we defined previously, stored in <code>cellColData</code> in columns named “Clusters” and “Clusters2”. Overlaying these cell groupings on our UMAP embedding shows the different cell types that we are interested in.</p>
+<div class="sourceCode" id="cb372"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb372-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb372-1" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">plotEmbedding</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Clusters&quot;</span>, <span class="at">embedding =</span> <span class="st">&quot;UMAP&quot;</span>)</span>
+<span id="cb372-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb372-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-984ab0ef-Date-2025-02-06_Time-02-54-41.875871.log</span></span>
+<span id="cb372-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb372-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb372-4"><a href="myeloid-trajectory---monocyte-differentiation.html#cb372-4" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
+<span id="cb372-5"><a href="myeloid-trajectory---monocyte-differentiation.html#cb372-5" tabindex="-1"></a><span class="do">## ColorBy = cellColData</span></span>
+<span id="cb372-6"><a href="myeloid-trajectory---monocyte-differentiation.html#cb372-6" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
+<span id="cb372-7"><a href="myeloid-trajectory---monocyte-differentiation.html#cb372-7" tabindex="-1"></a><span class="do">## 1 </span></span>
+<span id="cb372-8"><a href="myeloid-trajectory---monocyte-differentiation.html#cb372-8" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-984ab0ef-Date-2025-02-06_Time-02-54-41.875871.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb373"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb373-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb373-1" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">plotEmbedding</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Clusters2&quot;</span>, <span class="at">embedding =</span> <span class="st">&quot;UMAP&quot;</span>)</span>
+<span id="cb373-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb373-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-921c166a-Date-2025-02-06_Time-02-54-43.685416.log</span></span>
+<span id="cb373-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb373-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb373-4"><a href="myeloid-trajectory---monocyte-differentiation.html#cb373-4" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
+<span id="cb373-5"><a href="myeloid-trajectory---monocyte-differentiation.html#cb373-5" tabindex="-1"></a><span class="do">## ColorBy = cellColData</span></span>
+<span id="cb373-6"><a href="myeloid-trajectory---monocyte-differentiation.html#cb373-6" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
+<span id="cb373-7"><a href="myeloid-trajectory---monocyte-differentiation.html#cb373-7" tabindex="-1"></a><span class="do">## 1 </span></span>
+<span id="cb373-8"><a href="myeloid-trajectory---monocyte-differentiation.html#cb373-8" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-921c166a-Date-2025-02-06_Time-02-54-43.685416.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb374"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb374-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb374-1" tabindex="-1"></a><span class="fu">ggAlignPlots</span>(p1, p2, <span class="at">type =</span> <span class="st">&quot;h&quot;</span>)</span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-366-1.svg" width="672" /></p>
+<div id="pseudo-time-umaps-and-individual-feature-plots" class="section level3 hasAnchor" number="18.1.1">
+<h3><span class="header-section-number">18.1.1</span> Pseudo-time UMAPs and individual feature plots<a href="myeloid-trajectory---monocyte-differentiation.html#pseudo-time-umaps-and-individual-feature-plots" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We will use the cell type definitions that are stored in “Clusters2”. As mentioned above, we are creating a trajectory from stem cells (“Progenitor”), through the committed myeloid progenitor (“GMP”), to monocytes (“Mono”). The first step in creating a trajectory is to create a trajectory backbone in the form of an ordered vector of cell group labels.</p>
+<div class="sourceCode" id="cb375"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb375-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb375-1" tabindex="-1"></a>trajectory <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Progenitor&quot;</span>, <span class="st">&quot;GMP&quot;</span>, <span class="st">&quot;Mono&quot;</span>)</span>
+<span id="cb375-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb375-2" tabindex="-1"></a>trajectory</span>
+<span id="cb375-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb375-3" tabindex="-1"></a><span class="do">## [1] &quot;Progenitor&quot; &quot;GMP&quot;        &quot;Mono&quot;</span></span></code></pre></div>
+<p>We use the <code>addTrajectory()</code> function to create a trajectory and we add this to our <code>ArchRProject</code>. We will call this trajectory “MyeloidU”. What this does is it creates a new column in <code>cellColData</code> called “MyeloidU” that stores the pseudo-time value for each cell in the trajectory. Cells that are not part of the trajectory are labeled with <code>NA</code>.</p>
+<div class="sourceCode" id="cb376"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb376-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb376-1" tabindex="-1"></a>projHeme5 <span class="ot">&lt;-</span> <span class="fu">addTrajectory</span>(</span>
+<span id="cb376-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb376-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5, </span>
+<span id="cb376-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb376-3" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;MyeloidU&quot;</span>, </span>
+<span id="cb376-4"><a href="myeloid-trajectory---monocyte-differentiation.html#cb376-4" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
+<span id="cb376-5"><a href="myeloid-trajectory---monocyte-differentiation.html#cb376-5" tabindex="-1"></a>    <span class="at">trajectory =</span> trajectory, </span>
+<span id="cb376-6"><a href="myeloid-trajectory---monocyte-differentiation.html#cb376-6" tabindex="-1"></a>    <span class="at">embedding =</span> <span class="st">&quot;UMAP&quot;</span>, </span>
+<span id="cb376-7"><a href="myeloid-trajectory---monocyte-differentiation.html#cb376-7" tabindex="-1"></a>    <span class="at">force =</span> <span class="cn">TRUE</span></span>
+<span id="cb376-8"><a href="myeloid-trajectory---monocyte-differentiation.html#cb376-8" tabindex="-1"></a>)</span>
+<span id="cb376-9"><a href="myeloid-trajectory---monocyte-differentiation.html#cb376-9" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addTrajectory-94bdae59a-Date-2025-02-06_Time-02-54-47.419022.log</span></span>
+<span id="cb376-10"><a href="myeloid-trajectory---monocyte-differentiation.html#cb376-10" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb376-11"><a href="myeloid-trajectory---monocyte-differentiation.html#cb376-11" tabindex="-1"></a><span class="do">## Filtering outliers</span></span>
+<span id="cb376-12"><a href="myeloid-trajectory---monocyte-differentiation.html#cb376-12" tabindex="-1"></a><span class="do">## Initial Alignment Before Spline Fit</span></span>
+<span id="cb376-13"><a href="myeloid-trajectory---monocyte-differentiation.html#cb376-13" tabindex="-1"></a><span class="do">## Spline Fit</span></span>
+<span id="cb376-14"><a href="myeloid-trajectory---monocyte-differentiation.html#cb376-14" tabindex="-1"></a><span class="do">## KNN to Spline</span></span>
+<span id="cb376-15"><a href="myeloid-trajectory---monocyte-differentiation.html#cb376-15" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-addTrajectory-94bdae59a-Date-2025-02-06_Time-02-54-47.419022.log</span></span></code></pre></div>
+<p>We can look at this information and see that each cell has a unique pseudotime value between 0 and 100. We exclude cells with <code>NA</code> values because these are not part of the trajectory.</p>
+<div class="sourceCode" id="cb377"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb377-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb377-1" tabindex="-1"></a><span class="fu">head</span>(projHeme5<span class="sc">$</span>MyeloidU[<span class="sc">!</span><span class="fu">is.na</span>(projHeme5<span class="sc">$</span>MyeloidU)])</span>
+<span id="cb377-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb377-2" tabindex="-1"></a><span class="do">## [1] 45.78870 50.93468 53.30813 45.51565 45.09557 47.88910</span></span></code></pre></div>
+<p>To plot this trajectory, we use the <code>plotTrajectory()</code> function which overlays the pseudo-time values on our UMAP embedding and displays an arrow approximating the trajectory path from the spline-fit. Cells that are not part of the trajectory are colored gray. In this example, we use <code>colorBy = "cellColData"</code> to tell ArchR to look within <code>cellColData</code> for the column specified by <code>name</code> - in this case, the “MyeloidU” pseudo-time trajectory. While it may seem conterintuitive to list “MyeloidU” for both <code>trajectory</code> and <code>name</code>, this is done because <code>trajectory</code> tells ArchR which subset of cells we are interested in and <code>name</code> tells ArchR how to color that subset of cells.</p>
+<div class="sourceCode" id="cb378"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb378-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb378-1" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plotTrajectory</span>(projHeme5, <span class="at">trajectory =</span> <span class="st">&quot;MyeloidU&quot;</span>, <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="at">name =</span> <span class="st">&quot;MyeloidU&quot;</span>)</span>
+<span id="cb378-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb378-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotTrajectory-92d43611b-Date-2025-02-06_Time-02-54-47.975397.log</span></span>
+<span id="cb378-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb378-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb378-4"><a href="myeloid-trajectory---monocyte-differentiation.html#cb378-4" tabindex="-1"></a><span class="do">## Plotting</span></span>
+<span id="cb378-5"><a href="myeloid-trajectory---monocyte-differentiation.html#cb378-5" tabindex="-1"></a><span class="do">## Plotting Trajectory</span></span>
+<span id="cb378-6"><a href="myeloid-trajectory---monocyte-differentiation.html#cb378-6" tabindex="-1"></a><span class="do">## Adding Inferred Arrow Trajectory to Plot</span></span>
+<span id="cb378-7"><a href="myeloid-trajectory---monocyte-differentiation.html#cb378-7" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectory-92d43611b-Date-2025-02-06_Time-02-54-47.975397.log</span></span>
+<span id="cb378-8"><a href="myeloid-trajectory---monocyte-differentiation.html#cb378-8" tabindex="-1"></a>p[[<span class="dv">1</span>]]</span>
+<span id="cb378-9"><a href="myeloid-trajectory---monocyte-differentiation.html#cb378-9" tabindex="-1"></a><span class="do">## Warning: Removed 5489 rows containing non-finite outside the scale range</span></span>
+<span id="cb378-10"><a href="myeloid-trajectory---monocyte-differentiation.html#cb378-10" tabindex="-1"></a><span class="do">## (`stat_summary_hex()`).</span></span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-370-1.svg" width="672" /></p>
+<p>To save an editable vectorized version of this plot, we use <code>plotPDF()</code>.</p>
+<div class="sourceCode" id="cb379"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb379-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb379-1" tabindex="-1"></a><span class="fu">plotPDF</span>(p, <span class="at">name =</span> <span class="st">&quot;Plot-MyeloidU-Traj-UMAP.pdf&quot;</span>, <span class="at">ArchRProj =</span> projHeme5, <span class="at">addDOC =</span> <span class="cn">FALSE</span>, <span class="at">width =</span> <span class="dv">5</span>, <span class="at">height =</span> <span class="dv">5</span>)</span>
+<span id="cb379-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb379-2" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
+<span id="cb379-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb379-3" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
+<span id="cb379-4"><a href="myeloid-trajectory---monocyte-differentiation.html#cb379-4" tabindex="-1"></a><span class="do">## `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</span></span>
+<span id="cb379-5"><a href="myeloid-trajectory---monocyte-differentiation.html#cb379-5" tabindex="-1"></a><span class="do">## `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</span></span></code></pre></div>
+<p>We can also overlay other features on the trajectory within our UMAP embedding. This allows us to display specific features only within the cells that are relevant to our trajectory.</p>
+<p>If you have not already added impute weights to your <code>projHeme5</code> project, lets do that now.</p>
+<div class="sourceCode" id="cb380"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb380-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb380-1" tabindex="-1"></a>projHeme5 <span class="ot">&lt;-</span> <span class="fu">addImputeWeights</span>(projHeme5)</span>
+<span id="cb380-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb380-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addImputeWeights-934b34ab-Date-2025-02-06_Time-02-54-58.162486.log</span></span>
+<span id="cb380-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb380-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb380-4"><a href="myeloid-trajectory---monocyte-differentiation.html#cb380-4" tabindex="-1"></a><span class="do">## 2025-02-06 02:54:58.563546 : Computing Impute Weights Using Magic (Cell 2018), 0 mins elapsed.</span></span></code></pre></div>
+<p>Then, we can plot the “MyeloidU” trajectory but color the cells by the gene score value of the CEBPB gene, a known regulator of monocyte function that becomes active during the differentiation process. We indicate the matrix to use via the <code>colorBy</code> parameter and the feature to use via the <code>name</code> parameter.</p>
+<div class="sourceCode" id="cb381"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb381-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb381-1" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">plotTrajectory</span>(projHeme5, <span class="at">trajectory =</span> <span class="st">&quot;MyeloidU&quot;</span>, <span class="at">colorBy =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>, <span class="at">name =</span> <span class="st">&quot;CEBPB&quot;</span>, <span class="at">continuousSet =</span> <span class="st">&quot;horizonExtra&quot;</span>)</span>
+<span id="cb381-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb381-2" tabindex="-1"></a><span class="do">## Getting ImputeWeights</span></span>
+<span id="cb381-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb381-3" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotTrajectory-9967556a-Date-2025-02-06_Time-02-55-10.09262.log</span></span>
+<span id="cb381-4"><a href="myeloid-trajectory---monocyte-differentiation.html#cb381-4" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb381-5"><a href="myeloid-trajectory---monocyte-differentiation.html#cb381-5" tabindex="-1"></a><span class="do">## Getting Matrix Values...</span></span>
+<span id="cb381-6"><a href="myeloid-trajectory---monocyte-differentiation.html#cb381-6" tabindex="-1"></a><span class="do">## 2025-02-06 02:55:11.779708 :</span></span>
+<span id="cb381-7"><a href="myeloid-trajectory---monocyte-differentiation.html#cb381-7" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb381-8"><a href="myeloid-trajectory---monocyte-differentiation.html#cb381-8" tabindex="-1"></a><span class="do">## Imputing Matrix</span></span>
+<span id="cb381-9"><a href="myeloid-trajectory---monocyte-differentiation.html#cb381-9" tabindex="-1"></a><span class="do">## Using weights on disk</span></span>
+<span id="cb381-10"><a href="myeloid-trajectory---monocyte-differentiation.html#cb381-10" tabindex="-1"></a><span class="do">## Using weights on disk</span></span>
+<span id="cb381-11"><a href="myeloid-trajectory---monocyte-differentiation.html#cb381-11" tabindex="-1"></a><span class="do">## Plotting</span></span>
+<span id="cb381-12"><a href="myeloid-trajectory---monocyte-differentiation.html#cb381-12" tabindex="-1"></a><span class="do">## Plotting Trajectory</span></span>
+<span id="cb381-13"><a href="myeloid-trajectory---monocyte-differentiation.html#cb381-13" tabindex="-1"></a><span class="do">## Adding Inferred Arrow Trajectory to Plot</span></span>
+<span id="cb381-14"><a href="myeloid-trajectory---monocyte-differentiation.html#cb381-14" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectory-9967556a-Date-2025-02-06_Time-02-55-10.09262.log</span></span></code></pre></div>
+<p>We can repeat this process but color the cells by their linked gene expression via the <code>GeneIntegrationMatrix</code>.</p>
+<div class="sourceCode" id="cb382"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb382-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb382-1" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">plotTrajectory</span>(projHeme5, <span class="at">trajectory =</span> <span class="st">&quot;MyeloidU&quot;</span>, <span class="at">colorBy =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>, <span class="at">name =</span> <span class="st">&quot;CEBPB&quot;</span>, <span class="at">continuousSet =</span> <span class="st">&quot;blueYellow&quot;</span>)</span>
+<span id="cb382-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb382-2" tabindex="-1"></a><span class="do">## Getting ImputeWeights</span></span>
+<span id="cb382-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb382-3" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotTrajectory-9337c3eba-Date-2025-02-06_Time-02-55-20.549369.log</span></span>
+<span id="cb382-4"><a href="myeloid-trajectory---monocyte-differentiation.html#cb382-4" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb382-5"><a href="myeloid-trajectory---monocyte-differentiation.html#cb382-5" tabindex="-1"></a><span class="do">## Getting Matrix Values...</span></span>
+<span id="cb382-6"><a href="myeloid-trajectory---monocyte-differentiation.html#cb382-6" tabindex="-1"></a><span class="do">## 2025-02-06 02:55:22.292649 :</span></span>
+<span id="cb382-7"><a href="myeloid-trajectory---monocyte-differentiation.html#cb382-7" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb382-8"><a href="myeloid-trajectory---monocyte-differentiation.html#cb382-8" tabindex="-1"></a><span class="do">## Imputing Matrix</span></span>
+<span id="cb382-9"><a href="myeloid-trajectory---monocyte-differentiation.html#cb382-9" tabindex="-1"></a><span class="do">## Using weights on disk</span></span>
+<span id="cb382-10"><a href="myeloid-trajectory---monocyte-differentiation.html#cb382-10" tabindex="-1"></a><span class="do">## Using weights on disk</span></span>
+<span id="cb382-11"><a href="myeloid-trajectory---monocyte-differentiation.html#cb382-11" tabindex="-1"></a><span class="do">## Plotting</span></span>
+<span id="cb382-12"><a href="myeloid-trajectory---monocyte-differentiation.html#cb382-12" tabindex="-1"></a><span class="do">## Plotting Trajectory</span></span>
+<span id="cb382-13"><a href="myeloid-trajectory---monocyte-differentiation.html#cb382-13" tabindex="-1"></a><span class="do">## Adding Inferred Arrow Trajectory to Plot</span></span>
+<span id="cb382-14"><a href="myeloid-trajectory---monocyte-differentiation.html#cb382-14" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectory-9337c3eba-Date-2025-02-06_Time-02-55-20.549369.log</span></span></code></pre></div>
+<p>The <code>plotTrajectory()</code> function actually returns a list of relevant plots. The first plot in the list is a UMAP embedding, colorized as specified in the function call.</p>
+<p>Comparing these UMAP plots side-by-side for the gene score and gene expression, we see that the activity of the CEBPB gene is highly specific to monocyte cells in the later part of the pseudo-time trajectory.</p>
+<div class="sourceCode" id="cb383"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb383-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb383-1" tabindex="-1"></a><span class="fu">ggAlignPlots</span>(p1[[<span class="dv">1</span>]], p2[[<span class="dv">1</span>]], <span class="at">type =</span> <span class="st">&quot;h&quot;</span>)</span>
+<span id="cb383-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb383-2" tabindex="-1"></a><span class="do">## Warning: Removed 5489 rows containing non-finite outside the scale range (`stat_summary_hex()`).</span></span>
+<span id="cb383-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb383-3" tabindex="-1"></a><span class="do">## Removed 5489 rows containing non-finite outside the scale range (`stat_summary_hex()`).</span></span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-375-1.svg" width="672" /></p>
+<p>The second plot in the list that is returned by <code>plotTrajectory()</code> is a dot plot of pseudo-time versus the value of the relevant feature, in this case, the gene score or gene expression of CEBPB. In this case, the cells are colored by their pseudo-time.</p>
+<div class="sourceCode" id="cb384"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb384-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb384-1" tabindex="-1"></a><span class="fu">ggAlignPlots</span>(p1[[<span class="dv">2</span>]], p2[[<span class="dv">2</span>]], <span class="at">type =</span> <span class="st">&quot;h&quot;</span>)</span>
+<span id="cb384-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb384-2" tabindex="-1"></a><span class="do">## `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</span></span>
+<span id="cb384-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb384-3" tabindex="-1"></a><span class="do">## `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</span></span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-376-1.svg" width="672" /></p>
+</div>
+<div id="pseudo-time-heatmaps" class="section level3 hasAnchor" number="18.1.2">
+<h3><span class="header-section-number">18.1.2</span> Pseudo-time heatmaps<a href="myeloid-trajectory---monocyte-differentiation.html#pseudo-time-heatmaps" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We can visualize changes in many features across pseudo-time using heatmaps. To do this, we first retrieve the trajectory of interest from the <code>ArchRProject</code> using the <code>getTrajectory()</code> function which returns the trajectory as a <code>SummarizedExperiment</code> object. We will create these pseudo-time heatmaps for motifs, gene scores, gene expression, and peak accessibility by passing the corresponding matrix to the <code>useMatrix</code> parameter. When calling <code>getTrajectory()</code> we can provide as argument to the <code>trajectoryLabel</code> parameter which allows for labeling of the heatmap pseudo-time bins based on the group (eg. stem cell, progenitor cell, differentiated cell). Typically, the value passed to <code>trajectoryLabel</code> should be the same as the column in <code>cellColData</code> used in the <code>groupBy</code> parameter when <code>addTrajectory()</code> was called.</p>
+<div class="sourceCode" id="cb385"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb385-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb385-1" tabindex="-1"></a>trajMM  <span class="ot">&lt;-</span> <span class="fu">getTrajectory</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">name =</span> <span class="st">&quot;MyeloidU&quot;</span>, <span class="at">useMatrix =</span> <span class="st">&quot;MotifMatrix&quot;</span>, <span class="at">log2Norm =</span> <span class="cn">FALSE</span>, <span class="at">trajectoryLabel =</span> <span class="st">&quot;Clusters2&quot;</span>)</span>
+<span id="cb385-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb385-2" tabindex="-1"></a><span class="do">## Creating Trajectory Group Matrix..</span></span>
+<span id="cb385-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb385-3" tabindex="-1"></a><span class="do">## Some values are below 0, this could be a DeviationsMatrix in which scaleTo should be set = NULL.</span></span>
+<span id="cb385-4"><a href="myeloid-trajectory---monocyte-differentiation.html#cb385-4" tabindex="-1"></a><span class="do">## Continuing without depth normalization!</span></span>
+<span id="cb385-5"><a href="myeloid-trajectory---monocyte-differentiation.html#cb385-5" tabindex="-1"></a><span class="do">## Smoothing...</span></span>
+<span id="cb385-6"><a href="myeloid-trajectory---monocyte-differentiation.html#cb385-6" tabindex="-1"></a><span class="do">## Attempting to add labels to the trajectory based on the trajectoryLabel parameter.</span></span>
+<span id="cb385-7"><a href="myeloid-trajectory---monocyte-differentiation.html#cb385-7" tabindex="-1"></a>trajMM</span>
+<span id="cb385-8"><a href="myeloid-trajectory---monocyte-differentiation.html#cb385-8" tabindex="-1"></a><span class="do">## class: SummarizedExperiment </span></span>
+<span id="cb385-9"><a href="myeloid-trajectory---monocyte-differentiation.html#cb385-9" tabindex="-1"></a><span class="do">## dim: 1740 100 </span></span>
+<span id="cb385-10"><a href="myeloid-trajectory---monocyte-differentiation.html#cb385-10" tabindex="-1"></a><span class="do">## metadata(1): Params</span></span>
+<span id="cb385-11"><a href="myeloid-trajectory---monocyte-differentiation.html#cb385-11" tabindex="-1"></a><span class="do">## assays(2): smoothMat mat</span></span>
+<span id="cb385-12"><a href="myeloid-trajectory---monocyte-differentiation.html#cb385-12" tabindex="-1"></a><span class="do">## rownames(1740): deviations:TFAP2B_1 deviations:TFAP2D_2 ... z:TBX18_869</span></span>
+<span id="cb385-13"><a href="myeloid-trajectory---monocyte-differentiation.html#cb385-13" tabindex="-1"></a><span class="do">##   z:TBX22_870</span></span>
+<span id="cb385-14"><a href="myeloid-trajectory---monocyte-differentiation.html#cb385-14" tabindex="-1"></a><span class="do">## rowData names(3): seqnames idx name</span></span>
+<span id="cb385-15"><a href="myeloid-trajectory---monocyte-differentiation.html#cb385-15" tabindex="-1"></a><span class="do">## colnames(100): T.0_1 T.1_2 ... T.98_99 T.99_100</span></span>
+<span id="cb385-16"><a href="myeloid-trajectory---monocyte-differentiation.html#cb385-16" tabindex="-1"></a><span class="do">## colData names(1): label</span></span></code></pre></div>
+<p><code>getTrajectory()</code> returns a <code>Summarized Experiment</code> where the rows are the features of interest and the columns are pseudo-time bins. The size of the pseudo-time bins can be controlled by the <code>groupEvery</code> parameter.</p>
+<p>We then pass this <code>SummarizedExperiment</code> to the <code>plotTrajectoryHeatmap()</code> function. To include a color label across the top of the heatmap that represents the groups of the pseudo-time bins, we additionally use the <code>colorColumns</code> and <code>columnPal</code> arguments.</p>
+<div class="sourceCode" id="cb386"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb386-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb386-1" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">plotTrajectoryHeatmap</span>(trajMM, <span class="at">pal =</span> <span class="fu">paletteContinuous</span>(<span class="at">set =</span> <span class="st">&quot;solarExtra&quot;</span>), <span class="at">colorColumns =</span> <span class="cn">TRUE</span>, <span class="at">columnPal =</span> <span class="fu">paletteDiscrete</span>(<span class="at">values =</span> <span class="fu">unique</span>(<span class="fu">colData</span>(trajMM)<span class="sc">$</span>label)))</span>
+<span id="cb386-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb386-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-9380caa4f-Date-2025-02-06_Time-02-55-50.116091.log</span></span>
+<span id="cb386-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb386-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb386-4"><a href="myeloid-trajectory---monocyte-differentiation.html#cb386-4" tabindex="-1"></a><span class="do">## useSeqnames is NULL or greater than 1 with a Sparse.Assays.Matrix trajectory input.</span></span>
+<span id="cb386-5"><a href="myeloid-trajectory---monocyte-differentiation.html#cb386-5" tabindex="-1"></a><span class="do">## 2025-02-06 02:55:50.519287 :</span></span>
+<span id="cb386-6"><a href="myeloid-trajectory---monocyte-differentiation.html#cb386-6" tabindex="-1"></a><span class="do">## force=FALSE thus continuing with subsetting useSeqnames = z</span></span>
+<span id="cb386-7"><a href="myeloid-trajectory---monocyte-differentiation.html#cb386-7" tabindex="-1"></a><span class="do">## 2025-02-06 02:55:50.524774 :</span></span>
+<span id="cb386-8"><a href="myeloid-trajectory---monocyte-differentiation.html#cb386-8" tabindex="-1"></a><span class="do">## Adding Annotations..</span></span>
+<span id="cb386-9"><a href="myeloid-trajectory---monocyte-differentiation.html#cb386-9" tabindex="-1"></a><span class="do">## Preparing Main Heatmap..</span></span>
+<span id="cb386-10"><a href="myeloid-trajectory---monocyte-differentiation.html#cb386-10" tabindex="-1"></a><span class="do">## &#39;magick&#39; package is suggested to install to give better rasterization.</span></span>
+<span id="cb386-11"><a href="myeloid-trajectory---monocyte-differentiation.html#cb386-11" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb386-12"><a href="myeloid-trajectory---monocyte-differentiation.html#cb386-12" tabindex="-1"></a><span class="do">## Set `ht_opt$message = FALSE` to turn off this message.</span></span>
+<span id="cb386-13"><a href="myeloid-trajectory---monocyte-differentiation.html#cb386-13" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-9380caa4f-Date-2025-02-06_Time-02-55-50.116091.log</span></span>
+<span id="cb386-14"><a href="myeloid-trajectory---monocyte-differentiation.html#cb386-14" tabindex="-1"></a>p1</span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-378-1.svg" width="672" /></p>
+<p>We can perform the same steps to obtain a pseudo-time heatmap of gene scores by setting <code>useMatrix = "GeneScoreMatrix"</code>.</p>
+<div class="sourceCode" id="cb387"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb387-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb387-1" tabindex="-1"></a>trajGSM <span class="ot">&lt;-</span> <span class="fu">getTrajectory</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">name =</span> <span class="st">&quot;MyeloidU&quot;</span>, <span class="at">useMatrix =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>, <span class="at">log2Norm =</span> <span class="cn">TRUE</span>, <span class="at">trajectoryLabel =</span> <span class="st">&quot;Clusters2&quot;</span>)</span>
+<span id="cb387-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb387-2" tabindex="-1"></a><span class="do">## Creating Trajectory Group Matrix..</span></span>
+<span id="cb387-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb387-3" tabindex="-1"></a><span class="do">## Smoothing...</span></span>
+<span id="cb387-4"><a href="myeloid-trajectory---monocyte-differentiation.html#cb387-4" tabindex="-1"></a><span class="do">## Attempting to add labels to the trajectory based on the trajectoryLabel parameter.</span></span>
+<span id="cb387-5"><a href="myeloid-trajectory---monocyte-differentiation.html#cb387-5" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">plotTrajectoryHeatmap</span>(trajGSM,  <span class="at">pal =</span> <span class="fu">paletteContinuous</span>(<span class="at">set =</span> <span class="st">&quot;horizonExtra&quot;</span>), <span class="at">colorColumns =</span> <span class="cn">TRUE</span>, <span class="at">columnPal =</span> <span class="fu">paletteDiscrete</span>(<span class="at">values =</span> <span class="fu">unique</span>(<span class="fu">colData</span>(trajGSM)<span class="sc">$</span>label)))</span>
+<span id="cb387-6"><a href="myeloid-trajectory---monocyte-differentiation.html#cb387-6" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-95eb8075e-Date-2025-02-06_Time-02-56-23.743509.log</span></span>
+<span id="cb387-7"><a href="myeloid-trajectory---monocyte-differentiation.html#cb387-7" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb387-8"><a href="myeloid-trajectory---monocyte-differentiation.html#cb387-8" tabindex="-1"></a><span class="do">## Adding Annotations..</span></span>
+<span id="cb387-9"><a href="myeloid-trajectory---monocyte-differentiation.html#cb387-9" tabindex="-1"></a><span class="do">## Preparing Main Heatmap..</span></span>
+<span id="cb387-10"><a href="myeloid-trajectory---monocyte-differentiation.html#cb387-10" tabindex="-1"></a><span class="do">## &#39;magick&#39; package is suggested to install to give better rasterization.</span></span>
+<span id="cb387-11"><a href="myeloid-trajectory---monocyte-differentiation.html#cb387-11" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb387-12"><a href="myeloid-trajectory---monocyte-differentiation.html#cb387-12" tabindex="-1"></a><span class="do">## Set `ht_opt$message = FALSE` to turn off this message.</span></span>
+<span id="cb387-13"><a href="myeloid-trajectory---monocyte-differentiation.html#cb387-13" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-95eb8075e-Date-2025-02-06_Time-02-56-23.743509.log</span></span>
+<span id="cb387-14"><a href="myeloid-trajectory---monocyte-differentiation.html#cb387-14" tabindex="-1"></a>p2</span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-379-1.svg" width="672" /></p>
+<p>Similarly, we can obtain a pseudo-time heatmap of gene expression by setting <code>useMatrix = "GeneIntegrationMatrix"</code>.</p>
+<div class="sourceCode" id="cb388"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb388-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb388-1" tabindex="-1"></a>trajGIM <span class="ot">&lt;-</span> <span class="fu">getTrajectory</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">name =</span> <span class="st">&quot;MyeloidU&quot;</span>, <span class="at">useMatrix =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>, <span class="at">log2Norm =</span> <span class="cn">FALSE</span>, <span class="at">trajectoryLabel =</span> <span class="st">&quot;Clusters2&quot;</span>)</span>
+<span id="cb388-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb388-2" tabindex="-1"></a><span class="do">## Creating Trajectory Group Matrix..</span></span>
+<span id="cb388-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb388-3" tabindex="-1"></a><span class="do">## Smoothing...</span></span>
+<span id="cb388-4"><a href="myeloid-trajectory---monocyte-differentiation.html#cb388-4" tabindex="-1"></a><span class="do">## Attempting to add labels to the trajectory based on the trajectoryLabel parameter.</span></span>
+<span id="cb388-5"><a href="myeloid-trajectory---monocyte-differentiation.html#cb388-5" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">plotTrajectoryHeatmap</span>(trajGIM,  <span class="at">pal =</span> <span class="fu">paletteContinuous</span>(<span class="at">set =</span> <span class="st">&quot;blueYellow&quot;</span>), <span class="at">colorColumns =</span> <span class="cn">TRUE</span>, <span class="at">columnPal =</span> <span class="fu">paletteDiscrete</span>(<span class="at">values =</span> <span class="fu">unique</span>(<span class="fu">colData</span>(trajGIM)<span class="sc">$</span>label)))</span>
+<span id="cb388-6"><a href="myeloid-trajectory---monocyte-differentiation.html#cb388-6" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-94db2dc5b-Date-2025-02-06_Time-02-56-56.228106.log</span></span>
+<span id="cb388-7"><a href="myeloid-trajectory---monocyte-differentiation.html#cb388-7" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb388-8"><a href="myeloid-trajectory---monocyte-differentiation.html#cb388-8" tabindex="-1"></a><span class="do">## Adding Annotations..</span></span>
+<span id="cb388-9"><a href="myeloid-trajectory---monocyte-differentiation.html#cb388-9" tabindex="-1"></a><span class="do">## Preparing Main Heatmap..</span></span>
+<span id="cb388-10"><a href="myeloid-trajectory---monocyte-differentiation.html#cb388-10" tabindex="-1"></a><span class="do">## &#39;magick&#39; package is suggested to install to give better rasterization.</span></span>
+<span id="cb388-11"><a href="myeloid-trajectory---monocyte-differentiation.html#cb388-11" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb388-12"><a href="myeloid-trajectory---monocyte-differentiation.html#cb388-12" tabindex="-1"></a><span class="do">## Set `ht_opt$message = FALSE` to turn off this message.</span></span>
+<span id="cb388-13"><a href="myeloid-trajectory---monocyte-differentiation.html#cb388-13" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-94db2dc5b-Date-2025-02-06_Time-02-56-56.228106.log</span></span>
+<span id="cb388-14"><a href="myeloid-trajectory---monocyte-differentiation.html#cb388-14" tabindex="-1"></a>p3</span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-380-1.svg" width="672" /></p>
+<p>Lastly, we can obtain a pseudo-time heatmap of peak accessibility by setting <code>useMatrix = "PeakMatrix"</code>.</p>
+<div class="sourceCode" id="cb389"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb389-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb389-1" tabindex="-1"></a>trajPM  <span class="ot">&lt;-</span> <span class="fu">getTrajectory</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">name =</span> <span class="st">&quot;MyeloidU&quot;</span>, <span class="at">useMatrix =</span> <span class="st">&quot;PeakMatrix&quot;</span>, <span class="at">log2Norm =</span> <span class="cn">TRUE</span>, <span class="at">trajectoryLabel =</span> <span class="st">&quot;Clusters2&quot;</span>)</span>
+<span id="cb389-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb389-2" tabindex="-1"></a><span class="do">## Creating Trajectory Group Matrix..</span></span>
+<span id="cb389-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb389-3" tabindex="-1"></a><span class="do">## Smoothing...</span></span>
+<span id="cb389-4"><a href="myeloid-trajectory---monocyte-differentiation.html#cb389-4" tabindex="-1"></a><span class="do">## Attempting to add labels to the trajectory based on the trajectoryLabel parameter.</span></span>
+<span id="cb389-5"><a href="myeloid-trajectory---monocyte-differentiation.html#cb389-5" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">plotTrajectoryHeatmap</span>(trajPM, <span class="at">pal =</span> <span class="fu">paletteContinuous</span>(<span class="at">set =</span> <span class="st">&quot;solarExtra&quot;</span>), <span class="at">colorColumns =</span> <span class="cn">TRUE</span>, <span class="at">columnPal =</span> <span class="fu">paletteDiscrete</span>(<span class="at">values =</span> <span class="fu">unique</span>(<span class="fu">colData</span>(trajPM)<span class="sc">$</span>label)))</span>
+<span id="cb389-6"><a href="myeloid-trajectory---monocyte-differentiation.html#cb389-6" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-95ad4cb2b-Date-2025-02-06_Time-02-57-30.077996.log</span></span>
+<span id="cb389-7"><a href="myeloid-trajectory---monocyte-differentiation.html#cb389-7" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb389-8"><a href="myeloid-trajectory---monocyte-differentiation.html#cb389-8" tabindex="-1"></a><span class="do">## Adding Annotations..</span></span>
+<span id="cb389-9"><a href="myeloid-trajectory---monocyte-differentiation.html#cb389-9" tabindex="-1"></a><span class="do">## Preparing Main Heatmap..</span></span>
+<span id="cb389-10"><a href="myeloid-trajectory---monocyte-differentiation.html#cb389-10" tabindex="-1"></a><span class="do">## &#39;magick&#39; package is suggested to install to give better rasterization.</span></span>
+<span id="cb389-11"><a href="myeloid-trajectory---monocyte-differentiation.html#cb389-11" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb389-12"><a href="myeloid-trajectory---monocyte-differentiation.html#cb389-12" tabindex="-1"></a><span class="do">## Set `ht_opt$message = FALSE` to turn off this message.</span></span>
+<span id="cb389-13"><a href="myeloid-trajectory---monocyte-differentiation.html#cb389-13" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-95ad4cb2b-Date-2025-02-06_Time-02-57-30.077996.log</span></span>
+<span id="cb389-14"><a href="myeloid-trajectory---monocyte-differentiation.html#cb389-14" tabindex="-1"></a>p4</span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-381-1.svg" width="672" /></p>
+<p>To save an editable vectorized version of these plots, we use <code>plotPDF()</code>.</p>
+<div class="sourceCode" id="cb390"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb390-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb390-1" tabindex="-1"></a><span class="fu">plotPDF</span>(p1, p2, p3, p4, <span class="at">name =</span> <span class="st">&quot;Plot-MyeloidU-Traj-Heatmaps.pdf&quot;</span>, <span class="at">ArchRProj =</span> projHeme5, <span class="at">addDOC =</span> <span class="cn">FALSE</span>, <span class="at">width =</span> <span class="dv">6</span>, <span class="at">height =</span> <span class="dv">8</span>)</span>
+<span id="cb390-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb390-2" tabindex="-1"></a><span class="do">## Plotting ComplexHeatmap!</span></span>
+<span id="cb390-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb390-3" tabindex="-1"></a><span class="do">## Plotting ComplexHeatmap!</span></span>
+<span id="cb390-4"><a href="myeloid-trajectory---monocyte-differentiation.html#cb390-4" tabindex="-1"></a><span class="do">## Plotting ComplexHeatmap!</span></span>
+<span id="cb390-5"><a href="myeloid-trajectory---monocyte-differentiation.html#cb390-5" tabindex="-1"></a><span class="do">## Plotting ComplexHeatmap!</span></span></code></pre></div>
+</div>
+<div id="integrative-pseudo-time-analyses" class="section level3 hasAnchor" number="18.1.3">
+<h3><span class="header-section-number">18.1.3</span> Integrative pseudo-time analyses<a href="myeloid-trajectory---monocyte-differentiation.html#integrative-pseudo-time-analyses" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We can also perform integrative analyses, such as identification of positive TF regulators by integration of gene scores / gene expression with motif accessibility across pseudo-time. This can be very powerful, for example in identifying drivers of differentiation. To do this, we use the <code>correlateTrajectories()</code> function which takes two <code>SummarizedExperiment</code> objects retrived from the <code>getTrajectories()</code> function.</p>
+<p>First, lets find motifs whose accessibility across pseudo-time is correlated with the gene score of the TF gene. Since we are ultimately going to only correlate with the deviation z-scores, we filter out any entries that correlate based on raw deviations.</p>
+<div class="sourceCode" id="cb391"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb391-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb391-1" tabindex="-1"></a>corGSM_MM <span class="ot">&lt;-</span> <span class="fu">correlateTrajectories</span>(trajGSM, trajMM)</span>
+<span id="cb391-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb391-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-correlateTrajectories-966a54b87-Date-2025-02-06_Time-02-57-44.208525.log</span></span>
+<span id="cb391-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb391-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb391-4"><a href="myeloid-trajectory---monocyte-differentiation.html#cb391-4" tabindex="-1"></a><span class="do">## Found 37 Correlated Pairings!</span></span>
+<span id="cb391-5"><a href="myeloid-trajectory---monocyte-differentiation.html#cb391-5" tabindex="-1"></a><span class="do">## 2025-02-06 02:58:08.928024 :</span></span>
+<span id="cb391-6"><a href="myeloid-trajectory---monocyte-differentiation.html#cb391-6" tabindex="-1"></a>idxToRemove <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="at">pattern =</span> <span class="st">&quot;deviations&quot;</span>, <span class="at">x =</span> corGSM_MM[[<span class="st">&quot;correlatedMappings&quot;</span>]]<span class="sc">$</span>name2)</span>
+<span id="cb391-7"><a href="myeloid-trajectory---monocyte-differentiation.html#cb391-7" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">length</span>(idxToRemove <span class="sc">&gt;</span> <span class="dv">1</span>)){</span>
+<span id="cb391-8"><a href="myeloid-trajectory---monocyte-differentiation.html#cb391-8" tabindex="-1"></a>  corGSM_MM[[<span class="st">&quot;correlatedMappings&quot;</span>]] <span class="ot">&lt;-</span> corGSM_MM[[<span class="st">&quot;correlatedMappings&quot;</span>]][<span class="sc">-</span>idxToRemove,]</span>
+<span id="cb391-9"><a href="myeloid-trajectory---monocyte-differentiation.html#cb391-9" tabindex="-1"></a>}</span></code></pre></div>
+<p>The primary output of <code>correlateTrajectories()</code> is a list object containing a <code>DataFrame</code> object as the first entry in the list. This <code>DataFrame</code> has columns named <code>idx1</code>, <code>matchname1</code>, <code>name1</code>, and <code>VarAssay1</code> which correspond to the index, match name, unaltered name, and the variance quantile of the features from the first trajectory (gene scores) passed to the <code>correlateTrajectories()</code> function. A “variance quantile” is a normalized measure of the given feature which allows us to derive a correlation across disparate assays. This <code>DataFrame</code> contains all of the features that met the cutoffs specified in the <code>correlateTrajectories()</code> function.</p>
+<div class="sourceCode" id="cb392"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb392-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-1" tabindex="-1"></a>corGSM_MM[[<span class="st">&quot;correlatedMappings&quot;</span>]]</span>
+<span id="cb392-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-2" tabindex="-1"></a><span class="do">## DataFrame with 36 rows and 12 columns</span></span>
+<span id="cb392-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-3" tabindex="-1"></a><span class="do">##          idx1      idx2  matchname1  matchname2       name1        name2</span></span>
+<span id="cb392-4"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-4" tabindex="-1"></a><span class="do">##     &lt;integer&gt; &lt;integer&gt; &lt;character&gt; &lt;character&gt; &lt;character&gt;  &lt;character&gt;</span></span>
+<span id="cb392-5"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-5" tabindex="-1"></a><span class="do">## 1          82      1081      PRDM16      PRDM16 chr1:PRDM16 z:PRDM16_211</span></span>
+<span id="cb392-6"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-6" tabindex="-1"></a><span class="do">## 2         731       932        TAL1        TAL1   chr1:TAL1    z:TAL1_62</span></span>
+<span id="cb392-7"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-7" tabindex="-1"></a><span class="do">## 3         818      1013         JUN         JUN    chr1:JUN    z:JUN_143</span></span>
+<span id="cb392-8"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-8" tabindex="-1"></a><span class="do">## 4        2034      1002        ATF3        ATF3   chr1:ATF3   z:ATF3_132</span></span>
+<span id="cb392-9"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-9" tabindex="-1"></a><span class="do">## 5        2369      1254       GATA3       GATA3 chr10:GATA3  z:GATA3_384</span></span>
+<span id="cb392-10"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-10" tabindex="-1"></a><span class="do">## ...       ...       ...         ...         ...         ...          ...</span></span>
+<span id="cb392-11"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-11" tabindex="-1"></a><span class="do">## 32      20780      1031       SNAI2       SNAI2  chr8:SNAI2  z:SNAI2_161</span></span>
+<span id="cb392-12"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-12" tabindex="-1"></a><span class="do">## 33      21658      1003       NFIL3       NFIL3  chr9:NFIL3  z:NFIL3_133</span></span>
+<span id="cb392-13"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-13" tabindex="-1"></a><span class="do">## 34      21753      1538       NR4A3       NR4A3  chr9:NR4A3  z:NR4A3_668</span></span>
+<span id="cb392-14"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-14" tabindex="-1"></a><span class="do">## 35      21793      1078        KLF4        KLF4   chr9:KLF4   z:KLF4_208</span></span>
+<span id="cb392-15"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-15" tabindex="-1"></a><span class="do">## 36      22097      1565        RXRA        RXRA   chr9:RXRA   z:RXRA_695</span></span>
+<span id="cb392-16"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-16" tabindex="-1"></a><span class="do">##     Correlation VarAssay1 VarAssay2     TStat        Pval         FDR</span></span>
+<span id="cb392-17"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-17" tabindex="-1"></a><span class="do">##       &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;   &lt;numeric&gt;   &lt;numeric&gt;</span></span>
+<span id="cb392-18"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-18" tabindex="-1"></a><span class="do">## 1      0.823885  0.999784  0.867816  14.39074 6.60993e-26 3.60461e-23</span></span>
+<span id="cb392-19"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-19" tabindex="-1"></a><span class="do">## 2      0.767083  0.854153  0.988506  11.83658 1.33614e-20 1.36620e-18</span></span>
+<span id="cb392-20"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-20" tabindex="-1"></a><span class="do">## 3      0.513806  0.993990  0.967816   5.92887 4.57253e-08 4.64637e-07</span></span>
+<span id="cb392-21"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-21" tabindex="-1"></a><span class="do">## 4      0.745960  0.983310  0.909195  11.08817 5.35814e-19 4.17424e-17</span></span>
+<span id="cb392-22"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-22" tabindex="-1"></a><span class="do">## 5      0.678372  0.849094  0.995402   9.14028 8.88548e-15 3.23140e-13</span></span>
+<span id="cb392-23"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-23" tabindex="-1"></a><span class="do">## ...         ...       ...       ...       ...         ...         ...</span></span>
+<span id="cb392-24"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-24" tabindex="-1"></a><span class="do">## 32     0.618889  0.869503  0.960345   7.79994 6.76130e-12 1.40773e-10</span></span>
+<span id="cb392-25"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-25" tabindex="-1"></a><span class="do">## 33     0.756083  0.993125  0.938506  11.43640 9.57196e-20 8.24196e-18</span></span>
+<span id="cb392-26"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-26" tabindex="-1"></a><span class="do">## 34     0.575115  0.815454  0.943103   6.95946 3.89654e-10 5.95771e-09</span></span>
+<span id="cb392-27"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-27" tabindex="-1"></a><span class="do">## 35     0.802777  0.998833  0.822414  13.32779 9.82524e-24 3.21482e-21</span></span>
+<span id="cb392-28"><a href="myeloid-trajectory---monocyte-differentiation.html#cb392-28" tabindex="-1"></a><span class="do">## 36     0.605137  0.912224  0.922414   7.52468 2.58286e-11 4.54360e-10</span></span></code></pre></div>
+<p>We can then subset our corresponding trajectory <code>SummarizedExperiment</code> objects to only contain the elements that passed significance above.</p>
+<div class="sourceCode" id="cb393"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb393-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb393-1" tabindex="-1"></a>trajGSM2 <span class="ot">&lt;-</span> trajGSM[corGSM_MM[[<span class="st">&quot;correlatedMappings&quot;</span>]]<span class="sc">$</span>name1, ]</span>
+<span id="cb393-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb393-2" tabindex="-1"></a>trajMM2 <span class="ot">&lt;-</span> trajMM[corGSM_MM[[<span class="st">&quot;correlatedMappings&quot;</span>]]<span class="sc">$</span>name2, ]</span></code></pre></div>
+<p>To best order these features, we can create a new trajectory where the values of these two trajectories are multiplied. This will allow us to create side-by-side heatmaps that are identically ordered by row.</p>
+<div class="sourceCode" id="cb394"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb394-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb394-1" tabindex="-1"></a>trajCombined <span class="ot">&lt;-</span> trajGSM2</span>
+<span id="cb394-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb394-2" tabindex="-1"></a><span class="fu">assay</span>(trajCombined, <span class="at">withDimnames=</span><span class="cn">FALSE</span>) <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">apply</span>(<span class="fu">assay</span>(trajGSM2), <span class="dv">1</span>, scale)) <span class="sc">+</span> <span class="fu">t</span>(<span class="fu">apply</span>(<span class="fu">assay</span>(trajMM2), <span class="dv">1</span>, scale))</span></code></pre></div>
+<p>We can extract the optimal row order from the return of the <code>plotTrajectoryHeatmap()</code> function.</p>
+<div class="sourceCode" id="cb395"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb395-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb395-1" tabindex="-1"></a>combinedMat <span class="ot">&lt;-</span> <span class="fu">plotTrajectoryHeatmap</span>(trajCombined, <span class="at">returnMat =</span> <span class="cn">TRUE</span>, <span class="at">varCutOff =</span> <span class="dv">0</span>)</span>
+<span id="cb395-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb395-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-941e866f0-Date-2025-02-06_Time-02-58-09.044356.log</span></span>
+<span id="cb395-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb395-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb395-4"><a href="myeloid-trajectory---monocyte-differentiation.html#cb395-4" tabindex="-1"></a><span class="do">## Preparing Main Heatmap..</span></span>
+<span id="cb395-5"><a href="myeloid-trajectory---monocyte-differentiation.html#cb395-5" tabindex="-1"></a><span class="do">## &#39;magick&#39; package is suggested to install to give better rasterization.</span></span>
+<span id="cb395-6"><a href="myeloid-trajectory---monocyte-differentiation.html#cb395-6" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb395-7"><a href="myeloid-trajectory---monocyte-differentiation.html#cb395-7" tabindex="-1"></a><span class="do">## Set `ht_opt$message = FALSE` to turn off this message.</span></span>
+<span id="cb395-8"><a href="myeloid-trajectory---monocyte-differentiation.html#cb395-8" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-941e866f0-Date-2025-02-06_Time-02-58-09.044356.log</span></span>
+<span id="cb395-9"><a href="myeloid-trajectory---monocyte-differentiation.html#cb395-9" tabindex="-1"></a>rowOrder <span class="ot">&lt;-</span> <span class="fu">match</span>(<span class="fu">rownames</span>(combinedMat), <span class="fu">rownames</span>(trajGSM2))</span></code></pre></div>
+<p>With this, we are now ready to create our paired heatmaps. First, we will create the heatmap for the gene score trajectory. We specify the desired row order via the <code>rowOrder</code> parameter.</p>
+<div class="sourceCode" id="cb396"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb396-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb396-1" tabindex="-1"></a>ht1 <span class="ot">&lt;-</span> <span class="fu">plotTrajectoryHeatmap</span>(trajGSM2,  <span class="at">pal =</span> <span class="fu">paletteContinuous</span>(<span class="at">set =</span> <span class="st">&quot;horizonExtra&quot;</span>),  <span class="at">varCutOff =</span> <span class="dv">0</span>, <span class="at">rowOrder =</span> rowOrder)</span>
+<span id="cb396-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb396-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-959bd00cc-Date-2025-02-06_Time-02-58-09.752344.log</span></span>
+<span id="cb396-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb396-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb396-4"><a href="myeloid-trajectory---monocyte-differentiation.html#cb396-4" tabindex="-1"></a><span class="do">## Preparing Main Heatmap..</span></span>
+<span id="cb396-5"><a href="myeloid-trajectory---monocyte-differentiation.html#cb396-5" tabindex="-1"></a><span class="do">## &#39;magick&#39; package is suggested to install to give better rasterization.</span></span>
+<span id="cb396-6"><a href="myeloid-trajectory---monocyte-differentiation.html#cb396-6" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb396-7"><a href="myeloid-trajectory---monocyte-differentiation.html#cb396-7" tabindex="-1"></a><span class="do">## Set `ht_opt$message = FALSE` to turn off this message.</span></span>
+<span id="cb396-8"><a href="myeloid-trajectory---monocyte-differentiation.html#cb396-8" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-959bd00cc-Date-2025-02-06_Time-02-58-09.752344.log</span></span></code></pre></div>
+<p>Then, we will create the heatmap for the motif trajectory, again specifying the row order via the <code>rowOrder</code> parameter. Here, we’ve used <code>force = TRUE</code>. In the context of the MotifMatrix trajectory, this would allow correlations to both “z” and “deviations”. In this example, we’ve removed the raw deviations above but if we had not done this, <code>force = TRUE</code> would be essential here.</p>
+<div class="sourceCode" id="cb397"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb397-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb397-1" tabindex="-1"></a>ht2 <span class="ot">&lt;-</span> <span class="fu">plotTrajectoryHeatmap</span>(trajMM2, <span class="at">pal =</span> <span class="fu">paletteContinuous</span>(<span class="at">set =</span> <span class="st">&quot;solarExtra&quot;</span>), <span class="at">varCutOff =</span> <span class="dv">0</span>, <span class="at">rowOrder =</span> rowOrder, <span class="at">force =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb397-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb397-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-94c2fe2e3-Date-2025-02-06_Time-02-58-10.523033.log</span></span>
+<span id="cb397-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb397-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb397-4"><a href="myeloid-trajectory---monocyte-differentiation.html#cb397-4" tabindex="-1"></a><span class="do">## useSeqnames is NULL or greater than 1 with a Sparse.Assays.Matrix trajectory input.</span></span>
+<span id="cb397-5"><a href="myeloid-trajectory---monocyte-differentiation.html#cb397-5" tabindex="-1"></a><span class="do">## 2025-02-06 02:58:10.923082 :</span></span>
+<span id="cb397-6"><a href="myeloid-trajectory---monocyte-differentiation.html#cb397-6" tabindex="-1"></a><span class="do">## force=TRUE thus continuing</span></span>
+<span id="cb397-7"><a href="myeloid-trajectory---monocyte-differentiation.html#cb397-7" tabindex="-1"></a><span class="do">## 2025-02-06 02:58:10.927511 :</span></span>
+<span id="cb397-8"><a href="myeloid-trajectory---monocyte-differentiation.html#cb397-8" tabindex="-1"></a><span class="do">## Preparing Main Heatmap..</span></span>
+<span id="cb397-9"><a href="myeloid-trajectory---monocyte-differentiation.html#cb397-9" tabindex="-1"></a><span class="do">## &#39;magick&#39; package is suggested to install to give better rasterization.</span></span>
+<span id="cb397-10"><a href="myeloid-trajectory---monocyte-differentiation.html#cb397-10" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb397-11"><a href="myeloid-trajectory---monocyte-differentiation.html#cb397-11" tabindex="-1"></a><span class="do">## Set `ht_opt$message = FALSE` to turn off this message.</span></span>
+<span id="cb397-12"><a href="myeloid-trajectory---monocyte-differentiation.html#cb397-12" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-94c2fe2e3-Date-2025-02-06_Time-02-58-10.523033.log</span></span></code></pre></div>
+<p>Plotting these two heatmaps side-by-side, we see that the rows are matched across the two heatmaps. You may notice that the analysis captures both GATA3 and GATA3-AS1 (an anti-sense transcript of GATA3). This is due to how feature matching is performed and the anti-sense transcript entry could be removed manually in post-processing or programatically if desired.</p>
+<div class="sourceCode" id="cb398"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb398-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb398-1" tabindex="-1"></a>ComplexHeatmap<span class="sc">::</span><span class="fu">draw</span>(ht1 <span class="sc">+</span> ht2)</span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-390-1.svg" width="672" /></p>
+<p>We can repeat this same exact process but use gene expression from the <code>GeneIntegrationMatrix</code> instead of gene scores. Because this is the same analytical workflow, we do not repeat our explanations for each step.</p>
+<div class="sourceCode" id="cb399"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb399-1"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-1" tabindex="-1"></a>corGIM_MM <span class="ot">&lt;-</span> <span class="fu">correlateTrajectories</span>(trajGIM, trajMM)</span>
+<span id="cb399-2"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-correlateTrajectories-942520b2e-Date-2025-02-06_Time-02-58-12.160729.log</span></span>
+<span id="cb399-3"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb399-4"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-4" tabindex="-1"></a><span class="do">## Found 48 Correlated Pairings!</span></span>
+<span id="cb399-5"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-5" tabindex="-1"></a><span class="do">## 2025-02-06 02:58:31.057049 :</span></span>
+<span id="cb399-6"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-6" tabindex="-1"></a>idxToRemove2 <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="at">pattern =</span> <span class="st">&quot;deviations&quot;</span>, <span class="at">x =</span> corGIM_MM[[<span class="st">&quot;correlatedMappings&quot;</span>]]<span class="sc">$</span>name2)</span>
+<span id="cb399-7"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-7" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">length</span>(idxToRemove2 <span class="sc">&gt;</span> <span class="dv">1</span>)){</span>
+<span id="cb399-8"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-8" tabindex="-1"></a>  corGIM_MM[[<span class="st">&quot;correlatedMappings&quot;</span>]] <span class="ot">&lt;-</span> corGIM_MM[[<span class="st">&quot;correlatedMappings&quot;</span>]][<span class="sc">-</span>idxToRemove2,]</span>
+<span id="cb399-9"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-9" tabindex="-1"></a>}</span>
+<span id="cb399-10"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-10" tabindex="-1"></a>corGIM_MM[[<span class="dv">1</span>]]</span>
+<span id="cb399-11"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-11" tabindex="-1"></a><span class="do">## DataFrame with 47 rows and 12 columns</span></span>
+<span id="cb399-12"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-12" tabindex="-1"></a><span class="do">##          idx1      idx2  matchname1  matchname2       name1       name2</span></span>
+<span id="cb399-13"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-13" tabindex="-1"></a><span class="do">##     &lt;integer&gt; &lt;integer&gt; &lt;character&gt; &lt;character&gt; &lt;character&gt; &lt;character&gt;</span></span>
+<span id="cb399-14"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-14" tabindex="-1"></a><span class="do">## 1         295      1601       RUNX3       RUNX3  chr1:RUNX3 z:RUNX3_731</span></span>
+<span id="cb399-15"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-15" tabindex="-1"></a><span class="do">## 2         680      1612        NFIA        NFIA   chr1:NFIA  z:NFIA_742</span></span>
+<span id="cb399-16"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-16" tabindex="-1"></a><span class="do">## 3        1227      1512       MEF2D       MEF2D  chr1:MEF2D z:MEF2D_642</span></span>
+<span id="cb399-17"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-17" tabindex="-1"></a><span class="do">## 4        1936      1254       GATA3       GATA3 chr10:GATA3 z:GATA3_384</span></span>
+<span id="cb399-18"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-18" tabindex="-1"></a><span class="do">## 5        2036      1027        ZEB1        ZEB1  chr10:ZEB1  z:ZEB1_157</span></span>
+<span id="cb399-19"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-19" tabindex="-1"></a><span class="do">## ...       ...       ...         ...         ...         ...         ...</span></span>
+<span id="cb399-20"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-20" tabindex="-1"></a><span class="do">## 43      15859       997       CREB5       CREB5  chr7:CREB5 z:CREB5_127</span></span>
+<span id="cb399-21"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-21" tabindex="-1"></a><span class="do">## 44      16783      1022       CEBPD       CEBPD  chr8:CEBPD z:CEBPD_152</span></span>
+<span id="cb399-22"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-22" tabindex="-1"></a><span class="do">## 45      17463      1003       NFIL3       NFIL3  chr9:NFIL3 z:NFIL3_133</span></span>
+<span id="cb399-23"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-23" tabindex="-1"></a><span class="do">## 46      17560      1078        KLF4        KLF4   chr9:KLF4  z:KLF4_208</span></span>
+<span id="cb399-24"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-24" tabindex="-1"></a><span class="do">## 47      17803      1565        RXRA        RXRA   chr9:RXRA  z:RXRA_695</span></span>
+<span id="cb399-25"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-25" tabindex="-1"></a><span class="do">##     Correlation VarAssay1 VarAssay2     TStat        Pval         FDR</span></span>
+<span id="cb399-26"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-26" tabindex="-1"></a><span class="do">##       &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;   &lt;numeric&gt;   &lt;numeric&gt;</span></span>
+<span id="cb399-27"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-27" tabindex="-1"></a><span class="do">## 1      0.859304  0.836944  0.990805   16.6320 2.71340e-30 6.94894e-29</span></span>
+<span id="cb399-28"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-28" tabindex="-1"></a><span class="do">## 2      0.871016  0.843718  0.935057   17.5522 5.15150e-32 1.93181e-30</span></span>
+<span id="cb399-29"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-29" tabindex="-1"></a><span class="do">## 3      0.786838  0.852642  0.897126   12.6212 2.92156e-22 2.86695e-21</span></span>
+<span id="cb399-30"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-30" tabindex="-1"></a><span class="do">## 4      0.874051  0.811247  0.995402   17.8099 1.73053e-32 6.98866e-31</span></span>
+<span id="cb399-31"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-31" tabindex="-1"></a><span class="do">## 5      0.869930  0.825439  0.906897   17.4621 7.55989e-32 2.48059e-30</span></span>
+<span id="cb399-32"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-32" tabindex="-1"></a><span class="do">## ...         ...       ...       ...       ...         ...         ...</span></span>
+<span id="cb399-33"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-33" tabindex="-1"></a><span class="do">## 43     0.840645  0.938552  0.913218   15.3659 7.55559e-28 1.46914e-26</span></span>
+<span id="cb399-34"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-34" tabindex="-1"></a><span class="do">## 44     0.844978  0.993871  0.998851   15.6411 2.18504e-28 4.41210e-27</span></span>
+<span id="cb399-35"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-35" tabindex="-1"></a><span class="do">## 45     0.790844  0.920219  0.938506   12.7921 1.28056e-22 1.29288e-21</span></span>
+<span id="cb399-36"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-36" tabindex="-1"></a><span class="do">## 46     0.822718  0.987904  0.822414   14.3276 8.86608e-26 1.29297e-24</span></span>
+<span id="cb399-37"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-37" tabindex="-1"></a><span class="do">## 47     0.913108  0.952207  0.922414   22.1705 5.74331e-40 6.70053e-38</span></span>
+<span id="cb399-38"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-38" tabindex="-1"></a>trajGIM2 <span class="ot">&lt;-</span> trajGIM[corGIM_MM[[<span class="dv">1</span>]]<span class="sc">$</span>name1, ]</span>
+<span id="cb399-39"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-39" tabindex="-1"></a>trajMM2 <span class="ot">&lt;-</span> trajMM[corGIM_MM[[<span class="dv">1</span>]]<span class="sc">$</span>name2, ]</span>
+<span id="cb399-40"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-40" tabindex="-1"></a>trajCombined <span class="ot">&lt;-</span> trajGIM2</span>
+<span id="cb399-41"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-41" tabindex="-1"></a><span class="fu">assay</span>(trajCombined, <span class="at">withDimnames=</span><span class="cn">FALSE</span>) <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">apply</span>(<span class="fu">assay</span>(trajGIM2), <span class="dv">1</span>, scale)) <span class="sc">+</span> <span class="fu">t</span>(<span class="fu">apply</span>(<span class="fu">assay</span>(trajMM2), <span class="dv">1</span>, scale))</span>
+<span id="cb399-42"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-42" tabindex="-1"></a>combinedMat <span class="ot">&lt;-</span> <span class="fu">plotTrajectoryHeatmap</span>(trajCombined, <span class="at">returnMat =</span> <span class="cn">TRUE</span>, <span class="at">varCutOff =</span> <span class="dv">0</span>)</span>
+<span id="cb399-43"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-43" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-914c9c584-Date-2025-02-06_Time-02-58-31.143978.log</span></span>
+<span id="cb399-44"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-44" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb399-45"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-45" tabindex="-1"></a><span class="do">## Preparing Main Heatmap..</span></span>
+<span id="cb399-46"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-46" tabindex="-1"></a><span class="do">## &#39;magick&#39; package is suggested to install to give better rasterization.</span></span>
+<span id="cb399-47"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-47" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb399-48"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-48" tabindex="-1"></a><span class="do">## Set `ht_opt$message = FALSE` to turn off this message.</span></span>
+<span id="cb399-49"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-49" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-914c9c584-Date-2025-02-06_Time-02-58-31.143978.log</span></span>
+<span id="cb399-50"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-50" tabindex="-1"></a>rowOrder <span class="ot">&lt;-</span> <span class="fu">match</span>(<span class="fu">rownames</span>(combinedMat), <span class="fu">rownames</span>(trajGIM2))</span>
+<span id="cb399-51"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-51" tabindex="-1"></a>ht1 <span class="ot">&lt;-</span> <span class="fu">plotTrajectoryHeatmap</span>(trajGIM2,  <span class="at">pal =</span> <span class="fu">paletteContinuous</span>(<span class="at">set =</span> <span class="st">&quot;blueYellow&quot;</span>),  <span class="at">varCutOff =</span> <span class="dv">0</span>, <span class="at">rowOrder =</span> rowOrder)</span>
+<span id="cb399-52"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-52" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-92fc86dcd-Date-2025-02-06_Time-02-58-31.824126.log</span></span>
+<span id="cb399-53"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-53" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb399-54"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-54" tabindex="-1"></a><span class="do">## Preparing Main Heatmap..</span></span>
+<span id="cb399-55"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-55" tabindex="-1"></a><span class="do">## &#39;magick&#39; package is suggested to install to give better rasterization.</span></span>
+<span id="cb399-56"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-56" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb399-57"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-57" tabindex="-1"></a><span class="do">## Set `ht_opt$message = FALSE` to turn off this message.</span></span>
+<span id="cb399-58"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-58" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-92fc86dcd-Date-2025-02-06_Time-02-58-31.824126.log</span></span>
+<span id="cb399-59"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-59" tabindex="-1"></a>ht2 <span class="ot">&lt;-</span> <span class="fu">plotTrajectoryHeatmap</span>(trajMM2, <span class="at">pal =</span> <span class="fu">paletteContinuous</span>(<span class="at">set =</span> <span class="st">&quot;solarExtra&quot;</span>), <span class="at">varCutOff =</span> <span class="dv">0</span>, <span class="at">rowOrder =</span> rowOrder)</span>
+<span id="cb399-60"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-60" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotTrajectoryHeatmap-9777c73b5-Date-2025-02-06_Time-02-58-32.578954.log</span></span>
+<span id="cb399-61"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-61" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb399-62"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-62" tabindex="-1"></a><span class="do">## useSeqnames is NULL or greater than 1 with a Sparse.Assays.Matrix trajectory input.</span></span>
+<span id="cb399-63"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-63" tabindex="-1"></a><span class="do">## 2025-02-06 02:58:32.988129 :</span></span>
+<span id="cb399-64"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-64" tabindex="-1"></a><span class="do">## force=FALSE thus continuing with subsetting useSeqnames = z</span></span>
+<span id="cb399-65"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-65" tabindex="-1"></a><span class="do">## 2025-02-06 02:58:32.993881 :</span></span>
+<span id="cb399-66"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-66" tabindex="-1"></a><span class="do">## Preparing Main Heatmap..</span></span>
+<span id="cb399-67"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-67" tabindex="-1"></a><span class="do">## &#39;magick&#39; package is suggested to install to give better rasterization.</span></span>
+<span id="cb399-68"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-68" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb399-69"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-69" tabindex="-1"></a><span class="do">## Set `ht_opt$message = FALSE` to turn off this message.</span></span>
+<span id="cb399-70"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-70" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectoryHeatmap-9777c73b5-Date-2025-02-06_Time-02-58-32.578954.log</span></span>
+<span id="cb399-71"><a href="myeloid-trajectory---monocyte-differentiation.html#cb399-71" tabindex="-1"></a>ComplexHeatmap<span class="sc">::</span><span class="fu">draw</span>(ht1 <span class="sc">+</span> ht2)</span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-391-1.svg" width="672" /></p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="trajectory-analysis-with-archr.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="lymphoid-trajectory---b-cell-differentiation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": null
+},
+"fontsettings": null,
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "none"
+},
+"info": false
+});
+});
+</script>
+
+</body>
+
+</html>

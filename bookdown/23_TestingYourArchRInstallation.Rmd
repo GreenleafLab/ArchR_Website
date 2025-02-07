@@ -1,0 +1,61 @@
+---
+output:
+  html_document:
+    theme: yeti  # many options for theme, this one is my favorite.
+params:
+  threads: 20
+  rdata: ""
+  token: ""
+  ref: ""
+  out: ""
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+# Testing Your ArchR Installation
+
+To provide a system for testing a wide array of ArchR's functionalities, we use [`testthat`](https://testthat.r-lib.org/). This essentially automates testing ArchR functions by running the code present in the `examples` section of each function. Below is an example workflow for how to do this. These tests are run at the time each new stable release is created, using the version of R and the provided `renv` lockfile that accompanies each stable release. We would not expect you to encounter errors during this testing process if you are using the suggested version of R and the provided `renv` environment for the given release.
+
+Note that we run these tests outside of RStudio, in the R terminal, because of issues that appear to be related to long file paths that are created during testing. So in our hands, these tests do not work when run in RStudio. Instead, if you navigate to the directory where your `renv` project was initiated and you launch `R`, it will automatically load your `renv` environment and you can run the tests from the terminal.
+
+First, we will load `ArchR` and `devtools`.
+```{r, eval=FALSE}
+library(ArchR)
+library(devtools)
+```
+
+Because we will be creating Arrow Files during this process, we need to ensure that HDF5 file locking is handled correctly. On the system where this code is run to create this manual, we use `locking = TRUE` but this may be different on your system. See the chapter on [Getting Started with ArchR](getting-started-with-archr.html) for more information. We will also set our seed here for reproducibility.
+
+```{r, eval=FALSE}
+addArchRLocking(locking = TRUE)
+set.seed(1)
+```
+
+We will start by creating a directory in which to perform all testing.
+```{r, eval=FALSE}
+dir_test <- "ArchRTests"
+dir.create(dir_test, showWarnings = FALSE)
+```
+
+Then we will download and unzip the full ArchR package code corresponding to the branch that we want to test. We increase the `timeout` option to give the system enough time to download the full package.
+```{r, eval=FALSE}
+branch <- "master"
+options(timeout = 999)
+download.file(url = paste0("https://github.com/GreenleafLab/ArchR/archive/refs/heads/",branch,".zip"), destfile = file.path(dir_test,paste0("ArchR-",branch,".zip")))
+unzip(zipfile = file.path(dir_test,paste0("ArchR-",branch,".zip")), exdir = dir_test)
+```
+
+For reasons that aren't necessary to explain, we need to remove the `configure` file from the package directory before starting the tests.
+```{r, eval=FALSE}
+file.remove(file.path(dir_test,paste0("ArchR-",branch),"configure"))
+```
+
+Lastly, we run `devtools::test()` to perform all tests.
+```{r, eval=FALSE}
+devtools::test(pkg = file.path(dir_test,paste0("ArchR-",branch,"/")))
+
+```
+
+With a working installation of ArchR, one should not encounter any errors during this process.  If errors are indeed encountered, please see the chapter on [Using renv to manage dependencies](using-renv-to-manage-dependencies.html) 
+for aid in establishing a working environment.

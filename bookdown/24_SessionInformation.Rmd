@@ -1,0 +1,36 @@
+---
+output:
+  html_document:
+    theme: yeti  # many options for theme, this one is my favorite.
+params:
+  threads: 20
+  rdata: ""
+  token: ""
+  ref: ""
+  out: ""
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+# Session Information
+This tutorial was run on the date specified below.
+```{r, echo=FALSE}
+Sys.Date()
+```
+
+```{r loadAllDependencies, include=FALSE}
+#load all packages specified in the renv.lock file
+renv_json <- rjson::fromJSON(file = "../renv.lock")
+packages <- unique(names(renv_json$Packages))
+package_load <- suppressPackageStartupMessages(lapply(packages, require, character.only = TRUE))
+if(!all(unlist(package_load))) {
+  stop("Some packages failed to load!")
+}
+```
+
+The `sessionInfo()` at run time was:
+```{r, collapse=TRUE}
+sessionInfo()
+```
+

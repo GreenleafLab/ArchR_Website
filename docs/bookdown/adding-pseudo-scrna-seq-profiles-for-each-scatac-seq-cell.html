@@ -4,19 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>8.2 Adding Pseudo-scRNA-seq profiles for each scATAC-seq cell | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
+  <title>10.2 Adding Pseudo-scRNA-seq profiles for each scATAC-seq cell | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data.</title>
   <meta name="description" content="A guide to ArchR" />
-  <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="8.2 Adding Pseudo-scRNA-seq profiles for each scATAC-seq cell | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
+  <meta property="og:title" content="10.2 Adding Pseudo-scRNA-seq profiles for each scATAC-seq cell | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="A guide to ArchR" />
   <meta name="github-repo" content="GreenleafLab/ArchR" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="8.2 Adding Pseudo-scRNA-seq profiles for each scATAC-seq cell | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
+  <meta name="twitter:title" content="10.2 Adding Pseudo-scRNA-seq profiles for each scATAC-seq cell | ArchR: Robust and scaleable analysis of single-cell chromatin accessibility data." />
   
   <meta name="twitter:description" content="A guide to ArchR" />
   
@@ -24,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2020-05-01" />
+<meta name="date" content="2025-02-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +32,8 @@
   <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
 <link rel="prev" href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"/>
 <link rel="next" href="labeling-scatac-seq-clusters-with-scrna-seq-information.html"/>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -49,15 +49,18 @@
 
 
 
-
-<link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
@@ -65,7 +68,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -91,7 +94,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -104,7 +107,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -116,6 +119,11 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -134,114 +142,149 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="../index.html">Back to ArchR Home</a></li>
 
 <li class="divider"></li>
-<li><a href="index.html#section"><img src="images/ArchR_Logo_Integrated.png" alt="" width="200"></a></li>
-<li class="chapter" data-level="1" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>1</b> Getting Started with ArchR</a>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><img src="images/ArchR_Logo_Integrated.png" alt="" width="200"></a></li>
+<li class="chapter" data-level="1" data-path="debugging-and-troubleshooting-in-archr.html"><a href="debugging-and-troubleshooting-in-archr.html"><i class="fa fa-check"></i><b>1</b> Debugging and Troubleshooting in ArchR</a></li>
+<li class="chapter" data-level="2" data-path="manage-archrs-dependencies.html"><a href="manage-archrs-dependencies.html"><i class="fa fa-check"></i><b>2</b> Manage ArchR’s Dependencies</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="a-brief-primer-on-atac-seq-terminology.html"><a href="a-brief-primer-on-atac-seq-terminology.html"><i class="fa fa-check"></i><b>1.1</b> A Brief Primer on ATAC-seq Terminology</a></li>
-<li class="chapter" data-level="1.2" data-path="why-use-archr.html"><a href="why-use-archr.html"><i class="fa fa-check"></i><b>1.2</b> Why use ArchR?</a></li>
-<li class="chapter" data-level="1.3" data-path="what-is-an-arrow-file-archrproject.html"><a href="what-is-an-arrow-file-archrproject.html"><i class="fa fa-check"></i><b>1.3</b> What is an Arrow file / <code>ArchRProject</code>?</a></li>
-<li class="chapter" data-level="1.4" data-path="input-file-types-in-archr.html"><a href="input-file-types-in-archr.html"><i class="fa fa-check"></i><b>1.4</b> Input File Types in ArchR</a></li>
-<li class="chapter" data-level="1.5" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>1.5</b> Getting Set Up</a></li>
-<li class="chapter" data-level="1.6" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>1.6</b> Creating Arrow Files</a></li>
-<li class="chapter" data-level="1.7" data-path="per-cell-quality-control.html"><a href="per-cell-quality-control.html"><i class="fa fa-check"></i><b>1.7</b> Per-cell Quality Control</a></li>
+<li class="chapter" data-level="2.1" data-path="using-renv-to-manage-dependencies.html"><a href="using-renv-to-manage-dependencies.html"><i class="fa fa-check"></i><b>2.1</b> Using renv to manage dependencies</a></li>
+<li class="chapter" data-level="2.2" data-path="other-environment-managers.html"><a href="other-environment-managers.html"><i class="fa fa-check"></i><b>2.2</b> Other environment managers</a></li>
+<li class="chapter" data-level="2.3" data-path="using-docker-for-pre-compiled-environment-setup.html"><a href="using-docker-for-pre-compiled-environment-setup.html"><i class="fa fa-check"></i><b>2.3</b> Using Docker for pre-compiled environment setup</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="doublet-inference-with-archr.html"><a href="doublet-inference-with-archr.html"><i class="fa fa-check"></i><b>2</b> Doublet Inference with ArchR</a>
+<li class="chapter" data-level="3" data-path="getting-started-with-archr.html"><a href="getting-started-with-archr.html"><i class="fa fa-check"></i><b>3</b> Getting Started with ArchR</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="how-does-doublet-identification-work-in-archr.html"><a href="how-does-doublet-identification-work-in-archr.html"><i class="fa fa-check"></i><b>2.1</b> How does doublet identification work in ArchR?</a></li>
-<li class="chapter" data-level="2.2" data-path="inferring-scatac-seq-doublets-with-archr.html"><a href="inferring-scatac-seq-doublets-with-archr.html"><i class="fa fa-check"></i><b>2.2</b> Inferring scATAC-seq Doublets with ArchR</a></li>
+<li class="chapter" data-level="3.1" data-path="a-brief-primer-on-atac-seq-terminology.html"><a href="a-brief-primer-on-atac-seq-terminology.html"><i class="fa fa-check"></i><b>3.1</b> A Brief Primer on ATAC-seq Terminology</a></li>
+<li class="chapter" data-level="3.2" data-path="why-use-archr.html"><a href="why-use-archr.html"><i class="fa fa-check"></i><b>3.2</b> Why use ArchR?</a></li>
+<li class="chapter" data-level="3.3" data-path="what-is-an-arrow-file-archrproject.html"><a href="what-is-an-arrow-file-archrproject.html"><i class="fa fa-check"></i><b>3.3</b> What is an Arrow file / <code>ArchRProject</code>?</a></li>
+<li class="chapter" data-level="3.4" data-path="input-file-types-in-archr.html"><a href="input-file-types-in-archr.html"><i class="fa fa-check"></i><b>3.4</b> Input File Types in ArchR</a></li>
+<li class="chapter" data-level="3.5" data-path="getting-set-up.html"><a href="getting-set-up.html"><i class="fa fa-check"></i><b>3.5</b> Getting Set Up</a></li>
+<li class="chapter" data-level="3.6" data-path="creating-arrow-files.html"><a href="creating-arrow-files.html"><i class="fa fa-check"></i><b>3.6</b> Creating Arrow Files</a></li>
+<li class="chapter" data-level="3.7" data-path="per-cell-quality-control.html"><a href="per-cell-quality-control.html"><i class="fa fa-check"></i><b>3.7</b> Per-cell Quality Control</a></li>
+<li class="chapter" data-level="3.8" data-path="using-bam-files-for-arrow-file-creation.html"><a href="using-bam-files-for-arrow-file-creation.html"><i class="fa fa-check"></i><b>3.8</b> Using BAM files for Arrow File creation</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="creating-an-archrproject.html"><a href="creating-an-archrproject.html"><i class="fa fa-check"></i><b>3</b> Creating an ArchRProject</a>
+<li class="chapter" data-level="4" data-path="doublet-inference-with-archr.html"><a href="doublet-inference-with-archr.html"><i class="fa fa-check"></i><b>4</b> Doublet Inference with ArchR</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="creating-an-archrproject-1.html"><a href="creating-an-archrproject-1.html"><i class="fa fa-check"></i><b>3.1</b> Creating An ArchRProject</a></li>
-<li class="chapter" data-level="3.2" data-path="manipulating-an-archrproject.html"><a href="manipulating-an-archrproject.html"><i class="fa fa-check"></i><b>3.2</b> Manipulating An ArchRProject</a></li>
-<li class="chapter" data-level="3.3" data-path="plotting-sample-statistics-from-an-archrproject.html"><a href="plotting-sample-statistics-from-an-archrproject.html"><i class="fa fa-check"></i><b>3.3</b> Plotting Sample Statistics from an ArchRProject</a></li>
-<li class="chapter" data-level="3.4" data-path="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles-.html"><a href="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles-.html"><i class="fa fa-check"></i><b>3.4</b> Plotting Sample Fragment Size Distribution and TSS Enrichment Profiles.</a></li>
-<li class="chapter" data-level="3.5" data-path="saving-and-loading-an-archrproject.html"><a href="saving-and-loading-an-archrproject.html"><i class="fa fa-check"></i><b>3.5</b> Saving and Loading an <code>ArchRProject</code></a></li>
-<li class="chapter" data-level="3.6" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>3.6</b> Filtering Doublets from an ArchRProject</a></li>
+<li class="chapter" data-level="4.1" data-path="how-does-doublet-identification-work-in-archr.html"><a href="how-does-doublet-identification-work-in-archr.html"><i class="fa fa-check"></i><b>4.1</b> How does doublet identification work in ArchR?</a></li>
+<li class="chapter" data-level="4.2" data-path="inferring-scatac-seq-doublets-with-archr.html"><a href="inferring-scatac-seq-doublets-with-archr.html"><i class="fa fa-check"></i><b>4.2</b> Inferring scATAC-seq Doublets with ArchR</a></li>
+<li class="chapter" data-level="4.3" data-path="using-demuxlet-with-archr.html"><a href="using-demuxlet-with-archr.html"><i class="fa fa-check"></i><b>4.3</b> Using <em>demuxlet</em> with ArchR</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="dimensionality-reduction-with-archr.html"><a href="dimensionality-reduction-with-archr.html"><i class="fa fa-check"></i><b>4</b> Dimensionality Reduction with ArchR</a>
+<li class="chapter" data-level="5" data-path="creating-an-archrproject.html"><a href="creating-an-archrproject.html"><i class="fa fa-check"></i><b>5</b> Creating an ArchRProject</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>4.1</b> ArchR’s LSI Implementation</a></li>
-<li class="chapter" data-level="4.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>4.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
-<li class="chapter" data-level="4.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>4.3</b> Estimated LSI</a></li>
-<li class="chapter" data-level="4.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>4.4</b> Batch Effect Correction wtih Harmony</a></li>
+<li class="chapter" data-level="5.1" data-path="creating-an-archrproject-1.html"><a href="creating-an-archrproject-1.html"><i class="fa fa-check"></i><b>5.1</b> Creating An ArchRProject</a></li>
+<li class="chapter" data-level="5.2" data-path="manipulating-an-archrproject.html"><a href="manipulating-an-archrproject.html"><i class="fa fa-check"></i><b>5.2</b> Manipulating An ArchRProject</a></li>
+<li class="chapter" data-level="5.3" data-path="plotting-sample-statistics-from-an-archrproject.html"><a href="plotting-sample-statistics-from-an-archrproject.html"><i class="fa fa-check"></i><b>5.3</b> Plotting Sample Statistics from an ArchRProject</a></li>
+<li class="chapter" data-level="5.4" data-path="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles..html"><a href="plotting-sample-fragment-size-distribution-and-tss-enrichment-profiles..html"><i class="fa fa-check"></i><b>5.4</b> Plotting Sample Fragment Size Distribution and TSS Enrichment Profiles.</a></li>
+<li class="chapter" data-level="5.5" data-path="saving-and-loading-an-archrproject.html"><a href="saving-and-loading-an-archrproject.html"><i class="fa fa-check"></i><b>5.5</b> Saving and Loading an <code>ArchRProject</code></a></li>
+<li class="chapter" data-level="5.6" data-path="filtering-doublets-from-an-archrproject.html"><a href="filtering-doublets-from-an-archrproject.html"><i class="fa fa-check"></i><b>5.6</b> Filtering Doublets from an ArchRProject</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>5</b> Clustering with ArchR</a>
+<li class="chapter" data-level="6" data-path="dimensionality-reduction-with-archr.html"><a href="dimensionality-reduction-with-archr.html"><i class="fa fa-check"></i><b>6</b> Dimensionality Reduction with ArchR</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>5.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="6.1" data-path="archrs-lsi-implementation.html"><a href="archrs-lsi-implementation.html"><i class="fa fa-check"></i><b>6.1</b> ArchR’s LSI Implementation</a></li>
+<li class="chapter" data-level="6.2" data-path="iterative-latent-semantic-indexing-lsi.html"><a href="iterative-latent-semantic-indexing-lsi.html"><i class="fa fa-check"></i><b>6.2</b> Iterative Latent Semantic Indexing (LSI)</a></li>
+<li class="chapter" data-level="6.3" data-path="estimated-lsi.html"><a href="estimated-lsi.html"><i class="fa fa-check"></i><b>6.3</b> Estimated LSI</a></li>
+<li class="chapter" data-level="6.4" data-path="batch-effect-correction-wtih-harmony.html"><a href="batch-effect-correction-wtih-harmony.html"><i class="fa fa-check"></i><b>6.4</b> Batch Effect Correction wtih Harmony</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>6</b> Single-cell Embeddings</a>
+<li class="chapter" data-level="7" data-path="clustering-with-archr.html"><a href="clustering-with-archr.html"><i class="fa fa-check"></i><b>7</b> Clustering with ArchR</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>6.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
-<li class="chapter" data-level="6.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>6.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
-<li class="chapter" data-level="6.3" data-path="dimensionality-reduction-after-harmony.html"><a href="dimensionality-reduction-after-harmony.html"><i class="fa fa-check"></i><b>6.3</b> Dimensionality Reduction After Harmony</a></li>
+<li class="chapter" data-level="7.1" data-path="clustering-using-seurats-findclusters-function.html"><a href="clustering-using-seurats-findclusters-function.html"><i class="fa fa-check"></i><b>7.1</b> Clustering using Seurat’s <code>FindClusters()</code> function</a></li>
+<li class="chapter" data-level="7.2" data-path="clustering-using-scran.html"><a href="clustering-using-scran.html"><i class="fa fa-check"></i><b>7.2</b> Clustering using <code>scran</code></a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="gene-scores-and-marker-genes-with-archr.html"><a href="gene-scores-and-marker-genes-with-archr.html"><i class="fa fa-check"></i><b>7</b> Gene Scores and Marker Genes with ArchR</a>
+<li class="chapter" data-level="8" data-path="single-cell-embeddings.html"><a href="single-cell-embeddings.html"><i class="fa fa-check"></i><b>8</b> Single-cell Embeddings</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="calculating-gene-scores-in-archr.html"><a href="calculating-gene-scores-in-archr.html"><i class="fa fa-check"></i><b>7.1</b> Calculating Gene Scores in ArchR</a></li>
-<li class="chapter" data-level="7.2" data-path="identification-of-marker-features.html"><a href="identification-of-marker-features.html"><i class="fa fa-check"></i><b>7.2</b> Identification of Marker Features</a></li>
-<li class="chapter" data-level="7.3" data-path="identifying-marker-genes.html"><a href="identifying-marker-genes.html"><i class="fa fa-check"></i><b>7.3</b> Identifying Marker Genes</a></li>
-<li class="chapter" data-level="7.4" data-path="visualizing-marker-genes-on-an-embedding.html"><a href="visualizing-marker-genes-on-an-embedding.html"><i class="fa fa-check"></i><b>7.4</b> Visualizing Marker Genes on an Embedding</a></li>
-<li class="chapter" data-level="7.5" data-path="marker-genes-imputation-with-magic.html"><a href="marker-genes-imputation-with-magic.html"><i class="fa fa-check"></i><b>7.5</b> Marker Genes Imputation with MAGIC</a></li>
-<li class="chapter" data-level="7.6" data-path="track-plotting-with-archrbrowser.html"><a href="track-plotting-with-archrbrowser.html"><i class="fa fa-check"></i><b>7.6</b> Track Plotting with ArchRBrowser</a></li>
-<li class="chapter" data-level="7.7" data-path="launching-the-archrbrowser.html"><a href="launching-the-archrbrowser.html"><i class="fa fa-check"></i><b>7.7</b> Launching the ArchRBrowser</a></li>
+<li class="chapter" data-level="8.1" data-path="uniform-manifold-approximation-and-projection-umap.html"><a href="uniform-manifold-approximation-and-projection-umap.html"><i class="fa fa-check"></i><b>8.1</b> Uniform Manifold Approximation and Projection (UMAP)</a></li>
+<li class="chapter" data-level="8.2" data-path="t-stocastic-neighbor-embedding-t-sne.html"><a href="t-stocastic-neighbor-embedding-t-sne.html"><i class="fa fa-check"></i><b>8.2</b> t-Stocastic Neighbor Embedding (t-SNE)</a></li>
+<li class="chapter" data-level="8.3" data-path="dimensionality-reduction-after-harmony.html"><a href="dimensionality-reduction-after-harmony.html"><i class="fa fa-check"></i><b>8.3</b> Dimensionality Reduction After Harmony</a></li>
+<li class="chapter" data-level="8.4" data-path="highlighting-specific-cells-on-an-embedding.html"><a href="highlighting-specific-cells-on-an-embedding.html"><i class="fa fa-check"></i><b>8.4</b> Highlighting specific cells on an embedding</a></li>
+<li class="chapter" data-level="8.5" data-path="importing-an-embedding-from-external-software.html"><a href="importing-an-embedding-from-external-software.html"><i class="fa fa-check"></i><b>8.5</b> Importing an embedding from external software</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="defining-cluster-identity-with-scrna-seq.html"><a href="defining-cluster-identity-with-scrna-seq.html"><i class="fa fa-check"></i><b>8</b> Defining Cluster Identity with scRNA-seq</a>
+<li class="chapter" data-level="9" data-path="gene-scores-and-marker-genes-with-archr.html"><a href="gene-scores-and-marker-genes-with-archr.html"><i class="fa fa-check"></i><b>9</b> Gene Scores and Marker Genes with ArchR</a>
 <ul>
-<li class="chapter" data-level="8.1" data-path="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><i class="fa fa-check"></i><b>8.1</b> Cross-platform linkage of scATAC-seq cells with scRNA-seq cells</a></li>
-<li class="chapter" data-level="8.2" data-path="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><i class="fa fa-check"></i><b>8.2</b> Adding Pseudo-scRNA-seq profiles for each scATAC-seq cell</a></li>
-<li class="chapter" data-level="8.3" data-path="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><a href="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><i class="fa fa-check"></i><b>8.3</b> Labeling scATAC-seq clusters with scRNA-seq information</a></li>
+<li class="chapter" data-level="9.1" data-path="calculating-gene-scores-in-archr.html"><a href="calculating-gene-scores-in-archr.html"><i class="fa fa-check"></i><b>9.1</b> Calculating Gene Scores in ArchR</a></li>
+<li class="chapter" data-level="9.2" data-path="identification-of-marker-features.html"><a href="identification-of-marker-features.html"><i class="fa fa-check"></i><b>9.2</b> Identification of Marker Features</a></li>
+<li class="chapter" data-level="9.3" data-path="identifying-marker-genes.html"><a href="identifying-marker-genes.html"><i class="fa fa-check"></i><b>9.3</b> Identifying Marker Genes</a></li>
+<li class="chapter" data-level="9.4" data-path="visualizing-marker-genes-on-an-embedding.html"><a href="visualizing-marker-genes-on-an-embedding.html"><i class="fa fa-check"></i><b>9.4</b> Visualizing Marker Genes on an Embedding</a></li>
+<li class="chapter" data-level="9.5" data-path="marker-genes-imputation-with-magic.html"><a href="marker-genes-imputation-with-magic.html"><i class="fa fa-check"></i><b>9.5</b> Marker Genes Imputation with MAGIC</a></li>
+<li class="chapter" data-level="9.6" data-path="module-scores.html"><a href="module-scores.html"><i class="fa fa-check"></i><b>9.6</b> Module Scores</a></li>
+<li class="chapter" data-level="9.7" data-path="track-plotting-with-archrbrowser.html"><a href="track-plotting-with-archrbrowser.html"><i class="fa fa-check"></i><b>9.7</b> Track Plotting with ArchRBrowser</a></li>
+<li class="chapter" data-level="9.8" data-path="launching-the-interactive-archrbrowser.html"><a href="launching-the-interactive-archrbrowser.html"><i class="fa fa-check"></i><b>9.8</b> Launching the Interactive ArchRBrowser</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="pseudo-bulk-replicates-in-archr.html"><a href="pseudo-bulk-replicates-in-archr.html"><i class="fa fa-check"></i><b>9</b> Pseudo-bulk Replicates in ArchR</a>
+<li class="chapter" data-level="10" data-path="defining-cluster-identity-with-scrna-seq.html"><a href="defining-cluster-identity-with-scrna-seq.html"><i class="fa fa-check"></i><b>10</b> Defining Cluster Identity with scRNA-seq</a>
 <ul>
-<li class="chapter" data-level="9.1" data-path="how-does-archr-make-pseudo-bulk-replicates.html"><a href="how-does-archr-make-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>9.1</b> How Does ArchR Make Pseudo-bulk Replicates?</a></li>
-<li class="chapter" data-level="9.2" data-path="making-pseudo-bulk-replicates.html"><a href="making-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>9.2</b> Making Pseudo-bulk Replicates</a></li>
+<li class="chapter" data-level="10.1" data-path="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><a href="cross-platform-linkage-of-scatac-seq-cells-with-scrna-seq-cells.html"><i class="fa fa-check"></i><b>10.1</b> Cross-platform linkage of scATAC-seq cells with scRNA-seq cells</a></li>
+<li class="chapter" data-level="10.2" data-path="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html"><i class="fa fa-check"></i><b>10.2</b> Adding Pseudo-scRNA-seq profiles for each scATAC-seq cell</a></li>
+<li class="chapter" data-level="10.3" data-path="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><a href="labeling-scatac-seq-clusters-with-scrna-seq-information.html"><i class="fa fa-check"></i><b>10.3</b> Labeling scATAC-seq clusters with scRNA-seq information</a></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="calling-peaks-with-archr.html"><a href="calling-peaks-with-archr.html"><i class="fa fa-check"></i><b>10</b> Calling Peaks with ArchR</a>
+<li class="chapter" data-level="11" data-path="pseudo-bulk-replicates-in-archr.html"><a href="pseudo-bulk-replicates-in-archr.html"><i class="fa fa-check"></i><b>11</b> Pseudo-bulk Replicates in ArchR</a>
 <ul>
-<li class="chapter" data-level="10.1" data-path="the-iterative-overlap-peak-merging-procedure.html"><a href="the-iterative-overlap-peak-merging-procedure.html"><i class="fa fa-check"></i><b>10.1</b> The Iterative Overlap Peak Merging Procedure</a></li>
-<li class="chapter" data-level="10.2" data-path="calling-peaks-w-macs2.html"><a href="calling-peaks-w-macs2.html"><i class="fa fa-check"></i><b>10.2</b> Calling Peaks w/ Macs2</a></li>
-<li class="chapter" data-level="10.3" data-path="calling-peaks-w-tilematrix.html"><a href="calling-peaks-w-tilematrix.html"><i class="fa fa-check"></i><b>10.3</b> Calling Peaks w/ TileMatrix</a></li>
-<li class="chapter" data-level="10.4" data-path="add-peak-matrix.html"><a href="add-peak-matrix.html"><i class="fa fa-check"></i><b>10.4</b> Add Peak Matrix</a></li>
+<li class="chapter" data-level="11.1" data-path="how-does-archr-make-pseudo-bulk-replicates.html"><a href="how-does-archr-make-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>11.1</b> How Does ArchR Make Pseudo-bulk Replicates?</a></li>
+<li class="chapter" data-level="11.2" data-path="making-pseudo-bulk-replicates.html"><a href="making-pseudo-bulk-replicates.html"><i class="fa fa-check"></i><b>11.2</b> Making Pseudo-bulk Replicates</a></li>
 </ul></li>
-<li class="chapter" data-level="11" data-path="identifying-marker-peaks-with-archr.html"><a href="identifying-marker-peaks-with-archr.html"><i class="fa fa-check"></i><b>11</b> Identifying Marker Peaks with ArchR</a>
+<li class="chapter" data-level="12" data-path="calling-peaks-with-archr.html"><a href="calling-peaks-with-archr.html"><i class="fa fa-check"></i><b>12</b> Calling Peaks with ArchR</a>
 <ul>
-<li class="chapter" data-level="11.1" data-path="identifying-marker-peaks-with-archr-1.html"><a href="identifying-marker-peaks-with-archr-1.html"><i class="fa fa-check"></i><b>11.1</b> Identifying Marker Peaks with ArchR</a></li>
-<li class="chapter" data-level="11.2" data-path="plotting-marker-peaks-in-archr.html"><a href="plotting-marker-peaks-in-archr.html"><i class="fa fa-check"></i><b>11.2</b> Plotting Marker Peaks in ArchR</a></li>
-<li class="chapter" data-level="11.3" data-path="pairwise-testing-between-groups.html"><a href="pairwise-testing-between-groups.html"><i class="fa fa-check"></i><b>11.3</b> Pairwise Testing Between Groups</a></li>
+<li class="chapter" data-level="12.1" data-path="the-iterative-overlap-peak-merging-procedure.html"><a href="the-iterative-overlap-peak-merging-procedure.html"><i class="fa fa-check"></i><b>12.1</b> The Iterative Overlap Peak Merging Procedure</a></li>
+<li class="chapter" data-level="12.2" data-path="calling-peaks-w-macs2.html"><a href="calling-peaks-w-macs2.html"><i class="fa fa-check"></i><b>12.2</b> Calling Peaks w/ Macs2</a></li>
+<li class="chapter" data-level="12.3" data-path="calling-peaks-w-tilematrix.html"><a href="calling-peaks-w-tilematrix.html"><i class="fa fa-check"></i><b>12.3</b> Calling Peaks w/ TileMatrix</a></li>
+<li class="chapter" data-level="12.4" data-path="adding-a-peak-matrix.html"><a href="adding-a-peak-matrix.html"><i class="fa fa-check"></i><b>12.4</b> Adding a Peak Matrix</a></li>
 </ul></li>
-<li class="chapter" data-level="12" data-path="motif-and-feature-enrichment-with-archr.html"><a href="motif-and-feature-enrichment-with-archr.html"><i class="fa fa-check"></i><b>12</b> Motif and Feature Enrichment with ArchR</a>
+<li class="chapter" data-level="13" data-path="identifying-marker-peaks.html"><a href="identifying-marker-peaks.html"><i class="fa fa-check"></i><b>13</b> Identifying Marker Peaks</a>
 <ul>
-<li class="chapter" data-level="12.1" data-path="motif-enrichment-in-differential-peaks.html"><a href="motif-enrichment-in-differential-peaks.html"><i class="fa fa-check"></i><b>12.1</b> Motif Enrichment in Differential Peaks</a></li>
-<li class="chapter" data-level="12.2" data-path="motif-enrichment-in-marker-peaks.html"><a href="motif-enrichment-in-marker-peaks.html"><i class="fa fa-check"></i><b>12.2</b> Motif Enrichment in Marker Peaks</a></li>
-<li class="chapter" data-level="12.3" data-path="archr-enrichment.html"><a href="archr-enrichment.html"><i class="fa fa-check"></i><b>12.3</b> ArchR Enrichment</a></li>
-<li class="chapter" data-level="12.4" data-path="custom-enrichment.html"><a href="custom-enrichment.html"><i class="fa fa-check"></i><b>12.4</b> Custom Enrichment</a></li>
+<li class="chapter" data-level="13.1" data-path="identifying-marker-peaks-with-archr.html"><a href="identifying-marker-peaks-with-archr.html"><i class="fa fa-check"></i><b>13.1</b> Identifying Marker Peaks with ArchR</a></li>
+<li class="chapter" data-level="13.2" data-path="plotting-marker-peaks-in-archr.html"><a href="plotting-marker-peaks-in-archr.html"><i class="fa fa-check"></i><b>13.2</b> Plotting Marker Peaks in ArchR</a></li>
+<li class="chapter" data-level="13.3" data-path="pairwise-testing-between-groups.html"><a href="pairwise-testing-between-groups.html"><i class="fa fa-check"></i><b>13.3</b> Pairwise Testing Between Groups</a></li>
 </ul></li>
-<li class="chapter" data-level="13" data-path="chromvar-deviatons-enrichment-with-archr.html"><a href="chromvar-deviatons-enrichment-with-archr.html"><i class="fa fa-check"></i><b>13</b> ChromVAR Deviatons Enrichment with ArchR</a>
+<li class="chapter" data-level="14" data-path="motif-and-feature-enrichment-with-archr.html"><a href="motif-and-feature-enrichment-with-archr.html"><i class="fa fa-check"></i><b>14</b> Motif and Feature Enrichment with ArchR</a>
 <ul>
-<li class="chapter" data-level="13.1" data-path="motif-deviations.html"><a href="motif-deviations.html"><i class="fa fa-check"></i><b>13.1</b> Motif Deviations</a></li>
-<li class="chapter" data-level="13.2" data-path="archr-and-custom-deviations.html"><a href="archr-and-custom-deviations.html"><i class="fa fa-check"></i><b>13.2</b> ArchR and Custom Deviations</a></li>
+<li class="chapter" data-level="14.1" data-path="motif-enrichment.html"><a href="motif-enrichment.html"><i class="fa fa-check"></i><b>14.1</b> Motif Enrichment</a></li>
+<li class="chapter" data-level="14.2" data-path="archr-enrichment.html"><a href="archr-enrichment.html"><i class="fa fa-check"></i><b>14.2</b> ArchR Enrichment</a></li>
+<li class="chapter" data-level="14.3" data-path="custom-enrichment.html"><a href="custom-enrichment.html"><i class="fa fa-check"></i><b>14.3</b> Custom Enrichment</a></li>
 </ul></li>
-<li class="chapter" data-level="14" data-path="footprinting-with-archr.html"><a href="footprinting-with-archr.html"><i class="fa fa-check"></i><b>14</b> Footprinting with ArchR</a>
+<li class="chapter" data-level="15" data-path="chromvar-deviatons-enrichment-with-archr.html"><a href="chromvar-deviatons-enrichment-with-archr.html"><i class="fa fa-check"></i><b>15</b> ChromVAR Deviatons Enrichment with ArchR</a>
 <ul>
-<li class="chapter" data-level="14.1" data-path="motif-footprinting.html"><a href="motif-footprinting.html"><i class="fa fa-check"></i><b>14.1</b> Motif Footprinting</a></li>
-<li class="chapter" data-level="14.2" data-path="normalization-of-footprints-for-tn5-bias.html"><a href="normalization-of-footprints-for-tn5-bias.html"><i class="fa fa-check"></i><b>14.2</b> Normalization of Footprints for Tn5 Bias</a></li>
-<li class="chapter" data-level="14.3" data-path="feature-footprinting.html"><a href="feature-footprinting.html"><i class="fa fa-check"></i><b>14.3</b> Feature Footprinting</a></li>
+<li class="chapter" data-level="15.1" data-path="motif-deviations.html"><a href="motif-deviations.html"><i class="fa fa-check"></i><b>15.1</b> Motif Deviations</a></li>
+<li class="chapter" data-level="15.2" data-path="archr-and-custom-deviations.html"><a href="archr-and-custom-deviations.html"><i class="fa fa-check"></i><b>15.2</b> ArchR and Custom Deviations</a></li>
 </ul></li>
-<li class="chapter" data-level="15" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>15</b> Integrative Analysis with ArchR</a>
+<li class="chapter" data-level="16" data-path="footprinting-with-archr.html"><a href="footprinting-with-archr.html"><i class="fa fa-check"></i><b>16</b> Footprinting with ArchR</a>
 <ul>
-<li class="chapter" data-level="15.1" data-path="creating-low-overlapping-aggregates-of-cells.html"><a href="creating-low-overlapping-aggregates-of-cells.html"><i class="fa fa-check"></i><b>15.1</b> Creating Low-Overlapping Aggregates of Cells</a></li>
-<li class="chapter" data-level="15.2" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>15.2</b> Co-accessibility with ArchR</a></li>
-<li class="chapter" data-level="15.3" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>15.3</b> Peak2GeneLinkage with ArchR</a></li>
-<li class="chapter" data-level="15.4" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>15.4</b> Identification of Positive TF-Regulators</a></li>
+<li class="chapter" data-level="16.1" data-path="motif-footprinting.html"><a href="motif-footprinting.html"><i class="fa fa-check"></i><b>16.1</b> Motif Footprinting</a></li>
+<li class="chapter" data-level="16.2" data-path="normalization-of-footprints-for-tn5-bias.html"><a href="normalization-of-footprints-for-tn5-bias.html"><i class="fa fa-check"></i><b>16.2</b> Normalization of Footprints for Tn5 Bias</a></li>
+<li class="chapter" data-level="16.3" data-path="feature-footprinting.html"><a href="feature-footprinting.html"><i class="fa fa-check"></i><b>16.3</b> Feature Footprinting</a></li>
 </ul></li>
-<li class="chapter" data-level="16" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>16</b> Trajectory Analysis with ArchR</a>
+<li class="chapter" data-level="17" data-path="integrative-analysis-with-archr.html"><a href="integrative-analysis-with-archr.html"><i class="fa fa-check"></i><b>17</b> Integrative Analysis with ArchR</a>
 <ul>
-<li class="chapter" data-level="16.1" data-path="myeloid-trajectory-monocyte-differentiation.html"><a href="myeloid-trajectory-monocyte-differentiation.html"><i class="fa fa-check"></i><b>16.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
-<li class="chapter" data-level="16.2" data-path="lymphoid-trajectory-b-cell-cifferentiation.html"><a href="lymphoid-trajectory-b-cell-cifferentiation.html"><i class="fa fa-check"></i><b>16.2</b> Lymphoid Trajectory - B Cell Cifferentiation</a></li>
+<li class="chapter" data-level="17.1" data-path="creating-low-overlapping-aggregates-of-cells.html"><a href="creating-low-overlapping-aggregates-of-cells.html"><i class="fa fa-check"></i><b>17.1</b> Creating Low-Overlapping Aggregates of Cells</a></li>
+<li class="chapter" data-level="17.2" data-path="co-accessibility-with-archr.html"><a href="co-accessibility-with-archr.html"><i class="fa fa-check"></i><b>17.2</b> Co-accessibility with ArchR</a></li>
+<li class="chapter" data-level="17.3" data-path="peak2genelinkage-with-archr.html"><a href="peak2genelinkage-with-archr.html"><i class="fa fa-check"></i><b>17.3</b> Peak2GeneLinkage with ArchR</a></li>
+<li class="chapter" data-level="17.4" data-path="identification-of-positive-tf-regulators.html"><a href="identification-of-positive-tf-regulators.html"><i class="fa fa-check"></i><b>17.4</b> Identification of Positive TF-Regulators</a></li>
 </ul></li>
-<li class="chapter" data-level="17" data-path="plot-aesthetics-in-archr.html"><a href="plot-aesthetics-in-archr.html"><i class="fa fa-check"></i><b>17</b> Plot aesthetics in ArchR</a></li>
-<li class="chapter" data-level="18" data-path="session-information.html"><a href="session-information.html"><i class="fa fa-check"></i><b>18</b> Session Information</a></li>
+<li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-differentiation.html"><a href="lymphoid-trajectory---b-cell-differentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Differentiation</a></li>
+<li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
+<li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
+<li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="handling-archr-output.html"><a href="handling-archr-output.html"><i class="fa fa-check"></i><b>19</b> Handling ArchR Output</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="exporting-fragment-level-data.html"><a href="exporting-fragment-level-data.html"><i class="fa fa-check"></i><b>19.1</b> Exporting fragment-level data</a></li>
+<li class="chapter" data-level="19.2" data-path="exporting-matrix-level-data.html"><a href="exporting-matrix-level-data.html"><i class="fa fa-check"></i><b>19.2</b> Exporting matrix-level data</a></li>
+<li class="chapter" data-level="19.3" data-path="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html"><a href="exporting-pseudo-bulked-data-to-a-summarizedexperiment.html"><i class="fa fa-check"></i><b>19.3</b> Exporting pseudo-bulked data to a <code>SummarizedExperiment</code></a></li>
+<li class="chapter" data-level="19.4" data-path="exporting-pseudo-bulked-data-to-a-bigwig-file.html"><a href="exporting-pseudo-bulked-data-to-a-bigwig-file.html"><i class="fa fa-check"></i><b>19.4</b> Exporting pseudo-bulked data to a bigWig file</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="integration-with-bulk-atac-seq.html"><a href="integration-with-bulk-atac-seq.html"><i class="fa fa-check"></i><b>20</b> Integration with bulk ATAC-seq</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="projecting-bulk-atac-seq-data.html"><a href="projecting-bulk-atac-seq-data.html"><i class="fa fa-check"></i><b>20.1</b> Projecting bulk ATAC-seq data</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="multiomic-data-analysis-in-archr.html"><a href="multiomic-data-analysis-in-archr.html"><i class="fa fa-check"></i><b>21</b> Multiomic data analysis in ArchR</a>
+<ul>
+<li class="chapter" data-level="21.1" data-path="importing-data-and-setting-up-a-multiome-project.html"><a href="importing-data-and-setting-up-a-multiome-project.html"><i class="fa fa-check"></i><b>21.1</b> Importing data and setting up a Multiome project</a></li>
+<li class="chapter" data-level="21.2" data-path="analysis-of-multiome-data-in-archr.html"><a href="analysis-of-multiome-data-in-archr.html"><i class="fa fa-check"></i><b>21.2</b> Analysis of multiome data in ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="plot-aesthetics-in-archr.html"><a href="plot-aesthetics-in-archr.html"><i class="fa fa-check"></i><b>22</b> Plot aesthetics in ArchR</a>
+<ul>
+<li class="chapter" data-level="22.1" data-path="using-and-manipulating-palettes-in-archr.html"><a href="using-and-manipulating-palettes-in-archr.html"><i class="fa fa-check"></i><b>22.1</b> Using and manipulating palettes in ArchR</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="testing-your-archr-installation.html"><a href="testing-your-archr-installation.html"><i class="fa fa-check"></i><b>23</b> Testing Your ArchR Installation</a></li>
+<li class="chapter" data-level="24" data-path="session-information.html"><a href="session-information.html"><i class="fa fa-check"></i><b>24</b> Session Information</a></li>
 <li class="divider"></li>
 <li><a href="https://bookdown.org" target="_blank">Published with bookdown</a></li>
 
@@ -262,154 +305,176 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell" class="section level2" number="8.2">
-<h2><span class="header-section-number">8.2</span> Adding Pseudo-scRNA-seq profiles for each scATAC-seq cell</h2>
+<div id="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell" class="section level2 hasAnchor" number="10.2">
+<h2><span class="header-section-number">10.2</span> Adding Pseudo-scRNA-seq profiles for each scATAC-seq cell<a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Now that we are satisfied with the results of our scATAC-seq and scRNA-seq integration, we can re-run the integration with <code>addToArrow = TRUE</code> to add the linked gene expression data to each of the Arrow files. As described previously, we pass the <code>groupList</code> to constrain the integration and column names to <code>nameCell</code>, <code>nameGroup</code>, and <code>nameScore</code> for each of the metadata columns we will add to <code>cellColData</code>. Here, we create <code>projHeme3</code> which will be carried forward in the tutorial.</p>
-<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb135-1"></a><span class="co">#~5 minutes</span></span>
-<span id="cb135-2"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb135-2"></a>projHeme3 &lt;-<span class="st"> </span><span class="kw">addGeneIntegrationMatrix</span>(</span>
-<span id="cb135-3"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb135-3"></a>    <span class="dt">ArchRProj =</span> projHeme2, </span>
-<span id="cb135-4"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb135-4"></a>    <span class="dt">useMatrix =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>,</span>
-<span id="cb135-5"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb135-5"></a>    <span class="dt">matrixName =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>,</span>
-<span id="cb135-6"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb135-6"></a>    <span class="dt">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
-<span id="cb135-7"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb135-7"></a>    <span class="dt">seRNA =</span> seRNA,</span>
-<span id="cb135-8"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb135-8"></a>    <span class="dt">addToArrow =</span> <span class="ot">TRUE</span>,</span>
-<span id="cb135-9"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb135-9"></a>    <span class="dt">force=</span> <span class="ot">TRUE</span>,</span>
-<span id="cb135-10"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb135-10"></a>    <span class="dt">groupList =</span> groupList,</span>
-<span id="cb135-11"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb135-11"></a>    <span class="dt">groupRNA =</span> <span class="st">&quot;BioClassification&quot;</span>,</span>
-<span id="cb135-12"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb135-12"></a>    <span class="dt">nameCell =</span> <span class="st">&quot;predictedCell&quot;</span>,</span>
-<span id="cb135-13"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb135-13"></a>    <span class="dt">nameGroup =</span> <span class="st">&quot;predictedGroup&quot;</span>,</span>
-<span id="cb135-14"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb135-14"></a>    <span class="dt">nameScore =</span> <span class="st">&quot;predictedScore&quot;</span></span>
-<span id="cb135-15"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb135-15"></a>)</span></code></pre></div>
-<blockquote>
-<p>## ArchR logging to : ArchRLogs/ArchR-addGeneIntegrationMatrix-f66317d3557e-Date-2020-04-15_Time-10-16-26.log<br />
-## If there is an issue, please report to github with logFile!<br />
-## 2020-04-15 10:16:26 : Running Seurat’s Integration Stuart* et al 2019, 0.009 mins elapsed.<br />
-## 2020-04-15 10:16:27 : Checking ATAC Input, 0.021 mins elapsed.<br />
-## 2020-04-15 10:16:27 : Checking RNA Input, 0.021 mins elapsed.<br />
-## 2020-04-15 10:16:38 : Creating Integration Blocks, 0.211 mins elapsed.<br />
-## 2020-04-15 10:16:39 : Prepping Interation Data, 0.215 mins elapsed.<br />
-## 2020-04-15 10:16:39 : Computing Integration in 2 Integration Blocks!, 0 mins elapsed.<br />
-## 2020-04-15 10:19:30 : Transferring Data to ArrowFiles, 2.843 mins elapsed.<br />
-## 2020-04-15 10:20:47 : Completed Integration with RNA Matrix, 4.133 mins elapsed.<br />
-## ArchR logging successful to : ArchRLogs/ArchR-addGeneIntegrationMatrix-f66317d3557e-Date-2020-04-15_Time-10-16-26.log</p>
-</blockquote>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-1" tabindex="-1"></a>projHeme3 <span class="ot">&lt;-</span> <span class="fu">addGeneIntegrationMatrix</span>(</span>
+<span id="cb166-2"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme2, </span>
+<span id="cb166-3"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-3" tabindex="-1"></a>    <span class="at">useMatrix =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>,</span>
+<span id="cb166-4"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-4" tabindex="-1"></a>    <span class="at">matrixName =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>,</span>
+<span id="cb166-5"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-5" tabindex="-1"></a>    <span class="at">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span>,</span>
+<span id="cb166-6"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-6" tabindex="-1"></a>    <span class="at">seRNA =</span> seRNA,</span>
+<span id="cb166-7"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-7" tabindex="-1"></a>    <span class="at">addToArrow =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb166-8"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-8" tabindex="-1"></a>    <span class="at">force=</span> <span class="cn">TRUE</span>,</span>
+<span id="cb166-9"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-9" tabindex="-1"></a>    <span class="at">groupList =</span> groupList,</span>
+<span id="cb166-10"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-10" tabindex="-1"></a>    <span class="at">groupRNA =</span> <span class="st">&quot;BioClassification&quot;</span>,</span>
+<span id="cb166-11"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-11" tabindex="-1"></a>    <span class="at">nameCell =</span> <span class="st">&quot;predictedCell&quot;</span>,</span>
+<span id="cb166-12"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-12" tabindex="-1"></a>    <span class="at">nameGroup =</span> <span class="st">&quot;predictedGroup&quot;</span>,</span>
+<span id="cb166-13"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-13" tabindex="-1"></a>    <span class="at">nameScore =</span> <span class="st">&quot;predictedScore&quot;</span></span>
+<span id="cb166-14"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-14" tabindex="-1"></a>)</span>
+<span id="cb166-15"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-15" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addGeneIntegrationMatrix-95dd80f34-Date-2025-02-06_Time-01-22-03.820929.log</span></span>
+<span id="cb166-16"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-16" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb166-17"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-17" tabindex="-1"></a><span class="do">## 2025-02-06 01:22:03.97437 : Running Seurat&#39;s Integration Stuart* et al 2019, 0.003 mins elapsed.</span></span>
+<span id="cb166-18"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-18" tabindex="-1"></a><span class="do">## 2025-02-06 01:22:04.492682 : Checking ATAC Input, 0.011 mins elapsed.</span></span>
+<span id="cb166-19"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-19" tabindex="-1"></a><span class="do">## 2025-02-06 01:22:05.103631 : Checking RNA Input, 0.021 mins elapsed.</span></span>
+<span id="cb166-20"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-20" tabindex="-1"></a><span class="do">## 2025-02-06 01:22:14.847343 : Found 18601 overlapping gene names from gene scores and rna matrix!, 0.184 mins elapsed.</span></span>
+<span id="cb166-21"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-21" tabindex="-1"></a><span class="do">## 2025-02-06 01:22:14.854022 : Creating Integration Blocks, 0.184 mins elapsed.</span></span>
+<span id="cb166-22"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-22" tabindex="-1"></a><span class="do">## 2025-02-06 01:22:14.984647 : Prepping Interation Data, 0.186 mins elapsed.</span></span>
+<span id="cb166-23"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-23" tabindex="-1"></a><span class="do">## subThreading Disabled since ArchRLocking is TRUE see `addArchRLocking`</span></span>
+<span id="cb166-24"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-24" tabindex="-1"></a><span class="do">## 2025-02-06 01:22:15.768962 : Computing Integration in 2 Integration Blocks!, 0 mins elapsed.</span></span>
+<span id="cb166-25"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-25" tabindex="-1"></a><span class="do">## 2025-02-06 01:22:15.775256 : Block (1 of 2) : Computing Integration, 0 mins elapsed.</span></span>
+<span id="cb166-26"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-26" tabindex="-1"></a><span class="do">## 2025-02-06 01:22:17.119148 : Block (1 of 2) : Identifying Variable Genes, 0.023 mins elapsed.</span></span>
+<span id="cb166-27"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-27" tabindex="-1"></a><span class="do">## 2025-02-06 01:22:18.380874 : Block (1 of 2) : Getting GeneScoreMatrix, 0.044 mins elapsed.</span></span>
+<span id="cb166-28"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-28" tabindex="-1"></a><span class="do">## 2025-02-06 01:22:25.772727 : Block (1 of 2) : Imputing GeneScoreMatrix, 0.167 mins elapsed.</span></span>
+<span id="cb166-29"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-29" tabindex="-1"></a><span class="do">## Getting ImputeWeights</span></span>
+<span id="cb166-30"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-30" tabindex="-1"></a><span class="do">## 2025-02-06 01:22:30.937936 : Block (1 of 2) : Seurat FindTransferAnchors, 0.253 mins elapsed.</span></span>
+<span id="cb166-31"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-31" tabindex="-1"></a><span class="do">## 2025-02-06 01:23:37.036289 : Block (1 of 2) : Seurat TransferData Cell Group Labels, 1.354 mins elapsed.</span></span>
+<span id="cb166-32"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-32" tabindex="-1"></a><span class="do">## 2025-02-06 01:23:53.212624 : Block (1 of 2) : Seurat TransferData Cell Names Labels, 1.624 mins elapsed.</span></span>
+<span id="cb166-33"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-33" tabindex="-1"></a><span class="do">## 2025-02-06 01:24:12.982176 : Block (1 of 2) : Seurat TransferData GeneMatrix, 1.954 mins elapsed.</span></span>
+<span id="cb166-34"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-34" tabindex="-1"></a><span class="do">## 2025-02-06 01:24:30.25185 : Block (1 of 2) : Saving TransferAnchors Joint CCA, 2.241 mins elapsed.</span></span>
+<span id="cb166-35"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-35" tabindex="-1"></a><span class="do">## 2025-02-06 01:24:32.224822 : Block (1 of 2) : Transferring Paired RNA to Temp File, 2.274 mins elapsed.</span></span>
+<span id="cb166-36"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-36" tabindex="-1"></a><span class="do">## 2025-02-06 01:24:35.20627 : Block (1 of 2) : Completed Integration, 2.324 mins elapsed.</span></span>
+<span id="cb166-37"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-37" tabindex="-1"></a><span class="do">## 2025-02-06 01:24:36.931569 : Block (2 of 2) : Computing Integration, 2.353 mins elapsed.</span></span>
+<span id="cb166-38"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-38" tabindex="-1"></a><span class="do">## 2025-02-06 01:24:38.179617 : Block (2 of 2) : Identifying Variable Genes, 2.374 mins elapsed.</span></span>
+<span id="cb166-39"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-39" tabindex="-1"></a><span class="do">## 2025-02-06 01:24:40.020529 : Block (2 of 2) : Getting GeneScoreMatrix, 2.404 mins elapsed.</span></span>
+<span id="cb166-40"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-40" tabindex="-1"></a><span class="do">## 2025-02-06 01:24:50.25748 : Block (2 of 2) : Imputing GeneScoreMatrix, 2.575 mins elapsed.</span></span>
+<span id="cb166-41"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-41" tabindex="-1"></a><span class="do">## Getting ImputeWeights</span></span>
+<span id="cb166-42"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-42" tabindex="-1"></a><span class="do">## 2025-02-06 01:25:10.949585 : Block (2 of 2) : Seurat FindTransferAnchors, 2.92 mins elapsed.</span></span>
+<span id="cb166-43"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-43" tabindex="-1"></a><span class="do">## 2025-02-06 01:26:23.864048 : Block (2 of 2) : Seurat TransferData Cell Group Labels, 4.135 mins elapsed.</span></span>
+<span id="cb166-44"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-44" tabindex="-1"></a><span class="do">## 2025-02-06 01:26:40.437427 : Block (2 of 2) : Seurat TransferData Cell Names Labels, 4.411 mins elapsed.</span></span>
+<span id="cb166-45"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-45" tabindex="-1"></a><span class="do">## 2025-02-06 01:27:05.031954 : Block (2 of 2) : Seurat TransferData GeneMatrix, 4.821 mins elapsed.</span></span>
+<span id="cb166-46"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-46" tabindex="-1"></a><span class="do">## 2025-02-06 01:27:26.767575 : Block (2 of 2) : Saving TransferAnchors Joint CCA, 5.183 mins elapsed.</span></span>
+<span id="cb166-47"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-47" tabindex="-1"></a><span class="do">## 2025-02-06 01:27:28.982716 : Block (2 of 2) : Transferring Paired RNA to Temp File, 5.22 mins elapsed.</span></span>
+<span id="cb166-48"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-48" tabindex="-1"></a><span class="do">## 2025-02-06 01:27:37.764555 : Block (2 of 2) : Completed Integration, 5.367 mins elapsed.</span></span>
+<span id="cb166-49"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-49" tabindex="-1"></a><span class="do">## 2025-02-06 01:27:39.466188 : Block (1 of 2) : Plotting Joint UMAP, 5.395 mins elapsed.</span></span>
+<span id="cb166-50"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-50" tabindex="-1"></a><span class="do">## 2025-02-06 01:27:55.272158 : Block (2 of 2) : Plotting Joint UMAP, 5.658 mins elapsed.</span></span>
+<span id="cb166-51"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-51" tabindex="-1"></a><span class="do">## 2025-02-06 01:28:15.484101 : Transferring Data to ArrowFiles, 5.995 mins elapsed.</span></span>
+<span id="cb166-52"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-52" tabindex="-1"></a><span class="do">## 2025-02-06 01:28:15.526526 : scATAC_BMMC_R1 (1 of 3) Getting GeneIntegrationMatrix From TempFiles!, 5.996 mins elapsed.</span></span>
+<span id="cb166-53"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-53" tabindex="-1"></a><span class="do">## 2025-02-06 01:28:21.934368 : scATAC_BMMC_R1 (1 of 3) Adding GeneIntegrationMatrix to ArrowFile!, 6.103 mins elapsed.</span></span>
+<span id="cb166-54"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-54" tabindex="-1"></a><span class="do">## 2025-02-06 01:29:31.024427 : scATAC_CD34_BMMC_R1 (2 of 3) Getting GeneIntegrationMatrix From TempFiles!, 7.254 mins elapsed.</span></span>
+<span id="cb166-55"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-55" tabindex="-1"></a><span class="do">## 2025-02-06 01:29:36.136875 : scATAC_CD34_BMMC_R1 (2 of 3) Adding GeneIntegrationMatrix to ArrowFile!, 7.339 mins elapsed.</span></span>
+<span id="cb166-56"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-56" tabindex="-1"></a><span class="do">## 2025-02-06 01:30:40.029477 : scATAC_PBMC_R1 (3 of 3) Getting GeneIntegrationMatrix From TempFiles!, 8.404 mins elapsed.</span></span>
+<span id="cb166-57"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-57" tabindex="-1"></a><span class="do">## 2025-02-06 01:30:43.662016 : scATAC_PBMC_R1 (3 of 3) Adding GeneIntegrationMatrix to ArrowFile!, 8.465 mins elapsed.</span></span>
+<span id="cb166-58"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-58" tabindex="-1"></a><span class="do">## 2025-02-06 01:31:45.899053 : Completed Integration with RNA Matrix, 9.502 mins elapsed.</span></span>
+<span id="cb166-59"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb166-59" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-addGeneIntegrationMatrix-95dd80f34-Date-2025-02-06_Time-01-22-03.820929.log</span></span></code></pre></div>
 <p>Now, when we check which matrices are available using <code>getAvailableMatrices()</code>, we see that the <code>GeneIntegrationMatrix</code> has been added to the Arrow files.</p>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb136-1"></a><span class="kw">getAvailableMatrices</span>(projHeme3)</span></code></pre></div>
-<blockquote>
-<p>## [1] “GeneIntegrationMatrix” “GeneScoreMatrix” “TileMatrix”</p>
-</blockquote>
+<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb167-1" tabindex="-1"></a><span class="fu">getAvailableMatrices</span>(projHeme3)</span>
+<span id="cb167-2"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb167-2" tabindex="-1"></a><span class="do">## [1] &quot;GeneIntegrationMatrix&quot; &quot;GeneScoreMatrix&quot;       &quot;TileMatrix&quot;</span></span></code></pre></div>
 <p>With this new <code>GeneIntegrationMatrix</code> we can compare the linked gene expression with the inferred gene expression obtained through gene scores.</p>
 <p>First, lets make sure we have added impute weights to our project:</p>
-<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb137-1"></a>projHeme3 &lt;-<span class="st"> </span><span class="kw">addImputeWeights</span>(projHeme3)</span></code></pre></div>
-<blockquote>
-<p>## 2020-04-15 10:20:49 : Computing Impute Weights Using Magic (Cell 2018), 0 mins elapsed.<br />
-## 2020-04-15 10:20:59 : Completed Getting Magic Weights!, 0.176 mins elapsed.</p>
-</blockquote>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb168-1" tabindex="-1"></a>projHeme3 <span class="ot">&lt;-</span> <span class="fu">addImputeWeights</span>(projHeme3)</span>
+<span id="cb168-2"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb168-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addImputeWeights-96d4e8a34-Date-2025-02-06_Time-01-31-46.701253.log</span></span>
+<span id="cb168-3"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb168-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb168-4"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb168-4" tabindex="-1"></a><span class="do">## 2025-02-06 01:31:47.085446 : Computing Impute Weights Using Magic (Cell 2018), 0 mins elapsed.</span></span></code></pre></div>
 <p>Now, lets make some UMAP plots overlayed with the <strong>gene expression</strong> values from our <code>GeneIntegrationMatrix</code>.</p>
-<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb138-1"></a>markerGenes  &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
-<span id="cb138-2"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb138-2"></a>    <span class="st">&quot;CD34&quot;</span>, <span class="co">#Early Progenitor</span></span>
-<span id="cb138-3"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb138-3"></a>    <span class="st">&quot;GATA1&quot;</span>, <span class="co">#Erythroid</span></span>
-<span id="cb138-4"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb138-4"></a>    <span class="st">&quot;PAX5&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="co">#B-Cell Trajectory</span></span>
-<span id="cb138-5"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb138-5"></a>    <span class="st">&quot;CD14&quot;</span>, <span class="co">#Monocytes</span></span>
-<span id="cb138-6"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb138-6"></a>    <span class="st">&quot;CD3D&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;IL7R&quot;</span> <span class="co">#TCells</span></span>
-<span id="cb138-7"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb138-7"></a>  )</span>
-<span id="cb138-8"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb138-8"></a></span>
-<span id="cb138-9"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb138-9"></a>p1 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
-<span id="cb138-10"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb138-10"></a>    <span class="dt">ArchRProj =</span> projHeme3, </span>
-<span id="cb138-11"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb138-11"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>, </span>
-<span id="cb138-12"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb138-12"></a>    <span class="dt">name =</span> markerGenes, </span>
-<span id="cb138-13"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb138-13"></a>    <span class="dt">continuousSet =</span> <span class="st">&quot;horizonExtra&quot;</span>,</span>
-<span id="cb138-14"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb138-14"></a>    <span class="dt">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
-<span id="cb138-15"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb138-15"></a>    <span class="dt">imputeWeights =</span> <span class="kw">getImputeWeights</span>(projHeme3)</span>
-<span id="cb138-16"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb138-16"></a>)</span></code></pre></div>
-<blockquote>
-<p>## Getting ImputeWeights<br />
-## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-f66370e499ac-Date-2020-04-15_Time-10-20-59.log<br />
-## If there is an issue, please report to github with logFile!<br />
-## Getting UMAP Embedding<br />
-## ColorBy = GeneIntegrationMatrix<br />
-## Getting Matrix Values…<br />
-## Getting Matrix Values…<br />
-##<br />
-## Imputing Matrix<br />
-## Using weights on disk<br />
-## Using weights on disk<br />
-## Plotting Embedding<br />
-## 1 2 3 4 5 6 7 8 9<br />
-## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-f66370e499ac-Date-2020-04-15_Time-10-20-59.log</p>
-</blockquote>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-1" tabindex="-1"></a>markerGenes  <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb169-2"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-2" tabindex="-1"></a>    <span class="st">&quot;CD34&quot;</span>, <span class="co">#Early Progenitor</span></span>
+<span id="cb169-3"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-3" tabindex="-1"></a>    <span class="st">&quot;GATA1&quot;</span>, <span class="co">#Erythroid</span></span>
+<span id="cb169-4"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-4" tabindex="-1"></a>    <span class="st">&quot;PAX5&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="co">#B-Cell Trajectory</span></span>
+<span id="cb169-5"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-5" tabindex="-1"></a>    <span class="st">&quot;CD14&quot;</span>, <span class="co">#Monocytes</span></span>
+<span id="cb169-6"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-6" tabindex="-1"></a>    <span class="st">&quot;CD3D&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;IL7R&quot;</span> <span class="co">#TCells</span></span>
+<span id="cb169-7"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-7" tabindex="-1"></a>  )</span>
+<span id="cb169-8"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-8" tabindex="-1"></a></span>
+<span id="cb169-9"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-9" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">plotEmbedding</span>(</span>
+<span id="cb169-10"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-10" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme3, </span>
+<span id="cb169-11"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-11" tabindex="-1"></a>    <span class="at">colorBy =</span> <span class="st">&quot;GeneIntegrationMatrix&quot;</span>, </span>
+<span id="cb169-12"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-12" tabindex="-1"></a>    <span class="at">name =</span> markerGenes, </span>
+<span id="cb169-13"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-13" tabindex="-1"></a>    <span class="at">continuousSet =</span> <span class="st">&quot;horizonExtra&quot;</span>,</span>
+<span id="cb169-14"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-14" tabindex="-1"></a>    <span class="at">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
+<span id="cb169-15"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-15" tabindex="-1"></a>    <span class="at">imputeWeights =</span> <span class="fu">getImputeWeights</span>(projHeme3)</span>
+<span id="cb169-16"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-16" tabindex="-1"></a>)</span>
+<span id="cb169-17"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-17" tabindex="-1"></a><span class="do">## Getting ImputeWeights</span></span>
+<span id="cb169-18"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-18" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-952ba38bc-Date-2025-02-06_Time-01-31-58.649191.log</span></span>
+<span id="cb169-19"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-19" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb169-20"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-20" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
+<span id="cb169-21"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-21" tabindex="-1"></a><span class="do">## ColorBy = GeneIntegrationMatrix</span></span>
+<span id="cb169-22"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-22" tabindex="-1"></a><span class="do">## Getting Matrix Values...</span></span>
+<span id="cb169-23"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-23" tabindex="-1"></a><span class="do">## 2025-02-06 01:31:59.731046 :</span></span>
+<span id="cb169-24"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-24" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb169-25"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-25" tabindex="-1"></a><span class="do">## Imputing Matrix</span></span>
+<span id="cb169-26"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-26" tabindex="-1"></a><span class="do">## Using weights on disk</span></span>
+<span id="cb169-27"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-27" tabindex="-1"></a><span class="do">## Using weights on disk</span></span>
+<span id="cb169-28"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-28" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
+<span id="cb169-29"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-29" tabindex="-1"></a><span class="do">## 1 2 3 4 5 6 7 8 9 </span></span>
+<span id="cb169-30"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb169-30" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-952ba38bc-Date-2025-02-06_Time-01-31-58.649191.log</span></span></code></pre></div>
 <p>We can make the same UMAP plots but overlay them with the <strong>gene score</strong> values from our <code>GeneScoreMatrix</code></p>
-<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb139-1"></a>p2 &lt;-<span class="st"> </span><span class="kw">plotEmbedding</span>(</span>
-<span id="cb139-2"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb139-2"></a>    <span class="dt">ArchRProj =</span> projHeme3, </span>
-<span id="cb139-3"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb139-3"></a>    <span class="dt">colorBy =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>, </span>
-<span id="cb139-4"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb139-4"></a>    <span class="dt">continuousSet =</span> <span class="st">&quot;horizonExtra&quot;</span>,</span>
-<span id="cb139-5"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb139-5"></a>    <span class="dt">name =</span> markerGenes, </span>
-<span id="cb139-6"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb139-6"></a>    <span class="dt">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
-<span id="cb139-7"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb139-7"></a>    <span class="dt">imputeWeights =</span> <span class="kw">getImputeWeights</span>(projHeme3)</span>
-<span id="cb139-8"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb139-8"></a>)</span></code></pre></div>
-<blockquote>
-<p>## Getting ImputeWeights<br />
-## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-f6632d4259ce-Date-2020-04-15_Time-10-21-15.log<br />
-## If there is an issue, please report to github with logFile!<br />
-## Getting UMAP Embedding<br />
-## ColorBy = GeneScoreMatrix<br />
-## Getting Matrix Values…<br />
-## Getting Matrix Values…<br />
-##<br />
-## Imputing Matrix<br />
-## Using weights on disk<br />
-## Using weights on disk<br />
-## Plotting Embedding<br />
-## 1 2 3 4 5 6 7 8 9<br />
-## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-f6632d4259ce-Date-2020-04-15_Time-10-21-15.log</p>
-</blockquote>
-<p>To plot all marker genes we can use cowplot</p>
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-1"></a>p1c &lt;-<span class="st"> </span><span class="kw">lapply</span>(p1, <span class="cf">function</span>(x){</span>
-<span id="cb140-2"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-2"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb140-3"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-3"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
-<span id="cb140-4"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-4"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
-<span id="cb140-5"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-5"></a><span class="st">    </span><span class="kw">theme</span>(</span>
-<span id="cb140-6"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-6"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb140-7"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-7"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb140-8"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-8"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb140-9"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-9"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
-<span id="cb140-10"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-10"></a>    )</span>
-<span id="cb140-11"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-11"></a>})</span>
-<span id="cb140-12"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-12"></a></span>
-<span id="cb140-13"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-13"></a>p2c &lt;-<span class="st"> </span><span class="kw">lapply</span>(p2, <span class="cf">function</span>(x){</span>
-<span id="cb140-14"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-14"></a>    x <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="ot">FALSE</span>, <span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb140-15"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-15"></a><span class="st">    </span><span class="kw">theme_ArchR</span>(<span class="dt">baseSize =</span> <span class="fl">6.5</span>) <span class="op">+</span></span>
-<span id="cb140-16"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-16"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">plot.margin =</span> <span class="kw">unit</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="op">+</span></span>
-<span id="cb140-17"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-17"></a><span class="st">    </span><span class="kw">theme</span>(</span>
-<span id="cb140-18"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-18"></a>        <span class="dt">axis.text.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb140-19"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-19"></a>        <span class="dt">axis.ticks.x=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb140-20"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-20"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_blank</span>(), </span>
-<span id="cb140-21"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-21"></a>        <span class="dt">axis.ticks.y=</span><span class="kw">element_blank</span>()</span>
-<span id="cb140-22"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-22"></a>    )</span>
-<span id="cb140-23"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-23"></a>})</span>
-<span id="cb140-24"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-24"></a></span>
-<span id="cb140-25"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb140-25"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>), p1c))</span></code></pre></div>
-<p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-Markers-RNA-W-Imputation_1.png" width="800" height="800" /></p>
-<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb141-1"></a><span class="kw">do.call</span>(cowplot<span class="op">::</span>plot_grid, <span class="kw">c</span>(<span class="kw">list</span>(<span class="dt">ncol =</span> <span class="dv">3</span>), p2c))</span></code></pre></div>
-<p><img src="images/HemeWalkthrough/PNG/Plot-UMAP-Markers-RNA-W-Imputation_2.png" width="800" height="800" /></p>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-1" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">plotEmbedding</span>(</span>
+<span id="cb170-2"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme3, </span>
+<span id="cb170-3"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-3" tabindex="-1"></a>    <span class="at">colorBy =</span> <span class="st">&quot;GeneScoreMatrix&quot;</span>, </span>
+<span id="cb170-4"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-4" tabindex="-1"></a>    <span class="at">continuousSet =</span> <span class="st">&quot;horizonExtra&quot;</span>,</span>
+<span id="cb170-5"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-5" tabindex="-1"></a>    <span class="at">name =</span> markerGenes, </span>
+<span id="cb170-6"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-6" tabindex="-1"></a>    <span class="at">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
+<span id="cb170-7"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-7" tabindex="-1"></a>    <span class="at">imputeWeights =</span> <span class="fu">getImputeWeights</span>(projHeme3)</span>
+<span id="cb170-8"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-8" tabindex="-1"></a>)</span>
+<span id="cb170-9"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-9" tabindex="-1"></a><span class="do">## Getting ImputeWeights</span></span>
+<span id="cb170-10"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-10" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotEmbedding-97fd3fe9d-Date-2025-02-06_Time-01-32-09.527451.log</span></span>
+<span id="cb170-11"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-11" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb170-12"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-12" tabindex="-1"></a><span class="do">## Getting UMAP Embedding</span></span>
+<span id="cb170-13"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-13" tabindex="-1"></a><span class="do">## ColorBy = GeneScoreMatrix</span></span>
+<span id="cb170-14"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-14" tabindex="-1"></a><span class="do">## Getting Matrix Values...</span></span>
+<span id="cb170-15"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-15" tabindex="-1"></a><span class="do">## 2025-02-06 01:32:10.572266 :</span></span>
+<span id="cb170-16"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-16" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb170-17"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-17" tabindex="-1"></a><span class="do">## Imputing Matrix</span></span>
+<span id="cb170-18"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-18" tabindex="-1"></a><span class="do">## Using weights on disk</span></span>
+<span id="cb170-19"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-19" tabindex="-1"></a><span class="do">## Using weights on disk</span></span>
+<span id="cb170-20"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-20" tabindex="-1"></a><span class="do">## Plotting Embedding</span></span>
+<span id="cb170-21"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-21" tabindex="-1"></a><span class="do">## 1 2 3 4 5 6 7 8 9 </span></span>
+<span id="cb170-22"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb170-22" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotEmbedding-97fd3fe9d-Date-2025-02-06_Time-01-32-09.527451.log</span></span></code></pre></div>
+<p>To plot all marker genes we can use cowplot. First, lets organize our plots.</p>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-1" tabindex="-1"></a>p1c <span class="ot">&lt;-</span> <span class="fu">lapply</span>(p1, <span class="cf">function</span>(x){</span>
+<span id="cb171-2"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-2" tabindex="-1"></a>    x <span class="sc">+</span> <span class="fu">guides</span>(<span class="at">color =</span> <span class="cn">FALSE</span>, <span class="at">fill =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> </span>
+<span id="cb171-3"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-3" tabindex="-1"></a>    <span class="fu">theme_ArchR</span>(<span class="at">baseSize =</span> <span class="fl">6.5</span>) <span class="sc">+</span></span>
+<span id="cb171-4"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-4" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb171-5"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-5" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb171-6"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-6" tabindex="-1"></a>        <span class="at">axis.text.x=</span><span class="fu">element_blank</span>(), </span>
+<span id="cb171-7"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-7" tabindex="-1"></a>        <span class="at">axis.ticks.x=</span><span class="fu">element_blank</span>(), </span>
+<span id="cb171-8"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-8" tabindex="-1"></a>        <span class="at">axis.text.y=</span><span class="fu">element_blank</span>(), </span>
+<span id="cb171-9"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-9" tabindex="-1"></a>        <span class="at">axis.ticks.y=</span><span class="fu">element_blank</span>()</span>
+<span id="cb171-10"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-10" tabindex="-1"></a>    )</span>
+<span id="cb171-11"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-11" tabindex="-1"></a>})</span>
+<span id="cb171-12"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-12" tabindex="-1"></a></span>
+<span id="cb171-13"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-13" tabindex="-1"></a>p2c <span class="ot">&lt;-</span> <span class="fu">lapply</span>(p2, <span class="cf">function</span>(x){</span>
+<span id="cb171-14"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-14" tabindex="-1"></a>    x <span class="sc">+</span> <span class="fu">guides</span>(<span class="at">color =</span> <span class="cn">FALSE</span>, <span class="at">fill =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> </span>
+<span id="cb171-15"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-15" tabindex="-1"></a>    <span class="fu">theme_ArchR</span>(<span class="at">baseSize =</span> <span class="fl">6.5</span>) <span class="sc">+</span></span>
+<span id="cb171-16"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-16" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="st">&quot;cm&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb171-17"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-17" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb171-18"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-18" tabindex="-1"></a>        <span class="at">axis.text.x=</span><span class="fu">element_blank</span>(), </span>
+<span id="cb171-19"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-19" tabindex="-1"></a>        <span class="at">axis.ticks.x=</span><span class="fu">element_blank</span>(), </span>
+<span id="cb171-20"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-20" tabindex="-1"></a>        <span class="at">axis.text.y=</span><span class="fu">element_blank</span>(), </span>
+<span id="cb171-21"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-21" tabindex="-1"></a>        <span class="at">axis.ticks.y=</span><span class="fu">element_blank</span>()</span>
+<span id="cb171-22"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-22" tabindex="-1"></a>    )</span>
+<span id="cb171-23"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb171-23" tabindex="-1"></a>})</span></code></pre></div>
+<p>This is what the <em>gene expression</em> looks like:</p>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb172-1" tabindex="-1"></a><span class="fu">do.call</span>(cowplot<span class="sc">::</span>plot_grid, <span class="fu">c</span>(<span class="fu">list</span>(<span class="at">ncol =</span> <span class="dv">3</span>), p1c))</span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-167-1.svg" width="672" /></p>
+<p>And this is what the <em>gene score</em> looks like:</p>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb173-1" tabindex="-1"></a><span class="fu">do.call</span>(cowplot<span class="sc">::</span>plot_grid, <span class="fu">c</span>(<span class="fu">list</span>(<span class="at">ncol =</span> <span class="dv">3</span>), p2c))</span></code></pre></div>
+<p><img src="ArchR_files/figure-html/unnamed-chunk-168-1.svg" width="672" /></p>
 <p>As expected, the results from these two methods for inferring gene expression are similar but not identical.</p>
 <p>To save an editable vectorized version of this plot, we use the <code>plotPDF()</code> function.</p>
-<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb142-1"></a><span class="kw">plotPDF</span>(<span class="dt">plotList =</span> p1, </span>
-<span id="cb142-2"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb142-2"></a>    <span class="dt">name =</span> <span class="st">&quot;Plot-UMAP-Marker-Genes-RNA-W-Imputation.pdf&quot;</span>, </span>
-<span id="cb142-3"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb142-3"></a>    <span class="dt">ArchRProj =</span> projHeme3, </span>
-<span id="cb142-4"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb142-4"></a>    <span class="dt">addDOC =</span> <span class="ot">FALSE</span>, <span class="dt">width =</span> <span class="dv">5</span>, <span class="dt">height =</span> <span class="dv">5</span>)</span></code></pre></div>
-<blockquote>
-<p>## [1] “plotting ggplot!”<br />
-## [1] “plotting ggplot!”<br />
-## [1] “plotting ggplot!”<br />
-## [1] “plotting ggplot!”<br />
-## [1] “plotting ggplot!”<br />
-## [1] “plotting ggplot!”<br />
-## [1] “plotting ggplot!”<br />
-## [1] “plotting ggplot!”<br />
-## [1] “plotting ggplot!”<br />
-## [1] 0</p>
-</blockquote>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb174-1" tabindex="-1"></a><span class="fu">plotPDF</span>(<span class="at">plotList =</span> p1, </span>
+<span id="cb174-2"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb174-2" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Plot-UMAP-Marker-Genes-RNA-W-Imputation.pdf&quot;</span>, </span>
+<span id="cb174-3"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb174-3" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme3, </span>
+<span id="cb174-4"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb174-4" tabindex="-1"></a>    <span class="at">addDOC =</span> <span class="cn">FALSE</span>, <span class="at">width =</span> <span class="dv">5</span>, <span class="at">height =</span> <span class="dv">5</span>)</span>
+<span id="cb174-5"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb174-5" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
+<span id="cb174-6"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb174-6" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
+<span id="cb174-7"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb174-7" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
+<span id="cb174-8"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb174-8" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
+<span id="cb174-9"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb174-9" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
+<span id="cb174-10"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb174-10" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
+<span id="cb174-11"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb174-11" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
+<span id="cb174-12"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb174-12" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span>
+<span id="cb174-13"><a href="adding-pseudo-scrna-seq-profiles-for-each-scatac-seq-cell.html#cb174-13" tabindex="-1"></a><span class="do">## Plotting Ggplot!</span></span></code></pre></div>
 </div>
             </section>
 
@@ -421,7 +486,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -440,23 +504,27 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": null
 },
 "fontsettings": null,
 "edit": null,
 "history": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/commits/dev/08_scRNA_Labeling.Rmd",
-"text": "Chapter edit history"
+"link": null,
+"text": null
 },
 "view": {
-"link": "https://github.com/GreenleafLab/ArchR_Website/view/dev/08_scRNA_Labeling.Rmd",
-"text": "View source on GitHub"
+"link": null,
+"text": null
 },
-"download": ["ArchR.pdf"],
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "none"
 },
-"search": true,
 "info": false
 });
 });

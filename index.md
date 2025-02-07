@@ -1,7 +1,5 @@
 # <img src="man/figures/ArchR_Logo_Integrated.png" alt="" width="200" >
 
-[![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
-
 ArchR is a full-featured R package for processing and analyzing single-cell ATAC-seq data. ArchR provides the most extensive suite of scATAC-seq analysis tools of any software available. Additionally, ArchR excels in both speed and resource usage, making it possible to analyze 1 million cells in 8 hours on a MacBook Pro laptop.
 
 To get started, we recommend running through [the brief ArchR tutorial](articles/Articles/tutorial.html). For a detailed description of all of the features of ArchR applied to a test dataset of hematopoietic cells, please see the searchable [full manual](bookdown/index.html). If you havent already done so, we also recommend reading [the publication](https://www.nature.com/articles/s41588-021-00790-6) to get a better idea of what ArchR can do.
@@ -12,7 +10,9 @@ To get started, we recommend running through [the brief ArchR tutorial](articles
 
 __ArchR is designed to be run on Unix-based operating systems such as macOS and linux. ArchR is NOT supported on Windows or other operating systems.__
 
-ArchR installation currently requires `devtools` and `BiocManager` for installation of GitHub and Bioconductor packages. Run the following commands to install the various dependencies used by ArchR:
+ArchR installation currently requires `devtools` and `BiocManager` for installation of GitHub and Bioconductor packages. We highly encourage all users to utilize the `renv` environment and R version that have been confirmed to be functional with each stable release. This ensures that there are no incompatibilities between package dependencies. See [this page of the full manual](bookdown/manage-archrs-dependencies.html) for full instructions.
+
+If you do not wish to use the provided stable environment, then you would follow the below commands to install ArchR and its various dependencies:
 
 First, install devtools (for installing GitHub packages) if it isn't already installed:
 ```
@@ -64,6 +64,14 @@ __If you have installed R through Conda__, we have had reports of compile errors
 
 <hr>
 
+### Previous versions of ArchR documentation
+
+If you are using a version of ArchR other than the one shown at the top of this page, you can access previous versions of the ArchR documentation at the links below. Note that these snapshots only began in earnest as of ArchR version `1.0.3`.
+
+[v1.0.1](archive/1.0.1/index.html)
+
+<hr>
+
 # How to cite ArchR?
 
 ArchR is published in Nature Genetics! You can find the publication [here](https://www.nature.com/articles/s41588-021-00790-6).
@@ -75,12 +83,6 @@ Granja JM*, Corces MR* et al., ArchR is a scalable software package for integrat
 Looking for scripts related to the publication? Check out the [GitHub page for the publication](https://github.com/GreenleafLab/ArchR_2020).
 
 # Issues using ArchR?
-
-ArchR is still in active development. We expect there to be bumps in the road. If you think you have found a bug, please first install the latest version of ArchR via
-```{r}
-devtools::install_github("GreenleafLab/ArchR", ref="master", repos = BiocManager::repositories())
-```
-If this does not fix your problem, please [report an issue on Github](https://github.com/GreenleafLab/ArchR/issues) with the __Bug Report__ form.
 
 If you have questions about ArchR usage, please refer to the [the searchable full user's manual](https://www.archrproject.com/bookdown/index.html), [the FAQ section](https://www.archrproject.com/articles/Articles/faq.html), and the [publication](https://www.nature.com/articles/s41588-021-00790-6). If you think the documentation on this website or in the function annotations is unclear, please [post to the Github Discussions forum](https://github.com/GreenleafLab/ArchR/discussions) with the __Q&A__ form. If there is a feature that you think is missing from ArchR _and you have already searched the user's manual_, [post to the Github Discussions forum](https://github.com/GreenleafLab/ArchR/discussions) with the __Ideas__ form. If none of these options help, [send us an email](mailto:archr.devs@gmail.com). We will do our best to respond to questions that are not otherwise answered in the documentation.
 
