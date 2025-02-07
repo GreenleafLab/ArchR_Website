@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2025-01-23" />
+<meta name="date" content="2025-02-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -258,7 +258,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
 <ul>
 <li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
-<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-cifferentiation.html"><a href="lymphoid-trajectory---b-cell-cifferentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Cifferentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-differentiation.html"><a href="lymphoid-trajectory---b-cell-differentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Differentiation</a></li>
 <li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
 <li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
 <li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
@@ -309,58 +309,58 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">19.2</span> Exporting matrix-level data<a href="exporting-matrix-level-data.html#exporting-matrix-level-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>ArchR provides the <code>getMatrixFromProject()</code> function which allows you to export any matrix from your project as a <code>SummarizedExperiment</code>. The information returned is on a per-cell basis. In most cases, that matrix will be stored as a sparse matrix of class <code>dgCMatrix</code>. Some matrices, especially for larger projects, may take up excessive memory and lead to crashes when trying to export and there is really no way around this. This is, in fact, why ArchR leverages the on-disk storage of these data in <code>HDF5</code> format.</p>
 <p>For example, we can export the <code>GeneScoreMatrix</code> from our project like so:</p>
-<div class="sourceCode" id="cb435"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb435-1"><a href="exporting-matrix-level-data.html#cb435-1" tabindex="-1"></a>GSM_se <span class="ot">&lt;-</span> <span class="fu">getMatrixFromProject</span>(</span>
-<span id="cb435-2"><a href="exporting-matrix-level-data.html#cb435-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb435-3"><a href="exporting-matrix-level-data.html#cb435-3" tabindex="-1"></a>    useMatrix <span class="ot">&lt;-</span> <span class="st">&quot;GeneScoreMatrix&quot;</span></span>
-<span id="cb435-4"><a href="exporting-matrix-level-data.html#cb435-4" tabindex="-1"></a>)</span>
-<span id="cb435-5"><a href="exporting-matrix-level-data.html#cb435-5" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-getMatrixFromProject-1a14df471b9-Date-2025-01-23_Time-23-15-46.615001.log</span></span>
-<span id="cb435-6"><a href="exporting-matrix-level-data.html#cb435-6" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb435-7"><a href="exporting-matrix-level-data.html#cb435-7" tabindex="-1"></a><span class="do">## 2025-01-23 23:15:56.780928 : Organizing colData, 0.169 mins elapsed.</span></span>
-<span id="cb435-8"><a href="exporting-matrix-level-data.html#cb435-8" tabindex="-1"></a><span class="do">## 2025-01-23 23:15:56.920728 : Organizing rowData, 0.172 mins elapsed.</span></span>
-<span id="cb435-9"><a href="exporting-matrix-level-data.html#cb435-9" tabindex="-1"></a><span class="do">## 2025-01-23 23:15:56.929311 : Organizing rowRanges, 0.172 mins elapsed.</span></span>
-<span id="cb435-10"><a href="exporting-matrix-level-data.html#cb435-10" tabindex="-1"></a><span class="do">## 2025-01-23 23:15:56.940698 : Organizing Assays (1 of 1), 0.172 mins elapsed.</span></span>
-<span id="cb435-11"><a href="exporting-matrix-level-data.html#cb435-11" tabindex="-1"></a><span class="do">## 2025-01-23 23:15:57.089661 : Constructing SummarizedExperiment, 0.175 mins elapsed.</span></span>
-<span id="cb435-12"><a href="exporting-matrix-level-data.html#cb435-12" tabindex="-1"></a><span class="do">## 2025-01-23 23:16:01.124373 : Finished Matrix Creation, 0.242 mins elapsed.</span></span></code></pre></div>
+<div class="sourceCode" id="cb437"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb437-1"><a href="exporting-matrix-level-data.html#cb437-1" tabindex="-1"></a>GSM_se <span class="ot">&lt;-</span> <span class="fu">getMatrixFromProject</span>(</span>
+<span id="cb437-2"><a href="exporting-matrix-level-data.html#cb437-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb437-3"><a href="exporting-matrix-level-data.html#cb437-3" tabindex="-1"></a>    useMatrix <span class="ot">&lt;-</span> <span class="st">&quot;GeneScoreMatrix&quot;</span></span>
+<span id="cb437-4"><a href="exporting-matrix-level-data.html#cb437-4" tabindex="-1"></a>)</span>
+<span id="cb437-5"><a href="exporting-matrix-level-data.html#cb437-5" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-getMatrixFromProject-97cfcfd33-Date-2025-02-06_Time-03-11-00.505036.log</span></span>
+<span id="cb437-6"><a href="exporting-matrix-level-data.html#cb437-6" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb437-7"><a href="exporting-matrix-level-data.html#cb437-7" tabindex="-1"></a><span class="do">## 2025-02-06 03:11:10.827051 : Organizing colData, 0.172 mins elapsed.</span></span>
+<span id="cb437-8"><a href="exporting-matrix-level-data.html#cb437-8" tabindex="-1"></a><span class="do">## 2025-02-06 03:11:10.949313 : Organizing rowData, 0.174 mins elapsed.</span></span>
+<span id="cb437-9"><a href="exporting-matrix-level-data.html#cb437-9" tabindex="-1"></a><span class="do">## 2025-02-06 03:11:10.957773 : Organizing rowRanges, 0.174 mins elapsed.</span></span>
+<span id="cb437-10"><a href="exporting-matrix-level-data.html#cb437-10" tabindex="-1"></a><span class="do">## 2025-02-06 03:11:10.96988 : Organizing Assays (1 of 1), 0.174 mins elapsed.</span></span>
+<span id="cb437-11"><a href="exporting-matrix-level-data.html#cb437-11" tabindex="-1"></a><span class="do">## 2025-02-06 03:11:11.132909 : Constructing SummarizedExperiment, 0.177 mins elapsed.</span></span>
+<span id="cb437-12"><a href="exporting-matrix-level-data.html#cb437-12" tabindex="-1"></a><span class="do">## 2025-02-06 03:11:14.708232 : Finished Matrix Creation, 0.237 mins elapsed.</span></span></code></pre></div>
 <p>When we inspect this object, we can see the various attributes stored in the <code>SummarizedExperiment</code>:</p>
-<div class="sourceCode" id="cb436"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb436-1"><a href="exporting-matrix-level-data.html#cb436-1" tabindex="-1"></a>GSM_se</span>
-<span id="cb436-2"><a href="exporting-matrix-level-data.html#cb436-2" tabindex="-1"></a><span class="do">## class: SummarizedExperiment </span></span>
-<span id="cb436-3"><a href="exporting-matrix-level-data.html#cb436-3" tabindex="-1"></a><span class="do">## dim: 23127 10250 </span></span>
-<span id="cb436-4"><a href="exporting-matrix-level-data.html#cb436-4" tabindex="-1"></a><span class="do">## metadata(0):</span></span>
-<span id="cb436-5"><a href="exporting-matrix-level-data.html#cb436-5" tabindex="-1"></a><span class="do">## assays(1): GeneScoreMatrix</span></span>
-<span id="cb436-6"><a href="exporting-matrix-level-data.html#cb436-6" tabindex="-1"></a><span class="do">## rownames: NULL</span></span>
-<span id="cb436-7"><a href="exporting-matrix-level-data.html#cb436-7" tabindex="-1"></a><span class="do">## rowData names(6): seqnames start ... name idx</span></span>
-<span id="cb436-8"><a href="exporting-matrix-level-data.html#cb436-8" tabindex="-1"></a><span class="do">## colnames(10250): scATAC_BMMC_R1#TTATGTCAGTGATTAG-1</span></span>
-<span id="cb436-9"><a href="exporting-matrix-level-data.html#cb436-9" tabindex="-1"></a><span class="do">##   scATAC_BMMC_R1#AAGATAGTCACCGCGA-1 ...</span></span>
-<span id="cb436-10"><a href="exporting-matrix-level-data.html#cb436-10" tabindex="-1"></a><span class="do">##   scATAC_PBMC_R1#TTCGTTACATTGAACC-1 scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1</span></span>
-<span id="cb436-11"><a href="exporting-matrix-level-data.html#cb436-11" tabindex="-1"></a><span class="do">## colData names(39): BlacklistRatio DoubletEnrichment ...</span></span>
-<span id="cb436-12"><a href="exporting-matrix-level-data.html#cb436-12" tabindex="-1"></a><span class="do">##   Monocle_Lymphoid Slingshot_Lymphoid.Curve1</span></span></code></pre></div>
+<div class="sourceCode" id="cb438"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb438-1"><a href="exporting-matrix-level-data.html#cb438-1" tabindex="-1"></a>GSM_se</span>
+<span id="cb438-2"><a href="exporting-matrix-level-data.html#cb438-2" tabindex="-1"></a><span class="do">## class: SummarizedExperiment </span></span>
+<span id="cb438-3"><a href="exporting-matrix-level-data.html#cb438-3" tabindex="-1"></a><span class="do">## dim: 23127 10250 </span></span>
+<span id="cb438-4"><a href="exporting-matrix-level-data.html#cb438-4" tabindex="-1"></a><span class="do">## metadata(0):</span></span>
+<span id="cb438-5"><a href="exporting-matrix-level-data.html#cb438-5" tabindex="-1"></a><span class="do">## assays(1): GeneScoreMatrix</span></span>
+<span id="cb438-6"><a href="exporting-matrix-level-data.html#cb438-6" tabindex="-1"></a><span class="do">## rownames: NULL</span></span>
+<span id="cb438-7"><a href="exporting-matrix-level-data.html#cb438-7" tabindex="-1"></a><span class="do">## rowData names(6): seqnames start ... name idx</span></span>
+<span id="cb438-8"><a href="exporting-matrix-level-data.html#cb438-8" tabindex="-1"></a><span class="do">## colnames(10250): scATAC_BMMC_R1#TTATGTCAGTGATTAG-1</span></span>
+<span id="cb438-9"><a href="exporting-matrix-level-data.html#cb438-9" tabindex="-1"></a><span class="do">##   scATAC_BMMC_R1#AAGATAGTCACCGCGA-1 ...</span></span>
+<span id="cb438-10"><a href="exporting-matrix-level-data.html#cb438-10" tabindex="-1"></a><span class="do">##   scATAC_PBMC_R1#TTCGTTACATTGAACC-1 scATAC_PBMC_R1#CGCTATCGTGAGGTCA-1</span></span>
+<span id="cb438-11"><a href="exporting-matrix-level-data.html#cb438-11" tabindex="-1"></a><span class="do">## colData names(39): BlacklistRatio DoubletEnrichment ...</span></span>
+<span id="cb438-12"><a href="exporting-matrix-level-data.html#cb438-12" tabindex="-1"></a><span class="do">##   Monocle_Lymphoid Slingshot_Lymphoid.Curve1</span></span></code></pre></div>
 <p>For various reasons, we do not provide a method for directly converting an <code>ArchRProject</code> into an object that can interface with other tools like Seurat. Given the large differences in how these different tools work, this is beyond the scope of what we aim to support. However, once a matrix is exported as a <code>SummarizedExperiment</code> object, it is relatively simple to reformat that object to something that can be imported into the Seurat ecosystem. Shown below is an example of how this might be accomplished using a <code>GeneScoreMatrix</code> but the same applies to other matrices:</p>
-<div class="sourceCode" id="cb437"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb437-1"><a href="exporting-matrix-level-data.html#cb437-1" tabindex="-1"></a><span class="fu">library</span>(SingleCellExperiment)</span>
-<span id="cb437-2"><a href="exporting-matrix-level-data.html#cb437-2" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
-<span id="cb437-3"><a href="exporting-matrix-level-data.html#cb437-3" tabindex="-1"></a>GSM_sce <span class="ot">&lt;-</span> <span class="fu">as</span>(GSM_se, <span class="st">&quot;SingleCellExperiment&quot;</span>)</span>
-<span id="cb437-4"><a href="exporting-matrix-level-data.html#cb437-4" tabindex="-1"></a>counts <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">assay</span>(GSM_sce, <span class="st">&quot;GeneScoreMatrix&quot;</span>))</span>
-<span id="cb437-5"><a href="exporting-matrix-level-data.html#cb437-5" tabindex="-1"></a><span class="do">## Warning in asMethod(object): sparse-&gt;dense coercion: allocating vector of size</span></span>
-<span id="cb437-6"><a href="exporting-matrix-level-data.html#cb437-6" tabindex="-1"></a><span class="do">## 1.8 GiB</span></span>
-<span id="cb437-7"><a href="exporting-matrix-level-data.html#cb437-7" tabindex="-1"></a><span class="fu">assays</span>(GSM_sce)<span class="sc">$</span>counts <span class="ot">&lt;-</span> counts</span>
-<span id="cb437-8"><a href="exporting-matrix-level-data.html#cb437-8" tabindex="-1"></a>libSizes <span class="ot">&lt;-</span> <span class="fu">colSums</span>(counts)</span>
-<span id="cb437-9"><a href="exporting-matrix-level-data.html#cb437-9" tabindex="-1"></a>sizeFactors <span class="ot">&lt;-</span> libSizes<span class="sc">/</span><span class="fu">mean</span>(libSizes)</span>
-<span id="cb437-10"><a href="exporting-matrix-level-data.html#cb437-10" tabindex="-1"></a><span class="fu">assays</span>(GSM_sce)<span class="sc">$</span>logcounts <span class="ot">&lt;-</span> <span class="fu">log2</span>(<span class="fu">t</span>(<span class="fu">t</span>(counts)<span class="sc">/</span>sizeFactors) <span class="sc">+</span> <span class="dv">1</span>)</span>
-<span id="cb437-11"><a href="exporting-matrix-level-data.html#cb437-11" tabindex="-1"></a><span class="fu">rownames</span>(GSM_sce) <span class="ot">&lt;-</span> <span class="fu">rowData</span>(GSM_sce)<span class="sc">$</span>name</span>
-<span id="cb437-12"><a href="exporting-matrix-level-data.html#cb437-12" tabindex="-1"></a>seuratObj <span class="ot">&lt;-</span> <span class="fu">as.Seurat</span>(GSM_sce, <span class="at">counts =</span> <span class="st">&quot;counts&quot;</span>, <span class="at">data =</span> <span class="st">&quot;logcounts&quot;</span>)</span>
-<span id="cb437-13"><a href="exporting-matrix-level-data.html#cb437-13" tabindex="-1"></a><span class="do">## Warning: Feature names cannot have underscores (&#39;_&#39;), replacing with dashes</span></span>
-<span id="cb437-14"><a href="exporting-matrix-level-data.html#cb437-14" tabindex="-1"></a><span class="do">## (&#39;-&#39;)</span></span>
-<span id="cb437-15"><a href="exporting-matrix-level-data.html#cb437-15" tabindex="-1"></a><span class="do">## Warning: Feature names cannot have underscores (&#39;_&#39;), replacing with dashes</span></span>
-<span id="cb437-16"><a href="exporting-matrix-level-data.html#cb437-16" tabindex="-1"></a><span class="do">## (&#39;-&#39;)</span></span>
-<span id="cb437-17"><a href="exporting-matrix-level-data.html#cb437-17" tabindex="-1"></a><span class="do">## Warning: Feature names cannot have underscores (&#39;_&#39;), replacing with dashes</span></span>
-<span id="cb437-18"><a href="exporting-matrix-level-data.html#cb437-18" tabindex="-1"></a><span class="do">## (&#39;-&#39;)</span></span></code></pre></div>
+<div class="sourceCode" id="cb439"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb439-1"><a href="exporting-matrix-level-data.html#cb439-1" tabindex="-1"></a><span class="fu">library</span>(SingleCellExperiment)</span>
+<span id="cb439-2"><a href="exporting-matrix-level-data.html#cb439-2" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
+<span id="cb439-3"><a href="exporting-matrix-level-data.html#cb439-3" tabindex="-1"></a>GSM_sce <span class="ot">&lt;-</span> <span class="fu">as</span>(GSM_se, <span class="st">&quot;SingleCellExperiment&quot;</span>)</span>
+<span id="cb439-4"><a href="exporting-matrix-level-data.html#cb439-4" tabindex="-1"></a>counts <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">assay</span>(GSM_sce, <span class="st">&quot;GeneScoreMatrix&quot;</span>))</span>
+<span id="cb439-5"><a href="exporting-matrix-level-data.html#cb439-5" tabindex="-1"></a><span class="do">## Warning in asMethod(object): sparse-&gt;dense coercion: allocating vector of size</span></span>
+<span id="cb439-6"><a href="exporting-matrix-level-data.html#cb439-6" tabindex="-1"></a><span class="do">## 1.8 GiB</span></span>
+<span id="cb439-7"><a href="exporting-matrix-level-data.html#cb439-7" tabindex="-1"></a><span class="fu">assays</span>(GSM_sce)<span class="sc">$</span>counts <span class="ot">&lt;-</span> counts</span>
+<span id="cb439-8"><a href="exporting-matrix-level-data.html#cb439-8" tabindex="-1"></a>libSizes <span class="ot">&lt;-</span> <span class="fu">colSums</span>(counts)</span>
+<span id="cb439-9"><a href="exporting-matrix-level-data.html#cb439-9" tabindex="-1"></a>sizeFactors <span class="ot">&lt;-</span> libSizes<span class="sc">/</span><span class="fu">mean</span>(libSizes)</span>
+<span id="cb439-10"><a href="exporting-matrix-level-data.html#cb439-10" tabindex="-1"></a><span class="fu">assays</span>(GSM_sce)<span class="sc">$</span>logcounts <span class="ot">&lt;-</span> <span class="fu">log2</span>(<span class="fu">t</span>(<span class="fu">t</span>(counts)<span class="sc">/</span>sizeFactors) <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb439-11"><a href="exporting-matrix-level-data.html#cb439-11" tabindex="-1"></a><span class="fu">rownames</span>(GSM_sce) <span class="ot">&lt;-</span> <span class="fu">rowData</span>(GSM_sce)<span class="sc">$</span>name</span>
+<span id="cb439-12"><a href="exporting-matrix-level-data.html#cb439-12" tabindex="-1"></a>seuratObj <span class="ot">&lt;-</span> <span class="fu">as.Seurat</span>(GSM_sce, <span class="at">counts =</span> <span class="st">&quot;counts&quot;</span>, <span class="at">data =</span> <span class="st">&quot;logcounts&quot;</span>)</span>
+<span id="cb439-13"><a href="exporting-matrix-level-data.html#cb439-13" tabindex="-1"></a><span class="do">## Warning: Feature names cannot have underscores (&#39;_&#39;), replacing with dashes</span></span>
+<span id="cb439-14"><a href="exporting-matrix-level-data.html#cb439-14" tabindex="-1"></a><span class="do">## (&#39;-&#39;)</span></span>
+<span id="cb439-15"><a href="exporting-matrix-level-data.html#cb439-15" tabindex="-1"></a><span class="do">## Warning: Feature names cannot have underscores (&#39;_&#39;), replacing with dashes</span></span>
+<span id="cb439-16"><a href="exporting-matrix-level-data.html#cb439-16" tabindex="-1"></a><span class="do">## (&#39;-&#39;)</span></span>
+<span id="cb439-17"><a href="exporting-matrix-level-data.html#cb439-17" tabindex="-1"></a><span class="do">## Warning: Feature names cannot have underscores (&#39;_&#39;), replacing with dashes</span></span>
+<span id="cb439-18"><a href="exporting-matrix-level-data.html#cb439-18" tabindex="-1"></a><span class="do">## (&#39;-&#39;)</span></span></code></pre></div>
 <p>This gives us an object of class <code>Seurat</code>:</p>
-<div class="sourceCode" id="cb438"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb438-1"><a href="exporting-matrix-level-data.html#cb438-1" tabindex="-1"></a>seuratObj</span>
-<span id="cb438-2"><a href="exporting-matrix-level-data.html#cb438-2" tabindex="-1"></a><span class="do">## An object of class Seurat </span></span>
-<span id="cb438-3"><a href="exporting-matrix-level-data.html#cb438-3" tabindex="-1"></a><span class="do">## 23127 features across 10250 samples within 1 assay </span></span>
-<span id="cb438-4"><a href="exporting-matrix-level-data.html#cb438-4" tabindex="-1"></a><span class="do">## Active assay: originalexp (23127 features, 0 variable features)</span></span>
-<span id="cb438-5"><a href="exporting-matrix-level-data.html#cb438-5" tabindex="-1"></a><span class="do">##  2 layers present: counts, data</span></span></code></pre></div>
+<div class="sourceCode" id="cb440"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb440-1"><a href="exporting-matrix-level-data.html#cb440-1" tabindex="-1"></a>seuratObj</span>
+<span id="cb440-2"><a href="exporting-matrix-level-data.html#cb440-2" tabindex="-1"></a><span class="do">## An object of class Seurat </span></span>
+<span id="cb440-3"><a href="exporting-matrix-level-data.html#cb440-3" tabindex="-1"></a><span class="do">## 23127 features across 10250 samples within 1 assay </span></span>
+<span id="cb440-4"><a href="exporting-matrix-level-data.html#cb440-4" tabindex="-1"></a><span class="do">## Active assay: originalexp (23127 features, 0 variable features)</span></span>
+<span id="cb440-5"><a href="exporting-matrix-level-data.html#cb440-5" tabindex="-1"></a><span class="do">##  2 layers present: counts, data</span></span></code></pre></div>
 <p>You can then manipulate this object as you would any other <code>Seurat</code> object. Other operations are possible, for example, you can take your dimensionality reduction results from ArchR and add them to this <code>Seurat</code> object:</p>
-<div class="sourceCode" id="cb439"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb439-1"><a href="exporting-matrix-level-data.html#cb439-1" tabindex="-1"></a>seuratObj[[<span class="st">&quot;iterativeLSI&quot;</span>]] <span class="ot">&lt;-</span> <span class="fu">CreateDimReducObject</span>(<span class="at">embeddings =</span> <span class="fu">getReducedDims</span>(projHeme5), <span class="at">key =</span> <span class="st">&quot;ILSI_&quot;</span>, <span class="at">assay =</span> <span class="fu">DefaultAssay</span>(seuratObj))</span></code></pre></div>
+<div class="sourceCode" id="cb441"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb441-1"><a href="exporting-matrix-level-data.html#cb441-1" tabindex="-1"></a>seuratObj[[<span class="st">&quot;iterativeLSI&quot;</span>]] <span class="ot">&lt;-</span> <span class="fu">CreateDimReducObject</span>(<span class="at">embeddings =</span> <span class="fu">getReducedDims</span>(projHeme5), <span class="at">key =</span> <span class="st">&quot;ILSI_&quot;</span>, <span class="at">assay =</span> <span class="fu">DefaultAssay</span>(seuratObj))</span></code></pre></div>
 </div>
             </section>
 

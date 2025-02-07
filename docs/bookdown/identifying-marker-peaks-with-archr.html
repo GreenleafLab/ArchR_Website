@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2025-01-23" />
+<meta name="date" content="2025-02-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -258,7 +258,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
 <ul>
 <li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
-<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-cifferentiation.html"><a href="lymphoid-trajectory---b-cell-cifferentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Cifferentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-differentiation.html"><a href="lymphoid-trajectory---b-cell-differentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Differentiation</a></li>
 <li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
 <li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
 <li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
@@ -309,82 +309,82 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">13.1</span> Identifying Marker Peaks with ArchR<a href="identifying-marker-peaks-with-archr.html#identifying-marker-peaks-with-archr" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Often times, we are interested to know which peaks are unique to an individual cluster or a small group of clusters. We can do this in an unsupervised fashion in ArchR using the <code>addMarkerFeatures()</code> function in combination with <code>useMatrix = "PeakMatrix"</code>.</p>
 <p>First, lets remind ourselves of the cell types that we are working with in <code>projHeme5</code> and their relative proportions.</p>
-<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="identifying-marker-peaks-with-archr.html#cb207-1" tabindex="-1"></a><span class="fu">table</span>(projHeme5<span class="sc">$</span>Clusters2)</span>
-<span id="cb207-2"><a href="identifying-marker-peaks-with-archr.html#cb207-2" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb207-3"><a href="identifying-marker-peaks-with-archr.html#cb207-3" tabindex="-1"></a><span class="do">##          B      CD4.M      CD4.N        CLP  Erythroid        GMP       Mono </span></span>
-<span id="cb207-4"><a href="identifying-marker-peaks-with-archr.html#cb207-4" tabindex="-1"></a><span class="do">##        421        633       1250        386        702       1261       2652 </span></span>
-<span id="cb207-5"><a href="identifying-marker-peaks-with-archr.html#cb207-5" tabindex="-1"></a><span class="do">##         NK        pDC       PreB Progenitor </span></span>
-<span id="cb207-6"><a href="identifying-marker-peaks-with-archr.html#cb207-6" tabindex="-1"></a><span class="do">##        903        314        351       1377</span></span></code></pre></div>
+<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="identifying-marker-peaks-with-archr.html#cb209-1" tabindex="-1"></a><span class="fu">table</span>(projHeme5<span class="sc">$</span>Clusters2)</span>
+<span id="cb209-2"><a href="identifying-marker-peaks-with-archr.html#cb209-2" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb209-3"><a href="identifying-marker-peaks-with-archr.html#cb209-3" tabindex="-1"></a><span class="do">##          B      CD4.M      CD4.N        CLP  Erythroid        GMP       Mono </span></span>
+<span id="cb209-4"><a href="identifying-marker-peaks-with-archr.html#cb209-4" tabindex="-1"></a><span class="do">##        421        633       1250        386        702       1261       2652 </span></span>
+<span id="cb209-5"><a href="identifying-marker-peaks-with-archr.html#cb209-5" tabindex="-1"></a><span class="do">##         NK        pDC       PreB Progenitor </span></span>
+<span id="cb209-6"><a href="identifying-marker-peaks-with-archr.html#cb209-6" tabindex="-1"></a><span class="do">##        903        314        351       1377</span></span></code></pre></div>
 <p>Now, we are ready to identify marker peaks by calling the <code>addMarkerFeatures()</code> function with <code>useMatrix = "PeakMatrix"</code>. Additionally, we tell ArchR to account for differences in data quality amongst the cell groups by setting the <code>bias</code> parameter to account for TSS enrichment and the number of unique fragments per cell.</p>
-<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="identifying-marker-peaks-with-archr.html#cb208-1" tabindex="-1"></a>markerPeaks <span class="ot">&lt;-</span> <span class="fu">getMarkerFeatures</span>(</span>
-<span id="cb208-2"><a href="identifying-marker-peaks-with-archr.html#cb208-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5, </span>
-<span id="cb208-3"><a href="identifying-marker-peaks-with-archr.html#cb208-3" tabindex="-1"></a>    <span class="at">useMatrix =</span> <span class="st">&quot;PeakMatrix&quot;</span>, </span>
-<span id="cb208-4"><a href="identifying-marker-peaks-with-archr.html#cb208-4" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
-<span id="cb208-5"><a href="identifying-marker-peaks-with-archr.html#cb208-5" tabindex="-1"></a>  <span class="at">bias =</span> <span class="fu">c</span>(<span class="st">&quot;TSSEnrichment&quot;</span>, <span class="st">&quot;log10(nFrags)&quot;</span>),</span>
-<span id="cb208-6"><a href="identifying-marker-peaks-with-archr.html#cb208-6" tabindex="-1"></a>  <span class="at">testMethod =</span> <span class="st">&quot;wilcoxon&quot;</span></span>
-<span id="cb208-7"><a href="identifying-marker-peaks-with-archr.html#cb208-7" tabindex="-1"></a>)</span>
-<span id="cb208-8"><a href="identifying-marker-peaks-with-archr.html#cb208-8" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-getMarkerFeatures-1a1e914b97-Date-2025-01-23_Time-21-18-11.538173.log</span></span>
-<span id="cb208-9"><a href="identifying-marker-peaks-with-archr.html#cb208-9" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb208-10"><a href="identifying-marker-peaks-with-archr.html#cb208-10" tabindex="-1"></a><span class="do">## MatrixClass = Sparse.Integer.Matrix</span></span>
-<span id="cb208-11"><a href="identifying-marker-peaks-with-archr.html#cb208-11" tabindex="-1"></a><span class="do">## 2025-01-23 21:18:12.722498 : Matching Known Biases, 0.005 mins elapsed.</span></span>
-<span id="cb208-12"><a href="identifying-marker-peaks-with-archr.html#cb208-12" tabindex="-1"></a><span class="do">## ###########</span></span>
-<span id="cb208-13"><a href="identifying-marker-peaks-with-archr.html#cb208-13" tabindex="-1"></a><span class="do">## 2025-01-23 21:20:36.8485 : Completed Pairwise Tests, 2.408 mins elapsed.</span></span>
-<span id="cb208-14"><a href="identifying-marker-peaks-with-archr.html#cb208-14" tabindex="-1"></a><span class="do">## ###########</span></span>
-<span id="cb208-15"><a href="identifying-marker-peaks-with-archr.html#cb208-15" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-getMarkerFeatures-1a1e914b97-Date-2025-01-23_Time-21-18-11.538173.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="identifying-marker-peaks-with-archr.html#cb210-1" tabindex="-1"></a>markerPeaks <span class="ot">&lt;-</span> <span class="fu">getMarkerFeatures</span>(</span>
+<span id="cb210-2"><a href="identifying-marker-peaks-with-archr.html#cb210-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5, </span>
+<span id="cb210-3"><a href="identifying-marker-peaks-with-archr.html#cb210-3" tabindex="-1"></a>    <span class="at">useMatrix =</span> <span class="st">&quot;PeakMatrix&quot;</span>, </span>
+<span id="cb210-4"><a href="identifying-marker-peaks-with-archr.html#cb210-4" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
+<span id="cb210-5"><a href="identifying-marker-peaks-with-archr.html#cb210-5" tabindex="-1"></a>  <span class="at">bias =</span> <span class="fu">c</span>(<span class="st">&quot;TSSEnrichment&quot;</span>, <span class="st">&quot;log10(nFrags)&quot;</span>),</span>
+<span id="cb210-6"><a href="identifying-marker-peaks-with-archr.html#cb210-6" tabindex="-1"></a>  <span class="at">testMethod =</span> <span class="st">&quot;wilcoxon&quot;</span></span>
+<span id="cb210-7"><a href="identifying-marker-peaks-with-archr.html#cb210-7" tabindex="-1"></a>)</span>
+<span id="cb210-8"><a href="identifying-marker-peaks-with-archr.html#cb210-8" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-getMarkerFeatures-96be4b233-Date-2025-02-06_Time-02-03-45.434572.log</span></span>
+<span id="cb210-9"><a href="identifying-marker-peaks-with-archr.html#cb210-9" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb210-10"><a href="identifying-marker-peaks-with-archr.html#cb210-10" tabindex="-1"></a><span class="do">## MatrixClass = Sparse.Integer.Matrix</span></span>
+<span id="cb210-11"><a href="identifying-marker-peaks-with-archr.html#cb210-11" tabindex="-1"></a><span class="do">## 2025-02-06 02:03:46.394397 : Matching Known Biases, 0.005 mins elapsed.</span></span>
+<span id="cb210-12"><a href="identifying-marker-peaks-with-archr.html#cb210-12" tabindex="-1"></a><span class="do">## ###########</span></span>
+<span id="cb210-13"><a href="identifying-marker-peaks-with-archr.html#cb210-13" tabindex="-1"></a><span class="do">## 2025-02-06 02:05:55.075573 : Completed Pairwise Tests, 2.15 mins elapsed.</span></span>
+<span id="cb210-14"><a href="identifying-marker-peaks-with-archr.html#cb210-14" tabindex="-1"></a><span class="do">## ###########</span></span>
+<span id="cb210-15"><a href="identifying-marker-peaks-with-archr.html#cb210-15" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-getMarkerFeatures-96be4b233-Date-2025-02-06_Time-02-03-45.434572.log</span></span></code></pre></div>
 <p>The object returned by the <code>getMarkerFeatures()</code> function is a <code>SummarizedExperiment</code> that contains a few different <code>assays</code>.</p>
-<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="identifying-marker-peaks-with-archr.html#cb209-1" tabindex="-1"></a>markerPeaks</span>
-<span id="cb209-2"><a href="identifying-marker-peaks-with-archr.html#cb209-2" tabindex="-1"></a><span class="do">## class: SummarizedExperiment </span></span>
-<span id="cb209-3"><a href="identifying-marker-peaks-with-archr.html#cb209-3" tabindex="-1"></a><span class="do">## dim: 147407 11 </span></span>
-<span id="cb209-4"><a href="identifying-marker-peaks-with-archr.html#cb209-4" tabindex="-1"></a><span class="do">## metadata(2): MatchInfo Params</span></span>
-<span id="cb209-5"><a href="identifying-marker-peaks-with-archr.html#cb209-5" tabindex="-1"></a><span class="do">## assays(7): Log2FC Mean ... AUC MeanBGD</span></span>
-<span id="cb209-6"><a href="identifying-marker-peaks-with-archr.html#cb209-6" tabindex="-1"></a><span class="do">## rownames(147407): 1 2 ... 147406 147407</span></span>
-<span id="cb209-7"><a href="identifying-marker-peaks-with-archr.html#cb209-7" tabindex="-1"></a><span class="do">## rowData names(4): seqnames idx start end</span></span>
-<span id="cb209-8"><a href="identifying-marker-peaks-with-archr.html#cb209-8" tabindex="-1"></a><span class="do">## colnames(11): B CD4.M ... PreB Progenitor</span></span>
-<span id="cb209-9"><a href="identifying-marker-peaks-with-archr.html#cb209-9" tabindex="-1"></a><span class="do">## colData names(0):</span></span></code></pre></div>
+<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="identifying-marker-peaks-with-archr.html#cb211-1" tabindex="-1"></a>markerPeaks</span>
+<span id="cb211-2"><a href="identifying-marker-peaks-with-archr.html#cb211-2" tabindex="-1"></a><span class="do">## class: SummarizedExperiment </span></span>
+<span id="cb211-3"><a href="identifying-marker-peaks-with-archr.html#cb211-3" tabindex="-1"></a><span class="do">## dim: 147407 11 </span></span>
+<span id="cb211-4"><a href="identifying-marker-peaks-with-archr.html#cb211-4" tabindex="-1"></a><span class="do">## metadata(2): MatchInfo Params</span></span>
+<span id="cb211-5"><a href="identifying-marker-peaks-with-archr.html#cb211-5" tabindex="-1"></a><span class="do">## assays(7): Log2FC Mean ... AUC MeanBGD</span></span>
+<span id="cb211-6"><a href="identifying-marker-peaks-with-archr.html#cb211-6" tabindex="-1"></a><span class="do">## rownames(147407): 1 2 ... 147406 147407</span></span>
+<span id="cb211-7"><a href="identifying-marker-peaks-with-archr.html#cb211-7" tabindex="-1"></a><span class="do">## rowData names(4): seqnames idx start end</span></span>
+<span id="cb211-8"><a href="identifying-marker-peaks-with-archr.html#cb211-8" tabindex="-1"></a><span class="do">## colnames(11): B CD4.M ... PreB Progenitor</span></span>
+<span id="cb211-9"><a href="identifying-marker-peaks-with-archr.html#cb211-9" tabindex="-1"></a><span class="do">## colData names(0):</span></span></code></pre></div>
 <p>We can use the <code>getMarkers()</code> function to retrieve particular slices of this <code>SummarizedExperiment</code> that we are interested in. The default behavior of this function is to return a list of <code>DataFrame</code> objects, one for each cell group.</p>
-<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="identifying-marker-peaks-with-archr.html#cb210-1" tabindex="-1"></a>markerList <span class="ot">&lt;-</span> <span class="fu">getMarkers</span>(markerPeaks, <span class="at">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.01 &amp; Log2FC &gt;= 1&quot;</span>)</span>
-<span id="cb210-2"><a href="identifying-marker-peaks-with-archr.html#cb210-2" tabindex="-1"></a>markerList</span>
-<span id="cb210-3"><a href="identifying-marker-peaks-with-archr.html#cb210-3" tabindex="-1"></a><span class="do">## List of length 11</span></span>
-<span id="cb210-4"><a href="identifying-marker-peaks-with-archr.html#cb210-4" tabindex="-1"></a><span class="do">## names(11): B CD4.M CD4.N CLP Erythroid GMP Mono NK pDC PreB Progenitor</span></span></code></pre></div>
-<p>If we are interested in the marker peaks for a specific cell group, we can access this from the list via the <code>$</code> accessor.</p>
-<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="identifying-marker-peaks-with-archr.html#cb211-1" tabindex="-1"></a>markerList<span class="sc">$</span>Erythroid</span>
-<span id="cb211-2"><a href="identifying-marker-peaks-with-archr.html#cb211-2" tabindex="-1"></a><span class="do">## DataFrame with 2871 rows and 7 columns</span></span>
-<span id="cb211-3"><a href="identifying-marker-peaks-with-archr.html#cb211-3" tabindex="-1"></a><span class="do">##        seqnames       idx     start       end    Log2FC         FDR  MeanDiff</span></span>
-<span id="cb211-4"><a href="identifying-marker-peaks-with-archr.html#cb211-4" tabindex="-1"></a><span class="do">##           &lt;Rle&gt; &lt;integer&gt; &lt;integer&gt; &lt;integer&gt; &lt;numeric&gt;   &lt;numeric&gt; &lt;numeric&gt;</span></span>
-<span id="cb211-5"><a href="identifying-marker-peaks-with-archr.html#cb211-5" tabindex="-1"></a><span class="do">## 91169     chr22      1297  30129829  30130329   4.56041 3.24640e-16  1.090454</span></span>
-<span id="cb211-6"><a href="identifying-marker-peaks-with-archr.html#cb211-6" tabindex="-1"></a><span class="do">## 45636     chr15      1214  50552646  50553146   4.33461 6.58297e-14  0.882263</span></span>
-<span id="cb211-7"><a href="identifying-marker-peaks-with-archr.html#cb211-7" tabindex="-1"></a><span class="do">## 127421     chr7      3093  65392660  65393160   8.98553 3.73382e-13  1.017888</span></span>
-<span id="cb211-8"><a href="identifying-marker-peaks-with-archr.html#cb211-8" tabindex="-1"></a><span class="do">## 8954       chr1      8954 156864638 156865138   6.58465 3.83815e-13  0.978842</span></span>
-<span id="cb211-9"><a href="identifying-marker-peaks-with-archr.html#cb211-9" tabindex="-1"></a><span class="do">## 7130       chr1      7130 110407020 110407520   4.23204 4.88410e-13  0.859836</span></span>
-<span id="cb211-10"><a href="identifying-marker-peaks-with-archr.html#cb211-10" tabindex="-1"></a><span class="do">## ...         ...       ...       ...       ...       ...         ...       ...</span></span>
-<span id="cb211-11"><a href="identifying-marker-peaks-with-archr.html#cb211-11" tabindex="-1"></a><span class="do">## 139717     chr9      2044  86957967  86958467   6.22430   0.0099907  0.148421</span></span>
-<span id="cb211-12"><a href="identifying-marker-peaks-with-archr.html#cb211-12" tabindex="-1"></a><span class="do">## 141515     chr9      3842 119117633 119118133   6.59935   0.0099907  0.193083</span></span>
-<span id="cb211-13"><a href="identifying-marker-peaks-with-archr.html#cb211-13" tabindex="-1"></a><span class="do">## 143169     chr9      5496 136544169 136544669   6.08502   0.0099907  0.134577</span></span>
-<span id="cb211-14"><a href="identifying-marker-peaks-with-archr.html#cb211-14" tabindex="-1"></a><span class="do">## 146831     chrX      2966 133937841 133938341   6.17985   0.0099907  0.143857</span></span>
-<span id="cb211-15"><a href="identifying-marker-peaks-with-archr.html#cb211-15" tabindex="-1"></a><span class="do">## 146835     chrX      2970 133999808 134000308   6.15916   0.0099907  0.141780</span></span></code></pre></div>
-<p>Instead of a list of <code>DataFrame</code> objects, we can use <code>getMarkers()</code> to return a <code>GRangesList</code> object by setting <code>returnGR = TRUE</code>.</p>
-<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="identifying-marker-peaks-with-archr.html#cb212-1" tabindex="-1"></a>markerList <span class="ot">&lt;-</span> <span class="fu">getMarkers</span>(markerPeaks, <span class="at">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.01 &amp; Log2FC &gt;= 1&quot;</span>, <span class="at">returnGR =</span> <span class="cn">TRUE</span>)</span>
+<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="identifying-marker-peaks-with-archr.html#cb212-1" tabindex="-1"></a>markerList <span class="ot">&lt;-</span> <span class="fu">getMarkers</span>(markerPeaks, <span class="at">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.01 &amp; Log2FC &gt;= 1&quot;</span>)</span>
 <span id="cb212-2"><a href="identifying-marker-peaks-with-archr.html#cb212-2" tabindex="-1"></a>markerList</span>
 <span id="cb212-3"><a href="identifying-marker-peaks-with-archr.html#cb212-3" tabindex="-1"></a><span class="do">## List of length 11</span></span>
 <span id="cb212-4"><a href="identifying-marker-peaks-with-archr.html#cb212-4" tabindex="-1"></a><span class="do">## names(11): B CD4.M CD4.N CLP Erythroid GMP Mono NK pDC PreB Progenitor</span></span></code></pre></div>
-<p>This <code>GRangesList</code> object can similarly be subset to a <code>GRanges</code> object for a particular cell group using the <code>$</code> accessor.</p>
+<p>If we are interested in the marker peaks for a specific cell group, we can access this from the list via the <code>$</code> accessor.</p>
 <div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="identifying-marker-peaks-with-archr.html#cb213-1" tabindex="-1"></a>markerList<span class="sc">$</span>Erythroid</span>
-<span id="cb213-2"><a href="identifying-marker-peaks-with-archr.html#cb213-2" tabindex="-1"></a><span class="do">## GRanges object with 2871 ranges and 3 metadata columns:</span></span>
-<span id="cb213-3"><a href="identifying-marker-peaks-with-archr.html#cb213-3" tabindex="-1"></a><span class="do">##          seqnames              ranges strand |    Log2FC         FDR  MeanDiff</span></span>
-<span id="cb213-4"><a href="identifying-marker-peaks-with-archr.html#cb213-4" tabindex="-1"></a><span class="do">##             &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;   &lt;numeric&gt; &lt;numeric&gt;</span></span>
-<span id="cb213-5"><a href="identifying-marker-peaks-with-archr.html#cb213-5" tabindex="-1"></a><span class="do">##      [1]    chr22   30129829-30130329      * |   4.56041 3.24640e-16  1.090454</span></span>
-<span id="cb213-6"><a href="identifying-marker-peaks-with-archr.html#cb213-6" tabindex="-1"></a><span class="do">##      [2]    chr15   50552646-50553146      * |   4.33461 6.58297e-14  0.882263</span></span>
-<span id="cb213-7"><a href="identifying-marker-peaks-with-archr.html#cb213-7" tabindex="-1"></a><span class="do">##      [3]     chr7   65392660-65393160      * |   8.98553 3.73382e-13  1.017888</span></span>
-<span id="cb213-8"><a href="identifying-marker-peaks-with-archr.html#cb213-8" tabindex="-1"></a><span class="do">##      [4]     chr1 156864638-156865138      * |   6.58465 3.83815e-13  0.978842</span></span>
-<span id="cb213-9"><a href="identifying-marker-peaks-with-archr.html#cb213-9" tabindex="-1"></a><span class="do">##      [5]     chr1 110407020-110407520      * |   4.23204 4.88410e-13  0.859836</span></span>
-<span id="cb213-10"><a href="identifying-marker-peaks-with-archr.html#cb213-10" tabindex="-1"></a><span class="do">##      ...      ...                 ...    ... .       ...         ...       ...</span></span>
-<span id="cb213-11"><a href="identifying-marker-peaks-with-archr.html#cb213-11" tabindex="-1"></a><span class="do">##   [2867]     chr9   86957967-86958467      * |   6.22430   0.0099907  0.148421</span></span>
-<span id="cb213-12"><a href="identifying-marker-peaks-with-archr.html#cb213-12" tabindex="-1"></a><span class="do">##   [2868]     chr9 119117633-119118133      * |   6.59935   0.0099907  0.193083</span></span>
-<span id="cb213-13"><a href="identifying-marker-peaks-with-archr.html#cb213-13" tabindex="-1"></a><span class="do">##   [2869]     chr9 136544169-136544669      * |   6.08502   0.0099907  0.134577</span></span>
-<span id="cb213-14"><a href="identifying-marker-peaks-with-archr.html#cb213-14" tabindex="-1"></a><span class="do">##   [2870]     chrX 133937841-133938341      * |   6.17985   0.0099907  0.143857</span></span>
-<span id="cb213-15"><a href="identifying-marker-peaks-with-archr.html#cb213-15" tabindex="-1"></a><span class="do">##   [2871]     chrX 133999808-134000308      * |   6.15916   0.0099907  0.141780</span></span>
-<span id="cb213-16"><a href="identifying-marker-peaks-with-archr.html#cb213-16" tabindex="-1"></a><span class="do">##   -------</span></span>
-<span id="cb213-17"><a href="identifying-marker-peaks-with-archr.html#cb213-17" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
+<span id="cb213-2"><a href="identifying-marker-peaks-with-archr.html#cb213-2" tabindex="-1"></a><span class="do">## DataFrame with 2871 rows and 7 columns</span></span>
+<span id="cb213-3"><a href="identifying-marker-peaks-with-archr.html#cb213-3" tabindex="-1"></a><span class="do">##        seqnames       idx     start       end    Log2FC         FDR  MeanDiff</span></span>
+<span id="cb213-4"><a href="identifying-marker-peaks-with-archr.html#cb213-4" tabindex="-1"></a><span class="do">##           &lt;Rle&gt; &lt;integer&gt; &lt;integer&gt; &lt;integer&gt; &lt;numeric&gt;   &lt;numeric&gt; &lt;numeric&gt;</span></span>
+<span id="cb213-5"><a href="identifying-marker-peaks-with-archr.html#cb213-5" tabindex="-1"></a><span class="do">## 91169     chr22      1297  30129829  30130329   4.56041 3.24640e-16  1.090454</span></span>
+<span id="cb213-6"><a href="identifying-marker-peaks-with-archr.html#cb213-6" tabindex="-1"></a><span class="do">## 45636     chr15      1214  50552646  50553146   4.33461 6.58297e-14  0.882263</span></span>
+<span id="cb213-7"><a href="identifying-marker-peaks-with-archr.html#cb213-7" tabindex="-1"></a><span class="do">## 127421     chr7      3093  65392660  65393160   8.98553 3.73382e-13  1.017888</span></span>
+<span id="cb213-8"><a href="identifying-marker-peaks-with-archr.html#cb213-8" tabindex="-1"></a><span class="do">## 8954       chr1      8954 156864638 156865138   6.58465 3.83815e-13  0.978842</span></span>
+<span id="cb213-9"><a href="identifying-marker-peaks-with-archr.html#cb213-9" tabindex="-1"></a><span class="do">## 7130       chr1      7130 110407020 110407520   4.23204 4.88410e-13  0.859836</span></span>
+<span id="cb213-10"><a href="identifying-marker-peaks-with-archr.html#cb213-10" tabindex="-1"></a><span class="do">## ...         ...       ...       ...       ...       ...         ...       ...</span></span>
+<span id="cb213-11"><a href="identifying-marker-peaks-with-archr.html#cb213-11" tabindex="-1"></a><span class="do">## 139717     chr9      2044  86957967  86958467   6.22430   0.0099907  0.148421</span></span>
+<span id="cb213-12"><a href="identifying-marker-peaks-with-archr.html#cb213-12" tabindex="-1"></a><span class="do">## 141515     chr9      3842 119117633 119118133   6.59935   0.0099907  0.193083</span></span>
+<span id="cb213-13"><a href="identifying-marker-peaks-with-archr.html#cb213-13" tabindex="-1"></a><span class="do">## 143169     chr9      5496 136544169 136544669   6.08502   0.0099907  0.134577</span></span>
+<span id="cb213-14"><a href="identifying-marker-peaks-with-archr.html#cb213-14" tabindex="-1"></a><span class="do">## 146831     chrX      2966 133937841 133938341   6.17985   0.0099907  0.143857</span></span>
+<span id="cb213-15"><a href="identifying-marker-peaks-with-archr.html#cb213-15" tabindex="-1"></a><span class="do">## 146835     chrX      2970 133999808 134000308   6.15916   0.0099907  0.141780</span></span></code></pre></div>
+<p>Instead of a list of <code>DataFrame</code> objects, we can use <code>getMarkers()</code> to return a <code>GRangesList</code> object by setting <code>returnGR = TRUE</code>.</p>
+<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="identifying-marker-peaks-with-archr.html#cb214-1" tabindex="-1"></a>markerList <span class="ot">&lt;-</span> <span class="fu">getMarkers</span>(markerPeaks, <span class="at">cutOff =</span> <span class="st">&quot;FDR &lt;= 0.01 &amp; Log2FC &gt;= 1&quot;</span>, <span class="at">returnGR =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb214-2"><a href="identifying-marker-peaks-with-archr.html#cb214-2" tabindex="-1"></a>markerList</span>
+<span id="cb214-3"><a href="identifying-marker-peaks-with-archr.html#cb214-3" tabindex="-1"></a><span class="do">## List of length 11</span></span>
+<span id="cb214-4"><a href="identifying-marker-peaks-with-archr.html#cb214-4" tabindex="-1"></a><span class="do">## names(11): B CD4.M CD4.N CLP Erythroid GMP Mono NK pDC PreB Progenitor</span></span></code></pre></div>
+<p>This <code>GRangesList</code> object can similarly be subset to a <code>GRanges</code> object for a particular cell group using the <code>$</code> accessor.</p>
+<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="identifying-marker-peaks-with-archr.html#cb215-1" tabindex="-1"></a>markerList<span class="sc">$</span>Erythroid</span>
+<span id="cb215-2"><a href="identifying-marker-peaks-with-archr.html#cb215-2" tabindex="-1"></a><span class="do">## GRanges object with 2871 ranges and 3 metadata columns:</span></span>
+<span id="cb215-3"><a href="identifying-marker-peaks-with-archr.html#cb215-3" tabindex="-1"></a><span class="do">##          seqnames              ranges strand |    Log2FC         FDR  MeanDiff</span></span>
+<span id="cb215-4"><a href="identifying-marker-peaks-with-archr.html#cb215-4" tabindex="-1"></a><span class="do">##             &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;   &lt;numeric&gt; &lt;numeric&gt;</span></span>
+<span id="cb215-5"><a href="identifying-marker-peaks-with-archr.html#cb215-5" tabindex="-1"></a><span class="do">##      [1]    chr22   30129829-30130329      * |   4.56041 3.24640e-16  1.090454</span></span>
+<span id="cb215-6"><a href="identifying-marker-peaks-with-archr.html#cb215-6" tabindex="-1"></a><span class="do">##      [2]    chr15   50552646-50553146      * |   4.33461 6.58297e-14  0.882263</span></span>
+<span id="cb215-7"><a href="identifying-marker-peaks-with-archr.html#cb215-7" tabindex="-1"></a><span class="do">##      [3]     chr7   65392660-65393160      * |   8.98553 3.73382e-13  1.017888</span></span>
+<span id="cb215-8"><a href="identifying-marker-peaks-with-archr.html#cb215-8" tabindex="-1"></a><span class="do">##      [4]     chr1 156864638-156865138      * |   6.58465 3.83815e-13  0.978842</span></span>
+<span id="cb215-9"><a href="identifying-marker-peaks-with-archr.html#cb215-9" tabindex="-1"></a><span class="do">##      [5]     chr1 110407020-110407520      * |   4.23204 4.88410e-13  0.859836</span></span>
+<span id="cb215-10"><a href="identifying-marker-peaks-with-archr.html#cb215-10" tabindex="-1"></a><span class="do">##      ...      ...                 ...    ... .       ...         ...       ...</span></span>
+<span id="cb215-11"><a href="identifying-marker-peaks-with-archr.html#cb215-11" tabindex="-1"></a><span class="do">##   [2867]     chr9   86957967-86958467      * |   6.22430   0.0099907  0.148421</span></span>
+<span id="cb215-12"><a href="identifying-marker-peaks-with-archr.html#cb215-12" tabindex="-1"></a><span class="do">##   [2868]     chr9 119117633-119118133      * |   6.59935   0.0099907  0.193083</span></span>
+<span id="cb215-13"><a href="identifying-marker-peaks-with-archr.html#cb215-13" tabindex="-1"></a><span class="do">##   [2869]     chr9 136544169-136544669      * |   6.08502   0.0099907  0.134577</span></span>
+<span id="cb215-14"><a href="identifying-marker-peaks-with-archr.html#cb215-14" tabindex="-1"></a><span class="do">##   [2870]     chrX 133937841-133938341      * |   6.17985   0.0099907  0.143857</span></span>
+<span id="cb215-15"><a href="identifying-marker-peaks-with-archr.html#cb215-15" tabindex="-1"></a><span class="do">##   [2871]     chrX 133999808-134000308      * |   6.15916   0.0099907  0.141780</span></span>
+<span id="cb215-16"><a href="identifying-marker-peaks-with-archr.html#cb215-16" tabindex="-1"></a><span class="do">##   -------</span></span>
+<span id="cb215-17"><a href="identifying-marker-peaks-with-archr.html#cb215-17" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
 </div>
             </section>
 

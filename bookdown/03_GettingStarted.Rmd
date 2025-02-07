@@ -319,26 +319,26 @@ Creation of Arrow files will create a folder in the current working directory ca
 
 ```{r copyQcPlots, include=FALSE}
 #copy TSS and frag distribution files to the images output directory
-TSSFiles <- list.files(path = "./Figures", pattern = "TSS_by_Unique_Frags.pdf", full.names = TRUE, recursive = FALSE)
-FragFiles <- list.files(path = "./Figures", pattern = "Fragment_Size_Distribution.pdf", full.names = TRUE, recursive = FALSE)
+TSSFiles <- list.files(path = "./QualityControl", pattern = "TSS_by_Unique_Frags.pdf", full.names = TRUE, recursive = TRUE)
+FragFiles <- list.files(path = "./QualityControl", pattern = "Fragment_Size_Distribution.pdf", full.names = TRUE, recursive = TRUE)
 ArchR:::.convertToPNG(pdfFiles = c(TSSFiles, FragFiles), outDir = "./images/bookdown", command = "cp")
 ```
 
 For our tutorial data, we have three samples as shown below:
 
 For **BMMC**:</br>
-![](images/bookdown/scATAC_BMMC_R1-TSS_by_Unique_Frags.pdf){width=330 height=330}
-![](images/bookdown/scATAC_BMMC_R1-Fragment_Size_Distribution.pdf){width=430 height=330}
+![](images/bookdown/scATAC_BMMC_R1-TSS_by_Unique_Frags_1.png){width=330 height=330}
+![](images/bookdown/scATAC_BMMC_R1-Fragment_Size_Distribution_1.png){width=430 height=330}
 
 For **CD34 BMMC**:</br>
 
-![](images/bookdown/scATAC_CD34_BMMC_R1-TSS_by_Unique_Frags.pdf){width=330 height=330}
-![](images/bookdown/scATAC_CD34_BMMC_R1-Fragment_Size_Distribution.pdf){width=430 height=330}
+![](images/bookdown/scATAC_CD34_BMMC_R1-TSS_by_Unique_Frags_1.png){width=330 height=330}
+![](images/bookdown/scATAC_CD34_BMMC_R1-Fragment_Size_Distribution_1.png){width=430 height=330}
 
 For **PBMC**:</br>
 
-![](images/bookdown/scATAC_PBMC_R1-TSS_by_Unique_Frags.pdf){width=330 height=330}
-![](images/bookdown/scATAC_PBMC_R1-Fragment_Size_Distribution.pdf){width=430 height=330}
+![](images/bookdown/scATAC_PBMC_R1-TSS_by_Unique_Frags_1.png){width=330 height=330}
+![](images/bookdown/scATAC_PBMC_R1-Fragment_Size_Distribution_1.png){width=430 height=330}
 
 We are now ready to tidy up these Arrow files and then create an `ArchRProject`.
 

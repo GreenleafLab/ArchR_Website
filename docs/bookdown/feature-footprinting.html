@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2025-01-23" />
+<meta name="date" content="2025-02-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -258,7 +258,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
 <ul>
 <li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
-<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-cifferentiation.html"><a href="lymphoid-trajectory---b-cell-cifferentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Cifferentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-differentiation.html"><a href="lymphoid-trajectory---b-cell-differentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Differentiation</a></li>
 <li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
 <li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
 <li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
@@ -309,39 +309,39 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">16.3</span> Feature Footprinting<a href="feature-footprinting.html#feature-footprinting" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>In addition to footprinting motifs, ArchR enables footprinting of any user-defined feature set. To illustrate this capability, we will use the <code>plotFootprints()</code> function to create a TSS insertion profile (introduced previously during the section on data quality control). A TSS insertion profile is just a specialized sub-case of footprinting.</p>
 <p>As discussed in the previous section, footprinting is performed using group coverage files which are derived from pseudo-bulk replicates. We originally created these in a previous chapter to perform peak calling. If you haven’t already added group coverages to your <code>ArchRProject</code>, lets do that now.</p>
-<div class="sourceCode" id="cb328"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb328-1"><a href="feature-footprinting.html#cb328-1" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">is.null</span>(projHeme5<span class="sc">@</span>projectMetadata<span class="sc">$</span>GroupCoverages<span class="sc">$</span>Clusters2)){</span>
-<span id="cb328-2"><a href="feature-footprinting.html#cb328-2" tabindex="-1"></a>  projHeme5 <span class="ot">&lt;-</span> <span class="fu">addGroupCoverages</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>)</span>
-<span id="cb328-3"><a href="feature-footprinting.html#cb328-3" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb330"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb330-1"><a href="feature-footprinting.html#cb330-1" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">is.null</span>(projHeme5<span class="sc">@</span>projectMetadata<span class="sc">$</span>GroupCoverages<span class="sc">$</span>Clusters2)){</span>
+<span id="cb330-2"><a href="feature-footprinting.html#cb330-2" tabindex="-1"></a>  projHeme5 <span class="ot">&lt;-</span> <span class="fu">addGroupCoverages</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>)</span>
+<span id="cb330-3"><a href="feature-footprinting.html#cb330-3" tabindex="-1"></a>}</span></code></pre></div>
 <p>We create TSS insertion profiles without normalization for Tn5 bias. The main difference from our previous analyses is that we specify <code>flank = 2000</code> to extend these footprints 2000 bp on either side of each TSS.</p>
-<div class="sourceCode" id="cb329"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb329-1"><a href="feature-footprinting.html#cb329-1" tabindex="-1"></a>seTSS <span class="ot">&lt;-</span> <span class="fu">getFootprints</span>(</span>
-<span id="cb329-2"><a href="feature-footprinting.html#cb329-2" tabindex="-1"></a>  <span class="at">ArchRProj =</span> projHeme5, </span>
-<span id="cb329-3"><a href="feature-footprinting.html#cb329-3" tabindex="-1"></a>  <span class="at">positions =</span> <span class="fu">GRangesList</span>(<span class="at">TSS =</span> <span class="fu">getTSS</span>(projHeme5)), </span>
-<span id="cb329-4"><a href="feature-footprinting.html#cb329-4" tabindex="-1"></a>  <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
-<span id="cb329-5"><a href="feature-footprinting.html#cb329-5" tabindex="-1"></a>  <span class="at">flank =</span> <span class="dv">2000</span></span>
-<span id="cb329-6"><a href="feature-footprinting.html#cb329-6" tabindex="-1"></a>)</span>
-<span id="cb329-7"><a href="feature-footprinting.html#cb329-7" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-getFootprints-1a1603c3a74-Date-2025-01-23_Time-22-42-41.846472.log</span></span>
-<span id="cb329-8"><a href="feature-footprinting.html#cb329-8" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb329-9"><a href="feature-footprinting.html#cb329-9" tabindex="-1"></a><span class="do">## 2025-01-23 22:42:42.398613 : Computing Kmer Bias Table, 0.009 mins elapsed.</span></span>
-<span id="cb329-10"><a href="feature-footprinting.html#cb329-10" tabindex="-1"></a><span class="do">## 2025-01-23 22:43:38.43153 : Finished Computing Kmer Tables, 0.934 mins elapsed.</span></span>
-<span id="cb329-11"><a href="feature-footprinting.html#cb329-11" tabindex="-1"></a><span class="do">## 2025-01-23 22:43:38.432801 : Computing Footprints, 0.943 mins elapsed.</span></span>
-<span id="cb329-12"><a href="feature-footprinting.html#cb329-12" tabindex="-1"></a><span class="do">## 2025-01-23 22:44:01.998073 : Computing Footprints Bias, 1.336 mins elapsed.</span></span>
-<span id="cb329-13"><a href="feature-footprinting.html#cb329-13" tabindex="-1"></a><span class="do">## 2025-01-23 22:44:19.274545 : Summarizing Footprints, 1.624 mins elapsed.</span></span></code></pre></div>
+<div class="sourceCode" id="cb331"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb331-1"><a href="feature-footprinting.html#cb331-1" tabindex="-1"></a>seTSS <span class="ot">&lt;-</span> <span class="fu">getFootprints</span>(</span>
+<span id="cb331-2"><a href="feature-footprinting.html#cb331-2" tabindex="-1"></a>  <span class="at">ArchRProj =</span> projHeme5, </span>
+<span id="cb331-3"><a href="feature-footprinting.html#cb331-3" tabindex="-1"></a>  <span class="at">positions =</span> <span class="fu">GRangesList</span>(<span class="at">TSS =</span> <span class="fu">getTSS</span>(projHeme5)), </span>
+<span id="cb331-4"><a href="feature-footprinting.html#cb331-4" tabindex="-1"></a>  <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
+<span id="cb331-5"><a href="feature-footprinting.html#cb331-5" tabindex="-1"></a>  <span class="at">flank =</span> <span class="dv">2000</span></span>
+<span id="cb331-6"><a href="feature-footprinting.html#cb331-6" tabindex="-1"></a>)</span>
+<span id="cb331-7"><a href="feature-footprinting.html#cb331-7" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-getFootprints-91f663143-Date-2025-02-06_Time-02-41-05.083804.log</span></span>
+<span id="cb331-8"><a href="feature-footprinting.html#cb331-8" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb331-9"><a href="feature-footprinting.html#cb331-9" tabindex="-1"></a><span class="do">## 2025-02-06 02:41:05.603735 : Computing Kmer Bias Table, 0.009 mins elapsed.</span></span>
+<span id="cb331-10"><a href="feature-footprinting.html#cb331-10" tabindex="-1"></a><span class="do">## 2025-02-06 02:41:18.234618 : Finished Computing Kmer Tables, 0.21 mins elapsed.</span></span>
+<span id="cb331-11"><a href="feature-footprinting.html#cb331-11" tabindex="-1"></a><span class="do">## 2025-02-06 02:41:18.23562 : Computing Footprints, 0.219 mins elapsed.</span></span>
+<span id="cb331-12"><a href="feature-footprinting.html#cb331-12" tabindex="-1"></a><span class="do">## 2025-02-06 02:41:37.331191 : Computing Footprints Bias, 0.537 mins elapsed.</span></span>
+<span id="cb331-13"><a href="feature-footprinting.html#cb331-13" tabindex="-1"></a><span class="do">## 2025-02-06 02:41:53.403908 : Summarizing Footprints, 0.805 mins elapsed.</span></span></code></pre></div>
 <p>We can then plot the TSS insertion profiles for each cell group using <code>plotFootprints()</code>.</p>
-<div class="sourceCode" id="cb330"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb330-1"><a href="feature-footprinting.html#cb330-1" tabindex="-1"></a><span class="fu">plotFootprints</span>(</span>
-<span id="cb330-2"><a href="feature-footprinting.html#cb330-2" tabindex="-1"></a>  <span class="at">seFoot =</span> seTSS,</span>
-<span id="cb330-3"><a href="feature-footprinting.html#cb330-3" tabindex="-1"></a>  <span class="at">ArchRProj =</span> projHeme5, </span>
-<span id="cb330-4"><a href="feature-footprinting.html#cb330-4" tabindex="-1"></a>  <span class="at">normMethod =</span> <span class="st">&quot;None&quot;</span>,</span>
-<span id="cb330-5"><a href="feature-footprinting.html#cb330-5" tabindex="-1"></a>  <span class="at">plotName =</span> <span class="st">&quot;TSS-No-Normalization&quot;</span>,</span>
-<span id="cb330-6"><a href="feature-footprinting.html#cb330-6" tabindex="-1"></a>  <span class="at">addDOC =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb330-7"><a href="feature-footprinting.html#cb330-7" tabindex="-1"></a>  <span class="at">flank =</span> <span class="dv">2000</span>,</span>
-<span id="cb330-8"><a href="feature-footprinting.html#cb330-8" tabindex="-1"></a>  <span class="at">flankNorm =</span> <span class="dv">100</span></span>
-<span id="cb330-9"><a href="feature-footprinting.html#cb330-9" tabindex="-1"></a>)</span>
-<span id="cb330-10"><a href="feature-footprinting.html#cb330-10" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotFootprints-1a16d2127be-Date-2025-01-23_Time-22-44-22.924751.log</span></span>
-<span id="cb330-11"><a href="feature-footprinting.html#cb330-11" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb330-12"><a href="feature-footprinting.html#cb330-12" tabindex="-1"></a><span class="do">## 2025-01-23 22:44:23.13061 : Plotting Footprint : TSS (1 of 1), 0.003 mins elapsed.</span></span>
-<span id="cb330-13"><a href="feature-footprinting.html#cb330-13" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
-<span id="cb330-14"><a href="feature-footprinting.html#cb330-14" tabindex="-1"></a><span class="do">## NormMethod = None</span></span>
-<span id="cb330-15"><a href="feature-footprinting.html#cb330-15" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotFootprints-1a16d2127be-Date-2025-01-23_Time-22-44-22.924751.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb332"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb332-1"><a href="feature-footprinting.html#cb332-1" tabindex="-1"></a><span class="fu">plotFootprints</span>(</span>
+<span id="cb332-2"><a href="feature-footprinting.html#cb332-2" tabindex="-1"></a>  <span class="at">seFoot =</span> seTSS,</span>
+<span id="cb332-3"><a href="feature-footprinting.html#cb332-3" tabindex="-1"></a>  <span class="at">ArchRProj =</span> projHeme5, </span>
+<span id="cb332-4"><a href="feature-footprinting.html#cb332-4" tabindex="-1"></a>  <span class="at">normMethod =</span> <span class="st">&quot;None&quot;</span>,</span>
+<span id="cb332-5"><a href="feature-footprinting.html#cb332-5" tabindex="-1"></a>  <span class="at">plotName =</span> <span class="st">&quot;TSS-No-Normalization&quot;</span>,</span>
+<span id="cb332-6"><a href="feature-footprinting.html#cb332-6" tabindex="-1"></a>  <span class="at">addDOC =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb332-7"><a href="feature-footprinting.html#cb332-7" tabindex="-1"></a>  <span class="at">flank =</span> <span class="dv">2000</span>,</span>
+<span id="cb332-8"><a href="feature-footprinting.html#cb332-8" tabindex="-1"></a>  <span class="at">flankNorm =</span> <span class="dv">100</span></span>
+<span id="cb332-9"><a href="feature-footprinting.html#cb332-9" tabindex="-1"></a>)</span>
+<span id="cb332-10"><a href="feature-footprinting.html#cb332-10" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotFootprints-92fa2b418-Date-2025-02-06_Time-02-41-56.734039.log</span></span>
+<span id="cb332-11"><a href="feature-footprinting.html#cb332-11" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb332-12"><a href="feature-footprinting.html#cb332-12" tabindex="-1"></a><span class="do">## 2025-02-06 02:41:56.918339 : Plotting Footprint : TSS (1 of 1), 0.003 mins elapsed.</span></span>
+<span id="cb332-13"><a href="feature-footprinting.html#cb332-13" tabindex="-1"></a><span class="do">## Normalizing by flanking regions</span></span>
+<span id="cb332-14"><a href="feature-footprinting.html#cb332-14" tabindex="-1"></a><span class="do">## NormMethod = None</span></span>
+<span id="cb332-15"><a href="feature-footprinting.html#cb332-15" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotFootprints-92fa2b418-Date-2025-02-06_Time-02-41-56.734039.log</span></span></code></pre></div>
 <center>
 <img src="images/bookdown/TSS-No-Normalization_1.png" width="250" height="400" />
 </center>

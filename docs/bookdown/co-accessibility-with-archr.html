@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2025-01-23" />
+<meta name="date" content="2025-02-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -258,7 +258,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
 <ul>
 <li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
-<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-cifferentiation.html"><a href="lymphoid-trajectory---b-cell-cifferentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Cifferentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-differentiation.html"><a href="lymphoid-trajectory---b-cell-differentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Differentiation</a></li>
 <li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
 <li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
 <li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
@@ -313,406 +313,406 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </center>
 <p>One thing to note about co-accessibility analysis is that it often identified cell type-specific peaks as being co-accessibile. This is because these peaks are often all accessible together within a single cell type and often all not accessible in all other cell types. This drives a strong correlation but does not necessarily mean that there is a regulatory relationship between these peaks.</p>
 <p>To calculate co-accessibility in ArchR, we use the <code>addCoAccessibility()</code> function which stores peak co-accessibility information in the <code>ArchRProject</code>.</p>
-<div class="sourceCode" id="cb331"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb331-1"><a href="co-accessibility-with-archr.html#cb331-1" tabindex="-1"></a>projHeme5 <span class="ot">&lt;-</span> <span class="fu">addCoAccessibility</span>(</span>
-<span id="cb331-2"><a href="co-accessibility-with-archr.html#cb331-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb331-3"><a href="co-accessibility-with-archr.html#cb331-3" tabindex="-1"></a>    <span class="at">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span></span>
-<span id="cb331-4"><a href="co-accessibility-with-archr.html#cb331-4" tabindex="-1"></a>)</span>
-<span id="cb331-5"><a href="co-accessibility-with-archr.html#cb331-5" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addCoAccessibility-1a12826fe00-Date-2025-01-23_Time-22-46-30.828551.log</span></span>
-<span id="cb331-6"><a href="co-accessibility-with-archr.html#cb331-6" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb331-7"><a href="co-accessibility-with-archr.html#cb331-7" tabindex="-1"></a><span class="do">## 2025-01-23 22:46:31.256146 : Computing KNN, 0.007 mins elapsed.</span></span>
-<span id="cb331-8"><a href="co-accessibility-with-archr.html#cb331-8" tabindex="-1"></a><span class="do">## 2025-01-23 22:46:31.351738 : Identifying Non-Overlapping KNN pairs, 0.009 mins elapsed.</span></span>
-<span id="cb331-9"><a href="co-accessibility-with-archr.html#cb331-9" tabindex="-1"></a><span class="do">## 2025-01-23 22:46:39.110788 : Identified 493 Groupings!, 0.138 mins elapsed.</span></span>
-<span id="cb331-10"><a href="co-accessibility-with-archr.html#cb331-10" tabindex="-1"></a><span class="do">## 2025-01-23 22:46:44.582652 : Computing Co-Accessibility chr1 (1 of 23), 0.229 mins elapsed.</span></span>
-<span id="cb331-11"><a href="co-accessibility-with-archr.html#cb331-11" tabindex="-1"></a><span class="do">## 2025-01-23 22:46:53.949327 : Computing Co-Accessibility chr2 (2 of 23), 0.385 mins elapsed.</span></span>
-<span id="cb331-12"><a href="co-accessibility-with-archr.html#cb331-12" tabindex="-1"></a><span class="do">## 2025-01-23 22:47:03.939327 : Computing Co-Accessibility chr3 (3 of 23), 0.552 mins elapsed.</span></span>
-<span id="cb331-13"><a href="co-accessibility-with-archr.html#cb331-13" tabindex="-1"></a><span class="do">## 2025-01-23 22:47:11.113727 : Computing Co-Accessibility chr4 (4 of 23), 0.671 mins elapsed.</span></span>
-<span id="cb331-14"><a href="co-accessibility-with-archr.html#cb331-14" tabindex="-1"></a><span class="do">## 2025-01-23 22:47:19.867175 : Computing Co-Accessibility chr5 (5 of 23), 0.817 mins elapsed.</span></span>
-<span id="cb331-15"><a href="co-accessibility-with-archr.html#cb331-15" tabindex="-1"></a><span class="do">## 2025-01-23 22:47:29.019083 : Computing Co-Accessibility chr6 (6 of 23), 0.97 mins elapsed.</span></span>
-<span id="cb331-16"><a href="co-accessibility-with-archr.html#cb331-16" tabindex="-1"></a><span class="do">## 2025-01-23 22:47:38.743148 : Computing Co-Accessibility chr7 (7 of 23), 1.132 mins elapsed.</span></span>
-<span id="cb331-17"><a href="co-accessibility-with-archr.html#cb331-17" tabindex="-1"></a><span class="do">## 2025-01-23 22:47:45.430473 : Computing Co-Accessibility chr8 (8 of 23), 1.243 mins elapsed.</span></span>
-<span id="cb331-18"><a href="co-accessibility-with-archr.html#cb331-18" tabindex="-1"></a><span class="do">## 2025-01-23 22:47:54.240515 : Computing Co-Accessibility chr9 (9 of 23), 1.39 mins elapsed.</span></span>
-<span id="cb331-19"><a href="co-accessibility-with-archr.html#cb331-19" tabindex="-1"></a><span class="do">## 2025-01-23 22:48:03.323076 : Computing Co-Accessibility chr10 (10 of 23), 1.542 mins elapsed.</span></span>
-<span id="cb331-20"><a href="co-accessibility-with-archr.html#cb331-20" tabindex="-1"></a><span class="do">## 2025-01-23 22:48:10.036468 : Computing Co-Accessibility chr11 (11 of 23), 1.653 mins elapsed.</span></span>
-<span id="cb331-21"><a href="co-accessibility-with-archr.html#cb331-21" tabindex="-1"></a><span class="do">## 2025-01-23 22:48:19.632353 : Computing Co-Accessibility chr12 (12 of 23), 1.813 mins elapsed.</span></span>
-<span id="cb331-22"><a href="co-accessibility-with-archr.html#cb331-22" tabindex="-1"></a><span class="do">## 2025-01-23 22:48:28.86019 : Computing Co-Accessibility chr13 (13 of 23), 1.967 mins elapsed.</span></span>
-<span id="cb331-23"><a href="co-accessibility-with-archr.html#cb331-23" tabindex="-1"></a><span class="do">## 2025-01-23 22:48:34.635189 : Computing Co-Accessibility chr14 (14 of 23), 2.063 mins elapsed.</span></span>
-<span id="cb331-24"><a href="co-accessibility-with-archr.html#cb331-24" tabindex="-1"></a><span class="do">## 2025-01-23 22:48:43.600971 : Computing Co-Accessibility chr15 (15 of 23), 2.213 mins elapsed.</span></span>
-<span id="cb331-25"><a href="co-accessibility-with-archr.html#cb331-25" tabindex="-1"></a><span class="do">## 2025-01-23 22:48:52.31521 : Computing Co-Accessibility chr16 (16 of 23), 2.358 mins elapsed.</span></span>
-<span id="cb331-26"><a href="co-accessibility-with-archr.html#cb331-26" tabindex="-1"></a><span class="do">## 2025-01-23 22:49:01.362542 : Computing Co-Accessibility chr17 (17 of 23), 2.509 mins elapsed.</span></span>
-<span id="cb331-27"><a href="co-accessibility-with-archr.html#cb331-27" tabindex="-1"></a><span class="do">## 2025-01-23 22:49:08.816879 : Computing Co-Accessibility chr18 (18 of 23), 2.633 mins elapsed.</span></span>
-<span id="cb331-28"><a href="co-accessibility-with-archr.html#cb331-28" tabindex="-1"></a><span class="do">## 2025-01-23 22:49:16.899457 : Computing Co-Accessibility chr19 (19 of 23), 2.768 mins elapsed.</span></span>
-<span id="cb331-29"><a href="co-accessibility-with-archr.html#cb331-29" tabindex="-1"></a><span class="do">## 2025-01-23 22:49:26.770312 : Computing Co-Accessibility chr20 (20 of 23), 2.932 mins elapsed.</span></span>
-<span id="cb331-30"><a href="co-accessibility-with-archr.html#cb331-30" tabindex="-1"></a><span class="do">## 2025-01-23 22:49:32.985285 : Computing Co-Accessibility chr21 (21 of 23), 3.036 mins elapsed.</span></span>
-<span id="cb331-31"><a href="co-accessibility-with-archr.html#cb331-31" tabindex="-1"></a><span class="do">## 2025-01-23 22:49:41.044809 : Computing Co-Accessibility chr22 (22 of 23), 3.17 mins elapsed.</span></span>
-<span id="cb331-32"><a href="co-accessibility-with-archr.html#cb331-32" tabindex="-1"></a><span class="do">## 2025-01-23 22:49:49.496517 : Computing Co-Accessibility chrX (23 of 23), 3.311 mins elapsed.</span></span>
-<span id="cb331-33"><a href="co-accessibility-with-archr.html#cb331-33" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-addCoAccessibility-1a12826fe00-Date-2025-01-23_Time-22-46-30.828551.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb333"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb333-1"><a href="co-accessibility-with-archr.html#cb333-1" tabindex="-1"></a>projHeme5 <span class="ot">&lt;-</span> <span class="fu">addCoAccessibility</span>(</span>
+<span id="cb333-2"><a href="co-accessibility-with-archr.html#cb333-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb333-3"><a href="co-accessibility-with-archr.html#cb333-3" tabindex="-1"></a>    <span class="at">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span></span>
+<span id="cb333-4"><a href="co-accessibility-with-archr.html#cb333-4" tabindex="-1"></a>)</span>
+<span id="cb333-5"><a href="co-accessibility-with-archr.html#cb333-5" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addCoAccessibility-95f3509d5-Date-2025-02-06_Time-02-43-51.08169.log</span></span>
+<span id="cb333-6"><a href="co-accessibility-with-archr.html#cb333-6" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb333-7"><a href="co-accessibility-with-archr.html#cb333-7" tabindex="-1"></a><span class="do">## 2025-02-06 02:43:51.485349 : Computing KNN, 0.007 mins elapsed.</span></span>
+<span id="cb333-8"><a href="co-accessibility-with-archr.html#cb333-8" tabindex="-1"></a><span class="do">## 2025-02-06 02:43:51.577353 : Identifying Non-Overlapping KNN pairs, 0.008 mins elapsed.</span></span>
+<span id="cb333-9"><a href="co-accessibility-with-archr.html#cb333-9" tabindex="-1"></a><span class="do">## 2025-02-06 02:43:53.188808 : Identified 493 Groupings!, 0.035 mins elapsed.</span></span>
+<span id="cb333-10"><a href="co-accessibility-with-archr.html#cb333-10" tabindex="-1"></a><span class="do">## 2025-02-06 02:43:59.113994 : Computing Co-Accessibility chr1 (1 of 23), 0.134 mins elapsed.</span></span>
+<span id="cb333-11"><a href="co-accessibility-with-archr.html#cb333-11" tabindex="-1"></a><span class="do">## 2025-02-06 02:44:08.313653 : Computing Co-Accessibility chr2 (2 of 23), 0.287 mins elapsed.</span></span>
+<span id="cb333-12"><a href="co-accessibility-with-archr.html#cb333-12" tabindex="-1"></a><span class="do">## 2025-02-06 02:44:16.727436 : Computing Co-Accessibility chr3 (3 of 23), 0.427 mins elapsed.</span></span>
+<span id="cb333-13"><a href="co-accessibility-with-archr.html#cb333-13" tabindex="-1"></a><span class="do">## 2025-02-06 02:44:22.750216 : Computing Co-Accessibility chr4 (4 of 23), 0.528 mins elapsed.</span></span>
+<span id="cb333-14"><a href="co-accessibility-with-archr.html#cb333-14" tabindex="-1"></a><span class="do">## 2025-02-06 02:44:30.307904 : Computing Co-Accessibility chr5 (5 of 23), 0.654 mins elapsed.</span></span>
+<span id="cb333-15"><a href="co-accessibility-with-archr.html#cb333-15" tabindex="-1"></a><span class="do">## 2025-02-06 02:44:38.259914 : Computing Co-Accessibility chr6 (6 of 23), 0.786 mins elapsed.</span></span>
+<span id="cb333-16"><a href="co-accessibility-with-archr.html#cb333-16" tabindex="-1"></a><span class="do">## 2025-02-06 02:44:46.356375 : Computing Co-Accessibility chr7 (7 of 23), 0.921 mins elapsed.</span></span>
+<span id="cb333-17"><a href="co-accessibility-with-archr.html#cb333-17" tabindex="-1"></a><span class="do">## 2025-02-06 02:44:52.348607 : Computing Co-Accessibility chr8 (8 of 23), 1.021 mins elapsed.</span></span>
+<span id="cb333-18"><a href="co-accessibility-with-archr.html#cb333-18" tabindex="-1"></a><span class="do">## 2025-02-06 02:45:00.122384 : Computing Co-Accessibility chr9 (9 of 23), 1.151 mins elapsed.</span></span>
+<span id="cb333-19"><a href="co-accessibility-with-archr.html#cb333-19" tabindex="-1"></a><span class="do">## 2025-02-06 02:45:07.99718 : Computing Co-Accessibility chr10 (10 of 23), 1.282 mins elapsed.</span></span>
+<span id="cb333-20"><a href="co-accessibility-with-archr.html#cb333-20" tabindex="-1"></a><span class="do">## 2025-02-06 02:45:15.911764 : Computing Co-Accessibility chr11 (11 of 23), 1.414 mins elapsed.</span></span>
+<span id="cb333-21"><a href="co-accessibility-with-archr.html#cb333-21" tabindex="-1"></a><span class="do">## 2025-02-06 02:45:21.912721 : Computing Co-Accessibility chr12 (12 of 23), 1.514 mins elapsed.</span></span>
+<span id="cb333-22"><a href="co-accessibility-with-archr.html#cb333-22" tabindex="-1"></a><span class="do">## 2025-02-06 02:45:29.983331 : Computing Co-Accessibility chr13 (13 of 23), 1.648 mins elapsed.</span></span>
+<span id="cb333-23"><a href="co-accessibility-with-archr.html#cb333-23" tabindex="-1"></a><span class="do">## 2025-02-06 02:45:37.448417 : Computing Co-Accessibility chr14 (14 of 23), 1.773 mins elapsed.</span></span>
+<span id="cb333-24"><a href="co-accessibility-with-archr.html#cb333-24" tabindex="-1"></a><span class="do">## 2025-02-06 02:45:45.167054 : Computing Co-Accessibility chr15 (15 of 23), 1.901 mins elapsed.</span></span>
+<span id="cb333-25"><a href="co-accessibility-with-archr.html#cb333-25" tabindex="-1"></a><span class="do">## 2025-02-06 02:45:50.757761 : Computing Co-Accessibility chr16 (16 of 23), 1.995 mins elapsed.</span></span>
+<span id="cb333-26"><a href="co-accessibility-with-archr.html#cb333-26" tabindex="-1"></a><span class="do">## 2025-02-06 02:45:58.610244 : Computing Co-Accessibility chr17 (17 of 23), 2.125 mins elapsed.</span></span>
+<span id="cb333-27"><a href="co-accessibility-with-archr.html#cb333-27" tabindex="-1"></a><span class="do">## 2025-02-06 02:46:06.855097 : Computing Co-Accessibility chr18 (18 of 23), 2.263 mins elapsed.</span></span>
+<span id="cb333-28"><a href="co-accessibility-with-archr.html#cb333-28" tabindex="-1"></a><span class="do">## 2025-02-06 02:46:14.226 : Computing Co-Accessibility chr19 (19 of 23), 2.386 mins elapsed.</span></span>
+<span id="cb333-29"><a href="co-accessibility-with-archr.html#cb333-29" tabindex="-1"></a><span class="do">## 2025-02-06 02:46:20.553265 : Computing Co-Accessibility chr20 (20 of 23), 2.491 mins elapsed.</span></span>
+<span id="cb333-30"><a href="co-accessibility-with-archr.html#cb333-30" tabindex="-1"></a><span class="do">## 2025-02-06 02:46:28.219289 : Computing Co-Accessibility chr21 (21 of 23), 2.619 mins elapsed.</span></span>
+<span id="cb333-31"><a href="co-accessibility-with-archr.html#cb333-31" tabindex="-1"></a><span class="do">## 2025-02-06 02:46:35.541425 : Computing Co-Accessibility chr22 (22 of 23), 2.741 mins elapsed.</span></span>
+<span id="cb333-32"><a href="co-accessibility-with-archr.html#cb333-32" tabindex="-1"></a><span class="do">## 2025-02-06 02:46:43.061872 : Computing Co-Accessibility chrX (23 of 23), 2.866 mins elapsed.</span></span>
+<span id="cb333-33"><a href="co-accessibility-with-archr.html#cb333-33" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-addCoAccessibility-95f3509d5-Date-2025-02-06_Time-02-43-51.08169.log</span></span></code></pre></div>
 <p>If you aim to only perform co-accessibility analyses on a subset of cells in your project, you can specify which cells should be analyzed using the <code>cellsToUse</code> parameter. There are other important parameters to keep in mind depending on the precise composition of your own data. For example, the <code>k</code> parameter designates how many cells should be included in the low-overlapping cell groups for correlation analysis. If your dataset is very small, you may need to adjust this parameter accordingly (and other parameters like <code>overlapCutoff</code>) to ensure that you do not have high duplication rates with the same cells participating in many of the cell groupings. These same considerations apply to the <code>getPeak2GeneLinks()</code> function described below.</p>
 <p>We can retrieve this co-accessibility information from the <code>ArchRProject</code> via the <code>getCoAccessibility()</code> function which returns a <code>DataFrame</code> object if <code>returnLoops = FALSE</code>.</p>
-<div class="sourceCode" id="cb332"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb332-1"><a href="co-accessibility-with-archr.html#cb332-1" tabindex="-1"></a>cA <span class="ot">&lt;-</span> <span class="fu">getCoAccessibility</span>(</span>
-<span id="cb332-2"><a href="co-accessibility-with-archr.html#cb332-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb332-3"><a href="co-accessibility-with-archr.html#cb332-3" tabindex="-1"></a>    <span class="at">corCutOff =</span> <span class="fl">0.5</span>,</span>
-<span id="cb332-4"><a href="co-accessibility-with-archr.html#cb332-4" tabindex="-1"></a>    <span class="at">resolution =</span> <span class="dv">1</span>,</span>
-<span id="cb332-5"><a href="co-accessibility-with-archr.html#cb332-5" tabindex="-1"></a>    <span class="at">returnLoops =</span> <span class="cn">FALSE</span></span>
-<span id="cb332-6"><a href="co-accessibility-with-archr.html#cb332-6" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb334"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb334-1"><a href="co-accessibility-with-archr.html#cb334-1" tabindex="-1"></a>cA <span class="ot">&lt;-</span> <span class="fu">getCoAccessibility</span>(</span>
+<span id="cb334-2"><a href="co-accessibility-with-archr.html#cb334-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb334-3"><a href="co-accessibility-with-archr.html#cb334-3" tabindex="-1"></a>    <span class="at">corCutOff =</span> <span class="fl">0.5</span>,</span>
+<span id="cb334-4"><a href="co-accessibility-with-archr.html#cb334-4" tabindex="-1"></a>    <span class="at">resolution =</span> <span class="dv">1</span>,</span>
+<span id="cb334-5"><a href="co-accessibility-with-archr.html#cb334-5" tabindex="-1"></a>    <span class="at">returnLoops =</span> <span class="cn">FALSE</span></span>
+<span id="cb334-6"><a href="co-accessibility-with-archr.html#cb334-6" tabindex="-1"></a>)</span></code></pre></div>
 <p>The <code>DataFrame</code> contains a few important pieces of information. The <code>queryHits</code> and <code>subjectHits</code> columns denote the index of the two peaks that were found to be correlated. The <code>correlation</code> column gives the numeric correlation of the accessibility between those two peaks.</p>
-<div class="sourceCode" id="cb333"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb333-1"><a href="co-accessibility-with-archr.html#cb333-1" tabindex="-1"></a>cA</span>
-<span id="cb333-2"><a href="co-accessibility-with-archr.html#cb333-2" tabindex="-1"></a><span class="do">## DataFrame with 100410 rows and 11 columns</span></span>
-<span id="cb333-3"><a href="co-accessibility-with-archr.html#cb333-3" tabindex="-1"></a><span class="do">##        queryHits subjectHits seqnames correlation Variability1 Variability2</span></span>
-<span id="cb333-4"><a href="co-accessibility-with-archr.html#cb333-4" tabindex="-1"></a><span class="do">##        &lt;integer&gt;   &lt;integer&gt;    &lt;Rle&gt;   &lt;numeric&gt;    &lt;numeric&gt;    &lt;numeric&gt;</span></span>
-<span id="cb333-5"><a href="co-accessibility-with-archr.html#cb333-5" tabindex="-1"></a><span class="do">## 1              7          13     chr1    0.637747   0.00514607   0.03098155</span></span>
-<span id="cb333-6"><a href="co-accessibility-with-archr.html#cb333-6" tabindex="-1"></a><span class="do">## 2             13           7     chr1    0.637747   0.03098155   0.00514607</span></span>
-<span id="cb333-7"><a href="co-accessibility-with-archr.html#cb333-7" tabindex="-1"></a><span class="do">## 3             13          29     chr1    0.599347   0.03098155   0.00440347</span></span>
-<span id="cb333-8"><a href="co-accessibility-with-archr.html#cb333-8" tabindex="-1"></a><span class="do">## 4             13          38     chr1    0.608207   0.03098155   0.01377298</span></span>
-<span id="cb333-9"><a href="co-accessibility-with-archr.html#cb333-9" tabindex="-1"></a><span class="do">## 5             25          26     chr1    0.517674   0.02334748   0.00771205</span></span>
-<span id="cb333-10"><a href="co-accessibility-with-archr.html#cb333-10" tabindex="-1"></a><span class="do">## ...          ...         ...      ...         ...          ...          ...</span></span>
-<span id="cb333-11"><a href="co-accessibility-with-archr.html#cb333-11" tabindex="-1"></a><span class="do">## 100406    147344      147339     chrX    0.511756   0.00978620   0.01293699</span></span>
-<span id="cb333-12"><a href="co-accessibility-with-archr.html#cb333-12" tabindex="-1"></a><span class="do">## 100407    147367      147368     chrX    0.563453   0.00169568   0.00155184</span></span>
-<span id="cb333-13"><a href="co-accessibility-with-archr.html#cb333-13" tabindex="-1"></a><span class="do">## 100408    147368      147367     chrX    0.563453   0.00155184   0.00169568</span></span>
-<span id="cb333-14"><a href="co-accessibility-with-archr.html#cb333-14" tabindex="-1"></a><span class="do">## 100409    147373      147374     chrX    0.609453   0.01068828   0.00233270</span></span>
-<span id="cb333-15"><a href="co-accessibility-with-archr.html#cb333-15" tabindex="-1"></a><span class="do">## 100410    147374      147373     chrX    0.609453   0.00233270   0.01068828</span></span>
-<span id="cb333-16"><a href="co-accessibility-with-archr.html#cb333-16" tabindex="-1"></a><span class="do">##            TStat        Pval         FDR VarQuantile1 VarQuantile2</span></span>
-<span id="cb333-17"><a href="co-accessibility-with-archr.html#cb333-17" tabindex="-1"></a><span class="do">##        &lt;numeric&gt;   &lt;numeric&gt;   &lt;numeric&gt;    &lt;numeric&gt;    &lt;numeric&gt;</span></span>
-<span id="cb333-18"><a href="co-accessibility-with-archr.html#cb333-18" tabindex="-1"></a><span class="do">## 1        18.3468 1.21697e-57 1.56304e-55     0.555473     0.929311</span></span>
-<span id="cb333-19"><a href="co-accessibility-with-archr.html#cb333-19" tabindex="-1"></a><span class="do">## 2        18.3468 1.21697e-57 1.56304e-55     0.929311     0.555473</span></span>
-<span id="cb333-20"><a href="co-accessibility-with-archr.html#cb333-20" tabindex="-1"></a><span class="do">## 3        16.5906 2.11145e-49 1.84225e-47     0.929311     0.510818</span></span>
-<span id="cb333-21"><a href="co-accessibility-with-archr.html#cb333-21" tabindex="-1"></a><span class="do">## 4        16.9783 3.33373e-51 3.17421e-49     0.929311     0.792828</span></span>
-<span id="cb333-22"><a href="co-accessibility-with-archr.html#cb333-22" tabindex="-1"></a><span class="do">## 5        13.4072 3.79464e-35 1.55997e-33     0.884673     0.664324</span></span>
-<span id="cb333-23"><a href="co-accessibility-with-archr.html#cb333-23" tabindex="-1"></a><span class="do">## ...          ...         ...         ...          ...          ...</span></span>
-<span id="cb333-24"><a href="co-accessibility-with-archr.html#cb333-24" tabindex="-1"></a><span class="do">## 100406   13.1991 2.93656e-34 1.14815e-32     0.722281     0.780591</span></span>
-<span id="cb333-25"><a href="co-accessibility-with-archr.html#cb333-25" tabindex="-1"></a><span class="do">## 100407   15.1126 1.19929e-42 7.42944e-41     0.238637     0.216621</span></span>
-<span id="cb333-26"><a href="co-accessibility-with-archr.html#cb333-26" tabindex="-1"></a><span class="do">## 100408   15.1126 1.19929e-42 7.42944e-41     0.216621     0.238637</span></span>
-<span id="cb333-27"><a href="co-accessibility-with-archr.html#cb333-27" tabindex="-1"></a><span class="do">## 100409   17.0336 1.84100e-51 1.77552e-49     0.741567     0.324191</span></span>
-<span id="cb333-28"><a href="co-accessibility-with-archr.html#cb333-28" tabindex="-1"></a><span class="do">## 100410   17.0336 1.84100e-51 1.77552e-49     0.324191     0.741567</span></span></code></pre></div>
+<div class="sourceCode" id="cb335"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb335-1"><a href="co-accessibility-with-archr.html#cb335-1" tabindex="-1"></a>cA</span>
+<span id="cb335-2"><a href="co-accessibility-with-archr.html#cb335-2" tabindex="-1"></a><span class="do">## DataFrame with 100410 rows and 11 columns</span></span>
+<span id="cb335-3"><a href="co-accessibility-with-archr.html#cb335-3" tabindex="-1"></a><span class="do">##        queryHits subjectHits seqnames correlation Variability1 Variability2</span></span>
+<span id="cb335-4"><a href="co-accessibility-with-archr.html#cb335-4" tabindex="-1"></a><span class="do">##        &lt;integer&gt;   &lt;integer&gt;    &lt;Rle&gt;   &lt;numeric&gt;    &lt;numeric&gt;    &lt;numeric&gt;</span></span>
+<span id="cb335-5"><a href="co-accessibility-with-archr.html#cb335-5" tabindex="-1"></a><span class="do">## 1              7          13     chr1    0.637747   0.00514607   0.03098155</span></span>
+<span id="cb335-6"><a href="co-accessibility-with-archr.html#cb335-6" tabindex="-1"></a><span class="do">## 2             13           7     chr1    0.637747   0.03098155   0.00514607</span></span>
+<span id="cb335-7"><a href="co-accessibility-with-archr.html#cb335-7" tabindex="-1"></a><span class="do">## 3             13          29     chr1    0.599347   0.03098155   0.00440347</span></span>
+<span id="cb335-8"><a href="co-accessibility-with-archr.html#cb335-8" tabindex="-1"></a><span class="do">## 4             13          38     chr1    0.608207   0.03098155   0.01377298</span></span>
+<span id="cb335-9"><a href="co-accessibility-with-archr.html#cb335-9" tabindex="-1"></a><span class="do">## 5             25          26     chr1    0.517674   0.02334748   0.00771205</span></span>
+<span id="cb335-10"><a href="co-accessibility-with-archr.html#cb335-10" tabindex="-1"></a><span class="do">## ...          ...         ...      ...         ...          ...          ...</span></span>
+<span id="cb335-11"><a href="co-accessibility-with-archr.html#cb335-11" tabindex="-1"></a><span class="do">## 100406    147344      147339     chrX    0.511756   0.00978620   0.01293699</span></span>
+<span id="cb335-12"><a href="co-accessibility-with-archr.html#cb335-12" tabindex="-1"></a><span class="do">## 100407    147367      147368     chrX    0.563453   0.00169568   0.00155184</span></span>
+<span id="cb335-13"><a href="co-accessibility-with-archr.html#cb335-13" tabindex="-1"></a><span class="do">## 100408    147368      147367     chrX    0.563453   0.00155184   0.00169568</span></span>
+<span id="cb335-14"><a href="co-accessibility-with-archr.html#cb335-14" tabindex="-1"></a><span class="do">## 100409    147373      147374     chrX    0.609453   0.01068828   0.00233270</span></span>
+<span id="cb335-15"><a href="co-accessibility-with-archr.html#cb335-15" tabindex="-1"></a><span class="do">## 100410    147374      147373     chrX    0.609453   0.00233270   0.01068828</span></span>
+<span id="cb335-16"><a href="co-accessibility-with-archr.html#cb335-16" tabindex="-1"></a><span class="do">##            TStat        Pval         FDR VarQuantile1 VarQuantile2</span></span>
+<span id="cb335-17"><a href="co-accessibility-with-archr.html#cb335-17" tabindex="-1"></a><span class="do">##        &lt;numeric&gt;   &lt;numeric&gt;   &lt;numeric&gt;    &lt;numeric&gt;    &lt;numeric&gt;</span></span>
+<span id="cb335-18"><a href="co-accessibility-with-archr.html#cb335-18" tabindex="-1"></a><span class="do">## 1        18.3468 1.21697e-57 1.56304e-55     0.555473     0.929311</span></span>
+<span id="cb335-19"><a href="co-accessibility-with-archr.html#cb335-19" tabindex="-1"></a><span class="do">## 2        18.3468 1.21697e-57 1.56304e-55     0.929311     0.555473</span></span>
+<span id="cb335-20"><a href="co-accessibility-with-archr.html#cb335-20" tabindex="-1"></a><span class="do">## 3        16.5906 2.11145e-49 1.84225e-47     0.929311     0.510818</span></span>
+<span id="cb335-21"><a href="co-accessibility-with-archr.html#cb335-21" tabindex="-1"></a><span class="do">## 4        16.9783 3.33373e-51 3.17421e-49     0.929311     0.792828</span></span>
+<span id="cb335-22"><a href="co-accessibility-with-archr.html#cb335-22" tabindex="-1"></a><span class="do">## 5        13.4072 3.79464e-35 1.55997e-33     0.884673     0.664324</span></span>
+<span id="cb335-23"><a href="co-accessibility-with-archr.html#cb335-23" tabindex="-1"></a><span class="do">## ...          ...         ...         ...          ...          ...</span></span>
+<span id="cb335-24"><a href="co-accessibility-with-archr.html#cb335-24" tabindex="-1"></a><span class="do">## 100406   13.1991 2.93656e-34 1.14815e-32     0.722281     0.780591</span></span>
+<span id="cb335-25"><a href="co-accessibility-with-archr.html#cb335-25" tabindex="-1"></a><span class="do">## 100407   15.1126 1.19929e-42 7.42944e-41     0.238637     0.216621</span></span>
+<span id="cb335-26"><a href="co-accessibility-with-archr.html#cb335-26" tabindex="-1"></a><span class="do">## 100408   15.1126 1.19929e-42 7.42944e-41     0.216621     0.238637</span></span>
+<span id="cb335-27"><a href="co-accessibility-with-archr.html#cb335-27" tabindex="-1"></a><span class="do">## 100409   17.0336 1.84100e-51 1.77552e-49     0.741567     0.324191</span></span>
+<span id="cb335-28"><a href="co-accessibility-with-archr.html#cb335-28" tabindex="-1"></a><span class="do">## 100410   17.0336 1.84100e-51 1.77552e-49     0.324191     0.741567</span></span></code></pre></div>
 <p>This co-accessibility <code>DataFrame</code> also has a metadata component containing a <code>GRanges</code> object of the relevant peaks. The indexes of <code>queryHits</code> and <code>subjectHits</code> mentioned above apply to this <code>GRanges</code> object.</p>
-<div class="sourceCode" id="cb334"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb334-1"><a href="co-accessibility-with-archr.html#cb334-1" tabindex="-1"></a><span class="fu">metadata</span>(cA)[[<span class="dv">1</span>]]</span>
-<span id="cb334-2"><a href="co-accessibility-with-archr.html#cb334-2" tabindex="-1"></a><span class="do">## GRanges object with 147407 ranges and 0 metadata columns:</span></span>
-<span id="cb334-3"><a href="co-accessibility-with-archr.html#cb334-3" tabindex="-1"></a><span class="do">##              seqnames              ranges strand</span></span>
-<span id="cb334-4"><a href="co-accessibility-with-archr.html#cb334-4" tabindex="-1"></a><span class="do">##                 &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt;</span></span>
-<span id="cb334-5"><a href="co-accessibility-with-archr.html#cb334-5" tabindex="-1"></a><span class="do">##         Mono     chr1       752503-753003      *</span></span>
-<span id="cb334-6"><a href="co-accessibility-with-archr.html#cb334-6" tabindex="-1"></a><span class="do">##            B     chr1       762688-763188      *</span></span>
-<span id="cb334-7"><a href="co-accessibility-with-archr.html#cb334-7" tabindex="-1"></a><span class="do">##          GMP     chr1       773648-774148      *</span></span>
-<span id="cb334-8"><a href="co-accessibility-with-archr.html#cb334-8" tabindex="-1"></a><span class="do">##        CD4.M     chr1       779906-780406      *</span></span>
-<span id="cb334-9"><a href="co-accessibility-with-archr.html#cb334-9" tabindex="-1"></a><span class="do">##            B     chr1       801002-801502      *</span></span>
-<span id="cb334-10"><a href="co-accessibility-with-archr.html#cb334-10" tabindex="-1"></a><span class="do">##          ...      ...                 ...    ...</span></span>
-<span id="cb334-11"><a href="co-accessibility-with-archr.html#cb334-11" tabindex="-1"></a><span class="do">##           NK     chrX 154807254-154807754      *</span></span>
-<span id="cb334-12"><a href="co-accessibility-with-archr.html#cb334-12" tabindex="-1"></a><span class="do">##         PreB     chrX 154840939-154841439      *</span></span>
-<span id="cb334-13"><a href="co-accessibility-with-archr.html#cb334-13" tabindex="-1"></a><span class="do">##         PreB     chrX 154841881-154842381      *</span></span>
-<span id="cb334-14"><a href="co-accessibility-with-archr.html#cb334-14" tabindex="-1"></a><span class="do">##           NK     chrX 154842390-154842890      *</span></span>
-<span id="cb334-15"><a href="co-accessibility-with-archr.html#cb334-15" tabindex="-1"></a><span class="do">##   Progenitor     chrX 154862036-154862536      *</span></span>
-<span id="cb334-16"><a href="co-accessibility-with-archr.html#cb334-16" tabindex="-1"></a><span class="do">##   -------</span></span>
-<span id="cb334-17"><a href="co-accessibility-with-archr.html#cb334-17" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
+<div class="sourceCode" id="cb336"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb336-1"><a href="co-accessibility-with-archr.html#cb336-1" tabindex="-1"></a><span class="fu">metadata</span>(cA)[[<span class="dv">1</span>]]</span>
+<span id="cb336-2"><a href="co-accessibility-with-archr.html#cb336-2" tabindex="-1"></a><span class="do">## GRanges object with 147407 ranges and 0 metadata columns:</span></span>
+<span id="cb336-3"><a href="co-accessibility-with-archr.html#cb336-3" tabindex="-1"></a><span class="do">##              seqnames              ranges strand</span></span>
+<span id="cb336-4"><a href="co-accessibility-with-archr.html#cb336-4" tabindex="-1"></a><span class="do">##                 &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt;</span></span>
+<span id="cb336-5"><a href="co-accessibility-with-archr.html#cb336-5" tabindex="-1"></a><span class="do">##         Mono     chr1       752503-753003      *</span></span>
+<span id="cb336-6"><a href="co-accessibility-with-archr.html#cb336-6" tabindex="-1"></a><span class="do">##            B     chr1       762688-763188      *</span></span>
+<span id="cb336-7"><a href="co-accessibility-with-archr.html#cb336-7" tabindex="-1"></a><span class="do">##          GMP     chr1       773648-774148      *</span></span>
+<span id="cb336-8"><a href="co-accessibility-with-archr.html#cb336-8" tabindex="-1"></a><span class="do">##        CD4.M     chr1       779906-780406      *</span></span>
+<span id="cb336-9"><a href="co-accessibility-with-archr.html#cb336-9" tabindex="-1"></a><span class="do">##            B     chr1       801002-801502      *</span></span>
+<span id="cb336-10"><a href="co-accessibility-with-archr.html#cb336-10" tabindex="-1"></a><span class="do">##          ...      ...                 ...    ...</span></span>
+<span id="cb336-11"><a href="co-accessibility-with-archr.html#cb336-11" tabindex="-1"></a><span class="do">##           NK     chrX 154807254-154807754      *</span></span>
+<span id="cb336-12"><a href="co-accessibility-with-archr.html#cb336-12" tabindex="-1"></a><span class="do">##         PreB     chrX 154840939-154841439      *</span></span>
+<span id="cb336-13"><a href="co-accessibility-with-archr.html#cb336-13" tabindex="-1"></a><span class="do">##         PreB     chrX 154841881-154842381      *</span></span>
+<span id="cb336-14"><a href="co-accessibility-with-archr.html#cb336-14" tabindex="-1"></a><span class="do">##           NK     chrX 154842390-154842890      *</span></span>
+<span id="cb336-15"><a href="co-accessibility-with-archr.html#cb336-15" tabindex="-1"></a><span class="do">##   Progenitor     chrX 154862036-154862536      *</span></span>
+<span id="cb336-16"><a href="co-accessibility-with-archr.html#cb336-16" tabindex="-1"></a><span class="do">##   -------</span></span>
+<span id="cb336-17"><a href="co-accessibility-with-archr.html#cb336-17" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
 <p>If we set <code>returnLoops = TRUE</code>, then <code>getCoAccessibility()</code> will instead return the co-accessibility information in the form a loop track. In this <code>GRanges</code> object, the start and end of the <code>IRanges</code> map to the two different co-accessible peaks for each interaction. The <code>resolution</code> parameter sets the base-pair resolution of these loops. When <code>resolution = 1</code>, this creates loops that connect the center of each peak.</p>
-<div class="sourceCode" id="cb335"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb335-1"><a href="co-accessibility-with-archr.html#cb335-1" tabindex="-1"></a>cA <span class="ot">&lt;-</span> <span class="fu">getCoAccessibility</span>(</span>
-<span id="cb335-2"><a href="co-accessibility-with-archr.html#cb335-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb335-3"><a href="co-accessibility-with-archr.html#cb335-3" tabindex="-1"></a>    <span class="at">corCutOff =</span> <span class="fl">0.5</span>,</span>
-<span id="cb335-4"><a href="co-accessibility-with-archr.html#cb335-4" tabindex="-1"></a>    <span class="at">resolution =</span> <span class="dv">1</span>,</span>
-<span id="cb335-5"><a href="co-accessibility-with-archr.html#cb335-5" tabindex="-1"></a>    <span class="at">returnLoops =</span> <span class="cn">TRUE</span></span>
-<span id="cb335-6"><a href="co-accessibility-with-archr.html#cb335-6" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb337"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb337-1"><a href="co-accessibility-with-archr.html#cb337-1" tabindex="-1"></a>cA <span class="ot">&lt;-</span> <span class="fu">getCoAccessibility</span>(</span>
+<span id="cb337-2"><a href="co-accessibility-with-archr.html#cb337-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb337-3"><a href="co-accessibility-with-archr.html#cb337-3" tabindex="-1"></a>    <span class="at">corCutOff =</span> <span class="fl">0.5</span>,</span>
+<span id="cb337-4"><a href="co-accessibility-with-archr.html#cb337-4" tabindex="-1"></a>    <span class="at">resolution =</span> <span class="dv">1</span>,</span>
+<span id="cb337-5"><a href="co-accessibility-with-archr.html#cb337-5" tabindex="-1"></a>    <span class="at">returnLoops =</span> <span class="cn">TRUE</span></span>
+<span id="cb337-6"><a href="co-accessibility-with-archr.html#cb337-6" tabindex="-1"></a>)</span></code></pre></div>
 <p>We can compare this <code>GRanges</code> object to the <code>DataFrame</code> object generated above.</p>
-<div class="sourceCode" id="cb336"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb336-1"><a href="co-accessibility-with-archr.html#cb336-1" tabindex="-1"></a>cA[[<span class="dv">1</span>]]</span>
-<span id="cb336-2"><a href="co-accessibility-with-archr.html#cb336-2" tabindex="-1"></a><span class="do">## GRanges object with 50205 ranges and 9 metadata columns:</span></span>
-<span id="cb336-3"><a href="co-accessibility-with-archr.html#cb336-3" tabindex="-1"></a><span class="do">##           seqnames              ranges strand | correlation Variability1</span></span>
-<span id="cb336-4"><a href="co-accessibility-with-archr.html#cb336-4" tabindex="-1"></a><span class="do">##              &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |   &lt;numeric&gt;    &lt;numeric&gt;</span></span>
-<span id="cb336-5"><a href="co-accessibility-with-archr.html#cb336-5" tabindex="-1"></a><span class="do">##       [1]     chr1       845576-856616      * |    0.637747   0.00514607</span></span>
-<span id="cb336-6"><a href="co-accessibility-with-archr.html#cb336-6" tabindex="-1"></a><span class="do">##       [2]     chr1       856616-901487      * |    0.599347   0.03098155</span></span>
-<span id="cb336-7"><a href="co-accessibility-with-archr.html#cb336-7" tabindex="-1"></a><span class="do">##       [3]     chr1       856616-940557      * |    0.608207   0.03098155</span></span>
-<span id="cb336-8"><a href="co-accessibility-with-archr.html#cb336-8" tabindex="-1"></a><span class="do">##       [4]     chr1       894693-895198      * |    0.517674   0.02334748</span></span>
-<span id="cb336-9"><a href="co-accessibility-with-archr.html#cb336-9" tabindex="-1"></a><span class="do">##       [5]     chr1       901487-940557      * |    0.579194   0.01377298</span></span>
-<span id="cb336-10"><a href="co-accessibility-with-archr.html#cb336-10" tabindex="-1"></a><span class="do">##       ...      ...                 ...    ... .         ...          ...</span></span>
-<span id="cb336-11"><a href="co-accessibility-with-archr.html#cb336-11" tabindex="-1"></a><span class="do">##   [50201]     chrX 153529407-153597283      * |    0.514473   0.00259139</span></span>
-<span id="cb336-12"><a href="co-accessibility-with-archr.html#cb336-12" tabindex="-1"></a><span class="do">##   [50202]     chrX 153597283-153637642      * |    0.517474   0.09252559</span></span>
-<span id="cb336-13"><a href="co-accessibility-with-archr.html#cb336-13" tabindex="-1"></a><span class="do">##   [50203]     chrX 153686257-153715023      * |    0.511756   0.01293699</span></span>
-<span id="cb336-14"><a href="co-accessibility-with-archr.html#cb336-14" tabindex="-1"></a><span class="do">##   [50204]     chrX 153959653-153960340      * |    0.563453   0.00169568</span></span>
-<span id="cb336-15"><a href="co-accessibility-with-archr.html#cb336-15" tabindex="-1"></a><span class="do">##   [50205]     chrX 153980210-153990364      * |    0.609453   0.01068828</span></span>
-<span id="cb336-16"><a href="co-accessibility-with-archr.html#cb336-16" tabindex="-1"></a><span class="do">##           Variability2     TStat        Pval         FDR VarQuantile1</span></span>
-<span id="cb336-17"><a href="co-accessibility-with-archr.html#cb336-17" tabindex="-1"></a><span class="do">##              &lt;numeric&gt; &lt;numeric&gt;   &lt;numeric&gt;   &lt;numeric&gt;    &lt;numeric&gt;</span></span>
-<span id="cb336-18"><a href="co-accessibility-with-archr.html#cb336-18" tabindex="-1"></a><span class="do">##       [1]   0.03098155   18.3468 1.21697e-57 1.56304e-55     0.555473</span></span>
-<span id="cb336-19"><a href="co-accessibility-with-archr.html#cb336-19" tabindex="-1"></a><span class="do">##       [2]   0.00440347   16.5906 2.11145e-49 1.84225e-47     0.929311</span></span>
-<span id="cb336-20"><a href="co-accessibility-with-archr.html#cb336-20" tabindex="-1"></a><span class="do">##       [3]   0.01377298   16.9783 3.33373e-51 3.17421e-49     0.929311</span></span>
-<span id="cb336-21"><a href="co-accessibility-with-archr.html#cb336-21" tabindex="-1"></a><span class="do">##       [4]   0.00771205   13.4072 3.79464e-35 1.55997e-33     0.884673</span></span>
-<span id="cb336-22"><a href="co-accessibility-with-archr.html#cb336-22" tabindex="-1"></a><span class="do">##       [5]   0.00440347   15.7437 1.65808e-45 1.18689e-43     0.792828</span></span>
-<span id="cb336-23"><a href="co-accessibility-with-archr.html#cb336-23" tabindex="-1"></a><span class="do">##       ...          ...       ...         ...         ...          ...</span></span>
-<span id="cb336-24"><a href="co-accessibility-with-archr.html#cb336-24" tabindex="-1"></a><span class="do">##   [50201]   0.09252559   13.2943 1.15337e-34 4.61541e-33     0.354323</span></span>
-<span id="cb336-25"><a href="co-accessibility-with-archr.html#cb336-25" tabindex="-1"></a><span class="do">##   [50202]   0.02734691   13.4001 4.06966e-35 1.67015e-33     0.997672</span></span>
-<span id="cb336-26"><a href="co-accessibility-with-archr.html#cb336-26" tabindex="-1"></a><span class="do">##   [50203]   0.00978620   13.1991 2.93656e-34 1.14815e-32     0.780591</span></span>
-<span id="cb336-27"><a href="co-accessibility-with-archr.html#cb336-27" tabindex="-1"></a><span class="do">##   [50204]   0.00155184   15.1126 1.19929e-42 7.42944e-41     0.238637</span></span>
-<span id="cb336-28"><a href="co-accessibility-with-archr.html#cb336-28" tabindex="-1"></a><span class="do">##   [50205]   0.00233270   17.0336 1.84100e-51 1.77552e-49     0.741567</span></span>
-<span id="cb336-29"><a href="co-accessibility-with-archr.html#cb336-29" tabindex="-1"></a><span class="do">##           VarQuantile2     value</span></span>
-<span id="cb336-30"><a href="co-accessibility-with-archr.html#cb336-30" tabindex="-1"></a><span class="do">##              &lt;numeric&gt; &lt;numeric&gt;</span></span>
-<span id="cb336-31"><a href="co-accessibility-with-archr.html#cb336-31" tabindex="-1"></a><span class="do">##       [1]     0.929311  0.637747</span></span>
-<span id="cb336-32"><a href="co-accessibility-with-archr.html#cb336-32" tabindex="-1"></a><span class="do">##       [2]     0.510818  0.599347</span></span>
-<span id="cb336-33"><a href="co-accessibility-with-archr.html#cb336-33" tabindex="-1"></a><span class="do">##       [3]     0.792828  0.608207</span></span>
-<span id="cb336-34"><a href="co-accessibility-with-archr.html#cb336-34" tabindex="-1"></a><span class="do">##       [4]     0.664324  0.517674</span></span>
-<span id="cb336-35"><a href="co-accessibility-with-archr.html#cb336-35" tabindex="-1"></a><span class="do">##       [5]     0.510818  0.579194</span></span>
-<span id="cb336-36"><a href="co-accessibility-with-archr.html#cb336-36" tabindex="-1"></a><span class="do">##       ...          ...       ...</span></span>
-<span id="cb336-37"><a href="co-accessibility-with-archr.html#cb336-37" tabindex="-1"></a><span class="do">##   [50201]     0.997672  0.514473</span></span>
-<span id="cb336-38"><a href="co-accessibility-with-archr.html#cb336-38" tabindex="-1"></a><span class="do">##   [50202]     0.910198  0.517474</span></span>
-<span id="cb336-39"><a href="co-accessibility-with-archr.html#cb336-39" tabindex="-1"></a><span class="do">##   [50203]     0.722281  0.511756</span></span>
-<span id="cb336-40"><a href="co-accessibility-with-archr.html#cb336-40" tabindex="-1"></a><span class="do">##   [50204]     0.216621  0.563453</span></span>
-<span id="cb336-41"><a href="co-accessibility-with-archr.html#cb336-41" tabindex="-1"></a><span class="do">##   [50205]     0.324191  0.609453</span></span>
-<span id="cb336-42"><a href="co-accessibility-with-archr.html#cb336-42" tabindex="-1"></a><span class="do">##   -------</span></span>
-<span id="cb336-43"><a href="co-accessibility-with-archr.html#cb336-43" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
+<div class="sourceCode" id="cb338"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb338-1"><a href="co-accessibility-with-archr.html#cb338-1" tabindex="-1"></a>cA[[<span class="dv">1</span>]]</span>
+<span id="cb338-2"><a href="co-accessibility-with-archr.html#cb338-2" tabindex="-1"></a><span class="do">## GRanges object with 50205 ranges and 9 metadata columns:</span></span>
+<span id="cb338-3"><a href="co-accessibility-with-archr.html#cb338-3" tabindex="-1"></a><span class="do">##           seqnames              ranges strand | correlation Variability1</span></span>
+<span id="cb338-4"><a href="co-accessibility-with-archr.html#cb338-4" tabindex="-1"></a><span class="do">##              &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |   &lt;numeric&gt;    &lt;numeric&gt;</span></span>
+<span id="cb338-5"><a href="co-accessibility-with-archr.html#cb338-5" tabindex="-1"></a><span class="do">##       [1]     chr1       845576-856616      * |    0.637747   0.00514607</span></span>
+<span id="cb338-6"><a href="co-accessibility-with-archr.html#cb338-6" tabindex="-1"></a><span class="do">##       [2]     chr1       856616-901487      * |    0.599347   0.03098155</span></span>
+<span id="cb338-7"><a href="co-accessibility-with-archr.html#cb338-7" tabindex="-1"></a><span class="do">##       [3]     chr1       856616-940557      * |    0.608207   0.03098155</span></span>
+<span id="cb338-8"><a href="co-accessibility-with-archr.html#cb338-8" tabindex="-1"></a><span class="do">##       [4]     chr1       894693-895198      * |    0.517674   0.02334748</span></span>
+<span id="cb338-9"><a href="co-accessibility-with-archr.html#cb338-9" tabindex="-1"></a><span class="do">##       [5]     chr1       901487-940557      * |    0.579194   0.01377298</span></span>
+<span id="cb338-10"><a href="co-accessibility-with-archr.html#cb338-10" tabindex="-1"></a><span class="do">##       ...      ...                 ...    ... .         ...          ...</span></span>
+<span id="cb338-11"><a href="co-accessibility-with-archr.html#cb338-11" tabindex="-1"></a><span class="do">##   [50201]     chrX 153529407-153597283      * |    0.514473   0.00259139</span></span>
+<span id="cb338-12"><a href="co-accessibility-with-archr.html#cb338-12" tabindex="-1"></a><span class="do">##   [50202]     chrX 153597283-153637642      * |    0.517474   0.09252559</span></span>
+<span id="cb338-13"><a href="co-accessibility-with-archr.html#cb338-13" tabindex="-1"></a><span class="do">##   [50203]     chrX 153686257-153715023      * |    0.511756   0.01293699</span></span>
+<span id="cb338-14"><a href="co-accessibility-with-archr.html#cb338-14" tabindex="-1"></a><span class="do">##   [50204]     chrX 153959653-153960340      * |    0.563453   0.00169568</span></span>
+<span id="cb338-15"><a href="co-accessibility-with-archr.html#cb338-15" tabindex="-1"></a><span class="do">##   [50205]     chrX 153980210-153990364      * |    0.609453   0.01068828</span></span>
+<span id="cb338-16"><a href="co-accessibility-with-archr.html#cb338-16" tabindex="-1"></a><span class="do">##           Variability2     TStat        Pval         FDR VarQuantile1</span></span>
+<span id="cb338-17"><a href="co-accessibility-with-archr.html#cb338-17" tabindex="-1"></a><span class="do">##              &lt;numeric&gt; &lt;numeric&gt;   &lt;numeric&gt;   &lt;numeric&gt;    &lt;numeric&gt;</span></span>
+<span id="cb338-18"><a href="co-accessibility-with-archr.html#cb338-18" tabindex="-1"></a><span class="do">##       [1]   0.03098155   18.3468 1.21697e-57 1.56304e-55     0.555473</span></span>
+<span id="cb338-19"><a href="co-accessibility-with-archr.html#cb338-19" tabindex="-1"></a><span class="do">##       [2]   0.00440347   16.5906 2.11145e-49 1.84225e-47     0.929311</span></span>
+<span id="cb338-20"><a href="co-accessibility-with-archr.html#cb338-20" tabindex="-1"></a><span class="do">##       [3]   0.01377298   16.9783 3.33373e-51 3.17421e-49     0.929311</span></span>
+<span id="cb338-21"><a href="co-accessibility-with-archr.html#cb338-21" tabindex="-1"></a><span class="do">##       [4]   0.00771205   13.4072 3.79464e-35 1.55997e-33     0.884673</span></span>
+<span id="cb338-22"><a href="co-accessibility-with-archr.html#cb338-22" tabindex="-1"></a><span class="do">##       [5]   0.00440347   15.7437 1.65808e-45 1.18689e-43     0.792828</span></span>
+<span id="cb338-23"><a href="co-accessibility-with-archr.html#cb338-23" tabindex="-1"></a><span class="do">##       ...          ...       ...         ...         ...          ...</span></span>
+<span id="cb338-24"><a href="co-accessibility-with-archr.html#cb338-24" tabindex="-1"></a><span class="do">##   [50201]   0.09252559   13.2943 1.15337e-34 4.61541e-33     0.354323</span></span>
+<span id="cb338-25"><a href="co-accessibility-with-archr.html#cb338-25" tabindex="-1"></a><span class="do">##   [50202]   0.02734691   13.4001 4.06966e-35 1.67015e-33     0.997672</span></span>
+<span id="cb338-26"><a href="co-accessibility-with-archr.html#cb338-26" tabindex="-1"></a><span class="do">##   [50203]   0.00978620   13.1991 2.93656e-34 1.14815e-32     0.780591</span></span>
+<span id="cb338-27"><a href="co-accessibility-with-archr.html#cb338-27" tabindex="-1"></a><span class="do">##   [50204]   0.00155184   15.1126 1.19929e-42 7.42944e-41     0.238637</span></span>
+<span id="cb338-28"><a href="co-accessibility-with-archr.html#cb338-28" tabindex="-1"></a><span class="do">##   [50205]   0.00233270   17.0336 1.84100e-51 1.77552e-49     0.741567</span></span>
+<span id="cb338-29"><a href="co-accessibility-with-archr.html#cb338-29" tabindex="-1"></a><span class="do">##           VarQuantile2     value</span></span>
+<span id="cb338-30"><a href="co-accessibility-with-archr.html#cb338-30" tabindex="-1"></a><span class="do">##              &lt;numeric&gt; &lt;numeric&gt;</span></span>
+<span id="cb338-31"><a href="co-accessibility-with-archr.html#cb338-31" tabindex="-1"></a><span class="do">##       [1]     0.929311  0.637747</span></span>
+<span id="cb338-32"><a href="co-accessibility-with-archr.html#cb338-32" tabindex="-1"></a><span class="do">##       [2]     0.510818  0.599347</span></span>
+<span id="cb338-33"><a href="co-accessibility-with-archr.html#cb338-33" tabindex="-1"></a><span class="do">##       [3]     0.792828  0.608207</span></span>
+<span id="cb338-34"><a href="co-accessibility-with-archr.html#cb338-34" tabindex="-1"></a><span class="do">##       [4]     0.664324  0.517674</span></span>
+<span id="cb338-35"><a href="co-accessibility-with-archr.html#cb338-35" tabindex="-1"></a><span class="do">##       [5]     0.510818  0.579194</span></span>
+<span id="cb338-36"><a href="co-accessibility-with-archr.html#cb338-36" tabindex="-1"></a><span class="do">##       ...          ...       ...</span></span>
+<span id="cb338-37"><a href="co-accessibility-with-archr.html#cb338-37" tabindex="-1"></a><span class="do">##   [50201]     0.997672  0.514473</span></span>
+<span id="cb338-38"><a href="co-accessibility-with-archr.html#cb338-38" tabindex="-1"></a><span class="do">##   [50202]     0.910198  0.517474</span></span>
+<span id="cb338-39"><a href="co-accessibility-with-archr.html#cb338-39" tabindex="-1"></a><span class="do">##   [50203]     0.722281  0.511756</span></span>
+<span id="cb338-40"><a href="co-accessibility-with-archr.html#cb338-40" tabindex="-1"></a><span class="do">##   [50204]     0.216621  0.563453</span></span>
+<span id="cb338-41"><a href="co-accessibility-with-archr.html#cb338-41" tabindex="-1"></a><span class="do">##   [50205]     0.324191  0.609453</span></span>
+<span id="cb338-42"><a href="co-accessibility-with-archr.html#cb338-42" tabindex="-1"></a><span class="do">##   -------</span></span>
+<span id="cb338-43"><a href="co-accessibility-with-archr.html#cb338-43" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
 <p>This object contains a lot of information that can be helpful in further filtering the returned loops. In addition to filtering based on the correlation between peaks (via the <code>corCutOff</code> parameter), we have found it helpful to limit these analyses to stronger peaks (based on <code>FDR</code>) or loops that show more variability (i.e. higher values for <code>VarQuantile1</code> and <code>VarQuantile2</code>). For example:</p>
-<div class="sourceCode" id="cb337"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb337-1"><a href="co-accessibility-with-archr.html#cb337-1" tabindex="-1"></a>cALoops <span class="ot">&lt;-</span> cA[[<span class="dv">1</span>]]</span>
-<span id="cb337-2"><a href="co-accessibility-with-archr.html#cb337-2" tabindex="-1"></a>cALoops <span class="ot">&lt;-</span> cALoops[cALoops<span class="sc">$</span>FDR <span class="sc">&lt;</span> <span class="dv">10</span><span class="sc">^-</span><span class="dv">10</span>]</span>
-<span id="cb337-3"><a href="co-accessibility-with-archr.html#cb337-3" tabindex="-1"></a>cALoops <span class="ot">&lt;-</span> cALoops[<span class="fu">rowMins</span>(<span class="fu">cbind</span>(cALoops<span class="sc">$</span>VarQuantile1,cALoops<span class="sc">$</span>VarQuantile2)) <span class="sc">&gt;</span> <span class="fl">0.35</span>]</span>
-<span id="cb337-4"><a href="co-accessibility-with-archr.html#cb337-4" tabindex="-1"></a>cALoops</span>
-<span id="cb337-5"><a href="co-accessibility-with-archr.html#cb337-5" tabindex="-1"></a><span class="do">## GRanges object with 37760 ranges and 9 metadata columns:</span></span>
-<span id="cb337-6"><a href="co-accessibility-with-archr.html#cb337-6" tabindex="-1"></a><span class="do">##           seqnames              ranges strand | correlation Variability1</span></span>
-<span id="cb337-7"><a href="co-accessibility-with-archr.html#cb337-7" tabindex="-1"></a><span class="do">##              &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |   &lt;numeric&gt;    &lt;numeric&gt;</span></span>
-<span id="cb337-8"><a href="co-accessibility-with-archr.html#cb337-8" tabindex="-1"></a><span class="do">##       [1]     chr1       845576-856616      * |    0.637747   0.00514607</span></span>
-<span id="cb337-9"><a href="co-accessibility-with-archr.html#cb337-9" tabindex="-1"></a><span class="do">##       [2]     chr1       856616-901487      * |    0.599347   0.03098155</span></span>
-<span id="cb337-10"><a href="co-accessibility-with-archr.html#cb337-10" tabindex="-1"></a><span class="do">##       [3]     chr1       856616-940557      * |    0.608207   0.03098155</span></span>
-<span id="cb337-11"><a href="co-accessibility-with-archr.html#cb337-11" tabindex="-1"></a><span class="do">##       [4]     chr1       894693-895198      * |    0.517674   0.02334748</span></span>
-<span id="cb337-12"><a href="co-accessibility-with-archr.html#cb337-12" tabindex="-1"></a><span class="do">##       [5]     chr1       901487-940557      * |    0.579194   0.01377298</span></span>
-<span id="cb337-13"><a href="co-accessibility-with-archr.html#cb337-13" tabindex="-1"></a><span class="do">##       ...      ...                 ...    ... .         ...          ...</span></span>
-<span id="cb337-14"><a href="co-accessibility-with-archr.html#cb337-14" tabindex="-1"></a><span class="do">##   [37756]     chrX 153248873-153306007      * |    0.586708   0.00836791</span></span>
-<span id="cb337-15"><a href="co-accessibility-with-archr.html#cb337-15" tabindex="-1"></a><span class="do">##   [37757]     chrX 153276018-153306007      * |    0.647290   0.01478763</span></span>
-<span id="cb337-16"><a href="co-accessibility-with-archr.html#cb337-16" tabindex="-1"></a><span class="do">##   [37758]     chrX 153529407-153597283      * |    0.514473   0.00259139</span></span>
-<span id="cb337-17"><a href="co-accessibility-with-archr.html#cb337-17" tabindex="-1"></a><span class="do">##   [37759]     chrX 153597283-153637642      * |    0.517474   0.09252559</span></span>
-<span id="cb337-18"><a href="co-accessibility-with-archr.html#cb337-18" tabindex="-1"></a><span class="do">##   [37760]     chrX 153686257-153715023      * |    0.511756   0.01293699</span></span>
-<span id="cb337-19"><a href="co-accessibility-with-archr.html#cb337-19" tabindex="-1"></a><span class="do">##           Variability2     TStat        Pval         FDR VarQuantile1</span></span>
-<span id="cb337-20"><a href="co-accessibility-with-archr.html#cb337-20" tabindex="-1"></a><span class="do">##              &lt;numeric&gt; &lt;numeric&gt;   &lt;numeric&gt;   &lt;numeric&gt;    &lt;numeric&gt;</span></span>
-<span id="cb337-21"><a href="co-accessibility-with-archr.html#cb337-21" tabindex="-1"></a><span class="do">##       [1]   0.03098155   18.3468 1.21697e-57 1.56304e-55     0.555473</span></span>
-<span id="cb337-22"><a href="co-accessibility-with-archr.html#cb337-22" tabindex="-1"></a><span class="do">##       [2]   0.00440347   16.5906 2.11145e-49 1.84225e-47     0.929311</span></span>
-<span id="cb337-23"><a href="co-accessibility-with-archr.html#cb337-23" tabindex="-1"></a><span class="do">##       [3]   0.01377298   16.9783 3.33373e-51 3.17421e-49     0.929311</span></span>
-<span id="cb337-24"><a href="co-accessibility-with-archr.html#cb337-24" tabindex="-1"></a><span class="do">##       [4]   0.00771205   13.4072 3.79464e-35 1.55997e-33     0.884673</span></span>
-<span id="cb337-25"><a href="co-accessibility-with-archr.html#cb337-25" tabindex="-1"></a><span class="do">##       [5]   0.00440347   15.7437 1.65808e-45 1.18689e-43     0.792828</span></span>
-<span id="cb337-26"><a href="co-accessibility-with-archr.html#cb337-26" tabindex="-1"></a><span class="do">##       ...          ...       ...         ...         ...          ...</span></span>
-<span id="cb337-27"><a href="co-accessibility-with-archr.html#cb337-27" tabindex="-1"></a><span class="do">##   [37756]    0.0117999   16.0541 6.29899e-47 4.84649e-45     0.685606</span></span>
-<span id="cb337-28"><a href="co-accessibility-with-archr.html#cb337-28" tabindex="-1"></a><span class="do">##   [37757]    0.0117999   18.8168 7.11135e-60 1.01334e-57     0.805730</span></span>
-<span id="cb337-29"><a href="co-accessibility-with-archr.html#cb337-29" tabindex="-1"></a><span class="do">##   [37758]    0.0925256   13.2943 1.15337e-34 4.61541e-33     0.354323</span></span>
-<span id="cb337-30"><a href="co-accessibility-with-archr.html#cb337-30" tabindex="-1"></a><span class="do">##   [37759]    0.0273469   13.4001 4.06966e-35 1.67015e-33     0.997672</span></span>
-<span id="cb337-31"><a href="co-accessibility-with-archr.html#cb337-31" tabindex="-1"></a><span class="do">##   [37760]    0.0097862   13.1991 2.93656e-34 1.14815e-32     0.780591</span></span>
-<span id="cb337-32"><a href="co-accessibility-with-archr.html#cb337-32" tabindex="-1"></a><span class="do">##           VarQuantile2     value</span></span>
-<span id="cb337-33"><a href="co-accessibility-with-archr.html#cb337-33" tabindex="-1"></a><span class="do">##              &lt;numeric&gt; &lt;numeric&gt;</span></span>
-<span id="cb337-34"><a href="co-accessibility-with-archr.html#cb337-34" tabindex="-1"></a><span class="do">##       [1]     0.929311  0.637747</span></span>
-<span id="cb337-35"><a href="co-accessibility-with-archr.html#cb337-35" tabindex="-1"></a><span class="do">##       [2]     0.510818  0.599347</span></span>
-<span id="cb337-36"><a href="co-accessibility-with-archr.html#cb337-36" tabindex="-1"></a><span class="do">##       [3]     0.792828  0.608207</span></span>
-<span id="cb337-37"><a href="co-accessibility-with-archr.html#cb337-37" tabindex="-1"></a><span class="do">##       [4]     0.664324  0.517674</span></span>
-<span id="cb337-38"><a href="co-accessibility-with-archr.html#cb337-38" tabindex="-1"></a><span class="do">##       [5]     0.510818  0.579194</span></span>
-<span id="cb337-39"><a href="co-accessibility-with-archr.html#cb337-39" tabindex="-1"></a><span class="do">##       ...          ...       ...</span></span>
-<span id="cb337-40"><a href="co-accessibility-with-archr.html#cb337-40" tabindex="-1"></a><span class="do">##   [37756]     0.762503  0.586708</span></span>
-<span id="cb337-41"><a href="co-accessibility-with-archr.html#cb337-41" tabindex="-1"></a><span class="do">##   [37757]     0.762503  0.647290</span></span>
-<span id="cb337-42"><a href="co-accessibility-with-archr.html#cb337-42" tabindex="-1"></a><span class="do">##   [37758]     0.997672  0.514473</span></span>
-<span id="cb337-43"><a href="co-accessibility-with-archr.html#cb337-43" tabindex="-1"></a><span class="do">##   [37759]     0.910198  0.517474</span></span>
-<span id="cb337-44"><a href="co-accessibility-with-archr.html#cb337-44" tabindex="-1"></a><span class="do">##   [37760]     0.722281  0.511756</span></span>
-<span id="cb337-45"><a href="co-accessibility-with-archr.html#cb337-45" tabindex="-1"></a><span class="do">##   -------</span></span>
-<span id="cb337-46"><a href="co-accessibility-with-archr.html#cb337-46" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
+<div class="sourceCode" id="cb339"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb339-1"><a href="co-accessibility-with-archr.html#cb339-1" tabindex="-1"></a>cALoops <span class="ot">&lt;-</span> cA[[<span class="dv">1</span>]]</span>
+<span id="cb339-2"><a href="co-accessibility-with-archr.html#cb339-2" tabindex="-1"></a>cALoops <span class="ot">&lt;-</span> cALoops[cALoops<span class="sc">$</span>FDR <span class="sc">&lt;</span> <span class="dv">10</span><span class="sc">^-</span><span class="dv">10</span>]</span>
+<span id="cb339-3"><a href="co-accessibility-with-archr.html#cb339-3" tabindex="-1"></a>cALoops <span class="ot">&lt;-</span> cALoops[<span class="fu">rowMins</span>(<span class="fu">cbind</span>(cALoops<span class="sc">$</span>VarQuantile1,cALoops<span class="sc">$</span>VarQuantile2)) <span class="sc">&gt;</span> <span class="fl">0.35</span>]</span>
+<span id="cb339-4"><a href="co-accessibility-with-archr.html#cb339-4" tabindex="-1"></a>cALoops</span>
+<span id="cb339-5"><a href="co-accessibility-with-archr.html#cb339-5" tabindex="-1"></a><span class="do">## GRanges object with 37760 ranges and 9 metadata columns:</span></span>
+<span id="cb339-6"><a href="co-accessibility-with-archr.html#cb339-6" tabindex="-1"></a><span class="do">##           seqnames              ranges strand | correlation Variability1</span></span>
+<span id="cb339-7"><a href="co-accessibility-with-archr.html#cb339-7" tabindex="-1"></a><span class="do">##              &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |   &lt;numeric&gt;    &lt;numeric&gt;</span></span>
+<span id="cb339-8"><a href="co-accessibility-with-archr.html#cb339-8" tabindex="-1"></a><span class="do">##       [1]     chr1       845576-856616      * |    0.637747   0.00514607</span></span>
+<span id="cb339-9"><a href="co-accessibility-with-archr.html#cb339-9" tabindex="-1"></a><span class="do">##       [2]     chr1       856616-901487      * |    0.599347   0.03098155</span></span>
+<span id="cb339-10"><a href="co-accessibility-with-archr.html#cb339-10" tabindex="-1"></a><span class="do">##       [3]     chr1       856616-940557      * |    0.608207   0.03098155</span></span>
+<span id="cb339-11"><a href="co-accessibility-with-archr.html#cb339-11" tabindex="-1"></a><span class="do">##       [4]     chr1       894693-895198      * |    0.517674   0.02334748</span></span>
+<span id="cb339-12"><a href="co-accessibility-with-archr.html#cb339-12" tabindex="-1"></a><span class="do">##       [5]     chr1       901487-940557      * |    0.579194   0.01377298</span></span>
+<span id="cb339-13"><a href="co-accessibility-with-archr.html#cb339-13" tabindex="-1"></a><span class="do">##       ...      ...                 ...    ... .         ...          ...</span></span>
+<span id="cb339-14"><a href="co-accessibility-with-archr.html#cb339-14" tabindex="-1"></a><span class="do">##   [37756]     chrX 153248873-153306007      * |    0.586708   0.00836791</span></span>
+<span id="cb339-15"><a href="co-accessibility-with-archr.html#cb339-15" tabindex="-1"></a><span class="do">##   [37757]     chrX 153276018-153306007      * |    0.647290   0.01478763</span></span>
+<span id="cb339-16"><a href="co-accessibility-with-archr.html#cb339-16" tabindex="-1"></a><span class="do">##   [37758]     chrX 153529407-153597283      * |    0.514473   0.00259139</span></span>
+<span id="cb339-17"><a href="co-accessibility-with-archr.html#cb339-17" tabindex="-1"></a><span class="do">##   [37759]     chrX 153597283-153637642      * |    0.517474   0.09252559</span></span>
+<span id="cb339-18"><a href="co-accessibility-with-archr.html#cb339-18" tabindex="-1"></a><span class="do">##   [37760]     chrX 153686257-153715023      * |    0.511756   0.01293699</span></span>
+<span id="cb339-19"><a href="co-accessibility-with-archr.html#cb339-19" tabindex="-1"></a><span class="do">##           Variability2     TStat        Pval         FDR VarQuantile1</span></span>
+<span id="cb339-20"><a href="co-accessibility-with-archr.html#cb339-20" tabindex="-1"></a><span class="do">##              &lt;numeric&gt; &lt;numeric&gt;   &lt;numeric&gt;   &lt;numeric&gt;    &lt;numeric&gt;</span></span>
+<span id="cb339-21"><a href="co-accessibility-with-archr.html#cb339-21" tabindex="-1"></a><span class="do">##       [1]   0.03098155   18.3468 1.21697e-57 1.56304e-55     0.555473</span></span>
+<span id="cb339-22"><a href="co-accessibility-with-archr.html#cb339-22" tabindex="-1"></a><span class="do">##       [2]   0.00440347   16.5906 2.11145e-49 1.84225e-47     0.929311</span></span>
+<span id="cb339-23"><a href="co-accessibility-with-archr.html#cb339-23" tabindex="-1"></a><span class="do">##       [3]   0.01377298   16.9783 3.33373e-51 3.17421e-49     0.929311</span></span>
+<span id="cb339-24"><a href="co-accessibility-with-archr.html#cb339-24" tabindex="-1"></a><span class="do">##       [4]   0.00771205   13.4072 3.79464e-35 1.55997e-33     0.884673</span></span>
+<span id="cb339-25"><a href="co-accessibility-with-archr.html#cb339-25" tabindex="-1"></a><span class="do">##       [5]   0.00440347   15.7437 1.65808e-45 1.18689e-43     0.792828</span></span>
+<span id="cb339-26"><a href="co-accessibility-with-archr.html#cb339-26" tabindex="-1"></a><span class="do">##       ...          ...       ...         ...         ...          ...</span></span>
+<span id="cb339-27"><a href="co-accessibility-with-archr.html#cb339-27" tabindex="-1"></a><span class="do">##   [37756]    0.0117999   16.0541 6.29899e-47 4.84649e-45     0.685606</span></span>
+<span id="cb339-28"><a href="co-accessibility-with-archr.html#cb339-28" tabindex="-1"></a><span class="do">##   [37757]    0.0117999   18.8168 7.11135e-60 1.01334e-57     0.805730</span></span>
+<span id="cb339-29"><a href="co-accessibility-with-archr.html#cb339-29" tabindex="-1"></a><span class="do">##   [37758]    0.0925256   13.2943 1.15337e-34 4.61541e-33     0.354323</span></span>
+<span id="cb339-30"><a href="co-accessibility-with-archr.html#cb339-30" tabindex="-1"></a><span class="do">##   [37759]    0.0273469   13.4001 4.06966e-35 1.67015e-33     0.997672</span></span>
+<span id="cb339-31"><a href="co-accessibility-with-archr.html#cb339-31" tabindex="-1"></a><span class="do">##   [37760]    0.0097862   13.1991 2.93656e-34 1.14815e-32     0.780591</span></span>
+<span id="cb339-32"><a href="co-accessibility-with-archr.html#cb339-32" tabindex="-1"></a><span class="do">##           VarQuantile2     value</span></span>
+<span id="cb339-33"><a href="co-accessibility-with-archr.html#cb339-33" tabindex="-1"></a><span class="do">##              &lt;numeric&gt; &lt;numeric&gt;</span></span>
+<span id="cb339-34"><a href="co-accessibility-with-archr.html#cb339-34" tabindex="-1"></a><span class="do">##       [1]     0.929311  0.637747</span></span>
+<span id="cb339-35"><a href="co-accessibility-with-archr.html#cb339-35" tabindex="-1"></a><span class="do">##       [2]     0.510818  0.599347</span></span>
+<span id="cb339-36"><a href="co-accessibility-with-archr.html#cb339-36" tabindex="-1"></a><span class="do">##       [3]     0.792828  0.608207</span></span>
+<span id="cb339-37"><a href="co-accessibility-with-archr.html#cb339-37" tabindex="-1"></a><span class="do">##       [4]     0.664324  0.517674</span></span>
+<span id="cb339-38"><a href="co-accessibility-with-archr.html#cb339-38" tabindex="-1"></a><span class="do">##       [5]     0.510818  0.579194</span></span>
+<span id="cb339-39"><a href="co-accessibility-with-archr.html#cb339-39" tabindex="-1"></a><span class="do">##       ...          ...       ...</span></span>
+<span id="cb339-40"><a href="co-accessibility-with-archr.html#cb339-40" tabindex="-1"></a><span class="do">##   [37756]     0.762503  0.586708</span></span>
+<span id="cb339-41"><a href="co-accessibility-with-archr.html#cb339-41" tabindex="-1"></a><span class="do">##   [37757]     0.762503  0.647290</span></span>
+<span id="cb339-42"><a href="co-accessibility-with-archr.html#cb339-42" tabindex="-1"></a><span class="do">##   [37758]     0.997672  0.514473</span></span>
+<span id="cb339-43"><a href="co-accessibility-with-archr.html#cb339-43" tabindex="-1"></a><span class="do">##   [37759]     0.910198  0.517474</span></span>
+<span id="cb339-44"><a href="co-accessibility-with-archr.html#cb339-44" tabindex="-1"></a><span class="do">##   [37760]     0.722281  0.511756</span></span>
+<span id="cb339-45"><a href="co-accessibility-with-archr.html#cb339-45" tabindex="-1"></a><span class="do">##   -------</span></span>
+<span id="cb339-46"><a href="co-accessibility-with-archr.html#cb339-46" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
 <!--
 #JJJ Can you better describe what decreasing the resolution does here? How does this work? would it group two peaks that are nearby each other?
 -->
 <p>To help with over-plotting of co-accessibility interactions we can decrease the resolution of our loops to <code>resolution = 1000</code>. Below, we see that there are fewer total entries in our <code>GRanges</code> object than above.</p>
-<div class="sourceCode" id="cb338"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb338-1"><a href="co-accessibility-with-archr.html#cb338-1" tabindex="-1"></a>cA <span class="ot">&lt;-</span> <span class="fu">getCoAccessibility</span>(</span>
-<span id="cb338-2"><a href="co-accessibility-with-archr.html#cb338-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb338-3"><a href="co-accessibility-with-archr.html#cb338-3" tabindex="-1"></a>    <span class="at">corCutOff =</span> <span class="fl">0.5</span>,</span>
-<span id="cb338-4"><a href="co-accessibility-with-archr.html#cb338-4" tabindex="-1"></a>    <span class="at">resolution =</span> <span class="dv">1000</span>,</span>
-<span id="cb338-5"><a href="co-accessibility-with-archr.html#cb338-5" tabindex="-1"></a>    <span class="at">returnLoops =</span> <span class="cn">TRUE</span></span>
-<span id="cb338-6"><a href="co-accessibility-with-archr.html#cb338-6" tabindex="-1"></a>)</span>
-<span id="cb338-7"><a href="co-accessibility-with-archr.html#cb338-7" tabindex="-1"></a></span>
-<span id="cb338-8"><a href="co-accessibility-with-archr.html#cb338-8" tabindex="-1"></a>cA[[<span class="dv">1</span>]]</span>
-<span id="cb338-9"><a href="co-accessibility-with-archr.html#cb338-9" tabindex="-1"></a><span class="do">## GRanges object with 48198 ranges and 9 metadata columns:</span></span>
-<span id="cb338-10"><a href="co-accessibility-with-archr.html#cb338-10" tabindex="-1"></a><span class="do">##           seqnames              ranges strand | correlation Variability1</span></span>
-<span id="cb338-11"><a href="co-accessibility-with-archr.html#cb338-11" tabindex="-1"></a><span class="do">##              &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |   &lt;numeric&gt;    &lt;numeric&gt;</span></span>
-<span id="cb338-12"><a href="co-accessibility-with-archr.html#cb338-12" tabindex="-1"></a><span class="do">##       [1]     chr1       845500-856500      * |    0.637747   0.00514607</span></span>
-<span id="cb338-13"><a href="co-accessibility-with-archr.html#cb338-13" tabindex="-1"></a><span class="do">##       [2]     chr1       856500-901500      * |    0.599347   0.03098155</span></span>
-<span id="cb338-14"><a href="co-accessibility-with-archr.html#cb338-14" tabindex="-1"></a><span class="do">##       [3]     chr1       856500-940500      * |    0.608207   0.03098155</span></span>
-<span id="cb338-15"><a href="co-accessibility-with-archr.html#cb338-15" tabindex="-1"></a><span class="do">##       [4]     chr1       894500-895500      * |    0.517674   0.02334748</span></span>
-<span id="cb338-16"><a href="co-accessibility-with-archr.html#cb338-16" tabindex="-1"></a><span class="do">##       [5]     chr1       901500-940500      * |    0.579194   0.01377298</span></span>
-<span id="cb338-17"><a href="co-accessibility-with-archr.html#cb338-17" tabindex="-1"></a><span class="do">##       ...      ...                 ...    ... .         ...          ...</span></span>
-<span id="cb338-18"><a href="co-accessibility-with-archr.html#cb338-18" tabindex="-1"></a><span class="do">##   [48194]     chrX 153529500-153597500      * |    0.514473   0.00259139</span></span>
-<span id="cb338-19"><a href="co-accessibility-with-archr.html#cb338-19" tabindex="-1"></a><span class="do">##   [48195]     chrX 153597500-153637500      * |    0.517474   0.09252559</span></span>
-<span id="cb338-20"><a href="co-accessibility-with-archr.html#cb338-20" tabindex="-1"></a><span class="do">##   [48196]     chrX 153686500-153715500      * |    0.511756   0.01293699</span></span>
-<span id="cb338-21"><a href="co-accessibility-with-archr.html#cb338-21" tabindex="-1"></a><span class="do">##   [48197]     chrX 153959500-153960500      * |    0.563453   0.00169568</span></span>
-<span id="cb338-22"><a href="co-accessibility-with-archr.html#cb338-22" tabindex="-1"></a><span class="do">##   [48198]     chrX 153980500-153990500      * |    0.609453   0.01068828</span></span>
-<span id="cb338-23"><a href="co-accessibility-with-archr.html#cb338-23" tabindex="-1"></a><span class="do">##           Variability2     TStat        Pval         FDR VarQuantile1</span></span>
-<span id="cb338-24"><a href="co-accessibility-with-archr.html#cb338-24" tabindex="-1"></a><span class="do">##              &lt;numeric&gt; &lt;numeric&gt;   &lt;numeric&gt;   &lt;numeric&gt;    &lt;numeric&gt;</span></span>
-<span id="cb338-25"><a href="co-accessibility-with-archr.html#cb338-25" tabindex="-1"></a><span class="do">##       [1]   0.03098155   18.3468 1.21697e-57 1.56304e-55     0.555473</span></span>
-<span id="cb338-26"><a href="co-accessibility-with-archr.html#cb338-26" tabindex="-1"></a><span class="do">##       [2]   0.00440347   16.5906 2.11145e-49 1.84225e-47     0.929311</span></span>
-<span id="cb338-27"><a href="co-accessibility-with-archr.html#cb338-27" tabindex="-1"></a><span class="do">##       [3]   0.01377298   16.9783 3.33373e-51 3.17421e-49     0.929311</span></span>
-<span id="cb338-28"><a href="co-accessibility-with-archr.html#cb338-28" tabindex="-1"></a><span class="do">##       [4]   0.00771205   13.4072 3.79464e-35 1.55997e-33     0.884673</span></span>
-<span id="cb338-29"><a href="co-accessibility-with-archr.html#cb338-29" tabindex="-1"></a><span class="do">##       [5]   0.00440347   15.7437 1.65808e-45 1.18689e-43     0.792828</span></span>
-<span id="cb338-30"><a href="co-accessibility-with-archr.html#cb338-30" tabindex="-1"></a><span class="do">##       ...          ...       ...         ...         ...          ...</span></span>
-<span id="cb338-31"><a href="co-accessibility-with-archr.html#cb338-31" tabindex="-1"></a><span class="do">##   [48194]   0.09252559   13.2943 1.15337e-34 4.61541e-33     0.354323</span></span>
-<span id="cb338-32"><a href="co-accessibility-with-archr.html#cb338-32" tabindex="-1"></a><span class="do">##   [48195]   0.02734691   13.4001 4.06966e-35 1.67015e-33     0.997672</span></span>
-<span id="cb338-33"><a href="co-accessibility-with-archr.html#cb338-33" tabindex="-1"></a><span class="do">##   [48196]   0.00978620   13.1991 2.93656e-34 1.14815e-32     0.780591</span></span>
-<span id="cb338-34"><a href="co-accessibility-with-archr.html#cb338-34" tabindex="-1"></a><span class="do">##   [48197]   0.00155184   15.1126 1.19929e-42 7.42944e-41     0.238637</span></span>
-<span id="cb338-35"><a href="co-accessibility-with-archr.html#cb338-35" tabindex="-1"></a><span class="do">##   [48198]   0.00233270   17.0336 1.84100e-51 1.77552e-49     0.741567</span></span>
-<span id="cb338-36"><a href="co-accessibility-with-archr.html#cb338-36" tabindex="-1"></a><span class="do">##           VarQuantile2     value</span></span>
-<span id="cb338-37"><a href="co-accessibility-with-archr.html#cb338-37" tabindex="-1"></a><span class="do">##              &lt;numeric&gt; &lt;numeric&gt;</span></span>
-<span id="cb338-38"><a href="co-accessibility-with-archr.html#cb338-38" tabindex="-1"></a><span class="do">##       [1]     0.929311  0.637747</span></span>
-<span id="cb338-39"><a href="co-accessibility-with-archr.html#cb338-39" tabindex="-1"></a><span class="do">##       [2]     0.510818  0.599347</span></span>
-<span id="cb338-40"><a href="co-accessibility-with-archr.html#cb338-40" tabindex="-1"></a><span class="do">##       [3]     0.792828  0.608207</span></span>
-<span id="cb338-41"><a href="co-accessibility-with-archr.html#cb338-41" tabindex="-1"></a><span class="do">##       [4]     0.664324  0.517674</span></span>
-<span id="cb338-42"><a href="co-accessibility-with-archr.html#cb338-42" tabindex="-1"></a><span class="do">##       [5]     0.510818  0.579194</span></span>
-<span id="cb338-43"><a href="co-accessibility-with-archr.html#cb338-43" tabindex="-1"></a><span class="do">##       ...          ...       ...</span></span>
-<span id="cb338-44"><a href="co-accessibility-with-archr.html#cb338-44" tabindex="-1"></a><span class="do">##   [48194]     0.997672  0.514473</span></span>
-<span id="cb338-45"><a href="co-accessibility-with-archr.html#cb338-45" tabindex="-1"></a><span class="do">##   [48195]     0.910198  0.517474</span></span>
-<span id="cb338-46"><a href="co-accessibility-with-archr.html#cb338-46" tabindex="-1"></a><span class="do">##   [48196]     0.722281  0.511756</span></span>
-<span id="cb338-47"><a href="co-accessibility-with-archr.html#cb338-47" tabindex="-1"></a><span class="do">##   [48197]     0.216621  0.563453</span></span>
-<span id="cb338-48"><a href="co-accessibility-with-archr.html#cb338-48" tabindex="-1"></a><span class="do">##   [48198]     0.324191  0.609453</span></span>
-<span id="cb338-49"><a href="co-accessibility-with-archr.html#cb338-49" tabindex="-1"></a><span class="do">##   -------</span></span>
-<span id="cb338-50"><a href="co-accessibility-with-archr.html#cb338-50" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
+<div class="sourceCode" id="cb340"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb340-1"><a href="co-accessibility-with-archr.html#cb340-1" tabindex="-1"></a>cA <span class="ot">&lt;-</span> <span class="fu">getCoAccessibility</span>(</span>
+<span id="cb340-2"><a href="co-accessibility-with-archr.html#cb340-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb340-3"><a href="co-accessibility-with-archr.html#cb340-3" tabindex="-1"></a>    <span class="at">corCutOff =</span> <span class="fl">0.5</span>,</span>
+<span id="cb340-4"><a href="co-accessibility-with-archr.html#cb340-4" tabindex="-1"></a>    <span class="at">resolution =</span> <span class="dv">1000</span>,</span>
+<span id="cb340-5"><a href="co-accessibility-with-archr.html#cb340-5" tabindex="-1"></a>    <span class="at">returnLoops =</span> <span class="cn">TRUE</span></span>
+<span id="cb340-6"><a href="co-accessibility-with-archr.html#cb340-6" tabindex="-1"></a>)</span>
+<span id="cb340-7"><a href="co-accessibility-with-archr.html#cb340-7" tabindex="-1"></a></span>
+<span id="cb340-8"><a href="co-accessibility-with-archr.html#cb340-8" tabindex="-1"></a>cA[[<span class="dv">1</span>]]</span>
+<span id="cb340-9"><a href="co-accessibility-with-archr.html#cb340-9" tabindex="-1"></a><span class="do">## GRanges object with 48198 ranges and 9 metadata columns:</span></span>
+<span id="cb340-10"><a href="co-accessibility-with-archr.html#cb340-10" tabindex="-1"></a><span class="do">##           seqnames              ranges strand | correlation Variability1</span></span>
+<span id="cb340-11"><a href="co-accessibility-with-archr.html#cb340-11" tabindex="-1"></a><span class="do">##              &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |   &lt;numeric&gt;    &lt;numeric&gt;</span></span>
+<span id="cb340-12"><a href="co-accessibility-with-archr.html#cb340-12" tabindex="-1"></a><span class="do">##       [1]     chr1       845500-856500      * |    0.637747   0.00514607</span></span>
+<span id="cb340-13"><a href="co-accessibility-with-archr.html#cb340-13" tabindex="-1"></a><span class="do">##       [2]     chr1       856500-901500      * |    0.599347   0.03098155</span></span>
+<span id="cb340-14"><a href="co-accessibility-with-archr.html#cb340-14" tabindex="-1"></a><span class="do">##       [3]     chr1       856500-940500      * |    0.608207   0.03098155</span></span>
+<span id="cb340-15"><a href="co-accessibility-with-archr.html#cb340-15" tabindex="-1"></a><span class="do">##       [4]     chr1       894500-895500      * |    0.517674   0.02334748</span></span>
+<span id="cb340-16"><a href="co-accessibility-with-archr.html#cb340-16" tabindex="-1"></a><span class="do">##       [5]     chr1       901500-940500      * |    0.579194   0.01377298</span></span>
+<span id="cb340-17"><a href="co-accessibility-with-archr.html#cb340-17" tabindex="-1"></a><span class="do">##       ...      ...                 ...    ... .         ...          ...</span></span>
+<span id="cb340-18"><a href="co-accessibility-with-archr.html#cb340-18" tabindex="-1"></a><span class="do">##   [48194]     chrX 153529500-153597500      * |    0.514473   0.00259139</span></span>
+<span id="cb340-19"><a href="co-accessibility-with-archr.html#cb340-19" tabindex="-1"></a><span class="do">##   [48195]     chrX 153597500-153637500      * |    0.517474   0.09252559</span></span>
+<span id="cb340-20"><a href="co-accessibility-with-archr.html#cb340-20" tabindex="-1"></a><span class="do">##   [48196]     chrX 153686500-153715500      * |    0.511756   0.01293699</span></span>
+<span id="cb340-21"><a href="co-accessibility-with-archr.html#cb340-21" tabindex="-1"></a><span class="do">##   [48197]     chrX 153959500-153960500      * |    0.563453   0.00169568</span></span>
+<span id="cb340-22"><a href="co-accessibility-with-archr.html#cb340-22" tabindex="-1"></a><span class="do">##   [48198]     chrX 153980500-153990500      * |    0.609453   0.01068828</span></span>
+<span id="cb340-23"><a href="co-accessibility-with-archr.html#cb340-23" tabindex="-1"></a><span class="do">##           Variability2     TStat        Pval         FDR VarQuantile1</span></span>
+<span id="cb340-24"><a href="co-accessibility-with-archr.html#cb340-24" tabindex="-1"></a><span class="do">##              &lt;numeric&gt; &lt;numeric&gt;   &lt;numeric&gt;   &lt;numeric&gt;    &lt;numeric&gt;</span></span>
+<span id="cb340-25"><a href="co-accessibility-with-archr.html#cb340-25" tabindex="-1"></a><span class="do">##       [1]   0.03098155   18.3468 1.21697e-57 1.56304e-55     0.555473</span></span>
+<span id="cb340-26"><a href="co-accessibility-with-archr.html#cb340-26" tabindex="-1"></a><span class="do">##       [2]   0.00440347   16.5906 2.11145e-49 1.84225e-47     0.929311</span></span>
+<span id="cb340-27"><a href="co-accessibility-with-archr.html#cb340-27" tabindex="-1"></a><span class="do">##       [3]   0.01377298   16.9783 3.33373e-51 3.17421e-49     0.929311</span></span>
+<span id="cb340-28"><a href="co-accessibility-with-archr.html#cb340-28" tabindex="-1"></a><span class="do">##       [4]   0.00771205   13.4072 3.79464e-35 1.55997e-33     0.884673</span></span>
+<span id="cb340-29"><a href="co-accessibility-with-archr.html#cb340-29" tabindex="-1"></a><span class="do">##       [5]   0.00440347   15.7437 1.65808e-45 1.18689e-43     0.792828</span></span>
+<span id="cb340-30"><a href="co-accessibility-with-archr.html#cb340-30" tabindex="-1"></a><span class="do">##       ...          ...       ...         ...         ...          ...</span></span>
+<span id="cb340-31"><a href="co-accessibility-with-archr.html#cb340-31" tabindex="-1"></a><span class="do">##   [48194]   0.09252559   13.2943 1.15337e-34 4.61541e-33     0.354323</span></span>
+<span id="cb340-32"><a href="co-accessibility-with-archr.html#cb340-32" tabindex="-1"></a><span class="do">##   [48195]   0.02734691   13.4001 4.06966e-35 1.67015e-33     0.997672</span></span>
+<span id="cb340-33"><a href="co-accessibility-with-archr.html#cb340-33" tabindex="-1"></a><span class="do">##   [48196]   0.00978620   13.1991 2.93656e-34 1.14815e-32     0.780591</span></span>
+<span id="cb340-34"><a href="co-accessibility-with-archr.html#cb340-34" tabindex="-1"></a><span class="do">##   [48197]   0.00155184   15.1126 1.19929e-42 7.42944e-41     0.238637</span></span>
+<span id="cb340-35"><a href="co-accessibility-with-archr.html#cb340-35" tabindex="-1"></a><span class="do">##   [48198]   0.00233270   17.0336 1.84100e-51 1.77552e-49     0.741567</span></span>
+<span id="cb340-36"><a href="co-accessibility-with-archr.html#cb340-36" tabindex="-1"></a><span class="do">##           VarQuantile2     value</span></span>
+<span id="cb340-37"><a href="co-accessibility-with-archr.html#cb340-37" tabindex="-1"></a><span class="do">##              &lt;numeric&gt; &lt;numeric&gt;</span></span>
+<span id="cb340-38"><a href="co-accessibility-with-archr.html#cb340-38" tabindex="-1"></a><span class="do">##       [1]     0.929311  0.637747</span></span>
+<span id="cb340-39"><a href="co-accessibility-with-archr.html#cb340-39" tabindex="-1"></a><span class="do">##       [2]     0.510818  0.599347</span></span>
+<span id="cb340-40"><a href="co-accessibility-with-archr.html#cb340-40" tabindex="-1"></a><span class="do">##       [3]     0.792828  0.608207</span></span>
+<span id="cb340-41"><a href="co-accessibility-with-archr.html#cb340-41" tabindex="-1"></a><span class="do">##       [4]     0.664324  0.517674</span></span>
+<span id="cb340-42"><a href="co-accessibility-with-archr.html#cb340-42" tabindex="-1"></a><span class="do">##       [5]     0.510818  0.579194</span></span>
+<span id="cb340-43"><a href="co-accessibility-with-archr.html#cb340-43" tabindex="-1"></a><span class="do">##       ...          ...       ...</span></span>
+<span id="cb340-44"><a href="co-accessibility-with-archr.html#cb340-44" tabindex="-1"></a><span class="do">##   [48194]     0.997672  0.514473</span></span>
+<span id="cb340-45"><a href="co-accessibility-with-archr.html#cb340-45" tabindex="-1"></a><span class="do">##   [48195]     0.910198  0.517474</span></span>
+<span id="cb340-46"><a href="co-accessibility-with-archr.html#cb340-46" tabindex="-1"></a><span class="do">##   [48196]     0.722281  0.511756</span></span>
+<span id="cb340-47"><a href="co-accessibility-with-archr.html#cb340-47" tabindex="-1"></a><span class="do">##   [48197]     0.216621  0.563453</span></span>
+<span id="cb340-48"><a href="co-accessibility-with-archr.html#cb340-48" tabindex="-1"></a><span class="do">##   [48198]     0.324191  0.609453</span></span>
+<span id="cb340-49"><a href="co-accessibility-with-archr.html#cb340-49" tabindex="-1"></a><span class="do">##   -------</span></span>
+<span id="cb340-50"><a href="co-accessibility-with-archr.html#cb340-50" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
 <p>Similarly, if we decrease the resolution even further with <code>resolution = 10000</code>, we identify even fewer co-accessibility interactions.</p>
-<div class="sourceCode" id="cb339"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb339-1"><a href="co-accessibility-with-archr.html#cb339-1" tabindex="-1"></a>cA <span class="ot">&lt;-</span> <span class="fu">getCoAccessibility</span>(</span>
-<span id="cb339-2"><a href="co-accessibility-with-archr.html#cb339-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb339-3"><a href="co-accessibility-with-archr.html#cb339-3" tabindex="-1"></a>    <span class="at">corCutOff =</span> <span class="fl">0.5</span>,</span>
-<span id="cb339-4"><a href="co-accessibility-with-archr.html#cb339-4" tabindex="-1"></a>    <span class="at">resolution =</span> <span class="dv">10000</span>,</span>
-<span id="cb339-5"><a href="co-accessibility-with-archr.html#cb339-5" tabindex="-1"></a>    <span class="at">returnLoops =</span> <span class="cn">TRUE</span></span>
-<span id="cb339-6"><a href="co-accessibility-with-archr.html#cb339-6" tabindex="-1"></a>)</span>
-<span id="cb339-7"><a href="co-accessibility-with-archr.html#cb339-7" tabindex="-1"></a></span>
-<span id="cb339-8"><a href="co-accessibility-with-archr.html#cb339-8" tabindex="-1"></a>cA[[<span class="dv">1</span>]]</span>
-<span id="cb339-9"><a href="co-accessibility-with-archr.html#cb339-9" tabindex="-1"></a><span class="do">## GRanges object with 33744 ranges and 9 metadata columns:</span></span>
-<span id="cb339-10"><a href="co-accessibility-with-archr.html#cb339-10" tabindex="-1"></a><span class="do">##           seqnames              ranges strand | correlation Variability1</span></span>
-<span id="cb339-11"><a href="co-accessibility-with-archr.html#cb339-11" tabindex="-1"></a><span class="do">##              &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |   &lt;numeric&gt;    &lt;numeric&gt;</span></span>
-<span id="cb339-12"><a href="co-accessibility-with-archr.html#cb339-12" tabindex="-1"></a><span class="do">##       [1]     chr1       845000-855000      * |    0.637747   0.00514607</span></span>
-<span id="cb339-13"><a href="co-accessibility-with-archr.html#cb339-13" tabindex="-1"></a><span class="do">##       [2]     chr1       855000-905000      * |    0.599347   0.03098155</span></span>
-<span id="cb339-14"><a href="co-accessibility-with-archr.html#cb339-14" tabindex="-1"></a><span class="do">##       [3]     chr1       855000-945000      * |    0.608207   0.03098155</span></span>
-<span id="cb339-15"><a href="co-accessibility-with-archr.html#cb339-15" tabindex="-1"></a><span class="do">##       [4]     chr1              895000      * |    0.517674   0.02334748</span></span>
-<span id="cb339-16"><a href="co-accessibility-with-archr.html#cb339-16" tabindex="-1"></a><span class="do">##       [5]     chr1       905000-945000      * |    0.579194   0.01377298</span></span>
-<span id="cb339-17"><a href="co-accessibility-with-archr.html#cb339-17" tabindex="-1"></a><span class="do">##       ...      ...                 ...    ... .         ...          ...</span></span>
-<span id="cb339-18"><a href="co-accessibility-with-archr.html#cb339-18" tabindex="-1"></a><span class="do">##   [33740]     chrX 153525000-153595000      * |    0.514473   0.00259139</span></span>
-<span id="cb339-19"><a href="co-accessibility-with-archr.html#cb339-19" tabindex="-1"></a><span class="do">##   [33741]     chrX 153595000-153635000      * |    0.517474   0.09252559</span></span>
-<span id="cb339-20"><a href="co-accessibility-with-archr.html#cb339-20" tabindex="-1"></a><span class="do">##   [33742]     chrX 153685000-153715000      * |    0.511756   0.01293699</span></span>
-<span id="cb339-21"><a href="co-accessibility-with-archr.html#cb339-21" tabindex="-1"></a><span class="do">##   [33743]     chrX 153955000-153965000      * |    0.563453   0.00169568</span></span>
-<span id="cb339-22"><a href="co-accessibility-with-archr.html#cb339-22" tabindex="-1"></a><span class="do">##   [33744]     chrX 153985000-153995000      * |    0.609453   0.01068828</span></span>
-<span id="cb339-23"><a href="co-accessibility-with-archr.html#cb339-23" tabindex="-1"></a><span class="do">##           Variability2     TStat        Pval         FDR VarQuantile1</span></span>
-<span id="cb339-24"><a href="co-accessibility-with-archr.html#cb339-24" tabindex="-1"></a><span class="do">##              &lt;numeric&gt; &lt;numeric&gt;   &lt;numeric&gt;   &lt;numeric&gt;    &lt;numeric&gt;</span></span>
-<span id="cb339-25"><a href="co-accessibility-with-archr.html#cb339-25" tabindex="-1"></a><span class="do">##       [1]   0.03098155   18.3468 1.21697e-57 1.56304e-55     0.555473</span></span>
-<span id="cb339-26"><a href="co-accessibility-with-archr.html#cb339-26" tabindex="-1"></a><span class="do">##       [2]   0.00440347   16.5906 2.11145e-49 1.84225e-47     0.929311</span></span>
-<span id="cb339-27"><a href="co-accessibility-with-archr.html#cb339-27" tabindex="-1"></a><span class="do">##       [3]   0.01377298   16.9783 3.33373e-51 3.17421e-49     0.929311</span></span>
-<span id="cb339-28"><a href="co-accessibility-with-archr.html#cb339-28" tabindex="-1"></a><span class="do">##       [4]   0.00771205   13.4072 3.79464e-35 1.55997e-33     0.884673</span></span>
-<span id="cb339-29"><a href="co-accessibility-with-archr.html#cb339-29" tabindex="-1"></a><span class="do">##       [5]   0.00440347   15.7437 1.65808e-45 1.18689e-43     0.792828</span></span>
-<span id="cb339-30"><a href="co-accessibility-with-archr.html#cb339-30" tabindex="-1"></a><span class="do">##       ...          ...       ...         ...         ...          ...</span></span>
-<span id="cb339-31"><a href="co-accessibility-with-archr.html#cb339-31" tabindex="-1"></a><span class="do">##   [33740]   0.09252559   13.2943 1.15337e-34 4.61541e-33     0.354323</span></span>
-<span id="cb339-32"><a href="co-accessibility-with-archr.html#cb339-32" tabindex="-1"></a><span class="do">##   [33741]   0.02734691   13.4001 4.06966e-35 1.67015e-33     0.997672</span></span>
-<span id="cb339-33"><a href="co-accessibility-with-archr.html#cb339-33" tabindex="-1"></a><span class="do">##   [33742]   0.00978620   13.1991 2.93656e-34 1.14815e-32     0.780591</span></span>
-<span id="cb339-34"><a href="co-accessibility-with-archr.html#cb339-34" tabindex="-1"></a><span class="do">##   [33743]   0.00155184   15.1126 1.19929e-42 7.42944e-41     0.238637</span></span>
-<span id="cb339-35"><a href="co-accessibility-with-archr.html#cb339-35" tabindex="-1"></a><span class="do">##   [33744]   0.00233270   17.0336 1.84100e-51 1.77552e-49     0.741567</span></span>
-<span id="cb339-36"><a href="co-accessibility-with-archr.html#cb339-36" tabindex="-1"></a><span class="do">##           VarQuantile2     value</span></span>
-<span id="cb339-37"><a href="co-accessibility-with-archr.html#cb339-37" tabindex="-1"></a><span class="do">##              &lt;numeric&gt; &lt;numeric&gt;</span></span>
-<span id="cb339-38"><a href="co-accessibility-with-archr.html#cb339-38" tabindex="-1"></a><span class="do">##       [1]     0.929311  0.637747</span></span>
-<span id="cb339-39"><a href="co-accessibility-with-archr.html#cb339-39" tabindex="-1"></a><span class="do">##       [2]     0.510818  0.599347</span></span>
-<span id="cb339-40"><a href="co-accessibility-with-archr.html#cb339-40" tabindex="-1"></a><span class="do">##       [3]     0.792828  0.608207</span></span>
-<span id="cb339-41"><a href="co-accessibility-with-archr.html#cb339-41" tabindex="-1"></a><span class="do">##       [4]     0.664324  0.517674</span></span>
-<span id="cb339-42"><a href="co-accessibility-with-archr.html#cb339-42" tabindex="-1"></a><span class="do">##       [5]     0.510818  0.579194</span></span>
-<span id="cb339-43"><a href="co-accessibility-with-archr.html#cb339-43" tabindex="-1"></a><span class="do">##       ...          ...       ...</span></span>
-<span id="cb339-44"><a href="co-accessibility-with-archr.html#cb339-44" tabindex="-1"></a><span class="do">##   [33740]     0.997672  0.514473</span></span>
-<span id="cb339-45"><a href="co-accessibility-with-archr.html#cb339-45" tabindex="-1"></a><span class="do">##   [33741]     0.910198  0.517474</span></span>
-<span id="cb339-46"><a href="co-accessibility-with-archr.html#cb339-46" tabindex="-1"></a><span class="do">##   [33742]     0.722281  0.511756</span></span>
-<span id="cb339-47"><a href="co-accessibility-with-archr.html#cb339-47" tabindex="-1"></a><span class="do">##   [33743]     0.216621  0.563453</span></span>
-<span id="cb339-48"><a href="co-accessibility-with-archr.html#cb339-48" tabindex="-1"></a><span class="do">##   [33744]     0.324191  0.609453</span></span>
-<span id="cb339-49"><a href="co-accessibility-with-archr.html#cb339-49" tabindex="-1"></a><span class="do">##   -------</span></span>
-<span id="cb339-50"><a href="co-accessibility-with-archr.html#cb339-50" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
+<div class="sourceCode" id="cb341"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb341-1"><a href="co-accessibility-with-archr.html#cb341-1" tabindex="-1"></a>cA <span class="ot">&lt;-</span> <span class="fu">getCoAccessibility</span>(</span>
+<span id="cb341-2"><a href="co-accessibility-with-archr.html#cb341-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb341-3"><a href="co-accessibility-with-archr.html#cb341-3" tabindex="-1"></a>    <span class="at">corCutOff =</span> <span class="fl">0.5</span>,</span>
+<span id="cb341-4"><a href="co-accessibility-with-archr.html#cb341-4" tabindex="-1"></a>    <span class="at">resolution =</span> <span class="dv">10000</span>,</span>
+<span id="cb341-5"><a href="co-accessibility-with-archr.html#cb341-5" tabindex="-1"></a>    <span class="at">returnLoops =</span> <span class="cn">TRUE</span></span>
+<span id="cb341-6"><a href="co-accessibility-with-archr.html#cb341-6" tabindex="-1"></a>)</span>
+<span id="cb341-7"><a href="co-accessibility-with-archr.html#cb341-7" tabindex="-1"></a></span>
+<span id="cb341-8"><a href="co-accessibility-with-archr.html#cb341-8" tabindex="-1"></a>cA[[<span class="dv">1</span>]]</span>
+<span id="cb341-9"><a href="co-accessibility-with-archr.html#cb341-9" tabindex="-1"></a><span class="do">## GRanges object with 33744 ranges and 9 metadata columns:</span></span>
+<span id="cb341-10"><a href="co-accessibility-with-archr.html#cb341-10" tabindex="-1"></a><span class="do">##           seqnames              ranges strand | correlation Variability1</span></span>
+<span id="cb341-11"><a href="co-accessibility-with-archr.html#cb341-11" tabindex="-1"></a><span class="do">##              &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |   &lt;numeric&gt;    &lt;numeric&gt;</span></span>
+<span id="cb341-12"><a href="co-accessibility-with-archr.html#cb341-12" tabindex="-1"></a><span class="do">##       [1]     chr1       845000-855000      * |    0.637747   0.00514607</span></span>
+<span id="cb341-13"><a href="co-accessibility-with-archr.html#cb341-13" tabindex="-1"></a><span class="do">##       [2]     chr1       855000-905000      * |    0.599347   0.03098155</span></span>
+<span id="cb341-14"><a href="co-accessibility-with-archr.html#cb341-14" tabindex="-1"></a><span class="do">##       [3]     chr1       855000-945000      * |    0.608207   0.03098155</span></span>
+<span id="cb341-15"><a href="co-accessibility-with-archr.html#cb341-15" tabindex="-1"></a><span class="do">##       [4]     chr1              895000      * |    0.517674   0.02334748</span></span>
+<span id="cb341-16"><a href="co-accessibility-with-archr.html#cb341-16" tabindex="-1"></a><span class="do">##       [5]     chr1       905000-945000      * |    0.579194   0.01377298</span></span>
+<span id="cb341-17"><a href="co-accessibility-with-archr.html#cb341-17" tabindex="-1"></a><span class="do">##       ...      ...                 ...    ... .         ...          ...</span></span>
+<span id="cb341-18"><a href="co-accessibility-with-archr.html#cb341-18" tabindex="-1"></a><span class="do">##   [33740]     chrX 153525000-153595000      * |    0.514473   0.00259139</span></span>
+<span id="cb341-19"><a href="co-accessibility-with-archr.html#cb341-19" tabindex="-1"></a><span class="do">##   [33741]     chrX 153595000-153635000      * |    0.517474   0.09252559</span></span>
+<span id="cb341-20"><a href="co-accessibility-with-archr.html#cb341-20" tabindex="-1"></a><span class="do">##   [33742]     chrX 153685000-153715000      * |    0.511756   0.01293699</span></span>
+<span id="cb341-21"><a href="co-accessibility-with-archr.html#cb341-21" tabindex="-1"></a><span class="do">##   [33743]     chrX 153955000-153965000      * |    0.563453   0.00169568</span></span>
+<span id="cb341-22"><a href="co-accessibility-with-archr.html#cb341-22" tabindex="-1"></a><span class="do">##   [33744]     chrX 153985000-153995000      * |    0.609453   0.01068828</span></span>
+<span id="cb341-23"><a href="co-accessibility-with-archr.html#cb341-23" tabindex="-1"></a><span class="do">##           Variability2     TStat        Pval         FDR VarQuantile1</span></span>
+<span id="cb341-24"><a href="co-accessibility-with-archr.html#cb341-24" tabindex="-1"></a><span class="do">##              &lt;numeric&gt; &lt;numeric&gt;   &lt;numeric&gt;   &lt;numeric&gt;    &lt;numeric&gt;</span></span>
+<span id="cb341-25"><a href="co-accessibility-with-archr.html#cb341-25" tabindex="-1"></a><span class="do">##       [1]   0.03098155   18.3468 1.21697e-57 1.56304e-55     0.555473</span></span>
+<span id="cb341-26"><a href="co-accessibility-with-archr.html#cb341-26" tabindex="-1"></a><span class="do">##       [2]   0.00440347   16.5906 2.11145e-49 1.84225e-47     0.929311</span></span>
+<span id="cb341-27"><a href="co-accessibility-with-archr.html#cb341-27" tabindex="-1"></a><span class="do">##       [3]   0.01377298   16.9783 3.33373e-51 3.17421e-49     0.929311</span></span>
+<span id="cb341-28"><a href="co-accessibility-with-archr.html#cb341-28" tabindex="-1"></a><span class="do">##       [4]   0.00771205   13.4072 3.79464e-35 1.55997e-33     0.884673</span></span>
+<span id="cb341-29"><a href="co-accessibility-with-archr.html#cb341-29" tabindex="-1"></a><span class="do">##       [5]   0.00440347   15.7437 1.65808e-45 1.18689e-43     0.792828</span></span>
+<span id="cb341-30"><a href="co-accessibility-with-archr.html#cb341-30" tabindex="-1"></a><span class="do">##       ...          ...       ...         ...         ...          ...</span></span>
+<span id="cb341-31"><a href="co-accessibility-with-archr.html#cb341-31" tabindex="-1"></a><span class="do">##   [33740]   0.09252559   13.2943 1.15337e-34 4.61541e-33     0.354323</span></span>
+<span id="cb341-32"><a href="co-accessibility-with-archr.html#cb341-32" tabindex="-1"></a><span class="do">##   [33741]   0.02734691   13.4001 4.06966e-35 1.67015e-33     0.997672</span></span>
+<span id="cb341-33"><a href="co-accessibility-with-archr.html#cb341-33" tabindex="-1"></a><span class="do">##   [33742]   0.00978620   13.1991 2.93656e-34 1.14815e-32     0.780591</span></span>
+<span id="cb341-34"><a href="co-accessibility-with-archr.html#cb341-34" tabindex="-1"></a><span class="do">##   [33743]   0.00155184   15.1126 1.19929e-42 7.42944e-41     0.238637</span></span>
+<span id="cb341-35"><a href="co-accessibility-with-archr.html#cb341-35" tabindex="-1"></a><span class="do">##   [33744]   0.00233270   17.0336 1.84100e-51 1.77552e-49     0.741567</span></span>
+<span id="cb341-36"><a href="co-accessibility-with-archr.html#cb341-36" tabindex="-1"></a><span class="do">##           VarQuantile2     value</span></span>
+<span id="cb341-37"><a href="co-accessibility-with-archr.html#cb341-37" tabindex="-1"></a><span class="do">##              &lt;numeric&gt; &lt;numeric&gt;</span></span>
+<span id="cb341-38"><a href="co-accessibility-with-archr.html#cb341-38" tabindex="-1"></a><span class="do">##       [1]     0.929311  0.637747</span></span>
+<span id="cb341-39"><a href="co-accessibility-with-archr.html#cb341-39" tabindex="-1"></a><span class="do">##       [2]     0.510818  0.599347</span></span>
+<span id="cb341-40"><a href="co-accessibility-with-archr.html#cb341-40" tabindex="-1"></a><span class="do">##       [3]     0.792828  0.608207</span></span>
+<span id="cb341-41"><a href="co-accessibility-with-archr.html#cb341-41" tabindex="-1"></a><span class="do">##       [4]     0.664324  0.517674</span></span>
+<span id="cb341-42"><a href="co-accessibility-with-archr.html#cb341-42" tabindex="-1"></a><span class="do">##       [5]     0.510818  0.579194</span></span>
+<span id="cb341-43"><a href="co-accessibility-with-archr.html#cb341-43" tabindex="-1"></a><span class="do">##       ...          ...       ...</span></span>
+<span id="cb341-44"><a href="co-accessibility-with-archr.html#cb341-44" tabindex="-1"></a><span class="do">##   [33740]     0.997672  0.514473</span></span>
+<span id="cb341-45"><a href="co-accessibility-with-archr.html#cb341-45" tabindex="-1"></a><span class="do">##   [33741]     0.910198  0.517474</span></span>
+<span id="cb341-46"><a href="co-accessibility-with-archr.html#cb341-46" tabindex="-1"></a><span class="do">##   [33742]     0.722281  0.511756</span></span>
+<span id="cb341-47"><a href="co-accessibility-with-archr.html#cb341-47" tabindex="-1"></a><span class="do">##   [33743]     0.216621  0.563453</span></span>
+<span id="cb341-48"><a href="co-accessibility-with-archr.html#cb341-48" tabindex="-1"></a><span class="do">##   [33744]     0.324191  0.609453</span></span>
+<span id="cb341-49"><a href="co-accessibility-with-archr.html#cb341-49" tabindex="-1"></a><span class="do">##   -------</span></span>
+<span id="cb341-50"><a href="co-accessibility-with-archr.html#cb341-50" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
 <div id="plotting-browser-tracks-of-co-accessibility" class="section level3 hasAnchor" number="17.2.1">
 <h3><span class="header-section-number">17.2.1</span> Plotting browser tracks of Co-accessibility<a href="co-accessibility-with-archr.html#plotting-browser-tracks-of-co-accessibility" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Once we have added co-accessibility informtation to our <code>ArchRProject</code> we can use this as a loop track when plotting browser tracks. We do this via the <code>loops</code> parameter to the <code>plotBrowserTrack()</code> function. Here, we are using the default parameters for <code>getCoAccessibility()</code> which include <code>corCutOff = 0.5</code>, <code>resolution = 1000</code>, and <code>returnLoops = TRUE</code>.</p>
-<div class="sourceCode" id="cb340"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb340-1"><a href="co-accessibility-with-archr.html#cb340-1" tabindex="-1"></a>markerGenes  <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb340-2"><a href="co-accessibility-with-archr.html#cb340-2" tabindex="-1"></a>    <span class="st">&quot;CD34&quot;</span>, <span class="co">#Early Progenitor</span></span>
-<span id="cb340-3"><a href="co-accessibility-with-archr.html#cb340-3" tabindex="-1"></a>    <span class="st">&quot;GATA1&quot;</span>, <span class="co">#Erythroid</span></span>
-<span id="cb340-4"><a href="co-accessibility-with-archr.html#cb340-4" tabindex="-1"></a>    <span class="st">&quot;PAX5&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="co">#B-Cell Trajectory</span></span>
-<span id="cb340-5"><a href="co-accessibility-with-archr.html#cb340-5" tabindex="-1"></a>    <span class="st">&quot;CD14&quot;</span>, <span class="co">#Monocytes</span></span>
-<span id="cb340-6"><a href="co-accessibility-with-archr.html#cb340-6" tabindex="-1"></a>    <span class="st">&quot;CD3D&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;IL7R&quot;</span> <span class="co">#TCells</span></span>
-<span id="cb340-7"><a href="co-accessibility-with-archr.html#cb340-7" tabindex="-1"></a>  )</span>
-<span id="cb340-8"><a href="co-accessibility-with-archr.html#cb340-8" tabindex="-1"></a></span>
-<span id="cb340-9"><a href="co-accessibility-with-archr.html#cb340-9" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plotBrowserTrack</span>(</span>
-<span id="cb340-10"><a href="co-accessibility-with-archr.html#cb340-10" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5, </span>
-<span id="cb340-11"><a href="co-accessibility-with-archr.html#cb340-11" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>, </span>
-<span id="cb340-12"><a href="co-accessibility-with-archr.html#cb340-12" tabindex="-1"></a>    <span class="at">geneSymbol =</span> markerGenes, </span>
-<span id="cb340-13"><a href="co-accessibility-with-archr.html#cb340-13" tabindex="-1"></a>    <span class="at">upstream =</span> <span class="dv">50000</span>,</span>
-<span id="cb340-14"><a href="co-accessibility-with-archr.html#cb340-14" tabindex="-1"></a>    <span class="at">downstream =</span> <span class="dv">50000</span>,</span>
-<span id="cb340-15"><a href="co-accessibility-with-archr.html#cb340-15" tabindex="-1"></a>    <span class="at">loops =</span> <span class="fu">getCoAccessibility</span>(projHeme5)</span>
-<span id="cb340-16"><a href="co-accessibility-with-archr.html#cb340-16" tabindex="-1"></a>)</span>
-<span id="cb340-17"><a href="co-accessibility-with-archr.html#cb340-17" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotBrowserTrack-1a174338bb7-Date-2025-01-23_Time-22-49-59.925611.log</span></span>
-<span id="cb340-18"><a href="co-accessibility-with-archr.html#cb340-18" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb340-19"><a href="co-accessibility-with-archr.html#cb340-19" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:00.588868 : Validating Region, 0.011 mins elapsed.</span></span>
-<span id="cb340-20"><a href="co-accessibility-with-archr.html#cb340-20" tabindex="-1"></a><span class="do">## GRanges object with 9 ranges and 2 metadata columns:</span></span>
-<span id="cb340-21"><a href="co-accessibility-with-archr.html#cb340-21" tabindex="-1"></a><span class="do">##       seqnames              ranges strand |     gene_id      symbol</span></span>
-<span id="cb340-22"><a href="co-accessibility-with-archr.html#cb340-22" tabindex="-1"></a><span class="do">##          &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt; &lt;character&gt;</span></span>
-<span id="cb340-23"><a href="co-accessibility-with-archr.html#cb340-23" tabindex="-1"></a><span class="do">##   [1]     chr1 208059883-208084683      - |         947        CD34</span></span>
-<span id="cb340-24"><a href="co-accessibility-with-archr.html#cb340-24" tabindex="-1"></a><span class="do">##   [2]     chrX   48644982-48652717      + |        2623       GATA1</span></span>
-<span id="cb340-25"><a href="co-accessibility-with-archr.html#cb340-25" tabindex="-1"></a><span class="do">##   [3]     chr9   36838531-37034476      - |        5079        PAX5</span></span>
-<span id="cb340-26"><a href="co-accessibility-with-archr.html#cb340-26" tabindex="-1"></a><span class="do">##   [4]    chr11   60223282-60238225      + |         931       MS4A1</span></span>
-<span id="cb340-27"><a href="co-accessibility-with-archr.html#cb340-27" tabindex="-1"></a><span class="do">##   [5]     chr5 140011313-140013286      - |         929        CD14</span></span>
-<span id="cb340-28"><a href="co-accessibility-with-archr.html#cb340-28" tabindex="-1"></a><span class="do">##   [6]    chr11 118209789-118213459      - |         915        CD3D</span></span>
-<span id="cb340-29"><a href="co-accessibility-with-archr.html#cb340-29" tabindex="-1"></a><span class="do">##   [7]     chr2   87011728-87035519      - |         925        CD8A</span></span>
-<span id="cb340-30"><a href="co-accessibility-with-archr.html#cb340-30" tabindex="-1"></a><span class="do">##   [8]    chr17   45810610-45823485      + |       30009       TBX21</span></span>
-<span id="cb340-31"><a href="co-accessibility-with-archr.html#cb340-31" tabindex="-1"></a><span class="do">##   [9]     chr5   35856977-35879705      + |        3575        IL7R</span></span>
-<span id="cb340-32"><a href="co-accessibility-with-archr.html#cb340-32" tabindex="-1"></a><span class="do">##   -------</span></span>
-<span id="cb340-33"><a href="co-accessibility-with-archr.html#cb340-33" tabindex="-1"></a><span class="do">##   seqinfo: 24 sequences from hg19 genome</span></span>
-<span id="cb340-34"><a href="co-accessibility-with-archr.html#cb340-34" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:00.662672 : Adding Bulk Tracks (1 of 9), 0.012 mins elapsed.</span></span>
-<span id="cb340-35"><a href="co-accessibility-with-archr.html#cb340-35" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:02.743822 : Adding Feature Tracks (1 of 9), 0.047 mins elapsed.</span></span>
-<span id="cb340-36"><a href="co-accessibility-with-archr.html#cb340-36" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:02.908778 : Adding Loop Tracks (1 of 9), 0.05 mins elapsed.</span></span>
-<span id="cb340-37"><a href="co-accessibility-with-archr.html#cb340-37" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:03.064295 : Adding Gene Tracks (1 of 9), 0.052 mins elapsed.</span></span>
-<span id="cb340-38"><a href="co-accessibility-with-archr.html#cb340-38" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:03.281418 : Plotting, 0.056 mins elapsed.</span></span>
-<span id="cb340-39"><a href="co-accessibility-with-archr.html#cb340-39" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:04.140765 : Adding Bulk Tracks (2 of 9), 0.07 mins elapsed.</span></span>
-<span id="cb340-40"><a href="co-accessibility-with-archr.html#cb340-40" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:06.006014 : Adding Feature Tracks (2 of 9), 0.101 mins elapsed.</span></span>
-<span id="cb340-41"><a href="co-accessibility-with-archr.html#cb340-41" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:06.097762 : Adding Loop Tracks (2 of 9), 0.103 mins elapsed.</span></span>
-<span id="cb340-42"><a href="co-accessibility-with-archr.html#cb340-42" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:06.395795 : Adding Gene Tracks (2 of 9), 0.108 mins elapsed.</span></span>
-<span id="cb340-43"><a href="co-accessibility-with-archr.html#cb340-43" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:06.612242 : Plotting, 0.111 mins elapsed.</span></span>
-<span id="cb340-44"><a href="co-accessibility-with-archr.html#cb340-44" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:07.585766 : Adding Bulk Tracks (3 of 9), 0.128 mins elapsed.</span></span>
-<span id="cb340-45"><a href="co-accessibility-with-archr.html#cb340-45" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:09.524493 : Adding Feature Tracks (3 of 9), 0.16 mins elapsed.</span></span>
-<span id="cb340-46"><a href="co-accessibility-with-archr.html#cb340-46" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:09.613161 : Adding Loop Tracks (3 of 9), 0.162 mins elapsed.</span></span>
-<span id="cb340-47"><a href="co-accessibility-with-archr.html#cb340-47" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:10.111258 : Adding Gene Tracks (3 of 9), 0.17 mins elapsed.</span></span>
-<span id="cb340-48"><a href="co-accessibility-with-archr.html#cb340-48" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:10.323118 : Plotting, 0.173 mins elapsed.</span></span>
-<span id="cb340-49"><a href="co-accessibility-with-archr.html#cb340-49" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:11.148678 : Adding Bulk Tracks (4 of 9), 0.187 mins elapsed.</span></span>
-<span id="cb340-50"><a href="co-accessibility-with-archr.html#cb340-50" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:13.196459 : Adding Feature Tracks (4 of 9), 0.221 mins elapsed.</span></span>
-<span id="cb340-51"><a href="co-accessibility-with-archr.html#cb340-51" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:13.277191 : Adding Loop Tracks (4 of 9), 0.223 mins elapsed.</span></span>
-<span id="cb340-52"><a href="co-accessibility-with-archr.html#cb340-52" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:13.522422 : Adding Gene Tracks (4 of 9), 0.227 mins elapsed.</span></span>
-<span id="cb340-53"><a href="co-accessibility-with-archr.html#cb340-53" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:13.729115 : Plotting, 0.23 mins elapsed.</span></span>
-<span id="cb340-54"><a href="co-accessibility-with-archr.html#cb340-54" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:14.442999 : Adding Bulk Tracks (5 of 9), 0.242 mins elapsed.</span></span>
-<span id="cb340-55"><a href="co-accessibility-with-archr.html#cb340-55" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:16.315304 : Adding Feature Tracks (5 of 9), 0.273 mins elapsed.</span></span>
-<span id="cb340-56"><a href="co-accessibility-with-archr.html#cb340-56" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:16.399261 : Adding Loop Tracks (5 of 9), 0.275 mins elapsed.</span></span>
-<span id="cb340-57"><a href="co-accessibility-with-archr.html#cb340-57" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:16.807566 : Adding Gene Tracks (5 of 9), 0.281 mins elapsed.</span></span>
-<span id="cb340-58"><a href="co-accessibility-with-archr.html#cb340-58" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:17.01339 : Plotting, 0.285 mins elapsed.</span></span>
-<span id="cb340-59"><a href="co-accessibility-with-archr.html#cb340-59" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:17.986451 : Adding Bulk Tracks (6 of 9), 0.301 mins elapsed.</span></span>
-<span id="cb340-60"><a href="co-accessibility-with-archr.html#cb340-60" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:19.953629 : Adding Feature Tracks (6 of 9), 0.334 mins elapsed.</span></span>
-<span id="cb340-61"><a href="co-accessibility-with-archr.html#cb340-61" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:20.046475 : Adding Loop Tracks (6 of 9), 0.335 mins elapsed.</span></span>
-<span id="cb340-62"><a href="co-accessibility-with-archr.html#cb340-62" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:20.668184 : Adding Gene Tracks (6 of 9), 0.346 mins elapsed.</span></span>
-<span id="cb340-63"><a href="co-accessibility-with-archr.html#cb340-63" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:20.885079 : Plotting, 0.349 mins elapsed.</span></span>
-<span id="cb340-64"><a href="co-accessibility-with-archr.html#cb340-64" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:21.704805 : Adding Bulk Tracks (7 of 9), 0.363 mins elapsed.</span></span>
-<span id="cb340-65"><a href="co-accessibility-with-archr.html#cb340-65" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:23.617863 : Adding Feature Tracks (7 of 9), 0.395 mins elapsed.</span></span>
-<span id="cb340-66"><a href="co-accessibility-with-archr.html#cb340-66" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:23.705154 : Adding Loop Tracks (7 of 9), 0.396 mins elapsed.</span></span>
-<span id="cb340-67"><a href="co-accessibility-with-archr.html#cb340-67" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:24.693105 : Adding Gene Tracks (7 of 9), 0.413 mins elapsed.</span></span>
-<span id="cb340-68"><a href="co-accessibility-with-archr.html#cb340-68" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:24.930989 : Plotting, 0.417 mins elapsed.</span></span>
-<span id="cb340-69"><a href="co-accessibility-with-archr.html#cb340-69" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:25.853326 : Adding Bulk Tracks (8 of 9), 0.432 mins elapsed.</span></span>
-<span id="cb340-70"><a href="co-accessibility-with-archr.html#cb340-70" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:25.594349 : Adding Feature Tracks (8 of 9), 0.428 mins elapsed.</span></span>
-<span id="cb340-71"><a href="co-accessibility-with-archr.html#cb340-71" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:25.678534 : Adding Loop Tracks (8 of 9), 0.429 mins elapsed.</span></span>
-<span id="cb340-72"><a href="co-accessibility-with-archr.html#cb340-72" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:26.318239 : Adding Gene Tracks (8 of 9), 0.44 mins elapsed.</span></span>
-<span id="cb340-73"><a href="co-accessibility-with-archr.html#cb340-73" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:26.515026 : Plotting, 0.443 mins elapsed.</span></span>
-<span id="cb340-74"><a href="co-accessibility-with-archr.html#cb340-74" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:27.643816 : Adding Bulk Tracks (9 of 9), 0.462 mins elapsed.</span></span>
-<span id="cb340-75"><a href="co-accessibility-with-archr.html#cb340-75" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:29.628916 : Adding Feature Tracks (9 of 9), 0.495 mins elapsed.</span></span>
-<span id="cb340-76"><a href="co-accessibility-with-archr.html#cb340-76" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:29.720066 : Adding Loop Tracks (9 of 9), 0.497 mins elapsed.</span></span>
-<span id="cb340-77"><a href="co-accessibility-with-archr.html#cb340-77" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:30.282871 : Adding Gene Tracks (9 of 9), 0.506 mins elapsed.</span></span>
-<span id="cb340-78"><a href="co-accessibility-with-archr.html#cb340-78" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:30.489304 : Plotting, 0.509 mins elapsed.</span></span>
-<span id="cb340-79"><a href="co-accessibility-with-archr.html#cb340-79" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotBrowserTrack-1a174338bb7-Date-2025-01-23_Time-22-49-59.925611.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb342"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb342-1"><a href="co-accessibility-with-archr.html#cb342-1" tabindex="-1"></a>markerGenes  <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb342-2"><a href="co-accessibility-with-archr.html#cb342-2" tabindex="-1"></a>    <span class="st">&quot;CD34&quot;</span>, <span class="co">#Early Progenitor</span></span>
+<span id="cb342-3"><a href="co-accessibility-with-archr.html#cb342-3" tabindex="-1"></a>    <span class="st">&quot;GATA1&quot;</span>, <span class="co">#Erythroid</span></span>
+<span id="cb342-4"><a href="co-accessibility-with-archr.html#cb342-4" tabindex="-1"></a>    <span class="st">&quot;PAX5&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="co">#B-Cell Trajectory</span></span>
+<span id="cb342-5"><a href="co-accessibility-with-archr.html#cb342-5" tabindex="-1"></a>    <span class="st">&quot;CD14&quot;</span>, <span class="co">#Monocytes</span></span>
+<span id="cb342-6"><a href="co-accessibility-with-archr.html#cb342-6" tabindex="-1"></a>    <span class="st">&quot;CD3D&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;IL7R&quot;</span> <span class="co">#TCells</span></span>
+<span id="cb342-7"><a href="co-accessibility-with-archr.html#cb342-7" tabindex="-1"></a>  )</span>
+<span id="cb342-8"><a href="co-accessibility-with-archr.html#cb342-8" tabindex="-1"></a></span>
+<span id="cb342-9"><a href="co-accessibility-with-archr.html#cb342-9" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plotBrowserTrack</span>(</span>
+<span id="cb342-10"><a href="co-accessibility-with-archr.html#cb342-10" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5, </span>
+<span id="cb342-11"><a href="co-accessibility-with-archr.html#cb342-11" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>, </span>
+<span id="cb342-12"><a href="co-accessibility-with-archr.html#cb342-12" tabindex="-1"></a>    <span class="at">geneSymbol =</span> markerGenes, </span>
+<span id="cb342-13"><a href="co-accessibility-with-archr.html#cb342-13" tabindex="-1"></a>    <span class="at">upstream =</span> <span class="dv">50000</span>,</span>
+<span id="cb342-14"><a href="co-accessibility-with-archr.html#cb342-14" tabindex="-1"></a>    <span class="at">downstream =</span> <span class="dv">50000</span>,</span>
+<span id="cb342-15"><a href="co-accessibility-with-archr.html#cb342-15" tabindex="-1"></a>    <span class="at">loops =</span> <span class="fu">getCoAccessibility</span>(projHeme5)</span>
+<span id="cb342-16"><a href="co-accessibility-with-archr.html#cb342-16" tabindex="-1"></a>)</span>
+<span id="cb342-17"><a href="co-accessibility-with-archr.html#cb342-17" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotBrowserTrack-934c920d5-Date-2025-02-06_Time-02-46-52.415133.log</span></span>
+<span id="cb342-18"><a href="co-accessibility-with-archr.html#cb342-18" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb342-19"><a href="co-accessibility-with-archr.html#cb342-19" tabindex="-1"></a><span class="do">## 2025-02-06 02:46:53.022687 : Validating Region, 0.01 mins elapsed.</span></span>
+<span id="cb342-20"><a href="co-accessibility-with-archr.html#cb342-20" tabindex="-1"></a><span class="do">## GRanges object with 9 ranges and 2 metadata columns:</span></span>
+<span id="cb342-21"><a href="co-accessibility-with-archr.html#cb342-21" tabindex="-1"></a><span class="do">##       seqnames              ranges strand |     gene_id      symbol</span></span>
+<span id="cb342-22"><a href="co-accessibility-with-archr.html#cb342-22" tabindex="-1"></a><span class="do">##          &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt; &lt;character&gt;</span></span>
+<span id="cb342-23"><a href="co-accessibility-with-archr.html#cb342-23" tabindex="-1"></a><span class="do">##   [1]     chr1 208059883-208084683      - |         947        CD34</span></span>
+<span id="cb342-24"><a href="co-accessibility-with-archr.html#cb342-24" tabindex="-1"></a><span class="do">##   [2]     chrX   48644982-48652717      + |        2623       GATA1</span></span>
+<span id="cb342-25"><a href="co-accessibility-with-archr.html#cb342-25" tabindex="-1"></a><span class="do">##   [3]     chr9   36838531-37034476      - |        5079        PAX5</span></span>
+<span id="cb342-26"><a href="co-accessibility-with-archr.html#cb342-26" tabindex="-1"></a><span class="do">##   [4]    chr11   60223282-60238225      + |         931       MS4A1</span></span>
+<span id="cb342-27"><a href="co-accessibility-with-archr.html#cb342-27" tabindex="-1"></a><span class="do">##   [5]     chr5 140011313-140013286      - |         929        CD14</span></span>
+<span id="cb342-28"><a href="co-accessibility-with-archr.html#cb342-28" tabindex="-1"></a><span class="do">##   [6]    chr11 118209789-118213459      - |         915        CD3D</span></span>
+<span id="cb342-29"><a href="co-accessibility-with-archr.html#cb342-29" tabindex="-1"></a><span class="do">##   [7]     chr2   87011728-87035519      - |         925        CD8A</span></span>
+<span id="cb342-30"><a href="co-accessibility-with-archr.html#cb342-30" tabindex="-1"></a><span class="do">##   [8]    chr17   45810610-45823485      + |       30009       TBX21</span></span>
+<span id="cb342-31"><a href="co-accessibility-with-archr.html#cb342-31" tabindex="-1"></a><span class="do">##   [9]     chr5   35856977-35879705      + |        3575        IL7R</span></span>
+<span id="cb342-32"><a href="co-accessibility-with-archr.html#cb342-32" tabindex="-1"></a><span class="do">##   -------</span></span>
+<span id="cb342-33"><a href="co-accessibility-with-archr.html#cb342-33" tabindex="-1"></a><span class="do">##   seqinfo: 24 sequences from hg19 genome</span></span>
+<span id="cb342-34"><a href="co-accessibility-with-archr.html#cb342-34" tabindex="-1"></a><span class="do">## 2025-02-06 02:46:53.094381 : Adding Bulk Tracks (1 of 9), 0.011 mins elapsed.</span></span>
+<span id="cb342-35"><a href="co-accessibility-with-archr.html#cb342-35" tabindex="-1"></a><span class="do">## 2025-02-06 02:46:55.176209 : Adding Feature Tracks (1 of 9), 0.046 mins elapsed.</span></span>
+<span id="cb342-36"><a href="co-accessibility-with-archr.html#cb342-36" tabindex="-1"></a><span class="do">## 2025-02-06 02:46:55.25984 : Adding Loop Tracks (1 of 9), 0.047 mins elapsed.</span></span>
+<span id="cb342-37"><a href="co-accessibility-with-archr.html#cb342-37" tabindex="-1"></a><span class="do">## 2025-02-06 02:46:55.399196 : Adding Gene Tracks (1 of 9), 0.05 mins elapsed.</span></span>
+<span id="cb342-38"><a href="co-accessibility-with-archr.html#cb342-38" tabindex="-1"></a><span class="do">## 2025-02-06 02:46:55.742377 : Plotting, 0.055 mins elapsed.</span></span>
+<span id="cb342-39"><a href="co-accessibility-with-archr.html#cb342-39" tabindex="-1"></a><span class="do">## 2025-02-06 02:46:56.541037 : Adding Bulk Tracks (2 of 9), 0.069 mins elapsed.</span></span>
+<span id="cb342-40"><a href="co-accessibility-with-archr.html#cb342-40" tabindex="-1"></a><span class="do">## 2025-02-06 02:46:58.3216 : Adding Feature Tracks (2 of 9), 0.098 mins elapsed.</span></span>
+<span id="cb342-41"><a href="co-accessibility-with-archr.html#cb342-41" tabindex="-1"></a><span class="do">## 2025-02-06 02:46:58.405199 : Adding Loop Tracks (2 of 9), 0.1 mins elapsed.</span></span>
+<span id="cb342-42"><a href="co-accessibility-with-archr.html#cb342-42" tabindex="-1"></a><span class="do">## 2025-02-06 02:46:58.591959 : Adding Gene Tracks (2 of 9), 0.103 mins elapsed.</span></span>
+<span id="cb342-43"><a href="co-accessibility-with-archr.html#cb342-43" tabindex="-1"></a><span class="do">## 2025-02-06 02:46:58.796852 : Plotting, 0.106 mins elapsed.</span></span>
+<span id="cb342-44"><a href="co-accessibility-with-archr.html#cb342-44" tabindex="-1"></a><span class="do">## 2025-02-06 02:46:59.689016 : Adding Bulk Tracks (3 of 9), 0.121 mins elapsed.</span></span>
+<span id="cb342-45"><a href="co-accessibility-with-archr.html#cb342-45" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:01.491356 : Adding Feature Tracks (3 of 9), 0.151 mins elapsed.</span></span>
+<span id="cb342-46"><a href="co-accessibility-with-archr.html#cb342-46" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:01.577291 : Adding Loop Tracks (3 of 9), 0.153 mins elapsed.</span></span>
+<span id="cb342-47"><a href="co-accessibility-with-archr.html#cb342-47" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:02.074779 : Adding Gene Tracks (3 of 9), 0.161 mins elapsed.</span></span>
+<span id="cb342-48"><a href="co-accessibility-with-archr.html#cb342-48" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:02.274246 : Plotting, 0.164 mins elapsed.</span></span>
+<span id="cb342-49"><a href="co-accessibility-with-archr.html#cb342-49" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:03.255812 : Adding Bulk Tracks (4 of 9), 0.181 mins elapsed.</span></span>
+<span id="cb342-50"><a href="co-accessibility-with-archr.html#cb342-50" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:05.0556 : Adding Feature Tracks (4 of 9), 0.211 mins elapsed.</span></span>
+<span id="cb342-51"><a href="co-accessibility-with-archr.html#cb342-51" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:05.139917 : Adding Loop Tracks (4 of 9), 0.212 mins elapsed.</span></span>
+<span id="cb342-52"><a href="co-accessibility-with-archr.html#cb342-52" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:05.404111 : Adding Gene Tracks (4 of 9), 0.217 mins elapsed.</span></span>
+<span id="cb342-53"><a href="co-accessibility-with-archr.html#cb342-53" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:05.605285 : Plotting, 0.22 mins elapsed.</span></span>
+<span id="cb342-54"><a href="co-accessibility-with-archr.html#cb342-54" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:06.370167 : Adding Bulk Tracks (5 of 9), 0.233 mins elapsed.</span></span>
+<span id="cb342-55"><a href="co-accessibility-with-archr.html#cb342-55" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:08.110441 : Adding Feature Tracks (5 of 9), 0.262 mins elapsed.</span></span>
+<span id="cb342-56"><a href="co-accessibility-with-archr.html#cb342-56" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:08.194293 : Adding Loop Tracks (5 of 9), 0.263 mins elapsed.</span></span>
+<span id="cb342-57"><a href="co-accessibility-with-archr.html#cb342-57" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:08.608782 : Adding Gene Tracks (5 of 9), 0.27 mins elapsed.</span></span>
+<span id="cb342-58"><a href="co-accessibility-with-archr.html#cb342-58" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:08.812891 : Plotting, 0.273 mins elapsed.</span></span>
+<span id="cb342-59"><a href="co-accessibility-with-archr.html#cb342-59" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:09.633111 : Adding Bulk Tracks (6 of 9), 0.287 mins elapsed.</span></span>
+<span id="cb342-60"><a href="co-accessibility-with-archr.html#cb342-60" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:09.581985 : Adding Feature Tracks (6 of 9), 0.286 mins elapsed.</span></span>
+<span id="cb342-61"><a href="co-accessibility-with-archr.html#cb342-61" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:09.659093 : Adding Loop Tracks (6 of 9), 0.287 mins elapsed.</span></span>
+<span id="cb342-62"><a href="co-accessibility-with-archr.html#cb342-62" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:10.1937 : Adding Gene Tracks (6 of 9), 0.296 mins elapsed.</span></span>
+<span id="cb342-63"><a href="co-accessibility-with-archr.html#cb342-63" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:10.388781 : Plotting, 0.3 mins elapsed.</span></span>
+<span id="cb342-64"><a href="co-accessibility-with-archr.html#cb342-64" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:11.182084 : Adding Bulk Tracks (7 of 9), 0.313 mins elapsed.</span></span>
+<span id="cb342-65"><a href="co-accessibility-with-archr.html#cb342-65" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:13.100951 : Adding Feature Tracks (7 of 9), 0.345 mins elapsed.</span></span>
+<span id="cb342-66"><a href="co-accessibility-with-archr.html#cb342-66" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:13.180962 : Adding Loop Tracks (7 of 9), 0.346 mins elapsed.</span></span>
+<span id="cb342-67"><a href="co-accessibility-with-archr.html#cb342-67" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:13.970203 : Adding Gene Tracks (7 of 9), 0.359 mins elapsed.</span></span>
+<span id="cb342-68"><a href="co-accessibility-with-archr.html#cb342-68" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:14.175013 : Plotting, 0.363 mins elapsed.</span></span>
+<span id="cb342-69"><a href="co-accessibility-with-archr.html#cb342-69" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:15.095396 : Adding Bulk Tracks (8 of 9), 0.378 mins elapsed.</span></span>
+<span id="cb342-70"><a href="co-accessibility-with-archr.html#cb342-70" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:16.848731 : Adding Feature Tracks (8 of 9), 0.407 mins elapsed.</span></span>
+<span id="cb342-71"><a href="co-accessibility-with-archr.html#cb342-71" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:16.929622 : Adding Loop Tracks (8 of 9), 0.409 mins elapsed.</span></span>
+<span id="cb342-72"><a href="co-accessibility-with-archr.html#cb342-72" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:17.552829 : Adding Gene Tracks (8 of 9), 0.419 mins elapsed.</span></span>
+<span id="cb342-73"><a href="co-accessibility-with-archr.html#cb342-73" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:17.765846 : Plotting, 0.423 mins elapsed.</span></span>
+<span id="cb342-74"><a href="co-accessibility-with-archr.html#cb342-74" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:18.767357 : Adding Bulk Tracks (9 of 9), 0.439 mins elapsed.</span></span>
+<span id="cb342-75"><a href="co-accessibility-with-archr.html#cb342-75" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:20.563891 : Adding Feature Tracks (9 of 9), 0.469 mins elapsed.</span></span>
+<span id="cb342-76"><a href="co-accessibility-with-archr.html#cb342-76" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:20.645648 : Adding Loop Tracks (9 of 9), 0.471 mins elapsed.</span></span>
+<span id="cb342-77"><a href="co-accessibility-with-archr.html#cb342-77" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:21.197408 : Adding Gene Tracks (9 of 9), 0.48 mins elapsed.</span></span>
+<span id="cb342-78"><a href="co-accessibility-with-archr.html#cb342-78" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:21.391975 : Plotting, 0.483 mins elapsed.</span></span>
+<span id="cb342-79"><a href="co-accessibility-with-archr.html#cb342-79" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotBrowserTrack-934c920d5-Date-2025-02-06_Time-02-46-52.415133.log</span></span></code></pre></div>
 <p>To plot our browser track we use the <code>grid.draw</code> function and select a specific marker gene by name using the <code>$</code> accessor.</p>
-<div class="sourceCode" id="cb341"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb341-1"><a href="co-accessibility-with-archr.html#cb341-1" tabindex="-1"></a>grid<span class="sc">::</span><span class="fu">grid.newpage</span>()</span>
-<span id="cb341-2"><a href="co-accessibility-with-archr.html#cb341-2" tabindex="-1"></a>grid<span class="sc">::</span><span class="fu">grid.draw</span>(p<span class="sc">$</span>CD14)</span></code></pre></div>
+<div class="sourceCode" id="cb343"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb343-1"><a href="co-accessibility-with-archr.html#cb343-1" tabindex="-1"></a>grid<span class="sc">::</span><span class="fu">grid.newpage</span>()</span>
+<span id="cb343-2"><a href="co-accessibility-with-archr.html#cb343-2" tabindex="-1"></a>grid<span class="sc">::</span><span class="fu">grid.draw</span>(p<span class="sc">$</span>CD14)</span></code></pre></div>
 <p><img src="ArchR_files/figure-html/unnamed-chunk-333-1.svg" width="672" /></p>
 <p>To save an editable vectorized version of this plot, we use <code>plotPDF()</code>.</p>
-<div class="sourceCode" id="cb342"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb342-1"><a href="co-accessibility-with-archr.html#cb342-1" tabindex="-1"></a><span class="fu">plotPDF</span>(<span class="at">plotList =</span> p, </span>
-<span id="cb342-2"><a href="co-accessibility-with-archr.html#cb342-2" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Plot-Tracks-Marker-Genes-with-CoAccessibility.pdf&quot;</span>, </span>
-<span id="cb342-3"><a href="co-accessibility-with-archr.html#cb342-3" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5, </span>
-<span id="cb342-4"><a href="co-accessibility-with-archr.html#cb342-4" tabindex="-1"></a>    <span class="at">addDOC =</span> <span class="cn">FALSE</span>, <span class="at">width =</span> <span class="dv">5</span>, <span class="at">height =</span> <span class="dv">5</span>)</span>
-<span id="cb342-5"><a href="co-accessibility-with-archr.html#cb342-5" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb342-6"><a href="co-accessibility-with-archr.html#cb342-6" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb342-7"><a href="co-accessibility-with-archr.html#cb342-7" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb342-8"><a href="co-accessibility-with-archr.html#cb342-8" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb342-9"><a href="co-accessibility-with-archr.html#cb342-9" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb342-10"><a href="co-accessibility-with-archr.html#cb342-10" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb342-11"><a href="co-accessibility-with-archr.html#cb342-11" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb342-12"><a href="co-accessibility-with-archr.html#cb342-12" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb342-13"><a href="co-accessibility-with-archr.html#cb342-13" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb342-14"><a href="co-accessibility-with-archr.html#cb342-14" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb342-15"><a href="co-accessibility-with-archr.html#cb342-15" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb342-16"><a href="co-accessibility-with-archr.html#cb342-16" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb342-17"><a href="co-accessibility-with-archr.html#cb342-17" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb342-18"><a href="co-accessibility-with-archr.html#cb342-18" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb342-19"><a href="co-accessibility-with-archr.html#cb342-19" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb342-20"><a href="co-accessibility-with-archr.html#cb342-20" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb342-21"><a href="co-accessibility-with-archr.html#cb342-21" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb342-22"><a href="co-accessibility-with-archr.html#cb342-22" tabindex="-1"></a><span class="do">## NULL</span></span></code></pre></div>
+<div class="sourceCode" id="cb344"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb344-1"><a href="co-accessibility-with-archr.html#cb344-1" tabindex="-1"></a><span class="fu">plotPDF</span>(<span class="at">plotList =</span> p, </span>
+<span id="cb344-2"><a href="co-accessibility-with-archr.html#cb344-2" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Plot-Tracks-Marker-Genes-with-CoAccessibility.pdf&quot;</span>, </span>
+<span id="cb344-3"><a href="co-accessibility-with-archr.html#cb344-3" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5, </span>
+<span id="cb344-4"><a href="co-accessibility-with-archr.html#cb344-4" tabindex="-1"></a>    <span class="at">addDOC =</span> <span class="cn">FALSE</span>, <span class="at">width =</span> <span class="dv">5</span>, <span class="at">height =</span> <span class="dv">5</span>)</span>
+<span id="cb344-5"><a href="co-accessibility-with-archr.html#cb344-5" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb344-6"><a href="co-accessibility-with-archr.html#cb344-6" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb344-7"><a href="co-accessibility-with-archr.html#cb344-7" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb344-8"><a href="co-accessibility-with-archr.html#cb344-8" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb344-9"><a href="co-accessibility-with-archr.html#cb344-9" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb344-10"><a href="co-accessibility-with-archr.html#cb344-10" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb344-11"><a href="co-accessibility-with-archr.html#cb344-11" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb344-12"><a href="co-accessibility-with-archr.html#cb344-12" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb344-13"><a href="co-accessibility-with-archr.html#cb344-13" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb344-14"><a href="co-accessibility-with-archr.html#cb344-14" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb344-15"><a href="co-accessibility-with-archr.html#cb344-15" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb344-16"><a href="co-accessibility-with-archr.html#cb344-16" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb344-17"><a href="co-accessibility-with-archr.html#cb344-17" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb344-18"><a href="co-accessibility-with-archr.html#cb344-18" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb344-19"><a href="co-accessibility-with-archr.html#cb344-19" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb344-20"><a href="co-accessibility-with-archr.html#cb344-20" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb344-21"><a href="co-accessibility-with-archr.html#cb344-21" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb344-22"><a href="co-accessibility-with-archr.html#cb344-22" tabindex="-1"></a><span class="do">## NULL</span></span></code></pre></div>
 </div>
 </div>
             </section>

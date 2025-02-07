@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2025-01-23" />
+<meta name="date" content="2025-02-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -258,7 +258,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
 <ul>
 <li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
-<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-cifferentiation.html"><a href="lymphoid-trajectory---b-cell-cifferentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Cifferentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-differentiation.html"><a href="lymphoid-trajectory---b-cell-differentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Differentiation</a></li>
 <li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
 <li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
 <li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
@@ -309,336 +309,336 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">17.3</span> Peak2GeneLinkage with ArchR<a href="peak2genelinkage-with-archr.html#peak2genelinkage-with-archr" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Similar to co-accessibility, ArchR can also identify so-called “peak-to-gene links”. The primary differences between peak-to-gene links and co-accessibility is that co-accessibility is an ATAC-seq-only analysis that looks for correlations in accessibility between two peaks while peak-to-gene linkage leverages integrated scRNA-seq data to look for correlations between peak accessibility and gene expression. These represent orthogonal approaches to a similar problem. However, because peak-to-gene linkage correlates scATAC-seq and scRNA-seq data, we often think of these links as more relevant to gene regulatory interactions.</p>
 <p>To identify peak-to-gene links in ArchR, we use the <code>addPeak2GeneLinks()</code> function.</p>
-<div class="sourceCode" id="cb343"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb343-1"><a href="peak2genelinkage-with-archr.html#cb343-1" tabindex="-1"></a>projHeme5 <span class="ot">&lt;-</span> <span class="fu">addPeak2GeneLinks</span>(</span>
-<span id="cb343-2"><a href="peak2genelinkage-with-archr.html#cb343-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb343-3"><a href="peak2genelinkage-with-archr.html#cb343-3" tabindex="-1"></a>    <span class="at">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span></span>
-<span id="cb343-4"><a href="peak2genelinkage-with-archr.html#cb343-4" tabindex="-1"></a>)</span>
-<span id="cb343-5"><a href="peak2genelinkage-with-archr.html#cb343-5" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addPeak2GeneLinks-1a17796b264-Date-2025-01-23_Time-22-50-36.656885.log</span></span>
-<span id="cb343-6"><a href="peak2genelinkage-with-archr.html#cb343-6" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb343-7"><a href="peak2genelinkage-with-archr.html#cb343-7" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:37.194886 : Getting Available Matrices, 0.009 mins elapsed.</span></span>
-<span id="cb343-8"><a href="peak2genelinkage-with-archr.html#cb343-8" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:39.122843 : Filtered Low Prediction Score Cells (1719 of 10250, 0.168), 0.011 mins elapsed.</span></span>
-<span id="cb343-9"><a href="peak2genelinkage-with-archr.html#cb343-9" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:39.831465 : Computing KNN, 0.023 mins elapsed.</span></span>
-<span id="cb343-10"><a href="peak2genelinkage-with-archr.html#cb343-10" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:39.938104 : Identifying Non-Overlapping KNN pairs, 0.025 mins elapsed.</span></span>
-<span id="cb343-11"><a href="peak2genelinkage-with-archr.html#cb343-11" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:47.62793 : Identified 493 Groupings!, 0.153 mins elapsed.</span></span>
-<span id="cb343-12"><a href="peak2genelinkage-with-archr.html#cb343-12" tabindex="-1"></a><span class="do">## 2025-01-23 22:50:47.660128 : Getting Group RNA Matrix, 0.153 mins elapsed.</span></span>
-<span id="cb343-13"><a href="peak2genelinkage-with-archr.html#cb343-13" tabindex="-1"></a><span class="do">## 2025-01-23 22:51:22.97011 : Getting Group ATAC Matrix, 0.742 mins elapsed.</span></span>
-<span id="cb343-14"><a href="peak2genelinkage-with-archr.html#cb343-14" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:06.327725 : Normalizing Group Matrices, 1.464 mins elapsed.</span></span>
-<span id="cb343-15"><a href="peak2genelinkage-with-archr.html#cb343-15" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:11.681581 : Finding Peak Gene Pairings, 1.554 mins elapsed.</span></span>
-<span id="cb343-16"><a href="peak2genelinkage-with-archr.html#cb343-16" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:11.977915 : Computing Correlations, 1.559 mins elapsed.</span></span>
-<span id="cb343-17"><a href="peak2genelinkage-with-archr.html#cb343-17" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:32.122951 : Completed Peak2Gene Correlations!, 1.894 mins elapsed.</span></span>
-<span id="cb343-18"><a href="peak2genelinkage-with-archr.html#cb343-18" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-addPeak2GeneLinks-1a17796b264-Date-2025-01-23_Time-22-50-36.656885.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb345"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb345-1"><a href="peak2genelinkage-with-archr.html#cb345-1" tabindex="-1"></a>projHeme5 <span class="ot">&lt;-</span> <span class="fu">addPeak2GeneLinks</span>(</span>
+<span id="cb345-2"><a href="peak2genelinkage-with-archr.html#cb345-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb345-3"><a href="peak2genelinkage-with-archr.html#cb345-3" tabindex="-1"></a>    <span class="at">reducedDims =</span> <span class="st">&quot;IterativeLSI&quot;</span></span>
+<span id="cb345-4"><a href="peak2genelinkage-with-archr.html#cb345-4" tabindex="-1"></a>)</span>
+<span id="cb345-5"><a href="peak2genelinkage-with-archr.html#cb345-5" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-addPeak2GeneLinks-9711a92c1-Date-2025-02-06_Time-02-47-26.96776.log</span></span>
+<span id="cb345-6"><a href="peak2genelinkage-with-archr.html#cb345-6" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb345-7"><a href="peak2genelinkage-with-archr.html#cb345-7" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:27.421921 : Getting Available Matrices, 0.008 mins elapsed.</span></span>
+<span id="cb345-8"><a href="peak2genelinkage-with-archr.html#cb345-8" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:28.973197 : Filtered Low Prediction Score Cells (1719 of 10250, 0.168), 0.008 mins elapsed.</span></span>
+<span id="cb345-9"><a href="peak2genelinkage-with-archr.html#cb345-9" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:29.599043 : Computing KNN, 0.019 mins elapsed.</span></span>
+<span id="cb345-10"><a href="peak2genelinkage-with-archr.html#cb345-10" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:29.694643 : Identifying Non-Overlapping KNN pairs, 0.02 mins elapsed.</span></span>
+<span id="cb345-11"><a href="peak2genelinkage-with-archr.html#cb345-11" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:31.214207 : Identified 493 Groupings!, 0.046 mins elapsed.</span></span>
+<span id="cb345-12"><a href="peak2genelinkage-with-archr.html#cb345-12" tabindex="-1"></a><span class="do">## 2025-02-06 02:47:31.244854 : Getting Group RNA Matrix, 0.046 mins elapsed.</span></span>
+<span id="cb345-13"><a href="peak2genelinkage-with-archr.html#cb345-13" tabindex="-1"></a><span class="do">## 2025-02-06 02:48:04.61646 : Getting Group ATAC Matrix, 0.602 mins elapsed.</span></span>
+<span id="cb345-14"><a href="peak2genelinkage-with-archr.html#cb345-14" tabindex="-1"></a><span class="do">## 2025-02-06 02:48:40.540854 : Normalizing Group Matrices, 1.201 mins elapsed.</span></span>
+<span id="cb345-15"><a href="peak2genelinkage-with-archr.html#cb345-15" tabindex="-1"></a><span class="do">## 2025-02-06 02:48:45.903532 : Finding Peak Gene Pairings, 1.29 mins elapsed.</span></span>
+<span id="cb345-16"><a href="peak2genelinkage-with-archr.html#cb345-16" tabindex="-1"></a><span class="do">## 2025-02-06 02:48:46.204627 : Computing Correlations, 1.295 mins elapsed.</span></span>
+<span id="cb345-17"><a href="peak2genelinkage-with-archr.html#cb345-17" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:02.312747 : Completed Peak2Gene Correlations!, 1.564 mins elapsed.</span></span>
+<span id="cb345-18"><a href="peak2genelinkage-with-archr.html#cb345-18" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-addPeak2GeneLinks-9711a92c1-Date-2025-02-06_Time-02-47-26.96776.log</span></span></code></pre></div>
 <p>We can then retrieve these peak-to-gene links in a similar fashion to how we retrieved co-accessibility interactions by using the <code>getPeak2GeneLinks()</code> function. As we saw previously, this function allows for a user-specified cutoff for correlation and resolution for linkages.</p>
-<div class="sourceCode" id="cb344"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb344-1"><a href="peak2genelinkage-with-archr.html#cb344-1" tabindex="-1"></a>p2g <span class="ot">&lt;-</span> <span class="fu">getPeak2GeneLinks</span>(</span>
-<span id="cb344-2"><a href="peak2genelinkage-with-archr.html#cb344-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb344-3"><a href="peak2genelinkage-with-archr.html#cb344-3" tabindex="-1"></a>    <span class="at">corCutOff =</span> <span class="fl">0.45</span>,</span>
-<span id="cb344-4"><a href="peak2genelinkage-with-archr.html#cb344-4" tabindex="-1"></a>    <span class="at">resolution =</span> <span class="dv">1</span>,</span>
-<span id="cb344-5"><a href="peak2genelinkage-with-archr.html#cb344-5" tabindex="-1"></a>    <span class="at">returnLoops =</span> <span class="cn">FALSE</span></span>
-<span id="cb344-6"><a href="peak2genelinkage-with-archr.html#cb344-6" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb346"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb346-1"><a href="peak2genelinkage-with-archr.html#cb346-1" tabindex="-1"></a>p2g <span class="ot">&lt;-</span> <span class="fu">getPeak2GeneLinks</span>(</span>
+<span id="cb346-2"><a href="peak2genelinkage-with-archr.html#cb346-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb346-3"><a href="peak2genelinkage-with-archr.html#cb346-3" tabindex="-1"></a>    <span class="at">corCutOff =</span> <span class="fl">0.45</span>,</span>
+<span id="cb346-4"><a href="peak2genelinkage-with-archr.html#cb346-4" tabindex="-1"></a>    <span class="at">resolution =</span> <span class="dv">1</span>,</span>
+<span id="cb346-5"><a href="peak2genelinkage-with-archr.html#cb346-5" tabindex="-1"></a>    <span class="at">returnLoops =</span> <span class="cn">FALSE</span></span>
+<span id="cb346-6"><a href="peak2genelinkage-with-archr.html#cb346-6" tabindex="-1"></a>)</span></code></pre></div>
 <p>When <code>returnLoops</code> is set to false, this function returns a <code>DataFrame</code> object anaolgous to the <code>DataFrame</code> object returned by <code>getCoAccessibility()</code>. The primary difference is that the indexes for the scATAC-seq peaks are stored in a column called <code>idxATAC</code> and the indexes for the scRNA-seq gene are stored in a column called <code>idxRNA</code>.</p>
-<div class="sourceCode" id="cb345"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb345-1"><a href="peak2genelinkage-with-archr.html#cb345-1" tabindex="-1"></a>p2g</span>
-<span id="cb345-2"><a href="peak2genelinkage-with-archr.html#cb345-2" tabindex="-1"></a><span class="do">## DataFrame with 43706 rows and 6 columns</span></span>
-<span id="cb345-3"><a href="peak2genelinkage-with-archr.html#cb345-3" tabindex="-1"></a><span class="do">##         idxATAC    idxRNA Correlation         FDR  VarQATAC   VarQRNA</span></span>
-<span id="cb345-4"><a href="peak2genelinkage-with-archr.html#cb345-4" tabindex="-1"></a><span class="do">##       &lt;integer&gt; &lt;integer&gt;   &lt;numeric&gt;   &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;</span></span>
-<span id="cb345-5"><a href="peak2genelinkage-with-archr.html#cb345-5" tabindex="-1"></a><span class="do">## 1             5         2    0.595121 6.46022e-47  0.351537  0.480619</span></span>
-<span id="cb345-6"><a href="peak2genelinkage-with-archr.html#cb345-6" tabindex="-1"></a><span class="do">## 2            50         4    0.481528 9.74742e-29  0.740901  0.309768</span></span>
-<span id="cb345-7"><a href="peak2genelinkage-with-archr.html#cb345-7" tabindex="-1"></a><span class="do">## 3            51         4    0.523227 1.30350e-34  0.652344  0.309768</span></span>
-<span id="cb345-8"><a href="peak2genelinkage-with-archr.html#cb345-8" tabindex="-1"></a><span class="do">## 4            91         5    0.577011 1.60106e-43  0.875806  0.687221</span></span>
-<span id="cb345-9"><a href="peak2genelinkage-with-archr.html#cb345-9" tabindex="-1"></a><span class="do">## 5             2         6    0.462365 2.66174e-26  0.904862  0.481049</span></span>
-<span id="cb345-10"><a href="peak2genelinkage-with-archr.html#cb345-10" tabindex="-1"></a><span class="do">## ...         ...       ...         ...         ...       ...       ...</span></span>
-<span id="cb345-11"><a href="peak2genelinkage-with-archr.html#cb345-11" tabindex="-1"></a><span class="do">## 43702    147359     18589    0.464330 1.52289e-26  0.692552  0.736896</span></span>
-<span id="cb345-12"><a href="peak2genelinkage-with-archr.html#cb345-12" tabindex="-1"></a><span class="do">## 43703    147358     18590    0.474616 7.68618e-28  0.355919  0.957045</span></span>
-<span id="cb345-13"><a href="peak2genelinkage-with-archr.html#cb345-13" tabindex="-1"></a><span class="do">## 43704    147359     18590    0.521417 2.44218e-34  0.692552  0.957045</span></span>
-<span id="cb345-14"><a href="peak2genelinkage-with-archr.html#cb345-14" tabindex="-1"></a><span class="do">## 43705    147373     18590    0.599431 9.35259e-48  0.769238  0.957045</span></span>
-<span id="cb345-15"><a href="peak2genelinkage-with-archr.html#cb345-15" tabindex="-1"></a><span class="do">## 43706    147373     18591    0.511117 8.04962e-33  0.769238  0.960594</span></span></code></pre></div>
+<div class="sourceCode" id="cb347"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb347-1"><a href="peak2genelinkage-with-archr.html#cb347-1" tabindex="-1"></a>p2g</span>
+<span id="cb347-2"><a href="peak2genelinkage-with-archr.html#cb347-2" tabindex="-1"></a><span class="do">## DataFrame with 43706 rows and 6 columns</span></span>
+<span id="cb347-3"><a href="peak2genelinkage-with-archr.html#cb347-3" tabindex="-1"></a><span class="do">##         idxATAC    idxRNA Correlation         FDR  VarQATAC   VarQRNA</span></span>
+<span id="cb347-4"><a href="peak2genelinkage-with-archr.html#cb347-4" tabindex="-1"></a><span class="do">##       &lt;integer&gt; &lt;integer&gt;   &lt;numeric&gt;   &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;</span></span>
+<span id="cb347-5"><a href="peak2genelinkage-with-archr.html#cb347-5" tabindex="-1"></a><span class="do">## 1             5         2    0.595121 6.46022e-47  0.351537  0.480619</span></span>
+<span id="cb347-6"><a href="peak2genelinkage-with-archr.html#cb347-6" tabindex="-1"></a><span class="do">## 2            50         4    0.481528 9.74742e-29  0.740901  0.309768</span></span>
+<span id="cb347-7"><a href="peak2genelinkage-with-archr.html#cb347-7" tabindex="-1"></a><span class="do">## 3            51         4    0.523227 1.30350e-34  0.652344  0.309768</span></span>
+<span id="cb347-8"><a href="peak2genelinkage-with-archr.html#cb347-8" tabindex="-1"></a><span class="do">## 4            91         5    0.577011 1.60106e-43  0.875806  0.687221</span></span>
+<span id="cb347-9"><a href="peak2genelinkage-with-archr.html#cb347-9" tabindex="-1"></a><span class="do">## 5             2         6    0.462365 2.66174e-26  0.904862  0.481049</span></span>
+<span id="cb347-10"><a href="peak2genelinkage-with-archr.html#cb347-10" tabindex="-1"></a><span class="do">## ...         ...       ...         ...         ...       ...       ...</span></span>
+<span id="cb347-11"><a href="peak2genelinkage-with-archr.html#cb347-11" tabindex="-1"></a><span class="do">## 43702    147359     18589    0.464330 1.52289e-26  0.692552  0.736896</span></span>
+<span id="cb347-12"><a href="peak2genelinkage-with-archr.html#cb347-12" tabindex="-1"></a><span class="do">## 43703    147358     18590    0.474616 7.68618e-28  0.355919  0.957045</span></span>
+<span id="cb347-13"><a href="peak2genelinkage-with-archr.html#cb347-13" tabindex="-1"></a><span class="do">## 43704    147359     18590    0.521417 2.44218e-34  0.692552  0.957045</span></span>
+<span id="cb347-14"><a href="peak2genelinkage-with-archr.html#cb347-14" tabindex="-1"></a><span class="do">## 43705    147373     18590    0.599431 9.35259e-48  0.769238  0.957045</span></span>
+<span id="cb347-15"><a href="peak2genelinkage-with-archr.html#cb347-15" tabindex="-1"></a><span class="do">## 43706    147373     18591    0.511117 8.04962e-33  0.769238  0.960594</span></span></code></pre></div>
 <p>Here, <code>idxATAC</code> and <code>idxRNA</code> refer to the <strong>row indices</strong> of the peak or gene in the corresponding <code>geneSet</code> or <code>peakSet</code> which can be accessed via the metadata component of the <code>p2g</code> object.</p>
-<div class="sourceCode" id="cb346"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb346-1"><a href="peak2genelinkage-with-archr.html#cb346-1" tabindex="-1"></a><span class="fu">metadata</span>(p2g)</span>
-<span id="cb346-2"><a href="peak2genelinkage-with-archr.html#cb346-2" tabindex="-1"></a><span class="do">## $peakSet</span></span>
-<span id="cb346-3"><a href="peak2genelinkage-with-archr.html#cb346-3" tabindex="-1"></a><span class="do">## GRanges object with 147407 ranges and 0 metadata columns:</span></span>
-<span id="cb346-4"><a href="peak2genelinkage-with-archr.html#cb346-4" tabindex="-1"></a><span class="do">##            seqnames              ranges strand</span></span>
-<span id="cb346-5"><a href="peak2genelinkage-with-archr.html#cb346-5" tabindex="-1"></a><span class="do">##               &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt;</span></span>
-<span id="cb346-6"><a href="peak2genelinkage-with-archr.html#cb346-6" tabindex="-1"></a><span class="do">##        [1]     chr1       752503-753003      *</span></span>
-<span id="cb346-7"><a href="peak2genelinkage-with-archr.html#cb346-7" tabindex="-1"></a><span class="do">##        [2]     chr1       762688-763188      *</span></span>
-<span id="cb346-8"><a href="peak2genelinkage-with-archr.html#cb346-8" tabindex="-1"></a><span class="do">##        [3]     chr1       773648-774148      *</span></span>
-<span id="cb346-9"><a href="peak2genelinkage-with-archr.html#cb346-9" tabindex="-1"></a><span class="do">##        [4]     chr1       779906-780406      *</span></span>
-<span id="cb346-10"><a href="peak2genelinkage-with-archr.html#cb346-10" tabindex="-1"></a><span class="do">##        [5]     chr1       801002-801502      *</span></span>
-<span id="cb346-11"><a href="peak2genelinkage-with-archr.html#cb346-11" tabindex="-1"></a><span class="do">##        ...      ...                 ...    ...</span></span>
-<span id="cb346-12"><a href="peak2genelinkage-with-archr.html#cb346-12" tabindex="-1"></a><span class="do">##   [147403]     chrX 154807254-154807754      *</span></span>
-<span id="cb346-13"><a href="peak2genelinkage-with-archr.html#cb346-13" tabindex="-1"></a><span class="do">##   [147404]     chrX 154840939-154841439      *</span></span>
-<span id="cb346-14"><a href="peak2genelinkage-with-archr.html#cb346-14" tabindex="-1"></a><span class="do">##   [147405]     chrX 154841881-154842381      *</span></span>
-<span id="cb346-15"><a href="peak2genelinkage-with-archr.html#cb346-15" tabindex="-1"></a><span class="do">##   [147406]     chrX 154842390-154842890      *</span></span>
-<span id="cb346-16"><a href="peak2genelinkage-with-archr.html#cb346-16" tabindex="-1"></a><span class="do">##   [147407]     chrX 154862036-154862536      *</span></span>
-<span id="cb346-17"><a href="peak2genelinkage-with-archr.html#cb346-17" tabindex="-1"></a><span class="do">##   -------</span></span>
-<span id="cb346-18"><a href="peak2genelinkage-with-archr.html#cb346-18" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span>
-<span id="cb346-19"><a href="peak2genelinkage-with-archr.html#cb346-19" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb346-20"><a href="peak2genelinkage-with-archr.html#cb346-20" tabindex="-1"></a><span class="do">## $geneSet</span></span>
-<span id="cb346-21"><a href="peak2genelinkage-with-archr.html#cb346-21" tabindex="-1"></a><span class="do">## GRanges object with 18601 ranges and 2 metadata columns:</span></span>
-<span id="cb346-22"><a href="peak2genelinkage-with-archr.html#cb346-22" tabindex="-1"></a><span class="do">##           seqnames    ranges strand |        name       idx</span></span>
-<span id="cb346-23"><a href="peak2genelinkage-with-archr.html#cb346-23" tabindex="-1"></a><span class="do">##              &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt; &lt;integer&gt;</span></span>
-<span id="cb346-24"><a href="peak2genelinkage-with-archr.html#cb346-24" tabindex="-1"></a><span class="do">##       [1]     chr1     69091      * |       OR4F5         1</span></span>
-<span id="cb346-25"><a href="peak2genelinkage-with-archr.html#cb346-25" tabindex="-1"></a><span class="do">##       [2]     chr1    762902      * |   LINC00115         2</span></span>
-<span id="cb346-26"><a href="peak2genelinkage-with-archr.html#cb346-26" tabindex="-1"></a><span class="do">##       [3]     chr1    812182      * |      FAM41C         3</span></span>
-<span id="cb346-27"><a href="peak2genelinkage-with-archr.html#cb346-27" tabindex="-1"></a><span class="do">##       [4]     chr1    860530      * |      SAMD11         4</span></span>
-<span id="cb346-28"><a href="peak2genelinkage-with-archr.html#cb346-28" tabindex="-1"></a><span class="do">##       [5]     chr1    894679      * |       NOC2L         5</span></span>
-<span id="cb346-29"><a href="peak2genelinkage-with-archr.html#cb346-29" tabindex="-1"></a><span class="do">##       ...      ...       ...    ... .         ...       ...</span></span>
-<span id="cb346-30"><a href="peak2genelinkage-with-archr.html#cb346-30" tabindex="-1"></a><span class="do">##   [18597]     chrX 154299695      * |       BRCC3       708</span></span>
-<span id="cb346-31"><a href="peak2genelinkage-with-archr.html#cb346-31" tabindex="-1"></a><span class="do">##   [18598]     chrX 154444701      * |        VBP1       709</span></span>
-<span id="cb346-32"><a href="peak2genelinkage-with-archr.html#cb346-32" tabindex="-1"></a><span class="do">##   [18599]     chrX 154493852      * |      RAB39B       710</span></span>
-<span id="cb346-33"><a href="peak2genelinkage-with-archr.html#cb346-33" tabindex="-1"></a><span class="do">##   [18600]     chrX 154563986      * |       CLIC2       711</span></span>
-<span id="cb346-34"><a href="peak2genelinkage-with-archr.html#cb346-34" tabindex="-1"></a><span class="do">##   [18601]     chrX 154842622      * |       TMLHE       712</span></span>
-<span id="cb346-35"><a href="peak2genelinkage-with-archr.html#cb346-35" tabindex="-1"></a><span class="do">##   -------</span></span>
-<span id="cb346-36"><a href="peak2genelinkage-with-archr.html#cb346-36" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span>
-<span id="cb346-37"><a href="peak2genelinkage-with-archr.html#cb346-37" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb346-38"><a href="peak2genelinkage-with-archr.html#cb346-38" tabindex="-1"></a><span class="do">## $seATAC</span></span>
-<span id="cb346-39"><a href="peak2genelinkage-with-archr.html#cb346-39" tabindex="-1"></a><span class="do">## [1] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme4/Peak2GeneLinks/seATAC-Group-KNN.rds&quot;</span></span>
-<span id="cb346-40"><a href="peak2genelinkage-with-archr.html#cb346-40" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb346-41"><a href="peak2genelinkage-with-archr.html#cb346-41" tabindex="-1"></a><span class="do">## $seRNA</span></span>
-<span id="cb346-42"><a href="peak2genelinkage-with-archr.html#cb346-42" tabindex="-1"></a><span class="do">## [1] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme4/Peak2GeneLinks/seRNA-Group-KNN.rds&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb348"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb348-1"><a href="peak2genelinkage-with-archr.html#cb348-1" tabindex="-1"></a><span class="fu">metadata</span>(p2g)</span>
+<span id="cb348-2"><a href="peak2genelinkage-with-archr.html#cb348-2" tabindex="-1"></a><span class="do">## $peakSet</span></span>
+<span id="cb348-3"><a href="peak2genelinkage-with-archr.html#cb348-3" tabindex="-1"></a><span class="do">## GRanges object with 147407 ranges and 0 metadata columns:</span></span>
+<span id="cb348-4"><a href="peak2genelinkage-with-archr.html#cb348-4" tabindex="-1"></a><span class="do">##            seqnames              ranges strand</span></span>
+<span id="cb348-5"><a href="peak2genelinkage-with-archr.html#cb348-5" tabindex="-1"></a><span class="do">##               &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt;</span></span>
+<span id="cb348-6"><a href="peak2genelinkage-with-archr.html#cb348-6" tabindex="-1"></a><span class="do">##        [1]     chr1       752503-753003      *</span></span>
+<span id="cb348-7"><a href="peak2genelinkage-with-archr.html#cb348-7" tabindex="-1"></a><span class="do">##        [2]     chr1       762688-763188      *</span></span>
+<span id="cb348-8"><a href="peak2genelinkage-with-archr.html#cb348-8" tabindex="-1"></a><span class="do">##        [3]     chr1       773648-774148      *</span></span>
+<span id="cb348-9"><a href="peak2genelinkage-with-archr.html#cb348-9" tabindex="-1"></a><span class="do">##        [4]     chr1       779906-780406      *</span></span>
+<span id="cb348-10"><a href="peak2genelinkage-with-archr.html#cb348-10" tabindex="-1"></a><span class="do">##        [5]     chr1       801002-801502      *</span></span>
+<span id="cb348-11"><a href="peak2genelinkage-with-archr.html#cb348-11" tabindex="-1"></a><span class="do">##        ...      ...                 ...    ...</span></span>
+<span id="cb348-12"><a href="peak2genelinkage-with-archr.html#cb348-12" tabindex="-1"></a><span class="do">##   [147403]     chrX 154807254-154807754      *</span></span>
+<span id="cb348-13"><a href="peak2genelinkage-with-archr.html#cb348-13" tabindex="-1"></a><span class="do">##   [147404]     chrX 154840939-154841439      *</span></span>
+<span id="cb348-14"><a href="peak2genelinkage-with-archr.html#cb348-14" tabindex="-1"></a><span class="do">##   [147405]     chrX 154841881-154842381      *</span></span>
+<span id="cb348-15"><a href="peak2genelinkage-with-archr.html#cb348-15" tabindex="-1"></a><span class="do">##   [147406]     chrX 154842390-154842890      *</span></span>
+<span id="cb348-16"><a href="peak2genelinkage-with-archr.html#cb348-16" tabindex="-1"></a><span class="do">##   [147407]     chrX 154862036-154862536      *</span></span>
+<span id="cb348-17"><a href="peak2genelinkage-with-archr.html#cb348-17" tabindex="-1"></a><span class="do">##   -------</span></span>
+<span id="cb348-18"><a href="peak2genelinkage-with-archr.html#cb348-18" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span>
+<span id="cb348-19"><a href="peak2genelinkage-with-archr.html#cb348-19" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb348-20"><a href="peak2genelinkage-with-archr.html#cb348-20" tabindex="-1"></a><span class="do">## $geneSet</span></span>
+<span id="cb348-21"><a href="peak2genelinkage-with-archr.html#cb348-21" tabindex="-1"></a><span class="do">## GRanges object with 18601 ranges and 2 metadata columns:</span></span>
+<span id="cb348-22"><a href="peak2genelinkage-with-archr.html#cb348-22" tabindex="-1"></a><span class="do">##           seqnames    ranges strand |        name       idx</span></span>
+<span id="cb348-23"><a href="peak2genelinkage-with-archr.html#cb348-23" tabindex="-1"></a><span class="do">##              &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt; &lt;integer&gt;</span></span>
+<span id="cb348-24"><a href="peak2genelinkage-with-archr.html#cb348-24" tabindex="-1"></a><span class="do">##       [1]     chr1     69091      * |       OR4F5         1</span></span>
+<span id="cb348-25"><a href="peak2genelinkage-with-archr.html#cb348-25" tabindex="-1"></a><span class="do">##       [2]     chr1    762902      * |   LINC00115         2</span></span>
+<span id="cb348-26"><a href="peak2genelinkage-with-archr.html#cb348-26" tabindex="-1"></a><span class="do">##       [3]     chr1    812182      * |      FAM41C         3</span></span>
+<span id="cb348-27"><a href="peak2genelinkage-with-archr.html#cb348-27" tabindex="-1"></a><span class="do">##       [4]     chr1    860530      * |      SAMD11         4</span></span>
+<span id="cb348-28"><a href="peak2genelinkage-with-archr.html#cb348-28" tabindex="-1"></a><span class="do">##       [5]     chr1    894679      * |       NOC2L         5</span></span>
+<span id="cb348-29"><a href="peak2genelinkage-with-archr.html#cb348-29" tabindex="-1"></a><span class="do">##       ...      ...       ...    ... .         ...       ...</span></span>
+<span id="cb348-30"><a href="peak2genelinkage-with-archr.html#cb348-30" tabindex="-1"></a><span class="do">##   [18597]     chrX 154299695      * |       BRCC3       708</span></span>
+<span id="cb348-31"><a href="peak2genelinkage-with-archr.html#cb348-31" tabindex="-1"></a><span class="do">##   [18598]     chrX 154444701      * |        VBP1       709</span></span>
+<span id="cb348-32"><a href="peak2genelinkage-with-archr.html#cb348-32" tabindex="-1"></a><span class="do">##   [18599]     chrX 154493852      * |      RAB39B       710</span></span>
+<span id="cb348-33"><a href="peak2genelinkage-with-archr.html#cb348-33" tabindex="-1"></a><span class="do">##   [18600]     chrX 154563986      * |       CLIC2       711</span></span>
+<span id="cb348-34"><a href="peak2genelinkage-with-archr.html#cb348-34" tabindex="-1"></a><span class="do">##   [18601]     chrX 154842622      * |       TMLHE       712</span></span>
+<span id="cb348-35"><a href="peak2genelinkage-with-archr.html#cb348-35" tabindex="-1"></a><span class="do">##   -------</span></span>
+<span id="cb348-36"><a href="peak2genelinkage-with-archr.html#cb348-36" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span>
+<span id="cb348-37"><a href="peak2genelinkage-with-archr.html#cb348-37" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb348-38"><a href="peak2genelinkage-with-archr.html#cb348-38" tabindex="-1"></a><span class="do">## $seATAC</span></span>
+<span id="cb348-39"><a href="peak2genelinkage-with-archr.html#cb348-39" tabindex="-1"></a><span class="do">## [1] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme4/Peak2GeneLinks/seATAC-Group-KNN.rds&quot;</span></span>
+<span id="cb348-40"><a href="peak2genelinkage-with-archr.html#cb348-40" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb348-41"><a href="peak2genelinkage-with-archr.html#cb348-41" tabindex="-1"></a><span class="do">## $seRNA</span></span>
+<span id="cb348-42"><a href="peak2genelinkage-with-archr.html#cb348-42" tabindex="-1"></a><span class="do">## [1] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme4/Peak2GeneLinks/seRNA-Group-KNN.rds&quot;</span></span></code></pre></div>
 <p>It is important not to confuse <code>idxRNA</code> with the value in the <code>idx</code> column of the <code>geneSet</code>. Within the <code>geneSet</code>, <code>idx</code> corresponds to the chronological position of the given gene across each chromosome. As such, <code>idx</code> is only unique across an individual chromosome and is not relevant for mapping <code>idxRNA</code> to a gene name.</p>
 <p>So, if we wanted to add the gene name and peak coordinates to our <code>p2g</code> <code>DataFrame</code> object, we would do the following:</p>
-<div class="sourceCode" id="cb347"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb347-1"><a href="peak2genelinkage-with-archr.html#cb347-1" tabindex="-1"></a>p2g<span class="sc">$</span>geneName <span class="ot">&lt;-</span> <span class="fu">mcols</span>(<span class="fu">metadata</span>(p2g)<span class="sc">$</span>geneSet)<span class="sc">$</span>name[p2g<span class="sc">$</span>idxRNA]</span>
-<span id="cb347-2"><a href="peak2genelinkage-with-archr.html#cb347-2" tabindex="-1"></a>p2g<span class="sc">$</span>peakName <span class="ot">&lt;-</span> (<span class="fu">metadata</span>(p2g)<span class="sc">$</span>peakSet <span class="sc">%&gt;%</span> {<span class="fu">paste0</span>(<span class="fu">seqnames</span>(.), <span class="st">&quot;_&quot;</span>, <span class="fu">start</span>(.), <span class="st">&quot;_&quot;</span>, <span class="fu">end</span>(.))})[p2g<span class="sc">$</span>idxATAC]</span>
-<span id="cb347-3"><a href="peak2genelinkage-with-archr.html#cb347-3" tabindex="-1"></a>p2g</span>
-<span id="cb347-4"><a href="peak2genelinkage-with-archr.html#cb347-4" tabindex="-1"></a><span class="do">## DataFrame with 43706 rows and 8 columns</span></span>
-<span id="cb347-5"><a href="peak2genelinkage-with-archr.html#cb347-5" tabindex="-1"></a><span class="do">##         idxATAC    idxRNA Correlation         FDR  VarQATAC   VarQRNA</span></span>
-<span id="cb347-6"><a href="peak2genelinkage-with-archr.html#cb347-6" tabindex="-1"></a><span class="do">##       &lt;integer&gt; &lt;integer&gt;   &lt;numeric&gt;   &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;</span></span>
-<span id="cb347-7"><a href="peak2genelinkage-with-archr.html#cb347-7" tabindex="-1"></a><span class="do">## 1             5         2    0.595121 6.46022e-47  0.351537  0.480619</span></span>
-<span id="cb347-8"><a href="peak2genelinkage-with-archr.html#cb347-8" tabindex="-1"></a><span class="do">## 2            50         4    0.481528 9.74742e-29  0.740901  0.309768</span></span>
-<span id="cb347-9"><a href="peak2genelinkage-with-archr.html#cb347-9" tabindex="-1"></a><span class="do">## 3            51         4    0.523227 1.30350e-34  0.652344  0.309768</span></span>
-<span id="cb347-10"><a href="peak2genelinkage-with-archr.html#cb347-10" tabindex="-1"></a><span class="do">## 4            91         5    0.577011 1.60106e-43  0.875806  0.687221</span></span>
-<span id="cb347-11"><a href="peak2genelinkage-with-archr.html#cb347-11" tabindex="-1"></a><span class="do">## 5             2         6    0.462365 2.66174e-26  0.904862  0.481049</span></span>
-<span id="cb347-12"><a href="peak2genelinkage-with-archr.html#cb347-12" tabindex="-1"></a><span class="do">## ...         ...       ...         ...         ...       ...       ...</span></span>
-<span id="cb347-13"><a href="peak2genelinkage-with-archr.html#cb347-13" tabindex="-1"></a><span class="do">## 43702    147359     18589    0.464330 1.52289e-26  0.692552  0.736896</span></span>
-<span id="cb347-14"><a href="peak2genelinkage-with-archr.html#cb347-14" tabindex="-1"></a><span class="do">## 43703    147358     18590    0.474616 7.68618e-28  0.355919  0.957045</span></span>
-<span id="cb347-15"><a href="peak2genelinkage-with-archr.html#cb347-15" tabindex="-1"></a><span class="do">## 43704    147359     18590    0.521417 2.44218e-34  0.692552  0.957045</span></span>
-<span id="cb347-16"><a href="peak2genelinkage-with-archr.html#cb347-16" tabindex="-1"></a><span class="do">## 43705    147373     18590    0.599431 9.35259e-48  0.769238  0.957045</span></span>
-<span id="cb347-17"><a href="peak2genelinkage-with-archr.html#cb347-17" tabindex="-1"></a><span class="do">## 43706    147373     18591    0.511117 8.04962e-33  0.769238  0.960594</span></span>
-<span id="cb347-18"><a href="peak2genelinkage-with-archr.html#cb347-18" tabindex="-1"></a><span class="do">##          geneName               peakName</span></span>
-<span id="cb347-19"><a href="peak2genelinkage-with-archr.html#cb347-19" tabindex="-1"></a><span class="do">##       &lt;character&gt;            &lt;character&gt;</span></span>
-<span id="cb347-20"><a href="peak2genelinkage-with-archr.html#cb347-20" tabindex="-1"></a><span class="do">## 1       LINC00115     chr1_801002_801502</span></span>
-<span id="cb347-21"><a href="peak2genelinkage-with-archr.html#cb347-21" tabindex="-1"></a><span class="do">## 2          SAMD11     chr1_974038_974538</span></span>
-<span id="cb347-22"><a href="peak2genelinkage-with-archr.html#cb347-22" tabindex="-1"></a><span class="do">## 3          SAMD11     chr1_974855_975355</span></span>
-<span id="cb347-23"><a href="peak2genelinkage-with-archr.html#cb347-23" tabindex="-1"></a><span class="do">## 4           NOC2L   chr1_1136870_1137370</span></span>
-<span id="cb347-24"><a href="peak2genelinkage-with-archr.html#cb347-24" tabindex="-1"></a><span class="do">## 5          KLHL17     chr1_762688_763188</span></span>
-<span id="cb347-25"><a href="peak2genelinkage-with-archr.html#cb347-25" tabindex="-1"></a><span class="do">## ...           ...                    ...</span></span>
-<span id="cb347-26"><a href="peak2genelinkage-with-archr.html#cb347-26" tabindex="-1"></a><span class="do">## 43702        GAB3 chrX_153832174_15383..</span></span>
-<span id="cb347-27"><a href="peak2genelinkage-with-archr.html#cb347-27" tabindex="-1"></a><span class="do">## 43703        DKC1 chrX_153828590_15382..</span></span>
-<span id="cb347-28"><a href="peak2genelinkage-with-archr.html#cb347-28" tabindex="-1"></a><span class="do">## 43704        DKC1 chrX_153832174_15383..</span></span>
-<span id="cb347-29"><a href="peak2genelinkage-with-archr.html#cb347-29" tabindex="-1"></a><span class="do">## 43705        DKC1 chrX_153979960_15398..</span></span>
-<span id="cb347-30"><a href="peak2genelinkage-with-archr.html#cb347-30" tabindex="-1"></a><span class="do">## 43706        MPP1 chrX_153979960_15398..</span></span></code></pre></div>
+<div class="sourceCode" id="cb349"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb349-1"><a href="peak2genelinkage-with-archr.html#cb349-1" tabindex="-1"></a>p2g<span class="sc">$</span>geneName <span class="ot">&lt;-</span> <span class="fu">mcols</span>(<span class="fu">metadata</span>(p2g)<span class="sc">$</span>geneSet)<span class="sc">$</span>name[p2g<span class="sc">$</span>idxRNA]</span>
+<span id="cb349-2"><a href="peak2genelinkage-with-archr.html#cb349-2" tabindex="-1"></a>p2g<span class="sc">$</span>peakName <span class="ot">&lt;-</span> (<span class="fu">metadata</span>(p2g)<span class="sc">$</span>peakSet <span class="sc">%&gt;%</span> {<span class="fu">paste0</span>(<span class="fu">seqnames</span>(.), <span class="st">&quot;_&quot;</span>, <span class="fu">start</span>(.), <span class="st">&quot;_&quot;</span>, <span class="fu">end</span>(.))})[p2g<span class="sc">$</span>idxATAC]</span>
+<span id="cb349-3"><a href="peak2genelinkage-with-archr.html#cb349-3" tabindex="-1"></a>p2g</span>
+<span id="cb349-4"><a href="peak2genelinkage-with-archr.html#cb349-4" tabindex="-1"></a><span class="do">## DataFrame with 43706 rows and 8 columns</span></span>
+<span id="cb349-5"><a href="peak2genelinkage-with-archr.html#cb349-5" tabindex="-1"></a><span class="do">##         idxATAC    idxRNA Correlation         FDR  VarQATAC   VarQRNA</span></span>
+<span id="cb349-6"><a href="peak2genelinkage-with-archr.html#cb349-6" tabindex="-1"></a><span class="do">##       &lt;integer&gt; &lt;integer&gt;   &lt;numeric&gt;   &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;</span></span>
+<span id="cb349-7"><a href="peak2genelinkage-with-archr.html#cb349-7" tabindex="-1"></a><span class="do">## 1             5         2    0.595121 6.46022e-47  0.351537  0.480619</span></span>
+<span id="cb349-8"><a href="peak2genelinkage-with-archr.html#cb349-8" tabindex="-1"></a><span class="do">## 2            50         4    0.481528 9.74742e-29  0.740901  0.309768</span></span>
+<span id="cb349-9"><a href="peak2genelinkage-with-archr.html#cb349-9" tabindex="-1"></a><span class="do">## 3            51         4    0.523227 1.30350e-34  0.652344  0.309768</span></span>
+<span id="cb349-10"><a href="peak2genelinkage-with-archr.html#cb349-10" tabindex="-1"></a><span class="do">## 4            91         5    0.577011 1.60106e-43  0.875806  0.687221</span></span>
+<span id="cb349-11"><a href="peak2genelinkage-with-archr.html#cb349-11" tabindex="-1"></a><span class="do">## 5             2         6    0.462365 2.66174e-26  0.904862  0.481049</span></span>
+<span id="cb349-12"><a href="peak2genelinkage-with-archr.html#cb349-12" tabindex="-1"></a><span class="do">## ...         ...       ...         ...         ...       ...       ...</span></span>
+<span id="cb349-13"><a href="peak2genelinkage-with-archr.html#cb349-13" tabindex="-1"></a><span class="do">## 43702    147359     18589    0.464330 1.52289e-26  0.692552  0.736896</span></span>
+<span id="cb349-14"><a href="peak2genelinkage-with-archr.html#cb349-14" tabindex="-1"></a><span class="do">## 43703    147358     18590    0.474616 7.68618e-28  0.355919  0.957045</span></span>
+<span id="cb349-15"><a href="peak2genelinkage-with-archr.html#cb349-15" tabindex="-1"></a><span class="do">## 43704    147359     18590    0.521417 2.44218e-34  0.692552  0.957045</span></span>
+<span id="cb349-16"><a href="peak2genelinkage-with-archr.html#cb349-16" tabindex="-1"></a><span class="do">## 43705    147373     18590    0.599431 9.35259e-48  0.769238  0.957045</span></span>
+<span id="cb349-17"><a href="peak2genelinkage-with-archr.html#cb349-17" tabindex="-1"></a><span class="do">## 43706    147373     18591    0.511117 8.04962e-33  0.769238  0.960594</span></span>
+<span id="cb349-18"><a href="peak2genelinkage-with-archr.html#cb349-18" tabindex="-1"></a><span class="do">##          geneName               peakName</span></span>
+<span id="cb349-19"><a href="peak2genelinkage-with-archr.html#cb349-19" tabindex="-1"></a><span class="do">##       &lt;character&gt;            &lt;character&gt;</span></span>
+<span id="cb349-20"><a href="peak2genelinkage-with-archr.html#cb349-20" tabindex="-1"></a><span class="do">## 1       LINC00115     chr1_801002_801502</span></span>
+<span id="cb349-21"><a href="peak2genelinkage-with-archr.html#cb349-21" tabindex="-1"></a><span class="do">## 2          SAMD11     chr1_974038_974538</span></span>
+<span id="cb349-22"><a href="peak2genelinkage-with-archr.html#cb349-22" tabindex="-1"></a><span class="do">## 3          SAMD11     chr1_974855_975355</span></span>
+<span id="cb349-23"><a href="peak2genelinkage-with-archr.html#cb349-23" tabindex="-1"></a><span class="do">## 4           NOC2L   chr1_1136870_1137370</span></span>
+<span id="cb349-24"><a href="peak2genelinkage-with-archr.html#cb349-24" tabindex="-1"></a><span class="do">## 5          KLHL17     chr1_762688_763188</span></span>
+<span id="cb349-25"><a href="peak2genelinkage-with-archr.html#cb349-25" tabindex="-1"></a><span class="do">## ...           ...                    ...</span></span>
+<span id="cb349-26"><a href="peak2genelinkage-with-archr.html#cb349-26" tabindex="-1"></a><span class="do">## 43702        GAB3 chrX_153832174_15383..</span></span>
+<span id="cb349-27"><a href="peak2genelinkage-with-archr.html#cb349-27" tabindex="-1"></a><span class="do">## 43703        DKC1 chrX_153828590_15382..</span></span>
+<span id="cb349-28"><a href="peak2genelinkage-with-archr.html#cb349-28" tabindex="-1"></a><span class="do">## 43704        DKC1 chrX_153832174_15383..</span></span>
+<span id="cb349-29"><a href="peak2genelinkage-with-archr.html#cb349-29" tabindex="-1"></a><span class="do">## 43705        DKC1 chrX_153979960_15398..</span></span>
+<span id="cb349-30"><a href="peak2genelinkage-with-archr.html#cb349-30" tabindex="-1"></a><span class="do">## 43706        MPP1 chrX_153979960_15398..</span></span></code></pre></div>
 <p>You may also notice that there is other information stored within the <code>metadata()</code> of <code>p2g</code> including pointers to files called <code>seATAC</code> and <code>seRNA</code> which represent <code>SummarizedExperiment</code> objects for the ATAC-seq and RNA-seq data used to identify peak-to-gene linkages and these each include both the raw and normalized data matrices used in the analysis.</p>
-<div class="sourceCode" id="cb348"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb348-1"><a href="peak2genelinkage-with-archr.html#cb348-1" tabindex="-1"></a><span class="fu">metadata</span>(p2g)<span class="sc">$</span>seATAC</span>
-<span id="cb348-2"><a href="peak2genelinkage-with-archr.html#cb348-2" tabindex="-1"></a><span class="do">## [1] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme4/Peak2GeneLinks/seATAC-Group-KNN.rds&quot;</span></span>
-<span id="cb348-3"><a href="peak2genelinkage-with-archr.html#cb348-3" tabindex="-1"></a><span class="fu">metadata</span>(p2g)<span class="sc">$</span>seRNA</span>
-<span id="cb348-4"><a href="peak2genelinkage-with-archr.html#cb348-4" tabindex="-1"></a><span class="do">## [1] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme4/Peak2GeneLinks/seRNA-Group-KNN.rds&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb350"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb350-1"><a href="peak2genelinkage-with-archr.html#cb350-1" tabindex="-1"></a><span class="fu">metadata</span>(p2g)<span class="sc">$</span>seATAC</span>
+<span id="cb350-2"><a href="peak2genelinkage-with-archr.html#cb350-2" tabindex="-1"></a><span class="do">## [1] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme4/Peak2GeneLinks/seATAC-Group-KNN.rds&quot;</span></span>
+<span id="cb350-3"><a href="peak2genelinkage-with-archr.html#cb350-3" tabindex="-1"></a><span class="fu">metadata</span>(p2g)<span class="sc">$</span>seRNA</span>
+<span id="cb350-4"><a href="peak2genelinkage-with-archr.html#cb350-4" tabindex="-1"></a><span class="do">## [1] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme4/Peak2GeneLinks/seRNA-Group-KNN.rds&quot;</span></span></code></pre></div>
 <p>If we set <code>returnLoops = TRUE</code>, then <code>getPeak2GeneLinks()</code> will return a loop track <code>GRanges</code> object that connects the peak and gene. As for co-accessibility, the start and end of the <code>IRanges</code> object represent the position of the peak and gene being linked. When <code>resolution = 1</code>, this links the center of the peak to the single-base TSS of the gene.</p>
-<div class="sourceCode" id="cb349"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb349-1"><a href="peak2genelinkage-with-archr.html#cb349-1" tabindex="-1"></a>p2g <span class="ot">&lt;-</span> <span class="fu">getPeak2GeneLinks</span>(</span>
-<span id="cb349-2"><a href="peak2genelinkage-with-archr.html#cb349-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb349-3"><a href="peak2genelinkage-with-archr.html#cb349-3" tabindex="-1"></a>    <span class="at">corCutOff =</span> <span class="fl">0.45</span>,</span>
-<span id="cb349-4"><a href="peak2genelinkage-with-archr.html#cb349-4" tabindex="-1"></a>    <span class="at">resolution =</span> <span class="dv">1</span>,</span>
-<span id="cb349-5"><a href="peak2genelinkage-with-archr.html#cb349-5" tabindex="-1"></a>    <span class="at">returnLoops =</span> <span class="cn">TRUE</span></span>
-<span id="cb349-6"><a href="peak2genelinkage-with-archr.html#cb349-6" tabindex="-1"></a>)</span>
-<span id="cb349-7"><a href="peak2genelinkage-with-archr.html#cb349-7" tabindex="-1"></a></span>
-<span id="cb349-8"><a href="peak2genelinkage-with-archr.html#cb349-8" tabindex="-1"></a>p2g[[<span class="dv">1</span>]]</span>
-<span id="cb349-9"><a href="peak2genelinkage-with-archr.html#cb349-9" tabindex="-1"></a><span class="do">## GRanges object with 43626 ranges and 2 metadata columns:</span></span>
-<span id="cb349-10"><a href="peak2genelinkage-with-archr.html#cb349-10" tabindex="-1"></a><span class="do">##           seqnames              ranges strand |     value         FDR</span></span>
-<span id="cb349-11"><a href="peak2genelinkage-with-archr.html#cb349-11" tabindex="-1"></a><span class="do">##              &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;   &lt;numeric&gt;</span></span>
-<span id="cb349-12"><a href="peak2genelinkage-with-archr.html#cb349-12" tabindex="-1"></a><span class="do">##       [1]     chr1       762902-801252      * |  0.595121 6.46022e-47</span></span>
-<span id="cb349-13"><a href="peak2genelinkage-with-archr.html#cb349-13" tabindex="-1"></a><span class="do">##       [2]     chr1       762938-895967      * |  0.462365 2.66174e-26</span></span>
-<span id="cb349-14"><a href="peak2genelinkage-with-archr.html#cb349-14" tabindex="-1"></a><span class="do">##       [3]     chr1       762938-948847      * |  0.550805 5.63187e-39</span></span>
-<span id="cb349-15"><a href="peak2genelinkage-with-archr.html#cb349-15" tabindex="-1"></a><span class="do">##       [4]     chr1       860530-974288      * |  0.481528 9.74742e-29</span></span>
-<span id="cb349-16"><a href="peak2genelinkage-with-archr.html#cb349-16" tabindex="-1"></a><span class="do">##       [5]     chr1       860530-975105      * |  0.523227 1.30350e-34</span></span>
-<span id="cb349-17"><a href="peak2genelinkage-with-archr.html#cb349-17" tabindex="-1"></a><span class="do">##       ...      ...                 ...    ... .       ...         ...</span></span>
-<span id="cb349-18"><a href="peak2genelinkage-with-archr.html#cb349-18" tabindex="-1"></a><span class="do">##   [43622]     chrX 153828840-153991031      * |  0.474616 7.68618e-28</span></span>
-<span id="cb349-19"><a href="peak2genelinkage-with-archr.html#cb349-19" tabindex="-1"></a><span class="do">##   [43623]     chrX 153832424-153979858      * |  0.464330 1.52289e-26</span></span>
-<span id="cb349-20"><a href="peak2genelinkage-with-archr.html#cb349-20" tabindex="-1"></a><span class="do">##   [43624]     chrX 153832424-153991031      * |  0.521417 2.44218e-34</span></span>
-<span id="cb349-21"><a href="peak2genelinkage-with-archr.html#cb349-21" tabindex="-1"></a><span class="do">##   [43625]     chrX 153980210-153991031      * |  0.599431 9.35259e-48</span></span>
-<span id="cb349-22"><a href="peak2genelinkage-with-archr.html#cb349-22" tabindex="-1"></a><span class="do">##   [43626]     chrX 153980210-154033802      * |  0.511117 8.04962e-33</span></span>
-<span id="cb349-23"><a href="peak2genelinkage-with-archr.html#cb349-23" tabindex="-1"></a><span class="do">##   -------</span></span>
-<span id="cb349-24"><a href="peak2genelinkage-with-archr.html#cb349-24" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
-<p>We can alternatively decrease the resolution of these links by setting <code>resolution = 1000</code>. This is primarily useful for plotting the links as a browser tracks because there are instances where many nearby peaks all link to the same gene and this can be difficult to visualize.</p>
-<div class="sourceCode" id="cb350"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb350-1"><a href="peak2genelinkage-with-archr.html#cb350-1" tabindex="-1"></a>p2g <span class="ot">&lt;-</span> <span class="fu">getPeak2GeneLinks</span>(</span>
-<span id="cb350-2"><a href="peak2genelinkage-with-archr.html#cb350-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb350-3"><a href="peak2genelinkage-with-archr.html#cb350-3" tabindex="-1"></a>    <span class="at">corCutOff =</span> <span class="fl">0.45</span>,</span>
-<span id="cb350-4"><a href="peak2genelinkage-with-archr.html#cb350-4" tabindex="-1"></a>    <span class="at">resolution =</span> <span class="dv">1000</span>,</span>
-<span id="cb350-5"><a href="peak2genelinkage-with-archr.html#cb350-5" tabindex="-1"></a>    <span class="at">returnLoops =</span> <span class="cn">TRUE</span></span>
-<span id="cb350-6"><a href="peak2genelinkage-with-archr.html#cb350-6" tabindex="-1"></a>)</span>
-<span id="cb350-7"><a href="peak2genelinkage-with-archr.html#cb350-7" tabindex="-1"></a></span>
-<span id="cb350-8"><a href="peak2genelinkage-with-archr.html#cb350-8" tabindex="-1"></a>p2g[[<span class="dv">1</span>]]</span>
-<span id="cb350-9"><a href="peak2genelinkage-with-archr.html#cb350-9" tabindex="-1"></a><span class="do">## GRanges object with 42045 ranges and 2 metadata columns:</span></span>
-<span id="cb350-10"><a href="peak2genelinkage-with-archr.html#cb350-10" tabindex="-1"></a><span class="do">##           seqnames              ranges strand |     value         FDR</span></span>
-<span id="cb350-11"><a href="peak2genelinkage-with-archr.html#cb350-11" tabindex="-1"></a><span class="do">##              &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;   &lt;numeric&gt;</span></span>
-<span id="cb350-12"><a href="peak2genelinkage-with-archr.html#cb350-12" tabindex="-1"></a><span class="do">##       [1]     chr1       762500-801500      * |  0.595121 6.46022e-47</span></span>
-<span id="cb350-13"><a href="peak2genelinkage-with-archr.html#cb350-13" tabindex="-1"></a><span class="do">##       [2]     chr1       762500-895500      * |  0.462365 2.66174e-26</span></span>
-<span id="cb350-14"><a href="peak2genelinkage-with-archr.html#cb350-14" tabindex="-1"></a><span class="do">##       [3]     chr1       762500-948500      * |  0.550805 5.63187e-39</span></span>
-<span id="cb350-15"><a href="peak2genelinkage-with-archr.html#cb350-15" tabindex="-1"></a><span class="do">##       [4]     chr1       860500-974500      * |  0.481528 9.74742e-29</span></span>
-<span id="cb350-16"><a href="peak2genelinkage-with-archr.html#cb350-16" tabindex="-1"></a><span class="do">##       [5]     chr1       860500-975500      * |  0.523227 1.30350e-34</span></span>
-<span id="cb350-17"><a href="peak2genelinkage-with-archr.html#cb350-17" tabindex="-1"></a><span class="do">##       ...      ...                 ...    ... .       ...         ...</span></span>
-<span id="cb350-18"><a href="peak2genelinkage-with-archr.html#cb350-18" tabindex="-1"></a><span class="do">##   [42041]     chrX 153828500-153991500      * |  0.474616 7.68618e-28</span></span>
-<span id="cb350-19"><a href="peak2genelinkage-with-archr.html#cb350-19" tabindex="-1"></a><span class="do">##   [42042]     chrX 153832500-153979500      * |  0.464330 1.52289e-26</span></span>
-<span id="cb350-20"><a href="peak2genelinkage-with-archr.html#cb350-20" tabindex="-1"></a><span class="do">##   [42043]     chrX 153832500-153991500      * |  0.521417 2.44218e-34</span></span>
-<span id="cb350-21"><a href="peak2genelinkage-with-archr.html#cb350-21" tabindex="-1"></a><span class="do">##   [42044]     chrX 153980500-153991500      * |  0.599431 9.35259e-48</span></span>
-<span id="cb350-22"><a href="peak2genelinkage-with-archr.html#cb350-22" tabindex="-1"></a><span class="do">##   [42045]     chrX 153980500-154033500      * |  0.511117 8.04962e-33</span></span>
-<span id="cb350-23"><a href="peak2genelinkage-with-archr.html#cb350-23" tabindex="-1"></a><span class="do">##   -------</span></span>
-<span id="cb350-24"><a href="peak2genelinkage-with-archr.html#cb350-24" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
-<p>Decreasing the resolution even further also decreases the total number of peak-to-gene links identified.</p>
 <div class="sourceCode" id="cb351"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb351-1"><a href="peak2genelinkage-with-archr.html#cb351-1" tabindex="-1"></a>p2g <span class="ot">&lt;-</span> <span class="fu">getPeak2GeneLinks</span>(</span>
 <span id="cb351-2"><a href="peak2genelinkage-with-archr.html#cb351-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
 <span id="cb351-3"><a href="peak2genelinkage-with-archr.html#cb351-3" tabindex="-1"></a>    <span class="at">corCutOff =</span> <span class="fl">0.45</span>,</span>
-<span id="cb351-4"><a href="peak2genelinkage-with-archr.html#cb351-4" tabindex="-1"></a>    <span class="at">resolution =</span> <span class="dv">10000</span>,</span>
+<span id="cb351-4"><a href="peak2genelinkage-with-archr.html#cb351-4" tabindex="-1"></a>    <span class="at">resolution =</span> <span class="dv">1</span>,</span>
 <span id="cb351-5"><a href="peak2genelinkage-with-archr.html#cb351-5" tabindex="-1"></a>    <span class="at">returnLoops =</span> <span class="cn">TRUE</span></span>
 <span id="cb351-6"><a href="peak2genelinkage-with-archr.html#cb351-6" tabindex="-1"></a>)</span>
 <span id="cb351-7"><a href="peak2genelinkage-with-archr.html#cb351-7" tabindex="-1"></a></span>
 <span id="cb351-8"><a href="peak2genelinkage-with-archr.html#cb351-8" tabindex="-1"></a>p2g[[<span class="dv">1</span>]]</span>
-<span id="cb351-9"><a href="peak2genelinkage-with-archr.html#cb351-9" tabindex="-1"></a><span class="do">## GRanges object with 33725 ranges and 2 metadata columns:</span></span>
+<span id="cb351-9"><a href="peak2genelinkage-with-archr.html#cb351-9" tabindex="-1"></a><span class="do">## GRanges object with 43626 ranges and 2 metadata columns:</span></span>
 <span id="cb351-10"><a href="peak2genelinkage-with-archr.html#cb351-10" tabindex="-1"></a><span class="do">##           seqnames              ranges strand |     value         FDR</span></span>
 <span id="cb351-11"><a href="peak2genelinkage-with-archr.html#cb351-11" tabindex="-1"></a><span class="do">##              &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;   &lt;numeric&gt;</span></span>
-<span id="cb351-12"><a href="peak2genelinkage-with-archr.html#cb351-12" tabindex="-1"></a><span class="do">##       [1]     chr1       765000-805000      * |  0.595121 6.46022e-47</span></span>
-<span id="cb351-13"><a href="peak2genelinkage-with-archr.html#cb351-13" tabindex="-1"></a><span class="do">##       [2]     chr1       765000-895000      * |  0.462365 2.66174e-26</span></span>
-<span id="cb351-14"><a href="peak2genelinkage-with-archr.html#cb351-14" tabindex="-1"></a><span class="do">##       [3]     chr1       765000-945000      * |  0.550805 5.63187e-39</span></span>
-<span id="cb351-15"><a href="peak2genelinkage-with-archr.html#cb351-15" tabindex="-1"></a><span class="do">##       [4]     chr1       865000-975000      * |  0.523227 1.30350e-34</span></span>
-<span id="cb351-16"><a href="peak2genelinkage-with-archr.html#cb351-16" tabindex="-1"></a><span class="do">##       [5]     chr1              895000      * |  0.474614 7.69115e-28</span></span>
+<span id="cb351-12"><a href="peak2genelinkage-with-archr.html#cb351-12" tabindex="-1"></a><span class="do">##       [1]     chr1       762902-801252      * |  0.595121 6.46022e-47</span></span>
+<span id="cb351-13"><a href="peak2genelinkage-with-archr.html#cb351-13" tabindex="-1"></a><span class="do">##       [2]     chr1       762938-895967      * |  0.462365 2.66174e-26</span></span>
+<span id="cb351-14"><a href="peak2genelinkage-with-archr.html#cb351-14" tabindex="-1"></a><span class="do">##       [3]     chr1       762938-948847      * |  0.550805 5.63187e-39</span></span>
+<span id="cb351-15"><a href="peak2genelinkage-with-archr.html#cb351-15" tabindex="-1"></a><span class="do">##       [4]     chr1       860530-974288      * |  0.481528 9.74742e-29</span></span>
+<span id="cb351-16"><a href="peak2genelinkage-with-archr.html#cb351-16" tabindex="-1"></a><span class="do">##       [5]     chr1       860530-975105      * |  0.523227 1.30350e-34</span></span>
 <span id="cb351-17"><a href="peak2genelinkage-with-archr.html#cb351-17" tabindex="-1"></a><span class="do">##       ...      ...                 ...    ... .       ...         ...</span></span>
-<span id="cb351-18"><a href="peak2genelinkage-with-archr.html#cb351-18" tabindex="-1"></a><span class="do">##   [33721]     chrX 153825000-153995000      * |  0.474616 7.68618e-28</span></span>
-<span id="cb351-19"><a href="peak2genelinkage-with-archr.html#cb351-19" tabindex="-1"></a><span class="do">##   [33722]     chrX 153835000-153975000      * |  0.464330 1.52289e-26</span></span>
-<span id="cb351-20"><a href="peak2genelinkage-with-archr.html#cb351-20" tabindex="-1"></a><span class="do">##   [33723]     chrX 153835000-153995000      * |  0.521417 2.44218e-34</span></span>
-<span id="cb351-21"><a href="peak2genelinkage-with-archr.html#cb351-21" tabindex="-1"></a><span class="do">##   [33724]     chrX 153985000-153995000      * |  0.599431 9.35259e-48</span></span>
-<span id="cb351-22"><a href="peak2genelinkage-with-archr.html#cb351-22" tabindex="-1"></a><span class="do">##   [33725]     chrX 153985000-154035000      * |  0.511117 8.04962e-33</span></span>
+<span id="cb351-18"><a href="peak2genelinkage-with-archr.html#cb351-18" tabindex="-1"></a><span class="do">##   [43622]     chrX 153828840-153991031      * |  0.474616 7.68618e-28</span></span>
+<span id="cb351-19"><a href="peak2genelinkage-with-archr.html#cb351-19" tabindex="-1"></a><span class="do">##   [43623]     chrX 153832424-153979858      * |  0.464330 1.52289e-26</span></span>
+<span id="cb351-20"><a href="peak2genelinkage-with-archr.html#cb351-20" tabindex="-1"></a><span class="do">##   [43624]     chrX 153832424-153991031      * |  0.521417 2.44218e-34</span></span>
+<span id="cb351-21"><a href="peak2genelinkage-with-archr.html#cb351-21" tabindex="-1"></a><span class="do">##   [43625]     chrX 153980210-153991031      * |  0.599431 9.35259e-48</span></span>
+<span id="cb351-22"><a href="peak2genelinkage-with-archr.html#cb351-22" tabindex="-1"></a><span class="do">##   [43626]     chrX 153980210-154033802      * |  0.511117 8.04962e-33</span></span>
 <span id="cb351-23"><a href="peak2genelinkage-with-archr.html#cb351-23" tabindex="-1"></a><span class="do">##   -------</span></span>
 <span id="cb351-24"><a href="peak2genelinkage-with-archr.html#cb351-24" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
+<p>We can alternatively decrease the resolution of these links by setting <code>resolution = 1000</code>. This is primarily useful for plotting the links as a browser tracks because there are instances where many nearby peaks all link to the same gene and this can be difficult to visualize.</p>
+<div class="sourceCode" id="cb352"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb352-1"><a href="peak2genelinkage-with-archr.html#cb352-1" tabindex="-1"></a>p2g <span class="ot">&lt;-</span> <span class="fu">getPeak2GeneLinks</span>(</span>
+<span id="cb352-2"><a href="peak2genelinkage-with-archr.html#cb352-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb352-3"><a href="peak2genelinkage-with-archr.html#cb352-3" tabindex="-1"></a>    <span class="at">corCutOff =</span> <span class="fl">0.45</span>,</span>
+<span id="cb352-4"><a href="peak2genelinkage-with-archr.html#cb352-4" tabindex="-1"></a>    <span class="at">resolution =</span> <span class="dv">1000</span>,</span>
+<span id="cb352-5"><a href="peak2genelinkage-with-archr.html#cb352-5" tabindex="-1"></a>    <span class="at">returnLoops =</span> <span class="cn">TRUE</span></span>
+<span id="cb352-6"><a href="peak2genelinkage-with-archr.html#cb352-6" tabindex="-1"></a>)</span>
+<span id="cb352-7"><a href="peak2genelinkage-with-archr.html#cb352-7" tabindex="-1"></a></span>
+<span id="cb352-8"><a href="peak2genelinkage-with-archr.html#cb352-8" tabindex="-1"></a>p2g[[<span class="dv">1</span>]]</span>
+<span id="cb352-9"><a href="peak2genelinkage-with-archr.html#cb352-9" tabindex="-1"></a><span class="do">## GRanges object with 42045 ranges and 2 metadata columns:</span></span>
+<span id="cb352-10"><a href="peak2genelinkage-with-archr.html#cb352-10" tabindex="-1"></a><span class="do">##           seqnames              ranges strand |     value         FDR</span></span>
+<span id="cb352-11"><a href="peak2genelinkage-with-archr.html#cb352-11" tabindex="-1"></a><span class="do">##              &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;   &lt;numeric&gt;</span></span>
+<span id="cb352-12"><a href="peak2genelinkage-with-archr.html#cb352-12" tabindex="-1"></a><span class="do">##       [1]     chr1       762500-801500      * |  0.595121 6.46022e-47</span></span>
+<span id="cb352-13"><a href="peak2genelinkage-with-archr.html#cb352-13" tabindex="-1"></a><span class="do">##       [2]     chr1       762500-895500      * |  0.462365 2.66174e-26</span></span>
+<span id="cb352-14"><a href="peak2genelinkage-with-archr.html#cb352-14" tabindex="-1"></a><span class="do">##       [3]     chr1       762500-948500      * |  0.550805 5.63187e-39</span></span>
+<span id="cb352-15"><a href="peak2genelinkage-with-archr.html#cb352-15" tabindex="-1"></a><span class="do">##       [4]     chr1       860500-974500      * |  0.481528 9.74742e-29</span></span>
+<span id="cb352-16"><a href="peak2genelinkage-with-archr.html#cb352-16" tabindex="-1"></a><span class="do">##       [5]     chr1       860500-975500      * |  0.523227 1.30350e-34</span></span>
+<span id="cb352-17"><a href="peak2genelinkage-with-archr.html#cb352-17" tabindex="-1"></a><span class="do">##       ...      ...                 ...    ... .       ...         ...</span></span>
+<span id="cb352-18"><a href="peak2genelinkage-with-archr.html#cb352-18" tabindex="-1"></a><span class="do">##   [42041]     chrX 153828500-153991500      * |  0.474616 7.68618e-28</span></span>
+<span id="cb352-19"><a href="peak2genelinkage-with-archr.html#cb352-19" tabindex="-1"></a><span class="do">##   [42042]     chrX 153832500-153979500      * |  0.464330 1.52289e-26</span></span>
+<span id="cb352-20"><a href="peak2genelinkage-with-archr.html#cb352-20" tabindex="-1"></a><span class="do">##   [42043]     chrX 153832500-153991500      * |  0.521417 2.44218e-34</span></span>
+<span id="cb352-21"><a href="peak2genelinkage-with-archr.html#cb352-21" tabindex="-1"></a><span class="do">##   [42044]     chrX 153980500-153991500      * |  0.599431 9.35259e-48</span></span>
+<span id="cb352-22"><a href="peak2genelinkage-with-archr.html#cb352-22" tabindex="-1"></a><span class="do">##   [42045]     chrX 153980500-154033500      * |  0.511117 8.04962e-33</span></span>
+<span id="cb352-23"><a href="peak2genelinkage-with-archr.html#cb352-23" tabindex="-1"></a><span class="do">##   -------</span></span>
+<span id="cb352-24"><a href="peak2genelinkage-with-archr.html#cb352-24" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
+<p>Decreasing the resolution even further also decreases the total number of peak-to-gene links identified.</p>
+<div class="sourceCode" id="cb353"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb353-1"><a href="peak2genelinkage-with-archr.html#cb353-1" tabindex="-1"></a>p2g <span class="ot">&lt;-</span> <span class="fu">getPeak2GeneLinks</span>(</span>
+<span id="cb353-2"><a href="peak2genelinkage-with-archr.html#cb353-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb353-3"><a href="peak2genelinkage-with-archr.html#cb353-3" tabindex="-1"></a>    <span class="at">corCutOff =</span> <span class="fl">0.45</span>,</span>
+<span id="cb353-4"><a href="peak2genelinkage-with-archr.html#cb353-4" tabindex="-1"></a>    <span class="at">resolution =</span> <span class="dv">10000</span>,</span>
+<span id="cb353-5"><a href="peak2genelinkage-with-archr.html#cb353-5" tabindex="-1"></a>    <span class="at">returnLoops =</span> <span class="cn">TRUE</span></span>
+<span id="cb353-6"><a href="peak2genelinkage-with-archr.html#cb353-6" tabindex="-1"></a>)</span>
+<span id="cb353-7"><a href="peak2genelinkage-with-archr.html#cb353-7" tabindex="-1"></a></span>
+<span id="cb353-8"><a href="peak2genelinkage-with-archr.html#cb353-8" tabindex="-1"></a>p2g[[<span class="dv">1</span>]]</span>
+<span id="cb353-9"><a href="peak2genelinkage-with-archr.html#cb353-9" tabindex="-1"></a><span class="do">## GRanges object with 33725 ranges and 2 metadata columns:</span></span>
+<span id="cb353-10"><a href="peak2genelinkage-with-archr.html#cb353-10" tabindex="-1"></a><span class="do">##           seqnames              ranges strand |     value         FDR</span></span>
+<span id="cb353-11"><a href="peak2genelinkage-with-archr.html#cb353-11" tabindex="-1"></a><span class="do">##              &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;   &lt;numeric&gt;</span></span>
+<span id="cb353-12"><a href="peak2genelinkage-with-archr.html#cb353-12" tabindex="-1"></a><span class="do">##       [1]     chr1       765000-805000      * |  0.595121 6.46022e-47</span></span>
+<span id="cb353-13"><a href="peak2genelinkage-with-archr.html#cb353-13" tabindex="-1"></a><span class="do">##       [2]     chr1       765000-895000      * |  0.462365 2.66174e-26</span></span>
+<span id="cb353-14"><a href="peak2genelinkage-with-archr.html#cb353-14" tabindex="-1"></a><span class="do">##       [3]     chr1       765000-945000      * |  0.550805 5.63187e-39</span></span>
+<span id="cb353-15"><a href="peak2genelinkage-with-archr.html#cb353-15" tabindex="-1"></a><span class="do">##       [4]     chr1       865000-975000      * |  0.523227 1.30350e-34</span></span>
+<span id="cb353-16"><a href="peak2genelinkage-with-archr.html#cb353-16" tabindex="-1"></a><span class="do">##       [5]     chr1              895000      * |  0.474614 7.69115e-28</span></span>
+<span id="cb353-17"><a href="peak2genelinkage-with-archr.html#cb353-17" tabindex="-1"></a><span class="do">##       ...      ...                 ...    ... .       ...         ...</span></span>
+<span id="cb353-18"><a href="peak2genelinkage-with-archr.html#cb353-18" tabindex="-1"></a><span class="do">##   [33721]     chrX 153825000-153995000      * |  0.474616 7.68618e-28</span></span>
+<span id="cb353-19"><a href="peak2genelinkage-with-archr.html#cb353-19" tabindex="-1"></a><span class="do">##   [33722]     chrX 153835000-153975000      * |  0.464330 1.52289e-26</span></span>
+<span id="cb353-20"><a href="peak2genelinkage-with-archr.html#cb353-20" tabindex="-1"></a><span class="do">##   [33723]     chrX 153835000-153995000      * |  0.521417 2.44218e-34</span></span>
+<span id="cb353-21"><a href="peak2genelinkage-with-archr.html#cb353-21" tabindex="-1"></a><span class="do">##   [33724]     chrX 153985000-153995000      * |  0.599431 9.35259e-48</span></span>
+<span id="cb353-22"><a href="peak2genelinkage-with-archr.html#cb353-22" tabindex="-1"></a><span class="do">##   [33725]     chrX 153985000-154035000      * |  0.511117 8.04962e-33</span></span>
+<span id="cb353-23"><a href="peak2genelinkage-with-archr.html#cb353-23" tabindex="-1"></a><span class="do">##   -------</span></span>
+<span id="cb353-24"><a href="peak2genelinkage-with-archr.html#cb353-24" tabindex="-1"></a><span class="do">##   seqinfo: 23 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
 <p>You may find that you would like to use a statistical approach to evaluate peak-to-gene associations. Such an approach was developed in <a href="https://doi.org/10.1016/j.molcel.2021.10.013">Regner et al. 2021</a> and involves using permutation testing to empirically derive an FDR. This approach is quite computationally expensive but has been implemented as an option in <code>addPeak2GeneLinks()</code> via the <code>addPermutedPval</code> parameter. For more information on this approach, see <a href="https://github.com/GreenleafLab/ArchR/discussions/1149">this discussion post</a>.</p>
 <div id="plotting-browser-tracks-with-peak-to-gene-links" class="section level3 hasAnchor" number="17.3.1">
 <h3><span class="header-section-number">17.3.1</span> Plotting browser tracks with peak-to-gene links<a href="peak2genelinkage-with-archr.html#plotting-browser-tracks-with-peak-to-gene-links" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>To plot these peak-to-gene links as a browser track, we use the same workflow shown for co-accessibility in the previous section. Here we use the <code>plotBrowserTrack()</code> function</p>
-<div class="sourceCode" id="cb352"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb352-1"><a href="peak2genelinkage-with-archr.html#cb352-1" tabindex="-1"></a>markerGenes  <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb352-2"><a href="peak2genelinkage-with-archr.html#cb352-2" tabindex="-1"></a>    <span class="st">&quot;CD34&quot;</span>, <span class="co">#Early Progenitor</span></span>
-<span id="cb352-3"><a href="peak2genelinkage-with-archr.html#cb352-3" tabindex="-1"></a>    <span class="st">&quot;GATA1&quot;</span>, <span class="co">#Erythroid</span></span>
-<span id="cb352-4"><a href="peak2genelinkage-with-archr.html#cb352-4" tabindex="-1"></a>    <span class="st">&quot;PAX5&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="co">#B-Cell Trajectory</span></span>
-<span id="cb352-5"><a href="peak2genelinkage-with-archr.html#cb352-5" tabindex="-1"></a>    <span class="st">&quot;CD14&quot;</span>, <span class="co">#Monocytes</span></span>
-<span id="cb352-6"><a href="peak2genelinkage-with-archr.html#cb352-6" tabindex="-1"></a>    <span class="st">&quot;CD3D&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;IL7R&quot;</span> <span class="co">#TCells</span></span>
-<span id="cb352-7"><a href="peak2genelinkage-with-archr.html#cb352-7" tabindex="-1"></a>  )</span>
-<span id="cb352-8"><a href="peak2genelinkage-with-archr.html#cb352-8" tabindex="-1"></a></span>
-<span id="cb352-9"><a href="peak2genelinkage-with-archr.html#cb352-9" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plotBrowserTrack</span>(</span>
-<span id="cb352-10"><a href="peak2genelinkage-with-archr.html#cb352-10" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5, </span>
-<span id="cb352-11"><a href="peak2genelinkage-with-archr.html#cb352-11" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>, </span>
-<span id="cb352-12"><a href="peak2genelinkage-with-archr.html#cb352-12" tabindex="-1"></a>    <span class="at">geneSymbol =</span> markerGenes, </span>
-<span id="cb352-13"><a href="peak2genelinkage-with-archr.html#cb352-13" tabindex="-1"></a>    <span class="at">upstream =</span> <span class="dv">50000</span>,</span>
-<span id="cb352-14"><a href="peak2genelinkage-with-archr.html#cb352-14" tabindex="-1"></a>    <span class="at">downstream =</span> <span class="dv">50000</span>,</span>
-<span id="cb352-15"><a href="peak2genelinkage-with-archr.html#cb352-15" tabindex="-1"></a>    <span class="at">loops =</span> <span class="fu">getPeak2GeneLinks</span>(projHeme5)</span>
-<span id="cb352-16"><a href="peak2genelinkage-with-archr.html#cb352-16" tabindex="-1"></a>)</span>
-<span id="cb352-17"><a href="peak2genelinkage-with-archr.html#cb352-17" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotBrowserTrack-1a154ed4584-Date-2025-01-23_Time-22-52-33.004531.log</span></span>
-<span id="cb352-18"><a href="peak2genelinkage-with-archr.html#cb352-18" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb352-19"><a href="peak2genelinkage-with-archr.html#cb352-19" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:33.71393 : Validating Region, 0.012 mins elapsed.</span></span>
-<span id="cb352-20"><a href="peak2genelinkage-with-archr.html#cb352-20" tabindex="-1"></a><span class="do">## GRanges object with 9 ranges and 2 metadata columns:</span></span>
-<span id="cb352-21"><a href="peak2genelinkage-with-archr.html#cb352-21" tabindex="-1"></a><span class="do">##       seqnames              ranges strand |     gene_id      symbol</span></span>
-<span id="cb352-22"><a href="peak2genelinkage-with-archr.html#cb352-22" tabindex="-1"></a><span class="do">##          &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt; &lt;character&gt;</span></span>
-<span id="cb352-23"><a href="peak2genelinkage-with-archr.html#cb352-23" tabindex="-1"></a><span class="do">##   [1]     chr1 208059883-208084683      - |         947        CD34</span></span>
-<span id="cb352-24"><a href="peak2genelinkage-with-archr.html#cb352-24" tabindex="-1"></a><span class="do">##   [2]     chrX   48644982-48652717      + |        2623       GATA1</span></span>
-<span id="cb352-25"><a href="peak2genelinkage-with-archr.html#cb352-25" tabindex="-1"></a><span class="do">##   [3]     chr9   36838531-37034476      - |        5079        PAX5</span></span>
-<span id="cb352-26"><a href="peak2genelinkage-with-archr.html#cb352-26" tabindex="-1"></a><span class="do">##   [4]    chr11   60223282-60238225      + |         931       MS4A1</span></span>
-<span id="cb352-27"><a href="peak2genelinkage-with-archr.html#cb352-27" tabindex="-1"></a><span class="do">##   [5]     chr5 140011313-140013286      - |         929        CD14</span></span>
-<span id="cb352-28"><a href="peak2genelinkage-with-archr.html#cb352-28" tabindex="-1"></a><span class="do">##   [6]    chr11 118209789-118213459      - |         915        CD3D</span></span>
-<span id="cb352-29"><a href="peak2genelinkage-with-archr.html#cb352-29" tabindex="-1"></a><span class="do">##   [7]     chr2   87011728-87035519      - |         925        CD8A</span></span>
-<span id="cb352-30"><a href="peak2genelinkage-with-archr.html#cb352-30" tabindex="-1"></a><span class="do">##   [8]    chr17   45810610-45823485      + |       30009       TBX21</span></span>
-<span id="cb352-31"><a href="peak2genelinkage-with-archr.html#cb352-31" tabindex="-1"></a><span class="do">##   [9]     chr5   35856977-35879705      + |        3575        IL7R</span></span>
-<span id="cb352-32"><a href="peak2genelinkage-with-archr.html#cb352-32" tabindex="-1"></a><span class="do">##   -------</span></span>
-<span id="cb352-33"><a href="peak2genelinkage-with-archr.html#cb352-33" tabindex="-1"></a><span class="do">##   seqinfo: 24 sequences from hg19 genome</span></span>
-<span id="cb352-34"><a href="peak2genelinkage-with-archr.html#cb352-34" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:33.792755 : Adding Bulk Tracks (1 of 9), 0.013 mins elapsed.</span></span>
-<span id="cb352-35"><a href="peak2genelinkage-with-archr.html#cb352-35" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:35.992418 : Adding Feature Tracks (1 of 9), 0.05 mins elapsed.</span></span>
-<span id="cb352-36"><a href="peak2genelinkage-with-archr.html#cb352-36" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:36.085682 : Adding Loop Tracks (1 of 9), 0.051 mins elapsed.</span></span>
-<span id="cb352-37"><a href="peak2genelinkage-with-archr.html#cb352-37" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:36.236578 : Adding Gene Tracks (1 of 9), 0.054 mins elapsed.</span></span>
-<span id="cb352-38"><a href="peak2genelinkage-with-archr.html#cb352-38" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:36.47678 : Plotting, 0.058 mins elapsed.</span></span>
-<span id="cb352-39"><a href="peak2genelinkage-with-archr.html#cb352-39" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:37.398309 : Adding Bulk Tracks (2 of 9), 0.073 mins elapsed.</span></span>
-<span id="cb352-40"><a href="peak2genelinkage-with-archr.html#cb352-40" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:39.372914 : Adding Feature Tracks (2 of 9), 0.106 mins elapsed.</span></span>
-<span id="cb352-41"><a href="peak2genelinkage-with-archr.html#cb352-41" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:39.462504 : Adding Loop Tracks (2 of 9), 0.108 mins elapsed.</span></span>
-<span id="cb352-42"><a href="peak2genelinkage-with-archr.html#cb352-42" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:39.597364 : Adding Gene Tracks (2 of 9), 0.11 mins elapsed.</span></span>
-<span id="cb352-43"><a href="peak2genelinkage-with-archr.html#cb352-43" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:39.828398 : Plotting, 0.114 mins elapsed.</span></span>
-<span id="cb352-44"><a href="peak2genelinkage-with-archr.html#cb352-44" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:41.049866 : Adding Bulk Tracks (3 of 9), 0.134 mins elapsed.</span></span>
-<span id="cb352-45"><a href="peak2genelinkage-with-archr.html#cb352-45" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:43.127393 : Adding Feature Tracks (3 of 9), 0.169 mins elapsed.</span></span>
-<span id="cb352-46"><a href="peak2genelinkage-with-archr.html#cb352-46" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:43.231145 : Adding Loop Tracks (3 of 9), 0.17 mins elapsed.</span></span>
-<span id="cb352-47"><a href="peak2genelinkage-with-archr.html#cb352-47" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:43.48112 : Adding Gene Tracks (3 of 9), 0.175 mins elapsed.</span></span>
-<span id="cb352-48"><a href="peak2genelinkage-with-archr.html#cb352-48" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:43.708545 : Plotting, 0.178 mins elapsed.</span></span>
-<span id="cb352-49"><a href="peak2genelinkage-with-archr.html#cb352-49" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:44.629535 : Adding Bulk Tracks (4 of 9), 0.194 mins elapsed.</span></span>
-<span id="cb352-50"><a href="peak2genelinkage-with-archr.html#cb352-50" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:44.360904 : Adding Feature Tracks (4 of 9), 0.189 mins elapsed.</span></span>
-<span id="cb352-51"><a href="peak2genelinkage-with-archr.html#cb352-51" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:44.44795 : Adding Loop Tracks (4 of 9), 0.191 mins elapsed.</span></span>
-<span id="cb352-52"><a href="peak2genelinkage-with-archr.html#cb352-52" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:44.601731 : Adding Gene Tracks (4 of 9), 0.193 mins elapsed.</span></span>
-<span id="cb352-53"><a href="peak2genelinkage-with-archr.html#cb352-53" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:44.969776 : Plotting, 0.199 mins elapsed.</span></span>
-<span id="cb352-54"><a href="peak2genelinkage-with-archr.html#cb352-54" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:45.724746 : Adding Bulk Tracks (5 of 9), 0.212 mins elapsed.</span></span>
-<span id="cb352-55"><a href="peak2genelinkage-with-archr.html#cb352-55" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:47.708503 : Adding Feature Tracks (5 of 9), 0.245 mins elapsed.</span></span>
-<span id="cb352-56"><a href="peak2genelinkage-with-archr.html#cb352-56" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:47.796831 : Adding Loop Tracks (5 of 9), 0.247 mins elapsed.</span></span>
-<span id="cb352-57"><a href="peak2genelinkage-with-archr.html#cb352-57" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:48.003863 : Adding Gene Tracks (5 of 9), 0.25 mins elapsed.</span></span>
-<span id="cb352-58"><a href="peak2genelinkage-with-archr.html#cb352-58" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:48.212422 : Plotting, 0.254 mins elapsed.</span></span>
-<span id="cb352-59"><a href="peak2genelinkage-with-archr.html#cb352-59" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:49.068602 : Adding Bulk Tracks (6 of 9), 0.268 mins elapsed.</span></span>
-<span id="cb352-60"><a href="peak2genelinkage-with-archr.html#cb352-60" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:51.216736 : Adding Feature Tracks (6 of 9), 0.304 mins elapsed.</span></span>
-<span id="cb352-61"><a href="peak2genelinkage-with-archr.html#cb352-61" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:51.299276 : Adding Loop Tracks (6 of 9), 0.305 mins elapsed.</span></span>
-<span id="cb352-62"><a href="peak2genelinkage-with-archr.html#cb352-62" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:51.804137 : Adding Gene Tracks (6 of 9), 0.313 mins elapsed.</span></span>
-<span id="cb352-63"><a href="peak2genelinkage-with-archr.html#cb352-63" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:52.018038 : Plotting, 0.317 mins elapsed.</span></span>
-<span id="cb352-64"><a href="peak2genelinkage-with-archr.html#cb352-64" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:52.867649 : Adding Bulk Tracks (7 of 9), 0.331 mins elapsed.</span></span>
-<span id="cb352-65"><a href="peak2genelinkage-with-archr.html#cb352-65" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:54.990131 : Adding Feature Tracks (7 of 9), 0.366 mins elapsed.</span></span>
-<span id="cb352-66"><a href="peak2genelinkage-with-archr.html#cb352-66" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:55.074264 : Adding Loop Tracks (7 of 9), 0.368 mins elapsed.</span></span>
-<span id="cb352-67"><a href="peak2genelinkage-with-archr.html#cb352-67" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:55.312017 : Adding Gene Tracks (7 of 9), 0.372 mins elapsed.</span></span>
-<span id="cb352-68"><a href="peak2genelinkage-with-archr.html#cb352-68" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:55.548449 : Plotting, 0.376 mins elapsed.</span></span>
-<span id="cb352-69"><a href="peak2genelinkage-with-archr.html#cb352-69" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:56.564187 : Adding Bulk Tracks (8 of 9), 0.393 mins elapsed.</span></span>
-<span id="cb352-70"><a href="peak2genelinkage-with-archr.html#cb352-70" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:58.676991 : Adding Feature Tracks (8 of 9), 0.428 mins elapsed.</span></span>
-<span id="cb352-71"><a href="peak2genelinkage-with-archr.html#cb352-71" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:58.759855 : Adding Loop Tracks (8 of 9), 0.429 mins elapsed.</span></span>
-<span id="cb352-72"><a href="peak2genelinkage-with-archr.html#cb352-72" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:59.070109 : Adding Gene Tracks (8 of 9), 0.434 mins elapsed.</span></span>
-<span id="cb352-73"><a href="peak2genelinkage-with-archr.html#cb352-73" tabindex="-1"></a><span class="do">## 2025-01-23 22:52:59.288525 : Plotting, 0.438 mins elapsed.</span></span>
-<span id="cb352-74"><a href="peak2genelinkage-with-archr.html#cb352-74" tabindex="-1"></a><span class="do">## 2025-01-23 22:53:00.190516 : Adding Bulk Tracks (9 of 9), 0.453 mins elapsed.</span></span>
-<span id="cb352-75"><a href="peak2genelinkage-with-archr.html#cb352-75" tabindex="-1"></a><span class="do">## 2025-01-23 22:53:02.162617 : Adding Feature Tracks (9 of 9), 0.486 mins elapsed.</span></span>
-<span id="cb352-76"><a href="peak2genelinkage-with-archr.html#cb352-76" tabindex="-1"></a><span class="do">## 2025-01-23 22:53:02.250545 : Adding Loop Tracks (9 of 9), 0.487 mins elapsed.</span></span>
-<span id="cb352-77"><a href="peak2genelinkage-with-archr.html#cb352-77" tabindex="-1"></a><span class="do">## 2025-01-23 22:53:02.448608 : Adding Gene Tracks (9 of 9), 0.491 mins elapsed.</span></span>
-<span id="cb352-78"><a href="peak2genelinkage-with-archr.html#cb352-78" tabindex="-1"></a><span class="do">## 2025-01-23 22:53:02.816445 : Plotting, 0.497 mins elapsed.</span></span>
-<span id="cb352-79"><a href="peak2genelinkage-with-archr.html#cb352-79" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotBrowserTrack-1a154ed4584-Date-2025-01-23_Time-22-52-33.004531.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb354"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb354-1"><a href="peak2genelinkage-with-archr.html#cb354-1" tabindex="-1"></a>markerGenes  <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb354-2"><a href="peak2genelinkage-with-archr.html#cb354-2" tabindex="-1"></a>    <span class="st">&quot;CD34&quot;</span>, <span class="co">#Early Progenitor</span></span>
+<span id="cb354-3"><a href="peak2genelinkage-with-archr.html#cb354-3" tabindex="-1"></a>    <span class="st">&quot;GATA1&quot;</span>, <span class="co">#Erythroid</span></span>
+<span id="cb354-4"><a href="peak2genelinkage-with-archr.html#cb354-4" tabindex="-1"></a>    <span class="st">&quot;PAX5&quot;</span>, <span class="st">&quot;MS4A1&quot;</span>, <span class="co">#B-Cell Trajectory</span></span>
+<span id="cb354-5"><a href="peak2genelinkage-with-archr.html#cb354-5" tabindex="-1"></a>    <span class="st">&quot;CD14&quot;</span>, <span class="co">#Monocytes</span></span>
+<span id="cb354-6"><a href="peak2genelinkage-with-archr.html#cb354-6" tabindex="-1"></a>    <span class="st">&quot;CD3D&quot;</span>, <span class="st">&quot;CD8A&quot;</span>, <span class="st">&quot;TBX21&quot;</span>, <span class="st">&quot;IL7R&quot;</span> <span class="co">#TCells</span></span>
+<span id="cb354-7"><a href="peak2genelinkage-with-archr.html#cb354-7" tabindex="-1"></a>  )</span>
+<span id="cb354-8"><a href="peak2genelinkage-with-archr.html#cb354-8" tabindex="-1"></a></span>
+<span id="cb354-9"><a href="peak2genelinkage-with-archr.html#cb354-9" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plotBrowserTrack</span>(</span>
+<span id="cb354-10"><a href="peak2genelinkage-with-archr.html#cb354-10" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5, </span>
+<span id="cb354-11"><a href="peak2genelinkage-with-archr.html#cb354-11" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>, </span>
+<span id="cb354-12"><a href="peak2genelinkage-with-archr.html#cb354-12" tabindex="-1"></a>    <span class="at">geneSymbol =</span> markerGenes, </span>
+<span id="cb354-13"><a href="peak2genelinkage-with-archr.html#cb354-13" tabindex="-1"></a>    <span class="at">upstream =</span> <span class="dv">50000</span>,</span>
+<span id="cb354-14"><a href="peak2genelinkage-with-archr.html#cb354-14" tabindex="-1"></a>    <span class="at">downstream =</span> <span class="dv">50000</span>,</span>
+<span id="cb354-15"><a href="peak2genelinkage-with-archr.html#cb354-15" tabindex="-1"></a>    <span class="at">loops =</span> <span class="fu">getPeak2GeneLinks</span>(projHeme5)</span>
+<span id="cb354-16"><a href="peak2genelinkage-with-archr.html#cb354-16" tabindex="-1"></a>)</span>
+<span id="cb354-17"><a href="peak2genelinkage-with-archr.html#cb354-17" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotBrowserTrack-925b468a1-Date-2025-02-06_Time-02-49-03.297189.log</span></span>
+<span id="cb354-18"><a href="peak2genelinkage-with-archr.html#cb354-18" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb354-19"><a href="peak2genelinkage-with-archr.html#cb354-19" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:01.985563 : Validating Region, 0.022 mins elapsed.</span></span>
+<span id="cb354-20"><a href="peak2genelinkage-with-archr.html#cb354-20" tabindex="-1"></a><span class="do">## GRanges object with 9 ranges and 2 metadata columns:</span></span>
+<span id="cb354-21"><a href="peak2genelinkage-with-archr.html#cb354-21" tabindex="-1"></a><span class="do">##       seqnames              ranges strand |     gene_id      symbol</span></span>
+<span id="cb354-22"><a href="peak2genelinkage-with-archr.html#cb354-22" tabindex="-1"></a><span class="do">##          &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt; &lt;character&gt;</span></span>
+<span id="cb354-23"><a href="peak2genelinkage-with-archr.html#cb354-23" tabindex="-1"></a><span class="do">##   [1]     chr1 208059883-208084683      - |         947        CD34</span></span>
+<span id="cb354-24"><a href="peak2genelinkage-with-archr.html#cb354-24" tabindex="-1"></a><span class="do">##   [2]     chrX   48644982-48652717      + |        2623       GATA1</span></span>
+<span id="cb354-25"><a href="peak2genelinkage-with-archr.html#cb354-25" tabindex="-1"></a><span class="do">##   [3]     chr9   36838531-37034476      - |        5079        PAX5</span></span>
+<span id="cb354-26"><a href="peak2genelinkage-with-archr.html#cb354-26" tabindex="-1"></a><span class="do">##   [4]    chr11   60223282-60238225      + |         931       MS4A1</span></span>
+<span id="cb354-27"><a href="peak2genelinkage-with-archr.html#cb354-27" tabindex="-1"></a><span class="do">##   [5]     chr5 140011313-140013286      - |         929        CD14</span></span>
+<span id="cb354-28"><a href="peak2genelinkage-with-archr.html#cb354-28" tabindex="-1"></a><span class="do">##   [6]    chr11 118209789-118213459      - |         915        CD3D</span></span>
+<span id="cb354-29"><a href="peak2genelinkage-with-archr.html#cb354-29" tabindex="-1"></a><span class="do">##   [7]     chr2   87011728-87035519      - |         925        CD8A</span></span>
+<span id="cb354-30"><a href="peak2genelinkage-with-archr.html#cb354-30" tabindex="-1"></a><span class="do">##   [8]    chr17   45810610-45823485      + |       30009       TBX21</span></span>
+<span id="cb354-31"><a href="peak2genelinkage-with-archr.html#cb354-31" tabindex="-1"></a><span class="do">##   [9]     chr5   35856977-35879705      + |        3575        IL7R</span></span>
+<span id="cb354-32"><a href="peak2genelinkage-with-archr.html#cb354-32" tabindex="-1"></a><span class="do">##   -------</span></span>
+<span id="cb354-33"><a href="peak2genelinkage-with-archr.html#cb354-33" tabindex="-1"></a><span class="do">##   seqinfo: 24 sequences from hg19 genome</span></span>
+<span id="cb354-34"><a href="peak2genelinkage-with-archr.html#cb354-34" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:02.075656 : Adding Bulk Tracks (1 of 9), 0.02 mins elapsed.</span></span>
+<span id="cb354-35"><a href="peak2genelinkage-with-archr.html#cb354-35" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:03.994375 : Adding Feature Tracks (1 of 9), 0.012 mins elapsed.</span></span>
+<span id="cb354-36"><a href="peak2genelinkage-with-archr.html#cb354-36" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:04.076611 : Adding Loop Tracks (1 of 9), 0.013 mins elapsed.</span></span>
+<span id="cb354-37"><a href="peak2genelinkage-with-archr.html#cb354-37" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:04.211859 : Adding Gene Tracks (1 of 9), 0.015 mins elapsed.</span></span>
+<span id="cb354-38"><a href="peak2genelinkage-with-archr.html#cb354-38" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:04.420231 : Plotting, 0.019 mins elapsed.</span></span>
+<span id="cb354-39"><a href="peak2genelinkage-with-archr.html#cb354-39" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:05.577812 : Adding Bulk Tracks (2 of 9), 0.038 mins elapsed.</span></span>
+<span id="cb354-40"><a href="peak2genelinkage-with-archr.html#cb354-40" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:07.455849 : Adding Feature Tracks (2 of 9), 0.069 mins elapsed.</span></span>
+<span id="cb354-41"><a href="peak2genelinkage-with-archr.html#cb354-41" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:07.546801 : Adding Loop Tracks (2 of 9), 0.071 mins elapsed.</span></span>
+<span id="cb354-42"><a href="peak2genelinkage-with-archr.html#cb354-42" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:07.6892 : Adding Gene Tracks (2 of 9), 0.073 mins elapsed.</span></span>
+<span id="cb354-43"><a href="peak2genelinkage-with-archr.html#cb354-43" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:07.906346 : Plotting, 0.077 mins elapsed.</span></span>
+<span id="cb354-44"><a href="peak2genelinkage-with-archr.html#cb354-44" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:08.691367 : Adding Bulk Tracks (3 of 9), 0.09 mins elapsed.</span></span>
+<span id="cb354-45"><a href="peak2genelinkage-with-archr.html#cb354-45" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:10.577964 : Adding Feature Tracks (3 of 9), 0.121 mins elapsed.</span></span>
+<span id="cb354-46"><a href="peak2genelinkage-with-archr.html#cb354-46" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:10.672172 : Adding Loop Tracks (3 of 9), 0.123 mins elapsed.</span></span>
+<span id="cb354-47"><a href="peak2genelinkage-with-archr.html#cb354-47" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:11.061905 : Adding Gene Tracks (3 of 9), 0.129 mins elapsed.</span></span>
+<span id="cb354-48"><a href="peak2genelinkage-with-archr.html#cb354-48" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:11.286861 : Plotting, 0.133 mins elapsed.</span></span>
+<span id="cb354-49"><a href="peak2genelinkage-with-archr.html#cb354-49" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:12.250556 : Adding Bulk Tracks (4 of 9), 0.149 mins elapsed.</span></span>
+<span id="cb354-50"><a href="peak2genelinkage-with-archr.html#cb354-50" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:14.237169 : Adding Feature Tracks (4 of 9), 0.182 mins elapsed.</span></span>
+<span id="cb354-51"><a href="peak2genelinkage-with-archr.html#cb354-51" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:14.323251 : Adding Loop Tracks (4 of 9), 0.184 mins elapsed.</span></span>
+<span id="cb354-52"><a href="peak2genelinkage-with-archr.html#cb354-52" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:14.475799 : Adding Gene Tracks (4 of 9), 0.186 mins elapsed.</span></span>
+<span id="cb354-53"><a href="peak2genelinkage-with-archr.html#cb354-53" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:14.680334 : Plotting, 0.19 mins elapsed.</span></span>
+<span id="cb354-54"><a href="peak2genelinkage-with-archr.html#cb354-54" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:15.566444 : Adding Bulk Tracks (5 of 9), 0.205 mins elapsed.</span></span>
+<span id="cb354-55"><a href="peak2genelinkage-with-archr.html#cb354-55" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:17.509581 : Adding Feature Tracks (5 of 9), 0.237 mins elapsed.</span></span>
+<span id="cb354-56"><a href="peak2genelinkage-with-archr.html#cb354-56" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:17.60025 : Adding Loop Tracks (5 of 9), 0.238 mins elapsed.</span></span>
+<span id="cb354-57"><a href="peak2genelinkage-with-archr.html#cb354-57" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:17.803788 : Adding Gene Tracks (5 of 9), 0.242 mins elapsed.</span></span>
+<span id="cb354-58"><a href="peak2genelinkage-with-archr.html#cb354-58" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:18.010258 : Plotting, 0.245 mins elapsed.</span></span>
+<span id="cb354-59"><a href="peak2genelinkage-with-archr.html#cb354-59" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:19.063965 : Adding Bulk Tracks (6 of 9), 0.263 mins elapsed.</span></span>
+<span id="cb354-60"><a href="peak2genelinkage-with-archr.html#cb354-60" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:21.100406 : Adding Feature Tracks (6 of 9), 0.297 mins elapsed.</span></span>
+<span id="cb354-61"><a href="peak2genelinkage-with-archr.html#cb354-61" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:21.186736 : Adding Loop Tracks (6 of 9), 0.298 mins elapsed.</span></span>
+<span id="cb354-62"><a href="peak2genelinkage-with-archr.html#cb354-62" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:21.669676 : Adding Gene Tracks (6 of 9), 0.306 mins elapsed.</span></span>
+<span id="cb354-63"><a href="peak2genelinkage-with-archr.html#cb354-63" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:21.871229 : Plotting, 0.31 mins elapsed.</span></span>
+<span id="cb354-64"><a href="peak2genelinkage-with-archr.html#cb354-64" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:22.830714 : Adding Bulk Tracks (7 of 9), 0.326 mins elapsed.</span></span>
+<span id="cb354-65"><a href="peak2genelinkage-with-archr.html#cb354-65" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:24.83812 : Adding Feature Tracks (7 of 9), 0.359 mins elapsed.</span></span>
+<span id="cb354-66"><a href="peak2genelinkage-with-archr.html#cb354-66" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:24.927555 : Adding Loop Tracks (7 of 9), 0.361 mins elapsed.</span></span>
+<span id="cb354-67"><a href="peak2genelinkage-with-archr.html#cb354-67" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:25.172896 : Adding Gene Tracks (7 of 9), 0.365 mins elapsed.</span></span>
+<span id="cb354-68"><a href="peak2genelinkage-with-archr.html#cb354-68" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:25.38227 : Plotting, 0.368 mins elapsed.</span></span>
+<span id="cb354-69"><a href="peak2genelinkage-with-archr.html#cb354-69" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:26.249319 : Adding Bulk Tracks (8 of 9), 0.383 mins elapsed.</span></span>
+<span id="cb354-70"><a href="peak2genelinkage-with-archr.html#cb354-70" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:28.328631 : Adding Feature Tracks (8 of 9), 0.417 mins elapsed.</span></span>
+<span id="cb354-71"><a href="peak2genelinkage-with-archr.html#cb354-71" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:28.411748 : Adding Loop Tracks (8 of 9), 0.419 mins elapsed.</span></span>
+<span id="cb354-72"><a href="peak2genelinkage-with-archr.html#cb354-72" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:28.699722 : Adding Gene Tracks (8 of 9), 0.423 mins elapsed.</span></span>
+<span id="cb354-73"><a href="peak2genelinkage-with-archr.html#cb354-73" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:28.925004 : Plotting, 0.427 mins elapsed.</span></span>
+<span id="cb354-74"><a href="peak2genelinkage-with-archr.html#cb354-74" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:29.956741 : Adding Bulk Tracks (9 of 9), 0.444 mins elapsed.</span></span>
+<span id="cb354-75"><a href="peak2genelinkage-with-archr.html#cb354-75" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:30.079082 : Adding Feature Tracks (9 of 9), 0.446 mins elapsed.</span></span>
+<span id="cb354-76"><a href="peak2genelinkage-with-archr.html#cb354-76" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:30.16675 : Adding Loop Tracks (9 of 9), 0.448 mins elapsed.</span></span>
+<span id="cb354-77"><a href="peak2genelinkage-with-archr.html#cb354-77" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:30.375868 : Adding Gene Tracks (9 of 9), 0.451 mins elapsed.</span></span>
+<span id="cb354-78"><a href="peak2genelinkage-with-archr.html#cb354-78" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:30.583511 : Plotting, 0.455 mins elapsed.</span></span>
+<span id="cb354-79"><a href="peak2genelinkage-with-archr.html#cb354-79" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotBrowserTrack-925b468a1-Date-2025-02-06_Time-02-49-03.297189.log</span></span></code></pre></div>
 <p>To plot our browser track we use the <code>grid.draw</code> function and select a specific marker gene by name using the <code>$</code> accessor.</p>
-<div class="sourceCode" id="cb353"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb353-1"><a href="peak2genelinkage-with-archr.html#cb353-1" tabindex="-1"></a>grid<span class="sc">::</span><span class="fu">grid.newpage</span>()</span>
-<span id="cb353-2"><a href="peak2genelinkage-with-archr.html#cb353-2" tabindex="-1"></a>grid<span class="sc">::</span><span class="fu">grid.draw</span>(p<span class="sc">$</span>CD14)</span></code></pre></div>
+<div class="sourceCode" id="cb355"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb355-1"><a href="peak2genelinkage-with-archr.html#cb355-1" tabindex="-1"></a>grid<span class="sc">::</span><span class="fu">grid.newpage</span>()</span>
+<span id="cb355-2"><a href="peak2genelinkage-with-archr.html#cb355-2" tabindex="-1"></a>grid<span class="sc">::</span><span class="fu">grid.draw</span>(p<span class="sc">$</span>CD14)</span></code></pre></div>
 <p><img src="ArchR_files/figure-html/unnamed-chunk-345-1.svg" width="672" /></p>
 <p>To save an editable vectorized version of this plot, we use <code>plotPDF()</code>.</p>
-<div class="sourceCode" id="cb354"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb354-1"><a href="peak2genelinkage-with-archr.html#cb354-1" tabindex="-1"></a><span class="fu">plotPDF</span>(<span class="at">plotList =</span> p, </span>
-<span id="cb354-2"><a href="peak2genelinkage-with-archr.html#cb354-2" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Plot-Tracks-Marker-Genes-with-Peak2GeneLinks.pdf&quot;</span>, </span>
-<span id="cb354-3"><a href="peak2genelinkage-with-archr.html#cb354-3" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5, </span>
-<span id="cb354-4"><a href="peak2genelinkage-with-archr.html#cb354-4" tabindex="-1"></a>    <span class="at">addDOC =</span> <span class="cn">FALSE</span>, <span class="at">width =</span> <span class="dv">5</span>, <span class="at">height =</span> <span class="dv">5</span>)</span>
-<span id="cb354-5"><a href="peak2genelinkage-with-archr.html#cb354-5" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb354-6"><a href="peak2genelinkage-with-archr.html#cb354-6" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb354-7"><a href="peak2genelinkage-with-archr.html#cb354-7" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb354-8"><a href="peak2genelinkage-with-archr.html#cb354-8" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb354-9"><a href="peak2genelinkage-with-archr.html#cb354-9" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb354-10"><a href="peak2genelinkage-with-archr.html#cb354-10" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb354-11"><a href="peak2genelinkage-with-archr.html#cb354-11" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb354-12"><a href="peak2genelinkage-with-archr.html#cb354-12" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb354-13"><a href="peak2genelinkage-with-archr.html#cb354-13" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb354-14"><a href="peak2genelinkage-with-archr.html#cb354-14" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb354-15"><a href="peak2genelinkage-with-archr.html#cb354-15" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb354-16"><a href="peak2genelinkage-with-archr.html#cb354-16" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb354-17"><a href="peak2genelinkage-with-archr.html#cb354-17" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb354-18"><a href="peak2genelinkage-with-archr.html#cb354-18" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb354-19"><a href="peak2genelinkage-with-archr.html#cb354-19" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb354-20"><a href="peak2genelinkage-with-archr.html#cb354-20" tabindex="-1"></a><span class="do">## NULL</span></span>
-<span id="cb354-21"><a href="peak2genelinkage-with-archr.html#cb354-21" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
-<span id="cb354-22"><a href="peak2genelinkage-with-archr.html#cb354-22" tabindex="-1"></a><span class="do">## NULL</span></span></code></pre></div>
+<div class="sourceCode" id="cb356"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb356-1"><a href="peak2genelinkage-with-archr.html#cb356-1" tabindex="-1"></a><span class="fu">plotPDF</span>(<span class="at">plotList =</span> p, </span>
+<span id="cb356-2"><a href="peak2genelinkage-with-archr.html#cb356-2" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Plot-Tracks-Marker-Genes-with-Peak2GeneLinks.pdf&quot;</span>, </span>
+<span id="cb356-3"><a href="peak2genelinkage-with-archr.html#cb356-3" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5, </span>
+<span id="cb356-4"><a href="peak2genelinkage-with-archr.html#cb356-4" tabindex="-1"></a>    <span class="at">addDOC =</span> <span class="cn">FALSE</span>, <span class="at">width =</span> <span class="dv">5</span>, <span class="at">height =</span> <span class="dv">5</span>)</span>
+<span id="cb356-5"><a href="peak2genelinkage-with-archr.html#cb356-5" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb356-6"><a href="peak2genelinkage-with-archr.html#cb356-6" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb356-7"><a href="peak2genelinkage-with-archr.html#cb356-7" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb356-8"><a href="peak2genelinkage-with-archr.html#cb356-8" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb356-9"><a href="peak2genelinkage-with-archr.html#cb356-9" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb356-10"><a href="peak2genelinkage-with-archr.html#cb356-10" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb356-11"><a href="peak2genelinkage-with-archr.html#cb356-11" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb356-12"><a href="peak2genelinkage-with-archr.html#cb356-12" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb356-13"><a href="peak2genelinkage-with-archr.html#cb356-13" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb356-14"><a href="peak2genelinkage-with-archr.html#cb356-14" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb356-15"><a href="peak2genelinkage-with-archr.html#cb356-15" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb356-16"><a href="peak2genelinkage-with-archr.html#cb356-16" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb356-17"><a href="peak2genelinkage-with-archr.html#cb356-17" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb356-18"><a href="peak2genelinkage-with-archr.html#cb356-18" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb356-19"><a href="peak2genelinkage-with-archr.html#cb356-19" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb356-20"><a href="peak2genelinkage-with-archr.html#cb356-20" tabindex="-1"></a><span class="do">## NULL</span></span>
+<span id="cb356-21"><a href="peak2genelinkage-with-archr.html#cb356-21" tabindex="-1"></a><span class="do">## Plotting Gtable!</span></span>
+<span id="cb356-22"><a href="peak2genelinkage-with-archr.html#cb356-22" tabindex="-1"></a><span class="do">## NULL</span></span></code></pre></div>
 </div>
 <div id="plotting-a-heatmap-of-peak-to-gene-links" class="section level3 hasAnchor" number="17.3.2">
 <h3><span class="header-section-number">17.3.2</span> Plotting a heatmap of peak-to-gene links<a href="peak2genelinkage-with-archr.html#plotting-a-heatmap-of-peak-to-gene-links" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>To visualize the correspondence of all of our peak-to-gene links, we can plot a peak-to-gene heatmap which contains two side-by-side heatmaps, one for our scATAC-seq data and one for our scRNA-seq data. To do this, we use the <code>plotPeak2GeneHeatmap()</code></p>
-<div class="sourceCode" id="cb355"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb355-1"><a href="peak2genelinkage-with-archr.html#cb355-1" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plotPeak2GeneHeatmap</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>)</span>
-<span id="cb355-2"><a href="peak2genelinkage-with-archr.html#cb355-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotPeak2GeneHeatmap-1a123c24417-Date-2025-01-23_Time-22-53-08.847797.log</span></span>
-<span id="cb355-3"><a href="peak2genelinkage-with-archr.html#cb355-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb355-4"><a href="peak2genelinkage-with-archr.html#cb355-4" tabindex="-1"></a><span class="do">## 2025-01-23 22:53:21.977429 : Determining KNN Groups!, 0.219 mins elapsed.</span></span>
-<span id="cb355-5"><a href="peak2genelinkage-with-archr.html#cb355-5" tabindex="-1"></a><span class="do">## 2025-01-23 22:53:24.523867 : Ordering Peak2Gene Links!, 0.261 mins elapsed.</span></span>
-<span id="cb355-6"><a href="peak2genelinkage-with-archr.html#cb355-6" tabindex="-1"></a><span class="do">## 2025-01-23 22:53:32.864686 : Constructing ATAC Heatmap!, 0.4 mins elapsed.</span></span>
-<span id="cb355-7"><a href="peak2genelinkage-with-archr.html#cb355-7" tabindex="-1"></a><span class="do">## Adding Annotations..</span></span>
-<span id="cb355-8"><a href="peak2genelinkage-with-archr.html#cb355-8" tabindex="-1"></a><span class="do">## Preparing Main Heatmap..</span></span>
-<span id="cb355-9"><a href="peak2genelinkage-with-archr.html#cb355-9" tabindex="-1"></a><span class="do">## &#39;magick&#39; package is suggested to install to give better rasterization.</span></span>
-<span id="cb355-10"><a href="peak2genelinkage-with-archr.html#cb355-10" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb355-11"><a href="peak2genelinkage-with-archr.html#cb355-11" tabindex="-1"></a><span class="do">## Set `ht_opt$message = FALSE` to turn off this message.</span></span>
-<span id="cb355-12"><a href="peak2genelinkage-with-archr.html#cb355-12" tabindex="-1"></a><span class="do">## 2025-01-23 22:53:33.493668 : Constructing RNA Heatmap!, 0.411 mins elapsed.</span></span>
-<span id="cb355-13"><a href="peak2genelinkage-with-archr.html#cb355-13" tabindex="-1"></a><span class="do">## Adding Annotations..</span></span>
-<span id="cb355-14"><a href="peak2genelinkage-with-archr.html#cb355-14" tabindex="-1"></a><span class="do">## Preparing Main Heatmap..</span></span>
-<span id="cb355-15"><a href="peak2genelinkage-with-archr.html#cb355-15" tabindex="-1"></a><span class="do">## &#39;magick&#39; package is suggested to install to give better rasterization.</span></span>
-<span id="cb355-16"><a href="peak2genelinkage-with-archr.html#cb355-16" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb355-17"><a href="peak2genelinkage-with-archr.html#cb355-17" tabindex="-1"></a><span class="do">## Set `ht_opt$message = FALSE` to turn off this message.</span></span>
-<span id="cb355-18"><a href="peak2genelinkage-with-archr.html#cb355-18" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotPeak2GeneHeatmap-1a123c24417-Date-2025-01-23_Time-22-53-08.847797.log</span></span></code></pre></div>
+<div class="sourceCode" id="cb357"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb357-1"><a href="peak2genelinkage-with-archr.html#cb357-1" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plotPeak2GeneHeatmap</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>)</span>
+<span id="cb357-2"><a href="peak2genelinkage-with-archr.html#cb357-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotPeak2GeneHeatmap-97c367426-Date-2025-02-06_Time-02-49-36.1348.log</span></span>
+<span id="cb357-3"><a href="peak2genelinkage-with-archr.html#cb357-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb357-4"><a href="peak2genelinkage-with-archr.html#cb357-4" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:51.026259 : Determining KNN Groups!, 0.248 mins elapsed.</span></span>
+<span id="cb357-5"><a href="peak2genelinkage-with-archr.html#cb357-5" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:53.315845 : Ordering Peak2Gene Links!, 0.286 mins elapsed.</span></span>
+<span id="cb357-6"><a href="peak2genelinkage-with-archr.html#cb357-6" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:59.295731 : Constructing ATAC Heatmap!, 0.386 mins elapsed.</span></span>
+<span id="cb357-7"><a href="peak2genelinkage-with-archr.html#cb357-7" tabindex="-1"></a><span class="do">## Adding Annotations..</span></span>
+<span id="cb357-8"><a href="peak2genelinkage-with-archr.html#cb357-8" tabindex="-1"></a><span class="do">## Preparing Main Heatmap..</span></span>
+<span id="cb357-9"><a href="peak2genelinkage-with-archr.html#cb357-9" tabindex="-1"></a><span class="do">## &#39;magick&#39; package is suggested to install to give better rasterization.</span></span>
+<span id="cb357-10"><a href="peak2genelinkage-with-archr.html#cb357-10" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb357-11"><a href="peak2genelinkage-with-archr.html#cb357-11" tabindex="-1"></a><span class="do">## Set `ht_opt$message = FALSE` to turn off this message.</span></span>
+<span id="cb357-12"><a href="peak2genelinkage-with-archr.html#cb357-12" tabindex="-1"></a><span class="do">## 2025-02-06 02:49:59.713415 : Constructing RNA Heatmap!, 0.393 mins elapsed.</span></span>
+<span id="cb357-13"><a href="peak2genelinkage-with-archr.html#cb357-13" tabindex="-1"></a><span class="do">## Adding Annotations..</span></span>
+<span id="cb357-14"><a href="peak2genelinkage-with-archr.html#cb357-14" tabindex="-1"></a><span class="do">## Preparing Main Heatmap..</span></span>
+<span id="cb357-15"><a href="peak2genelinkage-with-archr.html#cb357-15" tabindex="-1"></a><span class="do">## &#39;magick&#39; package is suggested to install to give better rasterization.</span></span>
+<span id="cb357-16"><a href="peak2genelinkage-with-archr.html#cb357-16" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb357-17"><a href="peak2genelinkage-with-archr.html#cb357-17" tabindex="-1"></a><span class="do">## Set `ht_opt$message = FALSE` to turn off this message.</span></span>
+<span id="cb357-18"><a href="peak2genelinkage-with-archr.html#cb357-18" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotPeak2GeneHeatmap-97c367426-Date-2025-02-06_Time-02-49-36.1348.log</span></span></code></pre></div>
 <p>The heatmap rows are clustered using k-means clustering based on the value passed to the parameter <code>k</code>, which defaults to 25 as shown below.</p>
-<div class="sourceCode" id="cb356"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb356-1"><a href="peak2genelinkage-with-archr.html#cb356-1" tabindex="-1"></a>p</span></code></pre></div>
+<div class="sourceCode" id="cb358"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb358-1"><a href="peak2genelinkage-with-archr.html#cb358-1" tabindex="-1"></a>p</span></code></pre></div>
 <p><img src="ArchR_files/figure-html/unnamed-chunk-348-1.svg" width="672" /></p>
 </div>
 </div>

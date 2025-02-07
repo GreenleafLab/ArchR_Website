@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2025-01-23" />
+<meta name="date" content="2025-02-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -258,7 +258,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
 <ul>
 <li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
-<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-cifferentiation.html"><a href="lymphoid-trajectory---b-cell-cifferentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Cifferentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-differentiation.html"><a href="lymphoid-trajectory---b-cell-differentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Differentiation</a></li>
 <li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
 <li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
 <li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
@@ -309,27 +309,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">18.4</span> Slingshot Trajectories<a href="slingshot-trajectories.html#slingshot-trajectories" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The same general workflow also works for trajectories determined by <a href="https://www.bioconductor.org/packages/release/bioc/html/slingshot.html">Slingshot</a>. The only difference is that the workflow for Slingshot is more similar to the workflow for ArchR trajectories. Slingshot only utilizes the <code>addSlingShotTrajectories()</code> function and in doing so directly adds this trajectory to <code>cellColData</code>.</p>
 <p>Given how Slingshot works in ArchR, we will add a separate trajectory for each branch. Since this is primarily for illustrative purposes, we will only calculate the lymphoid trajectory here.</p>
-<div class="sourceCode" id="cb424"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb424-1"><a href="slingshot-trajectories.html#cb424-1" tabindex="-1"></a>projHeme5 <span class="ot">&lt;-</span> <span class="fu">addSlingShotTrajectories</span>(</span>
-<span id="cb424-2"><a href="slingshot-trajectories.html#cb424-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb424-3"><a href="slingshot-trajectories.html#cb424-3" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Slingshot_Lymphoid&quot;</span>,</span>
-<span id="cb424-4"><a href="slingshot-trajectories.html#cb424-4" tabindex="-1"></a>    <span class="at">useGroups =</span> <span class="fu">c</span>(<span class="st">&quot;Progenitor&quot;</span>,<span class="st">&quot;CLP&quot;</span>,<span class="st">&quot;PreB&quot;</span>,<span class="st">&quot;B&quot;</span>),</span>
-<span id="cb424-5"><a href="slingshot-trajectories.html#cb424-5" tabindex="-1"></a>    <span class="at">principalGroup =</span> <span class="st">&quot;Progenitor&quot;</span>,</span>
-<span id="cb424-6"><a href="slingshot-trajectories.html#cb424-6" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
-<span id="cb424-7"><a href="slingshot-trajectories.html#cb424-7" tabindex="-1"></a>    <span class="at">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
-<span id="cb424-8"><a href="slingshot-trajectories.html#cb424-8" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">1</span>,</span>
-<span id="cb424-9"><a href="slingshot-trajectories.html#cb424-9" tabindex="-1"></a>    <span class="at">force =</span> <span class="cn">TRUE</span></span>
-<span id="cb424-10"><a href="slingshot-trajectories.html#cb424-10" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb426"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb426-1"><a href="slingshot-trajectories.html#cb426-1" tabindex="-1"></a>projHeme5 <span class="ot">&lt;-</span> <span class="fu">addSlingShotTrajectories</span>(</span>
+<span id="cb426-2"><a href="slingshot-trajectories.html#cb426-2" tabindex="-1"></a>    <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb426-3"><a href="slingshot-trajectories.html#cb426-3" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Slingshot_Lymphoid&quot;</span>,</span>
+<span id="cb426-4"><a href="slingshot-trajectories.html#cb426-4" tabindex="-1"></a>    <span class="at">useGroups =</span> <span class="fu">c</span>(<span class="st">&quot;Progenitor&quot;</span>,<span class="st">&quot;CLP&quot;</span>,<span class="st">&quot;PreB&quot;</span>,<span class="st">&quot;B&quot;</span>),</span>
+<span id="cb426-5"><a href="slingshot-trajectories.html#cb426-5" tabindex="-1"></a>    <span class="at">principalGroup =</span> <span class="st">&quot;Progenitor&quot;</span>,</span>
+<span id="cb426-6"><a href="slingshot-trajectories.html#cb426-6" tabindex="-1"></a>    <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>,</span>
+<span id="cb426-7"><a href="slingshot-trajectories.html#cb426-7" tabindex="-1"></a>    <span class="at">embedding =</span> <span class="st">&quot;UMAP&quot;</span>,</span>
+<span id="cb426-8"><a href="slingshot-trajectories.html#cb426-8" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">1</span>,</span>
+<span id="cb426-9"><a href="slingshot-trajectories.html#cb426-9" tabindex="-1"></a>    <span class="at">force =</span> <span class="cn">TRUE</span></span>
+<span id="cb426-10"><a href="slingshot-trajectories.html#cb426-10" tabindex="-1"></a>)</span></code></pre></div>
 <p>This trajectory gets stored into <code>cellColData</code> in a column called “Slingshot_Lymphoid.Curve1”.</p>
 <p>Now, we can use <code>plotTrajectory()</code> to show the trajectory on our embedding.</p>
-<div class="sourceCode" id="cb425"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb425-1"><a href="slingshot-trajectories.html#cb425-1" tabindex="-1"></a>p_slingshot <span class="ot">&lt;-</span> <span class="fu">plotTrajectory</span>(projHeme5, <span class="at">trajectory =</span> <span class="st">&quot;Slingshot_Lymphoid.Curve1&quot;</span>, <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Slingshot_Lymphoid.Curve1&quot;</span>, <span class="at">addArrow =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb425-2"><a href="slingshot-trajectories.html#cb425-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotTrajectory-1a1bac2501-Date-2025-01-23_Time-23-07-10.095877.log</span></span>
-<span id="cb425-3"><a href="slingshot-trajectories.html#cb425-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb425-4"><a href="slingshot-trajectories.html#cb425-4" tabindex="-1"></a><span class="do">## Plotting</span></span>
-<span id="cb425-5"><a href="slingshot-trajectories.html#cb425-5" tabindex="-1"></a><span class="do">## Plotting Trajectory</span></span>
-<span id="cb425-6"><a href="slingshot-trajectories.html#cb425-6" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectory-1a1bac2501-Date-2025-01-23_Time-23-07-10.095877.log</span></span>
-<span id="cb425-7"><a href="slingshot-trajectories.html#cb425-7" tabindex="-1"></a>p_slingshot[[<span class="dv">1</span>]]</span>
-<span id="cb425-8"><a href="slingshot-trajectories.html#cb425-8" tabindex="-1"></a><span class="do">## Warning: Removed 7715 rows containing non-finite outside the scale range</span></span>
-<span id="cb425-9"><a href="slingshot-trajectories.html#cb425-9" tabindex="-1"></a><span class="do">## (`stat_summary_hex()`).</span></span></code></pre></div>
+<div class="sourceCode" id="cb427"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb427-1"><a href="slingshot-trajectories.html#cb427-1" tabindex="-1"></a>p_slingshot <span class="ot">&lt;-</span> <span class="fu">plotTrajectory</span>(projHeme5, <span class="at">trajectory =</span> <span class="st">&quot;Slingshot_Lymphoid.Curve1&quot;</span>, <span class="at">colorBy =</span> <span class="st">&quot;cellColData&quot;</span>, <span class="at">name =</span> <span class="st">&quot;Slingshot_Lymphoid.Curve1&quot;</span>, <span class="at">addArrow =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb427-2"><a href="slingshot-trajectories.html#cb427-2" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-plotTrajectory-96633c21c-Date-2025-02-06_Time-03-02-54.590481.log</span></span>
+<span id="cb427-3"><a href="slingshot-trajectories.html#cb427-3" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb427-4"><a href="slingshot-trajectories.html#cb427-4" tabindex="-1"></a><span class="do">## Plotting</span></span>
+<span id="cb427-5"><a href="slingshot-trajectories.html#cb427-5" tabindex="-1"></a><span class="do">## Plotting Trajectory</span></span>
+<span id="cb427-6"><a href="slingshot-trajectories.html#cb427-6" tabindex="-1"></a><span class="do">## ArchR logging successful to : ArchRLogs/ArchR-plotTrajectory-96633c21c-Date-2025-02-06_Time-03-02-54.590481.log</span></span>
+<span id="cb427-7"><a href="slingshot-trajectories.html#cb427-7" tabindex="-1"></a>p_slingshot[[<span class="dv">1</span>]]</span>
+<span id="cb427-8"><a href="slingshot-trajectories.html#cb427-8" tabindex="-1"></a><span class="do">## Warning: Removed 7715 rows containing non-finite outside the scale range</span></span>
+<span id="cb427-9"><a href="slingshot-trajectories.html#cb427-9" tabindex="-1"></a><span class="do">## (`stat_summary_hex()`).</span></span></code></pre></div>
 <p><img src="ArchR_files/figure-html/unnamed-chunk-419-1.svg" width="672" /></p>
 </div>
             </section>

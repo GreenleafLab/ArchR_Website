@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2025-01-23" />
+<meta name="date" content="2025-02-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -258,7 +258,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
 <ul>
 <li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
-<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-cifferentiation.html"><a href="lymphoid-trajectory---b-cell-cifferentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Cifferentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-differentiation.html"><a href="lymphoid-trajectory---b-cell-differentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Differentiation</a></li>
 <li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
 <li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
 <li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
@@ -308,100 +308,100 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="exporting-fragment-level-data" class="section level2 hasAnchor" number="19.1">
 <h2><span class="header-section-number">19.1</span> Exporting fragment-level data<a href="exporting-fragment-level-data.html#exporting-fragment-level-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Before we start exporting data, lets save <code>projHeme5</code> to its own directory.</p>
-<div class="sourceCode" id="cb429"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb429-1"><a href="exporting-fragment-level-data.html#cb429-1" tabindex="-1"></a>projHeme5 <span class="ot">&lt;-</span> <span class="fu">saveArchRProject</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">outputDirectory =</span> <span class="st">&quot;Save-ProjHeme5&quot;</span>, <span class="at">load =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb429-2"><a href="exporting-fragment-level-data.html#cb429-2" tabindex="-1"></a><span class="do">## Copying ArchRProject to new outputDirectory : /workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5</span></span>
-<span id="cb429-3"><a href="exporting-fragment-level-data.html#cb429-3" tabindex="-1"></a><span class="do">## Copying Arrow Files...</span></span>
-<span id="cb429-4"><a href="exporting-fragment-level-data.html#cb429-4" tabindex="-1"></a><span class="do">## Copying Arrow Files (1 of 3)</span></span>
-<span id="cb429-5"><a href="exporting-fragment-level-data.html#cb429-5" tabindex="-1"></a><span class="do">## Copying Arrow Files (2 of 3)</span></span>
-<span id="cb429-6"><a href="exporting-fragment-level-data.html#cb429-6" tabindex="-1"></a><span class="do">## Copying Arrow Files (3 of 3)</span></span>
-<span id="cb429-7"><a href="exporting-fragment-level-data.html#cb429-7" tabindex="-1"></a><span class="do">## Getting ImputeWeights</span></span>
-<span id="cb429-8"><a href="exporting-fragment-level-data.html#cb429-8" tabindex="-1"></a><span class="do">## Dropping ImputeWeights...</span></span>
-<span id="cb429-9"><a href="exporting-fragment-level-data.html#cb429-9" tabindex="-1"></a><span class="do">## Copying Other Files...</span></span>
-<span id="cb429-10"><a href="exporting-fragment-level-data.html#cb429-10" tabindex="-1"></a><span class="do">## Copying Other Files (1 of 12): Annotations</span></span>
-<span id="cb429-11"><a href="exporting-fragment-level-data.html#cb429-11" tabindex="-1"></a><span class="do">## Copying Other Files (2 of 12): Background-Peaks.rds</span></span>
-<span id="cb429-12"><a href="exporting-fragment-level-data.html#cb429-12" tabindex="-1"></a><span class="do">## Copying Other Files (3 of 12): Embeddings</span></span>
-<span id="cb429-13"><a href="exporting-fragment-level-data.html#cb429-13" tabindex="-1"></a><span class="do">## Copying Other Files (4 of 12): GroupCoverages</span></span>
-<span id="cb429-14"><a href="exporting-fragment-level-data.html#cb429-14" tabindex="-1"></a><span class="do">## Copying Other Files (5 of 12): IterativeLSI</span></span>
-<span id="cb429-15"><a href="exporting-fragment-level-data.html#cb429-15" tabindex="-1"></a><span class="do">## Copying Other Files (6 of 12): IterativeLSI2</span></span>
-<span id="cb429-16"><a href="exporting-fragment-level-data.html#cb429-16" tabindex="-1"></a><span class="do">## Copying Other Files (7 of 12): IterativeLSI3</span></span>
-<span id="cb429-17"><a href="exporting-fragment-level-data.html#cb429-17" tabindex="-1"></a><span class="do">## Copying Other Files (8 of 12): Monocole3</span></span>
-<span id="cb429-18"><a href="exporting-fragment-level-data.html#cb429-18" tabindex="-1"></a><span class="do">## Copying Other Files (9 of 12): Peak2GeneLinks</span></span>
-<span id="cb429-19"><a href="exporting-fragment-level-data.html#cb429-19" tabindex="-1"></a><span class="do">## Copying Other Files (10 of 12): PeakCalls</span></span>
-<span id="cb429-20"><a href="exporting-fragment-level-data.html#cb429-20" tabindex="-1"></a><span class="do">## Copying Other Files (11 of 12): Plots</span></span>
-<span id="cb429-21"><a href="exporting-fragment-level-data.html#cb429-21" tabindex="-1"></a><span class="do">## Copying Other Files (12 of 12): RNAIntegration</span></span>
-<span id="cb429-22"><a href="exporting-fragment-level-data.html#cb429-22" tabindex="-1"></a><span class="do">## Saving ArchRProject...</span></span>
-<span id="cb429-23"><a href="exporting-fragment-level-data.html#cb429-23" tabindex="-1"></a><span class="do">## Loading ArchRProject...</span></span>
-<span id="cb429-24"><a href="exporting-fragment-level-data.html#cb429-24" tabindex="-1"></a><span class="do">## Successfully loaded ArchRProject!</span></span>
-<span id="cb429-25"><a href="exporting-fragment-level-data.html#cb429-25" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb429-26"><a href="exporting-fragment-level-data.html#cb429-26" tabindex="-1"></a><span class="do">##                                                    / |</span></span>
-<span id="cb429-27"><a href="exporting-fragment-level-data.html#cb429-27" tabindex="-1"></a><span class="do">##                                                  /    \</span></span>
-<span id="cb429-28"><a href="exporting-fragment-level-data.html#cb429-28" tabindex="-1"></a><span class="do">##             .                                  /      |.</span></span>
-<span id="cb429-29"><a href="exporting-fragment-level-data.html#cb429-29" tabindex="-1"></a><span class="do">##             \\\                              /        |.</span></span>
-<span id="cb429-30"><a href="exporting-fragment-level-data.html#cb429-30" tabindex="-1"></a><span class="do">##               \\\                          /           `|.</span></span>
-<span id="cb429-31"><a href="exporting-fragment-level-data.html#cb429-31" tabindex="-1"></a><span class="do">##                 \\\                      /              |.</span></span>
-<span id="cb429-32"><a href="exporting-fragment-level-data.html#cb429-32" tabindex="-1"></a><span class="do">##                   \                    /                |\</span></span>
-<span id="cb429-33"><a href="exporting-fragment-level-data.html#cb429-33" tabindex="-1"></a><span class="do">##                   \\#####\           /                  ||</span></span>
-<span id="cb429-34"><a href="exporting-fragment-level-data.html#cb429-34" tabindex="-1"></a><span class="do">##                 ==###########&gt;      /                   ||</span></span>
-<span id="cb429-35"><a href="exporting-fragment-level-data.html#cb429-35" tabindex="-1"></a><span class="do">##                  \\##==......\    /                     ||</span></span>
-<span id="cb429-36"><a href="exporting-fragment-level-data.html#cb429-36" tabindex="-1"></a><span class="do">##             ______ =       =|__ /__                     ||      \\\</span></span>
-<span id="cb429-37"><a href="exporting-fragment-level-data.html#cb429-37" tabindex="-1"></a><span class="do">##         ,--&#39; ,----`-,__ ___/&#39;  --,-`-===================##========&gt;</span></span>
-<span id="cb429-38"><a href="exporting-fragment-level-data.html#cb429-38" tabindex="-1"></a><span class="do">##        \               &#39;        ##_______ _____ ,--,__,=##,__   ///</span></span>
-<span id="cb429-39"><a href="exporting-fragment-level-data.html#cb429-39" tabindex="-1"></a><span class="do">##         ,    __==    ___,-,__,--&#39;#&#39;  ===&#39;      `-&#39;    | ##,-/</span></span>
-<span id="cb429-40"><a href="exporting-fragment-level-data.html#cb429-40" tabindex="-1"></a><span class="do">##         -,____,---&#39;       \\####\\________________,--\\_##,/</span></span>
-<span id="cb429-41"><a href="exporting-fragment-level-data.html#cb429-41" tabindex="-1"></a><span class="do">##            ___      .______        ______  __    __  .______      </span></span>
-<span id="cb429-42"><a href="exporting-fragment-level-data.html#cb429-42" tabindex="-1"></a><span class="do">##           /   \     |   _  \      /      ||  |  |  | |   _  \     </span></span>
-<span id="cb429-43"><a href="exporting-fragment-level-data.html#cb429-43" tabindex="-1"></a><span class="do">##          /  ^  \    |  |_)  |    |  ,----&#39;|  |__|  | |  |_)  |    </span></span>
-<span id="cb429-44"><a href="exporting-fragment-level-data.html#cb429-44" tabindex="-1"></a><span class="do">##         /  /_\  \   |      /     |  |     |   __   | |      /     </span></span>
-<span id="cb429-45"><a href="exporting-fragment-level-data.html#cb429-45" tabindex="-1"></a><span class="do">##        /  _____  \  |  |\  \\___ |  `----.|  |  |  | |  |\  \\___.</span></span>
-<span id="cb429-46"><a href="exporting-fragment-level-data.html#cb429-46" tabindex="-1"></a><span class="do">##       /__/     \__\ | _| `._____| \______||__|  |__| | _| `._____|</span></span>
-<span id="cb429-47"><a href="exporting-fragment-level-data.html#cb429-47" tabindex="-1"></a><span class="do">## </span></span></code></pre></div>
+<div class="sourceCode" id="cb431"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb431-1"><a href="exporting-fragment-level-data.html#cb431-1" tabindex="-1"></a>projHeme5 <span class="ot">&lt;-</span> <span class="fu">saveArchRProject</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">outputDirectory =</span> <span class="st">&quot;Save-ProjHeme5&quot;</span>, <span class="at">load =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb431-2"><a href="exporting-fragment-level-data.html#cb431-2" tabindex="-1"></a><span class="do">## Copying ArchRProject to new outputDirectory : /workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5</span></span>
+<span id="cb431-3"><a href="exporting-fragment-level-data.html#cb431-3" tabindex="-1"></a><span class="do">## Copying Arrow Files...</span></span>
+<span id="cb431-4"><a href="exporting-fragment-level-data.html#cb431-4" tabindex="-1"></a><span class="do">## Copying Arrow Files (1 of 3)</span></span>
+<span id="cb431-5"><a href="exporting-fragment-level-data.html#cb431-5" tabindex="-1"></a><span class="do">## Copying Arrow Files (2 of 3)</span></span>
+<span id="cb431-6"><a href="exporting-fragment-level-data.html#cb431-6" tabindex="-1"></a><span class="do">## Copying Arrow Files (3 of 3)</span></span>
+<span id="cb431-7"><a href="exporting-fragment-level-data.html#cb431-7" tabindex="-1"></a><span class="do">## Getting ImputeWeights</span></span>
+<span id="cb431-8"><a href="exporting-fragment-level-data.html#cb431-8" tabindex="-1"></a><span class="do">## Dropping ImputeWeights...</span></span>
+<span id="cb431-9"><a href="exporting-fragment-level-data.html#cb431-9" tabindex="-1"></a><span class="do">## Copying Other Files...</span></span>
+<span id="cb431-10"><a href="exporting-fragment-level-data.html#cb431-10" tabindex="-1"></a><span class="do">## Copying Other Files (1 of 12): Annotations</span></span>
+<span id="cb431-11"><a href="exporting-fragment-level-data.html#cb431-11" tabindex="-1"></a><span class="do">## Copying Other Files (2 of 12): Background-Peaks.rds</span></span>
+<span id="cb431-12"><a href="exporting-fragment-level-data.html#cb431-12" tabindex="-1"></a><span class="do">## Copying Other Files (3 of 12): Embeddings</span></span>
+<span id="cb431-13"><a href="exporting-fragment-level-data.html#cb431-13" tabindex="-1"></a><span class="do">## Copying Other Files (4 of 12): GroupCoverages</span></span>
+<span id="cb431-14"><a href="exporting-fragment-level-data.html#cb431-14" tabindex="-1"></a><span class="do">## Copying Other Files (5 of 12): IterativeLSI</span></span>
+<span id="cb431-15"><a href="exporting-fragment-level-data.html#cb431-15" tabindex="-1"></a><span class="do">## Copying Other Files (6 of 12): IterativeLSI2</span></span>
+<span id="cb431-16"><a href="exporting-fragment-level-data.html#cb431-16" tabindex="-1"></a><span class="do">## Copying Other Files (7 of 12): IterativeLSI3</span></span>
+<span id="cb431-17"><a href="exporting-fragment-level-data.html#cb431-17" tabindex="-1"></a><span class="do">## Copying Other Files (8 of 12): Monocole3</span></span>
+<span id="cb431-18"><a href="exporting-fragment-level-data.html#cb431-18" tabindex="-1"></a><span class="do">## Copying Other Files (9 of 12): Peak2GeneLinks</span></span>
+<span id="cb431-19"><a href="exporting-fragment-level-data.html#cb431-19" tabindex="-1"></a><span class="do">## Copying Other Files (10 of 12): PeakCalls</span></span>
+<span id="cb431-20"><a href="exporting-fragment-level-data.html#cb431-20" tabindex="-1"></a><span class="do">## Copying Other Files (11 of 12): Plots</span></span>
+<span id="cb431-21"><a href="exporting-fragment-level-data.html#cb431-21" tabindex="-1"></a><span class="do">## Copying Other Files (12 of 12): RNAIntegration</span></span>
+<span id="cb431-22"><a href="exporting-fragment-level-data.html#cb431-22" tabindex="-1"></a><span class="do">## Saving ArchRProject...</span></span>
+<span id="cb431-23"><a href="exporting-fragment-level-data.html#cb431-23" tabindex="-1"></a><span class="do">## Loading ArchRProject...</span></span>
+<span id="cb431-24"><a href="exporting-fragment-level-data.html#cb431-24" tabindex="-1"></a><span class="do">## Successfully loaded ArchRProject!</span></span>
+<span id="cb431-25"><a href="exporting-fragment-level-data.html#cb431-25" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb431-26"><a href="exporting-fragment-level-data.html#cb431-26" tabindex="-1"></a><span class="do">##                                                    / |</span></span>
+<span id="cb431-27"><a href="exporting-fragment-level-data.html#cb431-27" tabindex="-1"></a><span class="do">##                                                  /    \</span></span>
+<span id="cb431-28"><a href="exporting-fragment-level-data.html#cb431-28" tabindex="-1"></a><span class="do">##             .                                  /      |.</span></span>
+<span id="cb431-29"><a href="exporting-fragment-level-data.html#cb431-29" tabindex="-1"></a><span class="do">##             \\\                              /        |.</span></span>
+<span id="cb431-30"><a href="exporting-fragment-level-data.html#cb431-30" tabindex="-1"></a><span class="do">##               \\\                          /           `|.</span></span>
+<span id="cb431-31"><a href="exporting-fragment-level-data.html#cb431-31" tabindex="-1"></a><span class="do">##                 \\\                      /              |.</span></span>
+<span id="cb431-32"><a href="exporting-fragment-level-data.html#cb431-32" tabindex="-1"></a><span class="do">##                   \                    /                |\</span></span>
+<span id="cb431-33"><a href="exporting-fragment-level-data.html#cb431-33" tabindex="-1"></a><span class="do">##                   \\#####\           /                  ||</span></span>
+<span id="cb431-34"><a href="exporting-fragment-level-data.html#cb431-34" tabindex="-1"></a><span class="do">##                 ==###########&gt;      /                   ||</span></span>
+<span id="cb431-35"><a href="exporting-fragment-level-data.html#cb431-35" tabindex="-1"></a><span class="do">##                  \\##==......\    /                     ||</span></span>
+<span id="cb431-36"><a href="exporting-fragment-level-data.html#cb431-36" tabindex="-1"></a><span class="do">##             ______ =       =|__ /__                     ||      \\\</span></span>
+<span id="cb431-37"><a href="exporting-fragment-level-data.html#cb431-37" tabindex="-1"></a><span class="do">##         ,--&#39; ,----`-,__ ___/&#39;  --,-`-===================##========&gt;</span></span>
+<span id="cb431-38"><a href="exporting-fragment-level-data.html#cb431-38" tabindex="-1"></a><span class="do">##        \               &#39;        ##_______ _____ ,--,__,=##,__   ///</span></span>
+<span id="cb431-39"><a href="exporting-fragment-level-data.html#cb431-39" tabindex="-1"></a><span class="do">##         ,    __==    ___,-,__,--&#39;#&#39;  ===&#39;      `-&#39;    | ##,-/</span></span>
+<span id="cb431-40"><a href="exporting-fragment-level-data.html#cb431-40" tabindex="-1"></a><span class="do">##         -,____,---&#39;       \\####\\________________,--\\_##,/</span></span>
+<span id="cb431-41"><a href="exporting-fragment-level-data.html#cb431-41" tabindex="-1"></a><span class="do">##            ___      .______        ______  __    __  .______      </span></span>
+<span id="cb431-42"><a href="exporting-fragment-level-data.html#cb431-42" tabindex="-1"></a><span class="do">##           /   \     |   _  \      /      ||  |  |  | |   _  \     </span></span>
+<span id="cb431-43"><a href="exporting-fragment-level-data.html#cb431-43" tabindex="-1"></a><span class="do">##          /  ^  \    |  |_)  |    |  ,----&#39;|  |__|  | |  |_)  |    </span></span>
+<span id="cb431-44"><a href="exporting-fragment-level-data.html#cb431-44" tabindex="-1"></a><span class="do">##         /  /_\  \   |      /     |  |     |   __   | |      /     </span></span>
+<span id="cb431-45"><a href="exporting-fragment-level-data.html#cb431-45" tabindex="-1"></a><span class="do">##        /  _____  \  |  |\  \\___ |  `----.|  |  |  | |  |\  \\___.</span></span>
+<span id="cb431-46"><a href="exporting-fragment-level-data.html#cb431-46" tabindex="-1"></a><span class="do">##       /__/     \__\ | _| `._____| \______||__|  |__| | _| `._____|</span></span>
+<span id="cb431-47"><a href="exporting-fragment-level-data.html#cb431-47" tabindex="-1"></a><span class="do">## </span></span></code></pre></div>
 <p>To enable optimal flexibility, ArchR allows you to export fragments from your <code>ArchRProject</code> or ArrowFiles at any time using the <code>getFragmentsFromArrow()</code>, <code>getFragmentsFromProject()</code>, and <code>getGroupFragments()</code> functions. For the <code>getFragmentsFromArrow()</code> and <code>getFragmentsFromProject()</code> functions, you must provide the <code>cellNames</code> for the cells you wish to extract. For example, you might extract the fragments from a particular cluster from your entire project like this:</p>
-<div class="sourceCode" id="cb430"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb430-1"><a href="exporting-fragment-level-data.html#cb430-1" tabindex="-1"></a>frags <span class="ot">&lt;-</span> <span class="fu">getFragmentsFromProject</span>(</span>
-<span id="cb430-2"><a href="exporting-fragment-level-data.html#cb430-2" tabindex="-1"></a>  <span class="at">ArchRProj =</span> projHeme5,</span>
-<span id="cb430-3"><a href="exporting-fragment-level-data.html#cb430-3" tabindex="-1"></a>  <span class="at">cellNames =</span> <span class="fu">getCellNames</span>(<span class="at">ArchRProj =</span> projHeme5)[<span class="fu">which</span>(projHeme5<span class="sc">@</span>cellColData<span class="sc">$</span>Clusters2 <span class="sc">==</span> <span class="st">&quot;Mono&quot;</span>)]</span>
-<span id="cb430-4"><a href="exporting-fragment-level-data.html#cb430-4" tabindex="-1"></a>  )</span>
-<span id="cb430-5"><a href="exporting-fragment-level-data.html#cb430-5" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-getFragmentsFromProject-1a11a09d7c5-Date-2025-01-23_Time-23-13-07.314107.log</span></span>
-<span id="cb430-6"><a href="exporting-fragment-level-data.html#cb430-6" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
-<span id="cb430-7"><a href="exporting-fragment-level-data.html#cb430-7" tabindex="-1"></a><span class="do">## Reading ArrowFile 1 of 3</span></span>
-<span id="cb430-8"><a href="exporting-fragment-level-data.html#cb430-8" tabindex="-1"></a><span class="do">## Reading ArrowFile 2 of 3</span></span>
-<span id="cb430-9"><a href="exporting-fragment-level-data.html#cb430-9" tabindex="-1"></a><span class="do">## Reading ArrowFile 3 of 3</span></span></code></pre></div>
+<div class="sourceCode" id="cb432"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb432-1"><a href="exporting-fragment-level-data.html#cb432-1" tabindex="-1"></a>frags <span class="ot">&lt;-</span> <span class="fu">getFragmentsFromProject</span>(</span>
+<span id="cb432-2"><a href="exporting-fragment-level-data.html#cb432-2" tabindex="-1"></a>  <span class="at">ArchRProj =</span> projHeme5,</span>
+<span id="cb432-3"><a href="exporting-fragment-level-data.html#cb432-3" tabindex="-1"></a>  <span class="at">cellNames =</span> <span class="fu">getCellNames</span>(<span class="at">ArchRProj =</span> projHeme5)[<span class="fu">which</span>(projHeme5<span class="sc">@</span>cellColData<span class="sc">$</span>Clusters2 <span class="sc">==</span> <span class="st">&quot;Mono&quot;</span>)]</span>
+<span id="cb432-4"><a href="exporting-fragment-level-data.html#cb432-4" tabindex="-1"></a>  )</span>
+<span id="cb432-5"><a href="exporting-fragment-level-data.html#cb432-5" tabindex="-1"></a><span class="do">## ArchR logging to : ArchRLogs/ArchR-getFragmentsFromProject-93afeb579-Date-2025-02-06_Time-03-08-30.449711.log</span></span>
+<span id="cb432-6"><a href="exporting-fragment-level-data.html#cb432-6" tabindex="-1"></a><span class="do">## If there is an issue, please report to github with logFile!</span></span>
+<span id="cb432-7"><a href="exporting-fragment-level-data.html#cb432-7" tabindex="-1"></a><span class="do">## Reading ArrowFile 1 of 3</span></span>
+<span id="cb432-8"><a href="exporting-fragment-level-data.html#cb432-8" tabindex="-1"></a><span class="do">## Reading ArrowFile 2 of 3</span></span>
+<span id="cb432-9"><a href="exporting-fragment-level-data.html#cb432-9" tabindex="-1"></a><span class="do">## Reading ArrowFile 3 of 3</span></span></code></pre></div>
 <p>Inspecting the <code>frags</code> object here, shows it to be a list and each of the elements of <code>frags</code> is a <code>GRanges</code> object corresponding to one of the original Arrow Files:</p>
-<div class="sourceCode" id="cb431"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb431-1"><a href="exporting-fragment-level-data.html#cb431-1" tabindex="-1"></a>frags</span>
-<span id="cb431-2"><a href="exporting-fragment-level-data.html#cb431-2" tabindex="-1"></a><span class="do">## List of length 3</span></span>
-<span id="cb431-3"><a href="exporting-fragment-level-data.html#cb431-3" tabindex="-1"></a><span class="do">## names(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1</span></span></code></pre></div>
+<div class="sourceCode" id="cb433"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb433-1"><a href="exporting-fragment-level-data.html#cb433-1" tabindex="-1"></a>frags</span>
+<span id="cb433-2"><a href="exporting-fragment-level-data.html#cb433-2" tabindex="-1"></a><span class="do">## List of length 3</span></span>
+<span id="cb433-3"><a href="exporting-fragment-level-data.html#cb433-3" tabindex="-1"></a><span class="do">## names(3): scATAC_BMMC_R1 scATAC_CD34_BMMC_R1 scATAC_PBMC_R1</span></span></code></pre></div>
 <p>We can just unlist this object to get a <code>GRanges</code> object where each entry represents an individual fragment:</p>
-<div class="sourceCode" id="cb432"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb432-1"><a href="exporting-fragment-level-data.html#cb432-1" tabindex="-1"></a><span class="fu">unlist</span>(frags)</span>
-<span id="cb432-2"><a href="exporting-fragment-level-data.html#cb432-2" tabindex="-1"></a><span class="do">## GRanges object with 9320877 ranges and 1 metadata column:</span></span>
-<span id="cb432-3"><a href="exporting-fragment-level-data.html#cb432-3" tabindex="-1"></a><span class="do">##                  seqnames            ranges strand |                     RG</span></span>
-<span id="cb432-4"><a href="exporting-fragment-level-data.html#cb432-4" tabindex="-1"></a><span class="do">##                     &lt;Rle&gt;         &lt;IRanges&gt;  &lt;Rle&gt; |                  &lt;Rle&gt;</span></span>
-<span id="cb432-5"><a href="exporting-fragment-level-data.html#cb432-5" tabindex="-1"></a><span class="do">##   scATAC_BMMC_R1     chr1     842515-842901      * | scATAC_BMMC_R1#CCCAC..</span></span>
-<span id="cb432-6"><a href="exporting-fragment-level-data.html#cb432-6" tabindex="-1"></a><span class="do">##   scATAC_BMMC_R1     chr1     931221-931355      * | scATAC_BMMC_R1#CCCAC..</span></span>
-<span id="cb432-7"><a href="exporting-fragment-level-data.html#cb432-7" tabindex="-1"></a><span class="do">##   scATAC_BMMC_R1     chr1     939387-939615      * | scATAC_BMMC_R1#CCCAC..</span></span>
-<span id="cb432-8"><a href="exporting-fragment-level-data.html#cb432-8" tabindex="-1"></a><span class="do">##   scATAC_BMMC_R1     chr1     985376-985401      * | scATAC_BMMC_R1#CCCAC..</span></span>
-<span id="cb432-9"><a href="exporting-fragment-level-data.html#cb432-9" tabindex="-1"></a><span class="do">##   scATAC_BMMC_R1     chr1     988510-988541      * | scATAC_BMMC_R1#CCCAC..</span></span>
-<span id="cb432-10"><a href="exporting-fragment-level-data.html#cb432-10" tabindex="-1"></a><span class="do">##              ...      ...               ...    ... .                    ...</span></span>
-<span id="cb432-11"><a href="exporting-fragment-level-data.html#cb432-11" tabindex="-1"></a><span class="do">##   scATAC_PBMC_R1     chrY 22737645-22737827      * | scATAC_PBMC_R1#AATGG..</span></span>
-<span id="cb432-12"><a href="exporting-fragment-level-data.html#cb432-12" tabindex="-1"></a><span class="do">##   scATAC_PBMC_R1     chrY 15443307-15443509      * | scATAC_PBMC_R1#GGTGC..</span></span>
-<span id="cb432-13"><a href="exporting-fragment-level-data.html#cb432-13" tabindex="-1"></a><span class="do">##   scATAC_PBMC_R1     chrY 14604751-14604917      * | scATAC_PBMC_R1#CGATG..</span></span>
-<span id="cb432-14"><a href="exporting-fragment-level-data.html#cb432-14" tabindex="-1"></a><span class="do">##   scATAC_PBMC_R1     chrY   5609640-5609780      * | scATAC_PBMC_R1#TATGT..</span></span>
-<span id="cb432-15"><a href="exporting-fragment-level-data.html#cb432-15" tabindex="-1"></a><span class="do">##   scATAC_PBMC_R1     chrY 22737684-22737775      * | scATAC_PBMC_R1#TATGT..</span></span>
-<span id="cb432-16"><a href="exporting-fragment-level-data.html#cb432-16" tabindex="-1"></a><span class="do">##   -------</span></span>
-<span id="cb432-17"><a href="exporting-fragment-level-data.html#cb432-17" tabindex="-1"></a><span class="do">##   seqinfo: 24 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
+<div class="sourceCode" id="cb434"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb434-1"><a href="exporting-fragment-level-data.html#cb434-1" tabindex="-1"></a><span class="fu">unlist</span>(frags)</span>
+<span id="cb434-2"><a href="exporting-fragment-level-data.html#cb434-2" tabindex="-1"></a><span class="do">## GRanges object with 9320877 ranges and 1 metadata column:</span></span>
+<span id="cb434-3"><a href="exporting-fragment-level-data.html#cb434-3" tabindex="-1"></a><span class="do">##                  seqnames            ranges strand |                     RG</span></span>
+<span id="cb434-4"><a href="exporting-fragment-level-data.html#cb434-4" tabindex="-1"></a><span class="do">##                     &lt;Rle&gt;         &lt;IRanges&gt;  &lt;Rle&gt; |                  &lt;Rle&gt;</span></span>
+<span id="cb434-5"><a href="exporting-fragment-level-data.html#cb434-5" tabindex="-1"></a><span class="do">##   scATAC_BMMC_R1     chr1     842515-842901      * | scATAC_BMMC_R1#CCCAC..</span></span>
+<span id="cb434-6"><a href="exporting-fragment-level-data.html#cb434-6" tabindex="-1"></a><span class="do">##   scATAC_BMMC_R1     chr1     931221-931355      * | scATAC_BMMC_R1#CCCAC..</span></span>
+<span id="cb434-7"><a href="exporting-fragment-level-data.html#cb434-7" tabindex="-1"></a><span class="do">##   scATAC_BMMC_R1     chr1     939387-939615      * | scATAC_BMMC_R1#CCCAC..</span></span>
+<span id="cb434-8"><a href="exporting-fragment-level-data.html#cb434-8" tabindex="-1"></a><span class="do">##   scATAC_BMMC_R1     chr1     985376-985401      * | scATAC_BMMC_R1#CCCAC..</span></span>
+<span id="cb434-9"><a href="exporting-fragment-level-data.html#cb434-9" tabindex="-1"></a><span class="do">##   scATAC_BMMC_R1     chr1     988510-988541      * | scATAC_BMMC_R1#CCCAC..</span></span>
+<span id="cb434-10"><a href="exporting-fragment-level-data.html#cb434-10" tabindex="-1"></a><span class="do">##              ...      ...               ...    ... .                    ...</span></span>
+<span id="cb434-11"><a href="exporting-fragment-level-data.html#cb434-11" tabindex="-1"></a><span class="do">##   scATAC_PBMC_R1     chrY 22737645-22737827      * | scATAC_PBMC_R1#AATGG..</span></span>
+<span id="cb434-12"><a href="exporting-fragment-level-data.html#cb434-12" tabindex="-1"></a><span class="do">##   scATAC_PBMC_R1     chrY 15443307-15443509      * | scATAC_PBMC_R1#GGTGC..</span></span>
+<span id="cb434-13"><a href="exporting-fragment-level-data.html#cb434-13" tabindex="-1"></a><span class="do">##   scATAC_PBMC_R1     chrY 14604751-14604917      * | scATAC_PBMC_R1#CGATG..</span></span>
+<span id="cb434-14"><a href="exporting-fragment-level-data.html#cb434-14" tabindex="-1"></a><span class="do">##   scATAC_PBMC_R1     chrY   5609640-5609780      * | scATAC_PBMC_R1#TATGT..</span></span>
+<span id="cb434-15"><a href="exporting-fragment-level-data.html#cb434-15" tabindex="-1"></a><span class="do">##   scATAC_PBMC_R1     chrY 22737684-22737775      * | scATAC_PBMC_R1#TATGT..</span></span>
+<span id="cb434-16"><a href="exporting-fragment-level-data.html#cb434-16" tabindex="-1"></a><span class="do">##   -------</span></span>
+<span id="cb434-17"><a href="exporting-fragment-level-data.html#cb434-17" tabindex="-1"></a><span class="do">##   seqinfo: 24 sequences from an unspecified genome; no seqlengths</span></span></code></pre></div>
 <p>Similarly, <code>getGroupFragments()</code> provides a shortcut to doing fragment export based on cell groupings defined in <code>cellColData</code>. However, this function creates fragment files on disk, rather than storing them as a <code>GRanges</code> object.</p>
-<div class="sourceCode" id="cb433"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb433-1"><a href="exporting-fragment-level-data.html#cb433-1" tabindex="-1"></a>frags <span class="ot">&lt;-</span> <span class="fu">getGroupFragments</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb435"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb435-1"><a href="exporting-fragment-level-data.html#cb435-1" tabindex="-1"></a>frags <span class="ot">&lt;-</span> <span class="fu">getGroupFragments</span>(<span class="at">ArchRProj =</span> projHeme5, <span class="at">groupBy =</span> <span class="st">&quot;Clusters2&quot;</span>)</span></code></pre></div>
 <p>Inspecting the <code>frags</code> object returned as the output of <code>getGroupFragments()</code>, we get the file paths to the fragment files on disk.</p>
-<div class="sourceCode" id="cb434"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb434-1"><a href="exporting-fragment-level-data.html#cb434-1" tabindex="-1"></a>frags</span>
-<span id="cb434-2"><a href="exporting-fragment-level-data.html#cb434-2" tabindex="-1"></a><span class="do">##  [1] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.B.tsv.gz&quot;         </span></span>
-<span id="cb434-3"><a href="exporting-fragment-level-data.html#cb434-3" tabindex="-1"></a><span class="do">##  [2] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.CD4.M.tsv.gz&quot;     </span></span>
-<span id="cb434-4"><a href="exporting-fragment-level-data.html#cb434-4" tabindex="-1"></a><span class="do">##  [3] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.CD4.N.tsv.gz&quot;     </span></span>
-<span id="cb434-5"><a href="exporting-fragment-level-data.html#cb434-5" tabindex="-1"></a><span class="do">##  [4] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.CLP.tsv.gz&quot;       </span></span>
-<span id="cb434-6"><a href="exporting-fragment-level-data.html#cb434-6" tabindex="-1"></a><span class="do">##  [5] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.Erythroid.tsv.gz&quot; </span></span>
-<span id="cb434-7"><a href="exporting-fragment-level-data.html#cb434-7" tabindex="-1"></a><span class="do">##  [6] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.GMP.tsv.gz&quot;       </span></span>
-<span id="cb434-8"><a href="exporting-fragment-level-data.html#cb434-8" tabindex="-1"></a><span class="do">##  [7] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.Mono.tsv.gz&quot;      </span></span>
-<span id="cb434-9"><a href="exporting-fragment-level-data.html#cb434-9" tabindex="-1"></a><span class="do">##  [8] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.NK.tsv.gz&quot;        </span></span>
-<span id="cb434-10"><a href="exporting-fragment-level-data.html#cb434-10" tabindex="-1"></a><span class="do">##  [9] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.pDC.tsv.gz&quot;       </span></span>
-<span id="cb434-11"><a href="exporting-fragment-level-data.html#cb434-11" tabindex="-1"></a><span class="do">## [10] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.PreB.tsv.gz&quot;      </span></span>
-<span id="cb434-12"><a href="exporting-fragment-level-data.html#cb434-12" tabindex="-1"></a><span class="do">## [11] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.Progenitor.tsv.gz&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb436"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb436-1"><a href="exporting-fragment-level-data.html#cb436-1" tabindex="-1"></a>frags</span>
+<span id="cb436-2"><a href="exporting-fragment-level-data.html#cb436-2" tabindex="-1"></a><span class="do">##  [1] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.B.tsv.gz&quot;         </span></span>
+<span id="cb436-3"><a href="exporting-fragment-level-data.html#cb436-3" tabindex="-1"></a><span class="do">##  [2] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.CD4.M.tsv.gz&quot;     </span></span>
+<span id="cb436-4"><a href="exporting-fragment-level-data.html#cb436-4" tabindex="-1"></a><span class="do">##  [3] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.CD4.N.tsv.gz&quot;     </span></span>
+<span id="cb436-5"><a href="exporting-fragment-level-data.html#cb436-5" tabindex="-1"></a><span class="do">##  [4] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.CLP.tsv.gz&quot;       </span></span>
+<span id="cb436-6"><a href="exporting-fragment-level-data.html#cb436-6" tabindex="-1"></a><span class="do">##  [5] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.Erythroid.tsv.gz&quot; </span></span>
+<span id="cb436-7"><a href="exporting-fragment-level-data.html#cb436-7" tabindex="-1"></a><span class="do">##  [6] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.GMP.tsv.gz&quot;       </span></span>
+<span id="cb436-8"><a href="exporting-fragment-level-data.html#cb436-8" tabindex="-1"></a><span class="do">##  [7] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.Mono.tsv.gz&quot;      </span></span>
+<span id="cb436-9"><a href="exporting-fragment-level-data.html#cb436-9" tabindex="-1"></a><span class="do">##  [8] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.NK.tsv.gz&quot;        </span></span>
+<span id="cb436-10"><a href="exporting-fragment-level-data.html#cb436-10" tabindex="-1"></a><span class="do">##  [9] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.pDC.tsv.gz&quot;       </span></span>
+<span id="cb436-11"><a href="exporting-fragment-level-data.html#cb436-11" tabindex="-1"></a><span class="do">## [10] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.PreB.tsv.gz&quot;      </span></span>
+<span id="cb436-12"><a href="exporting-fragment-level-data.html#cb436-12" tabindex="-1"></a><span class="do">## [11] &quot;/workspace/ArchR/ArchR_Website_Testing/bookdown/Save-ProjHeme5/GroupFragments/Clusters2.Progenitor.tsv.gz&quot;</span></span></code></pre></div>
 </div>
             </section>
 

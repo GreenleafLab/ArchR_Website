@@ -23,7 +23,7 @@
 <meta name="author" content="Jeffrey Granja and Ryan Corces" />
 
 
-<meta name="date" content="2025-01-23" />
+<meta name="date" content="2025-02-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -258,7 +258,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18" data-path="trajectory-analysis-with-archr.html"><a href="trajectory-analysis-with-archr.html"><i class="fa fa-check"></i><b>18</b> Trajectory Analysis with ArchR</a>
 <ul>
 <li class="chapter" data-level="18.1" data-path="myeloid-trajectory---monocyte-differentiation.html"><a href="myeloid-trajectory---monocyte-differentiation.html"><i class="fa fa-check"></i><b>18.1</b> Myeloid Trajectory - Monocyte Differentiation</a></li>
-<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-cifferentiation.html"><a href="lymphoid-trajectory---b-cell-cifferentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Cifferentiation</a></li>
+<li class="chapter" data-level="18.2" data-path="lymphoid-trajectory---b-cell-differentiation.html"><a href="lymphoid-trajectory---b-cell-differentiation.html"><i class="fa fa-check"></i><b>18.2</b> Lymphoid Trajectory - B Cell Differentiation</a></li>
 <li class="chapter" data-level="18.3" data-path="monocle3-trajectories.html"><a href="monocle3-trajectories.html"><i class="fa fa-check"></i><b>18.3</b> Monocle3 Trajectories</a></li>
 <li class="chapter" data-level="18.4" data-path="slingshot-trajectories.html"><a href="slingshot-trajectories.html"><i class="fa fa-check"></i><b>18.4</b> Slingshot Trajectories</a></li>
 <li class="chapter" data-level="18.5" data-path="comparing-the-different-trajectories.html"><a href="comparing-the-different-trajectories.html"><i class="fa fa-check"></i><b>18.5</b> Comparing the different trajectories</a></li>
@@ -325,7 +325,57 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-2"><a href="using-renv-to-manage-dependencies.html#cb6-2" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">init</span>()</span></code></pre></div>
 <p>After running <code>renv::init()</code>, you’ll notice that <code>renv</code> created some new files in your working directory. These files correspond to the particular environment that has just been set up. As mentioned before, <code>renv</code> environments are <strong>project specific</strong> and the <code>renv</code> environment here is only meant to be used for the analysis that will be done within this <code>./ArchRTutorial</code> directory. You’ll notice that within the subdirectories is essentially an entire R library but this is established through symbolic linking to your central R library (or to an <code>renv</code> cache if you’ve set that up).</p>
 <p>If all went well, ArchR and all of its dependencies should be availble to you and you can go ahead and load ArchR.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="using-renv-to-manage-dependencies.html#cb7-1" tabindex="-1"></a><span class="fu">library</span>(ArchR)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="using-renv-to-manage-dependencies.html#cb7-1" tabindex="-1"></a><span class="fu">library</span>(ArchR)</span>
+<span id="cb7-2"><a href="using-renv-to-manage-dependencies.html#cb7-2" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb7-3"><a href="using-renv-to-manage-dependencies.html#cb7-3" tabindex="-1"></a><span class="do">##                                                    / |</span></span>
+<span id="cb7-4"><a href="using-renv-to-manage-dependencies.html#cb7-4" tabindex="-1"></a><span class="do">##                                                  /    \</span></span>
+<span id="cb7-5"><a href="using-renv-to-manage-dependencies.html#cb7-5" tabindex="-1"></a><span class="do">##             .                                  /      |.</span></span>
+<span id="cb7-6"><a href="using-renv-to-manage-dependencies.html#cb7-6" tabindex="-1"></a><span class="do">##             \\\                              /        |.</span></span>
+<span id="cb7-7"><a href="using-renv-to-manage-dependencies.html#cb7-7" tabindex="-1"></a><span class="do">##               \\\                          /           `|.</span></span>
+<span id="cb7-8"><a href="using-renv-to-manage-dependencies.html#cb7-8" tabindex="-1"></a><span class="do">##                 \\\                      /              |.</span></span>
+<span id="cb7-9"><a href="using-renv-to-manage-dependencies.html#cb7-9" tabindex="-1"></a><span class="do">##                   \                    /                |\</span></span>
+<span id="cb7-10"><a href="using-renv-to-manage-dependencies.html#cb7-10" tabindex="-1"></a><span class="do">##                   \\#####\           /                  ||</span></span>
+<span id="cb7-11"><a href="using-renv-to-manage-dependencies.html#cb7-11" tabindex="-1"></a><span class="do">##                 ==###########&gt;      /                   ||</span></span>
+<span id="cb7-12"><a href="using-renv-to-manage-dependencies.html#cb7-12" tabindex="-1"></a><span class="do">##                  \\##==......\    /                     ||</span></span>
+<span id="cb7-13"><a href="using-renv-to-manage-dependencies.html#cb7-13" tabindex="-1"></a><span class="do">##             ______ =       =|__ /__                     ||      \\\</span></span>
+<span id="cb7-14"><a href="using-renv-to-manage-dependencies.html#cb7-14" tabindex="-1"></a><span class="do">##         ,--&#39; ,----`-,__ ___/&#39;  --,-`-===================##========&gt;</span></span>
+<span id="cb7-15"><a href="using-renv-to-manage-dependencies.html#cb7-15" tabindex="-1"></a><span class="do">##        \               &#39;        ##_______ _____ ,--,__,=##,__   ///</span></span>
+<span id="cb7-16"><a href="using-renv-to-manage-dependencies.html#cb7-16" tabindex="-1"></a><span class="do">##         ,    __==    ___,-,__,--&#39;#&#39;  ===&#39;      `-&#39;    | ##,-/</span></span>
+<span id="cb7-17"><a href="using-renv-to-manage-dependencies.html#cb7-17" tabindex="-1"></a><span class="do">##         -,____,---&#39;       \\####\\________________,--\\_##,/</span></span>
+<span id="cb7-18"><a href="using-renv-to-manage-dependencies.html#cb7-18" tabindex="-1"></a><span class="do">##            ___      .______        ______  __    __  .______      </span></span>
+<span id="cb7-19"><a href="using-renv-to-manage-dependencies.html#cb7-19" tabindex="-1"></a><span class="do">##           /   \     |   _  \      /      ||  |  |  | |   _  \     </span></span>
+<span id="cb7-20"><a href="using-renv-to-manage-dependencies.html#cb7-20" tabindex="-1"></a><span class="do">##          /  ^  \    |  |_)  |    |  ,----&#39;|  |__|  | |  |_)  |    </span></span>
+<span id="cb7-21"><a href="using-renv-to-manage-dependencies.html#cb7-21" tabindex="-1"></a><span class="do">##         /  /_\  \   |      /     |  |     |   __   | |      /     </span></span>
+<span id="cb7-22"><a href="using-renv-to-manage-dependencies.html#cb7-22" tabindex="-1"></a><span class="do">##        /  _____  \  |  |\  \\___ |  `----.|  |  |  | |  |\  \\___.</span></span>
+<span id="cb7-23"><a href="using-renv-to-manage-dependencies.html#cb7-23" tabindex="-1"></a><span class="do">##       /__/     \__\ | _| `._____| \______||__|  |__| | _| `._____|</span></span>
+<span id="cb7-24"><a href="using-renv-to-manage-dependencies.html#cb7-24" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb7-25"><a href="using-renv-to-manage-dependencies.html#cb7-25" tabindex="-1"></a><span class="do">## ArchR : Version 1.0.3</span></span>
+<span id="cb7-26"><a href="using-renv-to-manage-dependencies.html#cb7-26" tabindex="-1"></a><span class="do">## For more information see our website : www.ArchRProject.com</span></span>
+<span id="cb7-27"><a href="using-renv-to-manage-dependencies.html#cb7-27" tabindex="-1"></a><span class="do">## If you encounter a bug please report : https://github.com/GreenleafLab/ArchR/issues</span></span>
+<span id="cb7-28"><a href="using-renv-to-manage-dependencies.html#cb7-28" tabindex="-1"></a><span class="do">## Loading Required Packages...</span></span>
+<span id="cb7-29"><a href="using-renv-to-manage-dependencies.html#cb7-29" tabindex="-1"></a><span class="do">##  Loading Package : devtools v2.4.5</span></span>
+<span id="cb7-30"><a href="using-renv-to-manage-dependencies.html#cb7-30" tabindex="-1"></a><span class="do">##  Loading Package : grid v4.4.1</span></span>
+<span id="cb7-31"><a href="using-renv-to-manage-dependencies.html#cb7-31" tabindex="-1"></a><span class="do">##  Loading Package : gridExtra v2.3</span></span>
+<span id="cb7-32"><a href="using-renv-to-manage-dependencies.html#cb7-32" tabindex="-1"></a><span class="do">##  Loading Package : gtools v3.9.5</span></span>
+<span id="cb7-33"><a href="using-renv-to-manage-dependencies.html#cb7-33" tabindex="-1"></a><span class="do">##  Loading Package : gtable v0.3.6</span></span>
+<span id="cb7-34"><a href="using-renv-to-manage-dependencies.html#cb7-34" tabindex="-1"></a><span class="do">##  Loading Package : ggplot2 v3.5.1</span></span>
+<span id="cb7-35"><a href="using-renv-to-manage-dependencies.html#cb7-35" tabindex="-1"></a><span class="do">##  Loading Package : magrittr v2.0.3</span></span>
+<span id="cb7-36"><a href="using-renv-to-manage-dependencies.html#cb7-36" tabindex="-1"></a><span class="do">##  Loading Package : plyr v1.8.9</span></span>
+<span id="cb7-37"><a href="using-renv-to-manage-dependencies.html#cb7-37" tabindex="-1"></a><span class="do">##  Loading Package : stringr v1.5.1</span></span>
+<span id="cb7-38"><a href="using-renv-to-manage-dependencies.html#cb7-38" tabindex="-1"></a><span class="do">##  Loading Package : data.table v1.16.2</span></span>
+<span id="cb7-39"><a href="using-renv-to-manage-dependencies.html#cb7-39" tabindex="-1"></a><span class="do">##  Loading Package : matrixStats v1.4.1</span></span>
+<span id="cb7-40"><a href="using-renv-to-manage-dependencies.html#cb7-40" tabindex="-1"></a><span class="do">##  Loading Package : sparseMatrixStats v1.16.0</span></span>
+<span id="cb7-41"><a href="using-renv-to-manage-dependencies.html#cb7-41" tabindex="-1"></a><span class="do">##  Loading Package : S4Vectors v0.42.1</span></span>
+<span id="cb7-42"><a href="using-renv-to-manage-dependencies.html#cb7-42" tabindex="-1"></a><span class="do">##  Loading Package : GenomicRanges v1.56.2</span></span>
+<span id="cb7-43"><a href="using-renv-to-manage-dependencies.html#cb7-43" tabindex="-1"></a><span class="do">##  Loading Package : BiocGenerics v0.50.0</span></span>
+<span id="cb7-44"><a href="using-renv-to-manage-dependencies.html#cb7-44" tabindex="-1"></a><span class="do">##  Loading Package : Matrix v1.7.1</span></span>
+<span id="cb7-45"><a href="using-renv-to-manage-dependencies.html#cb7-45" tabindex="-1"></a><span class="do">##  Loading Package : Rcpp v1.0.13</span></span>
+<span id="cb7-46"><a href="using-renv-to-manage-dependencies.html#cb7-46" tabindex="-1"></a><span class="do">##  Loading Package : RcppArmadillo v14.0.2.1</span></span>
+<span id="cb7-47"><a href="using-renv-to-manage-dependencies.html#cb7-47" tabindex="-1"></a><span class="do">##  Loading Package : SummarizedExperiment v1.34.0</span></span>
+<span id="cb7-48"><a href="using-renv-to-manage-dependencies.html#cb7-48" tabindex="-1"></a><span class="do">## Warning: replacing previous import &#39;S4Arrays::makeNindexFromArrayViewport&#39; by</span></span>
+<span id="cb7-49"><a href="using-renv-to-manage-dependencies.html#cb7-49" tabindex="-1"></a><span class="do">## &#39;DelayedArray::makeNindexFromArrayViewport&#39; when loading &#39;SummarizedExperiment&#39;</span></span>
+<span id="cb7-50"><a href="using-renv-to-manage-dependencies.html#cb7-50" tabindex="-1"></a><span class="do">##  Loading Package : rhdf5 v2.48.0</span></span>
+<span id="cb7-51"><a href="using-renv-to-manage-dependencies.html#cb7-51" tabindex="-1"></a><span class="do">## Setting default number of Parallel threads to 12.</span></span></code></pre></div>
 <div id="managing-your-renv-environment" class="section level3 hasAnchor" number="2.1.1">
 <h3><span class="header-section-number">2.1.1</span> Managing your renv environment<a href="using-renv-to-manage-dependencies.html#managing-your-renv-environment" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Full documentation on <code>renv</code> can be found <a href="https://rstudio.github.io/renv/articles/renv.html">here</a> and we encourage you to read the <code>renv</code> documentation for more advanced usage. Below, we outline a few things that will make working with <code>renv</code> easier for you.</p>
